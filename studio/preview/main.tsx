@@ -1,20 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { App } from '../src/components/App';
-import '.././dist/index.css'
-import 'slapshot-studio/index.css'
-import { LeftNav, Preview, Studio } from 'slapshot-studio';
-import { BannerModuleConfiguration } from 'banner';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Studio } from './Studio';
+import { LeftNav } from './LeftNav';
+import { Preview } from './Preview';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Studio>
       <div className='flex flex-row h-full w-full'>
         <LeftNav>
-          <BannerModuleConfiguration/>
+          <button>Hey</button>
         </LeftNav>
         <Preview>
-          <App />
+          <button>Hey</button>
         </Preview>
       </div>
     </Studio>
