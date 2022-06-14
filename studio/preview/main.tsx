@@ -4,7 +4,9 @@ import { Studio } from './Studio';
 import { LeftNav } from './LeftNav';
 import { Preview } from './Preview';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+import '../../dist/output.css';
+
+ReactDOM.render(
   <React.StrictMode>
     <Studio>
       <div className='flex flex-row h-full w-full'>
@@ -16,5 +18,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         </Preview>
       </div>
     </Studio>
-  </React.StrictMode>
+  </React.StrictMode>,
+  document.getElementById('root')
 )
