@@ -1,0 +1,13 @@
+import Universal from '../../../studio/components/search/universal';
+import '@yext/answers-react-components/bundle.css';
+import pageConfig from './{{pageId}}.json';
+
+export default function UniversalSearchPage() {
+  return (
+    <html>
+      <body>
+        <Universal {...pageConfig}/>
+      </body>
+    </html>
+  );
+}
