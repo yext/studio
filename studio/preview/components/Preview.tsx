@@ -1,5 +1,5 @@
 export interface PreviewProps {
-  children: React.ReactChild
+  children?: React.ReactChild
 }
 
 export function Preview (props: PreviewProps) {

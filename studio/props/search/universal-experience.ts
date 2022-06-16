@@ -1,4 +1,4 @@
-export interface UniversalProps {
+export interface UniversalExperienceProps {
   searchBar?: {
     placeholderText?: string
   }

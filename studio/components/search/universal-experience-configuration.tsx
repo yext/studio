@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UniversalProps } from "../../props/search/universal";
+import { UniversalExperienceProps } from "../../props/search/universal-experience";
 
 export default function UniversalConfiguration(props: { pageId: string }) {
   const [placeHolder, setPlaceHolder] = useState('');
@@ -10,7 +10,7 @@ export default function UniversalConfiguration(props: { pageId: string }) {
   }
 
   function setConfig() {
-    const config: UniversalProps = {
+    const config: UniversalExperienceProps = {
       searchBar: {
         placeholderText: placeHolder
       }

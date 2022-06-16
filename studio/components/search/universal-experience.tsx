@@ -1,8 +1,8 @@
-import { UniversalProps } from '../../props/search/universal';
-import { SearchBar } from '@yext/answers-react-components'
+import { UniversalExperienceProps } from '../../props/search/universal-experience';
+import { SearchBar, UniversalResults } from '@yext/answers-react-components'
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
 
-export default function Universal(props: UniversalProps) {
+export default function UniversalExperience(props: UniversalExperienceProps) {
   const config = {
     apiKey: '2d8c550071a64ea23e263118a2b0680b',
     experienceKey: 'slanswers-hier-facets',
@@ -14,7 +14,8 @@ export default function Universal(props: UniversalProps) {
   return (
     <div>
       <AnswersHeadlessProvider {...config}>
-        <SearchBar placeholder={props.searchBar?.placeholderText || 'Hey'}/>
+        <SearchBar placeholder={props.searchBar?.placeholderText}/>
+        <UniversalResults verticalConfigMap={{}}/>
       </AnswersHeadlessProvider>
     </div>
   )
