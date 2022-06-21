@@ -20,7 +20,7 @@ export default function UniversalConfiguration(props: { pageId: string }) {
       }
     };
 
-    fetch(`http://127.0.0.1:8080/update/${props.pageId}`, {
+    fetch(`http://127.0.0.1:8080/update/${props.pageId}/universal-experience`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

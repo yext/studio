@@ -1,6 +1,7 @@
 const express = require('express');
 const hbs = require('handlebars');
 const merge = require('lodash.merge');
+const cloneDeep = require('lodash.clonedeep');
 const { writeFileSync, readFileSync, mkdirSync } = require('fs');
 
 const app = express();
@@ -27,24 +28,27 @@ app.post('/update/*', function(request, response){
   response.send();
   const incomingComponentConfig = request.body;
 
-  let updatedComponentConfig = incomingConfig;
+  let updatedComponentConfig = incomingComponentConfig;
   const existingComponentConfig = 
     existingPageConfig.components && 
     existingPageConfig.components.find(component => component.id === componentId);
   
   if (existingComponentConfig) {
-    updatedComponentConfig = merge(existingComponentConfig, incomingComponentConfig);
+    updatedComponentConfig = merge(cloneDeep(existingComponentConfig), incomingComponentConfig);
   }
 
+  let newComponents;
   if (existingPageConfig.components) {
-    existingPageConfig.components = 
+    newComponents = 
       existingPageConfig.components.filter(component => component.id !== componentId);
-    existingPageConfig.components.append(updatedComponentConfig);
+    newComponents.push(updatedComponentConfig);
   } else {
-    existingPageConfig.components = [ updatedComponentConfig ];
+    newComponents = [ updatedComponentConfig ];
   }
+
+  const newPageConfig = merge(existingPageConfig, { components: newComponents });
   
-  writeFileSync(`../../src/pages/${pageId}/${pageId}.json`, JSON.stringify(existingPageConfig, '\t'));
+  writeFileSync(`../../src/pages/${pageId}/${pageId}.json`, JSON.stringify(newPageConfig, '\t'));
 });
 
 app.post('/create-page', function(request, response){
