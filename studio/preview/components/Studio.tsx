@@ -1,3 +1,6 @@
+import { LeftNav } from "./LeftNav";
+import { Preview } from "./Preview";
+
 export interface StudioProps {
   children: React.ReactChild
 }
@@ -5,7 +8,10 @@ export interface StudioProps {
 export function Studio (props: StudioProps) {
   return (
     <div className='h-screen w-screen flex flex-row'>
-      {props.children}
+      <LeftNav></LeftNav>
+      <Preview>
+        {props.children}
+      </Preview>
     </div>
   );
 }

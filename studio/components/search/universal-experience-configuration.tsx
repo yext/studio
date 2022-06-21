@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { UniversalExperienceProps } from "../../props/search/universal-experience";
+import { UniversalExperienceProps } from "../../props/components/search/universal-experience";
 
 export default function UniversalConfiguration(props: { pageId: string }) {
   const [placeHolder, setPlaceHolder] = useState('');
+  const [showAppliedFilters, setShowAppliedFilters] = useState(false);
 
   function onSubmit(e) {
     e.preventDefault();
@@ -13,6 +14,9 @@ export default function UniversalConfiguration(props: { pageId: string }) {
     const config: UniversalExperienceProps = {
       searchBar: {
         placeholderText: placeHolder
+      },
+      universalResults: {
+        showAppliedFilters: showAppliedFilters
       }
     };
 
@@ -21,7 +25,7 @@ export default function UniversalConfiguration(props: { pageId: string }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(config)
+      body: JSON.stringify({ id: 'universal-experience', props: config })
     });
   }
 
@@ -38,6 +42,17 @@ export default function UniversalConfiguration(props: { pageId: string }) {
                 className='rounded-md px-2 py-1 border border-gray-100 outline-1 outline-blue-300'
                 value={placeHolder}
                 onChange={e => setPlaceHolder(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className='pl-4 pt-2'>
+            <label>Search Results</label>
+            <div className='pl-4 pt-2'>
+              <label>Show Applied Filters</label>
+              <input
+                className='ml-2'
+                type={'checkbox'}
+                onChange={e => setShowAppliedFilters(e.target.checked)}
               />
             </div>
           </div>

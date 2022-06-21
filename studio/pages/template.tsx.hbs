@@ -1,0 +1,29 @@
+import UniversalExperience from '../../../studio/components/search/universal-experience';
+import '@yext/answers-react-components/bundle.css';
+import pageConfig from './{{id}}.json';
+import { Banner } from '../../../studio/components/banner/banner';
+
+export default function Page() {
+  const components = pageConfig.components || [];
+
+  function shouldRenderComponent(componentId: string) {
+    return components.some(component => component.id === componentId);
+  }
+
+  function getComponentById(componentId: string) {
+    return components.find(component => component.id === componentId);
+  }
+
+  return (
+    <html>
+      <body>
+        {shouldRenderComponent('banner') 
+          && <Banner {...getComponentById('banner').props}/>
+        }
+        {shouldRenderComponent('universal-experience') 
+          && <UniversalExperience {...getComponentById('universal-experience').props}/>
+        }
+      </body>
+    </html>
+  );
+}

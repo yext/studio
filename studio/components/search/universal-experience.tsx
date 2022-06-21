@@ -1,4 +1,4 @@
-import { UniversalExperienceProps } from '../../props/search/universal-experience';
+import { UniversalExperienceProps } from '../../props/components/search/universal-experience';
 import { SearchBar, UniversalResults } from '@yext/answers-react-components'
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
 
@@ -15,7 +15,7 @@ export default function UniversalExperience(props: UniversalExperienceProps) {
     <div>
       <AnswersHeadlessProvider {...config}>
         <SearchBar placeholder={props.searchBar?.placeholderText}/>
-        <UniversalResults verticalConfigMap={{}}/>
+        <UniversalResults verticalConfigMap={{}} showAppliedFilters={props.universalResults?.showAppliedFilters}/>
       </AnswersHeadlessProvider>
     </div>
   )
