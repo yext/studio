@@ -46,7 +46,8 @@ app.post('/update/*', function(request, response){
     newComponents = [ updatedComponentConfig ];
   }
 
-  const newPageConfig = merge(existingPageConfig, { components: newComponents });
+  const newPageConfig = cloneDeep(existingPageConfig);
+  newPageConfig.components = newComponents;
   
   writeFileSync(`../../src/pages/${pageId}/${pageId}.json`, JSON.stringify(newPageConfig, '\t'));
 });

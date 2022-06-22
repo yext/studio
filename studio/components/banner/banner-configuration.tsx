@@ -8,7 +8,6 @@ export function BannerConfiguration(props: { pageId: string}) {
   }
 
   function setStoreTitle() {
-    const config = { title };
     fetch(`http://127.0.0.1:8080/update/${props.pageId}/banner`, {
       method: 'POST',
       headers: {
