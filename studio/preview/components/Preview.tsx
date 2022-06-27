@@ -1,8 +1,8 @@
-export interface PreviewProps {
-  children?: React.ReactChild
-}
+import { PropsWithChildren } from "react";
 
-export function Preview (props: PreviewProps) {
+export interface PreviewProps {}
+
+export function Preview (props: PropsWithChildren<PreviewProps>) {
   return (
     <div className='w-full h-full'>
       {props.children}

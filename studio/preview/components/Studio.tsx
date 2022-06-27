@@ -1,11 +1,11 @@
+import { PropsWithChildren } from "react";
 import { LeftNav } from "./LeftNav";
 import { Preview } from "./Preview";
 
 export interface StudioProps {
-  children: React.ReactChild
 }
 
-export function Studio (props: StudioProps) {
+export function Studio (props: PropsWithChildren<StudioProps>) {
   return (
     <div className='h-screen w-screen flex flex-row'>
       <LeftNav></LeftNav>
