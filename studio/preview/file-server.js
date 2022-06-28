@@ -1,4 +1,5 @@
 const express = require('express');
+const mkdirp = require('mkdirp')
 const hbs = require('handlebars');
 const merge = require('lodash.merge');
 const cloneDeep = require('lodash.clonedeep');
@@ -58,8 +59,7 @@ app.post('/create-page', function(request, response){
   const pageConfig = request.body;
   const { id } = pageConfig;
 
-  mkdirSync(`../../src/pages`);
-  mkdirSync(`../../src/pages/${id}`);
+  mkdirp.sync(`../../src/pages/${id}`);
   writeFileSync(`../../src/pages/${id}/${id}.tsx`, template(pageConfig));
   writeFileSync(`../../src/pages/${id}/${id}.json`, JSON.stringify(pageConfig, null, 2));
 
