@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import SiteSettings from "./templates/SiteSettings";
+import SiteSettings from "./SiteSettings";
 
 export function LeftNav() {
   const [id, setId] = useState('');
