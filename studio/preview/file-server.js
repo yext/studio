@@ -49,7 +49,7 @@ app.post('/update/*', function(request, response){
   const newPageConfig = cloneDeep(existingPageConfig);
   newPageConfig.components = newComponents;
   
-  writeFileSync(`../../src/pages/${pageId}/${pageId}.json`, JSON.stringify(newPageConfig, '\t'));
+  writeFileSync(`../../src/pages/${pageId}/${pageId}.json`, JSON.stringify(newPageConfig, null, 2));
 });
 
 app.post('/create-page', function(request, response){
@@ -61,7 +61,7 @@ app.post('/create-page', function(request, response){
   mkdirSync(`../../src/pages`);
   mkdirSync(`../../src/pages/${id}`);
   writeFileSync(`../../src/pages/${id}/${id}.tsx`, template(pageConfig));
-  writeFileSync(`../../src/pages/${id}/${id}.json`, JSON.stringify(pageConfig));
+  writeFileSync(`../../src/pages/${id}/${id}.json`, JSON.stringify(pageConfig, null, 2));
 
   writeFileSync('./main.tsx', mainTemplate(pageConfig));
 });
