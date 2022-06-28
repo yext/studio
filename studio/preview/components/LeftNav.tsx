@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { BannerConfiguration } from "../../components/banner/banner-configuration";
 import UniversalConfiguration from "../../components/search/universal-experience-configuration";
+import SiteSettings from "./templates/SiteSettings";
 
 export function LeftNav() {
   const [id, setId] = useState('');
@@ -69,6 +70,7 @@ export function LeftNav() {
       {pageComponents.includes('universal-experience') && <UniversalConfiguration pageId='index'/>}
       {renderComponentOptionsDropdown()}
       {renderAddPage()}
+      <SiteSettings/>
     </div>
   );
 }

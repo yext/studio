@@ -3,7 +3,10 @@ const mkdirp = require('mkdirp')
 const hbs = require('handlebars');
 const merge = require('lodash.merge');
 const cloneDeep = require('lodash.clonedeep');
-const { writeFileSync, readFileSync, mkdirSync } = require('fs');
+const { writeFileSync, readFileSync } = require('fs');
+const path = require('path');
+
+const pathToSrcDir = path.resolve(__dirname, '../../src')
 
 const app = express();
 
@@ -65,5 +68,20 @@ app.post('/create-page', function(request, response){
 
   writeFileSync('./main.tsx', mainTemplate(pageConfig));
 });
+
+app.post('/write-file/:filePath', (req, res) => {
+  res.setHeader('access-control-allow-origin', '*');
+  if (!req.params.filePath) {
+    res.status(400).send('No filepath specified to write to');
+  }
+  try {
+    const fullFilePath = path.resolve(pathToSrcDir, req.params.filePath)
+    writeFileSync(fullFilePath, JSON.stringify(req.body, null, 2))
+    res.send("successfully edited: " + path.relative(pathToSrcDir, fullFilePath));
+  } catch (e) {
+    res.status(500).send(e.toString());
+    console.error(e)
+  }
+})
 
 app.listen(8080);
