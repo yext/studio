@@ -17,7 +17,6 @@ async function createServer() {
     },
   })
 
-  // use vite's connect instance as middleware
   app.use(vite.middlewares)
   app.use('*', async (req, res, next) => {
     const url = req.originalUrl
@@ -26,7 +25,6 @@ async function createServer() {
         path.resolve(__dirname, 'index.html'),
         'utf-8'
       ))
-      console.log(template)
       const { Main } = await vite.ssrLoadModule(path.resolve(__dirname, "./preview/main.tsx"));
       const appHtml = ReactDOMServer.renderToString(createElement(Main));
       const html = template.replace(`<!--ssr-outlet-->`, appHtml)
