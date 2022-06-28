@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { BannerConfiguration } from "../../components/banner/banner-configuration";
-import UniversalConfiguration from "../../components/search/universal-experience-configuration";
 import SiteSettings from "./templates/SiteSettings";
 
 export function LeftNav() {
@@ -21,7 +19,7 @@ export function LeftNav() {
 
   function onComponentAdd(componentId) {
     const newComponents = [...pageComponents, componentId];
-    setPageComponents(newComponents);
+    // setPageComponents(newComponents);
   }
 
   function renderComponentOptionsDropdown() {
@@ -64,10 +62,8 @@ export function LeftNav() {
   }
 
   return (
-    <div className='h-screen w-64 bg-slate-500 flex flex-col'>
+    <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
       <h1 className='text-3xl text-white'>Yext Studio</h1>
-      {pageComponents.includes('banner') && <BannerConfiguration pageId='index'/>}
-      {pageComponents.includes('universal-experience') && <UniversalConfiguration pageId='index'/>}
       {renderComponentOptionsDropdown()}
       {renderAddPage()}
       <SiteSettings/>

@@ -1,4 +1,4 @@
-interface BannerProps {
+export interface BannerProps {
   title?: string
 }
 
@@ -10,11 +10,5 @@ export function Banner(props: BannerProps) {
         {props.title || 'Default Title'}
       </h1>
     </div>
-  );
-}
-
-export function BannerModule(props) {
-  return (
-    <Banner {...props}/>
   );
 }

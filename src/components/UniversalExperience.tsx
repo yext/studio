@@ -1,5 +1,6 @@
 import { SearchBar, UniversalResults } from '@yext/answers-react-components'
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
+import { answersConfig } from '../siteSettings';
 
 export interface UniversalExperienceProps {
   searchBar?: {
@@ -11,17 +12,9 @@ export interface UniversalExperienceProps {
 }
 
 export default function UniversalExperience(props: UniversalExperienceProps) {
-  const config = {
-    apiKey: '2d8c550071a64ea23e263118a2b0680b',
-    experienceKey: 'slanswers-hier-facets',
-    locale: 'en',
-    experienceVersion: 'STAGING',
-    businessId: 123123
-  };
-
   return (
     <div>
-      <AnswersHeadlessProvider {...config}>
+      <AnswersHeadlessProvider {...answersConfig}>
         <SearchBar placeholder={props.searchBar?.placeholderText}/>
         <UniversalResults verticalConfigMap={{}} showAppliedFilters={props.universalResults?.showAppliedFilters}/>
       </AnswersHeadlessProvider>

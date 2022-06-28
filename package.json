@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:fileserver": "cd studio/preview && nodemon file-server.js",
+    "dev:fileserver": "nodemon studio/file-server.js",
     "dev:tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
-    "dev:vite": "vite --config studio/preview/vite.config.ts",
+    "dev:vite": "nodemon studio/ssr-server.js",
     "dev": "npm-run-all -p dev:fileserver dev:tailwind dev:vite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

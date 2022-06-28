@@ -6,7 +6,7 @@ const cloneDeep = require('lodash.clonedeep');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
 
-const pathToSrcDir = path.resolve(__dirname, '../../src')
+const pathToSrcDir = path.resolve(__dirname, '../src')
 
 const app = express();
 
@@ -26,7 +26,7 @@ app.post('/update/*', function(request, response){
   const componentId = request.url.split('/')[3];
 
   const existingPageConfig = 
-    JSON.parse(readFileSync(`../../src/pages/${pageId}/${pageId}.json`, { encoding: 'utf8' }));
+    JSON.parse(readFileSync(`../src/pages/${pageId}/${pageId}.json`, { encoding: 'utf8' }));
 
   response.setHeader('access-control-allow-origin', '*');
   response.send();
@@ -53,7 +53,7 @@ app.post('/update/*', function(request, response){
   const newPageConfig = cloneDeep(existingPageConfig);
   newPageConfig.components = newComponents;
   
-  writeFileSync(`../../src/pages/${pageId}/${pageId}.json`, JSON.stringify(newPageConfig, null, 2));
+  writeFileSync(`../src/pages/${pageId}/${pageId}.json`, JSON.stringify(newPageConfig, null, 2));
 });
 
 app.post('/create-page', function(request, response){
@@ -62,9 +62,9 @@ app.post('/create-page', function(request, response){
   const pageConfig = request.body;
   const { id } = pageConfig;
 
-  mkdirp.sync(`../../src/pages/${id}`);
-  writeFileSync(`../../src/pages/${id}/${id}.tsx`, template(pageConfig));
-  writeFileSync(`../../src/pages/${id}/${id}.json`, JSON.stringify(pageConfig, null, 2));
+  mkdirp.sync(`../src/pages/${id}`);
+  writeFileSync(`../src/pages/${id}/${id}.tsx`, template(pageConfig));
+  writeFileSync(`../src/pages/${id}/${id}.json`, JSON.stringify(pageConfig, null, 2));
 
   writeFileSync('./main.tsx', mainTemplate(pageConfig));
 });
@@ -76,7 +76,7 @@ app.post('/write-file/:filePath', (req, res) => {
   }
   try {
     const fullFilePath = path.resolve(pathToSrcDir, req.params.filePath)
-    writeFileSync(fullFilePath, JSON.stringify(req.body, null, 2))
+    writeFileSync(fullFilePath, req.body.value)
     res.send("successfully edited: " + path.relative(pathToSrcDir, fullFilePath));
   } catch (e) {
     res.status(500).send(e.toString());

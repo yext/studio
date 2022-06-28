@@ -14,14 +14,16 @@ export default function SiteSettings() {
       <ToastContainer autoClose={1000}/>
       <Editor
         height="300px"
-        defaultLanguage="json"
+        defaultLanguage="typescript"
         defaultValue={"{\n}"}
         onMount={editor => editorRef.current = editor}
       />
       <button
         className='btn'
         onClick={async () => {
-          const text = await writeStudioFile('siteSettings.json', editorRef.current?.getValue());
+          const text = await writeStudioFile('siteSettings.ts', JSON.stringify({
+            value: editorRef.current?.getValue()
+          }));
           toast(text);
         }}
       >

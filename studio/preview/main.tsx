@@ -1,14 +1,19 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import Page from '../../src/pages/index';
 import { Studio } from './components/Studio';
+import SSRProvider from 'react-bootstrap/SSRProvider'
 
 import './index.css';
 import '../../dist/output.css';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <Studio>
-    </Studio>
-  </React.StrictMode>,
-  document.getElementById('root')
-)
+export function Main() {
+  return (
+    <React.StrictMode>
+      <SSRProvider>
+        <Studio>
+          <Page />
+        </Studio>
+      </SSRProvider>
+    </React.StrictMode>
+  );
+}
