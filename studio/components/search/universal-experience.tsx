@@ -1,6 +1,14 @@
-import { UniversalExperienceProps } from '../../props/components/search/universal-experience';
 import { SearchBar, UniversalResults } from '@yext/answers-react-components'
 import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
+
+export interface UniversalExperienceProps {
+  searchBar?: {
+    placeholderText?: string
+  },
+  universalResults?: {
+    showAppliedFilters?: boolean
+  }
+}
 
 export default function UniversalExperience(props: UniversalExperienceProps) {
   const config = {

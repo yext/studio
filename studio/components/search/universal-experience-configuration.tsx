@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { UniversalExperienceProps } from "../../props/components/search/universal-experience";
+import { UniversalExperienceProps } from "./universal-experience";
 
 export default function UniversalConfiguration(props: { pageId: string }) {
   const [placeHolder, setPlaceHolder] = useState('');
