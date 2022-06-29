@@ -1,74 +1,51 @@
-const { parse } = require('@typescript-eslint/typescript-estree');
 const fs = require('fs')
 const path = require('path')
-const ts = require('typescript')
-const { Project } = require('ts-morph')
+const { Project, ts } = require('ts-morph')
 
 module.exports = parsePageFile;
 function parsePageFile() {
-  // const file = fs.readFileSync(path.resolve(__dirname, '../../src/pages/index.tsx'));
-  // const p = parse(file, { jsx: true });
-  // const pageDeclaration = p.body.find(n => n.type === 'ExportDefaultDeclaration').declaration;
-  // const components = pageDeclaration.body.body.find(n => n.type === 'ReturnStatement').argument.children;
-  // const componentData = components.filter(n => n.type === 'JSXElement').map(n => ({
-  //   name: n.openingElement.name.name,
-  //   props: convertAttributesToProps(n.openingElement.attributes)
-  // }));
-  // console.log(componentData);
-  // fs.writeFileSync('bob.json', JSON.stringify(components, null, 2))
-  // return componentData;
   const file = path.resolve(__dirname, '../../src/pages/index.tsx')
-  // const p = ts.createProgram([file], {
-  //   jsx: true
-  // })
-  // const sourceFile = p.getSourceFile(file);
-  // /** @type {JsxOpeningElement[]} */
-  // const openingJsxElements = []
-  // // ts.SyntaxKind
-  // ts.forEachChild(sourceFile, node => {
-  //   console.log(node.kind)
-  //   if (ts.isJsxAttribute(node)) {
-  //     console.log(node)
-  //     openingJsxElements.push(node)
-  //   }
-  // })
-  // console.log(openingJsxElements[1].attributes)
-  // console.log(sourceFile)
-
-  const p = new Project()
+  const p = new Project({
+    compilerOptions: {
+      jsx: true
+    }
+  })
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)
-  sourceFile.
-  sourceFile.forEachChild(n => {
-    console.log('b')
-    // console.log(n)
+  const usedComponents = [
+    ...sourceFile.getDescendantsOfKind(ts.SyntaxKind.JsxOpeningElement),
+    ...sourceFile.getDescendantsOfKind(ts.SyntaxKind.JsxSelfClosingElement)
+  ]
+  usedComponents.forEach(n => {
+    const componentData = {
+      name: n.compilerNode.tagName.escapedText,
+      props: {}
+    }
+    fs.writeFileSync('bob.json', JSON.stringify(n.compilerNode, (k, v) => ['parent', 'pos', 'end', 'flags', 'modifierFlagsCache', 'transformFlags'].includes(k) ? undefined : v, 2))
+    n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
+      const propName = a.getFirstDescendantByKind(ts.SyntaxKind.Identifier).compilerNode.text;
+      const propValue = getPropValue(a);
+      componentData.props[propName] = propValue;
+    })
+    console.log(componentData)
+    return componentData
   })
 }
 parsePageFile();
 
-function convertAttributesToProps(attributes) {
-  return attributes.reduce((prev, curr) => {
-    prev[curr.name.name] = curr.value?.value ?? curr.value?.expression?.value
-    return prev;
-  }, {})
-}
-
 /**
- * 
- * @param {ts.Node} node 
- * @returns 
+ * @param {import('ts-morph').JsxAttribute} n 
  */
-function visit(node) {
-  if (!isNodeExported(node)) {
-    return;
+function getPropValue(n) {
+  const stringNode = n.getFirstDescendantByKind(ts.SyntaxKind.StringLiteral);
+  if (stringNode) {
+    return stringNode.compilerNode.text;
   }
-
-  if (ts.isClassDeclaration(node) && node.name) {
-    let symbol = checker.getSymbolAtLocation(node.name);
-    if (symbol) {
-      output.push(serializeClass(symbol));
-    }
-  } else if (ts.isModuleDeclaration(node)) {
-    ts.forEachChild(node, visit);
+  if (n.getFirstDescendantByKind(ts.SyntaxKind.TrueKeyword)) return true;
+  if (n.getFirstDescendantByKind(ts.SyntaxKind.FalseKeyword)) return false;
+  const numberNode = n.getFirstDescendantByKind(ts.SyntaxKind.NumericLiteral)
+  if (numberNode) {
+    return parseFloat(numberNode.compilerNode.text)
   }
+  throw new Error('unhandled prop value for node: ' + n.compilerNode)
 }
