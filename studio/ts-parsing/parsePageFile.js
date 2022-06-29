@@ -16,7 +16,7 @@ function parsePageFile() {
     ...sourceFile.getDescendantsOfKind(ts.SyntaxKind.JsxOpeningElement),
     ...sourceFile.getDescendantsOfKind(ts.SyntaxKind.JsxSelfClosingElement)
   ]
-  usedComponents.forEach(n => {
+  return usedComponents.map(n => {
     const componentData = {
       name: n.compilerNode.tagName.escapedText,
       props: {}
@@ -27,11 +27,9 @@ function parsePageFile() {
       const propValue = getPropValue(a);
       componentData.props[propName] = propValue;
     })
-    console.log(componentData)
     return componentData
   })
 }
-parsePageFile();
 
 /**
  * @param {import('ts-morph').JsxAttribute} n 

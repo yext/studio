@@ -4,13 +4,21 @@ import { PropEditorContext, TSPropShape } from './PropEditor'
 import { Preview } from "./Preview";
 
 export interface StudioProps {
-  componentsToPropShapes: Record<string, TSPropShape>
+  componentsToPropShapes: {
+    Banner: TSPropShape
+  },
+  components: {
+    index: {
+      name: 'Banner',
+      props: Record<string, number | string | boolean>
+    }[]
+  } 
 }
 
 export function Studio (props: PropsWithChildren<StudioProps>) {
+  console.log('props', props)
   const [componentName, setComponentName ] = useState('');
   function updateActiveComponent(name: string) {
-    console.log(props)
     setPropShape(props.componentsToPropShapes[name]);
     setComponentName(name);
   }
