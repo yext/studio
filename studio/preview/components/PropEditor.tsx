@@ -1,35 +1,18 @@
-import { createContext, useContext, useState } from "react"
-
 export type TSPropShape = Record<string, 'TSStringKeyword' | 'TSNumberKeyword' | 'TSBooleanKeyword'>;
 
-export const PropEditorContext = createContext<{
-  propShape: TSPropShape,
-  setPropShape: (val: TSPropShape) => void,
-  componentName: string,
-  updateActiveComponent: (val: string) => void
-}>({
-  propShape: {},
-  setPropShape: () => { throw new Error('PropEditorContext not set')},
-  componentName: '',
-  updateActiveComponent: () => { throw new Error() }
-});
-
 interface PropEditorProps {
-  // initialState: PropState
+  propState: PropState
+  propShape: TSPropShape
+  setPropState: (val: PropState) => void
 }
 
-type PropState = Record<string, string | number | boolean>
-// type PropState<T extends TSPropShape> = {
-//   [arg in keyof T]:
-//     T[arg] extends 'TSStringKeyword' ? string :
-//     T[arg] extends 'TSNumberKeyword' ? number :
-//     T[arg] extends 'TSBooleanKeyword' ? boolean : never;
-// }
+export type PropState = Record<string, string | number | boolean>
 
-export default function PropEditor(props: PropEditorProps) {
-  const { propShape } = useContext(PropEditorContext);
-  const [propState, setPropState] = useState<PropState>({});
-
+export default function PropEditor({
+  propState,
+  setPropState,
+  propShape
+}: PropEditorProps) {
   function updatePropState(propName, propValue) {
     setPropState({
       ...propState,
@@ -42,9 +25,11 @@ export default function PropEditor(props: PropEditorProps) {
       {
         Object.keys(propShape).map(propName => {
           const propType = propShape[propName]
+          const propValue = propState[propName] as any
           const sharedProps ={
             key: propName, 
             propName,
+            propValue,
             onChange: val => updatePropState(propName, val)
           }
           if (propType === 'TSBooleanKeyword') {
@@ -61,37 +46,40 @@ export default function PropEditor(props: PropEditorProps) {
 }
 
 function BoolProp(props: {
-  propName: string
+  propName: string,
+  propValue: boolean,
   onChange: (val: boolean) => void
 }) {
   return (
-    <div>
-      <label>{props.propName}</label>
-      <input type='checkbox' onChange={e => props.onChange(e.target.checked)}/>
+    <div className='flex'>
+      <label className='label'>{props.propName}:</label>
+      <input className='checkbox' type='checkbox' onChange={e => props.onChange(e.target.checked)} checked={props.propValue ?? false}/>
     </div>
   )
 }
 
 function StrProp(props: {
   propName: string,
+  propValue: string,
   onChange: (val: string) => void
 }) {
   return (
-    <div>
-      <label>{props.propName}</label>
-      <input onChange={e => props.onChange(e.target.value)}/>
+    <div className='flex'>
+      <label className='label'>{props.propName}:</label>
+      <input className='input-sm' onChange={e => props.onChange(e.target.value)} value={props.propValue ?? ''}/>
     </div>
   )
 }
 
 function NumProp(props: {
   propName: string,
+  propValue: number,
   onChange: (val: number) => void
 }) {
   return (
-    <div>
-      <label>{props.propName}</label>
-      <input onChange={e => props.onChange(parseFloat(e.target.value))}/>
+    <div className='flex'>
+      <label className='label'>{props.propName}:</label>
+      <input className='input-sm' onChange={e => props.onChange(parseFloat(e.target.value))} value={props.propValue ?? ''}/>
     </div>
   )
 }

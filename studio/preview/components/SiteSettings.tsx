@@ -2,7 +2,7 @@ import Editor from "@monaco-editor/react";
 import type { editor } from 'monaco-editor'
 import { useRef } from "react";
 import writeStudioFile from "../endpoints/writeStudioFile";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -11,7 +11,6 @@ export default function SiteSettings() {
 
   return (
     <div>
-      <ToastContainer autoClose={1000}/>
       <Editor
         height="300px"
         defaultLanguage="typescript"

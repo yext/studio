@@ -3,10 +3,8 @@ const path = require('path')
 const express = require('express')
 const { createServer: createViteServer } = require('vite')
 const react = require('@vitejs/plugin-react');
-
-const parsePropInterface = require('./ts-parsing/parsePropInterface')
 const parsePageFile = require('./ts-parsing/parsePageFile')
-
+const parsePropInterface = require('./ts-parsing/parsePropInterface')
 
 async function createServer() {
   const app = express()
@@ -32,12 +30,11 @@ async function createServer() {
         componentsToPropShapes: {
           Banner: parsePropInterface()
         },
-        components: {
+        componentsOnPage: {
           index: parsePageFile()
         }
       }
-      console.log('ctx:', ctx)
-      const appHtml = render(url, {})
+      const appHtml = render(url, ctx)
       const html = template
         .replace(`<!--ssr-outlet-->`, appHtml)
         .replace('// ssr-context', `window.__ssrContext = ${JSON.stringify(ctx)}`)

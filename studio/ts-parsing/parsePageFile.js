@@ -2,8 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const { Project, ts } = require('ts-morph')
 
-module.exports = parsePageFile;
-function parsePageFile() {
+module.exports = function parsePageFile() {
   const file = path.resolve(__dirname, '../../src/pages/index.tsx')
   const p = new Project({
     compilerOptions: {
@@ -21,7 +20,7 @@ function parsePageFile() {
       name: n.compilerNode.tagName.escapedText,
       props: {}
     }
-    fs.writeFileSync('bob.json', JSON.stringify(n.compilerNode, (k, v) => ['parent', 'pos', 'end', 'flags', 'modifierFlagsCache', 'transformFlags'].includes(k) ? undefined : v, 2))
+    // fs.writeFileSync('bob.json', JSON.stringify(n.compilerNode, (k, v) => ['parent', 'pos', 'end', 'flags', 'modifierFlagsCache', 'transformFlags'].includes(k) ? undefined : v, 2))
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
       const propName = a.getFirstDescendantByKind(ts.SyntaxKind.Identifier).compilerNode.text;
       const propValue = getPropValue(a);

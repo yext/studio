@@ -5,6 +5,7 @@ const merge = require('lodash.merge');
 const cloneDeep = require('lodash.clonedeep');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
+const updatePageFile = require('./ts-parsing/updatePageFile')
 
 const pathToSrcDir = path.resolve(__dirname, '../src')
 
@@ -77,6 +78,19 @@ app.post('/write-file/:filePath', (req, res) => {
   try {
     const fullFilePath = path.resolve(pathToSrcDir, req.params.filePath)
     writeFileSync(fullFilePath, req.body.value)
+    res.send("successfully edited: " + path.relative(pathToSrcDir, fullFilePath));
+  } catch (e) {
+    res.status(500).send(e.toString());
+    console.error(e)
+  }
+})
+
+app.post('/update-page-component-props', (req, res) => {
+  res.setHeader('access-control-allow-origin', '*');
+  try {
+    const fullFilePath = path.resolve(pathToSrcDir, 'pages/index.tsx')
+    // writeFileSync(fullFilePath, req.body.value)
+    updatePageFile(req.body.updatedState)
     res.send("successfully edited: " + path.relative(pathToSrcDir, fullFilePath));
   } catch (e) {
     res.status(500).send(e.toString());
