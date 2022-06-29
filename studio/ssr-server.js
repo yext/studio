@@ -3,10 +3,8 @@ const path = require('path')
 const express = require('express')
 const { createServer: createViteServer } = require('vite')
 const react = require('@vitejs/plugin-react');
-const { createElement } = require('react')
 
-const ReactDOMServer = require( "react-dom/server");
-const parsePropInterface = require('./prop-editor/parsePropInterface')
+const parsePropInterface = require('./ts-parsing/parsePropInterface')
 
 
 async function createServer() {
