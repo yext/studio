@@ -12,8 +12,8 @@ const app = express();
 
 app.use(express.json());
 
-const template = hbs.compile(readFileSync('../pages/template.tsx.hbs', 'utf8'));
-const mainTemplate = hbs.compile(readFileSync('./components/templates/main.tsx.hbs', 'utf8'));
+const template = hbs.compile(readFileSync('./studio/pages/template.tsx.hbs', 'utf8'));
+const mainTemplate = hbs.compile(readFileSync('./studio/preview/components/templates/main.tsx.hbs', 'utf8'));
 
 app.options('/*', function(request, response) {
   response.setHeader('access-control-allow-headers', 'content-type');

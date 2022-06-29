@@ -6,6 +6,9 @@ const react = require('@vitejs/plugin-react');
 const { createElement } = require('react')
 
 const ReactDOMServer = require( "react-dom/server");
+const parsePropInterface = require('./prop-editor/parsePropInterface')
+
+
 async function createServer() {
   const app = express()
 
@@ -25,9 +28,14 @@ async function createServer() {
         path.resolve(__dirname, 'index.html'),
         'utf-8'
       ))
-      const { Main } = await vite.ssrLoadModule(path.resolve(__dirname, "./preview/main.tsx"));
-      const appHtml = ReactDOMServer.renderToString(createElement(Main));
-      const html = template.replace(`<!--ssr-outlet-->`, appHtml)
+      const render = (await vite.ssrLoadModule('/studio/preview/entry-server.tsx')).render;
+      const ctx = {
+        Banner: parsePropInterface()
+      }
+      const appHtml = render(url, ctx)
+      const html = template
+        .replace(`<!--ssr-outlet-->`, appHtml)
+        .replace('// ssr-context', `window.__ssrContext = ${JSON.stringify({ componentsToPropShapes: ctx })}`)
 
       res.status(200).set({ 'Content-Type': 'text/html' }).end(html)
     } catch (e) {

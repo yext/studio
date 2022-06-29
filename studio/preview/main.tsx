@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Page from '../../src/pages/index';
-import { Studio } from './components/Studio';
+import { Studio, StudioProps } from './components/Studio';
 import SSRProvider from 'react-bootstrap/SSRProvider'
 
 import './index.css';
 import '../../dist/output.css';
 
-export function Main() {
+export function Main(props: StudioProps) {
   return (
     <React.StrictMode>
       <SSRProvider>
-        <Studio>
+        <Studio {...props}>
           <Page />
         </Studio>
       </SSRProvider>

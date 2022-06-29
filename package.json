@@ -22,15 +22,18 @@
   "homepage": "https://github.com/tmeyer2115/yext-starter-site-search#readme",
   "dependencies": {
     "@monaco-editor/react": "^4.4.5",
+    "@types/react": "^17.0.47",
+    "@types/react-dom": "^17.0.17",
+    "@typescript-eslint/typescript-estree": "^5.30.0",
     "@yext/answers-react-components": "^0.1.1-beta.8",
     "bootstrap": "^5.1.3",
     "daisyui": "^2.17.0",
     "handlebars": "^4.7.7",
     "lodash.clonedeep": "^4.5.0",
     "lodash.merge": "^4.6.2",
-    "react": "^17.0.0",
+    "react": "^17.0.2",
     "react-bootstrap": "^2.4.0",
-    "react-dom": "^17.0.0",
+    "react-dom": "^17.0.2",
     "react-toastify": "^9.0.5"
   },
   "devDependencies": {
