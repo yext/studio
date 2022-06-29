@@ -1,6 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const { Project, ts } = require('ts-morph')
+const { getComponentNodes } = require('./common')
 
 module.exports = function parsePageFile() {
   const file = path.resolve(__dirname, '../../src/pages/index.tsx')
@@ -11,10 +12,7 @@ module.exports = function parsePageFile() {
   })
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)
-  const usedComponents = [
-    ...sourceFile.getDescendantsOfKind(ts.SyntaxKind.JsxOpeningElement),
-    ...sourceFile.getDescendantsOfKind(ts.SyntaxKind.JsxSelfClosingElement)
-  ]
+  const usedComponents = getComponentNodes(sourceFile);
   return usedComponents.map(n => {
     const componentData = {
       name: n.compilerNode.tagName.escapedText,

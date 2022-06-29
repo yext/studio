@@ -1,7 +1,7 @@
 export interface BannerProps {
-  title?: string,
+  title?: string, // this is the title for doing things blahblah
   randomNum?: number,
-  someBool?: boolean
+  someBool?: boolean,
 }
 
 export function Banner(props: BannerProps) {

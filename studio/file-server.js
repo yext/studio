@@ -16,7 +16,7 @@ app.use(express.json());
 const template = hbs.compile(readFileSync('./studio/pages/template.tsx.hbs', 'utf8'));
 const mainTemplate = hbs.compile(readFileSync('./studio/preview/components/templates/main.tsx.hbs', 'utf8'));
 
-app.options('/*', function(request, response) {
+app.options('/*', function(_request, response) {
   response.setHeader('access-control-allow-headers', 'content-type');
   response.setHeader('access-control-allow-origin', '*');
   response.send();
@@ -89,7 +89,6 @@ app.post('/update-page-component-props', (req, res) => {
   res.setHeader('access-control-allow-origin', '*');
   try {
     const fullFilePath = path.resolve(pathToSrcDir, 'pages/index.tsx')
-    // writeFileSync(fullFilePath, req.body.value)
     updatePageFile(req.body.updatedState)
     res.send("successfully edited: " + path.relative(pathToSrcDir, fullFilePath));
   } catch (e) {

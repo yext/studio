@@ -1,35 +1,9 @@
 const fs = require('fs')
 const path = require('path')
 const { Project, ts } = require('ts-morph')
+const { getComponentNodes } = require('./common')
 
-// TODO turn this into a test fixture?
-// updatePageFile(
-//   [
-//     {
-//       "name": "Banner",
-//       "props": {
-//         "title": "first!",
-//         "randomNum": 1,
-//       }
-//     },
-//     {
-//       "name": "Banner",
-//       "props": {
-//         "title": "two",
-//         "randomNum": 2,
-//         "someBool": false
-//       }
-//     },
-//     {
-//       "name": "Banner",
-//       "props": {
-//         "title": "three",
-//         "randomNum": 3,
-//         "someBool": false
-//       }
-//     }
-//   ]
-// );
+
 
 module.exports = function updatePageFile(updatedState) {
   const file = path.resolve(__dirname, '../../src/pages/index.tsx')
@@ -40,11 +14,7 @@ module.exports = function updatePageFile(updatedState) {
   })
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)
-  const usedComponents =
-  sourceFile.getDescendants().filter(n => [
-    ts.SyntaxKind.JsxOpeningElement,
-    ts.SyntaxKind.JsxSelfClosingElement
-  ].includes(n.compilerNode.kind))
+  const usedComponents = getComponentNodes(sourceFile);
   usedComponents.forEach(n => {
     const name = n.compilerNode.tagName.escapedText;
     const i = updatedState.findIndex(s => s.name === name)
@@ -53,6 +23,11 @@ module.exports = function updatePageFile(updatedState) {
     }
     const updatedProps = updatedState[i].props;
     updatedState.shift()
+
+    // TODO I suspect in order to handle adding new props (not just changing preexisting ones)
+    // we will need to update the structure of the JsxAttributes, not just the individual JsxAttribute
+    // Ran into some difficulties and vague error messages.
+
     // console.log(n.getStructure())
     // console.log(convertUpdatedPropsToStructure(n.getStructure(), updatedProps))
     // console.log('---')

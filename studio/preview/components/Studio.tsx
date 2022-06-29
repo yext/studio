@@ -18,12 +18,10 @@ export interface StudioProps {
 }
 
 export function Studio(props: PropsWithChildren<StudioProps>) {
-  // const [propState, setComponentName] = useState('');
-
   function renderComponentOptionsDropdown() {
     return (
       <DropdownButton title='Add Component!' onSelect={() => {
-        // add component
+        // TODO add component
       }}>
         <Dropdown.Item eventKey='Banner'>Banner</Dropdown.Item>
       </DropdownButton>
