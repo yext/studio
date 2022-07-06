@@ -1,23 +1,27 @@
-import { PropsWithChildren, useState } from "react";
+import { useState } from "react";
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import PropEditor, { PropState, TSPropShape } from "./PropEditor";
 import SiteSettings from "./SiteSettings";
 import updatePageComponentProps from '../endpoints/updatePageComponentProps';
 import { ToastContainer, toast } from 'react-toastify';
+import PagePreview from './PagePreview';
+
+export type PageComponentsState = {
+  name: 'Banner',
+  props: Record<string, number | string | boolean>
+}[]
 
 export interface StudioProps {
   componentsToPropShapes: {
     Banner: TSPropShape
   },
+  // only supports a page named "index" for now
   componentsOnPage: {
-    index: {
-      name: 'Banner',
-      props: Record<string, number | string | boolean>
-    }[]
+    index: PageComponentsState
   }
 }
 
-export function Studio(props: PropsWithChildren<StudioProps>) {
+export function Studio(props: StudioProps) {
   function renderComponentOptionsDropdown() {
     return (
       <DropdownButton title='Add Component!' onSelect={() => {
@@ -38,7 +42,7 @@ export function Studio(props: PropsWithChildren<StudioProps>) {
         {renderComponentOptionsDropdown()}
         {renderPropEditors(props, pageComponentsState, setPageComponentsState)}
         <button className='btn' onClick={async () => {
-          console.log(pageComponentsState)
+          console.log('pagecomponentsstate', pageComponentsState)
           const text = await updatePageComponentProps(pageComponentsState)
           toast(text);
         }}>
@@ -46,9 +50,7 @@ export function Studio(props: PropsWithChildren<StudioProps>) {
         </button>
         <SiteSettings />
       </div>
-      <div className='w-full h-full'>
-        {props.children}
-      </div>
+      <PagePreview pageComponentsState={pageComponentsState}/>
     </div>
   );
 }

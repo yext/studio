@@ -4,7 +4,7 @@ export interface BannerProps {
   someBool?: boolean,
 }
 
-export function Banner(props: BannerProps) {
+export default function Banner(props: BannerProps) {
   const className = `w-fill p-3 flex flex-col items-center bg-lime-300 border-b-2 border-black`;
   return (
     <div className={className}>

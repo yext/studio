@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import Page from '../../src/pages/index';
+import React from 'react';
 import { Studio, StudioProps } from './components/Studio';
 import SSRProvider from 'react-bootstrap/SSRProvider'
 
@@ -10,9 +9,7 @@ export function Main(props: StudioProps) {
   return (
     <React.StrictMode>
       <SSRProvider>
-        <Studio {...props}>
-          <Page />
-        </Studio>
+        <Studio {...props} />
       </SSRProvider>
     </React.StrictMode>
   );

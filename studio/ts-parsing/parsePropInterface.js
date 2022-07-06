@@ -14,5 +14,6 @@ module.exports = function parsePropInterface() {
     const type = propSignature.typeAnnotation.typeAnnotation.type
     propShape[name] = type
   }
+  console.log(propShape)
   return propShape
 }
