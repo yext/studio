@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import { useState } from 'react'
 import { PageComponentsState } from './Studio'
 
@@ -16,7 +16,9 @@ export default function PagePreview({
   )
 }
 
-function useComponents(pageComponentsState: PageComponentsState) {
+function useComponents(
+  pageComponentsState: PageComponentsState
+): [Record<string, FunctionComponent>, PageComponentsState] {
   const [componentNameToComponent, setComponentNameToComponent] = useState({})
   const [loadedComponents, setLoadedComponents] = useState<PageComponentsState>([])
 
