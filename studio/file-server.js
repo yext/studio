@@ -1,8 +1,8 @@
 const express = require('express');
 const mkdirp = require('mkdirp')
-const hbs = require('handlebars');
-const merge = require('lodash.merge');
-const cloneDeep = require('lodash.clonedeep');
+// const hbs = require('handlebars');
+const merge = require('lodash/merge');
+const cloneDeep = require('lodash/clonedeep');
 const { writeFileSync, readFileSync } = require('fs');
 const path = require('path');
 const updatePageFile = require('./ts-parsing/updatePageFile')
@@ -13,8 +13,8 @@ const app = express();
 
 app.use(express.json());
 
-const template = hbs.compile(readFileSync('./studio/pages/template.tsx.hbs', 'utf8'));
-const mainTemplate = hbs.compile(readFileSync('./studio/preview/components/templates/main.tsx.hbs', 'utf8'));
+// const template = hbs.compile(readFileSync('./studio/pages/template.tsx.hbs', 'utf8'));
+// const mainTemplate = hbs.compile(readFileSync('./studio/preview/components/templates/main.tsx.hbs', 'utf8'));
 
 app.options('/*', function(_request, response) {
   response.setHeader('access-control-allow-headers', 'content-type');
@@ -60,14 +60,14 @@ app.post('/update/*', function(request, response){
 app.post('/create-page', function(request, response){
   response.setHeader('access-control-allow-origin', '*');
   response.send();
-  const pageConfig = request.body;
-  const { id } = pageConfig;
+  // const pageConfig = request.body;
+  // const { id } = pageConfig;
 
-  mkdirp.sync(`../src/pages/${id}`);
-  writeFileSync(`../src/pages/${id}/${id}.tsx`, template(pageConfig));
-  writeFileSync(`../src/pages/${id}/${id}.json`, JSON.stringify(pageConfig, null, 2));
+  // mkdirp.sync(`../src/pages/${id}`);
+  // writeFileSync(`../src/pages/${id}/${id}.tsx`, template(pageConfig));
+  // writeFileSync(`../src/pages/${id}/${id}.json`, JSON.stringify(pageConfig, null, 2));
 
-  writeFileSync('./main.tsx', mainTemplate(pageConfig));
+  // writeFileSync('./main.tsx', mainTemplate(pageConfig));
 });
 
 app.post('/write-file/:filePath', (req, res) => {
