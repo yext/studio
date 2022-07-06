@@ -7,8 +7,7 @@
     "dev:fileserver": "nodemon studio/file-server.js",
     "dev:tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "dev:vite": "nodemon studio/ssr-server.js",
-    "dev:browser": "node -e \"require('openurl').open('http://localhost:3000')\"",
-    "dev": "npm-run-all -p dev:fileserver dev:tailwind dev:vite dev:browser",
+    "dev": "npm-run-all -p dev:fileserver dev:tailwind dev:vite",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -46,7 +45,7 @@
     "mkdirp": "^1.0.4",
     "nodemon": "^2.0.18",
     "npm-run-all": "^4.1.5",
-    "openurl": "^1.1.1",
+    "react-dev-utils": "^12.0.1",
     "tailwindcss": "^3.1.2",
     "vite": "^2.9.12"
   }

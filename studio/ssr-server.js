@@ -3,6 +3,7 @@ const path = require('path')
 const express = require('express')
 const { createServer: createViteServer } = require('vite')
 const react = require('@vitejs/plugin-react');
+const openBrowser = require('react-dev-utils/openBrowser');
 const parsePageFile = require('./ts-parsing/parsePageFile')
 const parsePropInterface = require('./ts-parsing/parsePropInterface')
 
@@ -47,6 +48,8 @@ async function createServer() {
   })
 
   app.listen(3000)
+
+  openBrowser('http://localhost:3000/');
 }
 
 createServer()
