@@ -1,15 +1,11 @@
 const fs = require('fs')
 const path = require('path')
 const { Project, ts } = require('ts-morph')
-const { getComponentNodes } = require('./common')
+const { getComponentNodes, tsCompilerOptions } = require('./common')
 
 module.exports = function parsePageFile() {
   const file = path.resolve(__dirname, '../../src/pages/index.tsx')
-  const p = new Project({
-    compilerOptions: {
-      jsx: true
-    }
-  })
+  const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)
   const usedComponents = getComponentNodes(sourceFile);

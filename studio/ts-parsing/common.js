@@ -6,3 +6,9 @@ exports.getComponentNodes = function(sourceFile) {
     ts.SyntaxKind.JsxSelfClosingElement
   ].includes(n.compilerNode.kind))
 }
+
+exports.tsCompilerOptions = {
+  compilerOptions: {
+    jsx: true
+  }
+}
