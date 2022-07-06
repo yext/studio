@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { Dropdown, DropdownButton } from "react-bootstrap";
-import PropEditor, { PropState, TSPropShape } from "./PropEditor";
-import SiteSettings from "./SiteSettings";
-import updatePageComponentProps from '../endpoints/updatePageComponentProps';
-import { ToastContainer, toast } from 'react-toastify';
-import PagePreview from './PagePreview';
+import { useState } from 'react'
+import { Dropdown, DropdownButton } from 'react-bootstrap'
+import PropEditor, { PropState, TSPropShape } from './PropEditor'
+import SiteSettings from './SiteSettings'
+import updatePageComponentProps from '../endpoints/updatePageComponentProps'
+import { ToastContainer, toast } from 'react-toastify'
+import PagePreview from './PagePreview'
 
 export type PageComponentsState = {
   name: 'Banner',
@@ -29,10 +29,10 @@ export function Studio(props: StudioProps) {
       }}>
         <Dropdown.Item eventKey='Banner'>Banner</Dropdown.Item>
       </DropdownButton>
-    );
+    )
   }
 
-  const [pageComponentsState, setPageComponentsState] = useState(props.componentsOnPage.index);
+  const [pageComponentsState, setPageComponentsState] = useState(props.componentsOnPage.index)
 
   return (
     <div className='h-screen w-screen flex flex-row'>
@@ -44,7 +44,7 @@ export function Studio(props: StudioProps) {
         <button className='btn' onClick={async () => {
           console.log('pagecomponentsstate', pageComponentsState)
           const text = await updatePageComponentProps(pageComponentsState)
-          toast(text);
+          toast(text)
         }}>
           Update Component Props
         </button>
@@ -52,10 +52,14 @@ export function Studio(props: StudioProps) {
       </div>
       <PagePreview pageComponentsState={pageComponentsState}/>
     </div>
-  );
+  )
 }
 
-function renderPropEditors(props: StudioProps, pageComponentsState: any, setPageComponentsState: any) {
+function renderPropEditors(
+  props: StudioProps,
+  pageComponentsState: PageComponentsState,
+  setPageComponentsState: (val: PageComponentsState) => void
+) {
   return pageComponentsState.map((c, i) => {
     const setPropState = (val: PropState) => {
       console.log('setting updated prop state', val, ' for component', c.name)
@@ -65,7 +69,7 @@ function renderPropEditors(props: StudioProps, pageComponentsState: any, setPage
     }
     if (!(c.name in props.componentsToPropShapes)) {
       console.error('unknown component', c.name, 'gracefully skipping for now.')
-      return;
+      return null
     }
     return (
       <PropEditor

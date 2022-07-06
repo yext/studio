@@ -1,11 +1,11 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import parsePropInterface from './ts-parsing/parsePropInterface';
-import parsePageFile from './ts-parsing/parsePageFile';
-import path from 'path';
-import openBrowser from 'react-dev-utils/openBrowser';
+import parsePropInterface from './ts-parsing/parsePropInterface'
+import parsePageFile from './ts-parsing/parsePageFile'
+import path from 'path'
+import openBrowser from 'react-dev-utils/openBrowser'
 
-openBrowser('http://localhost:3000/studio');
+openBrowser('http://localhost:3000/studio')
 
 export default defineConfig({
   plugins: [react(), yextStudio()],
@@ -25,7 +25,7 @@ export default defineConfig({
  * for the initial load.
  */
 function yextStudio() {
-  const virtualModuleId = 'virtual:yext-studio';
+  const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
   const ctx = {
@@ -35,7 +35,7 @@ function yextStudio() {
     componentsOnPage: {
       index: parsePageFile()
     }
-  };
+  }
 
   return {
     name: 'yext-studio-vite-plugin',
@@ -46,7 +46,7 @@ function yextStudio() {
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        return `export default ${JSON.stringify(ctx)}`;
+        return `export default ${JSON.stringify(ctx)}`
       }
     }
   }

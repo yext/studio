@@ -8,7 +8,8 @@
     "dev:tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "dev:vite": "vite --config studio/vite.config.ts",
     "dev": "npm-run-all -p dev:fileserver dev:tailwind dev:vite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint studio"
   },
   "repository": {
     "type": "git",
@@ -27,8 +28,10 @@
     "@typescript-eslint/typescript-estree": "^5.30.0",
     "@vitejs/plugin-react": "^1.3.2",
     "@yext/answers-react-components": "^0.2.0-beta.184",
+    "@yext/eslint-config-slapshot": "^0.4.0",
     "bootstrap": "^5.1.3",
     "daisyui": "^2.17.0",
+    "eslint": "^8.19.0",
     "express": "^4.18.1",
     "jest": "^28.1.2",
     "lodash": "^4.17.21",

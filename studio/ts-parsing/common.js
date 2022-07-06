@@ -1,14 +1,14 @@
-const { Project, ts } = require('ts-morph')
+const { ts } = require('ts-morph');
 
 exports.getComponentNodes = function(sourceFile) {
   return sourceFile.getDescendants().filter(n => [
     ts.SyntaxKind.JsxOpeningElement,
     ts.SyntaxKind.JsxSelfClosingElement
-  ].includes(n.compilerNode.kind))
-}
+  ].includes(n.compilerNode.kind));
+};
 
 exports.tsCompilerOptions = {
   compilerOptions: {
     jsx: true
   }
-}
+};

@@ -6,5 +6,5 @@ export default async function writeStudioFile(path, content) {
     },
     body: content
   })
-  return res.text();
+  return res.text()
 }

@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require('fs');
 const updatePageFile = require('./updatePageFile');
 
 // TODO there is currently a bug where we are not able to properly set props that are not yet set.
@@ -16,33 +16,33 @@ export default function() {
 }`;
 
 it('updates correctly', () => {
-  jest.spyOn(fs, 'writeFileSync')
+  jest.spyOn(fs, 'writeFileSync');
   updatePageFile(
     [
       {
-        "name": "Banner",
-        "props": {
-          "title": "first!",
-          "randomNum": 1,
+        'name': 'Banner',
+        'props': {
+          'title': 'first!',
+          'randomNum': 1,
         }
       },
       {
-        "name": "Banner",
-        "props": {
-          "title": "two",
-          "randomNum": 2,
-          "someBool": false
+        'name': 'Banner',
+        'props': {
+          'title': 'two',
+          'randomNum': 2,
+          'someBool': false
         }
       },
       {
-        "name": "Banner",
-        "props": {
-          "title": "three",
-          "randomNum": 3,
-          "someBool": false
+        'name': 'Banner',
+        'props': {
+          'title': 'three',
+          'randomNum': 3,
+          'someBool': false
         }
       }
     ]
   );
-  expect(fs.writeFileSync).toHaveBeenCalledWith("/Users/oshi/studio-prototype/src/pages/index.tsx", expected)
-})
+  expect(fs.writeFileSync).toHaveBeenCalledWith('/Users/oshi/studio-prototype/src/pages/index.tsx', expected);
+});

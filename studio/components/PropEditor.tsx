@@ -1,8 +1,8 @@
-export type TSPropShape = Record<string, 'TSStringKeyword' | 'TSNumberKeyword' | 'TSBooleanKeyword'>;
+export type TSPropShape = Record<string, 'TSStringKeyword' | 'TSNumberKeyword' | 'TSBooleanKeyword'>
 
 interface PropEditorProps {
-  propState: PropState
-  propShape: TSPropShape
+  propState: PropState,
+  propShape: TSPropShape,
   setPropState: (val: PropState) => void
 }
 
@@ -27,7 +27,7 @@ export default function PropEditor({
           const propType = propShape[propName]
           const propValue = propState[propName] as any
           const sharedProps ={
-            key: propName, 
+            key: propName,
             propName,
             propValue,
             onChange: val => updatePropState(propName, val)
@@ -39,6 +39,7 @@ export default function PropEditor({
           } else if (propType === 'TSNumberKeyword') {
             return <NumProp {...sharedProps}/>
           }
+          return null
         })
       }
     </>
