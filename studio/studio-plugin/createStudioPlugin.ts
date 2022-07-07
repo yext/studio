@@ -1,6 +1,6 @@
 import { Plugin } from 'vite'
-import parsePropInterface from './ts-parsing/parsePropInterface'
-import parsePageFile from './ts-parsing/parsePageFile'
+import parsePropInterface from './ts-morph/parsePropInterface'
+import parsePageFile from './ts-morph/parsePageFile'
 import configureServer from './configureServer'
 
 /**

@@ -1,7 +1,7 @@
 import { ViteDevServer, WebSocketCustomListener } from 'vite'
 import { MessageID, StudioEventMap } from '../shared/messages'
 import getRootPath from './getRootPath'
-import updatePageFile from './ts-parsing/updatePageFile'
+import updatePageFile from './ts-morph/updatePageFile'
 
 export default function configureStudioServer(server: ViteDevServer) {
   /** Register a listener for the given messageId, infer it's payload type, and perform error handling */
