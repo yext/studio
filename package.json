@@ -21,21 +21,11 @@
   },
   "homepage": "https://github.com/tmeyer2115/yext-starter-site-search#readme",
   "dependencies": {
-    "@types/mkdirp": "^1.0.2",
-    "@types/react": "^18.0.15",
-    "@types/react-dom": "^18.0.6",
     "@typescript-eslint/typescript-estree": "^5.30.0",
     "@vitejs/plugin-react": "^1.3.2",
     "@yext/answers-react-components": "^0.2.0-beta.184",
-    "@yext/eslint-config-slapshot": "^0.4.0",
     "daisyui": "^2.17.0",
-    "eslint": "^8.19.0",
     "express": "^4.18.1",
-    "jest": "^28.1.2",
-    "lodash": "^4.17.21",
-    "mkdirp": "^1.0.4",
-    "nodemon": "^2.0.18",
-    "npm-run-all": "^4.1.5",
     "react": "^18.2.0",
     "react-dev-utils": "^12.0.1",
     "react-dom": "^18.2.0",
@@ -43,5 +33,13 @@
     "tailwindcss": "^3.1.2",
     "ts-morph": "^15.1.0",
     "vite": "^2.9.12"
+  },
+  "devDependencies": {
+    "@yext/eslint-config-slapshot": "^0.4.0",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "eslint": "^8.19.0",
+    "jest": "^28.1.2",
+    "npm-run-all": "^4.1.5"
   }
 }

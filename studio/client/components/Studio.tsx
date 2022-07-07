@@ -2,10 +2,10 @@ import { useState } from 'react'
 import PropEditor, { PropState } from './PropEditor'
 import { TSPropShape } from '../../shared/models'
 import SiteSettings from './SiteSettings'
-import updatePageComponentProps from '../endpoints/updatePageComponentProps'
+import sendMessage from '../messaging/sendMessage'
 import PagePreview from './PagePreview'
-import '../endpoints/ServerDataContext'
 import { PageComponentsState } from '../../shared/models'
+import { MessageID } from '../../shared/messages'
 
 export interface StudioProps {
   componentsToPropShapes: {
@@ -25,9 +25,7 @@ export default function Studio(props: StudioProps) {
       <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
         <h1 className='text-3xl text-white'>Yext Studio</h1>
         {renderPropEditors(props, pageComponentsState, setPageComponentsState)}
-        <button className='btn' onClick={async () => {
-          updatePageComponentProps(pageComponentsState)
-        }}>
+        <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, pageComponentsState)}>
           Update Component Props
         </button>
         <SiteSettings />

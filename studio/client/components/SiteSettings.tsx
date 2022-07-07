@@ -1,6 +1,6 @@
 // TODO make this use a regular UI and not a json editor
 export default function SiteSettings() {
-  return null;
+  return null
 
   return (
     <div>

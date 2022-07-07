@@ -1,7 +1,7 @@
 import { Plugin } from 'vite'
 import parsePropInterface from './ts-parsing/parsePropInterface'
 import parsePageFile from './ts-parsing/parsePageFile'
-import setupStudioServer from './configureStudioServer'
+import configureServer from './configureServer'
 
 /**
  * Handles server-client communication.
@@ -34,6 +34,6 @@ export default function createStudioPlugin(): Plugin {
         return `export default ${JSON.stringify(ctx)}`
       }
     },
-    configureServer: setupStudioServer
+    configureServer
   }
 }
