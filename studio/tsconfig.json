@@ -19,7 +19,7 @@
   },
   "include": [
     "client",
-    "server",
+    "yext-studio-plugin",
     "vite.config.ts"
   ]
 }
