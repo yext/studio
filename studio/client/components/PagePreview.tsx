@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react'
 import { useState } from 'react'
-import { PageComponentsState } from './Studio'
+import { PageComponentsState } from '../../shared/models'
 
 export default function PagePreview({
   pageComponentsState
@@ -13,7 +13,7 @@ export default function PagePreview({
     <div className='w-full h-full'>
       {loadedComponents.map((c, i) => React.createElement(componentNameToComponent[c.name], {
         ...c.props,
-        key: c.name + '-' + i
+        key: `${c.name}-${i}`
       }))}
     </div>
   )

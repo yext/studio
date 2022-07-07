@@ -1,9 +1,7 @@
-if (import.meta.hot) {
-  import.meta.hot.on('my:ack', (data) => {
-    console.log('my:ack', data.msg)
-  })
-}
+import { createContext } from 'react'
 
 export function sendFromClient() {
   import.meta.hot?.send('my:from-client', { msg: 'Hey!' })
 }
+
+// const ServerDataContext = createContext();

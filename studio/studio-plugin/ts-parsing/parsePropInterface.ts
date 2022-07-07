@@ -3,6 +3,7 @@ import fs from 'fs'
 import getRootPath from '../getRootPath'
 
 // TODO Currently only supports TSStringKeyword TSNumberKeyword TSBooleanKeyword and is hardcoded to Banner.tsx
+// TODO use ts-morph instead.
 export default function parsePropInterface() {
   const file = fs.readFileSync(getRootPath('src/components/Banner.tsx')).toString()
   const p = parse(file, { jsx: true })

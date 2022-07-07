@@ -1,15 +1,8 @@
-export default async function updatePageComponentProps(
-  updatedState: {
-    name: 'Banner',
-    props: Record<string, number | string | boolean>
-  }[]
+import { PageComponentsState } from '../../shared/models'
+import MessageIDs from '../../shared/MessageIDs'
+
+export default function updatePageComponentProps(
+  updatedState: PageComponentsState
 ) {
-  const res = await fetch('http://127.0.0.1:8080/update-page-component-props', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ updatedState })
-  })
-  return res.text()
+  import.meta.hot?.send(MessageIDs.UpdatePageComponentProps, updatedState)
 }

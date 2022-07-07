@@ -1,4 +1,4 @@
-export type TSPropShape = Record<string, 'TSStringKeyword' | 'TSNumberKeyword' | 'TSBooleanKeyword'>
+import { TSPropShape } from '../../shared/models'
 
 interface PropEditorProps {
   propState: PropState,

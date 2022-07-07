@@ -1,3 +1,9 @@
+/**
+ * @deprecated
+ * Use vite messaging through the studio plugin instead.
+ * This file is scheduled to be deleted.
+ */
+
 const express = require('express');
 // const mkdirp = require('mkdirp');
 // const hbs = require('handlebars');
