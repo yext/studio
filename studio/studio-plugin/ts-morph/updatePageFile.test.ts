@@ -1,5 +1,5 @@
-const fs = require('fs')
-const updatePageFile = require('./updatePageFile')
+import fs from 'fs'
+import updatePageFile from './updatePageFile'
 
 // TODO there is currently a bug where we are not able to properly set props that are not yet set.
 const expected = `import { Banner } from '../components/Banner';

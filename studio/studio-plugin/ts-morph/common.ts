@@ -1,4 +1,4 @@
-import { Identifier, JsxOpeningElement, JsxSelfClosingElement, SourceFile, ts } from 'ts-morph'
+import { JsxOpeningElement, JsxSelfClosingElement, SourceFile, ts } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 
 export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
