@@ -5,6 +5,7 @@ import setupStudioServer from './configureStudioServer'
 
 /**
  * Handles server-client communication.
+ *
  * This inclues providing a vite virtual module so that server side data can be passed to the front end
  * for the initial load, and messaging using the vite HMR API.
  */

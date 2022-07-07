@@ -1,4 +1,4 @@
-import { ViteDevServer } from 'vite';
+import { ViteDevServer } from 'vite'
 
 export default function configureStudioServer(server: ViteDevServer) {
   server.ws.on('my:from-client', (data, client) => {

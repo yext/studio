@@ -5,7 +5,7 @@ import SiteSettings from './SiteSettings'
 import updatePageComponentProps from '../endpoints/updatePageComponentProps'
 import { ToastContainer, toast } from 'react-toastify'
 import PagePreview from './PagePreview'
-import '../endpoints/ServerDataContext';
+import '../endpoints/ServerDataContext'
 import { sendFromClient } from '../endpoints/ServerDataContext'
 
 export type PageComponentsState = {

@@ -8,7 +8,7 @@
     "dev:vite": "vite --config studio/vite.config.ts",
     "dev": "npm-run-all -p dev:tailwind dev:vite",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint studio"
+    "lint": "eslint studio --fix"
   },
   "repository": {
     "type": "git",

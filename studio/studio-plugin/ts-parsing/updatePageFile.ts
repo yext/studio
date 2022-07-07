@@ -1,23 +1,23 @@
-const fs = require('fs');
-const path = require('path');
-const { Project, ts } = require('ts-morph');
-const getRootPath = require('../getRootPath');
-const { getComponentNodes, tsCompilerOptions } = require('./common');
+import fs from 'fs'
+import path from 'path'
+import { Project, ts } from 'ts-morph'
+import getRootPath from '../getRootPath'
+import { getComponentNodes, tsCompilerOptions } from './common'
 
-module.exports = function updatePageFile(updatedState) {
-  const file = path.resolve(getRootPath('src/pages/index.tsx'));
-  const p = new Project(tsCompilerOptions);
-  p.addSourceFilesAtPaths(file);
-  const sourceFile = p.getSourceFileOrThrow(file);
-  const usedComponents = getComponentNodes(sourceFile);
+export default function updatePageFile(updatedState) {
+  const file = path.resolve(getRootPath('src/pages/index.tsx'))
+  const p = new Project(tsCompilerOptions)
+  p.addSourceFilesAtPaths(file)
+  const sourceFile = p.getSourceFileOrThrow(file)
+  const usedComponents = getComponentNodes(sourceFile)
   usedComponents.forEach(n => {
-    const name = n.compilerNode.tagName.escapedText;
-    const i = updatedState.findIndex(s => s.name === name);
+    const name = n.compilerNode.tagName.escapedText
+    const i = updatedState.findIndex(s => s.name === name)
     if (i === -1) {
-      return;
+      return
     }
-    const updatedProps = updatedState[i].props;
-    updatedState.shift();
+    const updatedProps = updatedState[i].props
+    updatedState.shift()
 
     // TODO I suspect in order to handle adding new props (not just changing preexisting ones)
     // we will need to update the structure of the JsxAttributes, not just the individual JsxAttribute
@@ -29,21 +29,21 @@ module.exports = function updatePageFile(updatedState) {
     // n.set(convertUpdatedPropsToStructure(n.getStructure(), updatedProps))
 
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
-      const structure = a.getStructure();
-      const val = updatedProps[structure.name];
+      const structure = a.getStructure()
+      const val = updatedProps[structure.name]
       if (val === undefined) {
-        return;
+        return
       }
-      console.log(structure);
-      structure.initializer = typeof val === 'string' ? `'${val}'` : `{${val}}`;
+      console.log(structure)
+      structure.initializer = typeof val === 'string' ? `'${val}'` : `{${val}}`
       // console.log(structure, val)
-      a.set(structure);
-    });
-  });
-  const updatedFileText = sourceFile.getFullText();
+      a.set(structure)
+    })
+  })
+  const updatedFileText = sourceFile.getFullText()
   // console.log(updatedFileText);
-  fs.writeFileSync(file, updatedFileText);
-};
+  fs.writeFileSync(file, updatedFileText)
+}
 
 // function convertUpdatedPropsToStructure(componentName, updatedProps) {
 //   return {
