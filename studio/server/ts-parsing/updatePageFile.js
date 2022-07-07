@@ -1,10 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 const { Project, ts } = require('ts-morph');
+const getRootPath = require('../getRootPath');
 const { getComponentNodes, tsCompilerOptions } = require('./common');
 
 module.exports = function updatePageFile(updatedState) {
-  const file = path.resolve(__dirname, '../../src/pages/index.tsx');
+  const file = path.resolve(getRootPath('src/pages/index.tsx'));
   const p = new Project(tsCompilerOptions);
   p.addSourceFilesAtPaths(file);
   const sourceFile = p.getSourceFileOrThrow(file);

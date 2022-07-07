@@ -1,21 +1,25 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import parsePropInterface from './ts-parsing/parsePropInterface'
-import parsePageFile from './ts-parsing/parsePageFile'
+import parsePropInterface from './server/ts-parsing/parsePropInterface'
+import parsePageFile from './server/ts-parsing/parsePageFile'
 import path from 'path'
 import openBrowser from 'react-dev-utils/openBrowser'
 
-openBrowser('http://localhost:3000/studio')
 
-export default defineConfig({
-  plugins: [react(), yextStudio()],
-  root: path.resolve(__dirname, '..'),
-  preview: {
-    port: 3000
-  },
-  build: {
-    rollupOptions: {
-      input: '/studio/index.html'
+export default defineConfig((args) => {
+  if (args.mode === 'development' && args.command === 'serve') {
+    openBrowser('http://localhost:3000/studio/client/')
+  }
+  return {
+    plugins: [react(), yextStudio()],
+    root: path.resolve(__dirname, '..'),
+    preview: {
+      port: 3000
+    },
+    build: {
+      rollupOptions: {
+        input: '/studio/client/index.html'
+      }
     }
   }
 })

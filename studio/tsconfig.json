@@ -13,12 +13,13 @@
     "sourceMap": true,
     "jsx": "react-jsx",
     "target": "esnext",
-    "types": ["vite/client"]
+    "types": [
+      "vite/client"
+    ]
   },
   "include": [
-    "src"
-  ],
-  "exclude": [
-    "src/**/*.test.*"
+    "client",
+    "server",
+    "vite.config.ts"
   ]
 }

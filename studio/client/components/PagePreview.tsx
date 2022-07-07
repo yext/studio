@@ -11,7 +11,10 @@ export default function PagePreview({
 
   return (
     <div className='w-full h-full'>
-      {loadedComponents.map(c => React.createElement(componentNameToComponent[c.name], c.props))}
+      {loadedComponents.map((c, i) => React.createElement(componentNameToComponent[c.name], {
+        ...c.props,
+        key: c.name + '-' + i
+      }))}
     </div>
   )
 }
@@ -25,9 +28,9 @@ function useComponents(
   useEffect(() => {
     const componentNames = [...new Set(pageComponentsState.map(p => p.name))]
     const componentPromises = Promise.all(componentNames.map(name => {
-      return import('../../../src/components/' + name + '.tsx').then(module => ({
+      return import(`../../../src/components/${name}.tsx`).then(module => ({
         name,
-        Component: module.default ?? module[name] as React.Component
+        Component: module.default ?? module[name] as FunctionComponent
       }))
     }))
     componentPromises.then(components => {

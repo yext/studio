@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev:fileserver": "nodemon studio/file-server.js",
+    "dev:fileserver": "nodemon studio/server/file-server.js",
     "dev:tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
     "dev:vite": "vite --config studio/vite.config.ts",
     "dev": "npm-run-all -p dev:fileserver dev:tailwind dev:vite",

@@ -7,7 +7,7 @@ import { createRoot } from 'react-dom/client'
 import virtualStudioContext from 'virtual:yext-studio'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
-import '../dist/output.css'
+import '../../dist/output.css'
 
 export function Main() {
   return (
