@@ -1,7 +1,7 @@
 import path from 'path'
 import { Project, ts, JsxAttribute } from 'ts-morph'
 import getRootPath from '../getRootPath'
-import { getComponentNodes, tsCompilerOptions } from './common'
+import { getComponentName, getComponentNodes, tsCompilerOptions } from './common'
 
 export default function parsePageFile() {
   const file = path.resolve(getRootPath('src/pages/index.tsx'))
@@ -11,11 +11,14 @@ export default function parsePageFile() {
   const usedComponents = getComponentNodes(sourceFile)
   return usedComponents.map(n => {
     const componentData = {
-      name: n.compilerNode.tagName.escapedText,
+      name: getComponentName(n),
       props: {}
     }
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
-      const propName = a.getFirstDescendantByKind(ts.SyntaxKind.Identifier).compilerNode.text
+      const propName = a.getFirstDescendantByKind(ts.SyntaxKind.Identifier)?.compilerNode.text
+      if (!propName) {
+        throw new Error('Could not parse page file')
+      }
       const propValue = getPropValue(a)
       componentData.props[propName] = propValue
     })

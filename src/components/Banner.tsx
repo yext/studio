@@ -11,6 +11,8 @@ export default function Banner(props: BannerProps) {
       <h1 className='text-3xl p-1'>
         {props.title || 'Default Title'}
       </h1>
+      {props.randomNum && <h2>{props.randomNum}</h2>}
+      <h3>{props.someBool ? 'true' : 'false'}</h3>
     </div>
   );
 }

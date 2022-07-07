@@ -1,17 +1,18 @@
 import fs from 'fs'
 import path from 'path'
 import { Project, ts } from 'ts-morph'
+import { PageComponentsState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getComponentNodes, tsCompilerOptions } from './common'
+import { getComponentName, getComponentNodes, tsCompilerOptions } from './common'
 
-export default function updatePageFile(updatedState) {
+export default function updatePageFile(updatedState: PageComponentsState) {
   const file = path.resolve(getRootPath('src/pages/index.tsx'))
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)
   const usedComponents = getComponentNodes(sourceFile)
   usedComponents.forEach(n => {
-    const name = n.compilerNode.tagName.escapedText
+    const name = getComponentName(n)
     const i = updatedState.findIndex(s => s.name === name)
     if (i === -1) {
       return
