@@ -1,4 +1,5 @@
-import Banner from '../components/Banner';
+import Banner, { BannerProps, defaultClassNames as RenamedImportedClassNames } from './components/Banner';
+import { ColorProp } from './components/SpecialProps'
 
 export default function() {
   return (
