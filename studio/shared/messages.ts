@@ -6,5 +6,15 @@ export enum MessageID {
 }
 
 export interface StudioEventMap extends CustomEventMap {
-  [MessageID.UpdatePageComponentProps]: PageComponentsState
+  [MessageID.UpdatePageComponentProps]: {
+    state: PageComponentsState,
+    path: 'src/pages/index.tsx'
+  }
+}
+
+export type ResponseEventMap = CustomEventMap & {
+  [key in MessageID]: {
+    type: 'success' | 'error'
+    msg: string
+  }
 }

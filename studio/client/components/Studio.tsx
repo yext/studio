@@ -25,7 +25,10 @@ export default function Studio(props: StudioProps) {
       <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
         <h1 className='text-3xl text-white'>Yext Studio</h1>
         {renderPropEditors(props, pageComponentsState, setPageComponentsState)}
-        <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, pageComponentsState)}>
+        <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
+          path: 'src/pages/index.tsx',
+          state: pageComponentsState
+        })}>
           Update Component Props
         </button>
         <SiteSettings />

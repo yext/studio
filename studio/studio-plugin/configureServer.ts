@@ -1,30 +1,36 @@
-import { ViteDevServer, WebSocketCustomListener } from 'vite'
-import { MessageID, StudioEventMap } from '../shared/messages'
-import getRootPath from './getRootPath'
+import { ViteDevServer, WebSocketCustomListener, WebSocketClient } from 'vite'
+import { MessageID, StudioEventMap, ResponseEventMap } from '../shared/messages'
 import updatePageFile from './ts-morph/updatePageFile'
 
 export default function configureStudioServer(server: ViteDevServer) {
   /** Register a listener for the given messageId, infer it's payload type, and perform error handling */
   function registerListener(
     messageId: MessageID,
-    listener: WebSocketCustomListener<StudioEventMap[typeof messageId]>
+    listener: (data: StudioEventMap[typeof messageId]) => string
   ) {
-    server.ws.on(messageId, (data, client) => {
+    const handleRes: WebSocketCustomListener<StudioEventMap[typeof messageId]> = (data, client) => {
       try {
-        listener(data, client)
+        const msg = listener(data)
+        sendClientMsg(client, messageId, { type: 'success', msg });
       } catch (e: any) {
-        if (e?.toString && typeof e.toString === 'function') {
-          client.send(messageId, e.toString())
-        } else {
-          client.send(messageId, 'An unknown error occurred')
-        }
+        const msg = e.toString()
+        console.error(e)
+        sendClientMsg(client, messageId, { type: 'error', msg });
       }
-    })
+    }
+    server.ws.on(messageId, handleRes)
   }
 
-  registerListener(MessageID.UpdatePageComponentProps, (data, client) => {
-    const fullFilePath = getRootPath('src/pages/index.tsx')
-    updatePageFile(data)
-    client.send(MessageID.UpdatePageComponentProps, 'successfully edited: ' + fullFilePath)
+  registerListener(MessageID.UpdatePageComponentProps, data => {
+    updatePageFile(data.state, data.path)
+    return 'successfully edited: ' + data.path
   })
+}
+
+function sendClientMsg(
+  client: WebSocketClient,
+  messageId: MessageID,
+  payload: ResponseEventMap[typeof messageId]
+) {
+  client.send(messageId, payload)
 }
