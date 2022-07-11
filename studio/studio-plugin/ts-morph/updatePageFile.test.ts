@@ -6,6 +6,7 @@ jest.mock('../getRootPath')
 // TODO there is currently a bug where we are not able to properly set props that are not yet set.
 const expected = `import Banner, { BannerProps, defaultClassNames as RenamedImportedClassNames } from './components/Banner';
 import { ColorProp } from './components/SpecialProps'
+
 export default function() {
   return (
     <>
