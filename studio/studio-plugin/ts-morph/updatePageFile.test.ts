@@ -1,10 +1,11 @@
 import fs from 'fs'
 import updatePageFile from './updatePageFile'
 
-// TODO there is currently a bug where we are not able to properly set props that are not yet set.
-const expected = `import { Banner } from '../components/Banner';
-// import Layout from '../layouts/layout';
+jest.mock('../getRootPath')
 
+// TODO there is currently a bug where we are not able to properly set props that are not yet set.
+const expected = `import Banner, { BannerProps, defaultClassNames as RenamedImportedClassNames } from './components/Banner';
+import { ColorProp } from './components/SpecialProps'
 export default function() {
   return (
     <>
@@ -43,6 +44,6 @@ it('updates correctly', () => {
         }
       }
     ]
-  )
-  expect(fs.writeFileSync).toHaveBeenCalledWith('/Users/oshi/studio-prototype/src/pages/index.tsx', expected)
+  , 'testPage.tsx')
+  expect(fs.writeFileSync).toHaveBeenCalledWith(expect.stringContaining('testPage.tsx'), expected)
 })
