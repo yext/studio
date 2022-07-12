@@ -1,24 +1,15 @@
 import fs from 'fs'
+import getRootPath from '../getRootPath'
 import updatePageFile from './updatePageFile'
 
 jest.mock('../getRootPath')
 
-// TODO there is currently a bug where we are not able to properly set props that are not yet set.
-const expected = `import Banner, { BannerProps, defaultClassNames as RenamedImportedClassNames } from './components/Banner';
-import { ColorProp } from './components/SpecialProps'
+beforeEach(() => {
+  jest.spyOn(fs, 'writeFileSync').mockImplementation()
+  jest.clearAllMocks()
+})
 
-export default function() {
-  return (
-    <>
-      <Banner title='first!' randomNum={1}/>
-      <Banner/>
-      <Banner title='three' randomNum={3} someBool={false}></Banner>
-    </>
-  );
-}`
-
-it('updates correctly', () => {
-  jest.spyOn(fs, 'writeFileSync')
+it('can update props and add additional props', () => {
   updatePageFile(
     [
       {
@@ -33,7 +24,7 @@ it('updates correctly', () => {
         'props': {
           'title': 'two',
           'randomNum': 2,
-          'someBool': false
+          'someBool': true
         }
       },
       {
@@ -45,6 +36,23 @@ it('updates correctly', () => {
         }
       }
     ]
-  , 'testPage.tsx')
-  expect(fs.writeFileSync).toHaveBeenCalledWith(expect.stringContaining('testPage.tsx'), expected)
+    , 'testPage.tsx')
+  expect(fs.writeFileSync).toHaveBeenCalledWith(
+    expect.stringContaining('testPage.tsx'),
+    fs.readFileSync(getRootPath('testPageAfterUpdate.tsx'), 'utf-8')
+  )
+})
+
+it('can add additional components', () => {
+  updatePageFile([{
+    'name': 'Banner',
+    'props': {
+      'title': 'first!',
+      'randomNum': 1,
+    }
+  }], 'emptyPage.tsx')
+  expect(fs.writeFileSync).toHaveBeenCalledWith(
+    expect.stringContaining('emptyPage.tsx'),
+    fs.readFileSync(getRootPath('emptyPageAfterUpdate.tsx'), 'utf-8')
+  )
 })

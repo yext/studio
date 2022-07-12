@@ -1,5 +1,6 @@
 import { JsxOpeningElement, JsxSelfClosingElement, SourceFile, ts } from 'ts-morph'
 import { JsxEmit } from 'typescript'
+import prettier from 'prettier'
 
 export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
   const nodes = sourceFile
@@ -19,4 +20,13 @@ export const tsCompilerOptions = {
 export function getComponentName(n: JsxOpeningElement | JsxSelfClosingElement): string {
   const componentName =  n.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText()
   return componentName;
+}
+
+export function prettify(code: string) {
+  return prettier.format(code, {
+    parser: 'typescript',
+    semi: false,
+    singleQuote: true,
+    jsxSingleQuote: true
+  })
 }
