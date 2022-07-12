@@ -32,11 +32,11 @@ export default function PropEditor({
             propValue,
             onChange: val => updatePropState(propName, val)
           }
-          if (propType === 'TSBooleanKeyword') {
+          if (propType === 'boolean') {
             return <BoolProp {...sharedProps}/>
-          } else if (propType === 'TSStringKeyword') {
+          } else if (propType === 'string') {
             return <StrProp {...sharedProps}/>
-          } else if (propType === 'TSNumberKeyword') {
+          } else if (propType === 'number') {
             return <NumProp {...sharedProps}/>
           }
           return null

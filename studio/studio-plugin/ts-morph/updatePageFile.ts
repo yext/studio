@@ -1,12 +1,11 @@
 import fs from 'fs'
-import path from 'path'
 import { Project, ts } from 'ts-morph'
 import { PageComponentsState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getComponentName, getComponentNodes, tsCompilerOptions } from './common'
 
 export default function updatePageFile(updatedState: PageComponentsState, pageFilePath) {
-  const file = path.resolve(getRootPath(pageFilePath))
+  const file = getRootPath(pageFilePath)
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)

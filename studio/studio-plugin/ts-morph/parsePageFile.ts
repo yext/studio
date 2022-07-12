@@ -1,10 +1,10 @@
-import path from 'path'
 import { Project, ts, JsxAttribute } from 'ts-morph'
+import { PageComponentsState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getComponentName, getComponentNodes, tsCompilerOptions } from './common'
 
-export default function parsePageFile() {
-  const file = path.resolve(getRootPath('src/pages/index.tsx'))
+export default function parsePageFile(filePath): PageComponentsState {
+  const file = getRootPath(filePath)
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)

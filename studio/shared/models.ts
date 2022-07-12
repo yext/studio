@@ -1,6 +1,6 @@
 export type PageComponentsState = {
-  name: 'Banner',
+  name: string,
   props: Record<string, number | string | boolean>
 }[]
 
-export type TSPropShape = Record<string, 'TSStringKeyword' | 'TSNumberKeyword' | 'TSBooleanKeyword'>
+export type TSPropShape = Record<string, 'string' | 'number' | 'boolean'>

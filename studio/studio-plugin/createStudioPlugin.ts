@@ -15,10 +15,10 @@ export default function createStudioPlugin(): Plugin {
 
   const ctx = {
     componentsToPropShapes: {
-      Banner: parsePropInterface()
+      Banner: parsePropInterface('src/components/Banner.tsx', 'BannerProps')
     },
     componentsOnPage: {
-      index: parsePageFile()
+      index: parsePageFile('src/pages/index.tsx')
     }
   }
 

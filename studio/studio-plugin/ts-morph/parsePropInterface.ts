@@ -1,21 +1,25 @@
-import { parse } from '@typescript-eslint/typescript-estree'
-import fs from 'fs'
+import { TSPropShape } from '../../shared/models'
 import getRootPath from '../getRootPath'
+import { Project, ts } from 'ts-morph'
+import { tsCompilerOptions } from './common'
 
-// TODO Currently only supports TSStringKeyword TSNumberKeyword TSBooleanKeyword and is hardcoded to Banner.tsx
-// TODO use ts-morph instead.
-export default function parsePropInterface() {
-  const file = fs.readFileSync(getRootPath('src/components/Banner.tsx'), 'utf-8')
-  const p = parse(file, { jsx: true })
-  // @ts-ignore
-  const exportInterface = p.body.find(n => n?.declaration?.id?.name === 'BannerProps')
-  // @ts-ignore
-  const props = exportInterface.declaration.body.body
-  const propShape = {}
-  for (const propSignature of props) {
-    const name = propSignature.key.name
-    const type = propSignature.typeAnnotation.typeAnnotation.type
-    propShape[name] = type
+export default function parsePropInterface(filePath: string, componentPropsName: string): TSPropShape {
+  const file = getRootPath(filePath)
+  const p = new Project(tsCompilerOptions)
+  p.addSourceFilesAtPaths(file)
+  const sourceFile = p.getSourceFileOrThrow(file)
+  const propsInterface = sourceFile.getDescendantsOfKind(ts.SyntaxKind.InterfaceDeclaration).find(n => {
+    return n.getName() === componentPropsName
+  });
+  if (!propsInterface) {
+    throw new Error(`No interface found with name "${componentPropsName}" in file "${filePath}"`)
   }
-  return propShape
+  const structure = propsInterface.getStructure();
+  const properties = structure.properties ?? [];
+  const props: TSPropShape = {}
+  properties.forEach(p => {
+    props[p.name] = p.type as 'string' | 'number' | 'boolean'
+  })
+  return props
 }
+
