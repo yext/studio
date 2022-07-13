@@ -6,6 +6,7 @@ import sendMessage from '../messaging/sendMessage'
 import PagePreview from './PagePreview'
 import { PageComponentsState } from '../../shared/models'
 import { MessageID } from '../../shared/messages'
+import AddComponentButton from './AddComponentButton'
 
 export interface StudioProps {
   componentsToPropShapes: {
@@ -18,12 +19,18 @@ export interface StudioProps {
 }
 
 export default function Studio(props: StudioProps) {
-  const [pageComponentsState, setPageComponentsState] = useState(props.componentsOnPage.index)
+  const { componentsOnPage, componentsToPropShapes } = props;
+  const [pageComponentsState, setPageComponentsState] = useState(componentsOnPage.index)
 
   return (
     <div className='h-screen w-screen flex flex-row'>
       <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
         <h1 className='text-3xl text-white'>Yext Studio</h1>
+        <AddComponentButton
+          componentsToPropShapes={componentsToPropShapes}
+          pageComponentsState={pageComponentsState}
+          setPageComponentsState={setPageComponentsState}
+        />
         {renderPropEditors(props, pageComponentsState, setPageComponentsState)}
         <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
           path: 'src/pages/index.tsx',
