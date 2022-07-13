@@ -5,9 +5,19 @@ jest.mock('../getRootPath')
 it('updates correctly', () => {
   const propShape = parsePropInterface('components/Banner.tsx', 'BannerProps')
   expect(propShape).toEqual({
-    title: 'string',
-    randomNum: 'number',
-    someBool: 'boolean',
-    backgroundColor: 'ColorProp'
+    title: {
+      type: 'string'
+    },
+    randomNum: {
+      type: 'number',
+      doc: 'jsdoc single line'
+    },
+    someBool: {
+      type: 'boolean',
+      doc: '\nthis is a jsdoc\nmulti-line comments!'
+    },
+    backgroundColor: {
+      type: 'ColorProp'
+    }
   })
 })

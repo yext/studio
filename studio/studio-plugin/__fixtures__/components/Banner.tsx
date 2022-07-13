@@ -1,9 +1,15 @@
-import { ColorProp } from './SpecialProps';
+import { ColorProp } from './SpecialProps'
 
 export interface BannerProps {
-  title?: string, // this is the title for doing things blahblah
+  title?: string, // this is trailing comment
+  /** jsdoc single line */
   randomNum?: number,
+  /**
+   * this is a jsdoc
+   * multi-line comments!
+   */
   someBool?: boolean,
+  // this is a leading comment
   backgroundColor?: ColorProp
 }
 
