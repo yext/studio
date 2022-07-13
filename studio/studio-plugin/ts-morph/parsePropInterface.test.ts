@@ -1,9 +1,7 @@
 import parsePropInterface from './parsePropInterface'
 
-jest.mock('../getRootPath')
-
 it('updates correctly', () => {
-  const propShape = parsePropInterface('components/Banner.tsx', 'BannerProps')
+  const propShape = parsePropInterface('studio/studio-plugin/__fixtures__/components/Banner.tsx', 'BannerProps')
   expect(propShape).toEqual({
     title: {
       type: 'string'
@@ -17,7 +15,7 @@ it('updates correctly', () => {
       doc: '\nthis is a jsdoc\nmulti-line comments!'
     },
     backgroundColor: {
-      type: 'ColorProp'
+      type: 'HexColor'
     }
   })
 })

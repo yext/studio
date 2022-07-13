@@ -5,8 +5,10 @@ export type PageComponentsState = {
   props: Record<string, number | string | boolean | SpecialTypes>
 }[]
 
+export type TSPropType = 'string' | 'number' | 'boolean' | 'HexColor'
+
 export type TSPropMetadata = {
-  type: string | number | boolean | SpecialTypes,
+  type: TSPropType,
   doc?: string
 }
 
