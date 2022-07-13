@@ -8,6 +8,10 @@ import { PageComponentsState } from '../../shared/models'
 import { MessageID } from '../../shared/messages'
 import AddComponentButton from './AddComponentButton'
 import { StudioContext } from './useStudioContext'
+import DndContainer from './DndContainer'
+import {
+  UniqueIdentifier
+} from '@dnd-kit/core';
 
 export interface StudioProps {
   componentsToPropShapes: Record<string, TSPropShape>,
@@ -20,12 +24,14 @@ export interface StudioProps {
 export default function Studio(props: StudioProps) {
   const { componentsOnPage, componentsToPropShapes } = props
   const [pageComponentsState, setPageComponentsState] = useState(componentsOnPage.index)
+  const [items, setItems] = useState<UniqueIdentifier[]>([1, 2, 3]);
 
   return (
     <StudioContext.Provider value={{ componentsToPropShapes, pageComponentsState, setPageComponentsState }}>
       <div className='h-screen w-screen flex flex-row'>
         <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
           <h1 className='text-3xl text-white'>Yext Studio</h1>
+          <DndContainer items={items} setItems={setItems}/>
           <AddComponentButton />
           {renderPropEditors(props, pageComponentsState, setPageComponentsState)}
           <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
