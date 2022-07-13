@@ -1,12 +1,10 @@
 import React, { FunctionComponent, useEffect } from 'react'
 import { useState } from 'react'
 import { PageComponentsState } from '../../shared/models'
+import { useStudioContext } from './useStudioContext'
 
-export default function PagePreview({
-  pageComponentsState
-}: {
-  pageComponentsState: PageComponentsState
-}) {
+export default function PagePreview() {
+  const { pageComponentsState } = useStudioContext()
   const [componentNameToComponent, loadedComponents] = useComponents(pageComponentsState)
 
   return (
