@@ -1,6 +1,14 @@
 export interface BannerProps {
-  title?: string, // this is the title for doing things blahblah
+  /** Banner title! */
+  title?: string,
+  /** 
+   * Some random
+   * number to display!
+   */
   randomNum?: number,
+  /**
+   * A boolean to toggle nothing..
+   */
   someBool?: boolean,
 }
 

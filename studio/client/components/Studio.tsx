@@ -19,7 +19,7 @@ export interface StudioProps {
 }
 
 export default function Studio(props: StudioProps) {
-  const { componentsOnPage, componentsToPropShapes } = props;
+  const { componentsOnPage, componentsToPropShapes } = props
   const [pageComponentsState, setPageComponentsState] = useState(componentsOnPage.index)
 
   return (
