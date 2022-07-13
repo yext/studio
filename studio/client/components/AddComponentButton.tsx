@@ -1,14 +1,7 @@
-import { Dispatch, SetStateAction } from 'react';
-import { PageComponentsState, TSPropShape } from '../../shared/models';
+import { useStudioContext } from './useStudioContext'
 
-export default function AddComponentButton(props: {
-  componentsToPropShapes: {
-    Banner: TSPropShape
-  },
-  pageComponentsState: PageComponentsState,
-  setPageComponentsState: Dispatch<SetStateAction<PageComponentsState>>
-}) {
-  const { componentsToPropShapes, pageComponentsState, setPageComponentsState } = props;
+export default function AddComponentButton() {
+  const { componentsToPropShapes, pageComponentsState, setPageComponentsState } = useStudioContext()
 
   return (
     <div className="dropdown mb-2">

@@ -7,11 +7,10 @@ import PagePreview from './PagePreview'
 import { PageComponentsState } from '../../shared/models'
 import { MessageID } from '../../shared/messages'
 import AddComponentButton from './AddComponentButton'
+import { StudioContext } from './useStudioContext'
 
 export interface StudioProps {
-  componentsToPropShapes: {
-    Banner: TSPropShape
-  },
+  componentsToPropShapes: Record<string, TSPropShape>,
   // only supports a page named "index" for now
   componentsOnPage: {
     index: PageComponentsState
@@ -23,25 +22,23 @@ export default function Studio(props: StudioProps) {
   const [pageComponentsState, setPageComponentsState] = useState(componentsOnPage.index)
 
   return (
-    <div className='h-screen w-screen flex flex-row'>
-      <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
-        <h1 className='text-3xl text-white'>Yext Studio</h1>
-        <AddComponentButton
-          componentsToPropShapes={componentsToPropShapes}
-          pageComponentsState={pageComponentsState}
-          setPageComponentsState={setPageComponentsState}
-        />
-        {renderPropEditors(props, pageComponentsState, setPageComponentsState)}
-        <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
-          path: 'src/pages/index.tsx',
-          state: pageComponentsState
-        })}>
-          Update Component Props
-        </button>
-        <SiteSettings />
+    <StudioContext.Provider value={{ componentsToPropShapes, pageComponentsState, setPageComponentsState }}>
+      <div className='h-screen w-screen flex flex-row'>
+        <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
+          <h1 className='text-3xl text-white'>Yext Studio</h1>
+          <AddComponentButton />
+          {renderPropEditors(props, pageComponentsState, setPageComponentsState)}
+          <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
+            path: 'src/pages/index.tsx',
+            state: pageComponentsState
+          })}>
+            Update Component Props
+          </button>
+          <SiteSettings />
+        </div>
+        <PagePreview />
       </div>
-      <PagePreview pageComponentsState={pageComponentsState}/>
-    </div>
+    </StudioContext.Provider>
   )
 }
 
