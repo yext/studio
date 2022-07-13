@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/yext/studio-prototype#readme",
   "dependencies": {
+    "@dnd-kit/sortable": "^7.0.1",
     "@vitejs/plugin-react": "^1.3.2",
     "@yext/answers-react-components": "^0.2.0-beta.184",
     "daisyui": "^2.17.0",
