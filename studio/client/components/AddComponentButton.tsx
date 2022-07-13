@@ -15,12 +15,16 @@ export default function AddComponentButton(props: {
       <label className="btn m-1" tabIndex={0}>Add Component</label>
       <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" tabIndex={0}>
         {Object.keys(componentsToPropShapes).map(name => (
-          <li key={name}><a onClick={() => {
-            setPageComponentsState(pageComponentsState.concat([{
-              name,
-              props: {}
-            }]))
-          }}>{name}</a></li>
+          <li key={name}>
+            <button onClick={() => {
+              setPageComponentsState(pageComponentsState.concat([{
+                name,
+                props: {}
+              }]))
+            }}>
+              {name}
+            </button>
+          </li>
         ))}
       </ul>
     </div>
