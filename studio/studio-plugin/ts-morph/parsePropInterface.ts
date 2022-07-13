@@ -10,15 +10,19 @@ export default function parsePropInterface(filePath: string, componentPropsName:
   const sourceFile = p.getSourceFileOrThrow(file)
   const propsInterface = sourceFile.getDescendantsOfKind(ts.SyntaxKind.InterfaceDeclaration).find(n => {
     return n.getName() === componentPropsName
-  });
+  })
   if (!propsInterface) {
     throw new Error(`No interface found with name "${componentPropsName}" in file "${filePath}"`)
   }
-  const structure = propsInterface.getStructure();
-  const properties = structure.properties ?? [];
+  const structure = propsInterface.getStructure()
+  const properties = structure.properties ?? []
   const props: TSPropShape = {}
   properties.forEach(p => {
-    props[p.name] = p.type as 'string' | 'number' | 'boolean'
+    const jsdoc = p.docs?.map(doc => typeof doc === 'string' ? doc : doc.description).join('\n')
+    props[p.name] = {
+      type: p.type as 'string' | 'number' | 'boolean',
+      ...(jsdoc && { doc: jsdoc })
+    }
   })
   return props
 }

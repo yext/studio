@@ -25,12 +25,14 @@ export default function PropEditor({
     <>
       {
         Object.keys(propShape).map(propName => {
-          const propType = propShape[propName]
+          const propType = propShape[propName].type
+          const propDoc = propShape[propName].doc
           const propValue = propState[propName] as any
           const sharedProps ={
             key: propName,
             propName,
             propValue,
+            propDoc,
             onChange: val => updatePropState(propName, val)
           }
           if (propType === 'boolean') {
@@ -52,11 +54,13 @@ export default function PropEditor({
 function BoolProp(props: {
   propName: string,
   propValue: boolean,
+  propDoc?: string,
   onChange: (val: boolean) => void
 }) {
   return (
     <div className='flex'>
-      <label className='label'>{props.propName}:</label>
+      <label className='peer label'>{props.propName}:</label>
+      {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input className='checkbox' type='checkbox' onChange={e => props.onChange(e.target.checked)} checked={props.propValue ?? false}/>
     </div>
   )
@@ -65,11 +69,13 @@ function BoolProp(props: {
 function StrProp(props: {
   propName: string,
   propValue: string,
+  propDoc?: string,
   onChange: (val: string) => void
 }) {
   return (
     <div className='flex'>
-      <label className='label'>{props.propName}:</label>
+      <label className='peer label'>{props.propName}:</label>
+      {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input className='input-sm' onChange={e => props.onChange(e.target.value)} value={props.propValue ?? ''}/>
     </div>
   )
@@ -78,11 +84,13 @@ function StrProp(props: {
 function NumProp(props: {
   propName: string,
   propValue: number,
+  propDoc?: string,
   onChange: (val: number) => void
 }) {
   return (
     <div className='flex'>
-      <label className='label'>{props.propName}:</label>
+      <label className='peer label'>{props.propName}:</label>
+      {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input className='input-sm' onChange={e => props.onChange(parseFloat(e.target.value))} value={props.propValue ?? ''}/>
     </div>
   )
@@ -91,12 +99,24 @@ function NumProp(props: {
 function HexColorProp(props: {
   propName: string,
   propValue: HexColor,
+  propDoc?: string,
   onChange: (val: HexColor) => void
 }) {
   return (
     <div className='flex'>
-      <label className='label'>{props.propName}:</label>
+      <label className='peer label'>{props.propName}:</label>
+      {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input type='color' className='input-sm' onChange={e => props.onChange(e.target.value as HexColor)} value={props.propValue ?? '#ffffff'}/>
+    </div>
+  )
+}
+
+function ToolTip(props: {
+  message: string
+}) {
+  return (
+    <div className='invisible peer-hover:visible'>
+      <div className='absolute z-10 whitespace-nowrap rounded shadow-lg p-3 text-sm bg-gray-600 text-white'>{props.message}</div>
     </div>
   )
 }

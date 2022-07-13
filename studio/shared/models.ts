@@ -5,4 +5,9 @@ export type PageComponentsState = {
   props: Record<string, number | string | boolean | SpecialTypes>
 }[]
 
-export type TSPropShape = Record<string, string | number | boolean | SpecialTypes>
+export type TSPropMetadata = {
+  type: string | number | boolean | SpecialTypes,
+  doc?: string
+}
+
+export type TSPropShape = Record<string, TSPropMetadata>

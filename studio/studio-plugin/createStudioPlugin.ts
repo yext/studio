@@ -2,6 +2,7 @@ import { Plugin } from 'vite'
 import parsePropInterface from './ts-morph/parsePropInterface'
 import parsePageFile from './ts-morph/parsePageFile'
 import configureServer from './configureServer'
+import { StudioProps } from '../client/components/Studio'
 
 /**
  * Handles server-client communication.
@@ -13,7 +14,7 @@ export default function createStudioPlugin(): Plugin {
   const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
-  const ctx = {
+  const ctx: StudioProps = {
     componentsToPropShapes: {
       Banner: parsePropInterface('src/components/Banner.tsx', 'BannerProps')
     },
