@@ -1,4 +1,5 @@
 import { TSPropShape } from '../../shared/models'
+import { HexColor, SpecialTypes } from '../../types'
 
 interface PropEditorProps {
   propState: PropState,
@@ -6,7 +7,7 @@ interface PropEditorProps {
   setPropState: (val: PropState) => void
 }
 
-export type PropState = Record<string, string | number | boolean>
+export type PropState = Record<string, string | number | boolean | SpecialTypes>
 
 export default function PropEditor({
   propState,
@@ -33,11 +34,13 @@ export default function PropEditor({
             onChange: val => updatePropState(propName, val)
           }
           if (propType === 'boolean') {
-            return <BoolProp {...sharedProps}/>
+            return <BoolProp {...sharedProps} />
           } else if (propType === 'string') {
-            return <StrProp {...sharedProps}/>
+            return <StrProp {...sharedProps} />
           } else if (propType === 'number') {
-            return <NumProp {...sharedProps}/>
+            return <NumProp {...sharedProps} />
+          } else if (propType === 'HexColor') {
+            return <HexColorProp {...sharedProps} />
           }
           return null
         })
@@ -81,6 +84,19 @@ function NumProp(props: {
     <div className='flex'>
       <label className='label'>{props.propName}:</label>
       <input className='input-sm' onChange={e => props.onChange(parseFloat(e.target.value))} value={props.propValue ?? ''}/>
+    </div>
+  )
+}
+
+function HexColorProp(props: {
+  propName: string,
+  propValue: HexColor,
+  onChange: (val: HexColor) => void
+}) {
+  return (
+    <div className='flex'>
+      <label className='label'>{props.propName}:</label>
+      <input type='color' className='input-sm' onChange={e => props.onChange(e.target.value as HexColor)} value={props.propValue ?? '#ffffff'}/>
     </div>
   )
 }
