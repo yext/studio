@@ -9,7 +9,7 @@ export default class CustomPointerSensor extends PointerSensor {
         const { nativeEvent: event } = e
         const { onActivation } = opts
 
-        if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target as Element)) {
+        if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target)) {
           return false
         }
 
@@ -20,8 +20,8 @@ export default class CustomPointerSensor extends PointerSensor {
   ]
 }
 
-function isInteractiveElement(element: Element | null) {
-  if (!element?.tagName) {
+function isInteractiveElement(element: EventTarget | null) {
+  if (!element || !(element instanceof Element) || !element?.tagName) {
     return false
   }
 
