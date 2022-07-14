@@ -1,10 +1,14 @@
+import { SpecialTypes } from '../types'
+
 export type PageComponentsState = {
   name: string,
-  props: Record<string, number | string | boolean>
+  props: Record<string, number | string | boolean | SpecialTypes>
 }[]
 
+export type TSPropType = 'string' | 'number' | 'boolean' | 'HexColor'
+
 export type TSPropMetadata = {
-  type: 'string' | 'number' | 'boolean',
+  type: TSPropType,
   doc?: string
 }
 

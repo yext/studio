@@ -1,4 +1,5 @@
 import { ColorProp } from './SpecialProps'
+import { HexColor } from '../../../types'
 
 export interface BannerProps {
   title?: string, // this is trailing comment
@@ -9,8 +10,9 @@ export interface BannerProps {
    * multi-line comments!
    */
   someBool?: boolean,
+  fakeColor?: ColorProp,
   // this is a leading comment
-  backgroundColor?: ColorProp
+  backgroundColor?: HexColor
 }
 
 export const defaultClassNames = 'w-fill p-3 flex flex-col items-center bg-lime-300 border-b-2 border-black'
