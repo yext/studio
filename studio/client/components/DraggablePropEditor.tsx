@@ -1,5 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
+import { useEffect, useRef } from 'react'
 import PropEditor, { PropEditorProps } from './PropEditor'
 
 interface DraggablePropEditorProps extends PropEditorProps {
@@ -25,9 +26,21 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
     padding: '8px 4px'
   }
 
+  const ref = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const element: HTMLDivElement|null = ref.current
+    if (element) {
+      element.addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+      })
+    }
+  })
+
   return (
-    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      <PropEditor {...props}/>
+    <div ref={ref}>
+      <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <PropEditor {...props} />
+      </div>
     </div>
   )
 }
