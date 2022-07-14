@@ -2,6 +2,7 @@ import { Project, ts, JsxAttribute } from 'ts-morph'
 import { PageComponentsState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getComponentName, getComponentNodes, tsCompilerOptions } from './common'
+import { v1 }  from 'uuid';
 
 export default function parsePageFile(filePath): PageComponentsState {
   const file = getRootPath(filePath)
@@ -12,7 +13,8 @@ export default function parsePageFile(filePath): PageComponentsState {
   return usedComponents.map(n => {
     const componentData = {
       name: getComponentName(n),
-      props: {}
+      props: {},
+      uuid: v1()
     }
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
       const propName = a.getFirstDescendantByKind(ts.SyntaxKind.Identifier)?.compilerNode.text

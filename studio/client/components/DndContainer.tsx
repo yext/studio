@@ -14,15 +14,20 @@ import {
   sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { Dispatch, SetStateAction, useState, forwardRef } from 'react';
+import { Dispatch, SetStateAction, useState, forwardRef, ReactNode } from 'react';
 import SortableItem from './SortableItem';
+import {
+  restrictToVerticalAxis,
+  restrictToWindowEdges,
+} from '@dnd-kit/modifiers';
 
 export default function DndContainer(props: {
-  items: UniqueIdentifier[],
-  setItems: Dispatch<SetStateAction<UniqueIdentifier[]>>
+  items: string[],
+  setItems: Dispatch<SetStateAction<string[]>>
+  renderItem: (id: string) => ReactNode
 }) {
-  const { items, setItems } = props
-  // const [items, setItems] = useState([1, 2, 3]);
+  const { items, setItems, renderItem } = props
+
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
@@ -38,7 +43,9 @@ export default function DndContainer(props: {
     >
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {props.items.map(id => (
-          <SortableItem id={id} key={id}>{id}</SortableItem>)
+          <SortableItem id={id} key={id}>
+            {renderItem(id)}
+          </SortableItem>)
         )}
       </SortableContext>
     </DndContext>
@@ -51,6 +58,7 @@ export default function DndContainer(props: {
       setItems((items) => {
         const oldIndex = items.indexOf(active.id);
         const newIndex = items.indexOf(over.id);
+        console.log(arrayMove(items, oldIndex, newIndex))
 
         return arrayMove(items, oldIndex, newIndex);
       });

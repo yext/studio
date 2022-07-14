@@ -22,8 +22,8 @@ export default function SortableItem(props: PropsWithChildren<{
   };
   
   return (
-    <li ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {props.children}
-    </li>
+    </div>
   );
 }

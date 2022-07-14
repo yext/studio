@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/yext/studio-prototype#readme",
   "dependencies": {
+    "@dnd-kit/modifiers": "^6.0.0",
     "@dnd-kit/sortable": "^7.0.1",
     "@vitejs/plugin-react": "^1.3.2",
     "@yext/answers-react-components": "^0.2.0-beta.184",
@@ -33,12 +34,14 @@
     "react-toastify": "^9.0.5",
     "tailwindcss": "^3.1.2",
     "ts-morph": "^15.1.0",
+    "uuid": "^8.3.2",
     "vite": "^2.9.12"
   },
   "devDependencies": {
     "@types/jest": "^28.1.4",
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
+    "@types/uuid": "^8.3.4",
     "@yext/eslint-config-slapshot": "^0.4.0",
     "eslint": "^8.19.0",
     "jest": "^28.1.2",
