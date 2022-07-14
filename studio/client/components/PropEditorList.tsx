@@ -8,6 +8,7 @@ import DraggablePropEditor from './DraggablePropEditor'
 import { useStudioContext } from './useStudioContext'
 import { PropState } from './PropEditor'
 import { useState } from 'react'
+import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 
 export default function PropEditorList() {
   const { pageComponentsState, setPageComponentsState, componentsToPropShapes } = useStudioContext()
@@ -38,7 +39,11 @@ export default function PropEditorList() {
   }
 
   return (
-    <DndContext onDragEnd={handleDragEnd} onDragOver={handleDragOver}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      onDragOver={handleDragOver}
+      sensors={[{ sensor: CustomPointerSensor, options: {} }]}
+    >
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {listState.map(c => {
           const uuid = c.uuid

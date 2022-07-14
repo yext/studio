@@ -1,7 +1,6 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import PropEditor, { PropEditorProps } from './PropEditor'
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 
 interface DraggablePropEditorProps extends PropEditorProps {
   uuid: string
@@ -13,8 +12,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
     listeners,
     setNodeRef,
     transform,
-    transition,
-    setActivatorNodeRef
+    transition
   } = useSortable({ id: props.uuid })
 
   const style = {
@@ -28,11 +26,8 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
   }
 
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
       <PropEditor {...props}/>
-      <button ref={setActivatorNodeRef} {...listeners} {...attributes} className='flex-grow'>
-        <DragIndicatorIcon sx={{ fontSize: 40 }}/>
-      </button>
     </div>
   )
 }
