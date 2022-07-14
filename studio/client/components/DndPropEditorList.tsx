@@ -13,12 +13,13 @@ import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 export default function DndropEditorList() {
   const { pageComponentsState, setPageComponentsState, componentsToPropShapes } = useStudioContext()
   const [listState, setListState] = useState(pageComponentsState)
-  const items = listState.map(c => c.uuid)
 
-  // Update the listState if any other component updates the global pageComponentsState
+  // Update the listState if any other component adds or removes components
   useEffect(() => {
-    setListState(pageComponentsState)
-  }, [pageComponentsState])
+    if (pageComponentsState.length !== listState.length) {
+      setListState(pageComponentsState)
+    }
+  }, [pageComponentsState, listState.length])
 
   function getUpdatedListState(activeId: string, overId: string ) {
     const oldIndex = listState.findIndex(c => c.uuid === activeId)
@@ -49,7 +50,7 @@ export default function DndropEditorList() {
       onDragOver={handleDragOver}
       sensors={[{ sensor: CustomPointerSensor, options: {} }]}
     >
-      <SortableContext items={items} strategy={verticalListSortingStrategy}>
+      <SortableContext items={listState.map(c => c.uuid)} strategy={verticalListSortingStrategy}>
         {listState.map(c => {
           const uuid = c.uuid
 
