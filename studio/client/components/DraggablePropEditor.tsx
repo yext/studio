@@ -1,5 +1,5 @@
-import {useSortable} from '@dnd-kit/sortable'
-import {CSS} from '@dnd-kit/utilities'
+import { useSortable } from '@dnd-kit/sortable'
+import { CSS } from '@dnd-kit/utilities'
 import PropEditor, { PropEditorProps } from './PropEditor'
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator'
 

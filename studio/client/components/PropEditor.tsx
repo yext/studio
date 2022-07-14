@@ -14,7 +14,6 @@ export default function PropEditor({
   setPropState,
   propShape
 }: PropEditorProps) {
-  console.log('rendering PropEditor', propState)
   function updatePropState(propName, propValue) {
     setPropState({
       ...propState,
