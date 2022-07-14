@@ -1,5 +1,5 @@
-import { TSPropShape } from '../../shared/models'
-import { HexColor, SpecialTypes } from '../../types'
+import { PropState, TSPropShape } from '../../shared/models'
+import { HexColor } from '../../types'
 
 interface PropEditorProps {
   propState: PropState,
@@ -7,7 +7,6 @@ interface PropEditorProps {
   setPropState: (val: PropState) => void
 }
 
-export type PropState = Record<string, string | number | boolean | SpecialTypes>
 
 export default function PropEditor({
   propState,
@@ -24,10 +23,11 @@ export default function PropEditor({
   return (
     <>
       {
-        Object.keys(propShape).map(propName => {
+        Object.keys(propShape).map((propName, index) => {
           const propType = propShape[propName].type
           const propDoc = propShape[propName].doc
           const propValue = propState[propName] as any
+          const key = propName + '-' + index
           const sharedProps ={
             key: propName,
             propName,
@@ -36,13 +36,13 @@ export default function PropEditor({
             onChange: val => updatePropState(propName, val)
           }
           if (propType === 'boolean') {
-            return <BoolProp {...sharedProps} />
+            return <BoolProp {...sharedProps} key={key}/>
           } else if (propType === 'string') {
-            return <StrProp {...sharedProps} />
+            return <StrProp {...sharedProps} key={key}/>
           } else if (propType === 'number') {
-            return <NumProp {...sharedProps} />
+            return <NumProp {...sharedProps} key={key}/>
           } else if (propType === 'HexColor') {
-            return <HexColorProp {...sharedProps} />
+            return <HexColorProp {...sharedProps} key={key}/>
           }
           return null
         })
@@ -91,7 +91,7 @@ function NumProp(props: {
     <div className='flex'>
       <label className='peer label'>{props.propName}:</label>
       {props.propDoc && <ToolTip message={props.propDoc}/>}
-      <input className='input-sm' onChange={e => props.onChange(parseFloat(e.target.value))} value={props.propValue ?? ''}/>
+      <input className='input-sm' type="number" onChange={e => props.onChange(parseFloat(e.target.value))} value={props.propValue ?? ''}/>
     </div>
   )
 }

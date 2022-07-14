@@ -15,6 +15,10 @@ export default function createStudioPlugin(): Plugin {
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
   const ctx: StudioProps = {
+    siteSettings: {
+      propShape: parsePropInterface('src/siteSettings.ts', 'SiteSettings'),
+      propState: {}
+    },
     componentsToPropShapes: {
       Banner: parsePropInterface('src/components/Banner.tsx', 'BannerProps')
     },
