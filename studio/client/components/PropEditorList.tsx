@@ -41,8 +41,8 @@ export default function PropEditorList() {
   return (
     <DndContext onDragEnd={handleDragEnd} onDragOver={handleDragOver}>
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
-        {items.map(uuid => {
-          const c = pageComponentsState.find(c => c.uuid === uuid)
+        {listState.map(c => {
+          const uuid = c.uuid
 
           const setPropState = (val: PropState) => {
             const copy = [...pageComponentsState]
