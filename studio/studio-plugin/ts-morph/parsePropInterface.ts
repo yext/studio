@@ -6,16 +6,16 @@ import { specialTypesArray } from '../../types'
 import parseImports from './parseImports'
 import { resolve } from 'path'
 
-export default function parsePropInterface(filePath: string, componentPropsName: string): TSPropShape {
+export default function parsePropInterface(filePath: string, interfaceName: string): TSPropShape {
   const file = getRootPath(filePath)
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)
   const sourceFile = p.getSourceFileOrThrow(file)
   const propsInterface = sourceFile.getDescendantsOfKind(ts.SyntaxKind.InterfaceDeclaration).find(n => {
-    return n.getName() === componentPropsName
+    return n.getName() === interfaceName
   })
   if (!propsInterface) {
-    throw new Error(`No interface found with name "${componentPropsName}" in file "${filePath}"`)
+    throw new Error(`No interface found with name "${interfaceName}" in file "${filePath}"`)
   }
   const structure = propsInterface.getStructure()
   const properties = structure.properties ?? []
