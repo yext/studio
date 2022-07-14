@@ -23,7 +23,7 @@ export default function PropEditor({
   }
 
   return (
-    <>
+    <div className='flex flex-col'>
       {
         Object.keys(propShape).map(propName => {
           const propType = propShape[propName].type
@@ -48,7 +48,7 @@ export default function PropEditor({
           return null
         })
       }
-    </>
+    </div>
   )
 }
 

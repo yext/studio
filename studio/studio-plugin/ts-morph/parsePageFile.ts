@@ -2,7 +2,7 @@ import { Project, ts, JsxAttribute } from 'ts-morph'
 import { PageComponentsState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getComponentName, getComponentNodes, tsCompilerOptions } from './common'
-import { v1 }  from 'uuid';
+import { v1 } from 'uuid'
 
 export default function parsePageFile(filePath): PageComponentsState {
   const file = getRootPath(filePath)

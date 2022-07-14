@@ -1,25 +1,11 @@
 import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  UniqueIdentifier,
-  DragOverlay
-} from '@dnd-kit/core';
+  DndContext} from '@dnd-kit/core';
 import {
   arrayMove,
   SortableContext,
-  sortableKeyboardCoordinates,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { Dispatch, SetStateAction, useState, forwardRef, ReactNode } from 'react';
 import DraggablePropEditor from './DraggablePropEditor';
-import {
-  restrictToVerticalAxis,
-  restrictToWindowEdges,
-} from '@dnd-kit/modifiers';
 import { PageComponentsState } from '../../shared/models';
 import { useStudioContext } from './useStudioContext';
 import { PropState } from './PropEditor';
@@ -35,19 +21,9 @@ export default function PropEditorList() {
     setPageComponentsState(updatedState)
   }
 
-  // const sensors = useSensors(
-  //   useSensor(PointerSensor),
-  //   useSensor(KeyboardSensor, {
-  //     coordinateGetter: sortableKeyboardCoordinates,
-  //   })
-  // )
 
   return (
-    <DndContext
-      // sensors={sensors}
-      // collisionDetection={closestCenter}
-      onDragEnd={handleDragEnd}
-    >
+    <DndContext onDragEnd={handleDragEnd}>
       <SortableContext items={items} strategy={verticalListSortingStrategy}>
         {pageComponentsState.map(c => {
           const uuid = c.uuid;
