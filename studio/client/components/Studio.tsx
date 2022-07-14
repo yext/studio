@@ -7,7 +7,7 @@ import { PageComponentsState } from '../../shared/models'
 import { MessageID } from '../../shared/messages'
 import AddComponentButton from './AddComponentButton'
 import { StudioContext } from './useStudioContext'
-import PropEditorList from './PropEditorList'
+import PropEditorList from './DndPropEditorList'
 
 export interface StudioProps {
   componentsToPropShapes: Record<string, TSPropShape>,

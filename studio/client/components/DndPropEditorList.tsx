@@ -10,7 +10,7 @@ import { PropState } from './PropEditor'
 import { useState } from 'react'
 import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 
-export default function PropEditorList() {
+export default function DndropEditorList() {
   const { pageComponentsState, setPageComponentsState, componentsToPropShapes } = useStudioContext()
   const [listState, setListState] = useState(pageComponentsState)
   const items = listState.map(c => c.uuid)
