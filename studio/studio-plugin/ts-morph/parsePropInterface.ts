@@ -19,28 +19,19 @@ export default function parsePropInterface(filePath: string, componentPropsName:
   }
   const structure = propsInterface.getStructure()
   const properties = structure.properties ?? []
-
-  const imports = parseImports(filePath)
   const props: TSPropShape = {}
   properties.forEach(p => {
     const jsdoc = p.docs?.map(doc => typeof doc === 'string' ? doc : doc.description).join('\n')
 
     if (isPropType(p.type)) {
-      let isValidProp = true
-      if (!['string', 'boolean', 'number'].some(t => t === p.type)) {
-        isValidProp = false
-        Object.entries(imports).forEach(([path, names]) => {
-          if (names.some(name => name === p.type)) {
-            isValidProp = resolve(filePath, '..', path) === resolve(__dirname, '../../types')
-          }
-        })
-      }
-      if (isValidProp) {
+      if (validateProp(p.type, filePath)) {
         props[p.name] = {
           type: p.type,
           ...(jsdoc && { doc: jsdoc })
         }
       }
+    } else {
+      console.error(`Prop type ${p.type} is not recognized. Skipping gracefully.`)
     }
   })
   return props
@@ -49,4 +40,21 @@ export default function parsePropInterface(filePath: string, componentPropsName:
 function isPropType(type: unknown): type is TSPropType {
   const types = ['string', 'number', 'boolean'].concat(specialTypesArray)
   return types.some(t => t === type)
+}
+
+function validateProp(type: TSPropType, filePath: string): boolean {
+  const imports = parseImports(filePath)
+  let isValidProp = true
+  if (!['string', 'boolean', 'number'].some(t => t === type)) {
+    isValidProp = false
+    Object.entries(imports).forEach(([path, names]) => {
+      if (names.some(name => name === type)) {
+        isValidProp = resolve(filePath, '..', path) === resolve(__dirname, '../../types')
+      }
+    })
+  }
+  if (!isValidProp) {
+    console.error(`Skipping prop type ${type} because it was not imported from the Studio's types.ts.`)
+  }
+  return isValidProp
 }

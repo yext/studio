@@ -1,5 +1,7 @@
 import parsePropInterface from './parsePropInterface'
 
+jest.spyOn(console, 'error')
+
 it('updates correctly', () => {
   const propShape = parsePropInterface('studio/studio-plugin/__fixtures__/components/Banner.tsx', 'BannerProps')
   expect(propShape).toEqual({
@@ -18,4 +20,5 @@ it('updates correctly', () => {
       type: 'HexColor'
     }
   })
+  expect(console.error).toBeCalledWith('Prop type ColorProp is not recognized. Skipping gracefully.')
 })
