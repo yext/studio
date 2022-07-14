@@ -1,4 +1,4 @@
-import { DndContext, DragEndEvent, DragOverEvent } from '@dnd-kit/core'
+import { DndContext, DragEndEvent, DragOverEvent, UniqueIdentifier } from '@dnd-kit/core'
 import {
   arrayMove,
   SortableContext,
@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react'
 import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 import { PropState } from '../../shared/models'
 
-export default function DndropEditorList() {
+export default function DraggablePropEditorList() {
   const { pageComponentsState, setPageComponentsState, componentsToPropShapes } = useStudioContext()
   const [listState, setListState] = useState(pageComponentsState)
 
@@ -21,7 +21,7 @@ export default function DndropEditorList() {
     }
   }, [pageComponentsState, listState.length])
 
-  function getUpdatedListState(activeId: string, overId: string ) {
+  function getUpdatedListState(activeId: UniqueIdentifier, overId: UniqueIdentifier ) {
     const oldIndex = listState.findIndex(c => c.uuid === activeId)
     const newIndex = listState.findIndex(c => c.uuid === overId)
     const updatedListState = arrayMove(listState, oldIndex, newIndex)
@@ -29,18 +29,18 @@ export default function DndropEditorList() {
   }
 
   function handleDragEnd({ active, over }: DragEndEvent) {
-    if (!over?.id || active.id === over.id) {
+    if (!over || active.id === over.id) {
       return
     }
-    const updatedListState = getUpdatedListState(active.id as string, over.id as string)
+    const updatedListState = getUpdatedListState(active.id, over.id)
     setListState(updatedListState)
   }
 
   function handleDragOver({ active, over }: DragOverEvent) {
-    if (!over?.id) {
+    if (!over) {
       return
     }
-    const updatedListState = getUpdatedListState(active.id as string, over.id as string)
+    const updatedListState = getUpdatedListState(active.id, over.id)
     setPageComponentsState(updatedListState)
   }
 

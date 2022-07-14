@@ -1,9 +1,8 @@
-import PropEditor from './PropEditor'
 import sendMessage from '../messaging/sendMessage'
 import { MessageID } from '../../shared/messages'
 import AddComponentButton from './AddComponentButton'
 import { useStudioContext } from './useStudioContext'
-import DndropEditorList from './DndPropEditorList'
+import DndropEditorList from './DraggablePropEditorList'
 
 export function PageEditor(): JSX.Element {
   const { pageComponentsState } = useStudioContext()

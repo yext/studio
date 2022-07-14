@@ -12,7 +12,7 @@ export default defineConfig((args) => {
   return {
     plugins: [react(), createStudioPlugin()],
     root: path.resolve(__dirname, '..'),
-    preview: {
+    server: {
       port: 3000
     },
     build: {
