@@ -1,7 +1,7 @@
 import { TSPropShape } from '../../shared/models'
 import { HexColor, SpecialTypes } from '../../types'
 
-interface PropEditorProps {
+export interface PropEditorProps {
   propState: PropState,
   propShape: TSPropShape,
   setPropState: (val: PropState) => void
@@ -14,6 +14,7 @@ export default function PropEditor({
   setPropState,
   propShape
 }: PropEditorProps) {
+  console.log('rendering PropEditor', propState)
   function updatePropState(propName, propValue) {
     setPropState({
       ...propState,

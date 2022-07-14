@@ -7,7 +7,7 @@ import { PageComponentsState } from '../../shared/models'
 import { MessageID } from '../../shared/messages'
 import AddComponentButton from './AddComponentButton'
 import { StudioContext } from './useStudioContext'
-import PropEditors from './PropEditors'
+import PropEditorList from './PropEditorList'
 
 export interface StudioProps {
   componentsToPropShapes: Record<string, TSPropShape>,
@@ -27,7 +27,7 @@ export default function Studio(props: StudioProps) {
         <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
           <h1 className='text-3xl text-white'>Yext Studio</h1>
           <AddComponentButton />
-          <PropEditors/>
+          <PropEditorList/>
           <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
             path: 'src/pages/index.tsx',
             state: pageComponentsState
