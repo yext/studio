@@ -1,4 +1,3 @@
-
 import PropEditor from './PropEditor'
 import sendMessage from '../messaging/sendMessage'
 import { PageComponentsState, TSPropShape, PropState } from '../../shared/models'
