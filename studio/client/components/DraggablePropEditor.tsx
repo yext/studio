@@ -5,6 +5,7 @@ import PropEditor, { PropEditorProps } from './PropEditor'
 import { ControlledMenu, MenuItem, useMenuState } from '@szhsin/react-menu'
 // just for temporary styling
 import '@szhsin/react-menu/dist/core.css';
+import { useStudioContext } from './useStudioContext'
 
 interface DraggablePropEditorProps extends PropEditorProps {
   uuid: string
@@ -50,8 +51,11 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
     }
   })
 
+  const {pageComponentsState, setPageComponentsState } = useStudioContext()
   function deleteComponent() {
-    console.log("testing")
+    setPageComponentsState(pageComponentsState.filter((element) => {
+      return element.uuid !== props.uuid
+    }))
   }
 
   return (
