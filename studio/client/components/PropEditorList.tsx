@@ -15,28 +15,26 @@ export default function PropEditorList() {
   const [listState, setListState] = useState(pageComponentsState)
   const items = listState.map(c => c.uuid)
 
-  function getUpdatedListState({ active, over }: DragEvent) {
-    if (over?.id && active.id !== over.id) {
-      const oldIndex = listState.findIndex(c => c.uuid === active.id)
-      const newIndex = listState.findIndex(c => c.uuid === over.id)
-      const updatedListState = arrayMove(listState, oldIndex, newIndex)
-      return updatedListState
-    }
+  function getUpdatedListState(activeId: string, overId: string) {
+    const oldIndex = listState.findIndex(c => c.uuid === activeId)
+    const newIndex = listState.findIndex(c => c.uuid === overId)
+    const updatedListState = arrayMove(listState, oldIndex, newIndex)
+    return updatedListState
   }
 
-  function handleDragEnd(event: DragEvent) {
-    const updatedListState = getUpdatedListState(event)
-    if (!updatedListState) {
+  function handleDragEnd({ active, over }: DragEvent) {
+    if (!over?.id || active.id === over.id) {
       return
     }
+    const updatedListState = getUpdatedListState(active.id, over.id)
     setListState(updatedListState)
   }
 
-  function handleDragOver(event: DragEvent) {
-    const updatedListState = getUpdatedListState(event)
-    if (!updatedListState) {
+  function handleDragOver({ active, over }: DragEvent) {
+    if (!over?.id) {
       return
     }
+    const updatedListState = getUpdatedListState(active.id, over.id)
     setPageComponentsState(updatedListState)
   }
 
