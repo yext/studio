@@ -2,7 +2,8 @@ import { CustomEventMap } from 'vite'
 import { PageComponentsState } from './models'
 
 export enum MessageID {
-  UpdatePageComponentProps = 'studio:UpdatePageComponentProps'
+  UpdatePageComponentProps = 'studio:UpdatePageComponentProps',
+  UpdateSiteSettingsProps = 'studio:UpdateSiteSettingsProps'
 }
 
 export interface StudioEventMap extends CustomEventMap {
@@ -14,7 +15,7 @@ export interface StudioEventMap extends CustomEventMap {
 
 export type ResponseEventMap = CustomEventMap & {
   [key in MessageID]: {
-    type: 'success' | 'error'
+    type: 'success' | 'error',
     msg: string
   }
 }

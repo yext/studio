@@ -1,15 +1,12 @@
 import { useState } from 'react'
-import { TSPropShape } from '../../shared/models'
-import SiteSettings from './SiteSettings'
-import sendMessage from '../messaging/sendMessage'
+import SiteSettings, { SiteSettingsProps } from './SiteSettings'
 import PagePreview from './PagePreview'
-import { PageComponentsState } from '../../shared/models'
-import { MessageID } from '../../shared/messages'
-import AddComponentButton from './AddComponentButton'
+import { PageComponentsState, TSPropShape } from '../../shared/models'
 import { StudioContext } from './useStudioContext'
-import PropEditorList from './DndPropEditorList'
+import { PageEditor } from './PageEditor'
 
 export interface StudioProps {
+  siteSettings: SiteSettingsProps,
   componentsToPropShapes: Record<string, TSPropShape>,
   // only supports a page named "index" for now
   componentsOnPage: {
@@ -18,7 +15,7 @@ export interface StudioProps {
 }
 
 export default function Studio(props: StudioProps) {
-  const { componentsOnPage, componentsToPropShapes } = props
+  const { componentsOnPage, componentsToPropShapes, siteSettings } = props
   const [pageComponentsState, setPageComponentsState] = useState(componentsOnPage.index)
 
   return (
@@ -26,15 +23,8 @@ export default function Studio(props: StudioProps) {
       <div className='h-screen w-screen flex flex-row'>
         <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
           <h1 className='text-3xl text-white'>Yext Studio</h1>
-          <AddComponentButton />
-          <PropEditorList/>
-          <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
-            path: 'src/pages/index.tsx',
-            state: pageComponentsState
-          })}>
-            Update Component Props
-          </button>
-          <SiteSettings />
+          <PageEditor />
+          <SiteSettings {...siteSettings}/>
         </div>
         <PagePreview />
       </div>

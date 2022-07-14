@@ -6,9 +6,9 @@ import {
 } from '@dnd-kit/sortable'
 import DraggablePropEditor from './DraggablePropEditor'
 import { useStudioContext } from './useStudioContext'
-import { PropState } from './PropEditor'
 import { useEffect, useState } from 'react'
 import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
+import { PropState } from '../../shared/models'
 
 export default function DndropEditorList() {
   const { pageComponentsState, setPageComponentsState, componentsToPropShapes } = useStudioContext()
