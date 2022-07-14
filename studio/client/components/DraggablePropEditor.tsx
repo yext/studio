@@ -1,7 +1,10 @@
 import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import PropEditor, { PropEditorProps } from './PropEditor'
+import { ControlledMenu, MenuItem, useMenuState } from '@szhsin/react-menu'
+// just for temporary styling
+import '@szhsin/react-menu/dist/core.css';
 
 interface DraggablePropEditorProps extends PropEditorProps {
   uuid: string
@@ -26,18 +29,39 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
     padding: '8px 4px'
   }
 
+  const [contextMenuAnchor, setContextMenuAnchor] = useState({ x: 0, y: 0 })
+  const [contextMenuProps, toggleContextMenu] = useMenuState()
+
   const ref = useRef<HTMLDivElement>(null)
+
+  const handleContextMenu = useCallback((e) => {
+    e.preventDefault()
+    setContextMenuAnchor({ x: e.pageX, y: e.pageY })
+    toggleContextMenu(true)
+  }, [setContextMenuAnchor, toggleContextMenu])
+
   useEffect(() => {
     const element: HTMLDivElement|null = ref.current
     if (element) {
-      element.addEventListener('contextmenu', (e) => {
-        e.preventDefault()
-      })
+      element.addEventListener(
+        'contextmenu',
+        handleContextMenu
+      )
     }
   })
 
+  function deleteComponent() {
+    console.log("testing")
+  }
+
   return (
     <div ref={ref}>
+      <ControlledMenu {...contextMenuProps} anchorPoint={contextMenuAnchor}
+        onClose={() => toggleContextMenu(false)}>
+        <MenuItem onClick={deleteComponent}>
+          Delete
+        </MenuItem>
+      </ControlledMenu>
       <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
         <PropEditor {...props} />
       </div>
