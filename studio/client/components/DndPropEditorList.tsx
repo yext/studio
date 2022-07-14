@@ -7,13 +7,18 @@ import {
 import DraggablePropEditor from './DraggablePropEditor'
 import { useStudioContext } from './useStudioContext'
 import { PropState } from './PropEditor'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 
 export default function DndropEditorList() {
   const { pageComponentsState, setPageComponentsState, componentsToPropShapes } = useStudioContext()
   const [listState, setListState] = useState(pageComponentsState)
   const items = listState.map(c => c.uuid)
+
+  // Update the listState if any other component updates the global pageComponentsState
+  useEffect(() => {
+    setListState(pageComponentsState)
+  }, [pageComponentsState])
 
   function getUpdatedListState(activeId: string, overId: string ) {
     const oldIndex = listState.findIndex(c => c.uuid === activeId)
