@@ -1,3 +1,4 @@
+import { v1 } from 'uuid'
 import { useStudioContext } from './useStudioContext'
 
 export default function AddComponentButton() {
@@ -12,7 +13,8 @@ export default function AddComponentButton() {
             <button onClick={() => {
               setPageComponentsState(pageComponentsState.concat([{
                 name,
-                props: {}
+                props: {},
+                uuid: v1()
               }]))
             }}>
               {name}

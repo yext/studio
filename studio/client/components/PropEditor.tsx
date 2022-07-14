@@ -1,12 +1,11 @@
 import { PropState, TSPropShape } from '../../shared/models'
 import { HexColor } from '../../types'
 
-interface PropEditorProps {
+export interface PropEditorProps {
   propState: PropState,
   propShape: TSPropShape,
   setPropState: (val: PropState) => void
 }
-
 
 export default function PropEditor({
   propState,
@@ -21,7 +20,7 @@ export default function PropEditor({
   }
 
   return (
-    <>
+    <div className='flex flex-col'>
       {
         Object.keys(propShape).map((propName, index) => {
           const propType = propShape[propName].type
@@ -47,7 +46,7 @@ export default function PropEditor({
           return null
         })
       }
-    </>
+    </div>
   )
 }
 
