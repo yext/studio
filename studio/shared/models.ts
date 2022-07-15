@@ -2,7 +2,7 @@ import { SpecialTypes } from '../types'
 
 export type PageComponentsState = {
   name: string,
-  props: PropState
+  props: PropState,
   uuid: string
 }[]
 
