@@ -3,7 +3,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import PropEditor, { PropEditorProps } from './PropEditor'
 import { ControlledMenu, MenuItem, useMenuState } from '@szhsin/react-menu'
-// just for temporary styling
 import '@szhsin/react-menu/dist/core.css';
 import { useStudioContext } from './useStudioContext'
 
