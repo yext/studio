@@ -42,7 +42,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
   }, [setContextMenuAnchor, toggleContextMenu])
 
   useEffect(() => {
-    const element: HTMLDivElement|null = ref.current
+    const element: HTMLDivElement | null = ref.current
     if (element) {
       element.addEventListener(
         'contextmenu',
@@ -51,7 +51,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
     }
   })
 
-  const {pageComponentsState, setPageComponentsState } = useStudioContext()
+  const { pageComponentsState, setPageComponentsState } = useStudioContext()
   function deleteComponent() {
     setPageComponentsState(pageComponentsState.filter((element) => {
       return element.uuid !== props.uuid
