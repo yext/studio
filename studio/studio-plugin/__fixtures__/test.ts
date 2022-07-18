@@ -7,9 +7,9 @@ export interface SiteSettings {
 }
 
 export default {
-  apiKey: '2d8c550071a64ea23e263118a2b0680b',
+  apiKey: 'new key!',
   experienceKey: 'slanswers-hier-facets',
   locale: 'en',
-  experienceVersion: 'STAGING',
-  businessId: 13323123
+  experienceVersion: 'new experience version!',
+  businessId: 11111,
 } as SiteSettings

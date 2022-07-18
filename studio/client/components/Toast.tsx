@@ -5,18 +5,18 @@ import 'react-toastify/dist/ReactToastify.css'
 
 export default function Toast() {
   useEffect(() => {
-    const msgId = MessageID.UpdatePageComponentProps
-    let isUnmounted = false;
-    import.meta.hot?.on(msgId, (payload: ResponseEventMap[typeof msgId]) => {
+    let isUnmounted = false
+    const payloadHandler = (payload: ResponseEventMap[MessageID]) => {
       if (isUnmounted) return
-
       if (payload.type === 'error') {
         toast.error(payload.msg)
         console.error(payload.msg)
       } else {
         toast.success(payload.msg)
       }
-    })
+    }
+    import.meta.hot?.on(MessageID.UpdatePageComponentProps, payloadHandler)
+    import.meta.hot?.on(MessageID.UpdateSiteSettingsProps, payloadHandler)
     return () => { isUnmounted = true }
   }, [])
 
