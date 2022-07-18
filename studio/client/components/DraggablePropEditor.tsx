@@ -3,7 +3,6 @@ import { CSS } from '@dnd-kit/utilities'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import PropEditor, { PropEditorProps } from './PropEditor'
 import { ControlledMenu, MenuItem, useMenuState } from '@szhsin/react-menu'
-import '@szhsin/react-menu/dist/core.css'
 import { useStudioContext } from './useStudioContext'
 
 interface DraggablePropEditorProps extends PropEditorProps {
@@ -58,9 +57,15 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
 
   return (
     <div ref={ref}>
-      <ControlledMenu {...contextMenuProps} anchorPoint={contextMenuAnchor}
-        onClose={() => toggleContextMenu(false)}>
-        <MenuItem onClick={deleteComponent}>
+      <ControlledMenu
+        {...contextMenuProps}
+        anchorPoint={contextMenuAnchor}
+        onClose={() => toggleContextMenu(false)}
+      >
+        <MenuItem
+          onClick={deleteComponent}
+          className='px-3 py-1 rounded-md bg-white select-none cursor-pointer'
+        >
           Delete
         </MenuItem>
       </ControlledMenu>
