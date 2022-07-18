@@ -47,6 +47,14 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
         handleContextMenu
       )
     }
+    return (() => {
+      if (element) {
+        element.removeEventListener(
+          'contextmenu',
+          handleContextMenu
+        )
+      }
+    })
   }, [handleContextMenu])
 
   function deleteComponent() {
