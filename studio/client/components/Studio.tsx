@@ -20,8 +20,8 @@ export default function Studio(props: StudioProps) {
 
   return (
     <StudioContext.Provider value={{ componentsToPropShapes, pageComponentsState, setPageComponentsState }}>
-      <div className='h-screen w-screen flex flex-row'>
-        <div className='h-screen w-2/5 bg-slate-500 flex flex-col'>
+      <div className='min-h-screen h-full w-screen flex flex-row'>
+        <div className='w-2/5 bg-slate-500 flex flex-col'>
           <h1 className='text-3xl text-white'>Yext Studio</h1>
           <PageEditor />
           <SiteSettings {...siteSettings}/>

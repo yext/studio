@@ -21,10 +21,15 @@ export default function SiteSettings(props: SiteSettingsProps) {
         propState={siteSettingsState}
         setPropState={setSiteSettingsState}
       />
-      <button className='btn' onClick={() => sendMessage(MessageID.UpdateSiteSettingsProps, {
-        path: 'src/siteSettings.ts',
-        state: siteSettingsState
-      })}>
+      <button
+        className='btn'
+        onClick={() => {
+          sendMessage(MessageID.UpdateSiteSettingsProps, {
+            path: 'src/siteSettings.ts',
+            state: siteSettingsState
+          })
+        }}
+      >
         Save
       </button>
     </div>

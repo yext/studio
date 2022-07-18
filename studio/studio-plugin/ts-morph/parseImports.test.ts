@@ -6,7 +6,8 @@ jest.mock('../getRootPath')
 it('works for ColorProp use case', () => {
   const imports = parseImports('components/Banner.tsx')
   expect(imports).toEqual({
-    './SpecialProps': ['ColorProp']
+    './SpecialProps': ['ColorProp'],
+    '../../../types': ['HexColor']
   })
 });
 

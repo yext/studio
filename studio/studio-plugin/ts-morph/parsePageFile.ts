@@ -1,7 +1,7 @@
-import { Project, ts, JsxAttribute } from 'ts-morph'
+import { Project, ts } from 'ts-morph'
 import { PageComponentsState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getComponentName, getComponentNodes, tsCompilerOptions } from './common'
+import { getComponentName, getComponentNodes, getPropValue, tsCompilerOptions } from './common'
 import { v1 } from 'uuid'
 
 export default function parsePageFile(filePath): PageComponentsState {
@@ -26,18 +26,4 @@ export default function parsePageFile(filePath): PageComponentsState {
     })
     return componentData
   })
-}
-
-function getPropValue(n: JsxAttribute) {
-  const stringNode = n.getFirstDescendantByKind(ts.SyntaxKind.StringLiteral)
-  if (stringNode) {
-    return stringNode.compilerNode.text
-  }
-  if (n.getFirstDescendantByKind(ts.SyntaxKind.TrueKeyword)) return true
-  if (n.getFirstDescendantByKind(ts.SyntaxKind.FalseKeyword)) return false
-  const numberNode = n.getFirstDescendantByKind(ts.SyntaxKind.NumericLiteral)
-  if (numberNode) {
-    return parseFloat(numberNode.compilerNode.text)
-  }
-  throw new Error('unhandled prop value for node: ' + n.compilerNode)
 }
