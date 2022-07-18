@@ -47,7 +47,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
         handleContextMenu
       )
     }
-  })
+  }, [handleContextMenu])
 
   function deleteComponent() {
     setPageComponentsState(pageComponentsState.filter((element) => {
