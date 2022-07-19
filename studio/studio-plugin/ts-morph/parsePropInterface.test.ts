@@ -1,6 +1,6 @@
 import parsePropInterface from './parsePropInterface'
 
-jest.spyOn(console, 'error')
+jest.spyOn(console, 'error').mockImplementation(jest.fn())
 
 it('updates correctly', () => {
   const propShape = parsePropInterface('studio/studio-plugin/__fixtures__/components/Banner.tsx', 'BannerProps')
