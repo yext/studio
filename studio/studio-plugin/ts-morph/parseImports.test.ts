@@ -1,4 +1,3 @@
-// import getRootPath from '../getRootPath';
 import parseImports from './parseImports'
 import getRootPath from '../getRootPath'
 
