@@ -1,5 +1,6 @@
 import { Plugin } from 'vite'
 import parsePropInterface from './ts-morph/parsePropInterface'
+import parseSiteSettingsFile from './ts-morph/parseSiteSettingsFile'
 import parsePageFile from './ts-morph/parsePageFile'
 import configureServer from './configureServer'
 import { StudioProps } from '../client/components/Studio'
@@ -17,7 +18,7 @@ export default function createStudioPlugin(): Plugin {
   const ctx: StudioProps = {
     siteSettings: {
       propShape: parsePropInterface('src/siteSettings.ts', 'SiteSettings'),
-      propState: {}
+      propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings')
     },
     componentsToPropShapes: {
       Banner: parsePropInterface('src/components/Banner.tsx', 'BannerProps')
