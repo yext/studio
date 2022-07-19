@@ -1,9 +1,11 @@
+import getRootPath from '../getRootPath'
 import parsePropInterface from './parsePropInterface'
 
 jest.spyOn(console, 'error').mockImplementation(jest.fn())
+jest.mock('../getRootPath')
 
 it('updates correctly', () => {
-  const propShape = parsePropInterface('studio/studio-plugin/__fixtures__/components/Banner.tsx', 'BannerProps')
+  const propShape = parsePropInterface(getRootPath('components/Banner.tsx'), 'BannerProps')
   expect(propShape).toEqual({
     title: {
       type: 'string'

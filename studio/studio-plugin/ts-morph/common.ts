@@ -1,6 +1,8 @@
-import { InterfaceDeclaration, JsxOpeningElement, JsxSelfClosingElement, SourceFile, Node, ts } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 import prettier from 'prettier'
+import fs from 'fs'
+import { resolveModuleName, ModuleResolutionHost } from 'typescript'
 import { TSPropShape, TSPropType } from '../../shared/models'
 import { specialTypesArray } from '../../types'
 import parseImports from './parseImports'
@@ -49,9 +51,10 @@ export function getPropValue(n: Node) {
   throw new Error('unhandled prop value for node: ' + n.compilerNode)
 }
 
-export function parseInterfaceDeclaration(propsInterface: InterfaceDeclaration, filePath: string) {
-  const structure = propsInterface.getStructure()
-  const properties = structure.properties ?? []
+interface ParseablePropertyStructure extends
+  JSDocableNodeStructure, TypedNodeStructure, PropertyNamedNodeStructure {}
+
+export function parsePropertyStructures(properties: ParseablePropertyStructure[], filePath: string) {
   const props: TSPropShape = {}
 
   let imports: Record<string, string[]>
@@ -95,4 +98,39 @@ export function parseInterfaceDeclaration(propsInterface: InterfaceDeclaration, 
     const types = ['string', 'number', 'boolean'].concat(specialTypesArray)
     return types.some(t => t === type)
   }
+}
+
+export function resolveNpmModule(moduleName: string): string {
+  const customModuleResolutionHost: ModuleResolutionHost = {
+    fileExists(fileName) {
+      return fs.existsSync(resolveTsFileName(fileName))
+    },
+    readFile(fileName) {
+      return fs.readFileSync(resolveTsFileName(fileName), 'utf-8')
+    }
+  }
+
+  const { resolvedModule } = resolveModuleName(moduleName, '', {}, customModuleResolutionHost)
+  if (!resolvedModule) {
+    throw new Error(`Could not resolve module: "${moduleName}"`)
+  }
+  const absPath = resolveTsFileName(resolvedModule.resolvedFileName)
+  return absPath
+
+  function resolveTsFileName(fileName: string) {
+    return resolve(__dirname, '../../..', fileName)
+  }
+}
+
+/** This is for development/testing purposes only */
+export function writeNodeToFile(compilerNode: any, testFileName = 'test.json') {
+  fs.writeFileSync(testFileName, JSON.stringify(compilerNode, (key, val) => {
+    if (['parent', 'pos', 'end', 'flags', 'modifierFlagsCache', 'transformFlags'].includes(key) || key.startsWith('_')) {
+      return undefined
+    }
+    if (key === 'kind') {
+      return ts.SyntaxKind[val]
+    }
+    return val
+  }, 2))
 }

@@ -16,3 +16,9 @@ export type TSPropMetadata = {
 export type TSPropType = 'string' | 'number' | 'boolean' | 'HexColor'
 
 export type TSPropShape = Record<string, TSPropMetadata>
+
+export interface NpmComponentProps {
+  [moduleName: string]: {
+    [componentName: string]: TSPropShape
+  }
+}

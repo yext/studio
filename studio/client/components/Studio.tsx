@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import SiteSettings, { SiteSettingsProps } from './SiteSettings'
 import PagePreview from './PagePreview'
-import { PageComponentsState, TSPropShape } from '../../shared/models'
+import { PageComponentsState, TSPropShape, NpmComponentProps } from '../../shared/models'
 import { StudioContext } from './useStudioContext'
 import { PageEditor } from './PageEditor'
 
@@ -11,7 +11,8 @@ export interface StudioProps {
   // only supports a page named "index" for now
   componentsOnPage: {
     index: PageComponentsState
-  }
+  },
+  npmComponentProps: NpmComponentProps
 }
 
 export default function Studio(props: StudioProps) {

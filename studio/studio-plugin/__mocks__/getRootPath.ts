@@ -4,4 +4,4 @@ const mockGetRootPath = jest.fn().mockImplementation(pathToFixture => {
   return path.resolve(__dirname, '../__fixtures__', pathToFixture)
 })
 
-export default mockGetRootPath;
+export default mockGetRootPath
