@@ -2,7 +2,7 @@ module.exports = {
   extends: [
     '@yext/slapshot/typescript-react'
   ],
-  ignorePatterns: ['*.js'],
+  ignorePatterns: ['*.js', '__fixtures__'],
   overrides: [
     {
       files: ['**'],

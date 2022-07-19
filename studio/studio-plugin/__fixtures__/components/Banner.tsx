@@ -26,5 +26,5 @@ export default function Banner(props: BannerProps) {
       {props.randomNum && <h2>{props.randomNum}</h2>}
       <h3>{props.someBool ? 'true' : 'false'}</h3>
     </div>
-  );
+  )
 }

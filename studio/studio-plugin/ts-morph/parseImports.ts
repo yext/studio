@@ -1,4 +1,4 @@
-import { ImportClause, Project, SyntaxKind} from 'ts-morph'
+import { ImportClause, Project, SyntaxKind } from 'ts-morph'
 import { tsCompilerOptions } from './common'
 
 export default function parseImports(filePath: string): Record<string, string[]> {

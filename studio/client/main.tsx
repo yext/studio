@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Studio from './components/Studio'
 import Toast from './components/Toast'
 import { createRoot } from 'react-dom/client'
@@ -12,8 +12,7 @@ import virtualStudioContext from 'virtual:yext-studio'
 
 import '../../dist/output.css'
 
-
-const promise = import(`@yext/answers-react-components`)
+const promise = import('@yext/answers-react-components')
 
 export function Main() {
   const [Comp, setComp] = useState<any>(null)
@@ -41,7 +40,6 @@ export function Main() {
     </>
   )
 }
-
 
 // import(`@yext/answers-react-components`).then(module => {
 //   console.log(module)
