@@ -3,6 +3,7 @@ import { parsePropertyStructures, resolveNpmModule, tsCompilerOptions } from './
 import { ModuleMetadata } from '../../shared/models'
 import parsePropInterface from './parsePropInterface'
 import path from 'path'
+import parseInitialProps from './parseInitialProps'
 
 /**
  * Parses out the prop structure for a particular npm module.
@@ -23,6 +24,7 @@ export default function parseNpmComponents(
   // But for now this should never be mutated
   const errorMetadataValue = {
     propShape: {},
+    initialProps: {},
     importIdentifier
   }
   const componentsToProps: ModuleMetadata = {}
@@ -51,8 +53,10 @@ export default function parseNpmComponents(
     if (typeNode.isKind(ts.SyntaxKind.TypeLiteral)) {
       const properties = typeNode.getProperties().map(p => p.getStructure())
       const propShape = parsePropertyStructures(properties, absPath)
+      const initialProps = parseInitialProps(absPath)
       componentsToProps[componentName] = {
         propShape,
+        initialProps,
         importIdentifier
       }
     } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
