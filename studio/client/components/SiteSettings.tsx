@@ -1,23 +1,23 @@
 import { useState } from 'react'
 import { MessageID } from '../../shared/messages'
-import { PropState, TSPropShape } from '../../shared/models'
+import { ComponentMetadata, PropState } from '../../shared/models'
 import sendMessage from '../messaging/sendMessage'
 import PropEditor from './PropEditor'
 
 export interface SiteSettingsProps {
-  propShape: TSPropShape,
+  componentMetadata: ComponentMetadata,
   propState: PropState
 }
 
 export default function SiteSettings(props: SiteSettingsProps) {
-  const { propShape, propState } = props
+  const { componentMetadata, propState } = props
   const [siteSettingsState, setSiteSettingsState] = useState(propState)
 
   return (
     <div>
       <h1 className='text-2xl text-white'>Site Settings</h1>
       <PropEditor
-        propShape={propShape}
+        componentMetadata={componentMetadata}
         propState={siteSettingsState}
         setPropState={setSiteSettingsState}
       />

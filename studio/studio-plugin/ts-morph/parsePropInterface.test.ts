@@ -5,8 +5,8 @@ jest.spyOn(console, 'error').mockImplementation(jest.fn())
 jest.mock('../getRootPath')
 
 it('updates correctly', () => {
-  const propShape = parsePropInterface(getRootPath('components/Banner.tsx'), 'BannerProps')
-  expect(propShape).toEqual({
+  const componentMetadata = parsePropInterface(getRootPath('components/Banner.tsx'), 'BannerProps')
+  expect(componentMetadata).toEqual({
     title: {
       type: 'string'
     },

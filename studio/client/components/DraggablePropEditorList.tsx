@@ -6,12 +6,12 @@ import {
 } from '@dnd-kit/sortable'
 import DraggablePropEditor from './DraggablePropEditor'
 import { useStudioContext } from './useStudioContext'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 import { PropState } from '../../shared/models'
 
 export default function DraggablePropEditorList() {
-  const { pageComponentsState, setPageComponentsState, componentsToPropShapes } = useStudioContext()
+  const { pageComponentsState, setPageComponentsState, moduleNameToComponentMetadata } = useStudioContext()
   const [listState, setListState] = useState(pageComponentsState)
 
   // Update the listState if any other component adds or removes components
@@ -44,6 +44,14 @@ export default function DraggablePropEditorList() {
     setPageComponentsState(updatedListState)
   }
 
+  console.log(moduleNameToComponentMetadata)
+  const componentNames = useMemo(() => {
+    const names =
+      Object.values(moduleNameToComponentMetadata)
+        .flatMap(nameToMetadata => Object.keys(nameToMetadata))
+    return new Set(names)
+  }, [moduleNameToComponentMetadata])
+
   return (
     <DndContext
       onDragEnd={handleDragEnd}
@@ -60,7 +68,7 @@ export default function DraggablePropEditorList() {
             copy[i].props = val
             setPageComponentsState(copy)
           }
-          if (!(c.name in componentsToPropShapes)) {
+          if (!componentNames.has(c.name)) {
             console.error('unknown component', c.name, 'gracefully skipping for now.')
             return null
           }
@@ -70,7 +78,7 @@ export default function DraggablePropEditorList() {
               uuid={c.uuid}
               key={c.uuid}
               propState={c.props}
-              propShape={componentsToPropShapes[c.name]}
+              componentMetadata={moduleNameToComponentMetadata[c.moduleName][c.name]}
               setPropState={setPropState}
             />
           )

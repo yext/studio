@@ -58,7 +58,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
   }, [handleContextMenu])
 
   function deleteComponent() {
-    setPageComponentsState(pageComponentsState.filter((element) => {
+    setPageComponentsState(pageComponentsState.filter(element => {
       return element.uuid !== props.uuid
     }))
   }

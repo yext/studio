@@ -1,3 +1,4 @@
+import { SearchBar } from '@yext/answers-react-components'
 import Banner from '../components/Banner'
 
 export default function () {
@@ -11,6 +12,7 @@ export default function () {
         someBool={false}
         backgroundColor='#00ff00'
       />
+      <SearchBar/>
     </>
   )
 }

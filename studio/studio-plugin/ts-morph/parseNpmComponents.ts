@@ -1,7 +1,9 @@
 import { Project, ts } from 'ts-morph'
 import { parsePropertyStructures, resolveNpmModule, tsCompilerOptions } from './common'
-import { NpmComponentProps } from '../../shared/models'
+import { ModuleMetadata } from '../../shared/models'
 import parsePropInterface from './parsePropInterface'
+// import resolve from 'resolve/sync'
+const resolve = require('resolve/sync')
 
 /**
  * Parses out the prop structure for a particular npm module.
@@ -10,13 +12,21 @@ import parsePropInterface from './parsePropInterface'
 export default function parseNpmComponents(
   moduleName: string,
   matchers: (string | RegExp)[]
-): NpmComponentProps[typeof moduleName] {
+): ModuleMetadata {
   const absPath = resolveNpmModule(moduleName)
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(absPath)
   const sourceFile = p.getSourceFileOrThrow(absPath)
+  // const importIdentifier = resolve(moduleName)
+  const importIdentifier = require.resolve(moduleName)
 
-  const componentsToProps = {}
+  // We may want to not use the same object reference over in the future
+  // But for now this should never be mutated
+  const errorMetadataValue = {
+    propShape: {},
+    importIdentifier
+  }
+  const componentsToProps: ModuleMetadata = {}
   sourceFile.getDescendantStatements().forEach(n => {
     if (!n.isKind(ts.SyntaxKind.FunctionDeclaration)) {
       return
@@ -30,35 +40,38 @@ export default function parseNpmComponents(
       if (parameters.length > 1) {
         console.error(`Found ${parameters.length} number of arguments for functional component ${componentName}, expected only 1. Ignoring this component's props.`)
       }
-      componentsToProps[componentName] = {}
+      componentsToProps[componentName] = errorMetadataValue
       return
     }
     const typeNode = parameters[0].getTypeNode()
     if (!typeNode) {
       console.error(`No type information found for "${componentName}"'s props. Ignoring this component's props.`)
-      componentsToProps[componentName] = {}
+      componentsToProps[componentName] = errorMetadataValue
       return
     }
     if (typeNode.isKind(ts.SyntaxKind.TypeLiteral)) {
       const properties = typeNode.getProperties().map(p => p.getStructure())
       const propShape = parsePropertyStructures(properties, absPath)
-      componentsToProps[componentName] = propShape
+      componentsToProps[componentName] = {
+        propShape,
+        importIdentifier
+      }
     } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
       try {
         // TODO(oshi): currently assumes that the prop interface is in the same file as the component itself
         // This is not necessarily the case. Deferring the import tracing logic for now, since an imported
         // interface may live several imports deep.
         const typeName = typeNode.getTypeName().getText()
-        const propShape = parsePropInterface(absPath, typeName)
-        componentsToProps[componentName] = propShape
+        const componentMetadata = parsePropInterface(absPath, typeName, importIdentifier)
+        componentsToProps[componentName] = componentMetadata
       } catch (err) {
         console.error('Caught an error, likely with regards to nested interfaces. Ignoring props for ', componentName)
         console.error(err)
-        componentsToProps[componentName] = {}
+        componentsToProps[componentName] = errorMetadataValue
       }
     } else {
       console.error(`Unhandled parameter type "${typeNode.getKindName()}" found for "${componentName}". Ignoring this component's props.`)
-      componentsToProps[componentName] = {}
+      componentsToProps[componentName] = errorMetadataValue
     }
   })
   return componentsToProps

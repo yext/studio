@@ -1,6 +1,5 @@
 import { ViteDevServer, WebSocketCustomListener, WebSocketClient } from 'vite'
 import { MessageID, StudioEventMap, ResponseEventMap } from '../shared/messages'
-import { PageComponentsState, PropState } from '../shared/models'
 import updatePageFile from './ts-morph/updatePageFile'
 import updateSiteSettingsFile from './ts-morph/updateSiteSettingsFile'
 

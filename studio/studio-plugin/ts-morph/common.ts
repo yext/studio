@@ -1,12 +1,12 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
 import { resolveModuleName, ModuleResolutionHost } from 'typescript'
-import { TSPropShape, TSPropType } from '../../shared/models'
 import { specialTypesArray } from '../../types'
 import parseImports from './parseImports'
 import { resolve } from 'path'
+import { ComponentMetadata, PropMetadata, PropShape, PropType } from '../../shared/models'
 
 export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
   const nodes = sourceFile
@@ -55,7 +55,7 @@ interface ParseablePropertyStructure extends
   JSDocableNodeStructure, TypedNodeStructure, PropertyNamedNodeStructure {}
 
 export function parsePropertyStructures(properties: ParseablePropertyStructure[], filePath: string) {
-  const props: TSPropShape = {}
+  const props: PropShape = {}
 
   let imports: Record<string, string[]>
   properties.forEach(p => {
@@ -74,7 +74,7 @@ export function parsePropertyStructures(properties: ParseablePropertyStructure[]
   })
   return props
 
-  function validateProp(type: TSPropType): boolean {
+  function validateProp(type: PropType): boolean {
     if (!imports) {
       imports = parseImports(filePath)
     }
@@ -94,7 +94,7 @@ export function parsePropertyStructures(properties: ParseablePropertyStructure[]
     return isValidProp
   }
 
-  function isPropType(type: unknown): type is TSPropType {
+  function isPropType(type: unknown): type is PropType {
     const types = ['string', 'number', 'boolean'].concat(specialTypesArray)
     return types.some(t => t === type)
   }

@@ -1,30 +1,33 @@
-import { PropState, TSPropShape } from '../../shared/models'
+import { PropState, ComponentMetadata } from '../../shared/models'
 import { HexColor } from '../../types'
 
 export interface PropEditorProps {
   propState: PropState,
-  propShape: TSPropShape,
+  componentMetadata: ComponentMetadata,
   setPropState: (val: PropState) => void
 }
 
 export default function PropEditor({
   propState,
   setPropState,
-  propShape
+  componentMetadata
 }: PropEditorProps) {
+  if (!componentMetadata) {
+    console.error('Error rendering prop editor for', propState)
+    return null
+  }
   function updatePropState(propName, propValue) {
     setPropState({
       ...propState,
       [propName]: propValue
     })
   }
-
   return (
     <div className='flex flex-col'>
       {
-        Object.keys(propShape).map((propName, index) => {
-          const propType = propShape[propName].type
-          const propDoc = propShape[propName].doc
+        Object.keys(componentMetadata).map((propName, index) => {
+          const propType = componentMetadata[propName].type
+          const propDoc = componentMetadata[propName].doc
           const propValue = propState[propName] as any
           const key = propName + '-' + index
           const sharedProps ={

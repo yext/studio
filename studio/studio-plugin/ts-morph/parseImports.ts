@@ -1,6 +1,10 @@
 import { ImportClause, Project, SyntaxKind } from 'ts-morph'
 import { tsCompilerOptions } from './common'
 
+/**
+ * Returns a mapping of import identifier (i.e. path or module name)
+ * to identifiers imported from that path or module name.
+ */
 export default function parseImports(filePath: string): Record<string, string[]> {
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(filePath)

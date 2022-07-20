@@ -7,7 +7,7 @@ import { StudioProps } from '../client/components/Studio'
 import studioConfig from '../../src/studio'
 import getRootPath from './getRootPath'
 import parseNpmComponents from './ts-morph/parseNpmComponents'
-import { NpmComponentProps } from '../shared/models'
+import { ModuleMetadata } from '../shared/models'
 
 /**
  * Handles server-client communication.
@@ -19,25 +19,27 @@ export default function createStudioPlugin(): Plugin {
   const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
-  const npmComponentProps: NpmComponentProps =
-    Object.keys(studioConfig.npmComponents).reduce((shapes, moduleName) => {
+  const npmComponentProps =
+    Object.keys(studioConfig['npmComponents']).reduce((shapes, moduleName) => {
       const matchers = studioConfig.npmComponents[moduleName]
       shapes[moduleName] = parseNpmComponents(moduleName, matchers)
       return shapes
-    }, {})
+    }, {} as Record<keyof typeof studioConfig['npmComponents'], ModuleMetadata>)
 
   const ctx: StudioProps = {
     siteSettings: {
-      propShape: parsePropInterface(getRootPath('src/siteSettings.ts'), 'SiteSettings'),
+      componentMetadata: parsePropInterface(getRootPath('src/siteSettings.ts'), 'SiteSettings'),
       propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings')
     },
-    componentsToPropShapes: {
-      Banner: parsePropInterface(getRootPath('src/components/Banner.tsx'), 'BannerProps')
+    moduleNameToComponentMetadata: {
+      localComponents: {
+        Banner: parsePropInterface(getRootPath('src/components/Banner.tsx'), 'BannerProps')
+      },
+      ...npmComponentProps
     },
     componentsOnPage: {
       index: parsePageFile('src/pages/index.tsx')
-    },
-    npmComponentProps
+    }
   }
 
   return {

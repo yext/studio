@@ -1,8 +1,9 @@
 import { createContext, useContext } from 'react'
-import { PageComponentsState, TSPropShape } from '../../shared/models'
+import { PageComponentsState } from '../../shared/models'
+import { StudioProps } from './Studio'
 
 export interface StudioContextType {
-  componentsToPropShapes: Record<string, TSPropShape>,
+  moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
   pageComponentsState: PageComponentsState,
   setPageComponentsState: React.Dispatch<React.SetStateAction<PageComponentsState>>
 }
