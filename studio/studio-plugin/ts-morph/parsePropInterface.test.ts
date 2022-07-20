@@ -8,6 +8,12 @@ it('updates correctly', () => {
   const componentMetadata = parsePropInterface(getRootPath('components/Banner.tsx'), 'BannerProps')
   expect(componentMetadata).toEqual({
     importIdentifier: expect.stringContaining('components/Banner.tsx'),
+    initialProps: {
+      title: 'Title',
+      randomNum: 42,
+      someBool: true,
+      backgroundColor: '#ffff00'
+    },
     propShape: {
       title: {
         type: 'string'

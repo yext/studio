@@ -6,6 +6,7 @@ it('string matcher works', () => {
   expect(result).toEqual({
     ApplyFiltersButton: {
       importIdentifier: expect.stringContaining('.ts'),
+      initialProps: {},
       propShape: {
         label: {
           doc: expect.stringContaining('label for the button'),
@@ -21,6 +22,7 @@ it('works with regex matcher', () => {
   expect(result).toEqual({
     ApplyFiltersButton: {
       importIdentifier: expect.stringContaining('.ts'),
+      initialProps: {},
       propShape: {
         label: {
           doc: expect.stringContaining('label for the button'),

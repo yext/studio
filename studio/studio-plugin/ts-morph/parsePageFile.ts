@@ -1,7 +1,7 @@
 import { Project, ts } from 'ts-morph'
 import { PageComponentsState, PossibleModuleNames } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getComponentName, getComponentNodes, getPropValue, tsCompilerOptions } from './common'
+import { getComponentName, getComponentNodes, getPropName, getPropValue, tsCompilerOptions } from './common'
 import { v1 } from 'uuid'
 import parseImports from './parseImports'
 
@@ -32,7 +32,7 @@ export default function parsePageFile(filePath): PageComponentsState {
       moduleName: moduleName as PossibleModuleNames
     }
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
-      const propName = a.getFirstDescendantByKind(ts.SyntaxKind.Identifier)?.compilerNode.text
+      const propName = getPropName(a)
       if (!propName) {
         throw new Error('Could not parse page file')
       }
