@@ -6,8 +6,8 @@ import updateSiteSettingsFile from './ts-morph/updateSiteSettingsFile'
 
 export default function configureStudioServer(server: ViteDevServer) {
   /** Register a listener for the given messageId, infer it's payload type, and perform error handling */
-  function registerListener(
-    messageId: MessageID,
+  function registerListener<T extends MessageID>(
+    messageId: T,
     listener: (data: StudioEventMap[typeof messageId]) => string
   ) {
     const handleRes: WebSocketCustomListener<StudioEventMap[typeof messageId]> = (data, client) => {
@@ -24,12 +24,12 @@ export default function configureStudioServer(server: ViteDevServer) {
   }
 
   registerListener(MessageID.UpdatePageComponentProps, data => {
-    updatePageFile(data.state as PageComponentsState, data.path)
+    updatePageFile(data.state, data.path)
     return 'successfully edited: ' + data.path
   })
 
   registerListener(MessageID.UpdateSiteSettingsProps, data => {
-    updateSiteSettingsFile(data.state as PropState, data.path)
+    updateSiteSettingsFile(data.state, data.path)
     return 'successfully edited: ' + data.path
   })
 }
