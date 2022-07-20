@@ -1,8 +1,8 @@
 export interface SiteSettings {
-  apiKey: string,
-  experienceKey: string,
-  locale: string,
-  experienceVersion: string,
+  apiKey: string
+  experienceKey: string
+  locale: string
+  experienceVersion: string
   businessId: number
 }
 

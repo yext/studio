@@ -44,7 +44,6 @@ export default function DraggablePropEditorList() {
     setPageComponentsState(updatedListState)
   }
 
-  console.log(moduleNameToComponentMetadata)
   const componentNames = useMemo(() => {
     const names =
       Object.values(moduleNameToComponentMetadata)
@@ -69,7 +68,7 @@ export default function DraggablePropEditorList() {
             setPageComponentsState(copy)
           }
           if (!componentNames.has(c.name)) {
-            console.error('unknown component', c.name, 'gracefully skipping for now.')
+            // console.error('unknown component', c.name, 'gracefully skipping for now.')
             return null
           }
 

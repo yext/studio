@@ -2,24 +2,34 @@ import React, { FunctionComponent, useEffect } from 'react'
 import { useState } from 'react'
 import { ModuleNameToComponentMetadata, PageComponentsState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
-const bob = '@yext/answers-react-components'
-// import(bob).then(m => console.log('hi!', m))
-import('@yext/answers-react-components').then(m => console.log('hihi!', m))
-console.log(import.meta.glob('@yext/answers-react-components'))
+import Layout from '../../../src/layouts/layout'
+
+const componentNameToComponent = {}
 
 export default function PagePreview() {
   const { pageComponentsState, moduleNameToComponentMetadata } = useStudioContext()
   const [
-    componentNameToComponent,
     loadedComponents
   ] = useComponents(pageComponentsState, moduleNameToComponentMetadata)
 
   return (
     <div className='w-full h-full'>
-      {loadedComponents.map((c, i) => React.createElement(componentNameToComponent[c.name], {
-        ...c.props,
-        key: `${c.name}-${i}`
-      }))}
+      <Layout>
+        {loadedComponents.map((c, i) => {
+          if (c.name === 'Layout') {
+            return null
+          }
+          if (!componentNameToComponent[c.name]) {
+            console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
+            return null
+          }
+          return React.createElement(componentNameToComponent[c.name], {
+            ...c.props,
+            verticalConfigMap: {},
+            key: `${c.name}-${i}`
+          })
+        })}
+      </Layout>
     </div>
   )
 }
@@ -31,41 +41,28 @@ export default function PagePreview() {
 function useComponents(
   pageComponentsState: PageComponentsState,
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata
-): [Record<string, FunctionComponent>, PageComponentsState] {
-  const [componentNameToComponent, setComponentNameToComponent] = useState({})
+): [PageComponentsState] {
   const [loadedComponents, setLoadedComponents] = useState<PageComponentsState>([])
 
   useEffect(() => {
-    const seenNames = new Set()
-    const componentPromises = Promise.all(pageComponentsState.map(c => {
+    Promise.all(pageComponentsState.map(c => {
       const { name, moduleName } = c
-      if (seenNames.has(name)) {
+      if (name in componentNameToComponent) {
         return null
       }
-      seenNames.add(name)
+      if (name === 'Layout') {
+        // console.error('TODO remove hardcoded layout support')
+        return null
+      }
       const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
-      console.log(importIdentifier)
       return import(importIdentifier).then(module => {
-        console.log('loaded module', importIdentifier, name, module )
-        console.log(module[name] ?? module.default as FunctionComponent)
-        return {
-          name,
-          Component: module[name] ?? module.default as FunctionComponent
-        }
+        componentNameToComponent[name] = module[name] ?? module.default as FunctionComponent
       })
-    }))
-    componentPromises.then(components => {
-      const componentNameToComponent = components.reduce((prev, curr) => {
-        if (!curr) {
-          return prev
-        }
-        prev[curr.name] = curr.Component
-        return prev
-      }, {})
-      setComponentNameToComponent(componentNameToComponent)
+    })).then(() => {
+      // TODO(oshi): this probably runs into race conditions issues
       setLoadedComponents(pageComponentsState)
     })
   }, [moduleNameToComponentMetadata, pageComponentsState])
 
-  return [componentNameToComponent, loadedComponents]
+  return [loadedComponents]
 }

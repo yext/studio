@@ -22,12 +22,13 @@ export default function PropEditor({
       [propName]: propValue
     })
   }
+  const { propShape } = componentMetadata
   return (
     <div className='flex flex-col'>
       {
-        Object.keys(componentMetadata).map((propName, index) => {
-          const propType = componentMetadata[propName].type
-          const propDoc = componentMetadata[propName].doc
+        Object.keys(propShape).map((propName, index) => {
+          const propType = propShape[propName].type
+          const propDoc = propShape[propName].doc
           const propValue = propState[propName] as any
           const key = propName + '-' + index
           const sharedProps ={

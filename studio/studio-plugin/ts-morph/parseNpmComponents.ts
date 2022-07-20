@@ -2,8 +2,7 @@ import { Project, ts } from 'ts-morph'
 import { parsePropertyStructures, resolveNpmModule, tsCompilerOptions } from './common'
 import { ModuleMetadata } from '../../shared/models'
 import parsePropInterface from './parsePropInterface'
-// import resolve from 'resolve/sync'
-const resolve = require('resolve/sync')
+import path from 'path'
 
 /**
  * Parses out the prop structure for a particular npm module.
@@ -18,7 +17,7 @@ export default function parseNpmComponents(
   p.addSourceFilesAtPaths(absPath)
   const sourceFile = p.getSourceFileOrThrow(absPath)
   // const importIdentifier = resolve(moduleName)
-  const importIdentifier = require.resolve(moduleName)
+  const importIdentifier = path.resolve('/src/answers-components-re-export.ts')
 
   // We may want to not use the same object reference over in the future
   // But for now this should never be mutated
