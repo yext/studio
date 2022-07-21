@@ -7,11 +7,14 @@ export default function parseInitialProps(filePath: string): PropState {
   p.addSourceFilesAtPaths(filePath)
   const sourceFile = p.getSourceFileOrThrow(filePath)
 
-  const initialProps = sourceFile.getDescendantsOfKind(ts.SyntaxKind.ObjectLiteralExpression).find(n => {
-    return n.getParent().compilerNode.getFirstToken()?.getText() === 'initialProps'
-  })
-
   const props: PropState = {}
+  const initialPropsSymbol = sourceFile.getExportSymbols().find(s => s.compilerSymbol.escapedName === 'initialProps')
+  if (!initialPropsSymbol) {
+    return props
+  }
+
+  const initialProps =
+    initialPropsSymbol?.getValueDeclaration()?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
   if (!initialProps) {
     return props
   }
