@@ -9,6 +9,8 @@ import getRootPath from './getRootPath'
 import parseNpmComponents from './ts-morph/parseNpmComponents'
 import { ModuleMetadata } from '../shared/models'
 import { getSourceFile } from './ts-morph/common'
+import fs from 'fs'
+import path from 'path'
 
 /**
  * Handles server-client communication.
@@ -27,6 +29,15 @@ export default function createStudioPlugin(): Plugin {
       return shapes
     }, {} as Record<keyof typeof studioConfig['npmComponents'], ModuleMetadata>)
 
+  const localComponents = fs.readdirSync(getRootPath('src/components'), 'utf-8').reduce((prev, curr) => {
+    const componentName = curr.substring(0, curr.lastIndexOf('.'))
+    prev[componentName] = parsePropInterface(
+      getSourceFile(getRootPath(`src/components/${curr}`)),
+      getRootPath(`src/components/${curr}`),
+      `${componentName}Props`
+    )
+    return prev
+  }, {})
   const ctx: StudioProps = {
     siteSettings: {
       componentMetadata: parsePropInterface(
@@ -37,13 +48,7 @@ export default function createStudioPlugin(): Plugin {
       propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings')
     },
     moduleNameToComponentMetadata: {
-      localComponents: {
-        Banner: parsePropInterface(
-          getSourceFile(getRootPath('src/components/Banner.tsx')),
-          getRootPath('src/components/Banner.tsx'),
-          'BannerProps'
-        )
-      },
+      localComponents,
       ...npmComponentProps
     },
     componentsOnPage: {
