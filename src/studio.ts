@@ -1,5 +1,5 @@
 export default {
   npmComponents: {
-    '@yext/answers-react-components': [/.*/]
+    '@yext/answers-react-components': ['SearchBar', 'UniversalResults']
   }
 }
