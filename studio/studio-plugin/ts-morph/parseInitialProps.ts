@@ -1,12 +1,8 @@
-import { Project, ts } from 'ts-morph'
+import { SourceFile, ts } from 'ts-morph'
 import { PropState } from '../../shared/models'
-import { getPropName, getPropValue, tsCompilerOptions } from './common'
+import { getPropName, getPropValue } from './common'
 
-export default function parseInitialProps(filePath: string): PropState {
-  const p = new Project(tsCompilerOptions)
-  p.addSourceFilesAtPaths(filePath)
-  const sourceFile = p.getSourceFileOrThrow(filePath)
-
+export default function parseInitialProps(sourceFile: SourceFile): PropState {
   const props: PropState = {}
   const initialPropsSymbol = sourceFile.getExportSymbols().find(s => s.compilerSymbol.escapedName === 'initialProps')
   if (!initialPropsSymbol) {

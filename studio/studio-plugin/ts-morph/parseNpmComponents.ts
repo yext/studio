@@ -1,9 +1,8 @@
-import { Project, ts } from 'ts-morph'
-import { parsePropertyStructures, resolveNpmModule, tsCompilerOptions } from './common'
+import { ts } from 'ts-morph'
+import { getSourceFile, parsePropertyStructures, resolveNpmModule } from './common'
 import { ModuleMetadata } from '../../shared/models'
 import parsePropInterface from './parsePropInterface'
 import path from 'path'
-import parseInitialProps from './parseInitialProps'
 
 /**
  * Parses out the prop structure for a particular npm module.
@@ -14,9 +13,7 @@ export default function parseNpmComponents(
   matchers: (string | RegExp)[]
 ): ModuleMetadata {
   const absPath = resolveNpmModule(moduleName)
-  const p = new Project(tsCompilerOptions)
-  p.addSourceFilesAtPaths(absPath)
-  const sourceFile = p.getSourceFileOrThrow(absPath)
+  const sourceFile = getSourceFile(absPath)
   // const importIdentifier = resolve(moduleName)
   const importIdentifier = path.resolve('/src/answers-components-re-export.ts')
 
@@ -53,10 +50,9 @@ export default function parseNpmComponents(
     if (typeNode.isKind(ts.SyntaxKind.TypeLiteral)) {
       const properties = typeNode.getProperties().map(p => p.getStructure())
       const propShape = parsePropertyStructures(properties, absPath)
-      const initialProps = parseInitialProps(absPath)
       componentsToProps[componentName] = {
         propShape,
-        initialProps,
+        initialProps: {},
         importIdentifier
       }
     } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
@@ -65,7 +61,7 @@ export default function parseNpmComponents(
         // This is not necessarily the case. Deferring the import tracing logic for now, since an imported
         // interface may live several imports deep.
         const typeName = typeNode.getTypeName().getText()
-        const componentMetadata = parsePropInterface(absPath, typeName, importIdentifier)
+        const componentMetadata = parsePropInterface(sourceFile, absPath, typeName, importIdentifier)
         componentsToProps[componentName] = componentMetadata
       } catch (err) {
         console.error('Caught an error, likely with regards to nested interfaces. Ignoring props for ', componentName)

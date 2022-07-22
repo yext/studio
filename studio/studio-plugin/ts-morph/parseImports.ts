@@ -1,14 +1,12 @@
-import { ImportClause, Project, SyntaxKind } from 'ts-morph'
-import { tsCompilerOptions } from './common'
+import { ImportClause, SourceFile, SyntaxKind } from 'ts-morph'
+import { getSourceFile } from './common'
 
 /**
  * Returns a mapping of import identifier (i.e. path or module name)
  * to identifiers imported from that path or module name.
  */
-export default function parseImports(filePath: string): Record<string, string[]> {
-  const p = new Project(tsCompilerOptions)
-  p.addSourceFilesAtPaths(filePath)
-  const sourceFile = p.getSourceFileOrThrow(filePath)
+export default function parseImports(file: string | SourceFile): Record<string, string[]> {
+  const sourceFile = typeof file === 'string' ? getSourceFile(file) : file
   const importPathToImportNames: Record<string, string[]> = {}
 
   sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration).forEach(n => {

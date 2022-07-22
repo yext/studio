@@ -1,14 +1,12 @@
 import fs from 'fs'
-import { Project, ts } from 'ts-morph'
+import { ts } from 'ts-morph'
 import { PageComponentsState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { prettify, tsCompilerOptions } from './common'
+import { getSourceFile, prettify } from './common'
 
 export default function updatePageFile(updatedState: PageComponentsState, pageFilePath) {
   const file = getRootPath(pageFilePath)
-  const p = new Project(tsCompilerOptions)
-  p.addSourceFilesAtPaths(file)
-  const sourceFile = p.getSourceFileOrThrow(file)
+  const sourceFile = getSourceFile(file)
   const pageComponent = sourceFile.getDescendantsOfKind(ts.SyntaxKind.FunctionDeclaration).find(n => {
     return n.isDefaultExport
   })

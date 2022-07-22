@@ -1,14 +1,12 @@
 import fs from 'fs'
-import { Project, ts, PropertyAssignment } from 'ts-morph'
+import { ts, PropertyAssignment } from 'ts-morph'
 import { PropState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { prettify, tsCompilerOptions } from './common'
+import { getSourceFile, prettify } from './common'
 
 export default function updateSiteSettingsFile(updatedState: PropState, pageFilePath: string) {
   const file = getRootPath(pageFilePath)
-  const p = new Project(tsCompilerOptions)
-  p.addSourceFilesAtPaths(file)
-  const sourceFile = p.getSourceFileOrThrow(file)
+  const sourceFile = getSourceFile(file)
   const siteSettingsNode = sourceFile
     .getDescendantsOfKind(ts.SyntaxKind.ObjectLiteralExpression)
     .find(n => n.getContextualType()?.getSymbol()?.getName() === 'SiteSettings')

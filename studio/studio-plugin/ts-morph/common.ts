@@ -1,4 +1,4 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
@@ -137,4 +137,10 @@ export function writeNodeToFile(compilerNode: any, testFileName = 'test.json') {
     }
     return val
   }, 2))
+}
+
+export function getSourceFile(file: string): SourceFile {
+  const p = new Project(tsCompilerOptions)
+  p.addSourceFilesAtPaths(file)
+  return p.getSourceFileOrThrow(file)
 }

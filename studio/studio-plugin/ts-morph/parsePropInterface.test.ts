@@ -1,11 +1,16 @@
 import getRootPath from '../getRootPath'
+import { getSourceFile } from './common'
 import parsePropInterface from './parsePropInterface'
 
 jest.spyOn(console, 'error').mockImplementation(jest.fn())
 jest.mock('../getRootPath')
 
 it('updates correctly', () => {
-  const componentMetadata = parsePropInterface(getRootPath('components/Banner.tsx'), 'BannerProps')
+  const componentMetadata = parsePropInterface(
+    getSourceFile(getRootPath('components/Banner.tsx')),
+    getRootPath('components/Banner.tsx'),
+    'BannerProps'
+  )
   expect(componentMetadata).toEqual({
     importIdentifier: expect.stringContaining('components/Banner.tsx'),
     initialProps: {

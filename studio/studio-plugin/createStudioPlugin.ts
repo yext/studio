@@ -8,6 +8,7 @@ import studioConfig from '../../src/studio'
 import getRootPath from './getRootPath'
 import parseNpmComponents from './ts-morph/parseNpmComponents'
 import { ModuleMetadata } from '../shared/models'
+import { getSourceFile } from './ts-morph/common'
 
 /**
  * Handles server-client communication.
@@ -28,12 +29,20 @@ export default function createStudioPlugin(): Plugin {
 
   const ctx: StudioProps = {
     siteSettings: {
-      componentMetadata: parsePropInterface(getRootPath('src/siteSettings.ts'), 'SiteSettings'),
+      componentMetadata: parsePropInterface(
+        getSourceFile(getRootPath('src/siteSettings.ts')),
+        getRootPath('src/siteSettings.ts'),
+        'SiteSettings'
+      ),
       propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings')
     },
     moduleNameToComponentMetadata: {
       localComponents: {
-        Banner: parsePropInterface(getRootPath('src/components/Banner.tsx'), 'BannerProps')
+        Banner: parsePropInterface(
+          getSourceFile(getRootPath('src/components/Banner.tsx')),
+          getRootPath('src/components/Banner.tsx'),
+          'BannerProps'
+        )
       },
       ...npmComponentProps
     },

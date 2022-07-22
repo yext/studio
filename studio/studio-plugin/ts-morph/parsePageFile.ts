@@ -1,17 +1,15 @@
-import { Project, ts } from 'ts-morph'
+import { ts } from 'ts-morph'
 import { PageComponentsState, PossibleModuleNames } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getComponentName, getComponentNodes, getPropName, getPropValue, tsCompilerOptions } from './common'
+import { getComponentName, getComponentNodes, getPropName, getPropValue, getSourceFile } from './common'
 import { v1 } from 'uuid'
 import parseImports from './parseImports'
 
 export default function parsePageFile(filePath): PageComponentsState {
   const file = getRootPath(filePath)
-  const p = new Project(tsCompilerOptions)
-  p.addSourceFilesAtPaths(file)
-  const sourceFile = p.getSourceFileOrThrow(file)
+  const sourceFile = getSourceFile(file)
   const usedComponents = getComponentNodes(sourceFile)
-  const imports = parseImports(file)
+  const imports = parseImports(sourceFile)
 
   return usedComponents.map(n => {
     const name = getComponentName(n)
