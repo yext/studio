@@ -1,3 +1,4 @@
 node_modules/
-dist/
-studio/lib/
+/dist
+/docs/.vitepress/dist
+/studio/lib
