@@ -20,6 +20,7 @@ export type ModuleMetadata = {
 }
 export type ComponentMetadata = {
   propShape: PropShape,
+  initialProps: PropState,
   importIdentifier: string
 }
 export type PropShape = {

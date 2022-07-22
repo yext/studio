@@ -11,5 +11,4 @@ jobs:
         uses: actions/setup-node@v3
       - run: npm ci
       - run: npx jest
-      - run: cd studio
-      - run: npx tsc
+      - run: cd studio && npx tsc

@@ -6,7 +6,7 @@ import { resolveModuleName, ModuleResolutionHost } from 'typescript'
 import { specialTypesArray } from '../../types'
 import parseImports from './parseImports'
 import { resolve } from 'path'
-import { ComponentMetadata, PropMetadata, PropShape, PropType } from '../../shared/models'
+import { PropShape, PropType } from '../../shared/models'
 
 export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
   const nodes = sourceFile
@@ -35,6 +35,10 @@ export function prettify(code: string) {
     singleQuote: true,
     jsxSingleQuote: true
   })
+}
+
+export function getPropName(n: Node): string | undefined {
+  return n.getFirstDescendantByKind(ts.SyntaxKind.Identifier)?.compilerNode.text
 }
 
 export function getPropValue(n: Node) {

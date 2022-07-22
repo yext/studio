@@ -17,12 +17,12 @@ export default function AddComponentButton() {
       <div className="dropdown mb-2">
         <label className="btn m-1" tabIndex={0}>Add Component</label>
         <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" tabIndex={0}>
-          {Object.keys(moduleNameToComponentMetadata[moduleName]).map(name => (
+          {Object.entries(moduleNameToComponentMetadata[moduleName]).map(([name, data]) => (
             <li key={name}>
               <button onClick={() => {
                 setPageComponentsState(pageComponentsState.concat([{
                   name,
-                  props: {},
+                  props: data.initialProps,
                   uuid: v1(),
                   moduleName
                 }]))

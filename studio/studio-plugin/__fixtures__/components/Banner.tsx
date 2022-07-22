@@ -15,6 +15,13 @@ export interface BannerProps {
   backgroundColor?: HexColor
 }
 
+export const initialProps: BannerProps = {
+  title: 'Title',
+  randomNum: 42,
+  someBool: true,
+  backgroundColor: '#ffff00'
+}
+
 export const defaultClassNames = 'w-fill p-3 flex flex-col items-center bg-lime-300 border-b-2 border-black'
 
 export default function Banner(props: BannerProps) {

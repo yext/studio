@@ -2,6 +2,7 @@ import { ComponentMetadata } from '../../shared/models'
 import { Project, ts } from 'ts-morph'
 import { parsePropertyStructures, tsCompilerOptions } from './common'
 import path from 'path'
+import parseInitialProps from './parseInitialProps'
 
 const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
 
@@ -23,6 +24,7 @@ export default function parsePropInterface(
   const properties = propsInterface.getStructure().properties ?? []
   return {
     propShape: parsePropertyStructures(properties, filePath),
+    initialProps: parseInitialProps(filePath),
     importIdentifier: getImportIdentifier()
   }
 
