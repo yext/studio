@@ -35,7 +35,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
 
   const handleContextMenu = useCallback((e) => {
     e.preventDefault()
-    setContextMenuAnchor({ x: e.pageX, y: e.pageY })
+    setContextMenuAnchor({ x: e.x, y: e.y })
     toggleContextMenu(true)
   }, [setContextMenuAnchor, toggleContextMenu])
 
