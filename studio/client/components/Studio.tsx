@@ -8,7 +8,7 @@ import {
   BrowserRouter,
   Route,
   Routes
-} from 'react-router-dom';
+} from 'react-router-dom'
 import { Navbar } from './Navbar'
 
 export interface StudioProps {
@@ -30,14 +30,13 @@ export default function Studio(props: StudioProps) {
       <div className='min-h-screen h-full w-screen flex flex-row'>
         <div className='w-2/5 bg-slate-500 flex flex-col'>
           <h1 className='text-3xl text-white'>Yext Studio</h1>
-            <BrowserRouter>
-              <Navbar/>
-              
-              <Routes>
-                <Route path={"/studio/client"} element={<PageEditor/>} />
-                <Route path={"/studio/client/SiteSettings"} element={<SiteSettings {...siteSettings}/>} />
-              </Routes>
-            </BrowserRouter>
+          <BrowserRouter>
+            <Navbar />
+            <Routes>
+              <Route path="/studio/client" element={<PageEditor />} />
+              <Route path="/studio/client/SiteSettings" element={<SiteSettings {...siteSettings} />} />
+            </Routes>
+          </BrowserRouter>
         </div>
         <PagePreview />
       </div>
