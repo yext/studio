@@ -44,7 +44,7 @@
     "uuid": "^8.3.2",
     "vite": "^3.0.2",
     "vite-plugin-commonjs": "^0.5.2"
-    },
+  },
   "devDependencies": {
     "@types/jest": "^28.1.6",
     "@types/react": "^18.0.15",
