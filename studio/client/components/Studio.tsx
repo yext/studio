@@ -33,8 +33,8 @@ export default function Studio(props: StudioProps) {
           <BrowserRouter>
             <Navbar />
             <Routes>
-              <Route path="/studio/client" element={<PageEditor />} />
-              <Route path="/studio/client/SiteSettings" element={<SiteSettings {...siteSettings} />} />
+              <Route path='/studio/client' element={<PageEditor />} />
+              <Route path='/studio/client/SiteSettings' element={<SiteSettings {...siteSettings} />} />
             </Routes>
           </BrowserRouter>
         </div>
