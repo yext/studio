@@ -10,7 +10,6 @@ import parseNpmComponents from './ts-morph/parseNpmComponents'
 import { ModuleMetadata } from '../shared/models'
 import { getSourceFile } from './ts-morph/common'
 import fs from 'fs'
-import path from 'path'
 
 /**
  * Handles server-client communication.
@@ -38,6 +37,7 @@ export default function createStudioPlugin(): Plugin {
     )
     return prev
   }, {})
+
   const ctx: StudioProps = {
     siteSettings: {
       componentMetadata: parsePropInterface(
