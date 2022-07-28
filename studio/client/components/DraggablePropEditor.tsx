@@ -33,7 +33,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
   const [contextMenuProps, toggleContextMenu] = useMenuState()
   const ref = useRef<HTMLDivElement>(null)
 
-  const handleContextMenu = useCallback((e) => {
+  const handleContextMenu = useCallback((e: MouseEvent) => {
     e.preventDefault()
     setContextMenuAnchor({ x: e.x, y: e.y })
     toggleContextMenu(true)
