@@ -5,7 +5,8 @@ import { StudioProps } from './Studio'
 export interface StudioContextType {
   moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
   pageComponentsState: PageComponentsState,
-  setPageComponentsState: React.Dispatch<React.SetStateAction<PageComponentsState>>
+  setPageComponentsState: React.Dispatch<React.SetStateAction<PageComponentsState>>,
+  siteSettings: StudioProps['siteSettings']
 }
 
 export const StudioContext = createContext<StudioContextType | null>(null)
