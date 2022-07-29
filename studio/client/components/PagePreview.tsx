@@ -43,6 +43,7 @@ function useComponents(
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata
 ): [PageComponentsState] {
   const [loadedComponents, setLoadedComponents] = useState<PageComponentsState>([])
+  const modules = import.meta.glob('../../../src/components/*.tsx')
 
   useEffect(() => {
     Promise.all(pageComponentsState.map(c => {
@@ -54,15 +55,21 @@ function useComponents(
         // console.error('TODO remove hardcoded layout support')
         return null
       }
-      const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
-      return import(importIdentifier).then(module => {
-        componentNameToComponent[name] = module[name] ?? module.default as FunctionComponent
-      })
+      if (moduleName === 'localComponents') {
+        return modules[`../../../src/components/${name}.tsx`]().then(module => {
+          componentNameToComponent[name] = module[name] ?? module.default as FunctionComponent
+        })
+      } else {
+        const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
+        return import(importIdentifier).then(module => {
+          componentNameToComponent[name] = module[name] ?? module.default as FunctionComponent
+        })
+      }
     })).then(() => {
       // TODO(oshi): this probably runs into race conditions issues
       setLoadedComponents(pageComponentsState)
     })
-  }, [moduleNameToComponentMetadata, pageComponentsState])
+  }, [moduleNameToComponentMetadata, modules, pageComponentsState])
 
   return [loadedComponents]
 }
