@@ -43,7 +43,7 @@ function useComponents(
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata
 ): [PageComponentsState] {
   const [loadedComponents, setLoadedComponents] = useState<PageComponentsState>([])
-  const modules = import.meta.glob('../../../src/components/*.tsx')
+  const modules = import.meta.glob<object>('../../../src/components/*.tsx')
 
   useEffect(() => {
     Promise.all(pageComponentsState.map(c => {
@@ -58,7 +58,7 @@ function useComponents(
       if (moduleName === 'localComponents') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return modules[`../../../src/components/${name}.tsx`]().then((module: any) => {
-          componentNameToComponent[name] = module[name] ?? module.default as FunctionComponent
+          componentNameToComponent[name] = getFunctionComponent(module, name)
         })
       } else {
         const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
@@ -73,4 +73,10 @@ function useComponents(
   }, [moduleNameToComponentMetadata, modules, pageComponentsState])
 
   return [loadedComponents]
+}
+
+const getFunctionComponent = (module, name) => {
+  if (typeof module[name] ?? module.default === 'function') {
+    return module[name] ?? module.default as FunctionComponent
+  }
 }
