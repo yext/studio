@@ -58,7 +58,7 @@ function useComponents(
       } else {
         const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
         return import(importIdentifier).then(module => {
-          componentNameToComponent[name] = module[name] ?? module.default as FunctionComponent
+          componentNameToComponent[name] = getFunctionComponent(module, name)
         })
       }
     })).then(() => {
@@ -70,8 +70,12 @@ function useComponents(
   return [loadedComponents]
 }
 
-const getFunctionComponent = (module, name) => {
-  if (typeof module[name] ?? module.default === 'function') {
-    return module[name] ?? module.default as FunctionComponent
+function getFunctionComponent(module: object, name: string): (FunctionComponent | undefined) {
+  if (module[name]) {
+    return module[name] as FunctionComponent
+  } else if (typeof module['default'] === 'function') {
+    return module['default'] as FunctionComponent
+  } else {
+    console.error(`Module ${name} is not a valid functional component.`)
   }
 }
