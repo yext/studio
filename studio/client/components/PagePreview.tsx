@@ -56,7 +56,8 @@ function useComponents(
         return null
       }
       if (moduleName === 'localComponents') {
-        return modules[`../../../src/components/${name}.tsx`]().then(module => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return modules[`../../../src/components/${name}.tsx`]().then((module: any) => {
           componentNameToComponent[name] = module[name] ?? module.default as FunctionComponent
         })
       } else {
