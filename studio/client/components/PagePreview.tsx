@@ -34,10 +34,6 @@ export default function PagePreview() {
   )
 }
 
-/**
- * TODO(oshi): use import.meta.glob for components that live in the filesystem. Components provided
- * through npm probably still need a different strategy.
- */
 function useComponents(
   pageComponentsState: PageComponentsState,
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata
