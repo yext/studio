@@ -71,7 +71,7 @@ function useComponents(
 }
 
 function getFunctionComponent(module: object, name: string): (FunctionComponent | undefined) {
-  if (module[name]) {
+  if (typeof module[name] === 'function') {
     return module[name] as FunctionComponent
   } else if (typeof module['default'] === 'function') {
     return module['default'] as FunctionComponent
