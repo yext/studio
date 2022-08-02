@@ -4,7 +4,9 @@ import { ModuleNameToComponentMetadata, PageComponentsState } from '../../shared
 import { useStudioContext } from './useStudioContext'
 import Layout from '../../../src/layouts/layout'
 
-const componentNameToComponent = {}
+const componentNameToComponent: {
+  [name: string]: FunctionComponent<Record<string, unknown>> | string
+} = {}
 
 export default function PagePreview() {
   const { pageComponentsState, moduleNameToComponentMetadata } = useStudioContext()
@@ -70,12 +72,13 @@ function useComponents(
   return [loadedComponents]
 }
 
-function getFunctionComponent(module: object, name: string): (FunctionComponent | undefined) {
+function getFunctionComponent(module: object, name: string):
+(FunctionComponent<Record<string, unknown>> | string) {
   if (typeof module[name] === 'function') {
     return module[name] as FunctionComponent
   } else if (typeof module['default'] === 'function') {
     return module['default'] as FunctionComponent
   } else {
-    console.error(`Module ${name} is not a valid functional component.`)
+    return `Module ${name} is not a valid functional component.`
   }
 }
