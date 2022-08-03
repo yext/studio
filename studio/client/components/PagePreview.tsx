@@ -41,7 +41,7 @@ function useComponents(
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata
 ): [PageComponentsState] {
   const [loadedComponents, setLoadedComponents] = useState<PageComponentsState>([])
-  const modules = import.meta.glob<object>('../../../src/components/*.tsx')
+  const modules = import.meta.glob<Record<string, unknown>>('../../../src/components/*.tsx')
 
   useEffect(() => {
     Promise.all(pageComponentsState.map(c => {
@@ -72,7 +72,7 @@ function useComponents(
   return [loadedComponents]
 }
 
-function getFunctionComponent(module: object, name: string):
+function getFunctionComponent(module: Record<string, unknown>, name: string):
 (FunctionComponent<Record<string, unknown>> | string) {
   if (typeof module[name] === 'function') {
     return module[name] as FunctionComponent
