@@ -1,8 +1,10 @@
-import { HexColor } from "../../studio/types";
+import { HexColor, StreamsDataPath } from "../../studio/types";
 
 export interface BannerProps {
   /** Banner title! */
   title?: string,
+  /** A title that takes in streams data */
+  subtitleUsingStreams?: StreamsDataPath,
   /** 
    * Some random
    * number to display!
@@ -13,7 +15,8 @@ export interface BannerProps {
    */
   someBool?: boolean,
   /** Make it colorful */
-  backgroundColor?: HexColor
+  backgroundColor?: HexColor,
+  anotherColor?: HexColor
 }
 
 export const initialProps: BannerProps = {
@@ -27,6 +30,7 @@ export default function Banner(props: BannerProps) {
       <h1 className='text-3xl p-1'>
         {props.title || 'Default Title'}
       </h1>
+      <h3>{props.subtitleUsingStreams}</h3>
       {props.randomNum && <h2>{props.randomNum}</h2>}
       <h3>{props.someBool ? 'true' : 'false'}</h3>
     </div>

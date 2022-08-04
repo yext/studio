@@ -4,12 +4,9 @@ import parseSiteSettingsFile from './ts-morph/parseSiteSettingsFile'
 import parsePageFile from './ts-morph/parsePageFile'
 import configureServer from './configureServer'
 import { StudioProps } from '../client/components/Studio'
-import studioConfig from '../../src/studio'
 import getRootPath from './getRootPath'
-import parseNpmComponents from './ts-morph/parseNpmComponents'
-import { ModuleMetadata } from '../shared/models'
 import { getSourceFile } from './ts-morph/common'
-import fs from 'fs'
+import { moduleNameToComponentMetadata } from './componentMetadata'
 
 /**
  * Handles server-client communication.
@@ -21,23 +18,6 @@ export default function createStudioPlugin(): Plugin {
   const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
-  const npmComponentProps =
-    Object.keys(studioConfig['npmComponents']).reduce((shapes, moduleName) => {
-      const matchers = studioConfig.npmComponents[moduleName]
-      shapes[moduleName] = parseNpmComponents(moduleName, matchers)
-      return shapes
-    }, {} as Record<keyof typeof studioConfig['npmComponents'], ModuleMetadata>)
-
-  const localComponents = fs.readdirSync(getRootPath('src/components'), 'utf-8').reduce((prev, curr) => {
-    const componentName = curr.substring(0, curr.lastIndexOf('.'))
-    prev[componentName] = parsePropInterface(
-      getSourceFile(getRootPath(`src/components/${curr}`)),
-      getRootPath(`src/components/${curr}`),
-      `${componentName}Props`
-    )
-    return prev
-  }, {})
-
   const ctx: StudioProps = {
     siteSettings: {
       componentMetadata: parsePropInterface(
@@ -47,10 +27,7 @@ export default function createStudioPlugin(): Plugin {
       ),
       propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings')
     },
-    moduleNameToComponentMetadata: {
-      localComponents,
-      ...npmComponentProps
-    },
+    moduleNameToComponentMetadata,
     componentsOnPage: {
       index: parsePageFile('src/pages/index.tsx')
     }

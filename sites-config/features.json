@@ -1,0 +1,30 @@
+{
+  "features": [
+    {
+      "name": "people",
+      "streamId": "my-stream-id-1",
+      "templateType": "JS",
+      "entityPageSet": {
+        "plugin": {}
+      }
+    }
+  ],
+  "streams": [
+    {
+      "$id": "my-stream-id-1",
+      "fields": [
+      ],
+      "filter": {
+        "entityTypes": [
+          "ce_person"
+        ]
+      },
+      "localization": {
+        "locales": [
+          "en"
+        ],
+        "primary": false
+      }
+    }
+  ]
+}

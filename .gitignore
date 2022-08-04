@@ -2,3 +2,4 @@ node_modules/
 /dist
 /docs/.vitepress/dist
 /studio/lib
+/localData

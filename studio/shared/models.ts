@@ -30,5 +30,5 @@ export type PropMetadata = {
   type: PropType,
   doc?: string
 }
-export type PropType = 'string' | 'number' | 'boolean' | 'HexColor'
+export type PropType = 'string' | 'number' | 'boolean' | 'HexColor' | 'StreamsDataPath'
 

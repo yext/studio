@@ -1,5 +1,5 @@
 import { PropState, ComponentMetadata } from '../../shared/models'
-import { HexColor } from '../../types'
+import { HexColor, StreamsDataPath } from '../../types'
 
 export interface PropEditorProps {
   propState: PropState,
@@ -46,7 +46,10 @@ export default function PropEditor({
             return <NumProp {...sharedProps} key={key}/>
           } else if (propType === 'HexColor') {
             return <HexColorProp {...sharedProps} key={key}/>
+          } else if (propType === 'StreamsDataPath') {
+            return <StreamsDataProp {...sharedProps} key={key} />
           }
+          console.error('Unknown prop type', propType)
           return null
         })
       }
@@ -120,6 +123,25 @@ function ToolTip(props: {
   return (
     <div className='invisible peer-hover:visible'>
       <div className='absolute z-10 whitespace-nowrap rounded shadow-lg p-3 text-sm bg-gray-600 text-white'>{props.message}</div>
+    </div>
+  )
+}
+
+function StreamsDataProp(props: {
+  propName: string,
+  propValue: StreamsDataPath,
+  propDoc?: string,
+  onChange: (val: StreamsDataPath) => void
+}) {
+  return (
+    <div className='flex'>
+      <label className='peer label'>{props.propName}:</label>
+      {props.propDoc && <ToolTip message={props.propDoc}/>}
+      <input
+        className='input-sm'
+        onChange={e => props.onChange(e.target.value as StreamsDataPath)}
+        value={props.propValue ?? ''}
+      />
     </div>
   )
 }
