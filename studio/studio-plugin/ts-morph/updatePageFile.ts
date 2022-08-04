@@ -36,7 +36,7 @@ function createReturnStatement(updatedState: PageComponentsState) {
   const elements = updatedState.reduce((prev, next) => {
     return prev + '\n' + createJsxSelfClosingElement(next, moduleNameToComponentMetadata)
   }, '')
-  return `return (\n<Layout>\n${elements}\n</Layout>\n)`
+  return `return (\n<>\n${elements}\n</>\n)`
 }
 
 function createJsxSelfClosingElement(
@@ -46,7 +46,6 @@ function createJsxSelfClosingElement(
   const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
   let el = `<${name} `
   Object.keys(props).forEach(propName => {
-    console.log(propName)
     const propType = componentMetadata.propShape[propName].type
     const val = props[propName]
     if (propType === 'StreamsDataPath') {

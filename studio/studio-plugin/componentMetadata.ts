@@ -1,7 +1,7 @@
 
 import studioConfig from '../../src/studio'
 import parseNpmComponents from './ts-morph/parseNpmComponents'
-import { ModuleMetadata } from '../shared/models'
+import { ModuleMetadata, ModuleNameToComponentMetadata } from '../shared/models'
 import fs from 'fs'
 import getRootPath from './getRootPath'
 import parsePropInterface from './ts-morph/parsePropInterface'
@@ -24,7 +24,7 @@ const localComponents = fs.readdirSync(getRootPath('src/components'), 'utf-8').r
   return prev
 }, {})
 
-export const moduleNameToComponentMetadata = {
+export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   localComponents,
   ...npmComponentProps
 }

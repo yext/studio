@@ -2,7 +2,7 @@
   "features": [
     {
       "name": "people",
-      "streamId": "my-stream-id-1",
+      "streamId": "studio-stream-id",
       "templateType": "JS",
       "entityPageSet": {
         "plugin": {}
@@ -11,9 +11,8 @@
   ],
   "streams": [
     {
-      "$id": "my-stream-id-1",
-      "fields": [
-      ],
+      "$id": "studio-stream-id",
+      "fields": [],
       "filter": {
         "entityTypes": [
           "ce_person"

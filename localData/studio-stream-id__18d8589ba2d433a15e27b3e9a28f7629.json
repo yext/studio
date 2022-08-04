@@ -1,0 +1,75 @@
+{
+	"__": {
+		"entityPageSet": {
+			"plugin": {}
+		},
+		"name": "people",
+		"streamId": "studio-stream-id",
+		"templateType": "JS"
+	},
+	"address": {
+		"city": "New York",
+		"countryCode": "US",
+		"line1": "1 Madison Ave",
+		"localizedCountryName": "United States",
+		"localizedRegionName": "New York",
+		"postalCode": "10010",
+		"region": "NY"
+	},
+	"businessId": 0,
+	"c_allstateLadyCTA": {
+		"label": "Learn More",
+		"link": "http://yext.com",
+		"linkType": "URL"
+	},
+	"c_employeeCity": "Berlin",
+	"c_employeeCountry": "Germany",
+	"c_employeeDepartment": "INTERNATIONAL_PARTNER_SERVICE",
+	"c_employeeTitle": "Account Manager, International Partnerships",
+	"c_startDate": "2017-06-01",
+	"cityCoordinate": {
+		"latitude": 40.708601,
+		"longitude": -73.876717
+	},
+	"displayCoordinate": {
+		"latitude": 40.7410895,
+		"longitude": -73.9875092
+	},
+	"emails": [
+		"mkuhns@yext.com"
+	],
+	"firstName": "Mali",
+	"geocodedCoordinate": {
+		"latitude": 40.7410895,
+		"longitude": -73.98750919999999
+	},
+	"id": "Employee-1992",
+	"key": "0:people:knowledgeGraph:18716050:en",
+	"lastName": "Kuhns",
+	"locale": "en",
+	"meta": {
+		"entityType": {
+			"id": "ce_person",
+			"uid": 39139
+		},
+		"locale": "en",
+		"updateTimestamp": "2021-06-23T19:16:20Z"
+	},
+	"name": "Mali Kuhns",
+	"routableCoordinate": {
+		"latitude": 40.7412765,
+		"longitude": -73.9877401
+	},
+	"siteDomain": "",
+	"siteId": 0,
+	"siteInternalHostName": "",
+	"uid": 18716050,
+	"yextDisplayCoordinate": {
+		"latitude": 40.7410895,
+		"longitude": -73.9875092
+	},
+	"yextRoutableCoordinate": {
+		"latitude": 40.7412765,
+		"longitude": -73.9877401
+	}
+}

@@ -3,7 +3,12 @@ import { useState } from 'react'
 import { ModuleNameToComponentMetadata, PageComponentsState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import Layout from '../../../src/layouts/layout'
+import getPreviewProps from '../utils/getPreviewProps'
 
+/**
+ * TODO(oshi): this currently does not handle name conflicts between components.
+ * This will be more important when we add support for plugin libraries that add components to the Studio.
+ */
 const componentNameToComponent: {
   [name: string]: FunctionComponent<Record<string, unknown>> | string
 } = {}
@@ -26,7 +31,9 @@ export default function PagePreview() {
             return null
           }
           return React.createElement(componentNameToComponent[c.name], {
-            ...c.props,
+            ...getPreviewProps(c, moduleNameToComponentMetadata),
+            // TODO(oshi): this is a hardcoded verticalConfigMap so that UniversalResults works
+            // remove after we add plugin components support
             verticalConfigMap: {},
             key: `${c.name}-${i}`
           })
