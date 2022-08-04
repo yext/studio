@@ -1,4 +1,4 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxExpression } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
