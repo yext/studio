@@ -1,4 +1,4 @@
-import { SearchBar } from '@yext/answers-react-components'
+import { SearchBar } from '@yext/search-ui-react'
 import Banner from '../components/Banner'
 import Layout from '../layouts/layout'
 

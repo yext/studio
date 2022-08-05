@@ -1,5 +1,5 @@
-import { SearchBar, UniversalResults } from '@yext/answers-react-components'
-import { AnswersHeadlessProvider } from '@yext/answers-headless-react';
+import { SearchBar, UniversalResults } from '@yext/search-ui-react'
+import { AnswersHeadlessProvider } from '@yext/search-headless-react';
 import answersConfig from '../siteSettings';
 
 export interface UniversalExperienceProps {
