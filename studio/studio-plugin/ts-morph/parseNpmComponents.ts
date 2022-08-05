@@ -15,7 +15,7 @@ export default function parseNpmComponents(
   const absPath = resolveNpmModule(moduleName)
   const sourceFile = getSourceFile(absPath)
   // const importIdentifier = resolve(moduleName)
-  const importIdentifier = path.resolve('/src/answers-components-re-export.ts')
+  const importIdentifier = path.resolve('/src/search-ui-react-reexport.ts')
 
   // We may want to not use the same object reference over in the future
   // But for now this should never be mutated
