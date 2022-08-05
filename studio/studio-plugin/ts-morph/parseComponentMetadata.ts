@@ -4,10 +4,9 @@ import { parsePropertyStructures } from './common'
 import path from 'path'
 import parseInitialProps from './parseInitialProps'
 
-const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
+export const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
 
-// TODO(oshi): rename to parseComponentMetadata
-export default function parsePropInterface(
+export default function parseComponentMetadata(
   sourceFile: SourceFile,
   filePath: string,
   interfaceName: string,
@@ -23,6 +22,7 @@ export default function parsePropInterface(
   return {
     propShape: parsePropertyStructures(properties, filePath),
     initialProps: parseInitialProps(sourceFile),
+    editable: true,
     importIdentifier: getImportIdentifier()
   }
 

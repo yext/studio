@@ -1,11 +1,11 @@
 import { createContext, useContext } from 'react'
-import { PageComponentsState } from '../../shared/models'
+import { PageState } from '../../shared/models'
 import { StudioProps } from './Studio'
 
 export interface StudioContextType {
   moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
-  pageComponentsState: PageComponentsState,
-  setPageComponentsState: React.Dispatch<React.SetStateAction<PageComponentsState>>,
+  pageState: PageState,
+  setPageState: React.Dispatch<React.SetStateAction<PageState>>,
   siteSettings: StudioProps['siteSettings']
 }
 

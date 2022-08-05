@@ -1,12 +1,12 @@
 import getRootPath from '../getRootPath'
 import { getSourceFile } from './common'
-import parsePropInterface from './parsePropInterface'
+import parseComponentMetadata from './parseComponentMetadata'
 
 jest.spyOn(console, 'error').mockImplementation(jest.fn())
 jest.mock('../getRootPath')
 
 it('updates correctly', () => {
-  const componentMetadata = parsePropInterface(
+  const componentMetadata = parseComponentMetadata(
     getSourceFile(getRootPath('components/Banner.tsx')),
     getRootPath('components/Banner.tsx'),
     'BannerProps'
@@ -34,7 +34,8 @@ it('updates correctly', () => {
       backgroundColor: {
         type: 'HexColor'
       }
-    }
+    },
+    editable: true
   })
   expect(console.error).toBeCalledWith('Prop type ColorProp is not recognized. Skipping gracefully.')
 })

@@ -1,5 +1,5 @@
 import { Plugin } from 'vite'
-import parsePropInterface from './ts-morph/parsePropInterface'
+import parseComponentMetadata, { pathToPagePreview } from './ts-morph/parseComponentMetadata'
 import parseSiteSettingsFile from './ts-morph/parseSiteSettingsFile'
 import parsePageFile from './ts-morph/parsePageFile'
 import configureServer from './configureServer'
@@ -10,6 +10,7 @@ import parseNpmComponents from './ts-morph/parseNpmComponents'
 import { ModuleMetadata } from '../shared/models'
 import { getSourceFile } from './ts-morph/common'
 import fs from 'fs'
+import path from 'path'
 
 /**
  * Handles server-client communication.
@@ -30,17 +31,26 @@ export default function createStudioPlugin(): Plugin {
 
   const localComponents = fs.readdirSync(getRootPath('src/components'), 'utf-8').reduce((prev, curr) => {
     const componentName = curr.substring(0, curr.lastIndexOf('.'))
-    prev[componentName] = parsePropInterface(
+    prev[componentName] = parseComponentMetadata(
       getSourceFile(getRootPath(`src/components/${curr}`)),
       getRootPath(`src/components/${curr}`),
       `${componentName}Props`
     )
     return prev
-  }, {})
+  }, {} as ModuleMetadata)
+
+  const localLayouts = fs.readdirSync(getRootPath('src/layouts'), 'utf-8').reduce((prev, curr) => {
+    const componentName = curr.substring(0, curr.lastIndexOf('.'))
+    prev[componentName] = {
+      editable: false,
+      importIdentifier: path.relative(pathToPagePreview, getRootPath(`src/layouts/${curr}`))
+    }
+    return prev
+  }, {} as ModuleMetadata)
 
   const ctx: StudioProps = {
     siteSettings: {
-      componentMetadata: parsePropInterface(
+      componentMetadata: parseComponentMetadata(
         getSourceFile(getRootPath('src/siteSettings.ts')),
         getRootPath('src/siteSettings.ts'),
         'SiteSettings'
@@ -48,7 +58,10 @@ export default function createStudioPlugin(): Plugin {
       propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings')
     },
     moduleNameToComponentMetadata: {
-      localComponents,
+      localComponents: {
+        ...localComponents,
+        ...localLayouts
+      },
       ...npmComponentProps
     },
     componentsOnPage: {

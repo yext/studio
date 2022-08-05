@@ -12,7 +12,8 @@ it('string matcher works', () => {
           doc: expect.stringContaining('label for the button'),
           type: 'string'
         }
-      }
+      },
+      editable: true
     }
   })
 })
@@ -28,7 +29,8 @@ it('works with regex matcher', () => {
           doc: expect.stringContaining('label for the button'),
           type: 'string'
         }
-      }
+      },
+      editable: true
     }
   })
 })

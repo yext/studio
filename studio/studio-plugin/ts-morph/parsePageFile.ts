@@ -1,17 +1,28 @@
 import { ts } from 'ts-morph'
-import { PageComponentsState, PossibleModuleNames } from '../../shared/models'
+import { PageState, ComponentState, PossibleModuleNames } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getComponentName, getComponentNodes, getPropName, getPropValue, getSourceFile } from './common'
 import { v1 } from 'uuid'
 import parseImports from './parseImports'
 
-export default function parsePageFile(filePath): PageComponentsState {
+export default function parsePageFile(filePath): PageState {
   const file = getRootPath(filePath)
   const sourceFile = getSourceFile(file)
   const usedComponents = getComponentNodes(sourceFile)
   const imports = parseImports(sourceFile)
 
-  return usedComponents.map(n => {
+  const layoutNode = sourceFile.getFirstDescendantByKind(ts.SyntaxKind.JsxElement)?.getOpeningElement()
+
+  const componentsState: ComponentState[] = []
+  //Default Layout State
+  let layoutState: ComponentState = {
+    name: 'Layout',
+    props: {},
+    uuid: v1(),
+    moduleName: 'localComponents'
+  }
+
+  usedComponents.forEach(n => {
     const name = getComponentName(n)
     let moduleName = Object.keys(imports).find(importIdentifier => {
       const importedNames = imports[importIdentifier]
@@ -29,6 +40,10 @@ export default function parsePageFile(filePath): PageComponentsState {
       uuid: v1(),
       moduleName: moduleName as PossibleModuleNames
     }
+    if (n === layoutNode) {
+      layoutState = componentData
+      return
+    }
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
       const propName = getPropName(a)
       if (!propName) {
@@ -37,6 +52,11 @@ export default function parsePageFile(filePath): PageComponentsState {
       const propValue = getPropValue(a)
       componentData.props[propName] = propValue
     })
-    return componentData
+    componentsState.push(componentData)
   })
+
+  return {
+    layoutState,
+    componentsState
+  }
 }
