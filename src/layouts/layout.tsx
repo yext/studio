@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react';
-import { AnswersHeadlessProvider } from '@yext/answers-headless-react'
+import { AnswersHeadlessProvider } from '@yext/search-headless-react'
 
 export default function Layout(props: PropsWithChildren<{}>) {
   return (
