@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import openBrowser from 'react-dev-utils/openBrowser'
+import openBrowser from 'react-dev-utils/openBrowser.js'
 import createStudioPlugin from './studio-plugin/createStudioPlugin'
 
 export default defineConfig(args => {

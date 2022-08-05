@@ -2,6 +2,7 @@ import { ViteDevServer, WebSocketCustomListener, WebSocketClient } from 'vite'
 import { MessageID, StudioEventMap, ResponseEventMap } from '../shared/messages'
 import updatePageFile from './ts-morph/updatePageFile'
 import updateSiteSettingsFile from './ts-morph/updateSiteSettingsFile'
+import getPagePath from './getPagePath'
 
 export default function configureStudioServer(server: ViteDevServer) {
   /** Register a listener for the given messageId, infer it's payload type, and perform error handling */
@@ -23,8 +24,9 @@ export default function configureStudioServer(server: ViteDevServer) {
   }
 
   registerListener(MessageID.UpdatePageComponentProps, data => {
-    updatePageFile(data.state, data.path)
-    return 'successfully edited: ' + data.path
+    const pagePath = getPagePath(data.pageFile)
+    updatePageFile(data.state, pagePath)
+    return 'successfully edited: ' + pagePath
   })
 
   registerListener(MessageID.UpdateSiteSettingsProps, data => {

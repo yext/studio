@@ -7,6 +7,7 @@ import { StudioProps } from '../client/components/Studio'
 import getRootPath from './getRootPath'
 import { getSourceFile } from './ts-morph/common'
 import { moduleNameToComponentMetadata } from './componentMetadata'
+import getPagePath from './getPagePath'
 
 /**
  * Handles server-client communication.
@@ -29,7 +30,7 @@ export default function createStudioPlugin(): Plugin {
     },
     moduleNameToComponentMetadata,
     componentsOnPage: {
-      index: parsePageFile('src/pages/index.tsx')
+      index: parsePageFile(getPagePath('index.tsx'))
     }
   }
 

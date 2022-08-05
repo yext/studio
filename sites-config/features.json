@@ -1,7 +1,7 @@
 {
   "features": [
     {
-      "name": "people",
+      "name": "index",
       "streamId": "studio-stream-id",
       "templateType": "JS",
       "entityPageSet": {

@@ -3,12 +3,14 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "dev:tailwind": "tailwindcss -i ./src/input.css -o ./dist/output.css --watch",
-    "dev:vite": "vite --config studio/vite.config.ts",
+    "dev:vite": "vite --config studio/vite.config.mts",
     "dev": "npm-run-all -p dev:tailwind dev:vite",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint studio --fix",
+    "build": "vite build",
     "docs:dev": "vitepress dev docs",
     "docs:build": "vitepress build docs",
     "docs:serve": "vitepress serve docs"
@@ -52,6 +54,7 @@
     "@types/react-dom": "^18.0.6",
     "@types/uuid": "^8.3.4",
     "@yext/eslint-config-slapshot": "^0.4.0",
+    "@yext/pages": "^1.0.0-beta.0",
     "eslint": "^8.21.0",
     "jest": "^28.1.3",
     "npm-run-all": "^4.1.5",

@@ -11,7 +11,7 @@ export function PageEditor(): JSX.Element {
       <AddComponentButton />
       <DndropEditorList />
       <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
-        path: 'src/pages/index.tsx',
+        pageFile: 'index.tsx',
         state: pageComponentsState
       })}>
         Update Component Props
