@@ -10,7 +10,7 @@ export interface ComponentState {
   name: string,
   props: PropState,
   uuid: string,
-  moduleName: PossibleModuleNames
+  moduleName?: PossibleModuleNames
 }
 
 export type PropState = Record<string, string | number | boolean | SpecialTypes>

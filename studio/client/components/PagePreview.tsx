@@ -24,7 +24,9 @@ export default function PagePreview() {
         key: `${c.name}-${i}`
       })
     })
-    if (loadedComponents[pageState.layoutState.name]) {
+    if (pageState.layoutState.name === 'div') {
+      return React.createElement('div', {}, children)
+    } else if (loadedComponents[pageState.layoutState.name]) {
       return React.createElement(loadedComponents[pageState.layoutState.name], {}, children)
     } else {
       console.error(`Unable to load Layout component "${pageState.layoutState.name}", render children components directly on page..`)
@@ -60,7 +62,19 @@ function useComponents(
     componentNameToComponent: Record<string, ComponentImportType>
   ): Promise<void> | null => {
     const { name, moduleName } = c
+    // Avoid re-importing components
     if (name in loadedComponentsRef.current) {
+      return null
+    }
+    if (name === 'div') {
+      return null
+    }
+    if (name === 'Fragment' || name === '') {
+      componentNameToComponent[name] = React.Fragment
+      return null
+    }
+    if (!moduleName) {
+      console.error(`Missing module name for ${name}`)
       return null
     }
     if (moduleName === 'localComponents') {
