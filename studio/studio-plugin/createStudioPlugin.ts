@@ -60,7 +60,6 @@ export default function createStudioPlugin(args): Plugin {
   return {
     name: 'yext-studio-vite-plugin',
     async buildStart() {
-      console.log('buildStart')
       if (args.mode === 'development' && args.command === 'serve') {
         openBrowser('http://localhost:3000/studio/client/')
       }
