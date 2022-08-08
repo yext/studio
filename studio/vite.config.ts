@@ -1,18 +1,13 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
-import openBrowser from 'react-dev-utils/openBrowser'
 import createStudioPlugin from './studio-plugin/createStudioPlugin'
 
 export default defineConfig(args => {
-  if (args.mode === 'development' && args.command === 'serve') {
-    openBrowser('http://localhost:3000/studio/client/')
-  }
-
   return {
     plugins: [
       react(),
-      createStudioPlugin()
+      createStudioPlugin(args)
     ],
     root: path.resolve(__dirname, '..'),
     server: {

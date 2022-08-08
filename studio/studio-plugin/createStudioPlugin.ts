@@ -11,6 +11,7 @@ import { ModuleMetadata } from '../shared/models'
 import { getSourceFile } from './ts-morph/common'
 import fs from 'fs'
 import path from 'path'
+import openBrowser from 'react-dev-utils/openBrowser'
 
 /**
  * Handles server-client communication.
@@ -18,7 +19,7 @@ import path from 'path'
  * This inclues providing a vite virtual module so that server side data can be passed to the front end
  * for the initial load, and messaging using the vite HMR API.
  */
-export default function createStudioPlugin(): Plugin {
+export default function createStudioPlugin(args): Plugin {
   const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
@@ -71,6 +72,11 @@ export default function createStudioPlugin(): Plugin {
 
   return {
     name: 'yext-studio-vite-plugin',
+    async buildStart() {
+      if (args.mode === 'development' && args.command === 'serve') {
+        openBrowser('http://localhost:3000/studio/client/')
+      }
+    },
     resolveId(id) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId
