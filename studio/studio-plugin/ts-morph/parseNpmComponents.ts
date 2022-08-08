@@ -54,7 +54,8 @@ export default function parseNpmComponents(
       componentsToProps[componentName] = {
         propShape,
         initialProps: {},
-        importIdentifier
+        importIdentifier,
+        editable: true
       }
     } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
       try {

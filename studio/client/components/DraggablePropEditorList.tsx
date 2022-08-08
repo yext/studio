@@ -77,6 +77,9 @@ export default function DraggablePropEditorList() {
             // console.error('unknown component', c.name, 'gracefully skipping for now.')
             return null
           }
+          if (!c.moduleName) {
+            return null
+          }
 
           return (
             <DraggablePropEditor
