@@ -22,7 +22,7 @@ export const config: TemplateConfig = {
     $id: 'studio-stream-id',
     // need to update the fields to only include the ones a user uses
     // currently we rely on the -a flag for local testing
-    fields: [],
+    fields: ["id", "c_employeeDepartment"],
     filter: {
       // somehow we also need to know the entity type
       entityTypes: ['ce_person'],

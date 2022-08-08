@@ -1,14 +1,13 @@
 import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project } from 'ts-morph'
-import typescript from 'typescript'
+import typescript, { ModuleResolutionHost } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
-import { resolveModuleName, ModuleResolutionHost } from 'typescript'
 import { specialTypesArray } from '../../types'
 import parseImports from './parseImports'
 import { resolve } from 'path'
 import { PropShape, PropType } from '../../shared/models'
 
-const { JsxEmit } = typescript
+const { JsxEmit, resolveModuleName } = typescript
 
 export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
   const nodes = sourceFile

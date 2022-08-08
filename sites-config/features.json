@@ -7,12 +7,22 @@
       "entityPageSet": {
         "plugin": {}
       }
+    },
+    {
+      "name": "static",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
     }
   ],
   "streams": [
     {
       "$id": "studio-stream-id",
-      "fields": [],
+      "fields": [
+        "id",
+        "c_employeeDepartment"
+      ],
       "filter": {
         "entityTypes": [
           "ce_person"
