@@ -32,7 +32,7 @@ const componentsState: ComponentState[] = [
   }
 ]
 it('correctly parse page with React.Fragment layout', () => {
-  const result = parsePageFile('fragmentPage.tsx')
+  const result = parsePageFile('fragmentLayoutPage.tsx')
 
   expect(result).toEqual({
     layoutState: {
@@ -45,7 +45,7 @@ it('correctly parse page with React.Fragment layout', () => {
 })
 
 it('correctly parse page with React.Fragment layout in short syntax', () => {
-  const result = parsePageFile('shortFragmentSyntaxPage.tsx')
+  const result = parsePageFile('shortFragmentSyntaxLayoutPage.tsx')
 
   expect(result).toEqual({
     layoutState: {
@@ -56,6 +56,21 @@ it('correctly parse page with React.Fragment layout in short syntax', () => {
     componentsState
   })
 })
+
+
+it('correctly parse page with div layout component', () => {
+  const result = parsePageFile('divLayoutPage.tsx')
+
+  expect(result).toEqual({
+    layoutState: {
+      name: 'div',
+      props: {},
+      uuid: 'mock-uuid',
+    },
+    componentsState
+  })
+})
+
 
 it('correctly parse page with custom layout component', () => {
   const result = parsePageFile('customLayoutPage.tsx')
