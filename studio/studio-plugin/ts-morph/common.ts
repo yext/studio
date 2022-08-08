@@ -1,4 +1,4 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxElement, JsxFragment } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
@@ -8,7 +8,9 @@ import parseImports from './parseImports'
 import { resolve } from 'path'
 import { PropShape, PropType } from '../../shared/models'
 
-export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
+export function getComponentNodes(
+  sourceFile: SourceFile | JsxElement | JsxFragment
+): (JsxOpeningElement | JsxSelfClosingElement)[] {
   const nodes = sourceFile
     .getDescendants()
     .filter(n => {

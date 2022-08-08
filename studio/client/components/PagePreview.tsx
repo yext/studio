@@ -24,12 +24,13 @@ export default function PagePreview() {
         key: `${c.name}-${i}`
       })
     })
-    if (pageState.layoutState.name === 'div') {
-      return React.createElement('div', {}, children)
-    } else if (loadedComponents[pageState.layoutState.name]) {
-      return React.createElement(loadedComponents[pageState.layoutState.name], {}, children)
+    const layoutName = pageState.layoutState.name
+    if (loadedComponents[layoutName]) {
+      return React.createElement(loadedComponents[layoutName], {}, children)
+    } else if (layoutName && layoutName.charAt(0) === layoutName.charAt(0).toLowerCase()) {
+      return React.createElement(layoutName, {}, children)
     } else {
-      console.error(`Unable to load Layout component "${pageState.layoutState.name}", render children components directly on page..`)
+      console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return children
     }
   }, [loadedComponents, pageState.componentsState, pageState.layoutState.name])
@@ -66,7 +67,8 @@ function useComponents(
     if (name in loadedComponentsRef.current) {
       return null
     }
-    if (name === 'div') {
+    // built-in JSX Element
+    if (name && name.charAt(0) === name.charAt(0).toLowerCase()) {
       return null
     }
     if (name === 'Fragment' || name === '') {

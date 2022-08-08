@@ -1,49 +1,67 @@
-import { JsxElement, JsxOpeningElement, ts } from 'ts-morph'
+import { JsxElement, JsxFragment, SourceFile, ts } from 'ts-morph'
 import { PageState, ComponentState, PossibleModuleNames } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getComponentName, getComponentNodes, getPropName, getPropValue, getSourceFile } from './common'
 import { v1 } from 'uuid'
 import parseImports from './parseImports'
 
-export default function parsePageFile(filePath): PageState {
-  const file = getRootPath(filePath)
-  const sourceFile = getSourceFile(file)
-  const usedComponents = getComponentNodes(sourceFile)
-  const imports = parseImports(sourceFile)
-
+function parseLayoutState(
+  sourceFile: SourceFile,
+  imports: Record<string, string[]>
+): { layoutState: ComponentState, layoutNode: JsxElement | JsxFragment } {
   let layoutState: ComponentState
-  let layoutOpeningElement: JsxOpeningElement
-  const topLevelJsxNode = sourceFile.getFirstDescendantByKind(ts.SyntaxKind.JsxElement)
-    ?? sourceFile.getFirstDescendantByKind(ts.SyntaxKind.JsxFragment)
-  if (topLevelJsxNode) {
-    if (ts.isJsxElement(topLevelJsxNode.compilerNode)) {
-      layoutOpeningElement = (topLevelJsxNode as JsxElement).getOpeningElement()
-      const name = getComponentName(layoutOpeningElement)
-      layoutState = {
-        name,
-        props: {},
-        uuid: v1(),
+  const returnStatement = sourceFile.getFirstDescendantByKind(ts.SyntaxKind.ReturnStatement)
+  if (returnStatement) {
+    const JsxNodeWrapper = returnStatement.getFirstChildByKind(ts.SyntaxKind.ParenthesizedExpression)
+      ?? returnStatement
+    const topLevelJsxNode = JsxNodeWrapper.getChildren()
+      .find(n => n.getKind() === ts.SyntaxKind.JsxElement || n.getKind() === ts.SyntaxKind.JsxFragment)
+    if (topLevelJsxNode) {
+      if (topLevelJsxNode.getKind() === ts.SyntaxKind.JsxElement) {
+        const name = getComponentName((topLevelJsxNode as JsxElement).getOpeningElement())
+        layoutState = {
+          name,
+          props: {},
+          uuid: v1(),
+        }
+        const isBuiltinJsxElement = name.charAt(0) === name.charAt(0).toLowerCase()
+        if (!isBuiltinJsxElement && name !== 'Fragment') {
+          layoutState.moduleName = getComponentModuleName(name, imports)
+        }
+      } else {
+        layoutState = {
+          name: '',
+          props: {},
+          uuid: v1(),
+        }
       }
-      if (!['Fragment', 'div'].includes(name)) {
-        layoutState.moduleName = getComponentModuleName(name, imports)
-      }
-    } else {
-      layoutState = {
-        name: '',
-        props: {},
-        uuid: v1()
+      return {
+        layoutState,
+        layoutNode: topLevelJsxNode as JsxElement | JsxFragment
       }
     }
-  } else {
-    throw new Error('Unable to find top level JSX element or JsxFragment type from file.')
   }
+  throw new Error('Unable to find top level JSX element or JsxFragment type from file.')
+}
+
+export default function parsePageFile(filePath: string): PageState {
+  const file = getRootPath(filePath)
+  const sourceFile = getSourceFile(file)
+  const imports = parseImports(sourceFile)
+
+  const { layoutState, layoutNode } = parseLayoutState(sourceFile, imports)
+  const usedComponents = getComponentNodes(layoutNode)
+
+  const layoutJsxOpeningElement = layoutNode.getKind() === ts.SyntaxKind.JsxElement
+    ? (layoutNode as JsxElement).getOpeningElement()
+    : (layoutNode as JsxFragment).getOpeningFragment()
 
   const componentsState: ComponentState[] = []
   usedComponents.forEach(n => {
-    const name = getComponentName(n)
-    if (n === layoutOpeningElement) {
+    if (n === layoutJsxOpeningElement) {
       return
     }
+    const name = getComponentName(n)
     const componentData: ComponentState = {
       name,
       props: {},
