@@ -15,7 +15,8 @@
     "target": "esnext",
     "resolveJsonModule": true,
     "types": [
-      "vite/client"
+      "vite/client",
+      "jest"
     ]
   }
 }

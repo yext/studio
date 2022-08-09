@@ -7,13 +7,13 @@ import {
   TemplateConfig,
   TemplateProps,
   TemplateRenderProps,
-} from "@yext/pages";
+} from '@yext/pages'
 import '../index.css'
 
 export const config: TemplateConfig = {
   stream: {
     $id: 'studio-stream-id',
-    fields: ["id", "address"],
+    fields: ['id', 'address'],
     filter: {
       entityTypes: ['ce_person'],
     },
@@ -21,17 +21,20 @@ export const config: TemplateConfig = {
       locales: ['en'],
       primary: false,
     },
-  }
+  },
 }
 
 export const getPath: GetPath<TemplateProps> = ({ document }) => {
-  return `people/${document.id.toString()}`;
-};
+  return `people/${document.id.toString()}`
+}
 
 const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <TestLayout>
-      <Banner subtitleUsingStreams={`hi ${document.id} ${document.address}`} />
+      <Banner
+        subtitleUsingStreams={`hi ${document.id} ${document.address.city}`}
+        title='123123'
+      />
       <Banner title='12312312' />
       <Banner
         title='first!123u1o2i3u1'

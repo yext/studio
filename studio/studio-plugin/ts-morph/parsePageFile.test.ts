@@ -32,6 +32,7 @@ const componentsState: ComponentState[] = [
     moduleName: 'localComponents'
   }
 ]
+
 it('correctly parse page with React.Fragment layout', () => {
   const result = parsePageFile(getRootPath('reactFragmentLayoutPage.tsx'))
 

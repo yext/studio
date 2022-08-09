@@ -1,20 +1,13 @@
 import fs from 'fs'
-import { ts } from 'ts-morph'
+import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import { PageState, PropState, PropShape } from '../../shared/models'
-import getRootPath from '../getRootPath'
-import { getSourceFile, prettify } from './common'
+import { getDefaultExport, getSourceFile, prettify } from './common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 
 export default function updatePageFile(updatedState: PageState, pageFilePath: string) {
-  const file = getRootPath(pageFilePath)
-  const sourceFile = getSourceFile(file)
-  const pageComponent = sourceFile.getDescendantsOfKind(ts.SyntaxKind.FunctionDeclaration).find(n => {
-    return n.isDefaultExport
-  })
-  if (!pageComponent) {
-    throw new Error(`No page component found at "${pageFilePath}"`)
-  }
-
+  const sourceFile = getSourceFile(pageFilePath)
+  const defaultExport = getDefaultExport(sourceFile)
+  const pageComponent = getPageComponentFunction(defaultExport)
   const returnStatementIndex = pageComponent.getDescendantStatements().findIndex(n => {
     return n.isKind(ts.SyntaxKind.ReturnStatement)
   })
@@ -26,7 +19,19 @@ export default function updatePageFile(updatedState: PageState, pageFilePath: st
   pageComponent.addStatements(createReturnStatement(updatedState))
 
   const updatedFileText = prettify(sourceFile.getFullText())
-  fs.writeFileSync(file, updatedFileText)
+  fs.writeFileSync(pageFilePath, updatedFileText)
+}
+
+function getPageComponentFunction(
+  defaultExport: VariableDeclaration | FunctionDeclaration
+): FunctionDeclaration | ArrowFunction {
+  if (defaultExport.isKind(ts.SyntaxKind.VariableDeclaration)) {
+    const arrowFunction = defaultExport.getFirstDescendantByKindOrThrow(ts.SyntaxKind.ArrowFunction)
+    return arrowFunction
+  } else if (defaultExport.isKind(ts.SyntaxKind.FunctionDeclaration)) {
+    return defaultExport
+  }
+  throw new Error('Unhandled page component type: ' + (defaultExport as Node).getKindName())
 }
 
 function createReturnStatement(updatedState: PageState) {
