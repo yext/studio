@@ -1,17 +1,14 @@
 {
 	"index": [
-		"studio-stream-id__b55506eefb13aead1b0bc37da455453f.json",
-		"studio-stream-id__6a6e8da60d14fb98200dc9014bd6b716.json",
 		"studio-stream-id__14bdbacdd818933a4cfa62953b1876f6.json",
 		"studio-stream-id__a59c971b200edbe375623fdc41aa64ef.json",
+		"studio-stream-id__10f16b1c31d9b4bb3f3e934638f808ad.json",
+		"studio-stream-id__908d51c7addedb8f7175d09bf0796cfa.json",
+		"studio-stream-id__18d8589ba2d433a15e27b3e9a28f7629.json",
 		"studio-stream-id__44535c4abd8b1d79c33adb1405d50afd.json",
 		"studio-stream-id__2a31f273ad1944ccdff93d07c7a8dd77.json",
 		"studio-stream-id__44798c4354bb83b432f06e53f027488a.json",
-		"studio-stream-id__908d51c7addedb8f7175d09bf0796cfa.json",
-		"studio-stream-id__18d8589ba2d433a15e27b3e9a28f7629.json",
-		"studio-stream-id__10f16b1c31d9b4bb3f3e934638f808ad.json"
-	],
-	"static": [
-		"cog-internal-feature-static-file-generation-static__cfcd208495d565ef66e7dff9f98764da.json"
+		"studio-stream-id__b55506eefb13aead1b0bc37da455453f.json",
+		"studio-stream-id__6a6e8da60d14fb98200dc9014bd6b716.json"
 	]
 }

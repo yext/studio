@@ -1,4 +1,4 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxElement, JsxFragment, ExportAssignment, VariableDeclaration, FunctionDeclaration } from 'ts-morph'
 import typescript, { ModuleResolutionHost } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
@@ -9,8 +9,10 @@ import { PropShape, PropType } from '../../shared/models'
 
 const { JsxEmit, resolveModuleName } = typescript
 
-export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
-  const nodes = sourceFile
+export function getComponentNodes(
+  parentNode: JsxElement | JsxFragment
+): (JsxOpeningElement | JsxSelfClosingElement)[] {
+  const nodes = parentNode
     .getDescendants()
     .filter(n => {
       return n.isKind(ts.SyntaxKind.JsxOpeningElement) || n.isKind(ts.SyntaxKind.JsxSelfClosingElement)
@@ -149,4 +151,19 @@ export function getSourceFile(file: string): SourceFile {
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)
   return p.getSourceFileOrThrow(file)
+}
+
+export function getDefaultExport(sourceFile: SourceFile): VariableDeclaration | FunctionDeclaration {
+  const declarations = sourceFile.getDefaultExportSymbolOrThrow().getDeclarations()
+  if (declarations.length === 0) {
+    throw new Error('Error getting default export')
+  }
+  const node = declarations[0]
+  if (node.isKind(ts.SyntaxKind.ExportAssignment)) {
+    const identifierName = node.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText()
+    return sourceFile.getVariableDeclarationOrThrow(identifierName)
+  } else if (node.isKind(ts.SyntaxKind.FunctionDeclaration)) {
+    return node
+  }
+  throw new Error('Error getting default export, no ExportAssignment or FunctionDeclaration found')
 }

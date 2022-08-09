@@ -57,7 +57,13 @@ function useComponents(
   // in useCallback/useEffect logic
   const loadedComponentsRef = useRef<Record<string, ComponentImportType>>(loadedComponents)
 
-  const modules = useMemo(() => import.meta.glob<Record<string, unknown>>(['../../../src/components/*.tsx', '../../../src/layouts/*.tsx']), [])
+  const modules = useMemo(() => {
+    return import.meta.glob<Record<string, unknown>>([
+      '../../../src/components/*.tsx',
+      '../../../src/layouts/*.tsx'
+    ])
+  }, [])
+
   const importComponent = useCallback((
     c: ComponentState,
     directoryPath: string,

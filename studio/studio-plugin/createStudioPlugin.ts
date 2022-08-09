@@ -8,6 +8,7 @@ import getRootPath from './getRootPath'
 import { getSourceFile } from './ts-morph/common'
 import { moduleNameToComponentMetadata } from './componentMetadata'
 import getPagePath from './getPagePath'
+import openBrowser from 'react-dev-utils/openBrowser.js'
 
 /**
  * Handles server-client communication.

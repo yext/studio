@@ -1,9 +1,9 @@
-import { ModuleNameToComponentMetadata, PageComponentsState, PropType } from '../../shared/models'
+import { ModuleNameToComponentMetadata, ComponentState, PropType } from '../../shared/models'
 import lodashGet from 'lodash/get'
 import { TemplateProps } from '@yext/pages'
 
 export default function getPreviewProps(
-  { moduleName, props, name }: PageComponentsState[number],
+  { moduleName, props, name }: ComponentState,
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata,
   streamDocument: TemplateProps['document']
 ): Record<string, unknown> {

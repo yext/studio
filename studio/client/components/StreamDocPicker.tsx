@@ -14,7 +14,8 @@ export default function StreamDocPicker() {
   useEffect(() => {
     const pathToDoc = pathToLocalData + docName
     if (!(pathToDoc in streamDocumentPromises)) {
-      console.error('Could not find stream document promise for doc', pathToDoc)
+      console.error('Could not find stream document promise for doc', pathToDoc, streamDocumentPromises)
+      return
     }
     streamDocumentPromises[pathToDoc]().then((m: Record<string, any>) => {
       setStreamDocument(m.default ?? {})

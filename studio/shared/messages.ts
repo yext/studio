@@ -8,7 +8,7 @@ export enum MessageID {
 
 export interface StudioEventMap extends CustomEventMap {
   [MessageID.UpdatePageComponentProps]: {
-    state: PageComponentsState,
+    state: PageState,
     pageFile: 'index.tsx'
   },
   [MessageID.UpdateSiteSettingsProps]: {
