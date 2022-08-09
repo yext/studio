@@ -3,7 +3,12 @@ node_modules/
 /docs/.vitepress/dist
 /studio/lib
 /.artifact-output
+/sites-rendered-output
+/localData
+/dist
+.yext
+.artifact-output
+/sites-config/features.json
+*.local
 
-# TODO(oshi): Committing localData for now for ease of development. 
-# In the future this should be gitignored
-# /localData
+.DS_Store
