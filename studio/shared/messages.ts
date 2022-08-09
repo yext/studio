@@ -1,5 +1,5 @@
 import { CustomEventMap } from 'vite'
-import { PageComponentsState, PropState } from './models'
+import { PageState, PropState } from './models'
 
 export enum MessageID {
   UpdatePageComponentProps = 'studio:UpdatePageComponentProps',

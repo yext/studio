@@ -5,14 +5,14 @@ import { useStudioContext } from './useStudioContext'
 import DndropEditorList from './DraggablePropEditorList'
 
 export function PageEditor(): JSX.Element {
-  const { pageComponentsState } = useStudioContext()
+  const { pageState } = useStudioContext()
   return (
     <>
       <AddComponentButton />
       <DndropEditorList />
       <button className='btn' onClick={() => sendMessage(MessageID.UpdatePageComponentProps, {
         pageFile: 'index.tsx',
-        state: pageComponentsState
+        state: pageState
       })}>
         Update Component Props
       </button>

@@ -1,14 +1,11 @@
 import fs from 'fs'
 import { ts } from 'ts-morph'
-import { ModuleNameToComponentMetadata, PageComponentsState } from '../../shared/models'
-import { moduleNameToComponentMetadata } from '../componentMetadata'
+import { PageState, ComponentState, ModuleNameToComponentMetadata, ComponentMetadata, PropState, PropShape } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getSourceFile, prettify } from './common'
+import { moduleNameToComponentMetadata } from '../componentMetadata'
 
-export default function updatePageFile(
-  updatedState: PageComponentsState,
-  pageFilePath: string
-) {
+export default function updatePageFile(updatedState: PageState, pageFilePath: string) {
   const file = getRootPath(pageFilePath)
   const sourceFile = getSourceFile(file)
   const pageComponent = sourceFile.getDescendantsOfKind(ts.SyntaxKind.FunctionDeclaration).find(n => {
@@ -32,21 +29,29 @@ export default function updatePageFile(
   fs.writeFileSync(file, updatedFileText)
 }
 
-function createReturnStatement(updatedState: PageComponentsState) {
-  const elements = updatedState.reduce((prev, next) => {
-    return prev + '\n' + createJsxSelfClosingElement(next, moduleNameToComponentMetadata)
+function createReturnStatement(updatedState: PageState) {
+  const elements = updatedState.componentsState.reduce((prev, next) => {
+    if (!next.moduleName) {
+      return prev
+    }
+    const componentMetadata = moduleNameToComponentMetadata[next.moduleName][next.name]
+    if (!componentMetadata.propShape) {
+      return prev
+    }
+    return prev + '\n' + createJsxSelfClosingElement(next.name, componentMetadata.propShape, next.props)
   }, '')
-  return `return (\n<>\n${elements}\n</>\n)`
+  const layoutComponentName = updatedState.layoutState.name
+  return `return (\n<${layoutComponentName}>\n${elements}\n</${layoutComponentName}>\n)`
 }
 
 function createJsxSelfClosingElement(
-  { name, props, moduleName }: PageComponentsState[number],
-  moduleNameToComponentMetadata: ModuleNameToComponentMetadata
+  elementName: string,
+  propShape: PropShape,
+  props: PropState
 ) {
-  const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
-  let el = `<${name} `
+  let el = `<${elementName} `
   Object.keys(props).forEach(propName => {
-    const propType = componentMetadata.propShape[propName].type
+    const propType = propShape[propName].type
     const val = props[propName]
     if (propType === 'StreamsDataPath') {
       el += `${propName}={\`${val}\`}`

@@ -25,8 +25,7 @@ export const tsCompilerOptions = {
 }
 
 export function getComponentName(n: JsxOpeningElement | JsxSelfClosingElement): string {
-  const componentName = n.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText()
-  return componentName
+  return n.getTagNameNode().getText()
 }
 
 export function prettify(code: string) {

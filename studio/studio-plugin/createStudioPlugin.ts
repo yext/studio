@@ -1,5 +1,5 @@
 import { Plugin } from 'vite'
-import parsePropInterface from './ts-morph/parsePropInterface'
+import parseComponentMetadata from './ts-morph/parseComponentMetadata'
 import parseSiteSettingsFile from './ts-morph/parseSiteSettingsFile'
 import parsePageFile from './ts-morph/parsePageFile'
 import configureServer from './configureServer'
@@ -15,13 +15,13 @@ import getPagePath from './getPagePath'
  * This inclues providing a vite virtual module so that server side data can be passed to the front end
  * for the initial load, and messaging using the vite HMR API.
  */
-export default function createStudioPlugin(): Plugin {
+export default function createStudioPlugin(args): Plugin {
   const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
   const ctx: StudioProps = {
     siteSettings: {
-      componentMetadata: parsePropInterface(
+      componentMetadata: parseComponentMetadata(
         getSourceFile(getRootPath('src/siteSettings.ts')),
         getRootPath('src/siteSettings.ts'),
         'SiteSettings'
@@ -36,6 +36,11 @@ export default function createStudioPlugin(): Plugin {
 
   return {
     name: 'yext-studio-vite-plugin',
+    async buildStart() {
+      if (args.mode === 'development' && args.command === 'serve') {
+        openBrowser('http://localhost:3000/studio/client/')
+      }
+    },
     resolveId(id) {
       if (id === virtualModuleId) {
         return resolvedVirtualModuleId

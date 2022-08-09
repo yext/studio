@@ -9,7 +9,14 @@ export default function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = { ...props }
   Object.keys(props).forEach(propName => {
-    const propType: PropType = moduleNameToComponentMetadata[moduleName][name].propShape[propName].type
+    if (!moduleName) {
+      return
+    }
+    const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
+    if (!componentMetadata.propShape) {
+      return
+    }
+    const propType: PropType = componentMetadata.propShape[propName].type
     if (propType === 'StreamsDataPath') {
       const templateString = props[propName]
       if (typeof templateString !== 'string') {

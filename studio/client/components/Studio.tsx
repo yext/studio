@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { SiteSettingsProps } from './SiteSettings'
 import PagePreview from './PagePreview'
-import { PageComponentsState, ModuleNameToComponentMetadata } from '../../shared/models'
+import { PageState, ModuleNameToComponentMetadata } from '../../shared/models'
 import { StudioContext } from './useStudioContext'
 import { Navbar } from './Navbar'
 
@@ -10,7 +10,7 @@ export interface StudioProps {
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata,
   // only supports a page named "index" for now
   componentsOnPage: {
-    index: PageComponentsState
+    index: PageState
   }
 }
 
