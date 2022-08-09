@@ -1,5 +1,6 @@
 import { ComponentState } from 'react'
 import parsePageFile from './parsePageFile'
+import getRootPath from '../getRootPath'
 
 jest.mock('../getRootPath')
 jest.mock('uuid', () => ({ v1: () => 'mock-uuid' }))
@@ -32,7 +33,7 @@ const componentsState: ComponentState[] = [
   }
 ]
 it('correctly parse page with React.Fragment layout', () => {
-  const result = parsePageFile('reactFragmentLayoutPage.tsx')
+  const result = parsePageFile(getRootPath('reactFragmentLayoutPage.tsx'))
 
   expect(result).toEqual({
     layoutState: {
@@ -45,7 +46,7 @@ it('correctly parse page with React.Fragment layout', () => {
 })
 
 it('correctly parse page with Fragment layout', () => {
-  const result = parsePageFile('fragmentLayoutPage.tsx')
+  const result = parsePageFile(getRootPath('fragmentLayoutPage.tsx'))
 
   expect(result).toEqual({
     layoutState: {
@@ -58,7 +59,7 @@ it('correctly parse page with Fragment layout', () => {
 })
 
 it('correctly parse page with Fragment layout in short syntax', () => {
-  const result = parsePageFile('shortFragmentSyntaxLayoutPage.tsx')
+  const result = parsePageFile(getRootPath('shortFragmentSyntaxLayoutPage.tsx'))
 
   expect(result).toEqual({
     layoutState: {
@@ -71,7 +72,7 @@ it('correctly parse page with Fragment layout in short syntax', () => {
 })
 
 it('correctly parse page with div layout component', () => {
-  const result = parsePageFile('divLayoutPage.tsx')
+  const result = parsePageFile(getRootPath('divLayoutPage.tsx'))
 
   expect(result).toEqual({
     layoutState: {
@@ -84,7 +85,7 @@ it('correctly parse page with div layout component', () => {
 })
 
 it('correctly parse page with custom layout component', () => {
-  const result = parsePageFile('customLayoutPage.tsx')
+  const result = parsePageFile(getRootPath('customLayoutPage.tsx'))
 
   expect(result).toEqual({
     layoutState: {

@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import streamDocumentMapping from '../../../localData/mapping.json'
 import { useStudioContext } from './useStudioContext'
 
@@ -20,7 +20,7 @@ export default function StreamDocPicker() {
     streamDocumentPromises[pathToDoc]().then((m: Record<string, any>) => {
       setStreamDocument(m.default ?? {})
     })
-  }, [docName])
+  }, [docName, setStreamDocument])
 
   return (
     <select

@@ -9,6 +9,7 @@ export default function PagePreview() {
   const [
     loadedComponents
   ] = useComponents(pageState, moduleNameToComponentMetadata)
+
   const componentsToRender = useMemo(() => {
     // prevent logging errors on initial render before components are imported
     if (Object.keys(loadedComponents).length === 0) {
@@ -34,7 +35,13 @@ export default function PagePreview() {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return children
     }
-  }, [loadedComponents, pageState.componentsState, pageState.layoutState.name])
+  }, [
+    loadedComponents,
+    pageState.componentsState,
+    pageState.layoutState.name,
+    streamDocument,
+    moduleNameToComponentMetadata
+  ])
 
   return (
     <div className='w-full h-full'>

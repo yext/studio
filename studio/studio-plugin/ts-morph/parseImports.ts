@@ -1,4 +1,4 @@
-import { ImportClause, ImportDeclaration, SourceFile, SyntaxKind } from 'ts-morph'
+import { SourceFile, SyntaxKind } from 'ts-morph'
 import { getSourceFile } from './common'
 
 /**

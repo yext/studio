@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { ts } from 'ts-morph'
-import { PageState, ComponentState, ModuleNameToComponentMetadata, ComponentMetadata, PropState, PropShape } from '../../shared/models'
+import { PageState, PropState, PropShape } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getSourceFile, prettify } from './common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'

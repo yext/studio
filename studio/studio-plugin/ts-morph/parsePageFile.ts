@@ -1,4 +1,4 @@
-import { JsxAttribute, ts, SourceFile, JsxElement, JsxFragment, ExportAssignment, ReturnStatement } from 'ts-morph'
+import { JsxAttribute, ts, SourceFile, JsxElement, JsxFragment } from 'ts-morph'
 import { ComponentState, PossibleModuleNames, PageState } from '../../shared/models'
 import { getComponentName, getComponentNodes, getDefaultExport, getPropName, getPropValue, getSourceFile } from './common'
 import { v1 } from 'uuid'
