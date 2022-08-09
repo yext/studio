@@ -8,7 +8,7 @@
     "dev:tailwind": "tailwindcss -i ./src/index.css -o ./dist/output.css -c tailwind.config.cjs --watch",
     "dev:vite": "vite --config studio/vite.config.ts",
     "dev": "npm-run-all -p dev:tailwind dev:vite",
-    "generate-test-data": "vite build && yext sites generate-test-data -a",
+    "localData": "vite build && yext sites generate-test-data -a",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint studio --fix",
     "build": "vite build",
