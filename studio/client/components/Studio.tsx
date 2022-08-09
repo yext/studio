@@ -17,7 +17,16 @@ export interface StudioProps {
 export default function Studio(props: StudioProps) {
   const { componentsOnPage, moduleNameToComponentMetadata, siteSettings } = props
   const [pageComponentsState, setPageComponentsState] = useState(componentsOnPage.index)
-  const value = { moduleNameToComponentMetadata, pageComponentsState, setPageComponentsState, siteSettings }
+  const [streamDocument, setStreamDocument] = useState({})
+
+  const value = {
+    moduleNameToComponentMetadata,
+    pageComponentsState,
+    setPageComponentsState,
+    siteSettings,
+    streamDocument,
+    setStreamDocument
+  }
 
   return (
     <StudioContext.Provider value={value}>

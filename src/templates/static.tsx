@@ -6,8 +6,7 @@ import {
   TemplateProps,
   TemplateRenderProps,
 } from "@yext/pages";
-
-
+import '../index.css'
 
 export const getPath: GetPath<any> = () => {
   return `index.html`;

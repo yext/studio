@@ -4,13 +4,11 @@ import Layout from '../layouts/layout'
 import {
   Template,
   GetPath,
-  GetRedirects,
   TemplateConfig,
   TemplateProps,
   TemplateRenderProps,
-  GetHeadConfig,
-  HeadConfig,
 } from "@yext/pages";
+import '../index.css'
 
 /**
  * Currently unused, but here for reference.

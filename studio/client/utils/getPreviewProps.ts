@@ -1,12 +1,11 @@
 import { ModuleNameToComponentMetadata, PageComponentsState, PropType } from '../../shared/models'
-
-// TODO(oshi): don't use hardcoded document
-import streamDocument from '../../../localData/studio-stream-id__2a31f273ad1944ccdff93d07c7a8dd77.json'
 import lodashGet from 'lodash/get'
+import { TemplateProps } from '@yext/pages'
 
 export default function getPreviewProps(
   { moduleName, props, name }: PageComponentsState[number],
-  moduleNameToComponentMetadata: ModuleNameToComponentMetadata
+  moduleNameToComponentMetadata: ModuleNameToComponentMetadata,
+  streamDocument: TemplateProps['document']
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = { ...props }
   Object.keys(props).forEach(propName => {

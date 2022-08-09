@@ -14,7 +14,7 @@ const componentNameToComponent: {
 } = {}
 
 export default function PagePreview() {
-  const { pageComponentsState, moduleNameToComponentMetadata } = useStudioContext()
+  const { pageComponentsState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
   const [
     loadedComponents
   ] = useComponents(pageComponentsState, moduleNameToComponentMetadata)
@@ -31,7 +31,7 @@ export default function PagePreview() {
             return null
           }
           return React.createElement(componentNameToComponent[c.name], {
-            ...getPreviewProps(c, moduleNameToComponentMetadata),
+            ...getPreviewProps(c, moduleNameToComponentMetadata, streamDocument),
             // TODO(oshi): this is a hardcoded verticalConfigMap so that UniversalResults works
             // remove after we add plugin components support
             verticalConfigMap: {},

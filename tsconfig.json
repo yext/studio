@@ -13,6 +13,9 @@
     "sourceMap": true,
     "jsx": "react-jsx",
     "target": "esnext",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": [
+      "vite/client"
+    ]
   }
 }
