@@ -1,1 +1,0 @@
-import{_ as s,c as a,o as n,a as l}from"./app.67dd872d.js";const A=JSON.parse('{"title":"Layouts","description":"","frontmatter":{},"headers":[],"relativePath":"developer/layouts.md"}'),o={name:"developer/layouts.md"},p=l("",3),e=[p];function t(r,c,y,D,F,i){return n(),a("div",null,e)}var d=s(o,[["render",t]]);export{A as __pageData,d as default};

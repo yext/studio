@@ -1,1 +1,0 @@
-import{_ as s,c as n,o as a,a as p}from"./app.67dd872d.js";const A=JSON.parse('{"title":"Site Settings","description":"","frontmatter":{},"headers":[],"relativePath":"developer/siteSettings.md"}'),e={name:"developer/siteSettings.md"},l=p("",4),o=[l];function t(c,r,i,D,y,F){return a(),n("div",null,o)}var d=s(e,[["render",t]]);export{A as __pageData,d as default};

@@ -1,1 +1,0 @@
-import{_ as e,c as i,o as t,a as n}from"./app.67dd872d.js";const u=JSON.parse('{"title":"Admin Guide","description":"","frontmatter":{},"headers":[],"relativePath":"admin/intro.md"}'),a={name:"admin/intro.md"},o=n("",6),s=[o];function d(l,r,p,c,_,m){return t(),i("div",null,s)}var g=e(a,[["render",d]]);export{u as __pageData,g as default};
