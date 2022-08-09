@@ -26,7 +26,9 @@ export const config = {
 export default function ({ document }) {
   return (
     <TestLayout>
-      <Banner subtitleUsingStreams={`hi ${document.id} ${document.address}`} />
+      <Banner
+        subtitleUsingStreams={`hi 123${document.id} ${document.address}`}
+      />
       <Banner title='12312312' />
       <Banner
         title='first!123u1o2i3u1'

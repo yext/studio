@@ -38,17 +38,18 @@ function createReturnStatement(updatedState: PageState) {
     if (!componentMetadata.propShape) {
       return prev
     }
-    return prev + '\n' + createJsxSelfClosingElement(componentMetadata.propShape, next.props)
+    return prev + '\n' + createJsxSelfClosingElement(next.name, componentMetadata.propShape, next.props)
   }, '')
   const layoutComponentName = updatedState.layoutState.name
   return `return (\n<${layoutComponentName}>\n${elements}\n</${layoutComponentName}>\n)`
 }
 
 function createJsxSelfClosingElement(
+  elementName: string,
   propShape: PropShape,
   props: PropState
 ) {
-  let el = `<${name} `
+  let el = `<${elementName} `
   Object.keys(props).forEach(propName => {
     const propType = propShape[propName].type
     const val = props[propName]
