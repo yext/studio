@@ -25,7 +25,7 @@ function parseLayoutState(
           uuid: v1(),
         }
         const isBuiltinJsxElement = name.charAt(0) === name.charAt(0).toLowerCase()
-        if (!isBuiltinJsxElement && name !== 'Fragment') {
+        if (!isBuiltinJsxElement && !['Fragment', 'React.Fragment'].includes(name)) {
           layoutState.moduleName = getComponentModuleName(name, imports)
         }
       } else {

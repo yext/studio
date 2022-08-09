@@ -9,9 +9,9 @@ import { resolve } from 'path'
 import { PropShape, PropType } from '../../shared/models'
 
 export function getComponentNodes(
-  sourceFile: SourceFile | JsxElement | JsxFragment
+  parentNode: JsxElement | JsxFragment
 ): (JsxOpeningElement | JsxSelfClosingElement)[] {
-  const nodes = sourceFile
+  const nodes = parentNode
     .getDescendants()
     .filter(n => {
       return n.isKind(ts.SyntaxKind.JsxOpeningElement) || n.isKind(ts.SyntaxKind.JsxSelfClosingElement)
@@ -26,8 +26,7 @@ export const tsCompilerOptions = {
 }
 
 export function getComponentName(n: JsxOpeningElement | JsxSelfClosingElement): string {
-  const componentName = n.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText()
-  return componentName
+  return n.getTagNameNode().getText()
 }
 
 export function prettify(code: string) {

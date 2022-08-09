@@ -71,7 +71,7 @@ function useComponents(
     if (name && name.charAt(0) === name.charAt(0).toLowerCase()) {
       return null
     }
-    if (name === 'Fragment' || name === '') {
+    if (['', 'Fragment', 'React.Fragment'].includes(name)) {
       componentNameToComponent[name] = React.Fragment
       return null
     }
