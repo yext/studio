@@ -1,4 +1,4 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxElement, JsxFragment } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
@@ -8,8 +8,10 @@ import parseImports from './parseImports'
 import { resolve } from 'path'
 import { PropShape, PropType } from '../../shared/models'
 
-export function getComponentNodes(sourceFile: SourceFile): (JsxOpeningElement | JsxSelfClosingElement)[] {
-  const nodes = sourceFile
+export function getComponentNodes(
+  parentNode: JsxElement | JsxFragment
+): (JsxOpeningElement | JsxSelfClosingElement)[] {
+  const nodes = parentNode
     .getDescendants()
     .filter(n => {
       return n.isKind(ts.SyntaxKind.JsxOpeningElement) || n.isKind(ts.SyntaxKind.JsxSelfClosingElement)
@@ -24,8 +26,7 @@ export const tsCompilerOptions = {
 }
 
 export function getComponentName(n: JsxOpeningElement | JsxSelfClosingElement): string {
-  const componentName = n.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText()
-  return componentName
+  return n.getTagNameNode().getText()
 }
 
 export function prettify(code: string) {

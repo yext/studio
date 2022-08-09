@@ -1,7 +1,7 @@
 import { ts } from 'ts-morph'
 import { getSourceFile, parsePropertyStructures, resolveNpmModule } from './common'
-import { ModuleMetadata } from '../../shared/models'
-import parsePropInterface from './parsePropInterface'
+import { ComponentMetadata, ModuleMetadata } from '../../shared/models'
+import parseComponentMetadata from './parseComponentMetadata'
 import path from 'path'
 
 /**
@@ -19,9 +19,10 @@ export default function parseNpmComponents(
 
   // We may want to not use the same object reference over in the future
   // But for now this should never be mutated
-  const errorMetadataValue = {
+  const errorMetadataValue: ComponentMetadata = {
     propShape: {},
     initialProps: {},
+    editable: false,
     importIdentifier
   }
   const componentsToProps: ModuleMetadata = {}
@@ -53,7 +54,8 @@ export default function parseNpmComponents(
       componentsToProps[componentName] = {
         propShape,
         initialProps: {},
-        importIdentifier
+        importIdentifier,
+        editable: true
       }
     } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
       try {
@@ -61,7 +63,7 @@ export default function parseNpmComponents(
         // This is not necessarily the case. Deferring the import tracing logic for now, since an imported
         // interface may live several imports deep.
         const typeName = typeNode.getTypeName().getText()
-        const componentMetadata = parsePropInterface(sourceFile, absPath, typeName, importIdentifier)
+        const componentMetadata = parseComponentMetadata(sourceFile, absPath, typeName, importIdentifier)
         componentsToProps[componentName] = componentMetadata
       } catch (err) {
         console.error('Caught an error, likely with regards to nested interfaces. Ignoring props for ', componentName)

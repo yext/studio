@@ -1,10 +1,10 @@
 import { SearchBar } from '@yext/answers-react-components'
 import Banner from '../components/Banner'
-import Layout from '../layouts/layout'
+import TestLayout from '../layouts/TestLayout'
 
 export default function () {
   return (
-    <Layout>
+    <TestLayout>
       <Banner title='first!' randomNum={1} />
       <Banner />
       <Banner
@@ -14,6 +14,6 @@ export default function () {
         backgroundColor='#00ff00'
       />
       <SearchBar/>
-    </Layout>
+    </TestLayout>
   )
 }

@@ -12,7 +12,7 @@ export default function PropEditor({
   setPropState,
   componentMetadata
 }: PropEditorProps) {
-  if (!componentMetadata) {
+  if (!componentMetadata || !componentMetadata.propShape) {
     console.error('Error rendering prop editor for', propState)
     return null
   }

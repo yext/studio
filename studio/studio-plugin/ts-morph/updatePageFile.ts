@@ -1,10 +1,10 @@
 import fs from 'fs'
 import { ts } from 'ts-morph'
-import { PageComponentsState } from '../../shared/models'
+import { PageState, ComponentState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getSourceFile, prettify } from './common'
 
-export default function updatePageFile(updatedState: PageComponentsState, pageFilePath) {
+export default function updatePageFile(updatedState: PageState, pageFilePath: string) {
   const file = getRootPath(pageFilePath)
   const sourceFile = getSourceFile(file)
   const pageComponent = sourceFile.getDescendantsOfKind(ts.SyntaxKind.FunctionDeclaration).find(n => {
@@ -28,14 +28,15 @@ export default function updatePageFile(updatedState: PageComponentsState, pageFi
   fs.writeFileSync(file, updatedFileText)
 }
 
-function createReturnStatement(updatedState: PageComponentsState) {
-  const elements = updatedState.reduce((prev, next) => {
+function createReturnStatement(updatedState: PageState) {
+  const elements = updatedState.componentsState.reduce((prev, next) => {
     return prev + '\n' + createJsxSelfClosingElement(next)
   }, '')
-  return `return (\n<>\n${elements}\n</>\n)`
+  const layoutComponentName = updatedState.layoutState.name
+  return `return (\n<${layoutComponentName}>\n${elements}\n</${layoutComponentName}>\n)`
 }
 
-function createJsxSelfClosingElement({ name, props }: PageComponentsState[number]) {
+function createJsxSelfClosingElement({ name, props }: ComponentState) {
   let el = `<${name} `
   Object.keys(props).forEach(p => {
     const val = props[p]
