@@ -124,7 +124,9 @@ function useComponents(
 }
 
 function getFunctionComponent(module: Record<string, unknown>, name: string): ComponentImportType {
-  if (typeof module['default'] === 'function') {
+  if (typeof module[name] === 'function') {
+    return module[name] as FunctionComponent
+  } else if (typeof module['default'] === 'function') {
     return module['default'] as FunctionComponent
   } else {
     return `Module ${name} is not a valid functional component.`
