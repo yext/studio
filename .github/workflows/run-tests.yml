@@ -11,4 +11,5 @@ jobs:
         uses: actions/setup-node@v3
       - run: npm ci
       - run: npx jest
+      - run: npm run localData
       - run: cd studio && npx tsc
