@@ -1,86 +1,116 @@
-import React, { FunctionComponent, useEffect } from 'react'
-import { useState } from 'react'
-import { ModuleNameToComponentMetadata, PageComponentsState } from '../../shared/models'
+import React, { FunctionComponent, useEffect, useCallback, useState, useMemo } from 'react'
+import { useRef } from 'react'
+import { ModuleNameToComponentMetadata, PageState, ComponentState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
-import Layout from '../../../src/layouts/layout'
 import getPreviewProps from '../utils/getPreviewProps'
 
-/**
- * TODO(oshi): this currently does not handle name conflicts between components.
- * This will be more important when we add support for plugin libraries that add components to the Studio.
- */
-const componentNameToComponent: {
-  [name: string]: FunctionComponent<Record<string, unknown>> | string
-} = {}
-
 export default function PagePreview() {
-  const { pageComponentsState, moduleNameToComponentMetadata } = useStudioContext()
+  const { pageState, moduleNameToComponentMetadata } = useStudioContext()
   const [
     loadedComponents
-  ] = useComponents(pageComponentsState, moduleNameToComponentMetadata)
+  ] = useComponents(pageState, moduleNameToComponentMetadata)
+  const componentsToRender = useMemo(() => {
+    // prevent logging errors on initial render before components are imported
+    if (Object.keys(loadedComponents).length === 0) {
+      return null
+    }
+    const children = pageState.componentsState.map((c, i) => {
+      if (!loadedComponents[c.name]) {
+        console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
+        return null
+      }
+      return React.createElement(loadedComponents[c.name], {
+        ...getPreviewProps(c, moduleNameToComponentMetadata),
+        verticalConfigMap: {},
+        key: `${c.name}-${i}`
+      })
+    })
+    const layoutName = pageState.layoutState.name
+    if (loadedComponents[layoutName]) {
+      return React.createElement(loadedComponents[layoutName], {}, children)
+    } else if (layoutName && layoutName.charAt(0) === layoutName.charAt(0).toLowerCase()) {
+      return React.createElement(layoutName, {}, children)
+    } else {
+      console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
+      return children
+    }
+  }, [loadedComponents, pageState.componentsState, pageState.layoutState.name])
 
   return (
     <div className='w-full h-full'>
-      <Layout>
-        {loadedComponents.map((c, i) => {
-          if (c.name === 'Layout') {
-            return null
-          }
-          if (!componentNameToComponent[c.name]) {
-            console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
-            return null
-          }
-          return React.createElement(componentNameToComponent[c.name], {
-            ...getPreviewProps(c, moduleNameToComponentMetadata),
-            // TODO(oshi): this is a hardcoded verticalConfigMap so that UniversalResults works
-            // remove after we add plugin components support
-            verticalConfigMap: {},
-            key: `${c.name}-${i}`
-          })
-        })}
-      </Layout>
+      {componentsToRender}
     </div>
   )
 }
 
+type ComponentImportType = FunctionComponent<Record<string, unknown>> | string
+
 function useComponents(
-  pageComponentsState: PageComponentsState,
+  pageState: PageState,
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata
-): [PageComponentsState] {
-  const [loadedComponents, setLoadedComponents] = useState<PageComponentsState>([])
-  const modules = import.meta.glob<Record<string, unknown>>('../../../src/components/*.tsx')
+): [Record<string, ComponentImportType>] {
+  const [
+    loadedComponents,
+    setLoadedComponents
+  ] = useState<Record<string, ComponentImportType>>({})
+  // Use ref instead of "loadedComponents" to avoid triggering rerender (infinite loop)
+  // in useCallback/useEffect logic
+  const loadedComponentsRef = useRef<Record<string, ComponentImportType>>(loadedComponents)
+
+  const modules = useMemo(() => import.meta.glob<Record<string, unknown>>(['../../../src/components/*.tsx', '../../../src/layouts/*.tsx']), [])
+  const importComponent = useCallback((
+    c: ComponentState,
+    directoryPath: string,
+    componentNameToComponent: Record<string, ComponentImportType>
+  ): Promise<void> | null => {
+    const { name, moduleName } = c
+    // Avoid re-importing components
+    if (name in loadedComponentsRef.current) {
+      return null
+    }
+    // built-in JSX Element
+    if (name && name.charAt(0) === name.charAt(0).toLowerCase()) {
+      return null
+    }
+    if (['', 'Fragment', 'React.Fragment'].includes(name)) {
+      componentNameToComponent[name] = React.Fragment
+      return null
+    }
+    if (!moduleName) {
+      console.error(`Missing module name for ${name}`)
+      return null
+    }
+    if (moduleName === 'localComponents') {
+      return modules[`${directoryPath}/${name}.tsx`]().then(module => {
+        componentNameToComponent[name] = getFunctionComponent(module, name)
+      })
+    } else {
+      const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
+      return import(importIdentifier).then(module => {
+        componentNameToComponent[name] = getFunctionComponent(module, name)
+      })
+    }
+  }, [moduleNameToComponentMetadata, modules])
 
   useEffect(() => {
-    Promise.all(pageComponentsState.map(c => {
-      const { name, moduleName } = c
-      if (name in componentNameToComponent) {
-        return null
-      }
-      if (name === 'Layout') {
-        // console.error('TODO remove hardcoded layout support')
-        return null
-      }
-      if (moduleName === 'localComponents') {
-        return modules[`../../../src/components/${name}.tsx`]().then(module => {
-          componentNameToComponent[name] = getFunctionComponent(module, name)
-        })
-      } else {
-        const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
-        return import(importIdentifier).then(module => {
-          componentNameToComponent[name] = getFunctionComponent(module, name)
-        })
-      }
-    })).then(() => {
+    const newLoadedComponents = {}
+    Promise.all([
+      importComponent(pageState.layoutState, '../../../src/layouts', newLoadedComponents),
+      ...pageState.componentsState.map(c => importComponent(c, '../../../src/components', newLoadedComponents))
+    ]).then(() => {
       // TODO(oshi): this probably runs into race conditions issues
-      setLoadedComponents(pageComponentsState)
+      setLoadedComponents(prev => {
+        const newState = { ...prev, ...newLoadedComponents }
+        loadedComponentsRef.current = newState
+        return newState
+      })
     })
-  }, [moduleNameToComponentMetadata, modules, pageComponentsState])
+  }, [importComponent, pageState.componentsState, pageState.layoutState])
 
   return [loadedComponents]
 }
 
-function getFunctionComponent(module: Record<string, unknown>, name: string):
-(FunctionComponent<Record<string, unknown>> | string) {
+function getFunctionComponent(module: Record<string, unknown>, name: string): ComponentImportType {
   if (typeof module[name] === 'function') {
     return module[name] as FunctionComponent
   } else if (typeof module['default'] === 'function') {

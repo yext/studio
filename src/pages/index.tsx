@@ -1,6 +1,6 @@
 import { SearchBar } from '@yext/search-ui-react'
 import Banner from '../components/Banner'
-import Layout from '../layouts/layout'
+import TestLayout from '../layouts/TestLayout'
 
 /**
  * Currently unused, but here for reference.
@@ -25,7 +25,7 @@ export const config = {
 
 export default function ({ document }) {
   return (
-    <Layout>
+    <TestLayout>
       <Banner subtitleUsingStreams={`hi ${document.id} ${document.address}`} />
       <Banner title='12312312' />
       <Banner
@@ -41,6 +41,6 @@ export default function ({ document }) {
         backgroundColor='#00ff00'
       />
       <SearchBar />
-    </Layout>
+    </TestLayout>
   )
 }

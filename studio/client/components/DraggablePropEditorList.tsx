@@ -11,15 +11,15 @@ import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 import { PropState } from '../../shared/models'
 
 export default function DraggablePropEditorList() {
-  const { pageComponentsState, setPageComponentsState, moduleNameToComponentMetadata } = useStudioContext()
-  const [listState, setListState] = useState(pageComponentsState)
+  const { pageState, setPageState, moduleNameToComponentMetadata } = useStudioContext()
+  const [listState, setListState] = useState(pageState.componentsState)
 
   // Update the listState if any other component adds or removes components
   useEffect(() => {
-    if (pageComponentsState.length !== listState.length) {
-      setListState(pageComponentsState)
+    if (pageState.componentsState.length !== listState.length) {
+      setListState(pageState.componentsState)
     }
-  }, [pageComponentsState, listState.length])
+  }, [pageState.componentsState, listState.length])
 
   function getUpdatedListState(activeId: UniqueIdentifier, overId: UniqueIdentifier ) {
     const oldIndex = listState.findIndex(c => c.uuid === activeId)
@@ -41,7 +41,10 @@ export default function DraggablePropEditorList() {
       return
     }
     const updatedListState = getUpdatedListState(active.id, over.id)
-    setPageComponentsState(updatedListState)
+    setPageState({
+      ...pageState,
+      componentsState: updatedListState
+    })
   }
 
   const componentNames = useMemo(() => {
@@ -62,13 +65,19 @@ export default function DraggablePropEditorList() {
           const uuid = c.uuid
 
           const setPropState = (val: PropState) => {
-            const copy = [...pageComponentsState]
+            const copy = [...pageState.componentsState]
             const i = copy.findIndex(c => c.uuid === uuid)
             copy[i].props = val
-            setPageComponentsState(copy)
+            setPageState({
+              ...pageState,
+              componentsState: copy
+            })
           }
           if (!componentNames.has(c.name)) {
             // console.error('unknown component', c.name, 'gracefully skipping for now.')
+            return null
+          }
+          if (!c.moduleName) {
             return null
           }
 

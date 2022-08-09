@@ -28,7 +28,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
     padding: '8px 4px'
   }
 
-  const { pageComponentsState, setPageComponentsState } = useStudioContext()
+  const { pageState, setPageState } = useStudioContext()
   const [contextMenuAnchor, setContextMenuAnchor] = useState({ x: 0, y: 0 })
   const [contextMenuProps, toggleContextMenu] = useMenuState()
   const ref = useRef<HTMLDivElement>(null)
@@ -58,9 +58,12 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
   }, [handleContextMenu])
 
   function deleteComponent() {
-    setPageComponentsState(pageComponentsState.filter(element => {
-      return element.uuid !== props.uuid
-    }))
+    setPageState({
+      ...pageState,
+      componentsState: pageState.componentsState.filter(element => {
+        return element.uuid !== props.uuid
+      })
+    })
   }
 
   return (
