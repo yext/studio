@@ -1,0 +1,87 @@
+{
+	"__": {
+		"entityPageSet": {
+			"plugin": {}
+		},
+		"name": "people",
+		"streamId": "studio-stream-id",
+		"templateType": "JS"
+	},
+	"address": {
+		"city": "Brooklyn",
+		"countryCode": "US",
+		"line1": "63 Flushing Ave",
+		"localizedCountryName": "United States",
+		"localizedRegionName": "New York",
+		"postalCode": "11205",
+		"region": "NY"
+	},
+	"businessId": 0,
+	"c_allstateLadyCTA": {
+		"label": "Learn More",
+		"link": "http://yext.com",
+		"linkType": "URL"
+	},
+	"c_employeeCountry": "United States",
+	"c_employeeDepartment": "SALES_EXEC",
+	"c_employeeRegion": "New York",
+	"c_employeeTitle": "Dir. Market Development",
+	"c_startDate": "2014-06-16",
+	"cityCoordinate": {
+		"latitude": 40.675234,
+		"longitude": -73.971043
+	},
+	"displayCoordinate": {
+		"latitude": 40.6984589,
+		"longitude": -73.9777559
+	},
+	"emails": [
+		"vcheung@yext.com"
+	],
+	"firstName": "Vivien",
+	"geocodedCoordinate": {
+		"latitude": 40.6984715,
+		"longitude": -73.9777647
+	},
+	"headshot": {
+		"height": 450,
+		"thumbnails": [
+			{
+				"height": 196,
+				"url": "http://a.mktgcdn.com/p/0rIyT_Hvk622_qEYrGZb-f3m84k0lwhA8MLqpXLI6yo/196x196.jpg",
+				"width": 196
+			}
+		],
+		"url": "http://a.mktgcdn.com/p/0rIyT_Hvk622_qEYrGZb-f3m84k0lwhA8MLqpXLI6yo/450x450.jpg",
+		"width": 450
+	},
+	"id": "Employee-882",
+	"key": "0:people:knowledgeGraph:18716056:en",
+	"lastName": "Cheung",
+	"locale": "en",
+	"meta": {
+		"entityType": {
+			"id": "ce_person",
+			"uid": 39139
+		},
+		"locale": "en",
+		"updateTimestamp": "2021-06-23T19:16:33Z"
+	},
+	"name": "Vivien Cheung",
+	"routableCoordinate": {
+		"latitude": 40.6979771,
+		"longitude": -73.9744204
+	},
+	"siteDomain": "",
+	"siteId": 0,
+	"siteInternalHostName": "",
+	"uid": 18716056,
+	"yextDisplayCoordinate": {
+		"latitude": 40.6984589,
+		"longitude": -73.9777559
+	},
+	"yextRoutableCoordinate": {
+		"latitude": 40.6979771,
+		"longitude": -73.9744204
+	}
+}

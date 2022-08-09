@@ -2,3 +2,7 @@ node_modules/
 /dist
 /docs/.vitepress/dist
 /studio/lib
+
+# TODO(oshi): Committing localData for now for ease of development. 
+# In the future this should be gitignored
+# /localData

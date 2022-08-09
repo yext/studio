@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect, useCallback, useState, useMemo } f
 import { useRef } from 'react'
 import { ModuleNameToComponentMetadata, PageState, ComponentState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
+import getPreviewProps from '../utils/getPreviewProps'
 
 export default function PagePreview() {
   const { pageState, moduleNameToComponentMetadata } = useStudioContext()
@@ -19,7 +20,7 @@ export default function PagePreview() {
         return null
       }
       return React.createElement(loadedComponents[c.name], {
-        ...c.props,
+        ...getPreviewProps(c, moduleNameToComponentMetadata),
         verticalConfigMap: {},
         key: `${c.name}-${i}`
       })

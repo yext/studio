@@ -1,4 +1,4 @@
-import { JsxElement, JsxFragment, SourceFile, ts } from 'ts-morph'
+import { JsxAttribute, JsxElement, JsxFragment, SourceFile, ts } from 'ts-morph'
 import { PageState, ComponentState, PossibleModuleNames } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getComponentName, getComponentNodes, getPropName, getPropValue, getSourceFile } from './common'
@@ -68,12 +68,12 @@ export default function parsePageFile(filePath: string): PageState {
       uuid: v1(),
       moduleName: getComponentModuleName(name, imports)
     }
-    n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach(a => {
-      const propName = getPropName(a)
+    n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach((jsxAttribute: JsxAttribute) => {
+      const propName = getPropName(jsxAttribute)
       if (!propName) {
-        throw new Error('Could not parse page file')
+        throw new Error('Could not parse jsx attribute prop name: ' + jsxAttribute.getFullText())
       }
-      const propValue = getPropValue(a)
+      const propValue = getPropValue(jsxAttribute)
       componentData.props[propName] = propValue
     })
     componentsState.push(componentData)

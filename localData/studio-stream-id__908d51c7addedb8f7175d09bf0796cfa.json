@@ -1,0 +1,105 @@
+{
+	"__": {
+		"entityPageSet": {
+			"plugin": {}
+		},
+		"name": "people",
+		"streamId": "studio-stream-id",
+		"templateType": "JS"
+	},
+	"address": {
+		"city": "Mclean",
+		"countryCode": "US",
+		"line1": "7900 Westpark Drive",
+		"localizedCountryName": "United States",
+		"localizedRegionName": "Virginia",
+		"postalCode": "22102",
+		"region": "VA"
+	},
+	"associations": [
+		"Runners Association"
+	],
+	"businessId": 0,
+	"c_allstateLadyCTA": {
+		"label": "Learn More",
+		"link": "http://yext.com",
+		"linkType": "URL"
+	},
+	"c_employeeCity": "Tysons Corner",
+	"c_employeeCountry": "United States",
+	"c_employeeDepartment": "CONSULTING",
+	"c_employeeRegion": "Virginia",
+	"c_employeeTitle": "Associate Technical Project Manager",
+	"c_oliverCta": {
+		"icon": "yext",
+		"label": "test cta",
+		"url": "https://www.yext.com/s/2287528/entity/edit2?entityIds=13411251"
+	},
+	"c_startDate": "2017-09-18",
+	"cityCoordinate": {
+		"latitude": 38.936519622802734,
+		"longitude": -77.18428039550781
+	},
+	"description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Mollis nunc sed id semper risus. Commodo elit at imperdiet dui accumsan sit amet nulla facilisi. Scelerisque viverra mauris in aliquam. A erat nam at lectus. Egestas purus viverra accumsan in nisl nisi scelerisque. Habitant morbi tristique senectus et netus. Congue nisi vitae suscipit tellus mauris a diam maecenas sed.",
+	"displayCoordinate": {
+		"latitude": 38.924648,
+		"longitude": -77.216859
+	},
+	"emails": [
+		"afarooque@yext.com",
+		"af@yext.com",
+		"aplomb@yext.com"
+	],
+	"firstName": "Amani",
+	"geocodedCoordinate": {
+		"latitude": 38.924654,
+		"longitude": -77.216891
+	},
+	"headshot": {
+		"height": 191,
+		"url": "http://a.mktgcdn.com/p/bmc3W88h2mMRXk-wHQ7dB0Em4rR_dfia6OVrAK3LjYU/192x191.png",
+		"width": 192
+	},
+	"id": "Employee-2116",
+	"key": "0:people:knowledgeGraph:18716057:en",
+	"languages": [
+		"German"
+	],
+	"lastName": "Farooque",
+	"locale": "en",
+	"mainPhone": "+18003332222",
+	"meta": {
+		"entityType": {
+			"id": "ce_person",
+			"uid": 39139
+		},
+		"locale": "en",
+		"updateTimestamp": "2021-06-23T19:16:46Z"
+	},
+	"name": "Amani Farooque",
+	"routableCoordinate": {
+		"latitude": 38.9242966,
+		"longitude": -77.2177549
+	},
+	"siteDomain": "",
+	"siteId": 0,
+	"siteInternalHostName": "",
+	"specialities": [
+		"Documentation",
+		"Coding"
+	],
+	"uid": 18716057,
+	"websiteUrl": {
+		"displayUrl": "http://www.testdisplay.com",
+		"preferDisplayUrl": true,
+		"url": "http://www.test.com"
+	},
+	"yextDisplayCoordinate": {
+		"latitude": 38.924648,
+		"longitude": -77.216859
+	},
+	"yextRoutableCoordinate": {
+		"latitude": 38.9242966,
+		"longitude": -77.2177549
+	}
+}

@@ -3,6 +3,27 @@ import getRootPath from '../getRootPath'
 import updatePageFile from './updatePageFile'
 
 jest.mock('../getRootPath')
+jest.mock('../componentMetadata', () => {
+  return {
+    moduleNameToComponentMetadata: {
+      localComponents: {
+        Banner: {
+          propShape: {
+            title: {
+              type: 'string',
+            },
+            randomNum: {
+              type: 'number',
+            },
+            someBool: {
+              type: 'boolean'
+            }
+          }
+        }
+      }
+    }
+  }
+})
 
 beforeEach(() => {
   jest.spyOn(fs, 'writeFileSync').mockImplementation()
@@ -15,7 +36,8 @@ it('can update props and add additional props', () => {
       layoutState: {
         'name': '',
         'props': {},
-        'uuid': '0'
+        'uuid': '0',
+        moduleName: 'localComponents'
       },
       componentsState: [
         {
@@ -24,7 +46,8 @@ it('can update props and add additional props', () => {
             'title': 'first!',
             'randomNum': 1,
           },
-          'uuid': '1'
+          'uuid': '1',
+          moduleName: 'localComponents'
         },
         {
           'name': 'Banner',
@@ -33,7 +56,8 @@ it('can update props and add additional props', () => {
             'randomNum': 2,
             'someBool': true
           },
-          'uuid': '2'
+          'uuid': '2',
+          moduleName: 'localComponents'
         },
         {
           'name': 'Banner',
@@ -42,7 +66,8 @@ it('can update props and add additional props', () => {
             'randomNum': 3,
             'someBool': false
           },
-          'uuid': '3'
+          'uuid': '3',
+          moduleName: 'localComponents'
         }
       ]
     }
@@ -58,7 +83,8 @@ it('can add additional components', () => {
     layoutState: {
       'name': '',
       'props': {},
-      'uuid': '0'
+      'uuid': '0',
+      moduleName: 'localComponents'
     },
     componentsState: [{
       'name': 'Banner',
@@ -66,7 +92,8 @@ it('can add additional components', () => {
         'title': 'first!',
         'randomNum': 1,
       },
-      'uuid': '1'
+      'uuid': '1',
+      moduleName: 'localComponents'
     }]
   }, 'emptyPage.tsx')
   expect(fs.writeFileSync).toHaveBeenCalledWith(

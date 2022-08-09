@@ -1,8 +1,9 @@
 import fs from 'fs'
 import { ts } from 'ts-morph'
-import { PageState, ComponentState } from '../../shared/models'
+import { PageState, ComponentState, ModuleNameToComponentMetadata, ComponentMetadata, PropState, PropShape } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getSourceFile, prettify } from './common'
+import { moduleNameToComponentMetadata } from '../componentMetadata'
 
 export default function updatePageFile(updatedState: PageState, pageFilePath: string) {
   const file = getRootPath(pageFilePath)
@@ -30,20 +31,34 @@ export default function updatePageFile(updatedState: PageState, pageFilePath: st
 
 function createReturnStatement(updatedState: PageState) {
   const elements = updatedState.componentsState.reduce((prev, next) => {
-    return prev + '\n' + createJsxSelfClosingElement(next)
+    if (!next.moduleName) {
+      return prev
+    }
+    const componentMetadata = moduleNameToComponentMetadata[next.moduleName][next.name]
+    if (!componentMetadata.propShape) {
+      return prev
+    }
+    return prev + '\n' + createJsxSelfClosingElement(next.name, componentMetadata.propShape, next.props)
   }, '')
   const layoutComponentName = updatedState.layoutState.name
   return `return (\n<${layoutComponentName}>\n${elements}\n</${layoutComponentName}>\n)`
 }
 
-function createJsxSelfClosingElement({ name, props }: ComponentState) {
-  let el = `<${name} `
-  Object.keys(props).forEach(p => {
-    const val = props[p]
-    if (typeof props[p] === 'string') {
-      el += `${p}='${val}' `
+function createJsxSelfClosingElement(
+  elementName: string,
+  propShape: PropShape,
+  props: PropState
+) {
+  let el = `<${elementName} `
+  Object.keys(props).forEach(propName => {
+    const propType = propShape[propName].type
+    const val = props[propName]
+    if (propType === 'StreamsDataPath') {
+      el += `${propName}={\`${val}\`}`
+    } else if (propType === 'string' || propType === 'HexColor') {
+      el += `${propName}='${val}' `
     } else {
-      el += `${p}={${val}} `
+      el += `${propName}={${val}} `
     }
   })
   el += '/>'

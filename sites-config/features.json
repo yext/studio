@@ -1,0 +1,29 @@
+{
+  "features": [
+    {
+      "name": "people",
+      "streamId": "studio-stream-id",
+      "templateType": "JS",
+      "entityPageSet": {
+        "plugin": {}
+      }
+    }
+  ],
+  "streams": [
+    {
+      "$id": "studio-stream-id",
+      "fields": [],
+      "filter": {
+        "entityTypes": [
+          "ce_person"
+        ]
+      },
+      "localization": {
+        "locales": [
+          "en"
+        ],
+        "primary": false
+      }
+    }
+  ]
+}

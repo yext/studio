@@ -1,0 +1,1 @@
+export * from '@yext/search-ui-react'

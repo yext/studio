@@ -53,7 +53,13 @@ export function getPropValue(n: Node) {
   if (numberNode) {
     return parseFloat(numberNode.compilerNode.text)
   }
-  throw new Error('unhandled prop value for node: ' + n.compilerNode)
+  const templateExpression = n.getFirstDescendantByKind(ts.SyntaxKind.TemplateExpression)
+  if (templateExpression) {
+    const templateStringIncludingBacktiks = templateExpression.getFullText()
+    // remove the backtiks which should be the first and last characters
+    return templateStringIncludingBacktiks.substring(1, templateStringIncludingBacktiks.length - 1)
+  }
+  throw new Error('unhandled prop value for node: ' + n.getFullText() + ' with kind: ' + n.getKindName())
 }
 
 interface ParseablePropertyStructure extends
