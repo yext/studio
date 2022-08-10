@@ -6,7 +6,6 @@
         "pattern": "assets/**/*"
       }
     ],
-    "features": "sites-config/features.json",
     "plugins": [
       {
         "pluginName": "Generator",

@@ -7,6 +7,7 @@ import parseImports from './parseImports'
 import { resolve } from 'path'
 import { PropShape, PropType } from '../../shared/models'
 
+// 'typescript' is a CommonJS module, which may not support all module.exports as named exports
 const { JsxEmit, resolveModuleName } = typescript
 
 export function getComponentNodes(
