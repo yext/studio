@@ -4,9 +4,8 @@ New components can be added to a Studio site by creating a new .tsx file in the 
 
 Each component file is expected to export exactly one functional React component.
 
-The component must be the default export.
-for instance `Banner.tsx` would export a function named `Banner`.
-Note that React itself requires components to start with a capital letter.
+The component must be the default export. (Currently we technically support named exports, however
+this will likely be removed in the future)
 
 Besides that, the only other restriction to a component file is that any required props should have defaults provided
 for them via an `initialProps` export. Otherwise when an Admin adds the component to the page no value will be provided for the prop despite it being required.
