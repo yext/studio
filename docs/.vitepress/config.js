@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitepress'
+const { defineConfig } = require('vitepress')
 
-export default defineConfig({
+module.exports = defineConfig({
   title: 'VitePress',
   description: 'Just playing around.',
   themeConfig: {

@@ -31,7 +31,7 @@ export default function PropEditor({
           const propDoc = propShape[propName].doc
           const propValue = propState[propName] as any
           const key = propName + '-' + index
-          const sharedProps ={
+          const sharedProps = {
             key: propName,
             propName,
             propValue,

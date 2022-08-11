@@ -71,7 +71,7 @@ it('can update props and add additional props', () => {
         }
       ]
     }
-    , 'testPage.tsx')
+    , getRootPath('testPage.tsx'))
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining('testPage.tsx'),
     fs.readFileSync(getRootPath('testPageAfterUpdate.tsx'), 'utf-8')
@@ -95,7 +95,7 @@ it('can add additional components', () => {
       'uuid': '1',
       moduleName: 'localComponents'
     }]
-  }, 'emptyPage.tsx')
+  }, getRootPath('emptyPage.tsx'))
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining('emptyPage.tsx'),
     fs.readFileSync(getRootPath('emptyPageAfterUpdate.tsx'), 'utf-8')

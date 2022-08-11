@@ -1,12 +1,14 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxElement, JsxFragment } from 'ts-morph'
-import { JsxEmit } from 'typescript'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxElement, JsxFragment, VariableDeclaration, FunctionDeclaration } from 'ts-morph'
+import typescript, { ModuleResolutionHost } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
-import { resolveModuleName, ModuleResolutionHost } from 'typescript'
 import { specialTypesArray } from '../../types'
 import parseImports from './parseImports'
 import { resolve } from 'path'
 import { PropShape, PropType } from '../../shared/models'
+
+// 'typescript' is a CommonJS module, which may not support all module.exports as named exports
+const { JsxEmit, resolveModuleName } = typescript
 
 export function getComponentNodes(
   parentNode: JsxElement | JsxFragment
@@ -150,4 +152,19 @@ export function getSourceFile(file: string): SourceFile {
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)
   return p.getSourceFileOrThrow(file)
+}
+
+export function getDefaultExport(sourceFile: SourceFile): VariableDeclaration | FunctionDeclaration {
+  const declarations = sourceFile.getDefaultExportSymbolOrThrow().getDeclarations()
+  if (declarations.length === 0) {
+    throw new Error('Error getting default export')
+  }
+  const node = declarations[0]
+  if (node.isKind(ts.SyntaxKind.ExportAssignment)) {
+    const identifierName = node.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText()
+    return sourceFile.getVariableDeclarationOrThrow(identifierName)
+  } else if (node.isKind(ts.SyntaxKind.FunctionDeclaration)) {
+    return node
+  }
+  throw new Error('Error getting default export, no ExportAssignment or FunctionDeclaration found')
 }

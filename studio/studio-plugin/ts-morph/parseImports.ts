@@ -1,4 +1,4 @@
-import { ImportClause, SourceFile, SyntaxKind } from 'ts-morph'
+import { SourceFile, SyntaxKind } from 'ts-morph'
 import { getSourceFile } from './common'
 
 /**
@@ -9,12 +9,16 @@ export default function parseImports(file: string | SourceFile): Record<string, 
   const sourceFile = typeof file === 'string' ? getSourceFile(file) : file
   const importPathToImportNames: Record<string, string[]> = {}
 
-  sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration).forEach(n => {
-    const importClause: ImportClause = n.getFirstDescendantByKindOrThrow(SyntaxKind.ImportClause)
+  sourceFile.getDescendantsOfKind(SyntaxKind.ImportDeclaration).forEach(importDeclaration => {
+    const importClause = importDeclaration.getFirstDescendantByKind(SyntaxKind.ImportClause)
+    //  Ignore imports like `import 'index.css'` which lack an import clause
+    if (!importClause) {
+      return
+    }
     const defaultImport: string | undefined = importClause.getDefaultImport()?.getText()
     const namedImports: string[] = importClause.getNamedImports()
       .map(n => n.compilerNode.name.escapedText.toString())
-    const importPath: string = n.getModuleSpecifierValue()
+    const importPath: string = importDeclaration.getModuleSpecifierValue()
     if (!importPathToImportNames[importPath]) {
       importPathToImportNames[importPath] = []
     }

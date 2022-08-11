@@ -5,10 +5,11 @@ import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 
 export default function PagePreview() {
-  const { pageState, moduleNameToComponentMetadata } = useStudioContext()
+  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
   const [
     loadedComponents
   ] = useComponents(pageState, moduleNameToComponentMetadata)
+
   const componentsToRender = useMemo(() => {
     // prevent logging errors on initial render before components are imported
     if (Object.keys(loadedComponents).length === 0) {
@@ -20,7 +21,7 @@ export default function PagePreview() {
         return null
       }
       return React.createElement(loadedComponents[c.name], {
-        ...getPreviewProps(c, moduleNameToComponentMetadata),
+        ...getPreviewProps(c, moduleNameToComponentMetadata, streamDocument),
         verticalConfigMap: {},
         key: `${c.name}-${i}`
       })
@@ -34,7 +35,13 @@ export default function PagePreview() {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return children
     }
-  }, [loadedComponents, pageState.componentsState, pageState.layoutState.name])
+  }, [
+    loadedComponents,
+    pageState.componentsState,
+    pageState.layoutState.name,
+    streamDocument,
+    moduleNameToComponentMetadata
+  ])
 
   return (
     <div className='w-full h-full'>
@@ -57,7 +64,13 @@ function useComponents(
   // in useCallback/useEffect logic
   const loadedComponentsRef = useRef<Record<string, ComponentImportType>>(loadedComponents)
 
-  const modules = useMemo(() => import.meta.glob<Record<string, unknown>>(['../../../src/components/*.tsx', '../../../src/layouts/*.tsx']), [])
+  const modules = useMemo(() => {
+    return import.meta.glob<Record<string, unknown>>([
+      '../../../src/components/*.tsx',
+      '../../../src/layouts/*.tsx'
+    ])
+  }, [])
+
   const importComponent = useCallback((
     c: ComponentState,
     directoryPath: string,

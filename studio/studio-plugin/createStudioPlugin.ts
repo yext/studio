@@ -7,7 +7,8 @@ import { StudioProps } from '../client/components/Studio'
 import getRootPath from './getRootPath'
 import { getSourceFile } from './ts-morph/common'
 import { moduleNameToComponentMetadata } from './componentMetadata'
-import openBrowser from 'react-dev-utils/openBrowser'
+import getPagePath from './getPagePath'
+import openBrowser from 'react-dev-utils/openBrowser.js'
 
 /**
  * Handles server-client communication.
@@ -30,7 +31,7 @@ export default function createStudioPlugin(args): Plugin {
     },
     moduleNameToComponentMetadata,
     componentsOnPage: {
-      index: parsePageFile('src/pages/index.tsx')
+      index: parsePageFile(getPagePath('index.tsx'))
     }
   }
 
