@@ -63,7 +63,7 @@ function createJsxSelfClosingElement(
     } else if (propType === 'string' || propType === 'HexColor') {
       el += `${propName}='${val}' `
     } else {
-      // This handles numbers, booleans, and `StreamsDataPath`s
+      // This handles `JsxEspression`s, like numbers, booleans, and `StreamsDataPath`s
       el += `${propName}={${val}} `
     }
   })
