@@ -1,5 +1,5 @@
 import Banner from './components/Banner'
-import TestLayout from './components/TestLayout'
+import TestLayout from './layouts/TestLayout'
 
 export default function IndexPage() {
   return (

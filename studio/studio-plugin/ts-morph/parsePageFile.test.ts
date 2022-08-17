@@ -40,7 +40,8 @@ it('correctly parses page with React.Fragment layout', () => {
     layoutState: {
       name: 'React.Fragment',
       props: {},
-      uuid: 'mock-uuid'
+      uuid: 'mock-uuid',
+      moduleName: 'builtIn'
     },
     componentsState
   })
@@ -53,7 +54,8 @@ it('correctly parses page with Fragment layout', () => {
     layoutState: {
       name: 'Fragment',
       props: {},
-      uuid: 'mock-uuid'
+      uuid: 'mock-uuid',
+      moduleName: 'builtIn'
     },
     componentsState
   })
@@ -66,7 +68,8 @@ it('correctly parse page with Fragment layout in short syntax', () => {
     layoutState: {
       name: '',
       props: {},
-      uuid: 'mock-uuid'
+      uuid: 'mock-uuid',
+      moduleName: 'localLayouts'
     },
     componentsState
   })
@@ -80,6 +83,7 @@ it('correctly parses page with div layout component', () => {
       name: 'div',
       props: {},
       uuid: 'mock-uuid',
+      moduleName: 'builtIn'
     },
     componentsState
   })
@@ -93,7 +97,7 @@ it('correctly parses page with custom layout component', () => {
       name: 'TestLayout',
       props: {},
       uuid: 'mock-uuid',
-      moduleName: 'localComponents'
+      moduleName: 'localLayouts'
     },
     componentsState
   })
@@ -107,7 +111,7 @@ it('correctly parses page using streams paths', () => {
       name: 'TestLayout',
       props: {},
       uuid: 'mock-uuid',
-      moduleName: 'localComponents'
+      moduleName: 'localLayouts'
     },
     componentsState: [
       {

@@ -28,16 +28,18 @@ function parseLayoutState(
       name,
       props: {},
       uuid: v1(),
+      moduleName: 'builtIn'
     }
     const isBuiltinJsxElement = name.charAt(0) === name.charAt(0).toLowerCase()
     if (!isBuiltinJsxElement && !['Fragment', 'React.Fragment'].includes(name)) {
-      layoutState.moduleName = getComponentModuleName(name, imports)
+      layoutState.moduleName = getComponentModuleName(name, imports, true)
     }
   } else {
     layoutState = {
       name: '',
       props: {},
       uuid: v1(),
+      moduleName: 'localLayouts'
     }
   }
 
@@ -68,7 +70,7 @@ export default function parsePageFile(filePath: string): PageState {
       name,
       props: {},
       uuid: v1(),
-      moduleName: getComponentModuleName(name, imports)
+      moduleName: getComponentModuleName(name, imports, false)
     }
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach((jsxAttribute: JsxAttribute) => {
       const propName = getPropName(jsxAttribute)
@@ -87,7 +89,11 @@ export default function parsePageFile(filePath: string): PageState {
   }
 }
 
-function getComponentModuleName(name: string, imports: Record<string, string[]>): PossibleModuleNames {
+function getComponentModuleName(
+  name: string,
+  imports: Record<string, string[]>,
+  isLayout: boolean
+): PossibleModuleNames {
   let moduleName = Object.keys(imports).find(importIdentifier => {
     const importedNames = imports[importIdentifier]
     return importedNames.includes(name)
@@ -96,7 +102,7 @@ function getComponentModuleName(name: string, imports: Record<string, string[]>)
     throw new Error(`Could not find import path/module for component "${name}"`)
   }
   if (moduleName.startsWith('.')) {
-    moduleName = 'localComponents'
+    moduleName = isLayout ? 'localLayouts' : 'localComponents'
   }
   return moduleName as PossibleModuleNames
 }

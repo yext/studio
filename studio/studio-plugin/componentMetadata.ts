@@ -35,6 +35,6 @@ const localLayouts = fs.readdirSync(getRootPath('src/layouts'), 'utf-8').reduce(
 
 export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   localComponents,
-  ...localLayouts,
+  localLayouts,
   ...npmComponentProps
 }

@@ -9,9 +9,13 @@ export default function AddComponentButton() {
   return (
     <>
       <select className="select w-full max-w-xs" onChange={e => setModuleName(e.target.value as PossibleModuleNames)} value={moduleName}>
-        {Object.keys(moduleNameToComponentMetadata).map(m =>
-          <option key={m}>{m}</option>
-        )}
+        {Object.entries(moduleNameToComponentMetadata)
+          .filter(([_, metadata]) => {
+            return Object.values(metadata).filter(({ editable }) => editable).length > 0
+          })
+          .map(([moduleName]) =>
+            <option key={moduleName}>{moduleName}</option>
+          )}
       </select>
       <div className="dropdown mb-2">
         <label className="btn m-1" tabIndex={0}>Add Component</label>
