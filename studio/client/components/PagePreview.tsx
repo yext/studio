@@ -50,7 +50,9 @@ export default function PagePreview() {
 
   return (
     <div className='w-full h-full'>
-      {componentsToRender}
+      <ComponentPreviewBoundary key={pageState.layoutState.name}>
+        {componentsToRender}
+      </ComponentPreviewBoundary>
     </div>
   )
 }

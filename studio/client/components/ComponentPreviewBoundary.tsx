@@ -5,12 +5,8 @@ interface State {
 }
 
 export default class ComponentPreviewBoundary extends Component<PropsWithChildren, State> {
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError(error: Error) {
     return { error }
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.error(error, errorInfo)
   }
 
   render() {
