@@ -35,11 +35,12 @@ function parseLayoutState(
       layoutState.moduleName = getComponentModuleName(name, imports, true)
     }
   } else {
+    // This handles the React.Fragment shorthand <></>
     layoutState = {
       name: '',
       props: {},
       uuid: v1(),
-      moduleName: 'localLayouts'
+      moduleName: 'builtIn'
     }
   }
 

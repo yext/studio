@@ -69,7 +69,7 @@ it('correctly parse page with Fragment layout in short syntax', () => {
       name: '',
       props: {},
       uuid: 'mock-uuid',
-      moduleName: 'localLayouts'
+      moduleName: 'builtIn'
     },
     componentsState
   })
