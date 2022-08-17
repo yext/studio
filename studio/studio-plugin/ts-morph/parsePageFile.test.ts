@@ -33,7 +33,7 @@ const componentsState: ComponentState[] = [
   }
 ]
 
-it('correctly parses a page with React.Fragment layout', () => {
+it('correctly parses page with React.Fragment layout', () => {
   const result = parsePageFile(getRootPath('reactFragmentLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -46,7 +46,7 @@ it('correctly parses a page with React.Fragment layout', () => {
   })
 })
 
-it('correctly parses a page with Fragment layout', () => {
+it('correctly parses page with Fragment layout', () => {
   const result = parsePageFile(getRootPath('fragmentLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -72,7 +72,7 @@ it('correctly parse page with Fragment layout in short syntax', () => {
   })
 })
 
-it('correctly parses a page with div layout component', () => {
+it('correctly parses page with div layout component', () => {
   const result = parsePageFile(getRootPath('divLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -85,7 +85,7 @@ it('correctly parses a page with div layout component', () => {
   })
 })
 
-it('correctly parses a page with custom layout component', () => {
+it('correctly parses page with custom layout component', () => {
   const result = parsePageFile(getRootPath('customLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -99,7 +99,7 @@ it('correctly parses a page with custom layout component', () => {
   })
 })
 
-it('correctly parses a page using streams paths', () => {
+it('correctly parses page using streams paths', () => {
   const result = parsePageFile(getRootPath('streamsPage.tsx'))
 
   expect(result).toEqual({
