@@ -99,7 +99,7 @@ it('correctly parses a page with custom layout component', () => {
   })
 })
 
-it('correctly parses a page with custom layout component', () => {
+it('correctly parses a page using streams paths', () => {
   const result = parsePageFile(getRootPath('streamsPage.tsx'))
 
   expect(result).toEqual({
