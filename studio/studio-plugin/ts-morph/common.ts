@@ -45,6 +45,16 @@ export function getPropName(n: Node): string | undefined {
 }
 
 export function getPropValue(n: Node) {
+  if (n.isKind(ts.SyntaxKind.JsxAttribute)) {
+    const initializer = n.getInitializerOrThrow()
+    if (initializer.isKind(ts.SyntaxKind.StringLiteral)) {
+      return initializer.compilerNode.text
+    } else {
+      const propertyAccessExpression =
+        initializer.getExpressionIfKindOrThrow(ts.SyntaxKind.PropertyAccessExpression)
+      return propertyAccessExpression.getText()
+    }
+  }
   const stringNode = n.getFirstDescendantByKind(ts.SyntaxKind.StringLiteral)
   if (stringNode) {
     return stringNode.compilerNode.text

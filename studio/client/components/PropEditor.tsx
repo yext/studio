@@ -1,5 +1,6 @@
 import { PropState, ComponentMetadata } from '../../shared/models'
-import { HexColor, StreamsDataPath } from '../../types'
+import { HexColor, StreamsTemplateString, StreamsDataPath } from '../../types'
+import kgLogoUrl from '../images/kg-logo.jpeg'
 
 export interface PropEditorProps {
   propState: PropState,
@@ -46,8 +47,10 @@ export default function PropEditor({
             return <NumProp {...sharedProps} key={key}/>
           } else if (propType === 'HexColor') {
             return <HexColorProp {...sharedProps} key={key}/>
+          } else if (propType === 'StreamsTemplateString') {
+            return <StreamsTemplateStringProp {...sharedProps} key={key} />
           } else if (propType === 'StreamsDataPath') {
-            return <StreamsDataProp {...sharedProps} key={key} />
+            return <StreamsDataPathProp {...sharedProps} key={key} />
           }
           console.error('Unknown prop type', propType)
           return null
@@ -127,7 +130,31 @@ function ToolTip(props: {
   )
 }
 
-function StreamsDataProp(props: {
+function StreamsTemplateStringProp(props: {
+  propName: string,
+  propValue: StreamsTemplateString,
+  propDoc?: string,
+  onChange: (val: StreamsTemplateString) => void
+}) {
+  return (
+    <div className='flex'>
+      <label className='peer label'>{props.propName}:</label>
+      {props.propDoc && <ToolTip message={props.propDoc}/>}
+      <input
+        className='input-sm'
+        onChange={e => props.onChange(e.target.value as StreamsTemplateString)}
+        value={props.propValue ?? ''}
+      />
+      <img
+        src={kgLogoUrl}
+        alt='this input uses streams'
+        className='h-8'
+        style={{ filter: 'sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg)' }}
+      />
+    </div>
+  )
+}
+function StreamsDataPathProp(props: {
   propName: string,
   propValue: StreamsDataPath,
   propDoc?: string,
@@ -142,6 +169,7 @@ function StreamsDataProp(props: {
         onChange={e => props.onChange(e.target.value as StreamsDataPath)}
         value={props.propValue ?? ''}
       />
+      <img src={kgLogoUrl} alt='this input uses streams' className='h-8'/>
     </div>
   )
 }
