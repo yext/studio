@@ -1,6 +1,6 @@
 import { JsxAttribute, ts, SourceFile, JsxElement, JsxFragment } from 'ts-morph'
 import { ComponentState, PossibleModuleNames, PageState } from '../../shared/models'
-import { getComponentName, getComponentNodes, getDefaultExport, getPropName, getPropValue, getSourceFile } from './common'
+import { getComponentName, getComponentNodes, getDefaultExport, getJsxAttributeValue, getPropName, getSourceFile } from './common'
 import { v1 } from 'uuid'
 import parseImports from './parseImports'
 
@@ -75,7 +75,7 @@ export default function parsePageFile(filePath: string): PageState {
       if (!propName) {
         throw new Error('Could not parse jsx attribute prop name: ' + jsxAttribute.getFullText())
       }
-      const propValue = getPropValue(jsxAttribute)
+      const propValue = getJsxAttributeValue(jsxAttribute)
       componentData.props[propName] = propValue
     })
     componentsState.push(componentData)

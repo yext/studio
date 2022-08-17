@@ -1,4 +1,4 @@
-import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxElement, JsxFragment, VariableDeclaration, FunctionDeclaration } from 'ts-morph'
+import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, PropertyNamedNodeStructure, SourceFile, ts, TypedNodeStructure, Node, Project, JsxElement, JsxFragment, VariableDeclaration, FunctionDeclaration, JsxAttribute } from 'ts-morph'
 import typescript, { ModuleResolutionHost } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
@@ -44,17 +44,29 @@ export function getPropName(n: Node): string | undefined {
   return n.getFirstDescendantByKind(ts.SyntaxKind.Identifier)?.compilerNode.text
 }
 
-export function getPropValue(n: Node) {
-  if (n.isKind(ts.SyntaxKind.JsxAttribute)) {
-    const initializer = n.getInitializerOrThrow()
-    if (initializer.isKind(ts.SyntaxKind.StringLiteral)) {
-      return initializer.compilerNode.text
-    } else {
-      const propertyAccessExpression =
-        initializer.getExpressionIfKindOrThrow(ts.SyntaxKind.PropertyAccessExpression)
-      return propertyAccessExpression.getText()
-    }
+export function getJsxAttributeValue(n: JsxAttribute): string | number | boolean {
+  const initializer = n.getInitializerOrThrow()
+  if (initializer.isKind(ts.SyntaxKind.StringLiteral)) {
+    return initializer.compilerNode.text
   }
+  const expression = initializer.getExpressionOrThrow()
+  if (
+    expression.isKind(ts.SyntaxKind.PropertyAccessExpression) ||
+    expression.isKind(ts.SyntaxKind.TemplateExpression)
+  ) {
+    return expression.getText()
+  } else if (
+    expression.isKind(ts.SyntaxKind.NumericLiteral) ||
+    expression.isKind(ts.SyntaxKind.FalseKeyword) ||
+    expression.isKind(ts.SyntaxKind.TrueKeyword)
+  ) {
+    return expression.getLiteralValue()
+  } else {
+    throw new Error('Unrecognized Expression kind: ' + expression.getKindName())
+  }
+}
+
+export function getPropValue(n: Node): string | number | boolean {
   const stringNode = n.getFirstDescendantByKind(ts.SyntaxKind.StringLiteral)
   if (stringNode) {
     return stringNode.compilerNode.text
