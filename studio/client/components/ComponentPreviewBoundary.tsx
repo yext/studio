@@ -1,7 +1,7 @@
 import { Component, PropsWithChildren } from 'react'
 
 interface State {
-  error?: string
+  error?: Error
 }
 
 export default class ComponentPreviewBoundary extends Component<PropsWithChildren, State> {
