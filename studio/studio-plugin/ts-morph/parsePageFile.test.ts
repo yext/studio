@@ -33,7 +33,7 @@ const componentsState: ComponentState[] = [
   }
 ]
 
-it('correctly parse page with React.Fragment layout', () => {
+it('correctly parses page with React.Fragment layout', () => {
   const result = parsePageFile(getRootPath('reactFragmentLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -46,7 +46,7 @@ it('correctly parse page with React.Fragment layout', () => {
   })
 })
 
-it('correctly parse page with Fragment layout', () => {
+it('correctly parses page with Fragment layout', () => {
   const result = parsePageFile(getRootPath('fragmentLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -72,7 +72,7 @@ it('correctly parse page with Fragment layout in short syntax', () => {
   })
 })
 
-it('correctly parse page with div layout component', () => {
+it('correctly parses page with div layout component', () => {
   const result = parsePageFile(getRootPath('divLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -85,7 +85,7 @@ it('correctly parse page with div layout component', () => {
   })
 })
 
-it('correctly parse page with custom layout component', () => {
+it('correctly parses page with custom layout component', () => {
   const result = parsePageFile(getRootPath('customLayoutPage.tsx'))
 
   expect(result).toEqual({
@@ -96,5 +96,30 @@ it('correctly parse page with custom layout component', () => {
       moduleName: 'localComponents'
     },
     componentsState
+  })
+})
+
+it('correctly parses page using streams paths', () => {
+  const result = parsePageFile(getRootPath('streamsPage.tsx'))
+
+  expect(result).toEqual({
+    layoutState: {
+      name: 'TestLayout',
+      props: {},
+      uuid: 'mock-uuid',
+      moduleName: 'localComponents'
+    },
+    componentsState: [
+      {
+        name: 'Banner',
+        props: {
+          randomNum: 'document.address.city',
+          // eslint-disable-next-line no-template-curly-in-string
+          subtitleUsingStreams: '`my prefix ${document.id} my suffix`'
+        },
+        uuid: 'mock-uuid',
+        moduleName: 'localComponents'
+      }
+    ]
   })
 })

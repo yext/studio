@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import { ModuleNameToComponentMetadata, PageState, ComponentState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
+import ComponentPreviewBoundary from './ComponentPreviewBoundary'
 
 export default function PagePreview() {
   const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
@@ -20,11 +21,15 @@ export default function PagePreview() {
         console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
         return null
       }
-      return React.createElement(loadedComponents[c.name], {
-        ...getPreviewProps(c, moduleNameToComponentMetadata, streamDocument),
+      const previewProps = getPreviewProps(c, moduleNameToComponentMetadata, streamDocument)
+      const component = React.createElement(loadedComponents[c.name], {
+        ...previewProps,
         verticalConfigMap: {},
         key: `${c.name}-${i}`
       })
+      return (
+        <ComponentPreviewBoundary key={JSON.stringify(previewProps)}>{component}</ComponentPreviewBoundary>
+      )
     })
     const layoutName = pageState.layoutState.name
     if (loadedComponents[layoutName]) {
@@ -45,7 +50,9 @@ export default function PagePreview() {
 
   return (
     <div className='w-full h-full'>
-      {componentsToRender}
+      <ComponentPreviewBoundary key={pageState.layoutState.name}>
+        {componentsToRender}
+      </ComponentPreviewBoundary>
     </div>
   )
 }

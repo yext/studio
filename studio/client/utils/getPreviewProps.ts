@@ -17,15 +17,22 @@ export default function getPreviewProps(
       return
     }
     const propType: PropType = componentMetadata.propShape[propName].type
-    if (propType === 'StreamsDataPath') {
+    if (propType === 'StreamsTemplateString') {
       const templateString = props[propName]
       if (typeof templateString !== 'string') {
-        console.error('StreamsDataPath should be a string, found', typeof templateString)
+        console.error('StreamsTemplateString should be a string, found', typeof templateString)
         return
       }
       transformedProps[propName] = templateString.replaceAll(/\${(.*?)}/g, (...args) => {
         return lodashGet({ document: streamDocument }, args[1]) ?? args[0]
       })
+    } else if (propType === 'StreamsDataPath') {
+      const dataPath = props[propName]
+      if (typeof dataPath !== 'string') {
+        console.error('StreamsDataPath should be a string, found', typeof dataPath)
+        return
+      }
+      transformedProps[propName] = lodashGet({ document: streamDocument }, dataPath) ?? dataPath
     }
   })
   return transformedProps

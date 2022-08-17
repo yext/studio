@@ -58,9 +58,7 @@ function createJsxSelfClosingElement(
   Object.keys(props).forEach(propName => {
     const propType = propShape[propName].type
     const val = props[propName]
-    if (propType === 'StreamsDataPath') {
-      el += `${propName}={\`${val}\`}`
-    } else if (propType === 'string' || propType === 'HexColor') {
+    if (propType === 'string' || propType === 'HexColor') {
       el += `${propName}='${val}' `
     } else {
       el += `${propName}={${val}} `

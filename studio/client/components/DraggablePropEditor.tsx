@@ -25,7 +25,8 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
     border: 'white 4px solid',
     borderRadius: '4px',
     margin: '8px',
-    padding: '8px 4px'
+    padding: '8px 4px',
+    cursor: 'grab'
   }
 
   const { pageState, setPageState } = useStudioContext()
