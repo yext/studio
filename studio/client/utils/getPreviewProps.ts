@@ -2,12 +2,15 @@ import { ModuleNameToComponentMetadata, ComponentState, PropType } from '../../s
 import lodashGet from 'lodash/get'
 import { TemplateProps } from '@yext/pages'
 
+export const STREAMS_TEMPLATE_REGEX = /\${(.*?)}/g
+
 export default function getPreviewProps(
   { moduleName, props, name }: ComponentState,
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata,
   streamDocument: TemplateProps['document']
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = { ...props }
+
   Object.keys(props).forEach(propName => {
     const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
     if (!componentMetadata.propShape) {
@@ -20,7 +23,7 @@ export default function getPreviewProps(
         console.error('StreamsTemplateString should be a string, found', typeof templateString)
         return
       }
-      transformedProps[propName] = templateString.replaceAll(/\${(.*?)}/g, (...args) => {
+      transformedProps[propName] = templateString.replaceAll(STREAMS_TEMPLATE_REGEX, (...args) => {
         return lodashGet({ document: streamDocument }, args[1]) ?? args[0]
       })
     } else if (propType === 'StreamsDataPath') {

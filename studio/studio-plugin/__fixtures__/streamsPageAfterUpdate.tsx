@@ -1,6 +1,4 @@
-import { SearchBar } from '@yext/search-ui-react'
 import Banner from '../components/Banner'
-import TestLayout from '../layouts/TestLayout'
 import {
   Template,
   GetPath,
@@ -30,23 +28,12 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 
 const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
-    <TestLayout>
+    <>
       <Banner
-        randomNum={document.address.city.bob}
-        subtitleUsingStreams={`hi ${document.id} 123123123`}
-        title='12312312'
-        backgroundColor='#b75c5c'
-        someBool={true}
-        anotherColor='#45de0d'
+        subtitleUsingStreams={`my prefix ${document.id} my suffix`}
+        randomNum={document.address.city}
       />
-      <Banner
-        title='<Insert Titl2'
-        randomNum={document.id}
-        subtitleUsingStreams={document.id}
-        someBool={true}
-        anotherColor='#9c8181'
-      />
-    </TestLayout>
+    </>
   )
 }
 
