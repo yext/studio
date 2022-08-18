@@ -96,10 +96,6 @@ function useComponents(
       componentNameToComponent[name] = React.Fragment
       return null
     }
-    if (!moduleName) {
-      console.error(`Missing module name for ${name}`)
-      return null
-    }
     if (moduleName === 'localComponents') {
       return modules[`${directoryPath}/${name}.tsx`]().then(module => {
         componentNameToComponent[name] = getFunctionComponent(module, name)

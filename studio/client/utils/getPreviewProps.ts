@@ -9,9 +9,6 @@ export default function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = { ...props }
   Object.keys(props).forEach(propName => {
-    if (!moduleName) {
-      return
-    }
     const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
     if (!componentMetadata.propShape) {
       return
