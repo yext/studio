@@ -2,7 +2,7 @@ import { ObjectLiteralExpression, SourceFile, ts, VariableDeclarationKind } from
 import getUpdatedStreamConfig from '../streams/getUpdatedStreamConfig'
 import { ComponentState } from '../../shared/models'
 import { TemplateConfig } from '@yext/pages/*'
-import safeEval from 'safe-eval'
+import { runInNewContext } from 'vm'
 
 /**
  * This function mutates the original sourceFile in addition to returning the new config.
@@ -47,5 +47,5 @@ function getStreamObjectLiteral(sourceFile: SourceFile): ObjectLiteralExpression
 }
 
 function parseStreamObject(objectLiteralExpression: ObjectLiteralExpression): TemplateConfig {
-  return safeEval('(' + objectLiteralExpression.getText() + ')')
+  return runInNewContext('(' + objectLiteralExpression.getText() + ')')
 }

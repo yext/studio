@@ -23,9 +23,11 @@ export default function getPreviewProps(
         console.error('StreamsTemplateString should be a string, found', typeof templateString)
         return
       }
-      transformedProps[propName] = templateString.replaceAll(STREAMS_TEMPLATE_REGEX, (...args) => {
-        return lodashGet({ document: streamDocument }, args[1]) ?? args[0]
-      })
+      const templateStringWithoutBacktiks = templateString.substring(1, templateString.length - 1)
+      transformedProps[propName] =
+        templateStringWithoutBacktiks.replaceAll(STREAMS_TEMPLATE_REGEX, (...args) => {
+          return lodashGet({ document: streamDocument }, args[1]) ?? args[0]
+        })
     } else if (propType === 'StreamsDataPath') {
       const dataPath = props[propName]
       if (typeof dataPath !== 'string') {
