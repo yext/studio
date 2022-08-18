@@ -1,5 +1,5 @@
 import { ModuleNameToComponentMetadata, ComponentState, PropType } from '../../shared/models'
-import lodashGet from 'lodash/get'
+import lodashGet from 'lodash/get.js'
 import { TemplateProps } from '@yext/pages'
 
 export const STREAMS_TEMPLATE_REGEX = /\${(.*?)}/g

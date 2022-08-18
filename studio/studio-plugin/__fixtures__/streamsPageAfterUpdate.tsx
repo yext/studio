@@ -1,4 +1,5 @@
 import Banner from '../components/Banner'
+import TestLayout from '../layouts/TestLayout'
 import {
   Template,
   GetPath,
@@ -11,14 +12,9 @@ import '../index.css'
 export const config: TemplateConfig = {
   stream: {
     $id: 'studio-stream-id',
-    fields: ['id', 'address'],
-    filter: {
-      entityTypes: ['ce_person'],
-    },
-    localization: {
-      locales: ['en'],
-      primary: false,
-    },
+    filter: { entityTypes: ['ce_person'] },
+    localization: { locales: ['en'], primary: false },
+    fields: ['document.favoriteColor', 'document.title'],
   },
 }
 
@@ -30,8 +26,8 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <>
       <Banner
-        subtitleUsingStreams={`my prefix ${document.id} my suffix`}
-        randomNum={document.address.city}
+        streamsData={document.favoriteColor}
+        streamsTemplateString={`hi ${document.title}`}
       />
     </>
   )

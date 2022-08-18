@@ -1,10 +1,8 @@
 import { ObjectLiteralExpression, SourceFile, ts, VariableDeclarationKind } from 'ts-morph'
-import fs from 'fs'
-import { v1 } from 'uuid'
-import path from 'path'
 import getUpdatedStreamConfig from '../streams/getUpdatedStreamConfig'
 import { ComponentState } from '../../shared/models'
 import { TemplateConfig } from '@yext/pages/*'
+import safeEval from 'safe-eval'
 
 /**
  * This function mutates the original sourceFile in addition to returning the new config.
@@ -49,10 +47,5 @@ function getStreamObjectLiteral(sourceFile: SourceFile): ObjectLiteralExpression
 }
 
 function parseStreamObject(objectLiteralExpression: ObjectLiteralExpression): TemplateConfig {
-  return eval('(' + objectLiteralExpression.getText() + ')')
-  // const filename = path.resolve(__dirname, `temp-${v1()}.ts`)
-  // fs.writeFileSync(filename, 'export default ' + objectLiteralExpression.getText())
-  // const streamConfig = require(filename)
-  // fs.unlinkSync(filename)
-  // return streamConfig.default
+  return safeEval('(' + objectLiteralExpression.getText() + ')')
 }

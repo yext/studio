@@ -1,4 +1,3 @@
-import { SearchBar } from '@yext/search-ui-react'
 import Banner from '../components/Banner'
 import TestLayout from '../layouts/TestLayout'
 import {
@@ -13,14 +12,9 @@ import '../index.css'
 export const config: TemplateConfig = {
   stream: {
     $id: 'studio-stream-id',
-    fields: ['id', 'address'],
-    filter: {
-      entityTypes: ['ce_person'],
-    },
-    localization: {
-      locales: ['en'],
-      primary: false,
-    },
+    filter: { entityTypes: ['ce_person'] },
+    localization: { locales: ['en'], primary: false },
+    fields: ['document.address.city.bob', 'document.emails'],
   },
 }
 
@@ -33,7 +27,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
     <TestLayout>
       <Banner
         randomNum={document.address.city.bob}
-        subtitleUsingStreams={`hi ${document.id} 123123123`}
+        subtitleUsingStreams={`hi ${document.emails} 123123123`}
         title='12312312'
         backgroundColor='#b75c5c'
         someBool={true}
@@ -41,7 +35,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
       />
       <Banner
         title='<Insert Titl2'
-        randomNum={document.id}
+        randomNum={document.emails[1]}
         subtitleUsingStreams={document.id}
         someBool={true}
         anotherColor='#9c8181'
