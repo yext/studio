@@ -1,23 +1,32 @@
-export const moduleNameToComponentMetadata = {
+import { ModuleNameToComponentMetadata } from '../../shared/models'
+import { PropTypes } from '../../types'
+
+export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
+  localLayouts: {},
   localComponents: {
     Banner: {
+      editable: true,
+      importIdentifier: './components/Banner',
       propShape: {
         title: {
-          type: 'string',
+          type: PropTypes.string,
         },
         randomNum: {
-          type: 'number',
+          type: PropTypes.number,
         },
         someBool: {
-          type: 'boolean'
+          type: PropTypes.boolean
         },
         streamsData: {
-          type: 'StreamsData'
+          type: PropTypes.StreamsData
         },
-        StreamsString: {
-          type: 'StreamsString'
+        streamsString: {
+          type: PropTypes.StreamsString
+        },
+        subtitleUsingStreams: {
+          type: PropTypes.StreamsString
         }
-      }
+      },
     }
   }
 }

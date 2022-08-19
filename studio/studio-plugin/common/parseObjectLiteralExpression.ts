@@ -1,4 +1,3 @@
-import { TemplateConfig } from '@yext/pages/*'
 import { ObjectLiteralExpression } from 'ts-morph'
 import vm from 'vm'
 

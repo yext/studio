@@ -12,7 +12,7 @@ export default function updateStreamConfig(
   componentsState: ComponentState[]
 ): TemplateConfig {
   const streamObjectLiteral = getStreamObjectLiteral(sourceFile)
-  const currentConfig = streamObjectLiteral && 
+  const currentConfig = streamObjectLiteral &&
     parseObjectLiteralExpression<TemplateConfig>(streamObjectLiteral)
   const updatedStreamConfig = getUpdatedStreamConfig(componentsState, currentConfig)
   const stringifiedConfig = JSON.stringify(updatedStreamConfig)

@@ -1,8 +1,7 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
-import { PageState, PropState, PropShape } from '../../shared/models'
+import { PageState, PropState } from '../../shared/models'
 import { getDefaultExport, getSourceFile, prettify } from '../common/common'
-import { moduleNameToComponentMetadata } from '../componentMetadata'
 import updateStreamConfig from './updateStreamConfig'
 
 interface UpdatePageFileOptions {

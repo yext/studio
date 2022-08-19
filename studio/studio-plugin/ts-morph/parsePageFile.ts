@@ -4,7 +4,6 @@ import { getComponentName, getComponentNodes, getDefaultExport, getJsxAttributeV
 import { v1 } from 'uuid'
 import parseImports from './parseImports'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
-import { PropStateTypes, PropTypes } from '../../types'
 import validatePropState from '../common/validatePropState'
 
 function parseLayoutState(
@@ -52,7 +51,7 @@ function parseLayoutState(
     layoutNode: topLevelJsxNode as JsxElement | JsxFragment
   }
 }
-
+// TODO(oshi): move parsePageFile to the top of this file
 export default function parsePageFile(filePath: string): PageState {
   const sourceFile = getSourceFile(filePath)
   const imports = parseImports(sourceFile)
@@ -82,9 +81,9 @@ export default function parsePageFile(filePath: string): PageState {
       if (!propName) {
         throw new Error('Could not parse jsx attribute prop name: ' + jsxAttribute.getFullText())
       }
-      const propType = moduleNameToComponentMetadata[moduleName][name].propShape?.[propName].type
+      const propType = moduleNameToComponentMetadata[moduleName][name].propShape?.[propName]?.type
       if (!propType) {
-        throw new Error('Could not find prop type for : ' + jsxAttribute.getFullText())
+        throw new Error('Could not find prop type for: ' + jsxAttribute.getFullText())
       }
       const propValue = getJsxAttributeValue(jsxAttribute)
       const propState = {

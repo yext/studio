@@ -1,5 +1,5 @@
 import getRootPath from '../getRootPath'
-import { getSourceFile } from './common'
+import { getSourceFile } from '../common/common'
 import parseComponentMetadata from './parseComponentMetadata'
 
 jest.spyOn(console, 'error').mockImplementation(jest.fn())
@@ -37,5 +37,5 @@ it('updates correctly', () => {
     },
     editable: true
   })
-  expect(console.error).toBeCalledWith('Prop type ColorProp is not recognized. Skipping gracefully.')
+  expect(console.error).toBeCalledWith('Prop type ColorProp is not one of the recognized PropTypes. Skipping.')
 })

@@ -1,7 +1,8 @@
 import { ComponentState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getSourceFile } from './common'
+import { getSourceFile } from '../common/common'
 import updateStreamConfig from './updateStreamConfig'
+import { PropTypes } from '../../types'
 
 jest.mock('../getRootPath')
 jest.mock('../componentMetadata', () => {
@@ -25,13 +26,19 @@ jest.mock('../componentMetadata', () => {
   return { moduleNameToComponentMetadata }
 })
 
-const COMPONENTS_STATE = [
+const COMPONENTS_STATE: ComponentState[] = [
   {
     name: 'Banner',
     props: {
-      // eslint-disable-next-line no-template-curly-in-string
-      streamTemplateString: '`${document.id}: ${document.address.line1}`',
-      notStreams: 123
+      streamTemplateString: {
+        type: PropTypes.StreamsString,
+        // eslint-disable-next-line no-template-curly-in-string
+        value: '`${document.id}: ${document.address.line1}`',
+      },
+      notStreams: {
+        type: PropTypes.number,
+        value: 123
+      }
     },
     moduleName: 'localComponents',
     uuid: 'mock-uuid'
@@ -39,12 +46,15 @@ const COMPONENTS_STATE = [
   {
     name: 'Banner',
     props: {
-      streamPath: 'document.id',
+      streamPath: {
+        type: PropTypes.StreamsData,
+        value: 'document.id'
+      }
     },
     moduleName: 'localComponents',
     uuid: 'mock-uuid'
   }
-] as ComponentState[]
+]
 
 it('parse out the stream config object', () => {
   const sourceFile = getSourceFile(getRootPath('streamsPage.tsx'))

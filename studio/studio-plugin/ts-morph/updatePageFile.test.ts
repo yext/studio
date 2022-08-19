@@ -41,7 +41,7 @@ const BannerTwo: ComponentState = {
   props: {
     title: {
       type: PropTypes.string,
-      value: 'two!'
+      value: 'two'
     },
     randomNum: {
       type: PropTypes.number,

@@ -1,4 +1,5 @@
 import { ComponentState } from '../../shared/models'
+import { PropTypes } from '../../types'
 import updateStreamConfig, { getStreamPropValues, getUsedDocumentPaths } from './getUpdatedStreamConfig'
 
 jest.mock('../componentMetadata', () => {
@@ -22,13 +23,19 @@ jest.mock('../componentMetadata', () => {
   return { moduleNameToComponentMetadata }
 })
 
-const COMPONENTS_STATE = [
+const COMPONENTS_STATE: ComponentState[] = [
   {
     name: 'Banner',
     props: {
-      // eslint-disable-next-line no-template-curly-in-string
-      streamTemplateString: '`${document.id}: ${document.address.line1}`',
-      notStreams: 123
+      streamTemplateString: {
+        type: PropTypes.StreamsString,
+        // eslint-disable-next-line no-template-curly-in-string
+        value: '`${document.id}: ${document.address.line1}`',
+      },
+      notStreams: {
+        type: PropTypes.number,
+        value: 123
+      }
     },
     moduleName: 'localComponents',
     uuid: 'mock-uuid'
@@ -36,12 +43,15 @@ const COMPONENTS_STATE = [
   {
     name: 'Banner',
     props: {
-      streamPath: 'document.id',
+      streamPath: {
+        type: PropTypes.StreamsData,
+        value: 'document.id',
+      }
     },
     moduleName: 'localComponents',
     uuid: 'mock-uuid'
   }
-] as ComponentState[]
+]
 
 it('works with no current config', () => {
   const updatedConfig = updateStreamConfig(COMPONENTS_STATE, undefined)

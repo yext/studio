@@ -1,7 +1,7 @@
-import { PropertyAssignment, ts } from 'ts-morph'
+import { ts } from 'ts-morph'
 import { PropState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getPropValue, getSourceFile } from '../common/common'
+import { getSourceFile } from '../common/common'
 import parseObjectLiteralExpression from '../common/parseObjectLiteralExpression'
 
 export default function parseSiteSettingsFile(filePath: string, interfaceName: string): PropState {

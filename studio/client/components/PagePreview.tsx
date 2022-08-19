@@ -40,13 +40,7 @@ export default function PagePreview() {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return children
     }
-  }, [
-    loadedComponents,
-    pageState.componentsState,
-    pageState.layoutState.name,
-    streamDocument,
-    moduleNameToComponentMetadata
-  ])
+  }, [loadedComponents, pageState.componentsState, pageState.layoutState.name, streamDocument])
 
   return (
     <div className='w-full h-full'>

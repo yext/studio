@@ -1,5 +1,5 @@
 import { PropState, ComponentMetadata } from '../../shared/models'
-import { HexColor, StreamsString, StreamsData } from '../../types'
+import { HexColor, PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
 import kgLogoUrl from '../images/kg-logo.jpeg'
 
 export interface PropEditorProps {
@@ -39,21 +39,23 @@ export default function PropEditor({
             propDoc,
             onChange: val => updatePropState(propName, val)
           }
-          if (propType === 'boolean') {
-            return <BoolProp {...sharedProps} key={key}/>
-          } else if (propType === 'string') {
-            return <StrProp {...sharedProps} key={key}/>
-          } else if (propType === 'number') {
-            return <NumProp {...sharedProps} key={key}/>
-          } else if (propType === 'HexColor') {
-            return <HexColorProp {...sharedProps} key={key}/>
-          } else if (propType === 'StreamsString') {
-            return <StreamsStringProp {...sharedProps} key={key} />
-          } else if (propType === 'StreamsData') {
-            return <StreamsDataProp {...sharedProps} key={key} />
+          switch (propType) {
+            case PropTypes.boolean:
+              return <BoolProp {...sharedProps} key={key}/>
+            case PropTypes.string:
+              return <StrProp {...sharedProps} key={key}/>
+            case PropTypes.number:
+              return <NumProp {...sharedProps} key={key}/>
+            case PropTypes.HexColor:
+              return <HexColorProp {...sharedProps} key={key}/>
+            case PropTypes.StreamsString:
+              return <StreamsStringProp {...sharedProps} key={key} />
+            case PropTypes.StreamsData:
+              return <StreamsDataProp {...sharedProps} key={key} />
+            default:
+              console.error('Unknown prop type', propType)
+              return null
           }
-          console.error('Unknown prop type', propType)
-          return null
         })
       }
     </div>
@@ -132,7 +134,7 @@ function ToolTip(props: {
 
 function StreamsStringProp(props: {
   propName: string,
-  propValue: string,
+  propValue: StreamsStringExpression,
   propDoc?: string,
   onChange: (val: string) => void
 }) {
@@ -156,7 +158,7 @@ function StreamsStringProp(props: {
 }
 function StreamsDataProp(props: {
   propName: string,
-  propValue: string,
+  propValue: StreamsDataExpression,
   propDoc?: string,
   onChange: (val: string) => void
 }) {

@@ -1,5 +1,5 @@
 import studioConfig from '../../src/studio'
-import { BooleanState, HexColorState, NumberState, PropStateTypes, PropTypes, StreamsDataState, StreamsStringState, StringState } from '../types'
+import { PropStateTypes, PropTypes } from '../types'
 
 export type PageState = {
   layoutState: ComponentState,

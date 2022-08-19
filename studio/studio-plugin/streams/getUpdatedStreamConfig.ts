@@ -1,6 +1,5 @@
 import { TemplateConfig } from '@yext/pages/*'
-import { ComponentState, PossibleModuleNames } from '../../shared/models'
-import { moduleNameToComponentMetadata } from '../componentMetadata'
+import { ComponentState } from '../../shared/models'
 import { v1 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../client/utils/getPreviewProps'
 import { PropTypes } from '../../types'
@@ -70,35 +69,21 @@ export function getStreamPropValues(
     StreamsString: []
   }
 
-  componentsState.forEach(({ props, name: componentName, moduleName }) => {
+  componentsState.forEach(({ props, moduleName }) => {
     if (moduleName === 'builtIn') {
       return
     }
-    Object.keys(props)
-      .forEach(propName => {
-        const propType = getPropTypeOrThrow(propName, componentName, moduleName)
-        if (!['StreamsData', 'StreamsString'].includes(propType)) {
-          return
-        }
-        const propValue = props[propName]
-        if (typeof propValue !== 'string') {
-          throw new Error(`Streams prop value must be a string, received a(n) "${typeof propValue}" instead.`)
-        }
-        propValuesAccumulator[propType].push(propValue)
-      })
+    Object.keys(props).forEach(propName => {
+      const propType = props[propName].type
+      if (![PropTypes.StreamsData, PropTypes.StreamsString].includes(propType)) {
+        return
+      }
+      const propValue = props[propName].value
+      if (typeof propValue !== 'string') {
+        throw new Error(`Streams prop value must be a string, received a(n) "${typeof propValue}" instead.`)
+      }
+      propValuesAccumulator[propType].push(propValue)
+    })
   })
   return propValuesAccumulator
-}
-
-function getPropTypeOrThrow(
-  propName: string,
-  componentName: string,
-  moduleName: PossibleModuleNames
-): PropTypes {
-  const { propShape } = moduleNameToComponentMetadata[moduleName][componentName]
-  const propType = propShape?.[propName]?.type
-  if (!propType) {
-    throw new Error(`Unrecognized prop: "${propName}" on component: "${componentName}" for module: "${moduleName}"`)
-  }
-  return propType
 }
