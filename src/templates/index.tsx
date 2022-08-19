@@ -31,7 +31,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
     <TestLayout>
       <Banner
         randomNum={document.address.city.bob}
-        subtitleUsingStreams={`hi ${document.emails} 123123123`}
+        subtitleUsingStreams={document.id}
         title='12312312'
         backgroundColor='#b75c5c'
         someBool={true}

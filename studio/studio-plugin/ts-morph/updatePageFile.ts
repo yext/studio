@@ -1,6 +1,7 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import { PageState, PropState } from '../../shared/models'
+import { PropTypes } from '../../types'
 import { getDefaultExport, getSourceFile, prettify } from '../common/common'
 
 export default function updatePageFile(
@@ -52,7 +53,7 @@ function createJsxSelfClosingElement(
   Object.keys(props).forEach(propName => {
     const propType = props[propName].type
     const val = props[propName].value
-    if (propType === 'string' || propType === 'HexColor') {
+    if (propType === PropTypes.string || propType === PropTypes.HexColor) {
       el += `${propName}='${val}' `
     } else {
       el += `${propName}={${val}} `

@@ -1,6 +1,7 @@
 import getRootPath from '../getRootPath'
 import { getSourceFile } from '../common/common'
 import parseComponentMetadata from './parseComponentMetadata'
+import { PropTypes } from '../../types'
 
 jest.spyOn(console, 'error').mockImplementation(jest.fn())
 jest.mock('../getRootPath')
@@ -21,18 +22,18 @@ it('updates correctly', () => {
     },
     propShape: {
       title: {
-        type: 'string'
+        type: PropTypes.string
       },
       randomNum: {
-        type: 'number',
+        type: PropTypes.number,
         doc: 'jsdoc single line'
       },
       someBool: {
-        type: 'boolean',
+        type: PropTypes.boolean,
         doc: '\nthis is a jsdoc\nmulti-line comments!'
       },
       backgroundColor: {
-        type: 'HexColor'
+        type: PropTypes.HexColor
       }
     },
     editable: true

@@ -114,7 +114,7 @@ export function parsePropertyStructures(properties: ParseablePropertyStructure[]
       imports = parseImports(filePath)
     }
 
-    if (['string', 'boolean', 'number'].includes(type)) {
+    if ([PropTypes.string, PropTypes.boolean, PropTypes.number].includes(type)) {
       return true
     }
     const isValidProp = !!Object.entries(imports).find(([path, names]) => {
