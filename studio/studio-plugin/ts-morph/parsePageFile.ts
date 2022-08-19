@@ -1,8 +1,11 @@
 import { JsxAttribute, ts, SourceFile, JsxElement, JsxFragment } from 'ts-morph'
 import { ComponentState, PossibleModuleNames, PageState } from '../../shared/models'
-import { getComponentName, getComponentNodes, getDefaultExport, getJsxAttributeValue, getPropName, getSourceFile } from './common'
+import { getComponentName, getComponentNodes, getDefaultExport, getJsxAttributeValue, getPropName, getSourceFile } from '../common/common'
 import { v1 } from 'uuid'
 import parseImports from './parseImports'
+import { moduleNameToComponentMetadata } from '../componentMetadata'
+import { PropStateTypes, PropTypes } from '../../types'
+import validatePropState from '../common/validatePropState'
 
 function parseLayoutState(
   sourceFile: SourceFile,
@@ -67,19 +70,31 @@ export default function parsePageFile(filePath: string): PageState {
       return
     }
     const name = getComponentName(n)
+    const moduleName = getComponentModuleName(name, imports, false)
     const componentData: ComponentState = {
       name,
       props: {},
       uuid: v1(),
-      moduleName: getComponentModuleName(name, imports, false)
+      moduleName
     }
     n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach((jsxAttribute: JsxAttribute) => {
       const propName = getPropName(jsxAttribute)
       if (!propName) {
         throw new Error('Could not parse jsx attribute prop name: ' + jsxAttribute.getFullText())
       }
+      const propType = moduleNameToComponentMetadata[moduleName][name].propShape?.[propName].type
+      if (!propType) {
+        throw new Error('Could not find prop type for : ' + jsxAttribute.getFullText())
+      }
       const propValue = getJsxAttributeValue(jsxAttribute)
-      componentData.props[propName] = propValue
+      const propState = {
+        type: propType,
+        value: propValue
+      }
+      if (!validatePropState(propState)) {
+        throw new Error(`Could not validate propState ${JSON.stringify(propState, null, 2)}`)
+      }
+      componentData.props[propName] = propState
     })
     componentsState.push(componentData)
   })

@@ -1,7 +1,8 @@
 import { PropertyAssignment, ts } from 'ts-morph'
 import { PropState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getPropValue, getSourceFile } from './common'
+import { getPropValue, getSourceFile } from '../common/common'
+import parseObjectLiteralExpression from '../common/parseObjectLiteralExpression'
 
 export default function parseSiteSettingsFile(filePath: string, interfaceName: string): PropState {
   const file = getRootPath(filePath)
@@ -14,11 +15,5 @@ export default function parseSiteSettingsFile(filePath: string, interfaceName: s
     throw new Error(`unable to find site settings object of type ${interfaceName} in filepath ${filePath}`)
   }
 
-  const propState = {}
-  // only support type PropertyAssignment
-  siteSettingsNode
-    .getProperties()
-    .filter((p): p is PropertyAssignment => p.isKind(ts.SyntaxKind.PropertyAssignment))
-    .forEach(p => propState[p.getName()] = getPropValue(p))
-  return propState
+  return parseObjectLiteralExpression(siteSettingsNode)
 }

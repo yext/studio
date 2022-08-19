@@ -3,7 +3,7 @@ import parseNpmComponents from './ts-morph/parseNpmComponents'
 import { ModuleMetadata, ModuleNameToComponentMetadata } from '../shared/models'
 import fs from 'fs'
 import getRootPath from './getRootPath'
-import { getSourceFile } from './ts-morph/common'
+import { getSourceFile } from './common/common'
 import path from 'path'
 import parseComponentMetadata, { pathToPagePreview } from './ts-morph/parseComponentMetadata'
 

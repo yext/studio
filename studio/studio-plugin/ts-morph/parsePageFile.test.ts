@@ -2,6 +2,7 @@ import { ComponentState } from 'react'
 import parsePageFile from './parsePageFile'
 import getRootPath from '../getRootPath'
 
+jest.mock('../componentMetadata')
 jest.mock('../getRootPath')
 jest.mock('uuid', () => ({ v1: () => 'mock-uuid' }))
 

@@ -1,5 +1,5 @@
 import { SourceFile, SyntaxKind } from 'ts-morph'
-import { getSourceFile } from './common'
+import { getSourceFile } from '../common/common'
 
 /**
  * Returns a mapping of import identifier (i.e. path or module name)

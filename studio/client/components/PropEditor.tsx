@@ -1,5 +1,5 @@
 import { PropState, ComponentMetadata } from '../../shared/models'
-import { HexColor, StreamsTemplateString, StreamsData } from '../../types'
+import { HexColor, StreamsString, StreamsData } from '../../types'
 import kgLogoUrl from '../images/kg-logo.jpeg'
 
 export interface PropEditorProps {
@@ -47,8 +47,8 @@ export default function PropEditor({
             return <NumProp {...sharedProps} key={key}/>
           } else if (propType === 'HexColor') {
             return <HexColorProp {...sharedProps} key={key}/>
-          } else if (propType === 'StreamsTemplateString') {
-            return <StreamsTemplateStringProp {...sharedProps} key={key} />
+          } else if (propType === 'StreamsString') {
+            return <StreamsStringProp {...sharedProps} key={key} />
           } else if (propType === 'StreamsData') {
             return <StreamsDataProp {...sharedProps} key={key} />
           }
@@ -130,7 +130,7 @@ function ToolTip(props: {
   )
 }
 
-function StreamsTemplateStringProp(props: {
+function StreamsStringProp(props: {
   propName: string,
   propValue: string,
   propDoc?: string,

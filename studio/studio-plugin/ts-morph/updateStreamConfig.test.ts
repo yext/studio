@@ -10,7 +10,7 @@ jest.mock('../componentMetadata', () => {
       Banner: {
         propShape: {
           streamTemplateString: {
-            type: 'StreamsTemplateString'
+            type: 'StreamsString'
           },
           notStreams: {
             type: 'number'

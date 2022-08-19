@@ -21,7 +21,7 @@ export default function PagePreview() {
         console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
         return null
       }
-      const previewProps = getPreviewProps(c, moduleNameToComponentMetadata, streamDocument)
+      const previewProps = getPreviewProps(c.props, streamDocument)
       const component = React.createElement(loadedComponents[c.name], {
         ...previewProps,
         verticalConfigMap: {},

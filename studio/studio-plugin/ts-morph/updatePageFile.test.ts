@@ -1,81 +1,68 @@
 import fs from 'fs'
+import { ComponentState } from '../../shared/models'
+import { PropTypes } from '../../types'
 import getRootPath from '../getRootPath'
 import updatePageFile from './updatePageFile'
 
 jest.mock('uuid', () => ({ v1: () => 'mock-uuid' }))
 jest.mock('../getRootPath')
-jest.mock('../componentMetadata', () => {
-  return {
-    moduleNameToComponentMetadata: {
-      localComponents: {
-        Banner: {
-          propShape: {
-            title: {
-              type: 'string',
-            },
-            randomNum: {
-              type: 'number',
-            },
-            someBool: {
-              type: 'boolean'
-            },
-            streamsData: {
-              type: 'StreamsData'
-            },
-            streamsTemplateString: {
-              type: 'StreamsTemplateString'
-            }
-          }
-        }
-      }
-    }
-  }
-})
+jest.mock('../componentMetadata')
 
 beforeEach(() => {
   jest.spyOn(fs, 'writeFileSync').mockImplementation()
   jest.clearAllMocks()
 })
 
+const layoutState: ComponentState = {
+  name: '',
+  props: {},
+  uuid: '0',
+  moduleName: 'localComponents'
+}
+
+const BannerOne: ComponentState = {
+  name: 'Banner',
+  props: {
+    title: {
+      type: PropTypes.string,
+      value: 'first!'
+    },
+    randomNum: {
+      type: PropTypes.number,
+      value: 1,
+    }
+  },
+  uuid: '1',
+  moduleName: 'localComponents'
+}
+
+const BannerTwo: ComponentState = {
+  name: 'Banner',
+  props: {
+    title: {
+      type: PropTypes.string,
+      value: 'two!'
+    },
+    randomNum: {
+      type: PropTypes.number,
+      value: 2,
+    },
+    someBool: {
+      type: PropTypes.boolean,
+      value: true
+    },
+  },
+  uuid: '2',
+  moduleName: 'localComponents'
+}
+
 it('can update props and add additional props', () => {
   updatePageFile(
     {
-      layoutState: {
-        'name': '',
-        'props': {},
-        'uuid': '0',
-        moduleName: 'localComponents'
-      },
+      layoutState,
       componentsState: [
-        {
-          'name': 'Banner',
-          'props': {
-            'title': 'first!',
-            'randomNum': 1,
-          },
-          'uuid': '1',
-          moduleName: 'localComponents'
-        },
-        {
-          'name': 'Banner',
-          'props': {
-            'title': 'two',
-            'randomNum': 2,
-            'someBool': true
-          },
-          'uuid': '2',
-          moduleName: 'localComponents'
-        },
-        {
-          'name': 'Banner',
-          'props': {
-            'title': 'three',
-            'randomNum': 3,
-            'someBool': false
-          },
-          'uuid': '3',
-          moduleName: 'localComponents'
-        }
+        BannerOne,
+        BannerTwo
       ]
     }
     , getRootPath('testPage.tsx'))
@@ -87,21 +74,8 @@ it('can update props and add additional props', () => {
 
 it('can add additional components', () => {
   updatePageFile({
-    layoutState: {
-      'name': '',
-      'props': {},
-      'uuid': '0',
-      moduleName: 'localComponents'
-    },
-    componentsState: [{
-      'name': 'Banner',
-      'props': {
-        'title': 'first!',
-        'randomNum': 1,
-      },
-      'uuid': '1',
-      moduleName: 'localComponents'
-    }]
+    layoutState,
+    componentsState: [ BannerOne ]
   }, getRootPath('emptyPage.tsx'))
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining('emptyPage.tsx'),
@@ -111,12 +85,7 @@ it('can add additional components', () => {
 
 it('can update the stream config when no preeixsting one exists', () => {
   updatePageFile({
-    layoutState: {
-      'name': '',
-      'props': {},
-      'uuid': '0',
-      moduleName: 'localComponents'
-    },
+    layoutState,
     componentsState: []
   }, getRootPath('emptyPage.tsx'), { updateStreamConfig: true })
 
@@ -127,20 +96,21 @@ it('can update the stream config when no preeixsting one exists', () => {
 
 it('can update the stream config', () => {
   updatePageFile({
-    layoutState: {
-      'name': '',
-      'props': {},
-      'uuid': '0',
-      moduleName: 'localComponents'
-    },
+    layoutState,
     componentsState: [{
-      'name': 'Banner',
-      'props': {
-        'streamsData': 'document.favoriteColor',
-        // eslint-disable-next-line no-template-curly-in-string
-        'streamsTemplateString': '`hi ${document.title}`',
+      name: 'Banner',
+      props: {
+        streamsData: {
+          type: PropTypes.StreamsData,
+          value: 'document.favoriteColor'
+        },
+        streamsString: {
+          type: PropTypes.StreamsString,
+          // eslint-disable-next-line no-template-curly-in-string
+          value: '`hi ${document.title}`'
+        },
       },
-      'uuid': '1',
+      uuid: '1',
       moduleName: 'localComponents'
     }]
   }, getRootPath('streamsPage.tsx'), { updateStreamConfig: true })

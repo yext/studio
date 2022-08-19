@@ -9,7 +9,6 @@ export default function IndexPage() {
     <>
       <Banner title='first!' randomNum={1} />
       <Banner title='two' randomNum={2} someBool={true} />
-      <Banner title='three' randomNum={3} someBool={false} />
     </>
   )
 }

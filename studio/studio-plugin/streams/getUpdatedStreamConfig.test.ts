@@ -7,7 +7,7 @@ jest.mock('../componentMetadata', () => {
       Banner: {
         propShape: {
           streamTemplateString: {
-            type: 'StreamsTemplateString'
+            type: 'StreamsString'
           },
           notStreams: {
             type: 'number'
@@ -66,7 +66,7 @@ describe('getStreamPropValues', () => {
     const streamPropValues = getStreamPropValues(COMPONENTS_STATE)
     expect(streamPropValues).toEqual({
       // eslint-disable-next-line no-template-curly-in-string
-      StreamsTemplateString: ['`${document.id}: ${document.address.line1}`'],
+      StreamsString: ['`${document.id}: ${document.address.line1}`'],
       StreamsData: [ 'document.id' ]
     })
   })
@@ -76,7 +76,7 @@ describe('getUsedDocumentPaths', () => {
   it('can parse document paths', () => {
     const usedPaths = getUsedDocumentPaths({
       // eslint-disable-next-line no-template-curly-in-string
-      StreamsTemplateString: ['`${document.id}: ${document.address.line1}`'],
+      StreamsString: ['`${document.id}: ${document.address.line1}`'],
       StreamsData: [ 'document.id', 'document.emails[0]' ]
     })
     expect(usedPaths).toEqual(new Set(['document.id', 'document.address.line1', 'document.emails']))

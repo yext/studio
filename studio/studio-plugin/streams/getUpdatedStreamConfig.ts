@@ -1,8 +1,9 @@
 import { TemplateConfig } from '@yext/pages/*'
-import { ComponentState, PossibleModuleNames, PropType } from '../../shared/models'
+import { ComponentState, PossibleModuleNames } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import { v1 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../client/utils/getPreviewProps'
+import { PropTypes } from '../../types'
 
 const INFRA_STREAM_PROPERTIES = [
   '__',
@@ -46,7 +47,7 @@ export function getUsedDocumentPaths(
   streamPropValues: StreamPropValues
 ): Set<DocumentPath> {
   const usedPaths = streamPropValues.StreamsData.map(d => d.split('[')[0]) as DocumentPath[]
-  streamPropValues.StreamsTemplateString.forEach(val => {
+  streamPropValues.StreamsString.forEach(val => {
     const streamPaths = [...val.matchAll(STREAMS_TEMPLATE_REGEX)].map(m => m[1]) as DocumentPath[]
     streamPaths.forEach(streamPath => {
       // Streams configs fields do not allow specifying an index of a field.
@@ -59,14 +60,14 @@ export function getUsedDocumentPaths(
   return new Set(usedPaths)
 }
 
-type StreamPropValues = Record<'StreamsData' | 'StreamsTemplateString', string[]>
+type StreamPropValues = Record<'StreamsData' | 'StreamsString', string[]>
 
 export function getStreamPropValues(
   componentsState: ComponentState[]
 ): StreamPropValues {
   const propValuesAccumulator = {
     StreamsData: [],
-    StreamsTemplateString: []
+    StreamsString: []
   }
 
   componentsState.forEach(({ props, name: componentName, moduleName }) => {
@@ -76,7 +77,7 @@ export function getStreamPropValues(
     Object.keys(props)
       .forEach(propName => {
         const propType = getPropTypeOrThrow(propName, componentName, moduleName)
-        if (!['StreamsData', 'StreamsTemplateString'].includes(propType)) {
+        if (!['StreamsData', 'StreamsString'].includes(propType)) {
           return
         }
         const propValue = props[propName]
@@ -93,7 +94,7 @@ function getPropTypeOrThrow(
   propName: string,
   componentName: string,
   moduleName: PossibleModuleNames
-): PropType {
+): PropTypes {
   const { propShape } = moduleNameToComponentMetadata[moduleName][componentName]
   const propType = propShape?.[propName]?.type
   if (!propType) {

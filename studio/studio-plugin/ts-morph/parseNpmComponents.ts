@@ -1,5 +1,5 @@
 import { ts } from 'ts-morph'
-import { getSourceFile, parsePropertyStructures, resolveNpmModule } from './common'
+import { getSourceFile, parsePropertyStructures, resolveNpmModule } from '../common/common'
 import { ComponentMetadata, ModuleMetadata } from '../../shared/models'
 import parseComponentMetadata from './parseComponentMetadata'
 import path from 'path'

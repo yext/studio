@@ -27,7 +27,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
     <>
       <Banner
         streamsData={document.favoriteColor}
-        streamsTemplateString={`hi ${document.title}`}
+        streamsString={`hi ${document.title}`}
       />
     </>
   )

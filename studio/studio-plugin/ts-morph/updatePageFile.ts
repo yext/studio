@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import { PageState, PropState, PropShape } from '../../shared/models'
-import { getDefaultExport, getSourceFile, prettify } from './common'
+import { getDefaultExport, getSourceFile, prettify } from '../common/common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import updateStreamConfig from './updateStreamConfig'
 
@@ -49,14 +49,7 @@ function getPageComponentFunction(
 
 function createReturnStatement(updatedState: PageState) {
   const elements = updatedState.componentsState.reduce((prev, next) => {
-    if (!next.moduleName) {
-      return prev
-    }
-    const componentMetadata = moduleNameToComponentMetadata[next.moduleName][next.name]
-    if (!componentMetadata.propShape) {
-      return prev
-    }
-    return prev + '\n' + createJsxSelfClosingElement(next.name, componentMetadata.propShape, next.props)
+    return prev + '\n' + createJsxSelfClosingElement(next.name, next.props)
   }, '')
   const layoutComponentName = updatedState.layoutState.name
   return `return (\n<${layoutComponentName}>\n${elements}\n</${layoutComponentName}>\n)`
@@ -64,13 +57,12 @@ function createReturnStatement(updatedState: PageState) {
 
 function createJsxSelfClosingElement(
   elementName: string,
-  propShape: PropShape,
   props: PropState
 ) {
   let el = `<${elementName} `
   Object.keys(props).forEach(propName => {
-    const propType = propShape[propName].type
-    const val = props[propName]
+    const propType = props[propName].type
+    const val = props[propName].value
     if (propType === 'string' || propType === 'HexColor') {
       el += `${propName}='${val}' `
     } else {
