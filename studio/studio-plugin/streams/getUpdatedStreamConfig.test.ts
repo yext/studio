@@ -2,27 +2,6 @@ import { ComponentState } from '../../shared/models'
 import { PropTypes } from '../../types'
 import updateStreamConfig, { getStreamPropValues, getUsedDocumentPaths } from './getUpdatedStreamConfig'
 
-jest.mock('../componentMetadata', () => {
-  const moduleNameToComponentMetadata = {
-    localComponents: {
-      Banner: {
-        propShape: {
-          streamTemplateString: {
-            type: 'StreamsString'
-          },
-          notStreams: {
-            type: 'number'
-          },
-          streamPath: {
-            type: 'StreamsData'
-          }
-        }
-      }
-    }
-  }
-  return { moduleNameToComponentMetadata }
-})
-
 const COMPONENTS_STATE: ComponentState[] = [
   {
     name: 'Banner',

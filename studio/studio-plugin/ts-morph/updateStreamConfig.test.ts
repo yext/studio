@@ -5,26 +5,6 @@ import updateStreamConfig from './updateStreamConfig'
 import { PropTypes } from '../../types'
 
 jest.mock('../getRootPath')
-jest.mock('../componentMetadata', () => {
-  const moduleNameToComponentMetadata = {
-    localComponents: {
-      Banner: {
-        propShape: {
-          streamTemplateString: {
-            type: 'StreamsString'
-          },
-          notStreams: {
-            type: 'number'
-          },
-          streamPath: {
-            type: 'StreamsData'
-          }
-        }
-      }
-    }
-  }
-  return { moduleNameToComponentMetadata }
-})
 
 const COMPONENTS_STATE: ComponentState[] = [
   {
