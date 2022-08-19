@@ -25,7 +25,7 @@ export default function configureStudioServer(server: ViteDevServer) {
 
   registerListener(MessageID.UpdatePageComponentProps, data => {
     const pagePath = getPagePath(data.pageFile)
-    updatePageFile(data.state, pagePath, { updateStreamConfig: true })
+    updatePageFile(data.state, pagePath)
     return 'successfully edited: ' + pagePath
   })
 

@@ -2,16 +2,10 @@ import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import { PageState, PropState } from '../../shared/models'
 import { getDefaultExport, getSourceFile, prettify } from '../common/common'
-import updateStreamConfig from './updateStreamConfig'
-
-interface UpdatePageFileOptions {
-  updateStreamConfig?: boolean
-}
 
 export default function updatePageFile(
   updatedState: PageState,
-  pageFilePath: string,
-  options: UpdatePageFileOptions = {}
+  pageFilePath: string
 ) {
   const sourceFile = getSourceFile(pageFilePath)
   const defaultExport = getDefaultExport(sourceFile)
@@ -25,10 +19,6 @@ export default function updatePageFile(
   }
   pageComponent.removeStatement(returnStatementIndex)
   pageComponent.addStatements(createReturnStatement(updatedState))
-
-  if (options.updateStreamConfig) {
-    updateStreamConfig(sourceFile, updatedState.componentsState)
-  }
 
   const updatedFileText = prettify(sourceFile.getFullText())
   fs.writeFileSync(pageFilePath, updatedFileText)
