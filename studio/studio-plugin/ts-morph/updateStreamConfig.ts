@@ -46,6 +46,13 @@ function getStreamObjectLiteral(sourceFile: SourceFile): ObjectLiteralExpression
   return variableDeclaration.getFirstDescendantByKindOrThrow(ts.SyntaxKind.ObjectLiteralExpression)
 }
 
+/**
+ * This function takes in an {@link ObjectLiteralExpression} and returns it's data.
+ *
+ * It converts a js object string and converts it into an object using vm.runInNewContext,
+ * which can be thought of as a safe version of `eval`. Note that we cannot use JSON.parse here,
+ * because we are working with a js object not a JSON object.
+ */
 function parseStreamObject(objectLiteralExpression: ObjectLiteralExpression): TemplateConfig {
   return runInNewContext('(' + objectLiteralExpression.getText() + ')')
 }

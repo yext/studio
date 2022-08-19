@@ -45,7 +45,7 @@ type DocumentPath = `document${string}`
 export function getUsedDocumentPaths(
   streamPropValues: StreamPropValues
 ): Set<DocumentPath> {
-  const usedPaths = streamPropValues.StreamsDataPath.map(d => d.split('[')[0]) as DocumentPath[]
+  const usedPaths = streamPropValues.StreamsData.map(d => d.split('[')[0]) as DocumentPath[]
   streamPropValues.StreamsTemplateString.forEach(val => {
     const streamPaths = [...val.matchAll(STREAMS_TEMPLATE_REGEX)].map(m => m[1]) as DocumentPath[]
     streamPaths.forEach(streamPath => {
@@ -59,13 +59,13 @@ export function getUsedDocumentPaths(
   return new Set(usedPaths)
 }
 
-type StreamPropValues = Record<'StreamsDataPath' | 'StreamsTemplateString', string[]>
+type StreamPropValues = Record<'StreamsData' | 'StreamsTemplateString', string[]>
 
 export function getStreamPropValues(
   componentsState: ComponentState[]
 ): StreamPropValues {
   const propValuesAccumulator = {
-    StreamsDataPath: [],
+    StreamsData: [],
     StreamsTemplateString: []
   }
 
@@ -76,7 +76,7 @@ export function getStreamPropValues(
     Object.keys(props)
       .forEach(propName => {
         const propType = getPropTypeOrThrow(propName, componentName, moduleName)
-        if (!['StreamsDataPath', 'StreamsTemplateString'].includes(propType)) {
+        if (!['StreamsData', 'StreamsTemplateString'].includes(propType)) {
           return
         }
         const propValue = props[propName]

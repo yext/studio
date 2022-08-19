@@ -28,10 +28,10 @@ export default function getPreviewProps(
         templateStringWithoutBacktiks.replaceAll(STREAMS_TEMPLATE_REGEX, (...args) => {
           return lodashGet({ document: streamDocument }, args[1]) ?? args[0]
         })
-    } else if (propType === 'StreamsDataPath') {
+    } else if (propType === 'StreamsData') {
       const dataPath = props[propName]
       if (typeof dataPath !== 'string') {
-        console.error('StreamsDataPath should be a string, found', typeof dataPath)
+        console.error('StreamsData should be a string, found', typeof dataPath)
         return
       }
       transformedProps[propName] = lodashGet({ document: streamDocument }, dataPath) ?? dataPath

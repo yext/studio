@@ -16,7 +16,7 @@ jest.mock('../componentMetadata', () => {
             type: 'number'
           },
           streamPath: {
-            type: 'StreamsDataPath'
+            type: 'StreamsData'
           }
         }
       }

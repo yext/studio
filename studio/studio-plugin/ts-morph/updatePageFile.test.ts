@@ -20,7 +20,7 @@ jest.mock('../componentMetadata', () => {
               type: 'boolean'
             },
             streamsData: {
-              type: 'StreamsDataPath'
+              type: 'StreamsData'
             },
             streamsTemplateString: {
               type: 'StreamsTemplateString'

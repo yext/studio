@@ -22,7 +22,7 @@ export default function updateSiteSettingsFile(updatedState: PropState, pageFile
       const propNewValue = updatedState[propName]
       siteSettingsNode.addPropertyAssignment({
         name: propName,
-        initializer: typeof propNewValue === 'string' ? `'${propNewValue}'` : propNewValue.toString()
+        initializer: typeof propNewValue === 'string' ? `'${propNewValue}'` : JSON.stringify(propNewValue)
       })
       p.remove()
     })

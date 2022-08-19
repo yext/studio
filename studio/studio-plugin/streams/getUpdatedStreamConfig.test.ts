@@ -13,7 +13,7 @@ jest.mock('../componentMetadata', () => {
             type: 'number'
           },
           streamPath: {
-            type: 'StreamsDataPath'
+            type: 'StreamsData'
           }
         }
       }
@@ -67,7 +67,7 @@ describe('getStreamPropValues', () => {
     expect(streamPropValues).toEqual({
       // eslint-disable-next-line no-template-curly-in-string
       StreamsTemplateString: ['`${document.id}: ${document.address.line1}`'],
-      StreamsDataPath: [ 'document.id' ]
+      StreamsData: [ 'document.id' ]
     })
   })
 })
@@ -77,7 +77,7 @@ describe('getUsedDocumentPaths', () => {
     const usedPaths = getUsedDocumentPaths({
       // eslint-disable-next-line no-template-curly-in-string
       StreamsTemplateString: ['`${document.id}: ${document.address.line1}`'],
-      StreamsDataPath: [ 'document.id', 'document.emails[0]' ]
+      StreamsData: [ 'document.id', 'document.emails[0]' ]
     })
     expect(usedPaths).toEqual(new Set(['document.id', 'document.address.line1', 'document.emails']))
   })

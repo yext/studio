@@ -1,5 +1,5 @@
 import { PropState, ComponentMetadata } from '../../shared/models'
-import { HexColor, StreamsTemplateString, StreamsDataPath } from '../../types'
+import { HexColor, StreamsTemplateString, StreamsData } from '../../types'
 import kgLogoUrl from '../images/kg-logo.jpeg'
 
 export interface PropEditorProps {
@@ -49,8 +49,8 @@ export default function PropEditor({
             return <HexColorProp {...sharedProps} key={key}/>
           } else if (propType === 'StreamsTemplateString') {
             return <StreamsTemplateStringProp {...sharedProps} key={key} />
-          } else if (propType === 'StreamsDataPath') {
-            return <StreamsDataPathProp {...sharedProps} key={key} />
+          } else if (propType === 'StreamsData') {
+            return <StreamsDataProp {...sharedProps} key={key} />
           }
           console.error('Unknown prop type', propType)
           return null
@@ -132,9 +132,9 @@ function ToolTip(props: {
 
 function StreamsTemplateStringProp(props: {
   propName: string,
-  propValue: StreamsTemplateString,
+  propValue: string,
   propDoc?: string,
-  onChange: (val: StreamsTemplateString) => void
+  onChange: (val: string) => void
 }) {
   return (
     <div className='flex'>
@@ -142,7 +142,7 @@ function StreamsTemplateStringProp(props: {
       {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input
         className='input-sm'
-        onChange={e => props.onChange(e.target.value as StreamsTemplateString)}
+        onChange={e => props.onChange(e.target.value)}
         value={props.propValue ?? ''}
       />
       <img
@@ -154,11 +154,11 @@ function StreamsTemplateStringProp(props: {
     </div>
   )
 }
-function StreamsDataPathProp(props: {
+function StreamsDataProp(props: {
   propName: string,
-  propValue: StreamsDataPath,
+  propValue: string,
   propDoc?: string,
-  onChange: (val: StreamsDataPath) => void
+  onChange: (val: string) => void
 }) {
   return (
     <div className='flex'>
@@ -166,7 +166,7 @@ function StreamsDataPathProp(props: {
       {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input
         className='input-sm'
-        onChange={e => props.onChange(e.target.value as StreamsDataPath)}
+        onChange={e => props.onChange(e.target.value)}
         value={props.propValue ?? ''}
       />
       <img src={kgLogoUrl} alt='this input uses streams' className='h-8'/>

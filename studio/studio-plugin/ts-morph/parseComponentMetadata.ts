@@ -19,12 +19,14 @@ export default function parseComponentMetadata(
     throw new Error(`No interface found with name "${interfaceName}" in file "${filePath}"`)
   }
   const properties = propsInterface.getStructure().properties ?? []
-  return {
-    propShape: parsePropertyStructures(properties, filePath),
+  const propShape = parsePropertyStructures(properties, filePath)
+  const metadata: ComponentMetadata<typeof propShape> = {
+    propShape,
     initialProps: parseInitialProps(sourceFile),
     editable: true,
     importIdentifier: getImportIdentifier()
   }
+  return metadata
 
   function getImportIdentifier() {
     if (importIdentifier) return importIdentifier

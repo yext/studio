@@ -1,4 +1,4 @@
-import { HexColor, StreamsTemplateString, StreamsDataPath } from "../../studio/types";
+import { HexColor, StreamsTemplateString, StreamsData } from "../../studio/types";
 
 export interface BannerProps {
   /** Banner title! */
@@ -9,7 +9,7 @@ export interface BannerProps {
    * Some random
    * number to display!
    */
-  randomNum?: StreamsDataPath,
+  randomNum?: StreamsData,
   /**
    * A boolean to toggle nothing..
    */
