@@ -17,10 +17,13 @@ export default function PropEditor({
     console.error('Error rendering prop editor for', propState)
     return null
   }
-  function updatePropState(propName, propValue) {
+  function updatePropState(propName, propValue: string | number | boolean) {
     setPropState({
       ...propState,
-      [propName]: propValue
+      [propName]: {
+        ...propState[propName],
+        value: propValue
+      }
     })
   }
   const { propShape } = componentMetadata
@@ -28,18 +31,18 @@ export default function PropEditor({
     <div className='flex flex-col'>
       {
         Object.keys(propShape).map((propName, index) => {
-          const propType = propShape[propName].type
           const propDoc = propShape[propName].doc
-          const propValue = propState[propName] as any
+          const type = propShape[propName].type
+          const value = propState[propName]?.value
           const key = propName + '-' + index
           const sharedProps = {
             key: propName,
             propName,
-            propValue,
+            propValue: value as any,
             propDoc,
-            onChange: val => updatePropState(propName, val)
+            onChange: (val: string | number | boolean) => updatePropState(propName, val)
           }
-          switch (propType) {
+          switch (type) {
             case PropTypes.boolean:
               return <BoolProp {...sharedProps} key={key}/>
             case PropTypes.string:
@@ -53,7 +56,7 @@ export default function PropEditor({
             case PropTypes.StreamsData:
               return <StreamsDataProp {...sharedProps} key={key} />
             default:
-              console.error('Unknown prop type', propType)
+              console.error('Unknown prop type', type, 'for propName', propName, 'in propState', propState)
               return null
           }
         })
@@ -136,7 +139,7 @@ function StreamsStringProp(props: {
   propName: string,
   propValue: StreamsStringExpression,
   propDoc?: string,
-  onChange: (val: string) => void
+  onChange: (val: StreamsStringExpression) => void
 }) {
   return (
     <div className='flex'>
@@ -144,7 +147,7 @@ function StreamsStringProp(props: {
       {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input
         className='input-sm'
-        onChange={e => props.onChange(e.target.value)}
+        onChange={e => props.onChange(e.target.value as StreamsStringExpression)}
         value={props.propValue ?? ''}
       />
       <img
@@ -160,7 +163,7 @@ function StreamsDataProp(props: {
   propName: string,
   propValue: StreamsDataExpression,
   propDoc?: string,
-  onChange: (val: string) => void
+  onChange: (val: StreamsDataExpression) => void
 }) {
   return (
     <div className='flex'>
@@ -168,7 +171,7 @@ function StreamsDataProp(props: {
       {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input
         className='input-sm'
-        onChange={e => props.onChange(e.target.value)}
+        onChange={e => props.onChange(e.target.value as StreamsDataExpression)}
         value={props.propValue ?? ''}
       />
       <img src={kgLogoUrl} alt='this input uses streams' className='h-8'/>

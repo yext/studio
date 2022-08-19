@@ -9,7 +9,7 @@ export default function getPreviewProps(
   props: PropState,
   streamDocument: TemplateProps['document']
 ): Record<string, unknown> {
-  const transformedProps: Record<string, unknown> = { ...props }
+  const transformedProps: Record<string, unknown> = {}
 
   Object.keys(props).forEach(propName => {
     const propData = props[propName]
@@ -22,6 +22,8 @@ export default function getPreviewProps(
     } else if (propData.type === 'StreamsData') {
       const documentPath = propData.value
       transformedProps[propName] = lodashGet({ document: streamDocument }, documentPath) ?? documentPath
+    } else {
+      transformedProps[propName] = propData.value
     }
   })
   return transformedProps
