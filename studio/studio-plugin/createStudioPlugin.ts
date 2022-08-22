@@ -9,6 +9,7 @@ import { getSourceFile } from './common/common'
 import { moduleNameToComponentMetadata } from './componentMetadata'
 import getPagePath from './getPagePath'
 import openBrowser from 'react-dev-utils/openBrowser.js'
+import { ComponentMetadata } from '../shared/models'
 
 /**
  * Handles server-client communication.
@@ -20,14 +21,16 @@ export default function createStudioPlugin(args): Plugin {
   const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
 
+  const siteSettingsMetadata: ComponentMetadata = parseComponentMetadata(
+    getSourceFile(getRootPath('src/siteSettings.ts')),
+    getRootPath('src/siteSettings.ts'),
+    'SiteSettings'
+  )
+
   const ctx: StudioProps = {
     siteSettings: {
-      componentMetadata: parseComponentMetadata(
-        getSourceFile(getRootPath('src/siteSettings.ts')),
-        getRootPath('src/siteSettings.ts'),
-        'SiteSettings'
-      ),
-      propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings')
+      componentMetadata: siteSettingsMetadata,
+      propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings', siteSettingsMetadata.propShape ?? {})
     },
     moduleNameToComponentMetadata,
     componentsOnPage: {

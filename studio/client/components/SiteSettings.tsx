@@ -3,14 +3,15 @@ import { MessageID } from '../../shared/messages'
 import { ComponentMetadata, PropState } from '../../shared/models'
 import sendMessage from '../messaging/sendMessage'
 import PropEditor from './PropEditor'
+import { useStudioContext } from './useStudioContext'
 
 export interface SiteSettingsProps {
   componentMetadata: ComponentMetadata,
   propState: PropState
 }
 
-export default function SiteSettings(props: SiteSettingsProps) {
-  const { componentMetadata, propState } = props
+export default function SiteSettings() {
+  const { componentMetadata, propState } = useStudioContext().siteSettings
   const [siteSettingsState, setSiteSettingsState] = useState(propState)
 
   return (
