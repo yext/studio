@@ -12,7 +12,7 @@ export default function PropEditor({
   propState,
   setPropState,
   componentMetadata
-}: PropEditorProps) {
+}: PropEditorProps): JSX.Element | null {
   if (!componentMetadata || !componentMetadata.propShape) {
     console.error('Error rendering prop editor for', propState)
     return null
@@ -73,7 +73,7 @@ function InputProp<T>(props: {
   type?: string,
   img?: JSX.Element,
   onChange: (val: T) => void
-}) {
+}): JSX.Element {
   const { propName, propValue, propDoc, onChange, type = 'text', defaultValue, img } = props
   return (
     <div className='flex'>
@@ -100,7 +100,7 @@ function InputProp<T>(props: {
 
 function ToolTip(props: {
   message: string
-}) {
+}): JSX.Element {
   return (
     <div className='invisible peer-hover:visible'>
       <div className='absolute z-10 whitespace-nowrap rounded shadow-lg p-3 text-sm bg-gray-600 text-white'>{props.message}</div>
@@ -114,7 +114,7 @@ function StreamsStringProp(props: {
   propDoc?: string,
   onChange: (val: StreamsStringExpression) => void
   key?: string
-}) {
+}): JSX.Element {
   const kgLogo = <img
     src={kgLogoUrl}
     alt='this input uses streams'
@@ -129,7 +129,7 @@ function StreamsDataProp(props: {
   propValue: StreamsDataExpression,
   propDoc?: string,
   onChange: (val: StreamsDataExpression) => void
-}) {
+}): JSX.Element {
   const kgLogo = <img src={kgLogoUrl} alt='this input uses streams' className='h-8'/>
   return <InputProp {...props} img={kgLogo} />
 }
