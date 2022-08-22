@@ -3,10 +3,16 @@ import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } fro
 import { PageState, PropState } from '../../shared/models'
 import { PropTypes } from '../../types'
 import { getDefaultExport, getSourceFile, prettify } from '../common/common'
+import updateStreamConfig from './updateStreamConfig'
+
+interface UpdatePageFileOptions {
+  updateStreamConfig?: boolean
+}
 
 export default function updatePageFile(
   updatedState: PageState,
-  pageFilePath: string
+  pageFilePath: string,
+  options: UpdatePageFileOptions = {}
 ) {
   const sourceFile = getSourceFile(pageFilePath)
   const defaultExport = getDefaultExport(sourceFile)
@@ -20,6 +26,10 @@ export default function updatePageFile(
   }
   pageComponent.removeStatement(returnStatementIndex)
   pageComponent.addStatements(createReturnStatement(updatedState))
+
+  if (options.updateStreamConfig) {
+    updateStreamConfig(sourceFile, updatedState.componentsState)
+  }
 
   const updatedFileText = prettify(sourceFile.getFullText())
   fs.writeFileSync(pageFilePath, updatedFileText)
