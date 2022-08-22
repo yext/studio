@@ -14,7 +14,7 @@ export const config: TemplateConfig = {
     $id: 'studio-stream-id',
     filter: { entityTypes: ['ce_person'] },
     localization: { locales: ['en'], primary: false },
-    fields: ['document.favoriteColor', 'document.title'],
+    fields: ['favoriteColor', 'title'],
   },
 }
 

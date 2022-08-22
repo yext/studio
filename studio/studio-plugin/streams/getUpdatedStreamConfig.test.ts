@@ -1,6 +1,6 @@
 import { ComponentState } from '../../shared/models'
 import { PropTypes } from '../../types'
-import updateStreamConfig, { getStreamPropValues, getUsedDocumentPaths } from './getUpdatedStreamConfig'
+import updateStreamConfig, { getStreamValues, getUsedDocumentPaths } from './getUpdatedStreamConfig'
 
 const COMPONENTS_STATE: ComponentState[] = [
   {
@@ -38,8 +38,8 @@ it('works with no current config', () => {
     stream: {
       $id: expect.any(String),
       fields: [
-        'document.id',
-        'document.address.line1'
+        'id',
+        'address.line1'
       ],
       filter: {},
       localization: {
@@ -50,13 +50,13 @@ it('works with no current config', () => {
   })
 })
 
-describe('getStreamPropValues', () => {
+describe('getStreamValues', () => {
   it('parses out props that use streams', () => {
-    const streamPropValues = getStreamPropValues(COMPONENTS_STATE)
+    const streamPropValues = getStreamValues(COMPONENTS_STATE)
     expect(streamPropValues).toEqual({
       // eslint-disable-next-line no-template-curly-in-string
-      StreamsString: ['`${document.id}: ${document.address.line1}`'],
-      StreamsData: [ 'document.id' ]
+      templateStrings: ['`${document.id}: ${document.address.line1}`'],
+      documentPaths: [ 'document.id' ]
     })
   })
 })
@@ -65,8 +65,8 @@ describe('getUsedDocumentPaths', () => {
   it('can parse document paths', () => {
     const usedPaths = getUsedDocumentPaths({
       // eslint-disable-next-line no-template-curly-in-string
-      StreamsString: ['`${document.id}: ${document.address.line1}`'],
-      StreamsData: [ 'document.id', 'document.emails[0]' ]
+      templateStrings: ['`${document.id}: ${document.address.line1}`'],
+      documentPaths: [ 'document.id', 'document.emails[0]' ]
     })
     expect(usedPaths).toEqual(new Set(['document.id', 'document.address.line1', 'document.emails']))
   })

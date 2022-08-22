@@ -2,7 +2,7 @@ import { TemplateConfig } from '@yext/pages/*'
 import { ComponentState } from '../../shared/models'
 import { v1 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../client/utils/getPreviewProps'
-import { PropTypes } from '../../types'
+import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
 
 const INFRA_STREAM_PROPERTIES = [
   '__',
@@ -21,9 +21,11 @@ export default function getUpdatedStreamConfig(
   componentsState: ComponentState[],
   currentConfig: TemplateConfig = {}
 ): TemplateConfig {
-  const streamPropValues = getStreamPropValues(componentsState)
-  const usedDocumentPaths = getUsedDocumentPaths(streamPropValues)
-  const fields = [...usedDocumentPaths].filter(d => !INFRA_STREAM_PROPERTIES.includes(d))
+  const streamValues = getStreamValues(componentsState)
+  const usedDocumentPaths = getUsedDocumentPaths(streamValues)
+  const fields = [...usedDocumentPaths]
+    .filter(documentPath => !INFRA_STREAM_PROPERTIES.includes(documentPath))
+    .map(documentPath => documentPath.split('document.')[1])
 
   return {
     ...currentConfig,
@@ -40,33 +42,38 @@ export default function getUpdatedStreamConfig(
   }
 }
 
-type DocumentPath = `document${string}`
-
 export function getUsedDocumentPaths(
-  streamPropValues: StreamPropValues
-): Set<DocumentPath> {
-  const usedPaths = streamPropValues.StreamsData.map(d => d.split('[')[0]) as DocumentPath[]
-  streamPropValues.StreamsString.forEach(val => {
-    const streamPaths = [...val.matchAll(STREAMS_TEMPLATE_REGEX)].map(m => m[1]) as DocumentPath[]
+  streamValues: StreamValues
+): Set<StreamsDataExpression> {
+  const usedPaths: StreamsDataExpression[] = streamValues.documentPaths.map(d => d.split('[')[0] as StreamsDataExpression)
+  streamValues.templateStrings.forEach(val => {
+    const streamPaths = [...val.matchAll(STREAMS_TEMPLATE_REGEX)].map(m => m[1])
     streamPaths.forEach(streamPath => {
       // Streams configs fields do not allow specifying an index of a field.
       // Cutting off at the first left bracket also lets use sidestep bracket object property notation,
       // which we don't support.
-      const streamPathTruncatedAtBracket = streamPath.split('[')[0] as DocumentPath
+      const streamPathTruncatedAtBracket = streamPath.split('[')[0]
+      if (!isStreamsDataExpression(streamPathTruncatedAtBracket)) {
+        throw new Error(
+          `Error when parsing stream config, document path "${streamPath}" does not start with a "document." prefix`)
+      }
       usedPaths.push(streamPathTruncatedAtBracket)
     })
   })
   return new Set(usedPaths)
 }
 
-type StreamPropValues = Record<'StreamsData' | 'StreamsString', string[]>
+type StreamValues = {
+  documentPaths: StreamsDataExpression[],
+  templateStrings: Exclude<StreamsStringExpression, StreamsDataExpression>[]
+}
 
-export function getStreamPropValues(
+export function getStreamValues(
   componentsState: ComponentState[]
-): StreamPropValues {
-  const propValuesAccumulator = {
-    StreamsData: [],
-    StreamsString: []
+): StreamValues {
+  const valuesAccumulator: StreamValues = {
+    documentPaths: [],
+    templateStrings: []
   }
 
   componentsState.forEach(({ props, moduleName }) => {
@@ -74,16 +81,23 @@ export function getStreamPropValues(
       return
     }
     Object.keys(props).forEach(propName => {
-      const propType = props[propName].type
-      if (![PropTypes.StreamsData, PropTypes.StreamsString].includes(propType)) {
-        return
+      const { type, value } = props[propName]
+      if (type === PropTypes.StreamsData) {
+        valuesAccumulator.documentPaths.push(value)
+      } else if (type === PropTypes.StreamsString) {
+        if (isStreamsDataExpression(value)) {
+          valuesAccumulator.documentPaths.push(value)
+        } else {
+          valuesAccumulator.templateStrings.push(value)
+        }
       }
-      const propValue = props[propName].value
-      if (typeof propValue !== 'string') {
-        throw new Error(`Streams prop value must be a string, received a(n) "${typeof propValue}" instead.`)
-      }
-      propValuesAccumulator[propType].push(propValue)
     })
   })
-  return propValuesAccumulator
+  return valuesAccumulator
+}
+
+function isStreamsDataExpression(
+  value: string
+): value is StreamsDataExpression {
+  return value.startsWith('document.')
 }
