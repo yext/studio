@@ -32,7 +32,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
     <TestLayout>
       <Banner
         subtitleUsingStreams={`my prefix ${document.id} my suffix`}
-        randomNum={document.address.city}
+        streamsData={document.address.city}
       />
     </TestLayout>
   )

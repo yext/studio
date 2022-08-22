@@ -1,10 +1,13 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
-import { PageState, PropState, PropShape } from '../../shared/models'
-import { getDefaultExport, getSourceFile, prettify } from './common'
-import { moduleNameToComponentMetadata } from '../componentMetadata'
+import { PageState, PropState } from '../../shared/models'
+import { PropTypes } from '../../types'
+import { getDefaultExport, getSourceFile, prettify } from '../common/common'
 
-export default function updatePageFile(updatedState: PageState, pageFilePath: string) {
+export default function updatePageFile(
+  updatedState: PageState,
+  pageFilePath: string
+) {
   const sourceFile = getSourceFile(pageFilePath)
   const defaultExport = getDefaultExport(sourceFile)
   const pageComponent = getPageComponentFunction(defaultExport)
@@ -36,14 +39,7 @@ function getPageComponentFunction(
 
 function createReturnStatement(updatedState: PageState) {
   const elements = updatedState.componentsState.reduce((prev, next) => {
-    if (!next.moduleName) {
-      return prev
-    }
-    const componentMetadata = moduleNameToComponentMetadata[next.moduleName][next.name]
-    if (!componentMetadata.propShape) {
-      return prev
-    }
-    return prev + '\n' + createJsxSelfClosingElement(next.name, componentMetadata.propShape, next.props)
+    return prev + '\n' + createJsxSelfClosingElement(next.name, next.props)
   }, '')
   const layoutComponentName = updatedState.layoutState.name
   return `return (\n<${layoutComponentName}>\n${elements}\n</${layoutComponentName}>\n)`
@@ -51,14 +47,13 @@ function createReturnStatement(updatedState: PageState) {
 
 function createJsxSelfClosingElement(
   elementName: string,
-  propShape: PropShape,
   props: PropState
 ) {
   let el = `<${elementName} `
   Object.keys(props).forEach(propName => {
-    const propType = propShape[propName].type
-    const val = props[propName]
-    if (propType === 'string' || propType === 'HexColor') {
+    const propType = props[propName].type
+    const val = props[propName].value
+    if (propType === PropTypes.string || propType === PropTypes.HexColor) {
       el += `${propName}='${val}' `
     } else {
       el += `${propName}={${val}} `

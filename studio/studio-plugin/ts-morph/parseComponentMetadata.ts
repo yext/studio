@@ -1,6 +1,6 @@
 import { ComponentMetadata } from '../../shared/models'
 import { ts, SourceFile } from 'ts-morph'
-import { parsePropertyStructures } from './common'
+import { parsePropertyStructures } from '../common/common'
 import path from 'path'
 import parseInitialProps from './parseInitialProps'
 

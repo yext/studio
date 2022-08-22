@@ -1,5 +1,5 @@
-import { SpecialTypes } from '../types'
 import studioConfig from '../../src/studio'
+import { PropStateTypes, PropTypes } from '../types'
 
 export type PageState = {
   layoutState: ComponentState,
@@ -12,7 +12,9 @@ export interface ComponentState {
   moduleName: PossibleModuleNames | 'builtIn'
 }
 
-export type PropState = Record<string, string | number | boolean | SpecialTypes>
+export type PropState = {
+  [propName: string]: PropStateTypes
+}
 
 export type ModuleNameToComponentMetadata = {
   [moduleName in PossibleModuleNames]: ModuleMetadata
@@ -31,8 +33,6 @@ export type PropShape = {
   [propName: string]: PropMetadata
 }
 export type PropMetadata = {
-  type: PropType,
+  type: PropTypes,
   doc?: string
 }
-export type PropType = 'string' | 'number' | 'boolean' | 'HexColor' | 'StreamsTemplateString' | 'StreamsDataPath'
-

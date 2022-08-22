@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { PageEditor } from './PageEditor'
 import SiteSettings from './SiteSettings'
 import StreamDocPicker from './StreamDocPicker'
-import { useStudioContext } from './useStudioContext'
 
 enum Tab {
   PageEditor = 'Page Editor',
@@ -11,8 +10,6 @@ enum Tab {
 
 export function Navbar(): JSX.Element {
   const [currentTab, setTab] = useState(Tab.PageEditor)
-  const studioContext = useStudioContext()
-  const { siteSettings } = studioContext
 
   return (
     <div>
@@ -22,7 +19,7 @@ export function Navbar(): JSX.Element {
         <button onClick={() => { setTab(Tab.SiteSettings) }} className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" hover:underline p-2'>Site Settings</button>
       </nav>
       <StreamDocPicker/>
-      {currentTab === Tab.PageEditor ? <PageEditor /> : <SiteSettings {...siteSettings}/>}
+      {currentTab === Tab.PageEditor ? <PageEditor /> : <SiteSettings />}
     </div>
   )
 }

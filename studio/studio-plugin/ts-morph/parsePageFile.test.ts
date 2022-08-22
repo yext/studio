@@ -1,7 +1,9 @@
 import { ComponentState } from 'react'
 import parsePageFile from './parsePageFile'
 import getRootPath from '../getRootPath'
+import { PropTypes } from '../../types'
 
+jest.mock('../componentMetadata')
 jest.mock('../getRootPath')
 jest.mock('uuid', () => ({ v1: () => 'mock-uuid' }))
 
@@ -9,8 +11,14 @@ const componentsState: ComponentState[] = [
   {
     name: 'Banner',
     props: {
-      randomNum: 1,
-      title: 'first!'
+      randomNum: {
+        type: PropTypes.number,
+        value: 1
+      },
+      title: {
+        type: PropTypes.string,
+        value: 'first!'
+      }
     },
     uuid: 'mock-uuid',
     moduleName: 'localComponents'
@@ -24,9 +32,18 @@ const componentsState: ComponentState[] = [
   {
     name: 'Banner',
     props: {
-      randomNum: 3,
-      title: 'three',
-      someBool: false
+      randomNum: {
+        type: PropTypes.number,
+        value: 3
+      },
+      title: {
+        type: PropTypes.string,
+        value: 'three'
+      },
+      someBool: {
+        type: PropTypes.boolean,
+        value: false
+      }
     },
     uuid: 'mock-uuid',
     moduleName: 'localComponents'
@@ -117,9 +134,15 @@ it('correctly parses page using streams paths', () => {
       {
         name: 'Banner',
         props: {
-          randomNum: 'document.address.city',
-          // eslint-disable-next-line no-template-curly-in-string
-          subtitleUsingStreams: '`my prefix ${document.id} my suffix`'
+          streamsData: {
+            type: PropTypes.StreamsData,
+            value: 'document.address.city',
+          },
+          subtitleUsingStreams: {
+            type: PropTypes.StreamsString,
+            // eslint-disable-next-line no-template-curly-in-string
+            value: '`my prefix ${document.id} my suffix`'
+          }
         },
         uuid: 'mock-uuid',
         moduleName: 'localComponents'

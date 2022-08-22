@@ -2,14 +2,15 @@ import { JSDocableNodeStructure, JsxOpeningElement, JsxSelfClosingElement, Prope
 import typescript, { ModuleResolutionHost } from 'typescript'
 import prettier from 'prettier'
 import fs from 'fs'
-import { specialTypesArray } from '../../types'
-import parseImports from './parseImports'
+import { PropTypes } from '../../types'
+import parseImports from '../ts-morph/parseImports'
 import { resolve } from 'path'
-import { PropShape, PropType } from '../../shared/models'
+import { PropShape } from '../../shared/models'
 
 // 'typescript' is a CommonJS module, which may not support all module.exports as named exports
 const { JsxEmit, resolveModuleName } = typescript
 
+/** TODO(oshi): I will separate this file out into the common folder on the next PR */
 export function getComponentNodes(
   parentNode: JsxElement | JsxFragment
 ): (JsxOpeningElement | JsxSelfClosingElement)[] {
@@ -52,7 +53,8 @@ export function getJsxAttributeValue(n: JsxAttribute): string | number | boolean
   const expression = initializer.getExpressionOrThrow()
   if (
     expression.isKind(ts.SyntaxKind.PropertyAccessExpression) ||
-    expression.isKind(ts.SyntaxKind.TemplateExpression)
+    expression.isKind(ts.SyntaxKind.TemplateExpression) ||
+    expression.isKind(ts.SyntaxKind.ElementAccessExpression)
   ) {
     return expression.getText()
   } else if (
@@ -95,26 +97,24 @@ export function parsePropertyStructures(properties: ParseablePropertyStructure[]
   let imports: Record<string, string[]>
   properties.forEach(p => {
     const jsdoc = p.docs?.map(doc => typeof doc === 'string' ? doc : doc.description).join('\n')
-
-    if (isPropType(p.type)) {
-      if (['string', 'number', 'boolean'].includes(p.type) || validateProp(p.type)) {
-        props[p.name] = {
-          type: p.type,
-          ...(jsdoc && { doc: jsdoc })
-        }
-      }
-    } else {
-      console.error(`Prop type ${p.type} is not recognized. Skipping gracefully.`)
+    const propType = p.type
+    if (!isPropType(propType) || !isRecognized(propType)) {
+      console.error(`Prop type ${propType} is not one of the recognized PropTypes. Skipping.`)
+      return
+    }
+    props[p.name] = {
+      type: propType,
+      ...(jsdoc && { doc: jsdoc })
     }
   })
   return props
 
-  function validateProp(type: PropType): boolean {
+  function isRecognized(type: PropTypes): boolean {
     if (!imports) {
       imports = parseImports(filePath)
     }
 
-    if (['string', 'boolean', 'number'].includes(type)) {
+    if ([PropTypes.string, PropTypes.boolean, PropTypes.number].includes(type)) {
       return true
     }
     const isValidProp = !!Object.entries(imports).find(([path, names]) => {
@@ -129,9 +129,12 @@ export function parsePropertyStructures(properties: ParseablePropertyStructure[]
     return isValidProp
   }
 
-  function isPropType(type: unknown): type is PropType {
-    const types = ['string', 'number', 'boolean'].concat(specialTypesArray)
-    return types.some(t => t === type)
+  function isPropType(type: unknown): type is PropTypes {
+    if (typeof type !== 'string') {
+      return false
+    }
+    const propTypes = Object.values(PropTypes)
+    return propTypes.includes(type as PropTypes)
   }
 }
 

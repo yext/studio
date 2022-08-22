@@ -14,11 +14,7 @@ export const config: TemplateConfig = {
     $id: 'studio-stream-id',
     filter: { entityTypes: ['ce_person'] },
     localization: { locales: ['en'], primary: false },
-    fields: [
-      'document.address.city.bob',
-      'document.emails',
-      'document.lastName',
-    ],
+    fields: ['document.favoriteColor', 'document.title'],
   },
 }
 
@@ -28,23 +24,12 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 
 const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
-    <TestLayout>
+    <>
       <Banner
-        randomNum={document.address.city.bob}
-        subtitleUsingStreams={document.id}
-        title='12312312'
-        backgroundColor='#b75c5c'
-        someBool={true}
-        anotherColor='#45de0d'
+        streamsData={document.favoriteColor}
+        streamsString={`hi ${document.title}`}
       />
-      <Banner
-        title='<Insert Titl2'
-        randomNum={document.emails[1]}
-        subtitleUsingStreams={`${document.lastName}`}
-        someBool={true}
-        anotherColor='#9c8181'
-      />
-    </TestLayout>
+    </>
   )
 }
 

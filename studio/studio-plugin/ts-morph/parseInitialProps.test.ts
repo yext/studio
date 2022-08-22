@@ -1,5 +1,5 @@
 import getRootPath from '../getRootPath'
-import { getSourceFile } from './common'
+import { getSourceFile } from '../common/common'
 import parseInitialProps from './parseInitialProps'
 
 jest.spyOn(console, 'error').mockImplementation(jest.fn())

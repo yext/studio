@@ -21,7 +21,7 @@ export default function PagePreview() {
         console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
         return null
       }
-      const previewProps = getPreviewProps(c, moduleNameToComponentMetadata, streamDocument)
+      const previewProps = getPreviewProps(c.props, streamDocument)
       const component = React.createElement(loadedComponents[c.name], {
         ...previewProps,
         verticalConfigMap: {},
@@ -40,13 +40,7 @@ export default function PagePreview() {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return children
     }
-  }, [
-    loadedComponents,
-    pageState.componentsState,
-    pageState.layoutState.name,
-    streamDocument,
-    moduleNameToComponentMetadata
-  ])
+  }, [loadedComponents, pageState.componentsState, pageState.layoutState.name, streamDocument])
 
   return (
     <div className='w-full h-full'>

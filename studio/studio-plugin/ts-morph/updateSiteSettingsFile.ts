@@ -2,7 +2,8 @@ import fs from 'fs'
 import { ts, PropertyAssignment } from 'ts-morph'
 import { PropState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getSourceFile, prettify } from './common'
+import { getSourceFile, prettify } from '../common/common'
+import { PropTypes } from '../../types'
 
 export default function updateSiteSettingsFile(updatedState: PropState, pageFilePath: string) {
   const file = getRootPath(pageFilePath)
@@ -19,10 +20,10 @@ export default function updateSiteSettingsFile(updatedState: PropState, pageFile
     .filter((p): p is PropertyAssignment => p.isKind(ts.SyntaxKind.PropertyAssignment))
     .forEach(p => {
       const propName = p.getName()
-      const propNewValue = updatedState[propName]
+      const { type, value } = updatedState[propName]
       siteSettingsNode.addPropertyAssignment({
         name: propName,
-        initializer: typeof propNewValue === 'string' ? `'${propNewValue}'` : propNewValue.toString()
+        initializer: type === PropTypes.string ? `'${value}'` : JSON.stringify(value)
       })
       p.remove()
     })

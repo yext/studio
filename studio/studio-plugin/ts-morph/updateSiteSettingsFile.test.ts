@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { PropTypes } from '../../types'
 import getRootPath from '../getRootPath'
 import updateSiteSettingsFile from './updateSiteSettingsFile'
 
@@ -12,11 +13,14 @@ beforeEach(() => {
 it('can update props and add additional props', () => {
   updateSiteSettingsFile(
     {
-      apiKey: 'new key!',
-      experienceKey: 'slanswers-hier-facets',
-      locale: 'en',
-      experienceVersion: 'new experience version!',
-      businessId: 11111
+      apiKey: {
+        type: PropTypes.string,
+        value: 'new key!'
+      },
+      businessId: {
+        type: PropTypes.number,
+        value: 11111
+      }
     }, 'siteSettings.ts')
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining('siteSettings.ts'),

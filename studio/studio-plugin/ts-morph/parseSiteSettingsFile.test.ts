@@ -1,15 +1,26 @@
+import { PropTypes } from '../../types'
 import parseSiteSettingsFile from './parseSiteSettingsFile'
 
 jest.spyOn(console, 'error')
 
 it('updates correctly', () => {
-  const propState = parseSiteSettingsFile('studio/studio-plugin/__fixtures__/siteSettings.ts', 'SiteSettings')
+  const propState = parseSiteSettingsFile(
+    'studio/studio-plugin/__fixtures__/siteSettings.ts',
+    'SiteSettings',
+    {
+      apiKey: { type: PropTypes.string },
+      businessId: { type: PropTypes.number }
+    }
+  )
   expect(propState).toEqual({
-    apiKey: '2d8c550071a64ea23e263118a2b0680b',
-    experienceKey: 'slanswers-hier-facets',
-    locale: 'en',
-    experienceVersion: 'STAGING',
-    businessId: 13323123
+    apiKey: {
+      type: PropTypes.string,
+      value: '2d8c550071a64ea23e263118a2b0680b'
+    },
+    businessId: {
+      type: PropTypes.number,
+      value: 13323123
+    }
   })
   expect(console.error).not.toBeCalled()
 })

@@ -1,5 +1,5 @@
 import { PropState, ComponentMetadata } from '../../shared/models'
-import { HexColor, StreamsTemplateString, StreamsDataPath } from '../../types'
+import { HexColor, PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
 import kgLogoUrl from '../images/kg-logo.jpeg'
 
 export interface PropEditorProps {
@@ -17,10 +17,13 @@ export default function PropEditor({
     console.error('Error rendering prop editor for', propState)
     return null
   }
-  function updatePropState(propName, propValue) {
+  function updatePropState(propName, propValue: string | number | boolean) {
     setPropState({
       ...propState,
-      [propName]: propValue
+      [propName]: {
+        ...propState[propName],
+        value: propValue
+      }
     })
   }
   const { propShape } = componentMetadata
@@ -28,32 +31,34 @@ export default function PropEditor({
     <div className='flex flex-col'>
       {
         Object.keys(propShape).map((propName, index) => {
-          const propType = propShape[propName].type
           const propDoc = propShape[propName].doc
-          const propValue = propState[propName] as any
+          const type = propShape[propName].type
+          const value = propState[propName]?.value
           const key = propName + '-' + index
           const sharedProps = {
             key: propName,
             propName,
-            propValue,
+            propValue: value as any,
             propDoc,
-            onChange: val => updatePropState(propName, val)
+            onChange: (val: string | number | boolean) => updatePropState(propName, val)
           }
-          if (propType === 'boolean') {
-            return <BoolProp {...sharedProps} key={key}/>
-          } else if (propType === 'string') {
-            return <StrProp {...sharedProps} key={key}/>
-          } else if (propType === 'number') {
-            return <NumProp {...sharedProps} key={key}/>
-          } else if (propType === 'HexColor') {
-            return <HexColorProp {...sharedProps} key={key}/>
-          } else if (propType === 'StreamsTemplateString') {
-            return <StreamsTemplateStringProp {...sharedProps} key={key} />
-          } else if (propType === 'StreamsDataPath') {
-            return <StreamsDataPathProp {...sharedProps} key={key} />
+          switch (type) {
+            case PropTypes.boolean:
+              return <BoolProp {...sharedProps} key={key}/>
+            case PropTypes.string:
+              return <StrProp {...sharedProps} key={key}/>
+            case PropTypes.number:
+              return <NumProp {...sharedProps} key={key}/>
+            case PropTypes.HexColor:
+              return <HexColorProp {...sharedProps} key={key}/>
+            case PropTypes.StreamsString:
+              return <StreamsStringProp {...sharedProps} key={key} />
+            case PropTypes.StreamsData:
+              return <StreamsDataProp {...sharedProps} key={key} />
+            default:
+              console.error('Unknown prop type', type, 'for propName', propName, 'in propState', propState)
+              return null
           }
-          console.error('Unknown prop type', propType)
-          return null
         })
       }
     </div>
@@ -130,11 +135,11 @@ function ToolTip(props: {
   )
 }
 
-function StreamsTemplateStringProp(props: {
+function StreamsStringProp(props: {
   propName: string,
-  propValue: StreamsTemplateString,
+  propValue: StreamsStringExpression,
   propDoc?: string,
-  onChange: (val: StreamsTemplateString) => void
+  onChange: (val: StreamsStringExpression) => void
 }) {
   return (
     <div className='flex'>
@@ -142,7 +147,7 @@ function StreamsTemplateStringProp(props: {
       {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input
         className='input-sm'
-        onChange={e => props.onChange(e.target.value as StreamsTemplateString)}
+        onChange={e => props.onChange(e.target.value as StreamsStringExpression)}
         value={props.propValue ?? ''}
       />
       <img
@@ -154,11 +159,11 @@ function StreamsTemplateStringProp(props: {
     </div>
   )
 }
-function StreamsDataPathProp(props: {
+function StreamsDataProp(props: {
   propName: string,
-  propValue: StreamsDataPath,
+  propValue: StreamsDataExpression,
   propDoc?: string,
-  onChange: (val: StreamsDataPath) => void
+  onChange: (val: StreamsDataExpression) => void
 }) {
   return (
     <div className='flex'>
@@ -166,7 +171,7 @@ function StreamsDataPathProp(props: {
       {props.propDoc && <ToolTip message={props.propDoc}/>}
       <input
         className='input-sm'
-        onChange={e => props.onChange(e.target.value as StreamsDataPath)}
+        onChange={e => props.onChange(e.target.value as StreamsDataExpression)}
         value={props.propValue ?? ''}
       />
       <img src={kgLogoUrl} alt='this input uses streams' className='h-8'/>
