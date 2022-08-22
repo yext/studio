@@ -65,7 +65,7 @@ export default function PropEditor({
   )
 }
 
-function InputProp<T>(props: {
+function InputProp<T extends string | number | boolean>(props: {
   propName: string,
   propValue: T,
   defaultValue?: T,
