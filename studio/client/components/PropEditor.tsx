@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react'
 import { PropState, ComponentMetadata } from '../../shared/models'
-import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
+import { PropTypes } from '../../types'
 import kgLogoUrl from '../images/kg-logo.jpeg'
 
 export interface PropEditorProps {
