@@ -78,7 +78,7 @@ export default function createStudioPlugin(args): Plugin {
       if (studioCtxFilePathsArray.includes(file)) {
         console.log('Updating data export by "virtual:yext-studio".')
         ctx = getStudioProps()
-        server.moduleGraph.invalidateModule(module)
+        moduleGraph.invalidateModule(module)
       } else if (file.startsWith(getRootPath('./src/'))) {
         ws.send({
           type: 'full-reload',

@@ -1,11 +1,12 @@
 import { PropTypes } from '../../types'
+import getRootPath from '../getRootPath'
 import parseSiteSettingsFile from './parseSiteSettingsFile'
 
 jest.spyOn(console, 'error')
 
 it('updates correctly', () => {
   const propState = parseSiteSettingsFile(
-    'studio/studio-plugin/__fixtures__/siteSettings.ts',
+    getRootPath('studio/studio-plugin/__fixtures__/siteSettings.ts'),
     'SiteSettings',
     {
       apiKey: { type: PropTypes.string },
