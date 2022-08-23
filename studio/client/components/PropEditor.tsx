@@ -85,13 +85,13 @@ function InputProp<T extends string | number | boolean>(props: {
           className='checkbox'
           type='checkbox'
           onChange={e => onChange(e.target.checked as T)}
-          checked={propValue as boolean ?? defaultValue}
+          checked={propValue as boolean ?? defaultValue ?? false}
         />
         : <input
           className='input-sm'
           type={type}
           onChange={e => onChange(e.target.value as T)}
-          value={propValue as string | number ?? defaultValue}
+          value={propValue as string | number ?? defaultValue ?? ''}
         />
       }
       {img}
