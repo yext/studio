@@ -1,14 +1,12 @@
 import { PropertyAssignment, ts } from 'ts-morph'
 import { PropShape, PropState } from '../../shared/models'
-import getRootPath from '../getRootPath'
 import { getPropValue, getSourceFile } from '../common/common'
 
 export default function parseSiteSettingsFile(
-  filePath: string,
+  file: string,
   interfaceName: string,
   propShape: PropShape
 ): PropState {
-  const file = getRootPath(filePath)
   const sourceFile = getSourceFile(file)
   const siteSettingsNode = sourceFile
     .getDescendantsOfKind(ts.SyntaxKind.ObjectLiteralExpression)

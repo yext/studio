@@ -6,5 +6,6 @@ node_modules/
 /sites-rendered-output
 /localData
 /sites-config/features.json
+vite.config.ts.timestamp*
 
 .DS_Store
