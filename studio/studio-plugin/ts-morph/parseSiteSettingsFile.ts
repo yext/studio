@@ -13,7 +13,7 @@ export default function parseSiteSettingsFile(
     .find(n => n.getContextualType()?.getSymbol()?.getName() === interfaceName)
 
   if (!siteSettingsNode) {
-    throw new Error(`unable to find site settings object of type ${interfaceName} in filepath ${filePath}`)
+    throw new Error(`unable to find site settings object of type ${interfaceName} in filepath ${file}`)
   }
   const propState = {}
   // only support type PropertyAssignment
