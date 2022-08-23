@@ -1,6 +1,6 @@
 import { ComponentState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getSourceFile } from '../common/common'
+import { getSourceFile } from '../common'
 import updateStreamConfig from './updateStreamConfig'
 import { PropTypes } from '../../types'
 

@@ -1,6 +1,6 @@
 import { PropTypes, PropStateTypes } from '../../types'
 
-export default function validatePropState(propState: {
+export function validatePropState(propState: {
   type: PropTypes,
   value: string | number | boolean
 }): propState is PropStateTypes {
