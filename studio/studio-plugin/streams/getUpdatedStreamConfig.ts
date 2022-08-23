@@ -1,4 +1,4 @@
-import { TemplateConfig } from '@yext/pages/*'
+import { TemplateConfig } from '@yext/pages'
 import { ComponentState } from '../../shared/models'
 import { v1 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../client/utils/getPreviewProps'

@@ -1,7 +1,7 @@
 import { ObjectLiteralExpression, SourceFile, ts, VariableDeclarationKind } from 'ts-morph'
 import getUpdatedStreamConfig from '../streams/getUpdatedStreamConfig'
 import { ComponentState } from '../../shared/models'
-import { TemplateConfig } from '@yext/pages/*'
+import { TemplateConfig } from '@yext/pages'
 import parseObjectLiteralExpression from '../common/parseObjectLiteralExpression'
 
 /**
@@ -19,8 +19,8 @@ export default function updateStreamConfig(
   if (streamObjectLiteral) {
     streamObjectLiteral.replaceWithText(stringifiedConfig)
   } else {
-    const lastImportStatementIndex = Math.max(
-      -1, ...sourceFile.getImportDeclarations().map(d => d.getChildIndex()))
+    const lastImportStatementIndex =
+      sourceFile.getLastChildByKind(ts.SyntaxKind.ImportDeclaration)?.getChildIndex() ?? -1
     sourceFile.insertVariableStatement(lastImportStatementIndex + 1, {
       isExported: true,
       declarationKind: VariableDeclarationKind.Const,
