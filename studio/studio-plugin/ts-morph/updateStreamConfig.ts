@@ -2,7 +2,7 @@ import { ObjectLiteralExpression, SourceFile, ts, VariableDeclarationKind } from
 import getUpdatedStreamConfig from '../streams/getUpdatedStreamConfig'
 import { ComponentState } from '../../shared/models'
 import { TemplateConfig } from '@yext/pages'
-import parseObjectLiteralExpression from '../common/parseObjectLiteralExpression'
+import { parseObjectLiteralExpression } from '../common'
 
 /**
  * This function mutates the original sourceFile in addition to returning the new config.

@@ -1,6 +1,6 @@
 import { PropertyAssignment, ts } from 'ts-morph'
 import { PropShape, PropState } from '../../shared/models'
-import { getPropValue, getSourceFile } from '../common/common'
+import { getSourceFile, getPropValue } from '../common'
 
 export default function parseSiteSettingsFile(
   file: string,
