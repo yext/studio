@@ -2,6 +2,7 @@ import { CSSProperties } from 'react'
 import { PropState, ComponentMetadata } from '../../shared/models'
 import { PropTypes } from '../../types'
 import kgLogoUrl from '../images/kg-logo.jpeg'
+import { StreamsDataProp } from './StreamsDataProp'
 
 export interface PropEditorProps {
   propState: PropState,
@@ -55,7 +56,7 @@ export default function PropEditor({
             case PropTypes.StreamsString:
               return <InputProp {...sharedProps} img={<KGLogo style={{ filter: 'sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg)' }} />}/>
             case PropTypes.StreamsData:
-              return <InputProp {...sharedProps} img={<KGLogo />}/>
+              return <StreamsDataProp {...sharedProps} />
             default:
               console.error('Unknown prop type', type, 'for propName', propName, 'in propState', propState)
               return null
@@ -66,7 +67,8 @@ export default function PropEditor({
   )
 }
 
-function InputProp<T extends string | number | boolean>(props: {
+// TODO(oshi): move to separate file
+export function InputProp<T extends string | number | boolean>(props: {
   propName: string,
   propValue: T,
   defaultValue?: T,
@@ -99,7 +101,7 @@ function InputProp<T extends string | number | boolean>(props: {
   )
 }
 
-function ToolTip(props: {
+export function ToolTip(props: {
   message: string
 }): JSX.Element {
   return (
@@ -109,7 +111,7 @@ function ToolTip(props: {
   )
 }
 
-function KGLogo({ style }: { style?: CSSProperties }): JSX.Element {
+export function KGLogo({ style }: { style?: CSSProperties }): JSX.Element {
   return <img
     src={kgLogoUrl}
     alt='this input uses streams'
