@@ -2,7 +2,7 @@ import fs from 'fs'
 import { ts, PropertyAssignment } from 'ts-morph'
 import { PropState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getSourceFile, prettify } from '../common/common'
+import { getSourceFile, prettify } from '../common'
 import { PropTypes } from '../../types'
 
 export default function updateSiteSettingsFile(updatedState: PropState, pageFilePath: string) {

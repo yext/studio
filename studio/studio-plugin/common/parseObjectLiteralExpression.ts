@@ -10,7 +10,7 @@ import vm from 'vm'
  *
  * Due to using the nodejs `vm` module this function can only be run on the server side.
  */
-export default function parseObjectLiteralExpression<T>(
+export function parseObjectLiteralExpression<T>(
   objectLiteralExpression: ObjectLiteralExpression
 ): T {
   return vm.runInNewContext('(' + objectLiteralExpression.getText() + ')')
