@@ -1,21 +1,19 @@
 import { PropertyAssignment, ts } from 'ts-morph'
 import { PropShape, PropState } from '../../shared/models'
 import { getSourceFile, getPropValue } from '../common'
-import getRootPath from '../getRootPath'
 
 export default function parseSiteSettingsFile(
-  filePath: string,
+  file: string,
   interfaceName: string,
   propShape: PropShape
 ): PropState {
-  const file = getRootPath(filePath)
   const sourceFile = getSourceFile(file)
   const siteSettingsNode = sourceFile
     .getDescendantsOfKind(ts.SyntaxKind.ObjectLiteralExpression)
     .find(n => n.getContextualType()?.getSymbol()?.getName() === interfaceName)
 
   if (!siteSettingsNode) {
-    throw new Error(`unable to find site settings object of type ${interfaceName} in filepath ${filePath}`)
+    throw new Error(`unable to find site settings object of type ${interfaceName} in file: ${file}`)
   }
   const propState = {}
   // only support type PropertyAssignment

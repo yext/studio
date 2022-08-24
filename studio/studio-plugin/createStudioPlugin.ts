@@ -14,29 +14,37 @@ import { ComponentMetadata } from '../shared/models'
 /**
  * Handles server-client communication.
  *
- * This inclues providing a vite virtual module so that server side data can be passed to the front end
+ * This includes providing a vite virtual module so that server side data can be passed to the front end
  * for the initial load, and messaging using the vite HMR API.
  */
 export default function createStudioPlugin(args): Plugin {
   const virtualModuleId = 'virtual:yext-studio'
   const resolvedVirtualModuleId = '\0' + virtualModuleId
-
-  const siteSettingsMetadata: ComponentMetadata = parseComponentMetadata(
-    getSourceFile(getRootPath('src/siteSettings.ts')),
-    getRootPath('src/siteSettings.ts'),
-    'SiteSettings'
-  )
-
-  const ctx: StudioProps = {
-    siteSettings: {
-      componentMetadata: siteSettingsMetadata,
-      propState: parseSiteSettingsFile('src/siteSettings.ts', 'SiteSettings', siteSettingsMetadata.propShape ?? {})
-    },
-    moduleNameToComponentMetadata,
-    componentsOnPage: {
-      index: parsePageFile(getPagePath('index.tsx'))
+  const studioCtxFilePaths = {
+    siteSettings: getRootPath('src/siteSettings.ts'),
+    pages: {
+      index: getPagePath('index.tsx')
     }
   }
+  const siteSettingsMetadata: ComponentMetadata = parseComponentMetadata(
+    getSourceFile(studioCtxFilePaths.siteSettings),
+    studioCtxFilePaths.siteSettings,
+    'SiteSettings'
+  )
+  const getStudioProps = () => {
+    return {
+      siteSettings: {
+        componentMetadata: siteSettingsMetadata,
+        propState: parseSiteSettingsFile(studioCtxFilePaths.siteSettings, 'SiteSettings', siteSettingsMetadata.propShape ?? {})
+      },
+      moduleNameToComponentMetadata,
+      componentsOnPage: {
+        index: parsePageFile(studioCtxFilePaths.pages.index)
+      }
+    }
+  }
+
+  let ctx: StudioProps = getStudioProps()
 
   return {
     name: 'yext-studio-vite-plugin',
@@ -55,6 +63,28 @@ export default function createStudioPlugin(args): Plugin {
         return `export default ${JSON.stringify(ctx)}`
       }
     },
-    configureServer
+    configureServer,
+    handleHotUpdate({ file, server }) {
+      const { moduleGraph, ws } = server
+      const module = moduleGraph.getModuleById(resolvedVirtualModuleId)
+      if (!module) {
+        console.error(`Unable to find vite virtual module: "${resolvedVirtualModuleId}".`)
+        return
+      }
+      const studioCtxFilePathsArray = [
+        studioCtxFilePaths.siteSettings,
+        ...Object.values(studioCtxFilePaths.pages)
+      ]
+      if (studioCtxFilePathsArray.includes(file)) {
+        console.log('Updating data export by "virtual:yext-studio".')
+        ctx = getStudioProps()
+        moduleGraph.invalidateModule(module)
+      } else if (file.startsWith(getRootPath('./src/'))) {
+        ws.send({
+          type: 'full-reload',
+          path: '*'
+        })
+      }
+    },
   }
 }
