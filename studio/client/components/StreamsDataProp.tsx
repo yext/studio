@@ -1,7 +1,7 @@
 import { KGLogo, ToolTip } from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 import lodashGet from 'lodash/get.js'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 
 export function StreamsDataProp(props: {
   propName: string,
@@ -10,34 +10,34 @@ export function StreamsDataProp(props: {
   onChange: (val: string) => void
 }): JSX.Element {
   const { propName, propValue, propDoc, onChange } = props
-  const selectionStartRef = useRef<number>()
+  // const [selectionStart, setSelectionStart] = useState<number>(0)
   const options = useAutocompleteOptions(propValue)
   return (
     <div className='flex'>
       <label className='peer label'>{propName}:</label>
       {propDoc && <ToolTip message={propDoc} />}
-      <div className='flex flex-col'>
+      <div className='flex flex-col relative'>
         <div className='flex'>
           <input
-            className='input-sm'
+            style={{
+              fontSize: '16px',
+              // paddingLeft: '12px'
+            }}
             onChange={e => {
-              // const selection: Selection | null = window.getSelection()
               onChange(e.target.value)
-              // if (!selection || selection.rangeCount < 1) {
-              //   return
-              // }
-              if (e.target.selectionStart) {
-                console.log(e.target.selectionStart)
-                selectionStartRef.current = e.target.selectionStart
-              }
-              // const range: Range = selection.getRangeAt(0).cloneRange()
-              // console.log(range.getClientRects(), range.getBoundingClientRect())
+              // e.target.selectionStart && setSelectionStart(e.target.selectionStart)
             }}
             value={propValue ?? ''}
           />
           <KGLogo />
         </div>
-        <ul className='menu bg-base-100'>
+        <ul style={{
+          backgroundColor: 'white',
+          position: 'absolute',
+          top: '2em',
+          left: `${getAutocompleteOffset(propValue) * 8}px`,
+          // marginLeft: '12px'
+        }}>
           {options.map(k => {
             return (
               <li key={k} onClick={() => onChange(k)}>
@@ -61,4 +61,13 @@ function useAutocompleteOptions(propValue: string): string[] {
 
   return Object.keys(documentNode)
     .filter(d => d.startsWith(currentSuffix))
+    .filter((_, i) => i < 10)
+}
+
+function getAutocompleteOffset(propValue: string): number {
+  if (!propValue.startsWith('document.')) {
+    return 0
+  }
+  const parentSubstring = propValue.substring(0, propValue.lastIndexOf('.') + 2)
+  return parentSubstring.length
 }
