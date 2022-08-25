@@ -48,7 +48,7 @@ export function StreamsDataProp(props: {
                 e.preventDefault()
                 setAutocompleteIndex((options.length + autocompleteIndex - 1) % options.length)
               } else if (e.key === 'Enter') {
-                insertAtSelection(options[autocompleteIndex])
+                insertAutocompleteValue(options[autocompleteIndex])
                 setAutocompleteIsVisible(false)
               }
             }}
@@ -80,30 +80,57 @@ export function StreamsDataProp(props: {
     </div>
   )
 
-  function insertAtSelection(value: string) {
+  function insertAutocompleteValue(value: string) {
+    if (propValue === '') {
+      onChange(value)
+      return
+    }
     const selectionStart = getSelectionStart(inputRef)
     if (!selectionStart) {
       return
     }
-    if (isTemplateString(value)) {
-      const truncationIndex = getTemplateStringTruncationIndex(value, selectionStart)
-      if (truncationIndex === undefined) {
+
+    if (isTemplateString(propValue)) {
+      const openBraceIndex = getOpenBraceIndex(propValue, selectionStart)
+      if (!openBraceIndex) {
         return
       }
-
-    } else {
-      const firstHalf = propValue.substring(0, selectionStart)
-      let firstHalfTruncated = firstHalf.substring(0, firstHalf.lastIndexOf('.'))
-      if (firstHalf.includes('.')) {
-        firstHalfTruncated += '.'
-      }
-      const secondHalf = propValue.substring(selectionStart)
-      const newValue = firstHalfTruncated + value + secondHalf
-      onChange(newValue)
+      const prefix = propValue.substring(0, openBraceIndex)
+      const closeBraceIndex = openBraceIndex + propValue.substring(openBraceIndex, propValue.length - 1).indexOf('}')
+      const valueToAutocomplete = propValue.substring(openBraceIndex, closeBraceIndex)
+      const secondHalf = propValue.substring(closeBraceIndex)
+      const valueToSearch = closeBraceIndex === -1 ? secondHalf : secondHalf.substring(0, closeBraceIndex)
+      const dotIndex = valueToSearch
     }
+
+    // let startIndex = 0
+    // if (isTemplateString(propValue)) {
+    //   startIndex = getOpenBraceIndex(propValue, selectionStart) ?? 0
+    // }
+    const newValue = getUpdatedValue(propValue, value, selectionStart)
+
+    onChange(newValue)
   }
 }
 
+/**
+ * Given a certain `streamsDataExpression` like `'document.addr'` that needs the last part of the
+ * expression to be autocompleted to a certain `newValue` like `'address'`, return the updated value.
+ * For the above example `'document.address'` would be returned.
+ */
+function getUpdatedValue(streamsDataExpression: string, newValue: string, selectionStart: number) {
+  const firstHalf = streamsDataExpression.substring(0, selectionStart)
+  let firstHalfTruncated = firstHalf.substring(0, firstHalf.lastIndexOf('.'))
+  if (firstHalf.includes('.')) {
+    firstHalfTruncated += '.'
+  }
+  const secondHalf = streamsDataExpression.substring(selectionStart)
+  return firstHalfTruncated + newValue + secondHalf
+}
+
+/**
+ * Returns the stream autocomplete options available given a certain string value.
+ */
 function useAutocompleteOptions(
   propValue: string,
   inputRef: RefObject<HTMLInputElement>
@@ -116,11 +143,14 @@ function useAutocompleteOptions(
       if (!selectionStart) {
         return []
       }
-      const truncationIndex = getTemplateStringTruncationIndex(propValue, selectionStart)
-      if (truncationIndex === undefined) {
+      const openBraceIndex = getOpenBraceIndex(propValue, selectionStart)
+      if (openBraceIndex === undefined) {
         return []
       }
-      return getStreamDocumentOptions(propValue.substring(truncationIndex), streamDocument)
+      const secondHalf = propValue.substring(openBraceIndex, propValue.length - 1).split(' ')[0]
+      const closeBraceIndex = secondHalf.indexOf('}')
+      const valueToSearch = closeBraceIndex === -1 ? secondHalf : secondHalf.substring(0, closeBraceIndex)
+      return getStreamDocumentOptions(valueToSearch, streamDocument)
     }
     return getStreamDocumentOptions(propValue, streamDocument)
   }, [inputRef, propValue, streamDocument])
@@ -128,6 +158,9 @@ function useAutocompleteOptions(
   return options
 }
 
+/**
+ * Returns the index of the text cursor (aka caret) within the input element, if such a selection exists.
+ */
 function getSelectionStart(inputRef: RefObject<HTMLInputElement>) {
   if (!inputRef.current) {
     return null
@@ -135,7 +168,10 @@ function getSelectionStart(inputRef: RefObject<HTMLInputElement>) {
   return inputRef.current.selectionStart
 }
 
-function getTemplateStringTruncationIndex(
+/**
+ * Returns the index AFTER the last `${` style open brace that is before the cursor selection.
+ */
+function getOpenBraceIndex(
   value: string,
   selectionStart: number
 ): number | undefined {
@@ -145,18 +181,22 @@ function getTemplateStringTruncationIndex(
     return
   }
   const lastCloseBraceIndex = firstHalf.lastIndexOf('}')
-  if (lastCloseBraceIndex > 0 && lastCloseBraceIndex < lastOpenBraceIndex) {
+  if (lastCloseBraceIndex >= 0 && lastCloseBraceIndex > lastOpenBraceIndex) {
+    console.warn('last close brace after last open brace', lastCloseBraceIndex, lastOpenBraceIndex)
     return
   }
   return lastOpenBraceIndex + 2
 }
 
+/**
+ * Returns the available stream document autocomplete options, given a certain value.
+ */
 function getStreamDocumentOptions(
   value: string,
   streamDocument: Record<string, any>
 ): string[] {
   console.log('getting options for ', value)
-  if ('document.'.startsWith(value)) {
+  if ('document'.startsWith(value)) {
     return ['document.']
   } else if (!value.startsWith('document.')) {
     return []
