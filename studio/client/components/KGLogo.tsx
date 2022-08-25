@@ -1,4 +1,3 @@
-
 import { CSSProperties } from 'react'
 import kgLogoUrl from '../images/kg-logo.jpeg'
 
