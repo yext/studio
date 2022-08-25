@@ -30,7 +30,7 @@ export default function PropEditor({
   }
   const { propShape } = componentMetadata
   return (
-    <div className='flex flex-col'>
+    <div className='flex flex-col flex-grow'>
       {
         Object.keys(propShape).map((propName, index) => {
           const propDoc = propShape[propName].doc
@@ -90,7 +90,7 @@ export function InputProp<T extends string | number | boolean>(props: {
           checked={propValue as boolean ?? defaultValue ?? false}
         />
         : <input
-          className='input-sm'
+          className={ type === 'color' ? 'input-sm' : 'input-sm flex-grow' }
           type={type}
           onChange={e => onChange(e.target.value as T)}
           value={propValue as string | number ?? defaultValue ?? ''}
