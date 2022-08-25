@@ -1,7 +1,9 @@
 import { KGLogo, ToolTip } from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 import lodashGet from 'lodash/get.js'
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
+import Select, { GroupBase, OptionsOrGroups } from 'react-select'
+import { MenuList } from 'react-select/dist/declarations/src/components/Menu'
 
 export function StreamsDataProp(props: {
   propName: string,
@@ -10,14 +12,35 @@ export function StreamsDataProp(props: {
   onChange: (val: string) => void
 }): JSX.Element {
   const { propName, propValue, propDoc, onChange } = props
-  // const [selectionStart, setSelectionStart] = useState<number>(0)
   const options = useAutocompleteOptions(propValue)
+
+  const [inputValue, setInputValue] = useState('')
+
   return (
     <div className='flex'>
       <label className='peer label'>{propName}:</label>
       {propDoc && <ToolTip message={propDoc} />}
       <div className='flex flex-col relative'>
         <div className='flex'>
+          <Select
+            options={options}
+            isClearable={true}
+            isSearchable={true}
+            // inputValue={propValue}
+            // value={propValue}
+            onInputChange={(val, actionMeta) => {
+              console.log('onInputChange', val, actionMeta, propValue)
+              if (actionMeta.action !== 'input-change') {
+                return
+              }
+              // onChange(val)
+            }}
+            filterOption={() => true}
+            onChange={(option, actionMeta) => {
+              console.log('onChange', option, actionMeta)
+              // onChange(option?.value ?? '')
+            }}
+          />~
           <input
             style={{
               fontSize: '16px',
@@ -31,14 +54,9 @@ export function StreamsDataProp(props: {
           />
           <KGLogo />
         </div>
-        <ul style={{
-          backgroundColor: 'white',
-          position: 'absolute',
-          top: '2em',
-          left: `${getAutocompleteOffset(propValue) * 8}px`,
-          // marginLeft: '12px'
-        }}>
-          {options.map(k => {
+        <ul>
+          {options.map(o => {
+            const k = o.value
             return (
               <li key={k} onClick={() => onChange(k)}>
                 <button>{k}</button>
@@ -51,23 +69,28 @@ export function StreamsDataProp(props: {
   )
 }
 
-function useAutocompleteOptions(propValue: string): string[] {
+function useAutocompleteOptions(propValue: string): { value: string, label: string }[] {
   const { streamDocument } = useStudioContext()
-  if (!propValue.startsWith('document.')) {
-    return ['document.']
-  }
-  const currentSuffix = propValue.split('.').pop() ?? ''
-  const documentNode = lodashGet({ document: streamDocument }, propValue, streamDocument)
 
-  return Object.keys(documentNode)
-    .filter(d => d.startsWith(currentSuffix))
-    .filter((_, i) => i < 10)
-}
+  const options = useMemo(() => {
+    const currentSuffix = propValue.split('.').pop() ?? ''
+    const parentPath = propValue.substring(0, propValue.lastIndexOf('.'))
+    const documentNode = lodashGet({ document: streamDocument }, propValue)
+      ?? lodashGet({ document: streamDocument }, parentPath, streamDocument)
 
-function getAutocompleteOffset(propValue: string): number {
-  if (!propValue.startsWith('document.')) {
-    return 0
-  }
-  const parentSubstring = propValue.substring(0, propValue.lastIndexOf('.') + 2)
-  return parentSubstring.length
+    if (!propValue.startsWith('document.')) {
+      return [{ value: 'document.', label: 'document.' }]
+    }
+    return Object.keys(documentNode)
+      .filter(d => d.startsWith(currentSuffix))
+      .filter((_, i) => i < 10)
+      .map(d => {
+        return {
+          value: `${parentPath}.${d}`,
+          // label: d
+          label: `${parentPath}.${d}`,
+        }
+      })
+  }, [propValue, streamDocument])
+  return options
 }

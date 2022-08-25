@@ -9,7 +9,13 @@ export default class CustomPointerSensor extends PointerSensor {
         const { nativeEvent: event } = e
         const { onActivation } = opts
 
-        if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target)) {
+        if (
+          !event.isPrimary ||
+          event.button !== 0 ||
+          !(e.target instanceof HTMLElement) ||
+          isInteractiveElement(event.target) ||
+          window.getComputedStyle(e.target)['cursor'] !== 'grab'
+        ) {
           return false
         }
 
