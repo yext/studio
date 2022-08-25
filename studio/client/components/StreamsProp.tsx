@@ -1,26 +1,36 @@
-import { KGLogo, ToolTip } from './PropEditor'
+import { ToolTip } from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 import lodashGet from 'lodash/get.js'
 import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
-import useRootClose from '@restart/ui/useRootClose';
+import useRootClose from '@restart/ui/useRootClose'
+import { PropTypes } from '../../types'
+import { KGLogo } from './KGLogo'
 
-export function StreamsDataProp(props: {
+export default function StreamsProp(props: {
   propName: string,
   propValue: string,
   propDoc?: string,
+  propType: PropTypes.StreamsData | PropTypes.StreamsString,
   onChange: (val: string) => void
 }): JSX.Element {
-  const { propName, propValue, propDoc, onChange } = props
+  const { propName, propValue, propDoc, propType, onChange } = props
   const inputRef = useRef<HTMLInputElement>(null)
-  const options = useAutocompleteOptions(propValue, inputRef)
-  useRootClose(inputRef, () => setAutocompleteIsVisible(false))
+  const options = useAutocompleteOptions(propValue, propType, inputRef)
+  useRootClose(inputRef, () => setAutocompleteVisibility(false))
+  const [selectionRangeUpdate, triggerSelectionRangeUpdate] = useState<number>()
 
   const [autocompleteIndex, setAutocompleteIndex] = useState(0)
-  const [autocompleteIsVisible, setAutocompleteIsVisible] = useState(false)
+  const [autocompleteIsVisible, setAutocompleteVisibility] = useState(false)
 
   useEffect(() => {
     setAutocompleteIndex(0)
   }, [propValue])
+
+  useEffect(() => {
+    if (selectionRangeUpdate !== undefined) {
+      inputRef.current?.setSelectionRange(selectionRangeUpdate, selectionRangeUpdate)
+    }
+  }, [selectionRangeUpdate])
 
   return (
     <div className='flex'>
@@ -35,9 +45,11 @@ export function StreamsDataProp(props: {
               fontSize: '16px',
               padding: '0.25em 0.5em'
             }}
-            onClick={() => setAutocompleteIsVisible(true)}
+            onBlur={() => setAutocompleteVisibility(false)}
+            onClick={() => setAutocompleteVisibility(true)}
+            onFocus={() => setAutocompleteVisibility(true)}
             onChange={e => {
-              setAutocompleteIsVisible(true)
+              setAutocompleteVisibility(true)
               onChange(e.target.value)
             }}
             onKeyDown={e => {
@@ -49,27 +61,31 @@ export function StreamsDataProp(props: {
                 setAutocompleteIndex((options.length + autocompleteIndex - 1) % options.length)
               } else if (e.key === 'Enter') {
                 insertAutocompleteValue(options[autocompleteIndex])
-                setAutocompleteIsVisible(false)
               }
             }}
             value={propValue ?? ''}
           />
-          <KGLogo />
+          <KGLogo style={{
+            filter: propType === PropTypes.StreamsString ? 'sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg)' : ''
+          }}/>
         </div>
         {
-          autocompleteIsVisible && <ul style={{
+          autocompleteIsVisible && options.length > 0 && <ul style={{
             position: 'absolute',
             width: '100%',
             marginTop: '1px',
-            top: '2em'
+            top: '2em',
+            zIndex: 1
           }}>
             {options.map((k, i) => {
               return (
-                <li key={k} onClick={() => onChange(k)} style={{
-                  backgroundColor: i === autocompleteIndex ? 'rgb(223, 224, 246)' : 'white',
-                  padding: '0.25em 1em',
-                  cursor: 'pointer'
-                }}>
+                <li key={k}
+                  style={{
+                    backgroundColor: i === autocompleteIndex ? 'rgb(223, 224, 246)' : 'white',
+                    padding: '0.25em 1em',
+                    cursor: 'text'
+                  }}
+                >
                   <button>{k}</button>
                 </li>
               )
@@ -90,26 +106,30 @@ export function StreamsDataProp(props: {
       return
     }
 
-    if (isTemplateString(propValue)) {
-      const openBraceIndex = getOpenBraceIndex(propValue, selectionStart)
-      if (!openBraceIndex) {
+    if (propType === PropTypes.StreamsString && isTemplateString(propValue)) {
+      const templateSpanIndex = getTemplateSpanIndex(propValue, selectionStart)
+      if (!templateSpanIndex) {
         return
       }
-      const prefix = propValue.substring(0, openBraceIndex)
-      const closeBraceIndex = openBraceIndex + propValue.substring(openBraceIndex, propValue.length - 1).indexOf('}')
-      const valueToAutocomplete = propValue.substring(openBraceIndex, closeBraceIndex)
-      const secondHalf = propValue.substring(closeBraceIndex)
-      const valueToSearch = closeBraceIndex === -1 ? secondHalf : secondHalf.substring(0, closeBraceIndex)
-      const dotIndex = valueToSearch
+      const prefix = propValue.substring(0, templateSpanIndex)
+      const alreadyHasClosingBrace = propValue.substring(templateSpanIndex).includes('}')
+      const expressionEndIndex = alreadyHasClosingBrace
+        ? templateSpanIndex + propValue.substring(templateSpanIndex).indexOf('}')
+        : propValue.length - 1
+      const streamsDataExpression = propValue.substring(templateSpanIndex, expressionEndIndex)
+      const suffix = propValue.substring(expressionEndIndex)
+      let newValue = prefix + getUpdatedValue(streamsDataExpression, value)
+      const newSelectionIndex = newValue.length
+      if (!alreadyHasClosingBrace) {
+        newValue += '}'
+      }
+      newValue += suffix
+      onChange(newValue)
+      triggerSelectionRangeUpdate(newSelectionIndex)
+    } else {
+      const newValue = getUpdatedValue(propValue, value)
+      onChange(newValue)
     }
-
-    // let startIndex = 0
-    // if (isTemplateString(propValue)) {
-    //   startIndex = getOpenBraceIndex(propValue, selectionStart) ?? 0
-    // }
-    const newValue = getUpdatedValue(propValue, value, selectionStart)
-
-    onChange(newValue)
   }
 }
 
@@ -118,14 +138,12 @@ export function StreamsDataProp(props: {
  * expression to be autocompleted to a certain `newValue` like `'address'`, return the updated value.
  * For the above example `'document.address'` would be returned.
  */
-function getUpdatedValue(streamsDataExpression: string, newValue: string, selectionStart: number) {
-  const firstHalf = streamsDataExpression.substring(0, selectionStart)
-  let firstHalfTruncated = firstHalf.substring(0, firstHalf.lastIndexOf('.'))
-  if (firstHalf.includes('.')) {
-    firstHalfTruncated += '.'
+function getUpdatedValue(streamsDataExpression: string, newValue: string) {
+  const lastDotIndex = streamsDataExpression.lastIndexOf('.')
+  if (lastDotIndex === -1) {
+    return newValue
   }
-  const secondHalf = streamsDataExpression.substring(selectionStart)
-  return firstHalfTruncated + newValue + secondHalf
+  return streamsDataExpression.substring(0, lastDotIndex) + '.' + newValue
 }
 
 /**
@@ -133,27 +151,28 @@ function getUpdatedValue(streamsDataExpression: string, newValue: string, select
  */
 function useAutocompleteOptions(
   propValue: string,
+  propType: PropTypes,
   inputRef: RefObject<HTMLInputElement>
 ): string[] {
   const { streamDocument } = useStudioContext()
 
   const options = useMemo(() => {
-    if (isTemplateString(propValue)) {
+    if (propType === PropTypes.StreamsString && isTemplateString(propValue)) {
       const selectionStart = getSelectionStart(inputRef)
       if (!selectionStart) {
         return []
       }
-      const openBraceIndex = getOpenBraceIndex(propValue, selectionStart)
-      if (openBraceIndex === undefined) {
+      const templateSpanIndex = getTemplateSpanIndex(propValue, selectionStart)
+      if (templateSpanIndex === undefined) {
         return []
       }
-      const secondHalf = propValue.substring(openBraceIndex, propValue.length - 1).split(' ')[0]
+      const secondHalf = propValue.substring(templateSpanIndex, propValue.length - 1).split(' ')[0]
       const closeBraceIndex = secondHalf.indexOf('}')
       const valueToSearch = closeBraceIndex === -1 ? secondHalf : secondHalf.substring(0, closeBraceIndex)
       return getStreamDocumentOptions(valueToSearch, streamDocument)
     }
     return getStreamDocumentOptions(propValue, streamDocument)
-  }, [inputRef, propValue, streamDocument])
+  }, [inputRef, propValue, streamDocument, propType])
 
   return options
 }
@@ -169,9 +188,9 @@ function getSelectionStart(inputRef: RefObject<HTMLInputElement>) {
 }
 
 /**
- * Returns the index AFTER the last `${` style open brace that is before the cursor selection.
+ * Returns the index AFTER the last `${` style open brace that is still before the cursor selection.
  */
-function getOpenBraceIndex(
+function getTemplateSpanIndex(
   value: string,
   selectionStart: number
 ): number | undefined {
@@ -206,7 +225,7 @@ function getStreamDocumentOptions(
   const documentNode = lodashGet({ document: streamDocument }, value)
     ?? lodashGet({ document: streamDocument }, parentPath, streamDocument)
 
-  if (Array.isArray(documentNode)) {
+  if (Array.isArray(documentNode) || typeof documentNode !== 'object') {
     return []
   }
 
