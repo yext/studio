@@ -34,7 +34,7 @@ export default function StreamsProp(props: {
   }, [selectionRangeUpdate])
 
   return (
-    <div className='flex'>
+    <div className='flex' style={{ fontFamily: '"Courier New", monospace' }}>
       <label className='peer label'>{propName}:</label>
       {propDoc && <ToolTip message={propDoc} />}
       <div className='flex flex-col relative flex-grow'>
@@ -44,10 +44,8 @@ export default function StreamsProp(props: {
             style={{
               flexGrow: 1,
               fontSize: '16px',
-              padding: '0.25em 0.5em',
-              fontFamily: '"Courier New", monospace'
+              padding: '0.25em 0.5em'
             }}
-            onBlur={() => setAutocompleteVisibility(false)}
             onClick={() => setAutocompleteVisibility(true)}
             onFocus={() => setAutocompleteVisibility(true)}
             onChange={e => {
@@ -85,8 +83,9 @@ export default function StreamsProp(props: {
                   style={{
                     backgroundColor: i === autocompleteIndex ? 'rgb(223, 224, 246)' : 'white',
                     padding: '0.25em 1em',
-                    cursor: 'text'
+                    cursor: 'pointer'
                   }}
+                  onClick={() => insertAutocompleteValue(k)}
                 >
                   <button>{k}</button>
                 </li>
