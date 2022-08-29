@@ -3,8 +3,7 @@ import lodashGet from 'lodash/get.js'
 import { TemplateProps } from '@yext/pages'
 import { PropTypes, StreamsStringExpression } from '../../types'
 import isTemplateString from './isTemplateString'
-
-export const STREAMS_TEMPLATE_REGEX = /\${(.*?)}/g
+import { STREAMS_TEMPLATE_REGEX } from '../../shared/constants'
 
 export default function getPreviewProps(
   props: PropState,
@@ -14,6 +13,9 @@ export default function getPreviewProps(
 
   Object.keys(props).forEach(propName => {
     const propData = props[propName]
+    if (propData.value === null || propData.value === undefined) {
+      return
+    }
     if (propData.type === PropTypes.StreamsString) {
       const stringExpression: StreamsStringExpression = propData.value
       if (isTemplateString(stringExpression)) {

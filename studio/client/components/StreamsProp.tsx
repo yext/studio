@@ -9,7 +9,7 @@ import isTemplateString from '../utils/isTemplateString'
 
 export default function StreamsProp(props: {
   propName: string,
-  propValue: string,
+  propValue: string | undefined,
   propDoc?: string,
   propType: PropTypes.StreamsData | PropTypes.StreamsString,
   onChange: (val: string) => void
@@ -98,7 +98,7 @@ export default function StreamsProp(props: {
   )
 
   function insertAutocompleteValue(value: string) {
-    if (propValue === '') {
+    if (!propValue) {
       onChange(value)
       return
     }
@@ -151,7 +151,7 @@ function getUpdatedValue(streamsDataExpression: string, newValue: string) {
  * Returns the stream autocomplete options available given a certain string value.
  */
 function useAutocompleteOptions(
-  propValue: string,
+  propValue: string | undefined,
   propType: PropTypes,
   inputRef: RefObject<HTMLInputElement>
 ): string[] {
@@ -211,10 +211,10 @@ function getTemplateExpressionIndex(
  * Returns the available stream document autocomplete options, given a certain value.
  */
 function getStreamDocumentOptions(
-  value: string,
+  value: string | undefined,
   streamDocument: Record<string, any>
 ): string[] {
-  if ('document'.startsWith(value)) {
+  if (!value || 'document'.startsWith(value)) {
     return ['document.']
   } else if (!value.startsWith('document.')) {
     return []
