@@ -1,10 +1,15 @@
 import { TemplateConfig } from '@yext/pages'
 import { ComponentState } from '../../shared/models'
 import { v1 } from 'uuid'
-import { STREAMS_TEMPLATE_REGEX } from '../../client/utils/getPreviewProps'
+import { STREAMS_TEMPLATE_REGEX } from '../../shared/constants'
 import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
 
-const INFRA_STREAM_PROPERTIES = [
+/**
+ * These are stream properties that will throw an error if specified within a {@link Stream.fields}, with
+ * the exception of `id` (at the time of writing), and should always be present in localData even
+ * if not specifically asked for.
+ */
+const NON_CONFIGURABLE_PROPERTIES = [
   '__',
   'businessId',
   'id',
@@ -24,7 +29,7 @@ export default function getUpdatedStreamConfig(
   const streamValues = getStreamValues(componentsState)
   const usedDocumentPaths = getUsedDocumentPaths(streamValues)
   const fields = [...usedDocumentPaths]
-    .filter(documentPath => !INFRA_STREAM_PROPERTIES.includes(documentPath))
+    .filter(documentPath => !NON_CONFIGURABLE_PROPERTIES.includes(documentPath))
     .map(documentPath => documentPath.split('document.')[1])
 
   return {

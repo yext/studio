@@ -9,7 +9,8 @@ export function getJsxAttributeValue(n: JsxAttribute): string | number | boolean
   if (
     expression.isKind(ts.SyntaxKind.PropertyAccessExpression) ||
     expression.isKind(ts.SyntaxKind.TemplateExpression) ||
-    expression.isKind(ts.SyntaxKind.ElementAccessExpression)
+    expression.isKind(ts.SyntaxKind.ElementAccessExpression) ||
+    expression.isKind(ts.SyntaxKind.Identifier)
   ) {
     return expression.getText()
   } else if (

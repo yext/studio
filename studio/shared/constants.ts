@@ -1,0 +1,1 @@
+export const STREAMS_TEMPLATE_REGEX = /\${(.*?)}/g

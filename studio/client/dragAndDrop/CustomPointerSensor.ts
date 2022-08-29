@@ -9,7 +9,11 @@ export default class CustomPointerSensor extends PointerSensor {
         const { nativeEvent: event } = e
         const { onActivation } = opts
 
-        if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target)) {
+        if (
+          !event.isPrimary ||
+          event.button !== 0 ||
+          !elementShouldBeDraggable(event.target)
+        ) {
           return false
         }
 
@@ -20,8 +24,8 @@ export default class CustomPointerSensor extends PointerSensor {
   ]
 }
 
-function isInteractiveElement(element: EventTarget | null) {
-  if (!element || !(element instanceof Element) || !element?.tagName) {
+function elementShouldBeDraggable(element: EventTarget | null) {
+  if (!element || !(element instanceof HTMLElement) || !element?.tagName) {
     return false
   }
 
@@ -33,5 +37,9 @@ function isInteractiveElement(element: EventTarget | null) {
     'option',
   ]
 
-  return interactiveElements.includes(element.tagName.toLowerCase())
+  if (interactiveElements.includes(element.tagName.toLowerCase())) {
+    return false
+  }
+
+  return window.getComputedStyle(element)['cursor'] === 'grab'
 }
