@@ -44,7 +44,8 @@ export default function StreamsProp(props: {
             style={{
               flexGrow: 1,
               fontSize: '16px',
-              padding: '0.25em 0.5em'
+              padding: '0.25em 0.5em',
+              fontFamily: '"Courier New", monospace'
             }}
             onBlur={() => setAutocompleteVisibility(false)}
             onClick={() => setAutocompleteVisibility(true)}
