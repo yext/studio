@@ -41,5 +41,5 @@ function elementShouldBeDraggable(element: EventTarget | null) {
     return false
   }
 
-  return window.getComputedStyle(element)['cursor'] !== 'grab'
+  return window.getComputedStyle(element)['cursor'] === 'grab'
 }
