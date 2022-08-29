@@ -82,7 +82,11 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
         </MenuItem>
       </ControlledMenu>
       <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
-        <PropEditor {...props} />
+        <PropEditor
+          propState={props.propState}
+          setPropState={props.setPropState}
+          componentMetadata={props.componentMetadata}
+        />
       </div>
     </div>
   )

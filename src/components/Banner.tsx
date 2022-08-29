@@ -9,7 +9,7 @@ export interface BannerProps {
    * Some random
    * number to display!
    */
-  randomNum?: StreamsData<number>,
+  randomNum?: StreamsData,
   /**
    * A boolean to toggle nothing..
    */
