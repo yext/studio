@@ -214,7 +214,6 @@ function getStreamDocumentOptions(
   value: string,
   streamDocument: Record<string, any>
 ): string[] {
-  console.log('getting options for ', value)
   if ('document'.startsWith(value)) {
     return ['document.']
   } else if (!value.startsWith('document.')) {
