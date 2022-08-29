@@ -5,6 +5,7 @@ import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import useRootClose from '@restart/ui/useRootClose'
 import { PropTypes } from '../../types'
 import { KGLogo } from './KGLogo'
+import isTemplateString from '../utils/isTemplateString'
 
 export default function StreamsProp(props: {
   propName: string,
@@ -107,16 +108,16 @@ export default function StreamsProp(props: {
     }
 
     if (propType === PropTypes.StreamsString && isTemplateString(propValue)) {
-      const templateSpanIndex = getTemplateSpanIndex(propValue, selectionStart)
-      if (!templateSpanIndex) {
+      const templateExprIndex = getTemplateExpressionIndex(propValue, selectionStart)
+      if (templateExprIndex === null) {
         return
       }
-      const prefix = propValue.substring(0, templateSpanIndex)
-      const alreadyHasClosingBrace = propValue.substring(templateSpanIndex).includes('}')
+      const prefix = propValue.substring(0, templateExprIndex)
+      const alreadyHasClosingBrace = propValue.substring(templateExprIndex).includes('}')
       const expressionEndIndex = alreadyHasClosingBrace
-        ? templateSpanIndex + propValue.substring(templateSpanIndex).indexOf('}')
+        ? templateExprIndex + propValue.substring(templateExprIndex).indexOf('}')
         : propValue.length - 1
-      const streamsDataExpression = propValue.substring(templateSpanIndex, expressionEndIndex)
+      const streamsDataExpression = propValue.substring(templateExprIndex, expressionEndIndex)
       const suffix = propValue.substring(expressionEndIndex)
       let newValue = prefix + getUpdatedValue(streamsDataExpression, value)
       const newSelectionIndex = newValue.length
@@ -162,11 +163,11 @@ function useAutocompleteOptions(
       if (!selectionStart) {
         return []
       }
-      const templateSpanIndex = getTemplateSpanIndex(propValue, selectionStart)
-      if (templateSpanIndex === undefined) {
+      const templateExprIndex = getTemplateExpressionIndex(propValue, selectionStart)
+      if (templateExprIndex === null) {
         return []
       }
-      const secondHalf = propValue.substring(templateSpanIndex, propValue.length - 1).split(' ')[0]
+      const secondHalf = propValue.substring(templateExprIndex, propValue.length - 1).split(' ')[0]
       const closeBraceIndex = secondHalf.indexOf('}')
       const valueToSearch = closeBraceIndex === -1 ? secondHalf : secondHalf.substring(0, closeBraceIndex)
       return getStreamDocumentOptions(valueToSearch, streamDocument)
@@ -190,19 +191,18 @@ function getSelectionStart(inputRef: RefObject<HTMLInputElement>) {
 /**
  * Returns the index AFTER the last `${` style open brace that is still before the cursor selection.
  */
-function getTemplateSpanIndex(
+function getTemplateExpressionIndex(
   value: string,
   selectionStart: number
-): number | undefined {
+): number | null {
   const firstHalf = value.substring(0, selectionStart)
   const lastOpenBraceIndex = firstHalf.lastIndexOf('${')
   if (lastOpenBraceIndex < 0) {
-    return
+    return null
   }
   const lastCloseBraceIndex = firstHalf.lastIndexOf('}')
   if (lastCloseBraceIndex >= 0 && lastCloseBraceIndex > lastOpenBraceIndex) {
-    console.warn('last close brace after last open brace', lastCloseBraceIndex, lastOpenBraceIndex)
-    return
+    return null
   }
   return lastOpenBraceIndex + 2
 }
@@ -232,8 +232,4 @@ function getStreamDocumentOptions(
   return Object.keys(documentNode)
     .filter(d => d.startsWith(currentSuffix))
     .filter((_, i) => i < 10)
-}
-
-function isTemplateString(value: string): boolean {
-  return value.startsWith('`') && value.endsWith('`') && value.length >= 2
 }

@@ -12,9 +12,7 @@ export default class CustomPointerSensor extends PointerSensor {
         if (
           !event.isPrimary ||
           event.button !== 0 ||
-          !(e.target instanceof HTMLElement) ||
-          isInteractiveElement(event.target) ||
-          window.getComputedStyle(e.target)['cursor'] !== 'grab'
+          !elementShouldBeDraggable(event.target)
         ) {
           return false
         }
@@ -26,8 +24,8 @@ export default class CustomPointerSensor extends PointerSensor {
   ]
 }
 
-function isInteractiveElement(element: EventTarget | null) {
-  if (!element || !(element instanceof Element) || !element?.tagName) {
+function elementShouldBeDraggable(element: EventTarget | null) {
+  if (!element || !(element instanceof HTMLElement) || !element?.tagName) {
     return false
   }
 
@@ -39,5 +37,9 @@ function isInteractiveElement(element: EventTarget | null) {
     'option',
   ]
 
-  return interactiveElements.includes(element.tagName.toLowerCase())
+  if (interactiveElements.includes(element.tagName.toLowerCase())) {
+    return false
+  }
+
+  return window.getComputedStyle(element)['cursor'] !== 'grab'
 }
