@@ -4,6 +4,11 @@ import { v1 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../client/utils/getPreviewProps'
 import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
 
+/**
+ * These are stream properties that will throw an error if specified within a {@link Stream.fields}, with
+ * the exception of `id` (at the time of writing), and should always be present in localData even
+ * if not specifically asked for.
+ */
 const INFRA_STREAM_PROPERTIES = [
   '__',
   'businessId',
