@@ -9,7 +9,7 @@ import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../..
  * the exception of `id` (at the time of writing), and should always be present in localData even
  * if not specifically asked for.
  */
-const INFRA_STREAM_PROPERTIES = [
+const NON_FIELD_PROPERTIES = [
   '__',
   'businessId',
   'id',
@@ -29,7 +29,7 @@ export default function getUpdatedStreamConfig(
   const streamValues = getStreamValues(componentsState)
   const usedDocumentPaths = getUsedDocumentPaths(streamValues)
   const fields = [...usedDocumentPaths]
-    .filter(documentPath => !INFRA_STREAM_PROPERTIES.includes(documentPath))
+    .filter(documentPath => !NON_FIELD_PROPERTIES.includes(documentPath))
     .map(documentPath => documentPath.split('document.')[1])
 
   return {
