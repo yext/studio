@@ -31,7 +31,7 @@ export default function Banner(props: BannerProps) {
         {props.title || 'Default Title'}
       </h1>
       <h3>{props.subtitleUsingStreams}</h3>
-      {props.randomNum && <h2>{JSON.stringify(props.randomNum)}</h2>}
+      {props.randomNum && <h2>{props.randomNum}</h2>}
       <h3>{props.someBool ? 'true' : 'false'}</h3>
     </div>
   );

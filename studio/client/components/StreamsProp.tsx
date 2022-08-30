@@ -59,7 +59,7 @@ export default function StreamsProp(props: {
               } else if (e.key === 'ArrowUp') {
                 e.preventDefault()
                 setAutocompleteIndex((options.length + autocompleteIndex - 1) % options.length)
-              } else if (e.key === 'Enter') {
+              } else if (e.key === 'Enter' && options.length > 0) {
                 insertAutocompleteValue(options[autocompleteIndex])
               }
             }}
@@ -108,17 +108,16 @@ export default function StreamsProp(props: {
     }
 
     if (propType === PropTypes.StreamsString && isTemplateString(propValue)) {
-      const templateExprIndex = getTemplateExpressionIndex(propValue, selectionStart)
-      if (templateExprIndex === null) {
+      const expressionStartIndex = getTemplateExpressionIndex(propValue, selectionStart)
+      if (expressionStartIndex === null) {
         return
       }
-      const prefix = propValue.substring(0, templateExprIndex)
-      const alreadyHasClosingBrace = propValue.substring(templateExprIndex).includes('}')
-      const expressionEndIndex = alreadyHasClosingBrace
-        ? templateExprIndex + propValue.substring(templateExprIndex).indexOf('}')
-        : propValue.length - 1
-      const streamsDataExpression = propValue.substring(templateExprIndex, expressionEndIndex)
+      const prefix = propValue.substring(0, expressionStartIndex)
+      const alreadyHasClosingBrace = propValue.substring(expressionStartIndex).split(' ')[0].includes('}')
+      const expressionEndIndex = getExpressionEndIndex(propValue, expressionStartIndex)
+      const streamsDataExpression = propValue.substring(expressionStartIndex, expressionEndIndex)
       const suffix = propValue.substring(expressionEndIndex)
+
       let newValue = prefix + getUpdatedValue(streamsDataExpression, value)
       const newSelectionIndex = newValue.length
       if (!alreadyHasClosingBrace) {
@@ -132,6 +131,19 @@ export default function StreamsProp(props: {
       onChange(newValue)
     }
   }
+}
+
+/**
+ * Given the current propValue, and the startIndex of the `${` for the expression
+ * we're interested in, get the end index for this expression.
+ */
+function getExpressionEndIndex(propValue: string, startIndex: number) {
+  const truncated = propValue.substring(startIndex)
+  const whitespaceIndex = truncated.indexOf(' ')
+  const closingBraceIndex = truncated.indexOf('}')
+  const indexBeforeBacktik = truncated.length - 1
+  const nonNegativeValues = [whitespaceIndex, closingBraceIndex, indexBeforeBacktik].filter(v => v >= 0)
+  return startIndex + Math.min(...nonNegativeValues)
 }
 
 /**
