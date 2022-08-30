@@ -6,6 +6,8 @@ import { PropTypes } from '../../types'
 import { KGLogo } from './KGLogo'
 import isTemplateString from '../utils/isTemplateString'
 import getStreamDocumentOptions from '../utils/getStreamDocumentOptions'
+import getExpressionEndIndex from '../utils/getExpressionEndIndex'
+import getTemplateExpressionIndex from '../utils/getTemplateExpressionIndex'
 
 export default function StreamsProp(props: {
   propName: string,
@@ -134,19 +136,6 @@ export default function StreamsProp(props: {
 }
 
 /**
- * Given the current propValue, and the startIndex of the `${` for the expression
- * we're interested in, get the end index for this expression.
- */
-function getExpressionEndIndex(propValue: string, startIndex: number) {
-  const truncated = propValue.substring(startIndex)
-  const whitespaceIndex = truncated.indexOf(' ')
-  const closingBraceIndex = truncated.indexOf('}')
-  const indexBeforeBacktik = truncated.length - 1
-  const nonNegativeValues = [whitespaceIndex, closingBraceIndex, indexBeforeBacktik].filter(v => v >= 0)
-  return startIndex + Math.min(...nonNegativeValues)
-}
-
-/**
  * Given a certain `streamsDataExpression` like `'document.addr'` that needs the last part of the
  * expression to be autocompleted to a certain `newValue` like `'address'`, return the updated value.
  * For the above example `'document.address'` would be returned.
@@ -198,24 +187,5 @@ function getSelectionStart(inputRef: RefObject<HTMLInputElement>) {
     return null
   }
   return inputRef.current.selectionStart
-}
-
-/**
- * Returns the index AFTER the last `${` style open brace that is still before the cursor selection.
- */
-function getTemplateExpressionIndex(
-  value: string,
-  selectionStart: number
-): number | null {
-  const firstHalf = value.substring(0, selectionStart)
-  const lastOpenBraceIndex = firstHalf.lastIndexOf('${')
-  if (lastOpenBraceIndex < 0) {
-    return null
-  }
-  const lastCloseBraceIndex = firstHalf.lastIndexOf('}')
-  if (lastCloseBraceIndex >= 0 && lastCloseBraceIndex > lastOpenBraceIndex) {
-    return null
-  }
-  return lastOpenBraceIndex + 2
 }
 
