@@ -1,11 +1,11 @@
 import { ToolTip } from './PropEditor'
 import { useStudioContext } from './useStudioContext'
-import lodashGet from 'lodash/get.js'
 import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import useRootClose from '@restart/ui/useRootClose'
 import { PropTypes } from '../../types'
 import { KGLogo } from './KGLogo'
 import isTemplateString from '../utils/isTemplateString'
+import getStreamDocumentOptions from '../utils/getStreamDocumentOptions'
 
 export default function StreamsProp(props: {
   propName: string,
@@ -219,28 +219,3 @@ function getTemplateExpressionIndex(
   return lastOpenBraceIndex + 2
 }
 
-/**
- * Returns the available stream document autocomplete options, given a certain value.
- */
-function getStreamDocumentOptions(
-  value: string | undefined,
-  streamDocument: Record<string, any>
-): string[] {
-  if (!value || 'document'.startsWith(value)) {
-    return ['document.']
-  } else if (!value.startsWith('document.')) {
-    return []
-  }
-  const currentSuffix = value.split('.').pop() ?? ''
-  const parentPath = value.substring(0, value.lastIndexOf('.'))
-  const documentNode = lodashGet({ document: streamDocument }, value)
-    ?? lodashGet({ document: streamDocument }, parentPath, streamDocument)
-
-  if (Array.isArray(documentNode) || typeof documentNode !== 'object') {
-    return []
-  }
-
-  return Object.keys(documentNode)
-    .filter(d => d.startsWith(currentSuffix))
-    .filter((_, i) => i < 10)
-}
