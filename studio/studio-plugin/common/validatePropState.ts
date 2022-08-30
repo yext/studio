@@ -2,7 +2,7 @@ import { PropTypes, PropStateTypes } from '../../types'
 
 export function validatePropState(propState: {
   type: PropTypes,
-  value: string | number | boolean
+  value: unknown
 }): propState is PropStateTypes {
   const { type, value } = propState
   switch (type) {

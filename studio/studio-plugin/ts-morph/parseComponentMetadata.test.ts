@@ -15,10 +15,22 @@ it('updates correctly', () => {
   expect(componentMetadata).toEqual({
     importIdentifier: expect.stringContaining('components/Banner.tsx'),
     initialProps: {
-      title: 'Title',
-      randomNum: 42,
-      someBool: true,
-      backgroundColor: '#ffff00'
+      title: {
+        type: PropTypes.string,
+        value: 'Title'
+      },
+      randomNum: {
+        type: PropTypes.number,
+        value: 42
+      },
+      someBool: {
+        type: PropTypes.boolean,
+        value: true
+      },
+      backgroundColor: {
+        type: PropTypes.HexColor,
+        value: '#ffff00'
+      }
     },
     propShape: {
       title: {

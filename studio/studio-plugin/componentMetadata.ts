@@ -14,24 +14,28 @@ const npmComponentProps =
     return shapes
   }, {} as Record<keyof typeof studioConfig['npmComponents'], ModuleMetadata>)
 
-const localComponents = fs.readdirSync(getRootPath('src/components'), 'utf-8').reduce((prev, curr) => {
-  const componentName = curr.substring(0, curr.lastIndexOf('.'))
-  prev[componentName] = parseComponentMetadata(
-    getSourceFile(getRootPath(`src/components/${curr}`)),
-    getRootPath(`src/components/${curr}`),
-    `${componentName}Props`
-  )
-  return prev
-}, {})
+const localComponents: ModuleMetadata = fs
+  .readdirSync(getRootPath('src/components'), 'utf-8')
+  .reduce((prev, curr) => {
+    const componentName = curr.substring(0, curr.lastIndexOf('.'))
+    prev[componentName] = parseComponentMetadata(
+      getSourceFile(getRootPath(`src/components/${curr}`)),
+      getRootPath(`src/components/${curr}`),
+      `${componentName}Props`
+    )
+    return prev
+  }, {})
 
-const localLayouts = fs.readdirSync(getRootPath('src/layouts'), 'utf-8').reduce((prev, curr) => {
-  const componentName = curr.substring(0, curr.lastIndexOf('.'))
-  prev[componentName] = {
-    editable: false,
-    importIdentifier: path.relative(pathToPagePreview, getRootPath(`src/layouts/${curr}`))
-  }
-  return prev
-}, {} as ModuleMetadata)
+const localLayouts: ModuleMetadata = fs
+  .readdirSync(getRootPath('src/layouts'), 'utf-8')
+  .reduce((prev, curr) => {
+    const componentName = curr.substring(0, curr.lastIndexOf('.'))
+    prev[componentName] = {
+      editable: false,
+      importIdentifier: path.relative(pathToPagePreview, getRootPath(`src/layouts/${curr}`))
+    }
+    return prev
+  }, {} as ModuleMetadata)
 
 export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   localComponents,

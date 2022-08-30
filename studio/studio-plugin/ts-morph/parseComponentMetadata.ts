@@ -2,7 +2,7 @@ import { ComponentMetadata } from '../../shared/models'
 import { ts, SourceFile } from 'ts-morph'
 import { parsePropertyStructures } from '../common'
 import path from 'path'
-import parseInitialProps from './parseInitialProps'
+import { parseInitialProps } from './parseInitialProps'
 
 export const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
 
@@ -19,9 +19,10 @@ export default function parseComponentMetadata(
     throw new Error(`No interface found with name "${interfaceName}" in file "${filePath}"`)
   }
   const properties = propsInterface.getStructure().properties ?? []
+  const propShape = parsePropertyStructures(properties, filePath)
   return {
-    propShape: parsePropertyStructures(properties, filePath),
-    initialProps: parseInitialProps(sourceFile),
+    propShape,
+    initialProps: parseInitialProps(sourceFile, propShape),
     editable: true,
     importIdentifier: getImportIdentifier()
   }

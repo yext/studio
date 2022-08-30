@@ -1,18 +1,14 @@
 import { SourceFile, ts } from 'ts-morph'
-import { PropState } from '../../shared/models'
-import { parseObjectLiteralExpression } from '../common'
+import { PropShape, PropState } from '../../shared/models'
+import { getPropsState } from '../common'
 
-export default function parseInitialProps(sourceFile: SourceFile): PropState {
+export function parseInitialProps(sourceFile: SourceFile, propShape: PropShape): PropState {
   const initialPropsSymbol = sourceFile.getExportSymbols().find(s => s.compilerSymbol.escapedName === 'initialProps')
   if (!initialPropsSymbol) {
     return {}
   }
-
-  const initialProps =
-    initialPropsSymbol?.getValueDeclaration()?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
-  if (!initialProps) {
-    return {}
-  }
-
-  return parseObjectLiteralExpression(initialProps)
+  const initialPropsLiteralExp = initialPropsSymbol
+    .getValueDeclaration()
+    ?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
+  return initialPropsLiteralExp ? getPropsState(initialPropsLiteralExp, propShape) : {}
 }
