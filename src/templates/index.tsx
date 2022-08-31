@@ -8,7 +8,8 @@ import {
   TemplateRenderProps,
 } from '@yext/pages'
 import '../index.css'
-import Announcement, { globalProps } from '../components/Announcement'
+import Footer, { globalProps as footerProps } from '../components/Footer'
+import Header, { globalProps as headerProps } from '../components/Header'
 
 export const config: TemplateConfig = {
   stream: {
@@ -26,7 +27,7 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <TestLayout>
-      <Announcement {...globalProps}/>
+      <Header {...headerProps}/>
       <Banner
         randomNum={document.address.city.bob}
         subtitleUsingStreams={document.id}
@@ -42,7 +43,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         someBool={true}
         anotherColor='#9c8181'
       />
-      <Announcement {...globalProps}/>
+      <Footer {...footerProps}/>
     </TestLayout>
   )
 }
