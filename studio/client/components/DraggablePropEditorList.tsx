@@ -9,6 +9,7 @@ import { useStudioContext } from './useStudioContext'
 import { useEffect, useMemo, useState } from 'react'
 import CustomPointerSensor from '../dragAndDrop/CustomPointerSensor'
 import { PropState } from '../../shared/models'
+import PropEditor from './PropEditor'
 
 export default function DraggablePropEditorList() {
   const { pageState, setPageState, moduleNameToComponentMetadata } = useStudioContext()
@@ -77,16 +78,21 @@ export default function DraggablePropEditorList() {
             // console.error('unknown component', c.name, 'gracefully skipping for now.')
             return null
           }
-
-          return (
-            <DraggablePropEditor
+          return c.global
+            ? (<div key={c.uuid} className='border-4 border-black m-2 px-2 py-2'>
+              <PropEditor
+                propState={c.props}
+                setPropState={setPropState}
+                componentMetadata={moduleNameToComponentMetadata[c.moduleName][c.name]}
+              />
+            </div>)
+            : (<DraggablePropEditor
               uuid={c.uuid}
               key={c.uuid}
               propState={c.props}
               componentMetadata={moduleNameToComponentMetadata[c.moduleName][c.name]}
               setPropState={setPropState}
-            />
-          )
+            />)
         })}
       </SortableContext>
     </DndContext>

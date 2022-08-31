@@ -5,11 +5,13 @@ export type PageState = {
   layoutState: ComponentState,
   componentsState: ComponentState[]
 }
+
 export interface ComponentState {
   name: string,
   props: PropState,
   uuid: string,
-  moduleName: PossibleModuleNames | 'builtIn'
+  moduleName: PossibleModuleNames | 'builtIn',
+  global?: boolean
 }
 
 export type PropState = {
@@ -26,9 +28,17 @@ export type ModuleMetadata = {
 export type ComponentMetadata = {
   propShape?: PropShape,
   initialProps?: PropState,
+  global?: boolean,
   editable: boolean,
   importIdentifier: string
 }
+
+// export type EditorConfig = {
+//   movable?: boolean,
+//   removable?: boolean,
+//   addable?: boolean
+// }
+
 export type PropShape = {
   [propName: string]: PropMetadata
 }

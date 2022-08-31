@@ -8,17 +8,14 @@ import {
   TemplateRenderProps,
 } from '@yext/pages'
 import '../index.css'
+import Announcement, { globalProps } from '../components/Announcement'
 
 export const config: TemplateConfig = {
   stream: {
     $id: 'studio-stream-id',
     filter: { entityTypes: ['ce_person'] },
     localization: { locales: ['en'], primary: false },
-    fields: [
-      'document.address.city.bob',
-      'document.emails',
-      'document.lastName',
-    ],
+    fields: ['address.city.bob', 'id', 'emails', 'lastName'],
   },
 }
 
@@ -29,6 +26,7 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <TestLayout>
+      <Announcement {...globalProps}/>
       <Banner
         randomNum={document.address.city.bob}
         subtitleUsingStreams={document.id}
@@ -37,13 +35,14 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         someBool={true}
         anotherColor='#45de0d'
       />
-      <Banner
+      <Banner 
         title='<Insert Titl2'
         randomNum={document.emails[1]}
         subtitleUsingStreams={`${document.lastName}`}
         someBool={true}
         anotherColor='#9c8181'
       />
+      <Announcement {...globalProps}/>
     </TestLayout>
   )
 }

@@ -1,8 +1,7 @@
-import { ComponentMetadata } from '../../shared/models'
+import { ComponentMetadata, PropShape, PropState } from '../../shared/models'
 import { ts, SourceFile } from 'ts-morph'
-import { parsePropertyStructures } from '../common'
+import { getPropsState, parsePropertyStructures } from '../common'
 import path from 'path'
-import { parseInitialProps } from './parseInitialProps'
 
 export const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
 
@@ -20,15 +19,34 @@ export default function parseComponentMetadata(
   }
   const properties = propsInterface.getStructure().properties ?? []
   const propShape = parsePropertyStructures(properties, filePath)
-  return {
+  const componentMetaData: ComponentMetadata = {
     propShape,
-    initialProps: parseInitialProps(sourceFile, propShape),
     editable: true,
+    initialProps: parseInitialProps(sourceFile, propShape),
     importIdentifier: getImportIdentifier()
   }
+  const isGlobalComponent = !!sourceFile.getExportSymbols().find(s => s.getEscapedName() === 'globalProps')
+  if (isGlobalComponent) {
+    componentMetaData.editable = false
+    componentMetaData.global = true
+  }
+  return componentMetaData
 
   function getImportIdentifier() {
     if (importIdentifier) return importIdentifier
     return path.relative(pathToPagePreview, filePath)
   }
+}
+
+export function parseInitialProps(sourceFile: SourceFile, propShape: PropShape): PropState {
+  const exportSymbols = sourceFile.getExportSymbols()
+  const propSymbol = exportSymbols.find(s => s.getEscapedName() === 'globalProps')
+    ?? exportSymbols.find(s => s.getEscapedName() === 'initialProps')
+  if (!propSymbol) {
+    return {}
+  }
+  const initialPropsLiteralExp = propSymbol
+    .getValueDeclaration()
+    ?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
+  return initialPropsLiteralExp ? getPropsState(initialPropsLiteralExp, propShape) : {}
 }
