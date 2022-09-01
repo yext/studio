@@ -26,6 +26,7 @@
     "vite.config.ts"
   ],
   "exclude": [
-    "**/__fixtures__/**"
+    "**/__fixtures__/**",
+    "**/__mocks__/**"
   ]
 }

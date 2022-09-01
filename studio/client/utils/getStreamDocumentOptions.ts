@@ -5,7 +5,7 @@ import lodashGet from 'lodash/get.js'
 */
 export default function getStreamDocumentOptions(
   value: string | undefined,
-  streamDocument: Record<string, any>
+  streamDocument: Record<string, unknown>
 ): string[] {
   if (!value || 'document'.startsWith(value)) {
     return ['document.']

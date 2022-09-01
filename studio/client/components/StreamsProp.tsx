@@ -55,13 +55,16 @@ export default function StreamsProp(props: {
               onChange(e.target.value)
             }}
             onKeyDown={e => {
+              if (options.length === 0) {
+                return
+              }
               if (e.key === 'ArrowDown') {
                 e.preventDefault()
                 setAutocompleteIndex((autocompleteIndex + 1) % options.length)
               } else if (e.key === 'ArrowUp') {
                 e.preventDefault()
                 setAutocompleteIndex((options.length + autocompleteIndex - 1) % options.length)
-              } else if (e.key === 'Enter' && options.length > 0) {
+              } else if (e.key === 'Enter') {
                 insertAutocompleteValue(options[autocompleteIndex])
               }
             }}
