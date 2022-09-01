@@ -2,7 +2,7 @@
  * Returns the index AFTER the last `${` style open brace that is still before the cursor selection.
  */
 export default function getTemplateExpressionIndex(
-  value: string,
+  value: `${string}`,
   selectionStart: number
 ): number | null {
   const firstHalf = value.substring(0, selectionStart)
