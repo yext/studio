@@ -27,12 +27,13 @@ function getPropsInterfaceDeclaration(
 
   // props interface imported from another file
   let importSpecifier: ImportSpecifier | undefined
-  sourceFile.getDescendantsOfKind(ts.SyntaxKind.NamedImports).forEach(n => {
+  sourceFile.getDescendantsOfKind(ts.SyntaxKind.NamedImports).some(n => {
     importSpecifier = n.getChildrenOfKind(ts.SyntaxKind.ImportSpecifier).find(importSpecifier => {
       return importSpecifier
         .getChildrenOfKind(ts.SyntaxKind.Identifier)
         .find(identifier => identifier.getText() === interfaceName)
     })
+    return !!importSpecifier
   })
   if (!importSpecifier) {
     throw new Error(`No interface found with name "${interfaceName}" in file "${filePath}"`)

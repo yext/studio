@@ -24,13 +24,21 @@ export type PossibleModuleNames = keyof typeof studioConfig['npmComponents'] | '
 export type ModuleMetadata = {
   [componentName: string]: ComponentMetadata
 }
-export type ComponentMetadata = {
+
+export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaData
+type CommonComponentMetaData = {
   propShape?: PropShape,
-  initialProps?: PropState,
-  global?: boolean,
   editable: boolean,
   importIdentifier: string
 }
+type StandardComponentMetaData = {
+  global: false,
+  initialProps?: PropState
+} & CommonComponentMetaData
+type GlobalComponentMetaData = {
+  global: true,
+  globalProps?: PropState
+} & CommonComponentMetaData
 
 export type PropShape = {
   [propName: string]: PropMetadata

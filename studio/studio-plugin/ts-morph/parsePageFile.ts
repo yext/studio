@@ -31,7 +31,7 @@ export default function parsePageFile(filePath: string): PageState {
     }
     const componentMetaData = moduleNameToComponentMetadata[moduleName][name]
     componentData.props = componentMetaData.global
-      ? componentMetaData.initialProps ?? {}
+      ? componentMetaData.globalProps ?? {}
       : parseComponentJsxAttributes(n, componentMetaData)
     componentsState.push(componentData)
   })

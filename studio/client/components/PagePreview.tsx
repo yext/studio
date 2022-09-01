@@ -92,7 +92,7 @@ function useComponents(
     }
     const { importIdentifier }: ComponentMetadata = moduleNameToComponentMetadata[moduleName][name]
     if (moduleName === 'localComponents') {
-      const componentFilePath = `${directoryPath}/${importIdentifier.substring(importIdentifier.lastIndexOf('/') + 1)}`
+      const componentFilePath = `${directoryPath}/${importIdentifier.split('/').at(-1)}`
       return modules[componentFilePath]().then(module => {
         componentNameToComponent[name] = getFunctionComponent(module, name)
       })

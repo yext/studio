@@ -12,17 +12,23 @@ export default function parseComponentMetadata(
   importIdentifier?: string
 ): ComponentMetadata {
   const propShape = getPropShape(sourceFile, filePath, interfaceName)
-  const componentMetaData: ComponentMetadata = {
-    propShape,
-    editable: true,
-    initialProps: parseInitialProps(),
-    importIdentifier: getImportIdentifier()
-  }
   if (isGlobalComponent()) {
-    componentMetaData.editable = false
-    componentMetaData.global = true
+    return {
+      propShape,
+      global: true,
+      editable: false,
+      globalProps: parseComponentPropsValue('globalProps'),
+      importIdentifier: getImportIdentifier(),
+    }
+  } else {
+    return {
+      propShape,
+      global: false,
+      editable: true,
+      initialProps: parseComponentPropsValue('initialProps'),
+      importIdentifier: getImportIdentifier()
+    }
   }
-  return componentMetaData
 
   function getImportIdentifier(): string {
     if (importIdentifier) return importIdentifier
@@ -33,10 +39,9 @@ export default function parseComponentMetadata(
     return filePath.endsWith('.global.tsx')
   }
 
-  function parseInitialProps(): PropState {
+  function parseComponentPropsValue(propsVariableName: string): PropState {
     const exportSymbols = sourceFile.getExportSymbols()
-    const propSymbol = exportSymbols.find(s => s.getEscapedName() === 'globalProps')
-      ?? exportSymbols.find(s => s.getEscapedName() === 'initialProps')
+    const propSymbol = exportSymbols.find(s => s.getEscapedName() === propsVariableName)
     if (!propSymbol) {
       return {}
     }

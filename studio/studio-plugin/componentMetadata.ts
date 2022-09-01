@@ -31,6 +31,7 @@ const localLayouts: ModuleMetadata = fs
   .reduce((prev, curr) => {
     const componentName = curr.substring(0, curr.indexOf('.'))
     prev[componentName] = {
+      global: false,
       editable: false,
       importIdentifier: path.relative(pathToPagePreview, getRootPath(`src/layouts/${curr}`))
     }
