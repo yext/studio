@@ -17,7 +17,7 @@ function getPropsInterfaceDeclaration(
   const propsInterface = sourceFile.getDescendantsOfKind(ts.SyntaxKind.InterfaceDeclaration).find(n => {
     return n.getName() === interfaceName
   })
-  // props interface defined the same file
+  // props interface defined in the same file
   if (propsInterface) {
     return {
       propsInterfaceNode: propsInterface,
@@ -25,7 +25,7 @@ function getPropsInterfaceDeclaration(
     }
   }
 
-  // props interface imported in another file
+  // props interface imported from another file
   let importSpecifier: ImportSpecifier | undefined
   sourceFile.getDescendantsOfKind(ts.SyntaxKind.NamedImports).forEach(n => {
     importSpecifier = n.getChildrenOfKind(ts.SyntaxKind.ImportSpecifier).find(importSpecifier => {
