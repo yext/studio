@@ -5,6 +5,7 @@ export type PageState = {
   layoutState: ComponentState,
   componentsState: ComponentState[]
 }
+
 export interface ComponentState {
   name: string,
   props: PropState,
@@ -23,12 +24,22 @@ export type PossibleModuleNames = keyof typeof studioConfig['npmComponents'] | '
 export type ModuleMetadata = {
   [componentName: string]: ComponentMetadata
 }
-export type ComponentMetadata = {
+
+export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaData
+type CommonComponentMetaData = {
   propShape?: PropShape,
-  initialProps?: PropState,
   editable: boolean,
   importIdentifier: string
 }
+export type StandardComponentMetaData = {
+  global: false,
+  initialProps?: PropState
+} & CommonComponentMetaData
+export type GlobalComponentMetaData = {
+  global: true,
+  globalProps?: PropState
+} & CommonComponentMetaData
+
 export type PropShape = {
   [propName: string]: PropMetadata
 }

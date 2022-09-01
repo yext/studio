@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { v1 } from 'uuid'
-import { PossibleModuleNames } from '../../shared/models'
+import { PossibleModuleNames, StandardComponentMetaData } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 
 export default function AddComponentButton() {
@@ -21,7 +21,10 @@ export default function AddComponentButton() {
         <label className="btn m-1" tabIndex={0}>Add Component</label>
         <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" tabIndex={0}>
           {Object.entries(moduleNameToComponentMetadata[moduleName])
-            .filter(([_, data]) => data.editable)
+            .filter((moduleMetadataEntry): moduleMetadataEntry is [string, StandardComponentMetaData] => {
+              const [_, data] = moduleMetadataEntry
+              return !data.global && data.editable
+            })
             .map(([name, data]) => (
               <li key={name}>
                 <button onClick={() => {

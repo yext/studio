@@ -20,6 +20,7 @@ export default function parseNpmComponents(
   // We may want to not use the same object reference over in the future
   // But for now this should never be mutated
   const errorMetadataValue: ComponentMetadata = {
+    global: false,
     propShape: {},
     initialProps: {},
     editable: false,
@@ -52,6 +53,7 @@ export default function parseNpmComponents(
       const properties = typeNode.getProperties().map(p => p.getStructure())
       const propShape = parsePropertyStructures(properties, absPath)
       componentsToProps[componentName] = {
+        global: false,
         propShape,
         initialProps: {},
         importIdentifier,

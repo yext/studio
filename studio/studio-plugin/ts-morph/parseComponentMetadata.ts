@@ -1,8 +1,7 @@
-import { ComponentMetadata } from '../../shared/models'
+import { ComponentMetadata, PropState } from '../../shared/models'
 import { ts, SourceFile } from 'ts-morph'
-import { parsePropertyStructures } from '../common'
+import { getPropShape, getPropsState } from '../common'
 import path from 'path'
-import { parseInitialProps } from './parseInitialProps'
 
 export const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
 
@@ -12,23 +11,43 @@ export default function parseComponentMetadata(
   interfaceName: string,
   importIdentifier?: string
 ): ComponentMetadata {
-  const propsInterface = sourceFile.getDescendantsOfKind(ts.SyntaxKind.InterfaceDeclaration).find(n => {
-    return n.getName() === interfaceName
-  })
-  if (!propsInterface) {
-    throw new Error(`No interface found with name "${interfaceName}" in file "${filePath}"`)
-  }
-  const properties = propsInterface.getStructure().properties ?? []
-  const propShape = parsePropertyStructures(properties, filePath)
-  return {
-    propShape,
-    initialProps: parseInitialProps(sourceFile, propShape),
-    editable: true,
-    importIdentifier: getImportIdentifier()
+  const propShape = getPropShape(sourceFile, filePath, interfaceName)
+  if (isGlobalComponent()) {
+    return {
+      propShape,
+      global: true,
+      editable: false,
+      globalProps: parseComponentPropsValue('globalProps'),
+      importIdentifier: getImportIdentifier(),
+    }
+  } else {
+    return {
+      propShape,
+      global: false,
+      editable: true,
+      initialProps: parseComponentPropsValue('initialProps'),
+      importIdentifier: getImportIdentifier()
+    }
   }
 
-  function getImportIdentifier() {
+  function getImportIdentifier(): string {
     if (importIdentifier) return importIdentifier
     return path.relative(pathToPagePreview, filePath)
+  }
+
+  function isGlobalComponent(): boolean {
+    return filePath.endsWith('.global.tsx')
+  }
+
+  function parseComponentPropsValue(propsVariableName: string): PropState {
+    const exportSymbols = sourceFile.getExportSymbols()
+    const propSymbol = exportSymbols.find(s => s.getEscapedName() === propsVariableName)
+    if (!propSymbol) {
+      return {}
+    }
+    const initialPropsLiteralExp = propSymbol
+      .getValueDeclaration()
+      ?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
+    return initialPropsLiteralExp ? getPropsState(initialPropsLiteralExp, propShape) : {}
   }
 }
