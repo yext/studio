@@ -31,11 +31,11 @@ type CommonComponentMetaData = {
   editable: boolean,
   importIdentifier: string
 }
-type StandardComponentMetaData = {
+export type StandardComponentMetaData = {
   global: false,
   initialProps?: PropState
 } & CommonComponentMetaData
-type GlobalComponentMetaData = {
+export type GlobalComponentMetaData = {
   global: true,
   globalProps?: PropState
 } & CommonComponentMetaData
