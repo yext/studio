@@ -1,4 +1,4 @@
-import { ComponentMetadata, PropShape, PropState } from '../../shared/models'
+import { ComponentMetadata, PropState } from '../../shared/models'
 import { ts, SourceFile } from 'ts-morph'
 import { getPropShape, getPropsState } from '../common'
 import path from 'path'
@@ -15,7 +15,7 @@ export default function parseComponentMetadata(
   const componentMetaData: ComponentMetadata = {
     propShape,
     editable: true,
-    initialProps: parseInitialProps(sourceFile, propShape),
+    initialProps: parseInitialProps(),
     importIdentifier: getImportIdentifier()
   }
   const isGlobalComponent = !!sourceFile.getExportSymbols().find(s => s.getEscapedName() === 'globalProps')
@@ -25,21 +25,21 @@ export default function parseComponentMetadata(
   }
   return componentMetaData
 
-  function getImportIdentifier() {
+  function getImportIdentifier(): string {
     if (importIdentifier) return importIdentifier
     return path.relative(pathToPagePreview, filePath)
   }
-}
 
-export function parseInitialProps(sourceFile: SourceFile, propShape: PropShape): PropState {
-  const exportSymbols = sourceFile.getExportSymbols()
-  const propSymbol = exportSymbols.find(s => s.getEscapedName() === 'globalProps')
-    ?? exportSymbols.find(s => s.getEscapedName() === 'initialProps')
-  if (!propSymbol) {
-    return {}
+  function parseInitialProps(): PropState {
+    const exportSymbols = sourceFile.getExportSymbols()
+    const propSymbol = exportSymbols.find(s => s.getEscapedName() === 'globalProps')
+      ?? exportSymbols.find(s => s.getEscapedName() === 'initialProps')
+    if (!propSymbol) {
+      return {}
+    }
+    const initialPropsLiteralExp = propSymbol
+      .getValueDeclaration()
+      ?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
+    return initialPropsLiteralExp ? getPropsState(initialPropsLiteralExp, propShape) : {}
   }
-  const initialPropsLiteralExp = propSymbol
-    .getValueDeclaration()
-    ?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
-  return initialPropsLiteralExp ? getPropsState(initialPropsLiteralExp, propShape) : {}
 }
