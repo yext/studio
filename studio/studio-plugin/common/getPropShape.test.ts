@@ -34,8 +34,8 @@ it('gets prop interface defined in the provided file path correctly', () => {
 
 it('gets prop interface from an import correctly', () => {
   const propShape = getPropShape(
-    getSourceFile(getRootPath('components/SpecificHeader.tsx')),
-    getRootPath('components/SpecificHeader.tsx'),
+    getSourceFile(getRootPath('components/SpecificHeader.global.tsx')),
+    getRootPath('components/SpecificHeader.global.tsx'),
     'SpecificHeaderProps'
   )
   const expectedPropShape: PropShape = {

@@ -17,7 +17,7 @@ const npmComponentProps =
 const localComponents: ModuleMetadata = fs
   .readdirSync(getRootPath('src/components'), 'utf-8')
   .reduce((prev, curr) => {
-    const componentName = curr.substring(0, curr.lastIndexOf('.'))
+    const componentName = curr.substring(0, curr.indexOf('.'))
     prev[componentName] = parseComponentMetadata(
       getSourceFile(getRootPath(`src/components/${curr}`)),
       getRootPath(`src/components/${curr}`),
@@ -29,7 +29,7 @@ const localComponents: ModuleMetadata = fs
 const localLayouts: ModuleMetadata = fs
   .readdirSync(getRootPath('src/layouts'), 'utf-8')
   .reduce((prev, curr) => {
-    const componentName = curr.substring(0, curr.lastIndexOf('.'))
+    const componentName = curr.substring(0, curr.indexOf('.'))
     prev[componentName] = {
       editable: false,
       importIdentifier: path.relative(pathToPagePreview, getRootPath(`src/layouts/${curr}`))

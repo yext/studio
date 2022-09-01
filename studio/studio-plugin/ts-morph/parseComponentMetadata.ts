@@ -18,8 +18,7 @@ export default function parseComponentMetadata(
     initialProps: parseInitialProps(),
     importIdentifier: getImportIdentifier()
   }
-  const isGlobalComponent = !!sourceFile.getExportSymbols().find(s => s.getEscapedName() === 'globalProps')
-  if (isGlobalComponent) {
+  if (isGlobalComponent()) {
     componentMetaData.editable = false
     componentMetaData.global = true
   }
@@ -28,6 +27,10 @@ export default function parseComponentMetadata(
   function getImportIdentifier(): string {
     if (importIdentifier) return importIdentifier
     return path.relative(pathToPagePreview, filePath)
+  }
+
+  function isGlobalComponent(): boolean {
+    return filePath.endsWith('.global.tsx')
   }
 
   function parseInitialProps(): PropState {

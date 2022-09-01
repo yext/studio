@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useEffect, useCallback, useState, useMemo } from 'react'
 import { useRef } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentState } from '../../shared/models'
+import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
@@ -90,12 +90,13 @@ function useComponents(
       componentNameToComponent[name] = React.Fragment
       return null
     }
+    const { importIdentifier }: ComponentMetadata = moduleNameToComponentMetadata[moduleName][name]
     if (moduleName === 'localComponents') {
-      return modules[`${directoryPath}/${name}.tsx`]().then(module => {
+      const componentFilePath = `${directoryPath}/${importIdentifier.substring(importIdentifier.lastIndexOf('/') + 1)}`
+      return modules[componentFilePath]().then(module => {
         componentNameToComponent[name] = getFunctionComponent(module, name)
       })
     } else {
-      const { importIdentifier } = moduleNameToComponentMetadata[moduleName][name]
       return import(importIdentifier).then(module => {
         componentNameToComponent[name] = getFunctionComponent(module, name)
       })
