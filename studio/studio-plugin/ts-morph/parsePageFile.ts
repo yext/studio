@@ -32,7 +32,7 @@ export default function parsePageFile(filePath: string): PageState {
     const componentMetaData = moduleNameToComponentMetadata[moduleName][name]
     componentData.props = componentMetaData.global
       ? componentMetaData.initialProps ?? {}
-      : getComponentJsxAttributes(n, componentMetaData)
+      : parseComponentJsxAttributes(n, componentMetaData)
     componentsState.push(componentData)
   })
 
@@ -42,7 +42,7 @@ export default function parsePageFile(filePath: string): PageState {
   }
 }
 
-function getComponentJsxAttributes(
+function parseComponentJsxAttributes(
   n: JsxOpeningElement | JsxSelfClosingElement,
   componentMetaData: ComponentMetadata
 ): PropState {

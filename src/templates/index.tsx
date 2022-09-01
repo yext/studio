@@ -8,8 +8,8 @@ import {
   TemplateRenderProps,
 } from '@yext/pages'
 import '../index.css'
-import Footer, { globalProps as footerProps } from '../components/Footer'
-import Header, { globalProps as headerProps } from '../components/Header'
+import Footer, { globalProps as footerProps } from '../components/Footer.global'
+import Header, { globalProps as headerProps } from '../components/Header.global'
 
 export const config: TemplateConfig = {
   stream: {
