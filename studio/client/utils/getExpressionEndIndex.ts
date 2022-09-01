@@ -2,7 +2,7 @@
  * Given the current propValue, and the startIndex of the `${` for the expression
  * we're interested in, get the end index for this expression.
  */
-export default function getExpressionEndIndex(propValue: `${string}`, startIndex: number) {
+export default function getExpressionEndIndex(propValue: `\`${string}\``, startIndex: number) {
   const truncated = propValue.substring(startIndex)
   const whitespaceIndex = truncated.indexOf(' ')
   const closingBraceIndex = truncated.indexOf('}')
