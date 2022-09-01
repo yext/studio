@@ -10,7 +10,7 @@ module.exports = {
         'react-perf/jsx-no-new-array-as-prop': 'off',
         'react-perf/jsx-no-new-function-as-prop': 'off',
         'react-perf/jsx-no-new-object-as-prop': 'off',
-        "@typescript-eslint/semi": ['warn', 'never']
+        '@typescript-eslint/semi': ['warn', 'never']
       }
     }
   ]

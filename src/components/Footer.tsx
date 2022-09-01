@@ -3,7 +3,7 @@ export interface FooterProps {
 }
 
 export const globalProps: FooterProps = {
-  message: 'default message'
+  message: 'default footer'
 }
 
 export default function Footer({ message }: FooterProps) {

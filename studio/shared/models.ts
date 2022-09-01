@@ -10,8 +10,7 @@ export interface ComponentState {
   name: string,
   props: PropState,
   uuid: string,
-  moduleName: PossibleModuleNames | 'builtIn',
-  global?: boolean
+  moduleName: PossibleModuleNames | 'builtIn'
 }
 
 export type PropState = {
@@ -32,12 +31,6 @@ export type ComponentMetadata = {
   editable: boolean,
   importIdentifier: string
 }
-
-// export type EditorConfig = {
-//   movable?: boolean,
-//   removable?: boolean,
-//   addable?: boolean
-// }
 
 export type PropShape = {
   [propName: string]: PropMetadata

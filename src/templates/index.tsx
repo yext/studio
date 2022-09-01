@@ -36,7 +36,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         someBool={true}
         anotherColor='#45de0d'
       />
-      <Banner 
+      <Banner
         title='<Insert Titl2'
         randomNum={document.emails[1]}
         subtitleUsingStreams={`${document.lastName}`}
