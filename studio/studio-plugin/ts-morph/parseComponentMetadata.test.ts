@@ -48,7 +48,8 @@ it('updates correctly', () => {
         type: PropTypes.HexColor
       }
     },
-    editable: true
+    editable: true,
+    global: false
   })
   expect(console.error).toBeCalledWith('Prop type ColorProp is not one of the recognized PropTypes. Skipping.')
 })
