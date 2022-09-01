@@ -15,12 +15,18 @@
     "jsx": "react-jsx",
     "target": "esnext",
     "types": [
-      "vite/client"
+      "vite/client",
+      "jest"
     ]
   },
   "include": [
     "client",
-    "yext-studio-plugin",
+    "studio-plugin",
+    "shared",
     "vite.config.ts"
+  ],
+  "exclude": [
+    "**/__fixtures__/**",
+    "**/__mocks__/**"
   ]
 }

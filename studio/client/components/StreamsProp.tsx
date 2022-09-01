@@ -1,11 +1,13 @@
 import { ToolTip } from './PropEditor'
 import { useStudioContext } from './useStudioContext'
-import lodashGet from 'lodash/get.js'
 import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import useRootClose from '@restart/ui/useRootClose'
 import { PropTypes } from '../../types'
 import { KGLogo } from './KGLogo'
 import isTemplateString from '../utils/isTemplateString'
+import getStreamDocumentOptions from '../utils/getStreamDocumentOptions'
+import getExpressionEndIndex from '../utils/getExpressionEndIndex'
+import getTemplateExpressionIndex from '../utils/getTemplateExpressionIndex'
 
 export default function StreamsProp(props: {
   propName: string,
@@ -53,6 +55,9 @@ export default function StreamsProp(props: {
               onChange(e.target.value)
             }}
             onKeyDown={e => {
+              if (options.length === 0) {
+                return
+              }
               if (e.key === 'ArrowDown') {
                 e.preventDefault()
                 setAutocompleteIndex((autocompleteIndex + 1) % options.length)
@@ -108,17 +113,16 @@ export default function StreamsProp(props: {
     }
 
     if (propType === PropTypes.StreamsString && isTemplateString(propValue)) {
-      const templateExprIndex = getTemplateExpressionIndex(propValue, selectionStart)
-      if (templateExprIndex === null) {
+      const expressionStartIndex = getTemplateExpressionIndex(propValue, selectionStart)
+      if (expressionStartIndex === null) {
         return
       }
-      const prefix = propValue.substring(0, templateExprIndex)
-      const alreadyHasClosingBrace = propValue.substring(templateExprIndex).includes('}')
-      const expressionEndIndex = alreadyHasClosingBrace
-        ? templateExprIndex + propValue.substring(templateExprIndex).indexOf('}')
-        : propValue.length - 1
-      const streamsDataExpression = propValue.substring(templateExprIndex, expressionEndIndex)
+      const prefix = propValue.substring(0, expressionStartIndex)
+      const alreadyHasClosingBrace = propValue.substring(expressionStartIndex).split(' ')[0].includes('}')
+      const expressionEndIndex = getExpressionEndIndex(propValue, expressionStartIndex)
+      const streamsDataExpression = propValue.substring(expressionStartIndex, expressionEndIndex)
       const suffix = propValue.substring(expressionEndIndex)
+
       let newValue = prefix + getUpdatedValue(streamsDataExpression, value)
       const newSelectionIndex = newValue.length
       if (!alreadyHasClosingBrace) {
@@ -188,47 +192,3 @@ function getSelectionStart(inputRef: RefObject<HTMLInputElement>) {
   return inputRef.current.selectionStart
 }
 
-/**
- * Returns the index AFTER the last `${` style open brace that is still before the cursor selection.
- */
-function getTemplateExpressionIndex(
-  value: string,
-  selectionStart: number
-): number | null {
-  const firstHalf = value.substring(0, selectionStart)
-  const lastOpenBraceIndex = firstHalf.lastIndexOf('${')
-  if (lastOpenBraceIndex < 0) {
-    return null
-  }
-  const lastCloseBraceIndex = firstHalf.lastIndexOf('}')
-  if (lastCloseBraceIndex >= 0 && lastCloseBraceIndex > lastOpenBraceIndex) {
-    return null
-  }
-  return lastOpenBraceIndex + 2
-}
-
-/**
- * Returns the available stream document autocomplete options, given a certain value.
- */
-function getStreamDocumentOptions(
-  value: string | undefined,
-  streamDocument: Record<string, any>
-): string[] {
-  if (!value || 'document'.startsWith(value)) {
-    return ['document.']
-  } else if (!value.startsWith('document.')) {
-    return []
-  }
-  const currentSuffix = value.split('.').pop() ?? ''
-  const parentPath = value.substring(0, value.lastIndexOf('.'))
-  const documentNode = lodashGet({ document: streamDocument }, value)
-    ?? lodashGet({ document: streamDocument }, parentPath, streamDocument)
-
-  if (Array.isArray(documentNode) || typeof documentNode !== 'object') {
-    return []
-  }
-
-  return Object.keys(documentNode)
-    .filter(d => d.startsWith(currentSuffix))
-    .filter((_, i) => i < 10)
-}
