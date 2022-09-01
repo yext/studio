@@ -21,7 +21,10 @@ export default function AddComponentButton() {
         <label className="btn m-1" tabIndex={0}>Add Component</label>
         <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" tabIndex={0}>
           {Object.entries(moduleNameToComponentMetadata[moduleName])
-            .filter(([_, data]) => !data.global && data.editable)
+            .filter((moduleMetadataEntry): moduleMetadataEntry is [string, StandardComponentMetaData] => {
+              const [_, data] = moduleMetadataEntry
+              return !data.global && data.editable
+            })
             .map(([name, data]) => (
               <li key={name}>
                 <button onClick={() => {
@@ -29,7 +32,7 @@ export default function AddComponentButton() {
                     ...pageState,
                     componentsState: pageState.componentsState.concat([{
                       name,
-                      props: (data as StandardComponentMetaData).initialProps || {},
+                      props: data.initialProps || {},
                       uuid: v1(),
                       moduleName
                     }])
