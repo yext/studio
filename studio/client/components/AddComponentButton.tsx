@@ -6,7 +6,7 @@ import { useStudioContext } from './useStudioContext'
 export default function AddComponentButton() {
   const { moduleNameToComponentMetadata, pageState, setPageState } = useStudioContext()
   const [moduleName, setModuleName] = useState<PossibleModuleNames>('localComponents')
-  const moduleMetaData: ModuleMetadata = moduleNameToComponentMetadata[moduleName]
+  const moduleMetadata: ModuleMetadata = moduleNameToComponentMetadata[moduleName]
 
   const addComponentToPageState = useCallback((
     componentName: string,
@@ -19,7 +19,7 @@ export default function AddComponentButton() {
       moduleName
     }
     let i = pageState.componentsState.length - 1
-    while (i >= 0 && moduleMetaData[pageState.componentsState[i].name].global) {
+    while (i >= 0 && moduleMetadata[pageState.componentsState[i].name].global) {
       i--
     }
     const indexToInsert = i === -1 ? pageState.componentsState.length : i + 1
@@ -29,7 +29,7 @@ export default function AddComponentButton() {
       ...pageState,
       componentsState: newComponentsState
     })
-  }, [moduleMetaData, moduleName, pageState, setPageState])
+  }, [moduleMetadata, moduleName, pageState, setPageState])
 
   return (
     <>
@@ -45,7 +45,7 @@ export default function AddComponentButton() {
       <div className="dropdown mb-2">
         <label className="btn m-1" tabIndex={0}>Add Component</label>
         <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" tabIndex={0}>
-          {Object.entries(moduleMetaData)
+          {Object.entries(moduleMetadata)
             .filter((moduleMetadataEntry): moduleMetadataEntry is [string, StandardComponentMetaData] => {
               const [_, data] = moduleMetadataEntry
               return !data.global && data.editable

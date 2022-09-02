@@ -67,15 +67,16 @@ export default function DraggablePropEditorList() {
           const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
           const setPropState = (val: PropState) => {
             const copy = [...pageState.componentsState]
-            const i = copy.findIndex(e => e.uuid === uuid)
-            copy[i].props = val
             if (componentMetadata.global) {
               // update propState for other instances of the same global functional component
-              copy.forEach((e, index) => {
+              copy.forEach((e, i) => {
                 if (e.name === c.name) {
-                  copy[index].props = val
+                  copy[i].props = val
                 }
               })
+            } else {
+              const i = copy.findIndex(e => e.uuid === uuid)
+              copy[i].props = val
             }
             setPageState({
               ...pageState,
