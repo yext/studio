@@ -29,8 +29,8 @@ export default function getUpdatedStreamConfig(
   const streamValues = getStreamValues(componentsState)
   const usedDocumentPaths = getUsedDocumentPaths(streamValues)
   const fields = [...usedDocumentPaths]
-    .filter(documentPath => !NON_CONFIGURABLE_PROPERTIES.includes(documentPath))
     .map(documentPath => documentPath.split('document.')[1])
+    .filter(documentPath => !NON_CONFIGURABLE_PROPERTIES.includes(documentPath))
 
   return {
     ...currentConfig,
