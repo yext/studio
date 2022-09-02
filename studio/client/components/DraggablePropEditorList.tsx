@@ -84,6 +84,7 @@ export default function DraggablePropEditorList() {
               <PropEditor
                 propState={c.props}
                 setPropState={setPropState}
+                componentName={c.name}
                 componentMetadata={componentMetadata}
               />
             </div>)
@@ -91,6 +92,7 @@ export default function DraggablePropEditorList() {
               uuid={c.uuid}
               key={c.uuid}
               propState={c.props}
+              componentName={c.name}
               componentMetadata={componentMetadata}
               setPropState={setPropState}
             />)

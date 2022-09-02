@@ -3,12 +3,14 @@ import { PropTypes } from '../../types'
 import StreamsProp from './StreamsProp'
 
 export interface PropEditorProps {
+  componentName: string,
   propState: PropState,
   componentMetadata: ComponentMetadata,
   setPropState: (val: PropState) => void
 }
 
 export default function PropEditor({
+  componentName,
   propState,
   setPropState,
   componentMetadata
@@ -29,6 +31,7 @@ export default function PropEditor({
   const { propShape } = componentMetadata
   return (
     <div className='flex flex-col flex-grow'>
+      <h1 className='font-bold pb-1'>{componentName}</h1>
       {
         Object.keys(propShape).map((propName, index) => {
           const propDoc = propShape[propName].doc

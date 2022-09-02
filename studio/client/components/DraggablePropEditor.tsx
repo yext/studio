@@ -85,6 +85,7 @@ export default function DraggablePropEditor(props: DraggablePropEditorProps) {
         <PropEditor
           propState={props.propState}
           setPropState={props.setPropState}
+          componentName ={props.componentName}
           componentMetadata={props.componentMetadata}
         />
       </div>
