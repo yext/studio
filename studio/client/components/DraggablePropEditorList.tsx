@@ -64,11 +64,19 @@ export default function DraggablePropEditorList() {
       <SortableContext items={listState.map(c => c.uuid)} strategy={verticalListSortingStrategy}>
         {listState.map(c => {
           const uuid = c.uuid
-
+          const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
           const setPropState = (val: PropState) => {
             const copy = [...pageState.componentsState]
-            const i = copy.findIndex(c => c.uuid === uuid)
+            const i = copy.findIndex(e => e.uuid === uuid)
             copy[i].props = val
+            if (componentMetadata.global) {
+              // update propState for other instances of the same global functional component
+              copy.forEach((e, index) => {
+                if (e.name === c.name) {
+                  copy[index].props = val
+                }
+              })
+            }
             setPageState({
               ...pageState,
               componentsState: copy
@@ -78,7 +86,6 @@ export default function DraggablePropEditorList() {
             // console.error('unknown component', c.name, 'gracefully skipping for now.')
             return null
           }
-          const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
           return componentMetadata.global
             ? (<div key={c.uuid} className='border-4 border-black m-2 px-2 py-2'>
               <PropEditor

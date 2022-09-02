@@ -44,6 +44,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         anotherColor='#9c8181'
       />
       <Footer {...footerProps}/>
+      <Footer {...footerProps}/>
     </TestLayout>
   )
 }
