@@ -38,7 +38,6 @@ it('works with no current config', () => {
     stream: {
       $id: expect.any(String),
       fields: [
-        'id',
         'address.line1'
       ],
       filter: {},

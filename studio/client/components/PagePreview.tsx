@@ -28,7 +28,7 @@ export default function PagePreview() {
         key: `${c.name}-${i}`
       })
       return (
-        <ComponentPreviewBoundary key={JSON.stringify(previewProps)}>{component}</ComponentPreviewBoundary>
+        <ComponentPreviewBoundary key={`${JSON.stringify(previewProps)}-${c.uuid}`}>{component}</ComponentPreviewBoundary>
       )
     })
     const layoutName = pageState.layoutState.name
