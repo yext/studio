@@ -6,6 +6,7 @@ import updatePageFile from './updatePageFile'
 
 jest.mock('uuid', () => ({ v1: () => 'mock-uuid' }))
 jest.mock('../getRootPath')
+jest.mock('../componentMetadata')
 
 beforeEach(() => {
   jest.spyOn(fs, 'writeFileSync').mockImplementation()

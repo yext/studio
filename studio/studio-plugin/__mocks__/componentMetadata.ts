@@ -7,6 +7,7 @@ export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
     Banner: {
       editable: true,
       importIdentifier: './components/Banner',
+      global: false,
       propShape: {
         title: {
           type: PropTypes.string,
