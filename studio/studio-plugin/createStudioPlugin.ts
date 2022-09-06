@@ -10,6 +10,7 @@ import { moduleNameToComponentMetadata } from './componentMetadata'
 import getPagePath from './getPagePath'
 import openBrowser from 'react-dev-utils/openBrowser.js'
 import { ComponentMetadata } from '../shared/models'
+import path from 'path'
 
 /**
  * Handles server-client communication.
@@ -44,6 +45,16 @@ export default function createStudioPlugin(args): Plugin {
     }
   }
 
+  const updateComponentMetadata = (file: string) => {
+    const fileName = path.basename(file)
+    const componentName = fileName.substring(0, fileName.indexOf('.'))
+    moduleNameToComponentMetadata.localComponents[componentName] = parseComponentMetadata(
+      getSourceFile(getRootPath(`src/components/${fileName}`)),
+      getRootPath(`src/components/${fileName}`),
+      `${componentName}Props`
+    )
+  }
+
   let ctx: StudioProps = getStudioProps()
 
   return {
@@ -75,8 +86,12 @@ export default function createStudioPlugin(args): Plugin {
         studioCtxFilePaths.siteSettings,
         ...Object.values(studioCtxFilePaths.pages)
       ]
-      if (studioCtxFilePathsArray.includes(file)) {
-        console.log('Updating data export by "virtual:yext-studio".')
+      const isGlobalComponentFile = file.endsWith('global.tsx')
+      if (studioCtxFilePathsArray.includes(file) || isGlobalComponentFile) {
+        console.log('Updating data export by "virtual:yext-studio".', file.endsWith('global.tsx'))
+        if (isGlobalComponentFile) {
+          updateComponentMetadata(file)
+        }
         ctx = getStudioProps()
         moduleGraph.invalidateModule(module)
       } else if (file.startsWith(getRootPath('./src/'))) {
