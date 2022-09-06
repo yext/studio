@@ -55,7 +55,7 @@ function createReturnStatement(updatedState: PageState, currentReturnStatement: 
   const elements = updatedState.componentsState.reduce((prev, next) => {
     const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[next.moduleName][next.name]
     // Reuse the same attributes for global components set in the page,
-    // and update globbalProps from the corresponding global component file.
+    // and update globalProps in the corresponding global component file.
     if (componentMetadata.global) {
       const globalNode = currentReturnStatement
         .getDescendantsOfKind(ts.SyntaxKind.JsxSelfClosingElement)
