@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { SiteSettingsProps } from './SiteSettings'
-import PagePreview from './PagePreview'
 import { PageState, ModuleNameToComponentMetadata } from '../../shared/models'
 import { StudioContext } from './useStudioContext'
-import { Navbar } from './Navbar'
+import RightSidebar from './RightSidebar'
+import PagePreview from './PagePreview'
+import LeftSidebar from './LeftSidebar'
+import { cloneDeep } from 'lodash'
 
 export interface StudioProps {
   siteSettings: SiteSettingsProps,
@@ -18,6 +20,8 @@ export default function Studio(props: StudioProps) {
   const { componentsOnPage, moduleNameToComponentMetadata, siteSettings } = props
   const [pageState, setPageState] = useState(componentsOnPage.index)
   const [streamDocument, setStreamDocument] = useState({})
+  const [activeComponentUUID, setActiveComponentUUID] = useState<string | undefined>()
+  const initialPageState: Readonly<PageState> = useRef(cloneDeep(componentsOnPage.index)).current
 
   const value = {
     moduleNameToComponentMetadata,
@@ -25,17 +29,18 @@ export default function Studio(props: StudioProps) {
     setPageState,
     siteSettings,
     streamDocument,
-    setStreamDocument
+    setStreamDocument,
+    activeComponentUUID,
+    setActiveComponentUUID,
+    initialPageState
   }
 
   return (
     <StudioContext.Provider value={value}>
-      <div className='min-h-screen h-full w-screen flex flex-row'>
-        <div className='w-2/5 bg-slate-500 flex flex-col'>
-          <h1 className='text-3xl text-white'>Yext Studio</h1>
-          <Navbar />
-        </div>
+      <div className='flex h-screen'>
+        <LeftSidebar />
         <PagePreview />
+        <RightSidebar />
       </div>
     </StudioContext.Provider>
   )

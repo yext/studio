@@ -36,11 +36,11 @@ export default function StreamsProp(props: {
   }, [selectionRangeUpdate])
 
   return (
-    <div className='flex' style={{ fontFamily: '"Courier New", monospace' }}>
+    <div className='flex flex-col' style={{ fontFamily: '"Courier New", monospace' }}>
       <label className='peer label'>{propName}:</label>
       {propDoc && <ToolTip message={propDoc} />}
       <div className='flex flex-col relative flex-grow'>
-        <div className='flex'>
+        <div className='flex '>
           <input
             ref={inputRef}
             style={{

@@ -9,6 +9,7 @@ export const tsCompilerOptions = {
     jsx: JsxEmit.ReactJSX
   }
 }
+
 export function getSourceFile(file: string): SourceFile {
   const p = new Project(tsCompilerOptions)
   p.addSourceFilesAtPaths(file)

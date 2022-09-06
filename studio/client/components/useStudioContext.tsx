@@ -9,7 +9,10 @@ export interface StudioContextType {
   setPageState: React.Dispatch<React.SetStateAction<PageState>>,
   siteSettings: StudioProps['siteSettings'],
   streamDocument: TemplateProps['document'],
-  setStreamDocument: React.Dispatch<React.SetStateAction<TemplateProps['document']>>
+  setStreamDocument: React.Dispatch<React.SetStateAction<TemplateProps['document']>>,
+  activeComponentUUID: string | undefined,
+  setActiveComponentUUID: React.Dispatch<React.SetStateAction<string | undefined>>,
+  initialPageState: Readonly<PageState>
 }
 
 export const StudioContext = createContext<StudioContextType | null>(null)
