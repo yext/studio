@@ -88,7 +88,7 @@ export default function createStudioPlugin(args): Plugin {
       ]
       const isGlobalComponentFile = file.endsWith('global.tsx')
       if (studioCtxFilePathsArray.includes(file) || isGlobalComponentFile) {
-        console.log('Updating data export by "virtual:yext-studio".', file.endsWith('global.tsx'))
+        console.log('Updating data export by "virtual:yext-studio".')
         if (isGlobalComponentFile) {
           updateComponentMetadata(file)
         }
