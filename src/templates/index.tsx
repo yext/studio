@@ -31,7 +31,9 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
       <Header {...headerProps} />
       <Card bgColor='#45de0d'>
         <Card bgColor='#abcdef'>
-          <Card/>
+          <Card bgColor='#ffffee'>
+            <Card/>
+          </Card>
         </Card>
       </Card>
       <Banner

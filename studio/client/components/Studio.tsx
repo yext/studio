@@ -20,7 +20,7 @@ export default function Studio(props: StudioProps) {
   const { componentsOnPage, moduleNameToComponentMetadata, siteSettings } = props
   const [pageState, setPageState] = useState(componentsOnPage.index)
   const [streamDocument, setStreamDocument] = useState({})
-  const [activeComponentState, setActiveComponentState] = useState<string | undefined>()
+  const [activeComponentState, setActiveComponentState] = useState<ComponentState | undefined>()
   const [pageStateOnFile, setPageStateOnFile] = useState<PageState>(cloneDeep(componentsOnPage.index))
 
   const value = {

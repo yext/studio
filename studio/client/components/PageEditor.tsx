@@ -3,13 +3,11 @@ import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 
 export function PageEditor(): JSX.Element | null {
-  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentUUID } = useStudioContext()
-  const activeComponentState: ComponentState | undefined =
-    pageState.componentsState.find(c => c.uuid === activeComponentUUID)
-
+  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentState } = useStudioContext()
   if (!activeComponentState) {
     return null
   }
+
   const componentMetadata: ComponentMetadata =
     moduleNameToComponentMetadata[activeComponentState.moduleName][activeComponentState.name]
 
@@ -23,7 +21,7 @@ export function PageEditor(): JSX.Element | null {
         }
       })
     } else {
-      const i = copy.findIndex(c => c.uuid === activeComponentUUID)
+      const i = copy.findIndex(c => c.uuid === activeComponentState.uuid)
       copy[i].props = val
     }
     setPageState({

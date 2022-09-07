@@ -8,23 +8,15 @@ import parseJsxAttributes from './parseJsxAttributes'
 export default function parseComponentState(
   c: JsxText | JsxExpression | JsxFragment | JsxElement | JsxSelfClosingElement,
   imports: Record<string, string[]>,
-  parentUUID?: string
+  parentUUIDsFromRoot?: string[]
 ): ComponentState | null {
-  const data = deleteChildrenIfEmpty(undecoratedParseComponentState(c, imports))
-  if (!data) return data
-
-  if (parentUUID) {
-    if (!data.parentUUIDsFromRoot) {
-      data.parentUUIDsFromRoot = []
-    }
-    data.parentUUIDsFromRoot.push(parentUUID)
-  }
-  return data
+  return deleteChildrenIfEmpty(undecoratedParseComponentState(c, imports, parentUUIDsFromRoot))
 }
 
 function undecoratedParseComponentState(
   c: JsxText | JsxExpression | JsxFragment | JsxElement | JsxSelfClosingElement,
-  imports: Record<string, string[]>
+  imports: Record<string, string[]>,
+  parentUUIDsFromRoot?: string[]
 ): ComponentState | null {
   if (c.isKind(SyntaxKind.JsxText)) {
     return null
@@ -34,26 +26,36 @@ function undecoratedParseComponentState(
       `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`)
   }
 
+  const uuid = v1()
   if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
     const name = c.getTagNameNode().getText()
-    return parseElement(c, name, imports)
+    return {
+      ...parseElement(c, name, imports),
+      name,
+      uuid,
+      parentUUIDsFromRoot
+    }
   }
 
-  const uuid = v1()
-  const children = parseChildren(c, imports, uuid)
+  const nextParentUUIDs = (parentUUIDsFromRoot ?? []).concat([ uuid ])
+  const children = parseChildren(c, imports, nextParentUUIDs)
   if (c.isKind(SyntaxKind.JsxFragment)) {
     return {
       name: '',
       isFragment: true,
-      uuid: v1(),
+      uuid,
       props: {},
       moduleName: 'builtIn',
+      parentUUIDsFromRoot,
       children
     }
   }
   const name = c.getOpeningElement().getTagNameNode().getText()
   return {
     ...parseElement(c, name, imports),
+    name,
+    uuid,
+    parentUUIDsFromRoot,
     children
   }
 }
@@ -74,16 +76,16 @@ function parseElement(
   const props = componentMetaData.global
     ? componentMetaData.globalProps ?? {}
     : parseJsxAttributes(attributes, componentMetaData)
-  return { name, moduleName, uuid: v1(), props }
+  return { moduleName, props }
 }
 
 function parseChildren(
   c: JsxFragment | JsxElement,
   imports: Record<string, string[]>,
-  parentUUID: string
+  parentUUIDsFromRoot: string[]
 ): ComponentState[] {
   return c.getJsxChildren()
-    .map(c => parseComponentState(c, imports, parentUUID))
+    .map(c => parseComponentState(c, imports, parentUUIDsFromRoot))
     .filter((c): c is ComponentState => !!c)
 }
 

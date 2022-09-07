@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
-import { useRef } from 'react'
+import { useCallback, useRef } from 'react'
 import { ComponentState, PageState } from '../../shared/models'
 import CustomContextMenu from './CustomContextMenu'
 import { useStudioContext } from './useStudioContext'
@@ -23,14 +23,16 @@ function ComponentNode({ c }: { c: ComponentState }) {
     pageStateOnFile,
     moduleNameToComponentMetadata
   } = useStudioContext()
+  const activeComponentUUID = activeComponentState?.uuid
 
-  const updateActiveComponent = (uuid: string) => {
-    if (activeComponentUUID !== uuid) {
+  const updateActiveComponent = useCallback(() => {
+    if (activeComponentUUID !== c.uuid) {
       setActiveComponentState(c)
     } else {
       setActiveComponentState(undefined)
     }
-  }
+  }, [activeComponentUUID, c, setActiveComponentState])
+
   const className = classNames('flex cursor-pointer select-none border-solid border-2 ml-4', {
     'border-indigo-600': activeComponentUUID === c.uuid,
     'border-transparent': activeComponentUUID !== c.uuid
@@ -43,7 +45,7 @@ function ComponentNode({ c }: { c: ComponentState }) {
       ref={ref}
       key={c.uuid}
       className={className}
-      onClick={() => updateActiveComponent(c.uuid)}
+      onClick={updateActiveComponent}
     >
       {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={c.uuid} />}
       {c.name}
