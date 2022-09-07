@@ -2,7 +2,7 @@ import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import { PageState, PropState, ComponentMetadata } from '../../shared/models'
 import { PropTypes } from '../../types'
-import { getSourceFile, prettify, getDefaultExport, getPropsLiteralExpression, updatePropsValue } from '../common'
+import { getSourceFile, prettify, getDefaultExport, getExportedObjectLiteral, updatePropsObjectLiteral } from '../common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getRootPath from '../getRootPath'
 
@@ -94,11 +94,11 @@ function updateGlobalComponentProps(componentMetadata: ComponentMetadata, update
   const partialFilePath = componentMetadata.importIdentifier.split('src/components').at(-1)
   const relativeFilePath = getRootPath(`src/components/${partialFilePath}`)
   const sourceFile = getSourceFile(relativeFilePath)
-  const propsLiteralExp = getPropsLiteralExpression(sourceFile, 'globalProps')
+  const propsLiteralExp = getExportedObjectLiteral(sourceFile, 'globalProps')
   if (!propsLiteralExp) {
     throw new Error(`Unable to find "globalProps" variable for file path: ${relativeFilePath}`)
   }
-  updatePropsValue(propsLiteralExp, updatedState)
+  updatePropsObjectLiteral(propsLiteralExp, updatedState)
   const updatedFileText = prettify(sourceFile.getFullText())
   fs.writeFileSync(relativeFilePath, updatedFileText)
 }

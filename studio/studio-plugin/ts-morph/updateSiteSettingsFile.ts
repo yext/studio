@@ -2,7 +2,7 @@ import fs from 'fs'
 import { ts } from 'ts-morph'
 import { PropState } from '../../shared/models'
 import getRootPath from '../getRootPath'
-import { getSourceFile, prettify, updatePropsValue } from '../common'
+import { getSourceFile, prettify, updatePropsObjectLiteral } from '../common'
 
 export default function updateSiteSettingsFile(updatedState: PropState, pageFilePath: string) {
   const file = getRootPath(pageFilePath)
@@ -13,7 +13,7 @@ export default function updateSiteSettingsFile(updatedState: PropState, pageFile
   if (!siteSettingsNode) {
     throw new Error(`No site settings object found at "${pageFilePath}"`)
   }
-  updatePropsValue(siteSettingsNode, updatedState)
+  updatePropsObjectLiteral(siteSettingsNode, updatedState)
   const updatedFileText = prettify(sourceFile.getFullText())
   fs.writeFileSync(pageFilePath, updatedFileText)
 }

@@ -1,6 +1,6 @@
 import { ObjectLiteralExpression, SourceFile, ts } from 'ts-morph'
 
-export function getPropsLiteralExpression(
+export function getExportedObjectLiteral(
   sourceFile: SourceFile,
   propsVariableName: string
 ): ObjectLiteralExpression | undefined {
