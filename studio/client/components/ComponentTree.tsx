@@ -17,7 +17,7 @@ export default function ComponentTree() {
 
 function ComponentNode({ c }: { c: ComponentState }) {
   const ref = useRef<HTMLDivElement>(null)
-  const { activeComponentUUID, setActiveComponentUUID, initialPageState } = useStudioContext()
+  const { activeComponentUUID, setActiveComponentUUID, pageStateOnFile } = useStudioContext()
   const updateActiveComponent = (uuid: string) => {
     if (activeComponentUUID !== uuid) {
       setActiveComponentUUID(uuid)
@@ -38,12 +38,12 @@ function ComponentNode({ c }: { c: ComponentState }) {
     >
       <CustomContextMenu elementRef={ref} componentUUID={c.uuid} />
       {c.name}
-      {hasUnsavedChanges(c, initialPageState) && <div className='red'>*</div>}
+      {hasUnsavedChanges(c, pageStateOnFile) && <div className='red'>*</div>}
     </div>
   )
 }
 
-function hasUnsavedChanges(c: ComponentState, initialPageState: Readonly<PageState>) {
-  const initialProps = initialPageState.componentsState.find(({ uuid }) => uuid === c.uuid)?.props
+function hasUnsavedChanges(c: ComponentState, pageStateOnFile: PageState) {
+  const initialProps = pageStateOnFile.componentsState.find(({ uuid }) => uuid === c.uuid)?.props
   return !isEqual(c.props, initialProps)
 }

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { SiteSettingsProps } from './SiteSettings'
 import { PageState, ModuleNameToComponentMetadata } from '../../shared/models'
 import { StudioContext } from './useStudioContext'
@@ -21,7 +21,7 @@ export default function Studio(props: StudioProps) {
   const [pageState, setPageState] = useState(componentsOnPage.index)
   const [streamDocument, setStreamDocument] = useState({})
   const [activeComponentUUID, setActiveComponentUUID] = useState<string | undefined>()
-  const initialPageState: Readonly<PageState> = useRef(cloneDeep(componentsOnPage.index)).current
+  const [pageStateOnFile, setPageStateOnFile] = useState<PageState>(cloneDeep(componentsOnPage.index))
 
   const value = {
     moduleNameToComponentMetadata,
@@ -32,7 +32,8 @@ export default function Studio(props: StudioProps) {
     setStreamDocument,
     activeComponentUUID,
     setActiveComponentUUID,
-    initialPageState
+    pageStateOnFile,
+    setPageStateOnFile
   }
 
   return (

@@ -1,18 +1,19 @@
 import { TemplateProps } from '@yext/pages'
-import React, { createContext, useContext } from 'react'
+import { createContext, useContext, Dispatch, SetStateAction } from 'react'
 import { PageState } from '../../shared/models'
 import { StudioProps } from './Studio'
 
 export interface StudioContextType {
   moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
   pageState: PageState,
-  setPageState: React.Dispatch<React.SetStateAction<PageState>>,
+  setPageState: Dispatch<SetStateAction<PageState>>,
   siteSettings: StudioProps['siteSettings'],
   streamDocument: TemplateProps['document'],
-  setStreamDocument: React.Dispatch<React.SetStateAction<TemplateProps['document']>>,
+  setStreamDocument: Dispatch<SetStateAction<TemplateProps['document']>>,
   activeComponentUUID: string | undefined,
-  setActiveComponentUUID: React.Dispatch<React.SetStateAction<string | undefined>>,
-  initialPageState: Readonly<PageState>
+  setActiveComponentUUID: Dispatch<SetStateAction<string | undefined>>,
+  pageStateOnFile: PageState,
+  setPageStateOnFile: Dispatch<SetStateAction<PageState>>
 }
 
 export const StudioContext = createContext<StudioContextType | null>(null)
