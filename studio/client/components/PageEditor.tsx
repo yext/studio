@@ -1,4 +1,4 @@
-import { ComponentMetadata, ComponentState, PropState } from '../../shared/models'
+import { ComponentMetadata, PropState } from '../../shared/models'
 import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 

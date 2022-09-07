@@ -1,6 +1,6 @@
 import { ComponentState } from '../../shared/models'
 import { SourceFile, JsxElement, JsxFragment, ts } from 'ts-morph'
-import { v1 } from 'uuid'
+import { v4 } from 'uuid'
 import { getDefaultExport } from '../common'
 import getComponentModuleName from './getComponentModuleName'
 
@@ -27,7 +27,7 @@ export default function parseLayoutState(
     layoutState = {
       name,
       props: {},
-      uuid: v1(),
+      uuid: v4(),
       moduleName: 'builtIn'
     }
     const isBuiltinJsxElement = name.charAt(0) === name.charAt(0).toLowerCase()
@@ -39,7 +39,7 @@ export default function parseLayoutState(
     layoutState = {
       name: '',
       props: {},
-      uuid: v1(),
+      uuid: v4(),
       moduleName: 'builtIn'
     }
   }

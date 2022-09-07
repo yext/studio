@@ -1,5 +1,5 @@
 import { JsxAttributeLike, JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, JsxText, SyntaxKind } from 'ts-morph'
-import { v1 } from 'uuid'
+import { v4 } from 'uuid'
 import { ComponentState } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getComponentModuleName from './getComponentModuleName'
@@ -26,7 +26,7 @@ function undecoratedParseComponentState(
       `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`)
   }
 
-  const uuid = v1()
+  const uuid = v4()
   if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
     const name = c.getTagNameNode().getText()
     return {

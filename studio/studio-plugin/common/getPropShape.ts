@@ -1,4 +1,3 @@
-import { PropShape } from '../../shared/models'
 import { ts, SourceFile, ImportSpecifier, InterfaceDeclaration, OptionalKind, PropertySignatureStructure } from 'ts-morph'
 import path from 'path'
 import { getSourceFile } from './getSourceFile'

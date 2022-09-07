@@ -33,7 +33,7 @@ function ComponentNode({ c }: { c: ComponentState }) {
     }
   }, [activeComponentUUID, c, setActiveComponentState])
 
-  const className = classNames('flex cursor-pointer select-none border-solid border-2 ml-4', {
+  const className = classNames('flex border-solid border-2 ', {
     'border-indigo-600': activeComponentUUID === c.uuid,
     'border-transparent': activeComponentUUID !== c.uuid
   })
@@ -42,14 +42,19 @@ function ComponentNode({ c }: { c: ComponentState }) {
 
   return (
     <div
-      ref={ref}
       key={c.uuid}
-      className={className}
-      onClick={updateActiveComponent}
+      className='cursor-pointer select-none ml-4'
     >
-      {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={c.uuid} />}
-      {c.name}
-      {hasUnsavedChanges(c, pageStateOnFile) && <div className='red'>*</div>}
+      <div
+        className={className}
+        ref={ref}
+        onClick={updateActiveComponent}
+      >
+        {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={c.uuid} />}
+        {c.name}
+        {hasUnsavedChanges(c, pageStateOnFile) && <div className='red'>*</div>}
+      </div>
+      {c.children?.map(c => <ComponentNode c={c}/>)}
     </div>
   )
 }
