@@ -10,19 +10,27 @@ export function PageEditor(): JSX.Element | null {
   if (!activeComponentState) {
     return null
   }
+  const componentMetadata: ComponentMetadata =
+    moduleNameToComponentMetadata[activeComponentState.moduleName][activeComponentState.name]
 
   const setPropState = (val: PropState) => {
     const copy = [...pageState.componentsState]
-    const i = copy.findIndex(c => c.uuid === activeComponentUUID)
-    copy[i].props = val
+    if (componentMetadata.global) {
+      // update propState for other instances of the same global functional component
+      copy.forEach((c, i) => {
+        if (c.name === activeComponentState.name) {
+          copy[i].props = val
+        }
+      })
+    } else {
+      const i = copy.findIndex(c => c.uuid === activeComponentUUID)
+      copy[i].props = val
+    }
     setPageState({
       ...pageState,
       componentsState: copy
     })
   }
-  const componentMetadata: ComponentMetadata =
-    moduleNameToComponentMetadata[activeComponentState.moduleName][activeComponentState.name]
-
   return <PropEditor
     propState={activeComponentState.props}
     setPropState={setPropState}

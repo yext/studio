@@ -24,11 +24,10 @@ export default function RightSidebar(): JSX.Element {
 }
 
 function renderTab(tab: Tab) {
-  if (tab === Tab.PageEditor) {
-    return <PageEditor />
-  } else if (tab === Tab.SiteSettings) {
-    return <SiteSettings />
+  switch (tab) {
+    case Tab.PageEditor:
+      return <PageEditor />
+    case Tab.SiteSettings:
+      return <SiteSettings />
   }
-
-  return null
 }
