@@ -1,6 +1,6 @@
 import { ComponentMetadata, PropState } from '../../shared/models'
-import { ts, SourceFile } from 'ts-morph'
-import { getPropShape, getPropsState } from '../common'
+import { SourceFile } from 'ts-morph'
+import { getPropShape, getExportedObjectLiteral, getPropsState } from '../common'
 import path from 'path'
 
 export const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
@@ -40,14 +40,7 @@ export default function parseComponentMetadata(
   }
 
   function parseComponentPropsValue(propsVariableName: string): PropState {
-    const exportSymbols = sourceFile.getExportSymbols()
-    const propSymbol = exportSymbols.find(s => s.getEscapedName() === propsVariableName)
-    if (!propSymbol) {
-      return {}
-    }
-    const initialPropsLiteralExp = propSymbol
-      .getValueDeclaration()
-      ?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression)
-    return initialPropsLiteralExp ? getPropsState(initialPropsLiteralExp, propShape) : {}
+    const propsLiteralExp = getExportedObjectLiteral(sourceFile, propsVariableName)
+    return propsLiteralExp ? getPropsState(propsLiteralExp, propShape) : {}
   }
 }
