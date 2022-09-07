@@ -50,103 +50,124 @@ const componentsState: ComponentState[] = [
   }
 ]
 
-it('correctly parses page with React.Fragment layout', () => {
-  const result = parsePageFile(getRootPath('reactFragmentLayoutPage.tsx'))
+// it('correctly parses page with React.Fragment layout', () => {
+//   const result = parsePageFile(getRootPath('reactFragmentLayoutPage.tsx'))
 
-  expect(result).toEqual({
-    layoutState: {
-      name: 'React.Fragment',
-      props: {},
-      uuid: 'mock-uuid',
-      moduleName: 'builtIn'
-    },
-    componentsState
-  })
-})
+//   expect(result).toEqual({
+//     layoutState: {
+//       name: 'React.Fragment',
+//       props: {},
+//       uuid: 'mock-uuid',
+//       moduleName: 'builtIn'
+//     },
+//     componentsState
+//   })
+// })
 
-it('correctly parses page with Fragment layout', () => {
-  const result = parsePageFile(getRootPath('fragmentLayoutPage.tsx'))
+// it('correctly parses page with Fragment layout', () => {
+//   const result = parsePageFile(getRootPath('fragmentLayoutPage.tsx'))
 
-  expect(result).toEqual({
-    layoutState: {
-      name: 'Fragment',
-      props: {},
-      uuid: 'mock-uuid',
-      moduleName: 'builtIn'
-    },
-    componentsState
-  })
-})
+//   expect(result).toEqual({
+//     layoutState: {
+//       name: 'Fragment',
+//       props: {},
+//       uuid: 'mock-uuid',
+//       moduleName: 'builtIn'
+//     },
+//     componentsState
+//   })
+// })
 
-it('correctly parse page with Fragment layout in short syntax', () => {
-  const result = parsePageFile(getRootPath('shortFragmentSyntaxLayoutPage.tsx'))
+// it('correctly parse page with Fragment layout in short syntax', () => {
+//   const result = parsePageFile(getRootPath('shortFragmentSyntaxLayoutPage.tsx'))
 
-  expect(result).toEqual({
-    layoutState: {
-      name: '',
-      props: {},
-      uuid: 'mock-uuid',
-      moduleName: 'builtIn'
-    },
-    componentsState
-  })
-})
+//   expect(result).toEqual({
+//     layoutState: {
+//       name: '',
+//       props: {},
+//       uuid: 'mock-uuid',
+//       moduleName: 'builtIn'
+//     },
+//     componentsState
+//   })
+// })
 
-it('correctly parses page with div layout component', () => {
-  const result = parsePageFile(getRootPath('divLayoutPage.tsx'))
+// it('correctly parses page with div layout component', () => {
+//   const result = parsePageFile(getRootPath('divLayoutPage.tsx'))
 
-  expect(result).toEqual({
-    layoutState: {
-      name: 'div',
-      props: {},
-      uuid: 'mock-uuid',
-      moduleName: 'builtIn'
-    },
-    componentsState
-  })
-})
+//   expect(result).toEqual({
+//     layoutState: {
+//       name: 'div',
+//       props: {},
+//       uuid: 'mock-uuid',
+//       moduleName: 'builtIn'
+//     },
+//     componentsState
+//   })
+// })
 
-it('correctly parses page with custom layout component', () => {
-  const result = parsePageFile(getRootPath('customLayoutPage.tsx'))
+// it('correctly parses page with custom layout component', () => {
+//   const result = parsePageFile(getRootPath('customLayoutPage.tsx'))
 
-  expect(result).toEqual({
-    layoutState: {
-      name: 'TestLayout',
-      props: {},
-      uuid: 'mock-uuid',
-      moduleName: 'localLayouts'
-    },
-    componentsState
-  })
-})
+//   expect(result).toEqual({
+//     layoutState: {
+//       name: 'TestLayout',
+//       props: {},
+//       uuid: 'mock-uuid',
+//       moduleName: 'localLayouts'
+//     },
+//     componentsState
+//   })
+// })
 
-it('correctly parses page using streams paths', () => {
-  const result = parsePageFile(getRootPath('streamsPage.tsx'))
+// it('correctly parses page using streams paths', () => {
+//   const result = parsePageFile(getRootPath('streamsPage.tsx'))
 
-  expect(result).toEqual({
-    layoutState: {
-      name: 'TestLayout',
-      props: {},
-      uuid: 'mock-uuid',
-      moduleName: 'localLayouts'
-    },
-    componentsState: [
-      {
-        name: 'Banner',
-        props: {
-          streamsData: {
-            type: PropTypes.StreamsData,
-            value: 'document.address.city',
-          },
-          subtitleUsingStreams: {
-            type: PropTypes.StreamsString,
-            // eslint-disable-next-line no-template-curly-in-string
-            value: '`my prefix ${document.id} my suffix`'
-          }
-        },
-        uuid: 'mock-uuid',
-        moduleName: 'localComponents'
+//   expect(result).toEqual({
+//     layoutState: {
+//       name: 'TestLayout',
+//       props: {},
+//       uuid: 'mock-uuid',
+//       moduleName: 'localLayouts'
+//     },
+//     componentsState: [
+//       {
+//         name: 'Banner',
+//         props: {
+//           streamsData: {
+//             type: PropTypes.StreamsData,
+//             value: 'document.address.city',
+//           },
+//           subtitleUsingStreams: {
+//             type: PropTypes.StreamsString,
+//             // eslint-disable-next-line no-template-curly-in-string
+//             value: '`my prefix ${document.id} my suffix`'
+//           }
+//         },
+//         uuid: 'mock-uuid',
+//         moduleName: 'localComponents'
+//       }
+//     ]
+//   })
+// })
+
+it('parses nested components props and children correctly', () => {
+  const result = parsePageFile(getRootPath('nestedComponents.tsx'))
+  expect(result.componentsState).toHaveLength(1)
+  expect(result.componentsState[0]).toEqual(expect.objectContaining({
+    props: {
+      bgColor: {
+        type: PropTypes.HexColor,
+        value: '#453d0d'
       }
-    ]
+    }
+  }))
+  expect(result.componentsState[0].children).toHaveLength(1)
+  expect(result.componentsState[0]?.children?.[0]).toEqual({
+    moduleName: 'localComponents',
+    name: 'Card',
+    props: {},
+    uuid: 'mock-uuid',
+    parentUUID: 'mock-uuid'
   })
 })

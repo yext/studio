@@ -2,28 +2,41 @@ import { JSDocableNodeStructure, PropertyNamedNodeStructure, TypedNodeStructure 
 import { PropTypes } from '../../types'
 import parseImports from '../ts-morph/parseImports'
 import { resolve } from 'path'
-import { PropShape } from '../../shared/models'
+import { PropShape, SpecialReactProps } from '../../shared/models'
 
 interface ParseablePropertyStructure extends
   JSDocableNodeStructure, TypedNodeStructure, PropertyNamedNodeStructure {}
 
-export function parsePropertyStructures(properties: ParseablePropertyStructure[], filePath: string) {
-  const props: PropShape = {}
+/**
+ * Returns the {@link PropShape} and also whether or not the component accepts React children.
+ */
+export function parsePropertyStructures(
+  properties: ParseablePropertyStructure[],
+  filePath: string
+): { propShape: PropShape, acceptsChildren: boolean } {
+  const propShape: PropShape = {}
 
   let imports: Record<string, string[]>
+  let acceptsChildren = false
   properties.forEach(p => {
+    if (Object.values(SpecialReactProps).includes(p.name as SpecialReactProps)) {
+      if (p.name === SpecialReactProps.Children) {
+        acceptsChildren = true
+      }
+      return
+    }
     const jsdoc = p.docs?.map(doc => typeof doc === 'string' ? doc : doc.description).join('\n')
     const propType = p.type
     if (!isPropType(propType) || !isRecognized(propType)) {
       console.error(`Prop type ${propType} is not one of the recognized PropTypes. Skipping.`)
       return
     }
-    props[p.name] = {
+    propShape[p.name] = {
       type: propType,
       ...(jsdoc && { doc: jsdoc })
     }
   })
-  return props
+  return { propShape, acceptsChildren }
 
   function isRecognized(type: PropTypes): boolean {
     if (!imports) {

@@ -10,6 +10,7 @@ import {
 import '../index.css'
 import Footer, { globalProps as footerProps } from '../components/Footer.global'
 import Header, { globalProps as headerProps } from '../components/Header.global'
+import Card from '../components/Card'
 
 export const config: TemplateConfig = {
   stream: {
@@ -28,6 +29,11 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <TestLayout>
       <Header {...headerProps} />
+      <Card bgColor='#45de0d'>
+        <Card bgColor='#abcdef'>
+          <Card/>
+        </Card>
+      </Card>
       <Banner
         randomNum={document.address.city.bob}
         subtitleUsingStreams={document.id}

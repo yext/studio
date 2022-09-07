@@ -1,13 +1,16 @@
-import { JsxOpeningElement, JsxSelfClosingElement, ts, JsxAttribute } from 'ts-morph'
+import { JsxAttributeLike, SyntaxKind } from 'ts-morph'
 import { ComponentMetadata, PropState } from '../../shared/models'
 import { getPropName, getJsxAttributeValue, validatePropState } from '../common'
 
 export default function parseJsxAttributes(
-  n: JsxOpeningElement | JsxSelfClosingElement,
+  attributes: JsxAttributeLike[],
   componentMetaData: ComponentMetadata
 ): PropState {
   const props = {}
-  n.getDescendantsOfKind(ts.SyntaxKind.JsxAttribute).forEach((jsxAttribute: JsxAttribute) => {
+  attributes.forEach((jsxAttribute: JsxAttributeLike) => {
+    if (jsxAttribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
+      throw new Error('JsxSpreadAttribute is not currently supported')
+    }
     const propName = getPropName(jsxAttribute)
     if (!propName) {
       throw new Error('Could not parse jsx attribute prop name: ' + jsxAttribute.getFullText())

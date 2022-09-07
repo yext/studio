@@ -10,7 +10,7 @@ export default function getComponentModuleName(
     return importedNames.includes(name)
   })
   if (!moduleName) {
-    throw new Error(`Could not find import path/module for component "${name}"`)
+    return 'builtIn'
   }
   if (moduleName.startsWith('.')) {
     moduleName = isLayout ? 'localLayouts' : 'localComponents'

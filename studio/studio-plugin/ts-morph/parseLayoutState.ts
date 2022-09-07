@@ -1,7 +1,7 @@
-import { ComponentState } from 'react'
+import { ComponentState } from '../../shared/models'
 import { SourceFile, JsxElement, JsxFragment, ts } from 'ts-morph'
 import { v1 } from 'uuid'
-import { getDefaultExport, getComponentName } from '../common'
+import { getDefaultExport } from '../common'
 import getComponentModuleName from './getComponentModuleName'
 
 export default function parseLayoutState(
@@ -22,8 +22,8 @@ export default function parseLayoutState(
   }
 
   let layoutState: ComponentState
-  if (topLevelJsxNode.getKind() === ts.SyntaxKind.JsxElement) {
-    const name = getComponentName((topLevelJsxNode as JsxElement).getOpeningElement())
+  if (topLevelJsxNode.isKind(ts.SyntaxKind.JsxElement)) {
+    const name = topLevelJsxNode.getOpeningElement().getTagNameNode().getText()
     layoutState = {
       name,
       props: {},

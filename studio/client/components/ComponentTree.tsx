@@ -18,20 +18,20 @@ export default function ComponentTree() {
 function ComponentNode({ c }: { c: ComponentState }) {
   const ref = useRef<HTMLDivElement>(null)
   const {
-    activeComponentUUID,
-    setActiveComponentUUID,
+    activeComponentState,
+    setActiveComponentState,
     pageStateOnFile,
     moduleNameToComponentMetadata
   } = useStudioContext()
 
   const updateActiveComponent = (uuid: string) => {
     if (activeComponentUUID !== uuid) {
-      setActiveComponentUUID(uuid)
+      setActiveComponentState(c)
     } else {
-      setActiveComponentUUID(undefined)
+      setActiveComponentState(undefined)
     }
   }
-  const className = classNames('flex cursor-pointer select-none border-solid border-2', {
+  const className = classNames('flex cursor-pointer select-none border-solid border-2 ml-4', {
     'border-indigo-600': activeComponentUUID === c.uuid,
     'border-transparent': activeComponentUUID !== c.uuid
   })
