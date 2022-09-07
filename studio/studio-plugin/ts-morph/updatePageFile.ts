@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { ComponentState } from 'react'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import { PageState, PropState, ComponentMetadata } from '../../shared/models'
 import { PropTypes } from '../../types'
@@ -28,6 +29,7 @@ export default function updatePageFile(
   }
   const currentReturnStatement = pageComponent.getStatements()[returnStatementIndex]
   const newReturnStatement = createReturnStatement(updatedState, currentReturnStatement)
+  updateGlobalComponentProps(updatedState.componentsState)
   pageComponent.removeStatement(returnStatementIndex)
   pageComponent.addStatements(newReturnStatement)
 
@@ -51,19 +53,15 @@ function getPageComponentFunction(
   throw new Error('Unhandled page component type: ' + (defaultExport as Node).getKindName())
 }
 
-function createReturnStatement(updatedState: PageState, currentReturnStatement: Node) {
+function createReturnStatement(updatedState: PageState, currentReturnStatement: Node): string {
   const elements = updatedState.componentsState.reduce((prev, next) => {
-    const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[next.moduleName][next.name]
-    // Reuse the same attributes for global components set in the page,
-    // and update globalProps in the corresponding global component file.
-    if (componentMetadata.global) {
+    if (moduleNameToComponentMetadata[next.moduleName][next.name].global) {
       const globalNode = currentReturnStatement
         .getDescendantsOfKind(ts.SyntaxKind.JsxSelfClosingElement)
         .find(n => n.getTagNameNode().getText() === next.name)
       if (!globalNode) {
         throw new Error(`Unable to find corresponding global component node: ${next.name}`)
       }
-      updateGlobalComponentProps(componentMetadata, next.props)
       return prev + '\n' + globalNode.getFullText()
     }
     return prev + '\n' + createJsxSelfClosingElement(next.name, next.props)
@@ -90,15 +88,20 @@ function createJsxSelfClosingElement(
   return el
 }
 
-function updateGlobalComponentProps(componentMetadata: ComponentMetadata, updatedState: PropState) {
-  const partialFilePath = componentMetadata.importIdentifier.split('src/components').at(-1)
-  const relativeFilePath = getRootPath(`src/components/${partialFilePath}`)
-  const sourceFile = getSourceFile(relativeFilePath)
-  const propsLiteralExp = getExportedObjectLiteral(sourceFile, 'globalProps')
-  if (!propsLiteralExp) {
-    throw new Error(`Unable to find "globalProps" variable for file path: ${relativeFilePath}`)
-  }
-  updatePropsObjectLiteral(propsLiteralExp, updatedState)
-  const updatedFileText = prettify(sourceFile.getFullText())
-  fs.writeFileSync(relativeFilePath, updatedFileText)
+function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
+  updatedComponentState.forEach(c => {
+    const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
+    if (componentMetadata.global) {
+      const partialFilePath = componentMetadata.importIdentifier.split('src/components').at(-1)
+      const relativeFilePath = getRootPath(`src/components/${partialFilePath}`)
+      const sourceFile = getSourceFile(relativeFilePath)
+      const propsLiteralExp = getExportedObjectLiteral(sourceFile, 'globalProps')
+      if (!propsLiteralExp) {
+        throw new Error(`Unable to find "globalProps" variable for file path: ${relativeFilePath}`)
+      }
+      updatePropsObjectLiteral(propsLiteralExp, c.props)
+      const updatedFileText = prettify(sourceFile.getFullText())
+      fs.writeFileSync(relativeFilePath, updatedFileText)
+    }
+  })
 }
