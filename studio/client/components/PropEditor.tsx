@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import { PropState, ComponentMetadata } from '../../shared/models'
 import { PropTypes } from '../../types'
 import StreamsProp from './StreamsProp'
@@ -29,8 +30,11 @@ export default function PropEditor({
     })
   }
   const { propShape } = componentMetadata
+  const className = classNames('flex flex-col flex-grow m-2 px-2 py-2 border-4', {
+    'border-black': componentMetadata.global
+  })
   return (
-    <div className='flex flex-col flex-grow'>
+    <div className={className}>
       {componentName && <h1 className='font-bold pb-1'>{componentName}</h1>}
       {
         Object.keys(propShape).map((propName, index) => {
