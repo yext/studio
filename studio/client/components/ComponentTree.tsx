@@ -17,7 +17,13 @@ export default function ComponentTree() {
 
 function ComponentNode({ c }: { c: ComponentState }) {
   const ref = useRef<HTMLDivElement>(null)
-  const { activeComponentUUID, setActiveComponentUUID, pageStateOnFile } = useStudioContext()
+  const {
+    activeComponentUUID,
+    setActiveComponentUUID,
+    pageStateOnFile,
+    moduleNameToComponentMetadata
+  } = useStudioContext()
+
   const updateActiveComponent = (uuid: string) => {
     if (activeComponentUUID !== uuid) {
       setActiveComponentUUID(uuid)
@@ -29,6 +35,9 @@ function ComponentNode({ c }: { c: ComponentState }) {
     'border-indigo-600': activeComponentUUID === c.uuid,
     'border-transparent': activeComponentUUID !== c.uuid
   })
+
+  const isGlobal = moduleNameToComponentMetadata.localComponents[c.name].global
+
   return (
     <div
       ref={ref}
@@ -36,7 +45,7 @@ function ComponentNode({ c }: { c: ComponentState }) {
       className={className}
       onClick={() => updateActiveComponent(c.uuid)}
     >
-      <CustomContextMenu elementRef={ref} componentUUID={c.uuid} />
+      {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={c.uuid} />}
       {c.name}
       {hasUnsavedChanges(c, pageStateOnFile) && <div className='red'>*</div>}
     </div>
