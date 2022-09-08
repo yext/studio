@@ -5,14 +5,15 @@ export default function findComponentState(
   componentsState: ComponentState[]
 ): ComponentState | undefined {
   let parentComponentState: ComponentState | undefined
-  const uuids = [...componentStateToFind.parentUUIDsFromRoot ?? [], componentStateToFind.uuid]
-  for (const uuid of uuids) {
+  for (const uuid of componentStateToFind.parentUUIDsFromRoot ?? []) {
     parentComponentState = getComponentState(uuid)
     if (!parentComponentState) {
+      console.error(
+        'Unable to find parent uuid', uuid, 'for parentUUIDsFromRoot', componentStateToFind.parentUUIDsFromRoot)
       return undefined
     }
   }
-  return parentComponentState
+  return getComponentState(componentStateToFind.uuid)
 
   function getComponentState(uuid: string) {
     return parentComponentState?.children?.find(c => c.uuid === uuid) ??
