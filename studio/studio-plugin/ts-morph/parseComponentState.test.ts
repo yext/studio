@@ -38,6 +38,19 @@ it('can parse nested components', () => {
   })
 })
 
+it('errors if detects non whitespace JsxText', () => {
+  const source = getSource(`
+  <Card bgColor='#abcdef'>
+    JsxText IS NOT SUPPORTED YET
+  </Card>
+`)
+  const topLevelNode = source.getFirstDescendantByKindOrThrow(SyntaxKind.JsxElement)
+  const imports = {
+    './components': ['Card']
+  }
+  expect(() => parseComponentState(topLevelNode, imports)).toThrow(/JsxText IS NOT SUPPORTED YET/)
+})
+
 function getSource(code: string): SourceFile {
   const p = new Project(tsCompilerOptions)
   p.createSourceFile('testPage.tsx', code)

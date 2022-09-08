@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { isEqual } from 'lodash'
 import { useCallback, useRef } from 'react'
 import { ComponentState, PageState } from '../../shared/models'
+import findComponentState from '../utils/findComponentState'
 import CustomContextMenu from './CustomContextMenu'
 import { useStudioContext } from './useStudioContext'
 
@@ -54,12 +55,12 @@ function ComponentNode({ c }: { c: ComponentState }) {
         {c.name}
         {hasUnsavedChanges(c, pageStateOnFile) && <div className='red'>*</div>}
       </div>
-      {c.children?.map(c => <ComponentNode c={c}/>)}
+      {c.children?.map(c => <ComponentNode c={c} key={c.uuid}/>)}
     </div>
   )
 }
 
-function hasUnsavedChanges(c: ComponentState, pageStateOnFile: PageState) {
-  const initialProps = pageStateOnFile.componentsState.find(({ uuid }) => uuid === c.uuid)?.props
-  return !isEqual(c.props, initialProps)
+function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
+  const initialComponentState = findComponentState(componentState, pageStateOnFile.componentsState)
+  return !isEqual(componentState.props, initialComponentState?.props)
 }

@@ -1,6 +1,6 @@
 import { JsxAttributeLike, JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, JsxText, SyntaxKind } from 'ts-morph'
 import { v4 } from 'uuid'
-import { ComponentState } from '../../shared/models'
+import { ComponentState, PossibleModuleNames, PropState } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getComponentModuleName from './getComponentModuleName'
 import parseJsxAttributes from './parseJsxAttributes'
@@ -19,6 +19,9 @@ function undecoratedParseComponentState(
   parentUUIDsFromRoot?: string[]
 ): ComponentState | null {
   if (c.isKind(SyntaxKind.JsxText)) {
+    if (c.getLiteralText().trim() !== '') {
+      throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported`)
+    }
     return null
   }
   if (c.isKind(SyntaxKind.JsxExpression)) {
@@ -64,7 +67,7 @@ function parseElement(
   c: JsxElement | JsxSelfClosingElement,
   name: string,
   imports: Record<string, string[]>
-) {
+): { moduleName: PossibleModuleNames, props: PropState } {
   const moduleName = getComponentModuleName(name, imports, false)
   if (moduleName === 'builtIn') {
     throw new Error('parseComponentState does not currently support builtIn elements.')
