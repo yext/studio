@@ -4,7 +4,8 @@ export enum PropTypes {
   HexColor = 'HexColor',
   number = 'number',
   string = 'string',
-  boolean = 'boolean'
+  boolean = 'boolean',
+  ReactNode = 'ReactNode'
 }
 
 export type PropStateTypes =

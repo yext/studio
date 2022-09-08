@@ -22,5 +22,4 @@ export default function useMessageListener(messageID: MessageID, options: Listen
     import.meta.hot?.on(messageID, payloadHandler)
     return () => { isUnmounted = true }
   }, [options, messageID])
-
 }

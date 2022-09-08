@@ -1,4 +1,3 @@
-import studioConfig from '../../src/studio'
 import { PropStateTypes, PropTypes } from '../types'
 
 export type PageState = {
@@ -10,7 +9,10 @@ export interface ComponentState {
   name: string,
   props: PropState,
   uuid: string,
-  moduleName: PossibleModuleNames | 'builtIn'
+  moduleName: PossibleModuleNames,
+  children?: ComponentState[],
+  isFragment?: true,
+  parentUUIDsFromRoot?: string[]
 }
 
 export type PropState = {
@@ -18,9 +20,9 @@ export type PropState = {
 }
 
 export type ModuleNameToComponentMetadata = {
-  [moduleName in PossibleModuleNames]: ModuleMetadata
+  [moduleName in Exclude<PossibleModuleNames, 'builtIn'>]: ModuleMetadata
 }
-export type PossibleModuleNames = keyof typeof studioConfig['npmComponents'] | 'localComponents' | 'localLayouts'
+export type PossibleModuleNames = 'localComponents' | 'localLayouts' | 'builtIn'
 export type ModuleMetadata = {
   [componentName: string]: ComponentMetadata
 }
@@ -29,10 +31,11 @@ export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaD
 type CommonComponentMetaData = {
   propShape?: PropShape,
   editable: boolean,
-  importIdentifier: string
+  importIdentifier: string,
+  acceptsChildren: boolean
 }
 export type StandardComponentMetaData = {
-  global: false,
+  global?: false,
   initialProps?: PropState
 } & CommonComponentMetaData
 export type GlobalComponentMetaData = {
@@ -40,8 +43,13 @@ export type GlobalComponentMetaData = {
   globalProps?: PropState
 } & CommonComponentMetaData
 
-export type PropShape = {
+export enum SpecialReactProps {
+  Children = 'children'
+}
+export type PropShape = Omit<{
   [propName: string]: PropMetadata
+}, SpecialReactProps> & {
+  [propName in SpecialReactProps]?: never
 }
 export type PropMetadata = {
   type: PropTypes,

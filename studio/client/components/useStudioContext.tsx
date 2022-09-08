@@ -1,6 +1,6 @@
 import { TemplateProps } from '@yext/pages'
 import { createContext, useContext, Dispatch, SetStateAction } from 'react'
-import { PageState } from '../../shared/models'
+import { ComponentState, PageState } from '../../shared/models'
 import { StudioProps } from './Studio'
 
 export interface StudioContextType {
@@ -10,8 +10,8 @@ export interface StudioContextType {
   siteSettings: StudioProps['siteSettings'],
   streamDocument: TemplateProps['document'],
   setStreamDocument: Dispatch<SetStateAction<TemplateProps['document']>>,
-  activeComponentUUID: string | undefined,
-  setActiveComponentUUID: Dispatch<SetStateAction<string | undefined>>,
+  activeComponentState: ComponentState | undefined,
+  setActiveComponentState: Dispatch<SetStateAction<ComponentState | undefined>>,
   pageStateOnFile: PageState,
   setPageStateOnFile: Dispatch<SetStateAction<PageState>>
 }

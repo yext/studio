@@ -4,7 +4,20 @@ import { PropTypes } from '../../types'
 export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   localLayouts: {},
   localComponents: {
+    Card: {
+      global: false,
+      acceptsChildren: true,
+      editable: true,
+      importIdentifier: './components/Bard',
+      propShape: {
+        bgColor: {
+          type: PropTypes.HexColor
+        }
+      }
+    },
     Banner: {
+      global: false,
+      acceptsChildren: false,
       editable: true,
       importIdentifier: './components/Banner',
       global: false,

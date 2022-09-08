@@ -1,5 +1,5 @@
 import { ComponentState, useCallback, useState } from 'react'
-import { v1 } from 'uuid'
+import { v4 } from 'uuid'
 import { ModuleMetadata, PossibleModuleNames, StandardComponentMetaData } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 
@@ -15,7 +15,7 @@ export default function AddComponentButton() {
     const newComponentState: ComponentState = {
       name: componentName,
       props: componentMetadata.initialProps || {},
-      uuid: v1(),
+      uuid: v4(),
       moduleName
     }
     let i = pageState.componentsState.length - 1

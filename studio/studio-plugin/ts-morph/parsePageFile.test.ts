@@ -5,7 +5,7 @@ import { PropTypes } from '../../types'
 
 jest.mock('../componentMetadata')
 jest.mock('../getRootPath')
-jest.mock('uuid', () => ({ v1: () => 'mock-uuid' }))
+jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }))
 
 const componentsState: ComponentState[] = [
   {
@@ -148,5 +148,26 @@ it('correctly parses page using streams paths', () => {
         moduleName: 'localComponents'
       }
     ]
+  })
+})
+
+it('parses nested components props and children correctly', () => {
+  const result = parsePageFile(getRootPath('nestedComponents.tsx'))
+  expect(result.componentsState).toHaveLength(1)
+  expect(result.componentsState[0]).toEqual(expect.objectContaining({
+    props: {
+      bgColor: {
+        type: PropTypes.HexColor,
+        value: '#453d0d'
+      }
+    }
+  }))
+  expect(result.componentsState[0].children).toHaveLength(1)
+  expect(result.componentsState[0]?.children?.[0]).toEqual({
+    moduleName: 'localComponents',
+    name: 'Card',
+    props: {},
+    uuid: 'mock-uuid',
+    parentUUIDsFromRoot: ['mock-uuid']
   })
 })

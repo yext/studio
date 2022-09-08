@@ -1,30 +1,35 @@
-import { ComponentMetadata, ComponentState, PropState } from '../../shared/models'
+import { ComponentMetadata, PropState } from '../../shared/models'
+import findComponentState from '../utils/findComponentState'
+import iterateOverComponentsState from '../utils/iterateOverComponentsState'
 import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 
 export function PageEditor(): JSX.Element | null {
-  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentUUID } = useStudioContext()
-  const activeComponentState: ComponentState | undefined =
-    pageState.componentsState.find(c => c.uuid === activeComponentUUID)
-
+  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentState } = useStudioContext()
   if (!activeComponentState) {
     return null
   }
+
   const componentMetadata: ComponentMetadata =
     moduleNameToComponentMetadata[activeComponentState.moduleName][activeComponentState.name]
 
   const setPropState = (val: PropState) => {
+    // TODO(oshi): we cannot use cloneDeep here over the spread operator.
+    // If we do then activeComponentState will get out of sync and point to a ComponentState BEFORE the clone.
+    // We should probably switch to using Redux instead of simple Context since the state is becoming complex.
     const copy = [...pageState.componentsState]
     if (componentMetadata.global) {
       // update propState for other instances of the same global functional component
-      copy.forEach((c, i) => {
+      iterateOverComponentsState(copy, c => {
         if (c.name === activeComponentState.name) {
-          copy[i].props = val
+          c.props = val
         }
       })
     } else {
-      const i = copy.findIndex(c => c.uuid === activeComponentUUID)
-      copy[i].props = val
+      const c = findComponentState(activeComponentState, copy)
+      if (c) {
+        c.props = val
+      }
     }
     setPageState({
       ...pageState,

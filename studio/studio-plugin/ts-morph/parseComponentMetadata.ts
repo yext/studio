@@ -11,10 +11,11 @@ export default function parseComponentMetadata(
   interfaceName: string,
   importIdentifier?: string
 ): ComponentMetadata {
-  const propShape = getPropShape(sourceFile, filePath, interfaceName)
+  const { propShape, acceptsChildren } = getPropShape(sourceFile, filePath, interfaceName)
   if (isGlobalComponent()) {
     return {
       propShape,
+      acceptsChildren,
       global: true,
       editable: false,
       globalProps: parseComponentPropsValue('globalProps'),
@@ -23,6 +24,7 @@ export default function parseComponentMetadata(
   } else {
     return {
       propShape,
+      acceptsChildren,
       global: false,
       editable: true,
       initialProps: parseComponentPropsValue('initialProps'),

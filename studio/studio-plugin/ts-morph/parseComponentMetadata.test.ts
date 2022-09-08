@@ -48,6 +48,7 @@ it('updates correctly', () => {
         type: PropTypes.HexColor
       }
     },
+    acceptsChildren: false,
     editable: true,
     global: false
   })

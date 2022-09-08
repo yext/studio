@@ -1,6 +1,6 @@
 import { TemplateConfig } from '@yext/pages'
 import { ComponentState } from '../../shared/models'
-import { v1 } from 'uuid'
+import { v4 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../shared/constants'
 import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
 
@@ -35,7 +35,7 @@ export default function getUpdatedStreamConfig(
   return {
     ...currentConfig,
     stream: {
-      $id: 'studio-stream-id_' + v1(),
+      $id: 'studio-stream-id_' + v4(),
       filter: {},
       localization: {
         locales: ['en'],

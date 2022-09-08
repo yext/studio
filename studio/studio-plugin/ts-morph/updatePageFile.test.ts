@@ -4,7 +4,7 @@ import { PropTypes } from '../../types'
 import getRootPath from '../getRootPath'
 import updatePageFile from './updatePageFile'
 
-jest.mock('uuid', () => ({ v1: () => 'mock-uuid' }))
+jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }))
 jest.mock('../getRootPath')
 jest.mock('../componentMetadata')
 
