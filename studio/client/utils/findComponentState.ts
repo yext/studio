@@ -4,14 +4,18 @@ export default function findComponentState(
   componentStateToFind: Pick<ComponentState, 'uuid' | 'parentUUIDsFromRoot' | 'props'>,
   componentsState: ComponentState[]
 ): ComponentState | undefined {
-  let initialComponentState: ComponentState | undefined
-  componentStateToFind.parentUUIDsFromRoot?.forEach(uuid => {
-    initialComponentState = getComponentState(uuid)
-  })
-  return getComponentState(componentStateToFind.uuid)
+  let parentComponentState: ComponentState | undefined
+  const uuids = [...componentStateToFind.parentUUIDsFromRoot ?? [], componentStateToFind.uuid]
+  for (const uuid of uuids) {
+    parentComponentState = getComponentState(uuid)
+    if (!parentComponentState) {
+      return undefined
+    }
+  }
+  return parentComponentState
 
   function getComponentState(uuid: string) {
-    return initialComponentState?.children?.find(c => c.uuid === uuid) ??
+    return parentComponentState?.children?.find(c => c.uuid === uuid) ??
       componentsState.find(c => c.uuid === uuid)
   }
 }
