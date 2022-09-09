@@ -1,5 +1,4 @@
-import React, { FunctionComponent, useEffect, useCallback, useState, useMemo } from 'react'
-import { useRef } from 'react'
+import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef } from 'react'
 import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
@@ -18,13 +17,12 @@ export default function PagePreview() {
     }
     const children = pageState.componentsState.map((c, i) => {
       if (!loadedComponents[c.name]) {
-        console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
+        console.error(`Expected to find component loaded for ${c.name} but none found.`)
         return null
       }
       const previewProps = getPreviewProps(c.props, streamDocument)
-      const component = React.createElement(loadedComponents[c.name], {
+      const component = createElement(loadedComponents[c.name], {
         ...previewProps,
-        verticalConfigMap: {},
         key: `${c.name}-${i}`
       })
       return (
@@ -33,9 +31,9 @@ export default function PagePreview() {
     })
     const layoutName = pageState.layoutState.name
     if (loadedComponents[layoutName]) {
-      return React.createElement(loadedComponents[layoutName], {}, children)
+      return createElement(loadedComponents[layoutName], {}, children)
     } else if (layoutName && layoutName.charAt(0) === layoutName.charAt(0).toLowerCase()) {
-      return React.createElement(layoutName, {}, children)
+      return createElement(layoutName, {}, children)
     } else {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return children
@@ -109,7 +107,6 @@ function useComponents(
       importComponent(pageState.layoutState, '../../../src/layouts', newLoadedComponents),
       ...pageState.componentsState.map(c => importComponent(c, '../../../src/components', newLoadedComponents))
     ]).then(() => {
-      // TODO(oshi): this probably runs into race conditions issues
       setLoadedComponents(prev => {
         const newState = { ...prev, ...newLoadedComponents }
         loadedComponentsRef.current = newState
