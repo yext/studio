@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef } from 'react'
+import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
 import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
