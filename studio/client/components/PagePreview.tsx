@@ -1,67 +1,81 @@
-import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef } from 'react'
+import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
 import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
 
 export default function PagePreview() {
-  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
-  const [
-    loadedComponents
-  ] = useComponents(pageState, moduleNameToComponentMetadata)
-
-  const componentsToRender = useMemo(() => {
-    // prevent logging errors on initial render before components are imported
-    if (Object.keys(loadedComponents).length === 0) {
-      return null
-    }
-    const children = pageState.componentsState.map((c, i) => {
-      if (!loadedComponents[c.name]) {
-        console.error(`Expected to find component loaded for ${c.name} but none found.`)
-        return null
-      }
-      const previewProps = getPreviewProps(c.props, streamDocument)
-      const component = createElement(loadedComponents[c.name], {
-        ...previewProps,
-        key: `${c.name}-${i}`
-      })
-      return (
-        <ComponentPreviewBoundary key={`${JSON.stringify(previewProps)}-${c.uuid}`}>{component}</ComponentPreviewBoundary>
-      )
-    })
-    const layoutName = pageState.layoutState.name
-    if (loadedComponents[layoutName]) {
-      return createElement(loadedComponents[layoutName], {}, children)
-    } else if (layoutName && layoutName.charAt(0) === layoutName.charAt(0).toLowerCase()) {
-      return createElement(layoutName, {}, children)
-    } else {
-      console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
-      return children
-    }
-  }, [loadedComponents, pageState.componentsState, pageState.layoutState.name, streamDocument])
+  const { pageState } = useStudioContext()
+  const elements = useElements()
 
   return (
     <div className='w-full h-full'>
       <ComponentPreviewBoundary key={pageState.layoutState.name}>
-        {componentsToRender}
+        {elements}
       </ComponentPreviewBoundary>
     </div>
   )
 }
 
+function useElements() {
+  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
+  const importedComponents = useImportedComponents(pageState, moduleNameToComponentMetadata)
+
+  return useMemo(() => {
+    // prevent logging errors on initial render before components are imported
+    if (Object.keys(importedComponents).length === 0) {
+      return null
+    }
+    const elements = createStudioElements(pageState.componentsState, importedComponents, streamDocument)
+    const layoutName = pageState.layoutState.name
+    if (importedComponents[layoutName]) {
+      return createElement(importedComponents[layoutName], {}, elements)
+    } else if (layoutName && layoutName.charAt(0) === layoutName.charAt(0).toLowerCase()) {
+      return createElement(layoutName, {}, elements)
+    } else {
+      console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
+      return elements
+    }
+  }, [importedComponents, pageState.componentsState, pageState.layoutState.name, streamDocument])
+}
+
+function createStudioElements(
+  components: ComponentState[],
+  importedComponents: Record<string, ComponentImportType>,
+  streamDocument: Record<string, any>
+): (ReactElement | null)[] {
+  return components.map((c, i) => {
+    if (!importedComponents[c.name]) {
+      console.error(`Expected to find component loaded for ${c.name} but none found.`)
+      return null
+    }
+    const previewProps = getPreviewProps(c.props, streamDocument)
+    const children = createStudioElements(c.children ?? [], importedComponents, streamDocument)
+    const component = createElement(importedComponents[c.name], {
+      ...previewProps,
+      key: `${c.name}-${i}`
+    }, ...children)
+    return (
+      <ComponentPreviewBoundary key={`${JSON.stringify(previewProps)}-${c.uuid}`}>
+        {component}
+      </ComponentPreviewBoundary>
+    )
+  })
+}
+
 type ComponentImportType = FunctionComponent<Record<string, unknown>> | string
 
-function useComponents(
+function useImportedComponents(
   pageState: PageState,
   moduleNameToComponentMetadata: ModuleNameToComponentMetadata
-): [Record<string, ComponentImportType>] {
+): Record<string, ComponentImportType> {
   const [
-    loadedComponents,
-    setLoadedComponents
+    importedComponents,
+    setImportedComponents
   ] = useState<Record<string, ComponentImportType>>({})
   // Use ref instead of "loadedComponents" to avoid triggering rerender (infinite loop)
   // in useCallback/useEffect logic
-  const loadedComponentsRef = useRef<Record<string, ComponentImportType>>(loadedComponents)
+  const importedComponentsRef = useRef<Record<string, ComponentImportType>>(importedComponents)
 
   const modules = useMemo(() => {
     return import.meta.glob<Record<string, unknown>>([
@@ -77,7 +91,7 @@ function useComponents(
   ): Promise<void> | null => {
     const { name, moduleName } = c
     // Avoid re-importing components
-    if (name in loadedComponentsRef.current) {
+    if (name in importedComponentsRef.current) {
       return null
     }
     // built-in JSX Element
@@ -107,15 +121,15 @@ function useComponents(
       importComponent(pageState.layoutState, '../../../src/layouts', newLoadedComponents),
       ...pageState.componentsState.map(c => importComponent(c, '../../../src/components', newLoadedComponents))
     ]).then(() => {
-      setLoadedComponents(prev => {
+      setImportedComponents(prev => {
         const newState = { ...prev, ...newLoadedComponents }
-        loadedComponentsRef.current = newState
+        importedComponentsRef.current = newState
         return newState
       })
     })
   }, [importComponent, pageState.componentsState, pageState.layoutState])
 
-  return [loadedComponents]
+  return importedComponents
 }
 
 function getFunctionComponent(module: Record<string, unknown>, name: string): ComponentImportType {
