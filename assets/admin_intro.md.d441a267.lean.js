@@ -1,1 +1,0 @@
-import{_ as e,c as i,o as t,a as o}from"./app.680e1261.js";const m='{"title":"Admin Guide","description":"","frontmatter":{},"headers":[],"relativePath":"admin/intro.md"}',n={},a=o("",6),s=[a];function d(l,r,c,p,_,h){return t(),i("div",null,s)}var g=e(n,[["render",d]]);export{m as __pageData,g as default};
