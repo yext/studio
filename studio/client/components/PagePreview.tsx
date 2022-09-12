@@ -20,7 +20,7 @@ export default function PagePreview() {
 function useElements() {
   const { pageState, moduleNameToComponentMetadata, streamDocument, siteSettingsState } = useStudioContext()
   const importedComponents = useImportedComponents(pageState, moduleNameToComponentMetadata)
-  const [ siteSettingsObj ] = useSiteSettings(siteSettingsState)
+  const siteSettingsObj = useSiteSettings(siteSettingsState)
 
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
@@ -152,10 +152,10 @@ function getFunctionComponent(module: Record<string, unknown>, name: string): Co
   }
 }
 
-function useSiteSettings(siteSettingsProp: PropState): [Record<string, any>] {
+function useSiteSettings(siteSettingsProp: PropState): Record<string, any> {
   const siteSettingsObj = {}
   Object.entries(siteSettingsProp).forEach(([propName, propData]) => {
     siteSettingsObj[propName] = propData.value
   })
-  return [siteSettingsObj]
+  return siteSettingsObj
 }
