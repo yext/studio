@@ -1,0 +1,1 @@
+import{_ as s,c as a,o as n,a as l}from"./app.680e1261.js";const A='{"title":"Layouts","description":"","frontmatter":{},"headers":[],"relativePath":"developer/layouts.md"}',o={},p=l("",3),e=[p];function t(r,c,y,D,F,i){return n(),a("div",null,e)}var d=s(o,[["render",t]]);export{A as __pageData,d as default};
