@@ -37,7 +37,8 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         </Card>
       </Card>
       <Banner
-        randomNum={document.address.city.bob}
+        randomNum={100}
+        streamData={document.address.city.bob}
         subtitleUsingStreams={document.id}
         title='12312312'
         backgroundColor='#b75c5c'
@@ -46,7 +47,8 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
       />
       <Banner
         title='custom title'
-        randomNum={document.emails[1]}
+        randomNum={1}
+        streamData={document.emails[1]}
         subtitleUsingStreams={`${document.lastName}`}
         someBool={true}
         anotherColor='#9c8181'

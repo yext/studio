@@ -3,6 +3,8 @@ import { ComponentState } from '../../shared/models'
 import { v4 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../shared/constants'
 import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
+import { isStreamsDataExpression } from '../../shared/isStreamsDataExpression'
+import { isTemplateString } from '../../shared/isTemplateString'
 
 /**
  * These are stream properties that will throw an error if specified within a {@link Stream.fields}, with
@@ -87,22 +89,18 @@ export function getStreamValues(
     }
     Object.keys(props).forEach(propName => {
       const { type, value } = props[propName]
-      if (type === PropTypes.StreamsData) {
+      if (type === PropTypes.StreamsData && isStreamsDataExpression(value)) {
         valuesAccumulator.documentPaths.push(value)
       } else if (type === PropTypes.StreamsString) {
         if (isStreamsDataExpression(value)) {
           valuesAccumulator.documentPaths.push(value)
-        } else {
+        } else if (isTemplateString(value)) {
           valuesAccumulator.templateStrings.push(value)
+        } else {
+          console.error(`Invalid string format for "value" field of type ${type}:`, value)
         }
       }
     })
   })
   return valuesAccumulator
-}
-
-function isStreamsDataExpression(
-  value: string
-): value is StreamsDataExpression {
-  return value.startsWith('document.')
 }

@@ -2,6 +2,7 @@ import { ts, SourceFile, ImportSpecifier, InterfaceDeclaration, OptionalKind, Pr
 import path from 'path'
 import { getSourceFile } from './getSourceFile'
 import { parsePropertyStructures } from './parsePropertyStructures'
+import { PropShape } from '../../shared/models'
 
 /**
  * Recursively find the props interface starting from the provided file path and its import declarations.
@@ -59,7 +60,7 @@ export function getPropShape(
   sourceFile: SourceFile,
   filePath: string,
   interfaceName: string
-) {
+): { propShape: PropShape, acceptsChildren: boolean } {
   const {
     propsInterfaceNode,
     propsFilePath
