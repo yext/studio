@@ -1,13 +1,15 @@
 import { TemplateProps } from '@yext/pages'
 import { createContext, useContext, Dispatch, SetStateAction } from 'react'
-import { ComponentState, PageState } from '../../shared/models'
+import { ComponentMetadata, ComponentState, PageState, PropState } from '../../shared/models'
 import { StudioProps } from './Studio'
 
 export interface StudioContextType {
   moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
   pageState: PageState,
   setPageState: Dispatch<SetStateAction<PageState>>,
-  siteSettings: StudioProps['siteSettings'],
+  siteSettingsMetadata: ComponentMetadata,
+  siteSettingsState: PropState,
+  setSiteSettingsState: Dispatch<SetStateAction<PropState>>,
   streamDocument: TemplateProps['document'],
   setStreamDocument: Dispatch<SetStateAction<TemplateProps['document']>>,
   activeComponentState: ComponentState | undefined,

@@ -1,11 +1,11 @@
 import fs from 'fs'
-import { ComponentState } from 'react'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
-import { PageState, PropState, ComponentMetadata } from '../../shared/models'
+import { PageState, PropState, ComponentMetadata, ComponentState } from '../../shared/models'
 import { PropTypes } from '../../types'
 import { getSourceFile, prettify, getDefaultExport, getExportedObjectLiteral, updatePropsObjectLiteral } from '../common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getRootPath from '../getRootPath'
+import { updateFileImports } from './updateFileImports'
 
 import updateStreamConfig from './updateStreamConfig'
 
@@ -33,6 +33,7 @@ export default function updatePageFile(
   pageComponent.removeStatement(returnStatementIndex)
   pageComponent.addStatements(newReturnStatement)
 
+  updateFileImports(sourceFile, updatedState.componentsState)
   if (options.updateStreamConfig) {
     updateStreamConfig(sourceFile, updatedState.componentsState)
   }
@@ -78,7 +79,8 @@ function createJsxSelfClosingElement(
   Object.keys(props).forEach(propName => {
     const propType = props[propName].type
     const val = props[propName].value
-    if (propType === PropTypes.string || propType === PropTypes.HexColor) {
+    if (props[propName].expressionSource === undefined
+        && (propType === PropTypes.string || propType === PropTypes.HexColor)) {
       el += `${propName}='${val}' `
     } else {
       el += `${propName}={${val}} `
@@ -100,6 +102,7 @@ function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
         throw new Error(`Unable to find "globalProps" variable for file path: ${relativeFilePath}`)
       }
       updatePropsObjectLiteral(propsLiteralExp, c.props)
+      updateFileImports(sourceFile, [c])
       const updatedFileText = prettify(sourceFile.getFullText())
       fs.writeFileSync(relativeFilePath, updatedFileText)
     }

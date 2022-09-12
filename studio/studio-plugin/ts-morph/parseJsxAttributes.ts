@@ -1,6 +1,7 @@
 import { JsxAttributeLike, SyntaxKind } from 'ts-morph'
 import { ComponentMetadata, PropState } from '../../shared/models'
-import { getPropName, getJsxAttributeValue, validatePropState } from '../common'
+import { validatePropState } from '../../shared/validatePropState'
+import { getExpressionSource, getPropName, getPropValue } from '../common'
 
 export default function parseJsxAttributes(
   attributes: JsxAttributeLike[],
@@ -19,10 +20,11 @@ export default function parseJsxAttributes(
     if (!propType) {
       throw new Error('Could not find prop type for: ' + jsxAttribute.getFullText())
     }
-    const propValue = getJsxAttributeValue(jsxAttribute)
+    const { value, isExpressionType } = getPropValue(jsxAttribute.getInitializerOrThrow())
     const propState = {
       type: propType,
-      value: propValue
+      value,
+      ...(isExpressionType && { expressionSource: getExpressionSource(value) })
     }
     if (!validatePropState(propState)) {
       throw new Error(`Could not validate propState ${JSON.stringify(propState, null, 2)}`)
@@ -31,3 +33,4 @@ export default function parseJsxAttributes(
   })
   return props
 }
+

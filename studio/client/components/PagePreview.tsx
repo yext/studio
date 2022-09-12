@@ -1,15 +1,13 @@
-import React, { FunctionComponent, useEffect, useCallback, useState, useMemo } from 'react'
-import { useRef } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
+import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, useRef } from 'react'
+import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata, PropState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
 
 export default function PagePreview() {
-  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
-  const [
-    loadedComponents
-  ] = useComponents(pageState, moduleNameToComponentMetadata)
+  const { pageState, siteSettingsState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
+  const [ loadedComponents ] = useComponents(pageState, moduleNameToComponentMetadata)
+  const [ siteSettingsObj ] = useSiteSettings(siteSettingsState)
 
   const componentsToRender = useMemo(() => {
     // prevent logging errors on initial render before components are imported
@@ -21,7 +19,7 @@ export default function PagePreview() {
         console.error(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
         return null
       }
-      const previewProps = getPreviewProps(c.props, streamDocument)
+      const previewProps = getPreviewProps(c.props, streamDocument, siteSettingsObj)
       const component = React.createElement(loadedComponents[c.name], {
         ...previewProps,
         verticalConfigMap: {},
@@ -40,7 +38,13 @@ export default function PagePreview() {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return children
     }
-  }, [loadedComponents, pageState.componentsState, pageState.layoutState.name, streamDocument])
+  }, [
+    loadedComponents,
+    pageState.componentsState,
+    pageState.layoutState.name,
+    siteSettingsObj,
+    streamDocument
+  ])
 
   return (
     <div className='w-full h-full'>
@@ -129,4 +133,12 @@ function getFunctionComponent(module: Record<string, unknown>, name: string): Co
   } else {
     return `Module ${name} is not a valid functional component.`
   }
+}
+
+function useSiteSettings(siteSettingsProp: PropState): [Record<string, any>] {
+  const siteSettingsObj = {}
+  Object.entries(siteSettingsProp).forEach(([propName, propData]) => {
+    siteSettingsObj[propName] = propData.value
+  })
+  return [siteSettingsObj]
 }

@@ -1,23 +1,28 @@
-import { ObjectLiteralExpression } from 'ts-morph'
+import { ObjectLiteralExpression, PropertyAssignment, ts } from 'ts-morph'
 import { PropShape, PropState } from '../../shared/models'
-import { parseObjectLiteralExpression } from './parseObjectLiteralExpression'
-import { validatePropState } from './validatePropState'
+import { validatePropState } from '../../shared/validatePropState'
+import { getExpressionSource } from './getExpressionSource'
+import { getPropValue } from './getPropValue'
 
 export function getPropsState(
   propsExpression: ObjectLiteralExpression,
   propShape: PropShape
 ): PropState {
-  const propValues: Record<string, unknown> = parseObjectLiteralExpression(propsExpression)
   const propsState: PropState = {}
-  Object.entries(propValues).forEach(([propName, propValue]) => {
-    const propState = {
-      type: propShape[propName].type,
-      value: propValue
-    }
-    if (validatePropState(propState)) {
+  propsExpression.getProperties()
+    .filter((p): p is PropertyAssignment => p.isKind(ts.SyntaxKind.PropertyAssignment))
+    .forEach(p => {
+      const propName = p.getName()
+      const { value, isExpressionType } = getPropValue(p.getInitializerOrThrow())
+      const propState = {
+        type: propShape[propName].type,
+        value,
+        ...(isExpressionType && { expressionSource: getExpressionSource(value) })
+      }
+      if (!validatePropState(propState)) {
+        throw new Error(`Could not validate propState ${JSON.stringify(propState, null, 2)}`)
+      }
       propsState[propName] = propState
-    }
-  })
-
+    })
   return propsState
 }

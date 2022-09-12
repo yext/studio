@@ -11,6 +11,7 @@ import '../index.css'
 import Footer, { globalProps as footerProps } from '../components/Footer.global'
 import Header, { globalProps as headerProps } from '../components/Header.global'
 import Card from '../components/Card'
+import siteSettings from '../siteSettings'
 
 export const config: TemplateConfig = {
   stream: {
@@ -40,7 +41,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         randomNum={100}
         streamData={document.address.city.bob}
         subtitleUsingStreams={document.id}
-        title='12312312'
+        title={siteSettings.experienceKey}
         backgroundColor='#b75c5c'
         someBool={true}
         anotherColor='#45de0d'

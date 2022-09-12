@@ -1,13 +1,17 @@
 import { PropState } from '../../shared/models'
 import lodashGet from 'lodash/get.js'
 import { TemplateProps } from '@yext/pages'
-import { PropTypes, StreamsStringExpression } from '../../types'
-import isTemplateString from './isTemplateString'
+import { ExpressionSourceType, PropTypes } from '../../types'
+import { isTemplateString } from '../../shared/isTemplateString'
 import { STREAMS_TEMPLATE_REGEX } from '../../shared/constants'
+import { isExpressionState } from '../../shared/isExpressionState'
+import { validatePropState } from '../../shared/validatePropState'
+import { isStreamsDataExpression } from '../../shared/isStreamsDataExpression'
 
 export default function getPreviewProps(
   props: PropState,
-  streamDocument: TemplateProps['document']
+  streamDocument: TemplateProps['document'],
+  siteSettings: Record<string, any>
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {}
 
@@ -17,21 +21,34 @@ export default function getPreviewProps(
       return
     }
     if (propData.type === PropTypes.StreamsString) {
-      const stringExpression: StreamsStringExpression = propData.value
+      const stringExpression: string = propData.value
       if (isTemplateString(stringExpression)) {
         const templateStringWithoutBacktiks = stringExpression.substring(1, stringExpression.length - 1)
         transformedProps[propName] =
           templateStringWithoutBacktiks.replaceAll(STREAMS_TEMPLATE_REGEX, (...args) => {
             return lodashGet({ document: streamDocument }, args[1]) ?? args[0]
           })
-      } else {
+      } else if (isStreamsDataExpression(stringExpression)) {
         transformedProps[propName] = lodashGet({
           document: streamDocument
         }, stringExpression) ?? stringExpression
+      } else {
+        console.error('Unrecognized value type for PropTypes.StreamsString:', stringExpression)
       }
     } else if (propData.type === PropTypes.StreamsData) {
       const documentPath = propData.value
       transformedProps[propName] = lodashGet({ document: streamDocument }, documentPath) ?? documentPath
+    } else if (isExpressionState(propData)) {
+      if (propData.expressionSource === ExpressionSourceType.SiteSettings) {
+        const siteSettingsPath = propData.value
+        const newPropValue = lodashGet({ siteSettings }, siteSettingsPath) ?? siteSettingsPath
+        if (validatePropState({ type: propData.type, value: newPropValue })) {
+          transformedProps[propName] = newPropValue
+        } else {
+          console.warn(`The value extracted from the expression ${siteSettingsPath} does not match with the expected propType ${propData.type}:\n${newPropValue}`)
+          transformedProps[propName] = siteSettingsPath
+        }
+      }
     } else {
       transformedProps[propName] = propData.value
     }

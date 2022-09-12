@@ -8,10 +8,18 @@ export function updatePropsObjectLiteral(node: ObjectLiteralExpression, updatedS
     .filter((p): p is PropertyAssignment => p.isKind(ts.SyntaxKind.PropertyAssignment))
     .forEach(p => {
       const propName = p.getName()
-      const { type, value } = updatedState[propName]
+      const { type, value, expressionSource } = updatedState[propName]
+      let nodeValue: string | number | boolean
+      if (expressionSource !== undefined) {
+        nodeValue = value
+      } else if (type === PropTypes.string) {
+        nodeValue = `'${value}'`
+      } else {
+        nodeValue = JSON.stringify(value)
+      }
       node.addPropertyAssignment({
         name: propName,
-        initializer: type === PropTypes.string ? `'${value}'` : JSON.stringify(value)
+        initializer: nodeValue
       })
       p.remove()
     })

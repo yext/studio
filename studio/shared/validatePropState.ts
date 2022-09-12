@@ -1,10 +1,19 @@
-import { PropTypes, PropStateTypes } from '../../types'
+import { PropTypes, PropStateTypes, ExpressionSourceType } from '../types'
 
 export function validatePropState(propState: {
   type: PropTypes,
-  value: unknown
+  value: unknown,
+  expressionSource?: ExpressionSourceType
 }): propState is PropStateTypes {
-  const { type, value } = propState
+  const { type, value, expressionSource } = propState
+  if (expressionSource) {
+    switch (expressionSource) {
+      case ExpressionSourceType.SiteSettings:
+        return typeof value === 'string' && value.startsWith('siteSettings.')
+      default:
+        throw new Error(`Unknown PropTypes with expressionSource: "${expressionSource}"`)
+    }
+  }
   switch (type) {
     case PropTypes.string:
       return typeof value === 'string'
@@ -21,6 +30,6 @@ export function validatePropState(propState: {
       if (value.startsWith('document.')) return true
       return value.length > 1 && value.startsWith('`') && value.endsWith('`')
     default:
-      throw new Error(`Unknown PropTypes: "${type}"`)
+      throw new Error(`Unknown PropTypes with type: "${type}"`)
   }
 }
