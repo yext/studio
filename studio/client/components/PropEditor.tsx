@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import { useCallback, useState } from 'react'
 import { PropState, ComponentMetadata } from '../../shared/models'
+import { validatePropState } from '../../shared/validatePropState'
 import { ExpressionSourceType, PropStateTypes, PropTypes } from '../../types'
 import { ExpressionLogo } from './ExpressionLogo'
 import ExpressionProp from './ExpressionProp'
@@ -21,20 +22,25 @@ export default function PropEditor({
     console.error('Error rendering prop editor for', propState)
     return null
   }
-  function updatePropState(propName: string, newPropState: Omit<PropStateTypes, 'type'>) {
-    const mergedPropState = {
-      ...propState[propName],
-      ...newPropState
-    } as PropStateTypes
-    setPropState({
-      ...propState,
-      [propName]: mergedPropState
-    })
-  }
   const { propShape } = componentMetadata
   const className = classNames('flex flex-col flex-grow m-2 px-2 py-2 border-4', {
     'border-black': componentMetadata.global
   })
+  function updatePropState(propName: string, newPropState: Omit<PropStateTypes, 'type'>) {
+    const mergedPropState = {
+      type: propShape[propName].type,
+      ...newPropState
+    }
+    if (validatePropState(mergedPropState)) {
+      setPropState({
+        ...propState,
+        [propName]: mergedPropState
+      })
+    } else {
+      console.warn('Unable to update prop state. Invalid new prop state:', mergedPropState)
+    }
+  }
+
   return (
     <div className={className}>
       {
@@ -94,7 +100,7 @@ export function InputProp<T extends string | number | boolean>(props: {
   const [inputType, setInputType] = useState<string>(expressionInputOnly || expressionSource ? 'expression' : htmlType)
 
   const onExpressionPropChange = useCallback((val: string) => {
-    let expressionSource: ExpressionSourceType | undefined
+    let expressionSource: ExpressionSourceType = ExpressionSourceType.Unknown
     if (val.startsWith('siteSettings.')) {
       expressionSource = ExpressionSourceType.SiteSettings
     }

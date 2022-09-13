@@ -68,5 +68,6 @@ export type ExpressionState = {
 }
 
 export enum ExpressionSourceType {
+  Unknown = 'Unknown',
   SiteSettings = 'siteSettings',
 }

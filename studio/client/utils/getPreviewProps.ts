@@ -39,15 +39,21 @@ export default function getPreviewProps(
       const documentPath = propData.value
       transformedProps[propName] = lodashGet({ document: streamDocument }, documentPath) ?? documentPath
     } else if (isExpressionState(propData)) {
-      if (propData.expressionSource === ExpressionSourceType.SiteSettings) {
-        const siteSettingsPath = propData.value
-        const newPropValue = lodashGet({ siteSettings }, siteSettingsPath) ?? siteSettingsPath
-        if (validatePropState({ type: propData.type, value: newPropValue })) {
-          transformedProps[propName] = newPropValue
-        } else {
-          console.warn(`The value extracted from the expression ${siteSettingsPath} does not match with the expected propType ${propData.type}:\n${newPropValue}`)
-          transformedProps[propName] = siteSettingsPath
-        }
+      switch (propData.expressionSource) {
+        case ExpressionSourceType.SiteSettings:
+          const siteSettingsPath = propData.value
+          const newPropValue = lodashGet({ siteSettings }, siteSettingsPath) ?? siteSettingsPath
+          if (validatePropState({ type: propData.type, value: newPropValue })) {
+            transformedProps[propName] = newPropValue
+          } else {
+            console.warn(`The value extracted from the expression ${siteSettingsPath} does not match with the expected propType ${propData.type}:`, newPropValue)
+            transformedProps[propName] = siteSettingsPath
+          }
+          break
+        default:
+          console.warn('Failed to extract value from unknown expression source type in the following prop state:', propData)
+          transformedProps[propName] = propData.value
+          break
       }
     } else {
       transformedProps[propName] = propData.value

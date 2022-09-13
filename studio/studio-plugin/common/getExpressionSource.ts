@@ -7,5 +7,5 @@ export function getExpressionSource(value: unknown): ExpressionSourceType | unde
   if (value.startsWith('siteSettings')) {
     return ExpressionSourceType.SiteSettings
   }
-  return undefined
+  return ExpressionSourceType.Unknown
 }

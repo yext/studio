@@ -18,7 +18,7 @@ export const config: TemplateConfig = {
     $id: 'studio-stream-id',
     filter: { entityTypes: ['ce_person'] },
     localization: { locales: ['en'], primary: false },
-    fields: ['address.city.bob', 'emails', 'lastName'],
+    fields: ['address.city', 'emails', 'lastName'],
   },
 }
 
@@ -39,7 +39,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
       </Card>
       <Banner
         randomNum={100}
-        streamData={document.address.city.bob}
+        streamData={document.address.city}
         subtitleUsingStreams={document.id}
         title={siteSettings.experienceKey}
         backgroundColor='#b75c5c'

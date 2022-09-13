@@ -10,6 +10,8 @@ export function validatePropState(propState: {
     switch (expressionSource) {
       case ExpressionSourceType.SiteSettings:
         return typeof value === 'string' && value.startsWith('siteSettings.')
+      case ExpressionSourceType.Unknown:
+        return typeof value === 'string'
       default:
         throw new Error(`Unknown PropTypes with expressionSource: "${expressionSource}"`)
     }
