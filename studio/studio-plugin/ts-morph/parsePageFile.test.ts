@@ -1,7 +1,7 @@
 import { ComponentState } from 'react'
 import parsePageFile from './parsePageFile'
 import getRootPath from '../getRootPath'
-import { PropTypes } from '../../types'
+import { ExpressionSourceType, PropTypes } from '../../types'
 
 jest.mock('../componentMetadata')
 jest.mock('../getRootPath')
@@ -137,11 +137,13 @@ it('correctly parses page using streams paths', () => {
           streamsData: {
             type: PropTypes.StreamsData,
             value: 'document.address.city',
+            expressionSource: ExpressionSourceType.Unknown,
           },
           subtitleUsingStreams: {
             type: PropTypes.StreamsString,
             // eslint-disable-next-line no-template-curly-in-string
-            value: '`my prefix ${document.id} my suffix`'
+            value: '`my prefix ${document.id} my suffix`',
+            expressionSource: ExpressionSourceType.Unknown,
           }
         },
         uuid: 'mock-uuid',
