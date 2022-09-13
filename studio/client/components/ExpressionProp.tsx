@@ -1,22 +1,18 @@
-import { ToolTip } from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import useRootClose from '@restart/ui/useRootClose'
 import { PropTypes } from '../../types'
-import { KGLogo } from './KGLogo'
-import isTemplateString from '../utils/isTemplateString'
+import { isTemplateString } from '../../shared/isTemplateString'
 import getStreamDocumentOptions from '../utils/getStreamDocumentOptions'
 import getExpressionEndIndex from '../utils/getExpressionEndIndex'
 import getTemplateExpressionIndex from '../utils/getTemplateExpressionIndex'
 
-export default function StreamsProp(props: {
-  propName: string,
+export default function ExpressionProp(props: {
   propValue: string | undefined,
-  propDoc?: string,
-  propType: PropTypes.StreamsData | PropTypes.StreamsString,
+  propType: PropTypes,
   onChange: (val: string) => void
 }): JSX.Element {
-  const { propName, propValue, propDoc, propType, onChange } = props
+  const { propValue, propType, onChange } = props
   const inputRef = useRef<HTMLInputElement>(null)
   const options = useAutocompleteOptions(propValue, propType, inputRef)
   useRootClose(inputRef, () => setAutocompleteVisibility(false))
@@ -36,69 +32,62 @@ export default function StreamsProp(props: {
   }, [selectionRangeUpdate])
 
   return (
-    <div className='flex flex-col' style={{ fontFamily: '"Courier New", monospace' }}>
-      <label className='peer label'>{propName}:</label>
-      {propDoc && <ToolTip message={propDoc} />}
-      <div className='flex flex-col relative flex-grow'>
-        <div className='flex '>
-          <input
-            ref={inputRef}
-            style={{
-              flexGrow: 1,
-              fontSize: '16px',
-              padding: '0.25em 0.5em'
-            }}
-            onClick={() => setAutocompleteVisibility(true)}
-            onFocus={() => setAutocompleteVisibility(true)}
-            onChange={e => {
-              setAutocompleteVisibility(true)
-              onChange(e.target.value)
-            }}
-            onKeyDown={e => {
-              if (options.length === 0) {
-                return
-              }
-              if (e.key === 'ArrowDown') {
-                e.preventDefault()
-                setAutocompleteIndex((autocompleteIndex + 1) % options.length)
-              } else if (e.key === 'ArrowUp') {
-                e.preventDefault()
-                setAutocompleteIndex((options.length + autocompleteIndex - 1) % options.length)
-              } else if (e.key === 'Enter') {
-                insertAutocompleteValue(options[autocompleteIndex])
-              }
-            }}
-            value={propValue ?? ''}
-          />
-          <KGLogo style={{
-            filter: propType === PropTypes.StreamsString ? 'sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg)' : ''
-          }}/>
-        </div>
-        {
-          autocompleteIsVisible && options.length > 0 && <ul style={{
-            position: 'absolute',
-            width: '100%',
-            marginTop: '1px',
-            top: '2em',
-            zIndex: 1
-          }}>
-            {options.map((k, i) => {
-              return (
-                <li key={k}
-                  style={{
-                    backgroundColor: i === autocompleteIndex ? 'rgb(223, 224, 246)' : 'white',
-                    padding: '0.25em 1em',
-                    cursor: 'pointer'
-                  }}
-                  onClick={() => insertAutocompleteValue(k)}
-                >
-                  <button>{k}</button>
-                </li>
-              )
-            })}
-          </ul>
-        }
+    <div className='flex flex-col relative flex-grow' style={{ fontFamily: '"Courier New", monospace' }}>
+      <div className='flex '>
+        <input
+          ref={inputRef}
+          style={{
+            flexGrow: 1,
+            fontSize: '16px',
+            padding: '0.25em 0.5em'
+          }}
+          onClick={() => setAutocompleteVisibility(true)}
+          onFocus={() => setAutocompleteVisibility(true)}
+          onChange={e => {
+            setAutocompleteVisibility(true)
+            onChange(e.target.value)
+          }}
+          onKeyDown={e => {
+            if (options.length === 0) {
+              return
+            }
+            if (e.key === 'ArrowDown') {
+              e.preventDefault()
+              setAutocompleteIndex((autocompleteIndex + 1) % options.length)
+            } else if (e.key === 'ArrowUp') {
+              e.preventDefault()
+              setAutocompleteIndex((options.length + autocompleteIndex - 1) % options.length)
+            } else if (e.key === 'Enter') {
+              insertAutocompleteValue(options[autocompleteIndex])
+            }
+          }}
+          value={propValue ?? ''}
+        />
       </div>
+      {
+        autocompleteIsVisible && options.length > 0 && <ul style={{
+          position: 'absolute',
+          width: '100%',
+          marginTop: '1px',
+          top: '2em',
+          zIndex: 1
+        }}>
+          {options.map((k, i) => {
+            return (
+              <li key={k}
+                style={{
+                  backgroundColor: i === autocompleteIndex ? 'rgb(223, 224, 246)' : 'white',
+                  padding: '0.25em 1em',
+                  cursor: 'pointer'
+                }}
+                onClick={() => insertAutocompleteValue(k)}
+              >
+                <button>{k}</button>
+              </li>
+            )
+          })}
+        </ul>
+      }
     </div>
   )
 

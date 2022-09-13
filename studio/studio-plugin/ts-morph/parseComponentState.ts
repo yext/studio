@@ -75,10 +75,10 @@ function parseElement(
   const attributes: JsxAttributeLike[] = c.isKind(SyntaxKind.JsxSelfClosingElement)
     ? c.getAttributes()
     : c.getOpeningElement().getAttributes()
-  const componentMetaData = moduleNameToComponentMetadata[moduleName][name]
-  const props = componentMetaData.global
-    ? componentMetaData.globalProps ?? {}
-    : parseJsxAttributes(attributes, componentMetaData)
+  const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
+  const props = componentMetadata.global
+    ? componentMetadata.globalProps ?? {}
+    : parseJsxAttributes(attributes, componentMetadata)
   return { moduleName, props }
 }
 

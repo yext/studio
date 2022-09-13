@@ -9,7 +9,14 @@ export enum PropTypes {
 }
 
 export type PropStateTypes =
-  StreamsStringState | StreamsDataState | HexColorState | NumberState | BooleanState | StringState
+  (StreamsStringState |
+  StreamsDataState |
+  HexColorState |
+  NumberState |
+  BooleanState |
+  StringState)
+  & { expressionSource?: never } |
+  ExpressionState
 
 // When a StreamsString is used by a component it is a string type
 export type StreamsString = string
@@ -52,4 +59,15 @@ export type StringState = {
 export type BooleanState = {
   type: PropTypes.boolean,
   value: boolean
+}
+
+export type ExpressionState = {
+  type: PropTypes,
+  value: string,
+  expressionSource: ExpressionSourceType
+}
+
+export enum ExpressionSourceType {
+  Unknown = 'Unknown',
+  SiteSettings = 'siteSettings',
 }

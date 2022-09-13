@@ -11,13 +11,14 @@ import '../index.css'
 import Footer, { globalProps as footerProps } from '../components/Footer.global'
 import Header, { globalProps as headerProps } from '../components/Header.global'
 import Card from '../components/Card'
+import siteSettings from '../siteSettings'
 
 export const config: TemplateConfig = {
   stream: {
     $id: 'studio-stream-id',
     filter: { entityTypes: ['ce_person'] },
     localization: { locales: ['en'], primary: false },
-    fields: ['address.city.bob', 'emails', 'lastName'],
+    fields: ['address.city', 'emails', 'lastName'],
   },
 }
 
@@ -37,16 +38,18 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         </Card>
       </Card>
       <Banner
-        randomNum={document.address.city.bob}
+        randomNum={100}
+        streamData={document.address.city}
         subtitleUsingStreams={document.id}
-        title='12312312'
+        title={siteSettings.experienceKey}
         backgroundColor='#b75c5c'
         someBool={true}
         anotherColor='#45de0d'
       />
       <Banner
         title='custom title'
-        randomNum={document.emails[1]}
+        randomNum={1}
+        streamData={document.emails[1]}
         subtitleUsingStreams={`${document.lastName}`}
         someBool={true}
         anotherColor='#9c8181'

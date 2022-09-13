@@ -1,21 +1,29 @@
-import { ts, Node } from 'ts-morph'
+import { ts, Expression, StringLiteral, JsxExpression } from 'ts-morph'
 
-export function getPropValue(n: Node): string | number | boolean {
-  const stringNode = n.getFirstDescendantByKind(ts.SyntaxKind.StringLiteral)
-  if (stringNode) {
-    return stringNode.compilerNode.text
+export function getPropValue(initializer: StringLiteral | Expression | JsxExpression): {
+  value: string | number | boolean,
+  isExpressionType?: boolean
+} {
+  if (initializer.isKind(ts.SyntaxKind.StringLiteral)) {
+    return { value: initializer.compilerNode.text }
   }
-  if (n.getFirstDescendantByKind(ts.SyntaxKind.TrueKeyword)) return true
-  if (n.getFirstDescendantByKind(ts.SyntaxKind.FalseKeyword)) return false
-  const numberNode = n.getFirstDescendantByKind(ts.SyntaxKind.NumericLiteral)
-  if (numberNode) {
-    return parseFloat(numberNode.compilerNode.text)
+  const expression = initializer.isKind(ts.SyntaxKind.JsxExpression)
+    ? initializer.getExpressionOrThrow()
+    : initializer
+  if (
+    expression.isKind(ts.SyntaxKind.PropertyAccessExpression) ||
+    expression.isKind(ts.SyntaxKind.TemplateExpression) ||
+    expression.isKind(ts.SyntaxKind.ElementAccessExpression) ||
+    expression.isKind(ts.SyntaxKind.Identifier)
+  ) {
+    return { value: expression.getText(), isExpressionType: true }
+  } else if (
+    expression.isKind(ts.SyntaxKind.NumericLiteral) ||
+    expression.isKind(ts.SyntaxKind.FalseKeyword) ||
+    expression.isKind(ts.SyntaxKind.TrueKeyword)
+  ) {
+    return { value: expression.getLiteralValue() }
+  } else {
+    throw new Error('Unrecognized Expression kind: ' + expression.getKindName())
   }
-  const templateExpression = n.getFirstDescendantByKind(ts.SyntaxKind.TemplateExpression)
-  if (templateExpression) {
-    const templateStringIncludingBacktiks = templateExpression.getFullText()
-    // remove the backtiks which should be the first and last characters
-    return templateStringIncludingBacktiks.substring(1, templateStringIncludingBacktiks.length - 1)
-  }
-  throw new Error('unhandled prop value for node: ' + n.getFullText() + ' with kind: ' + n.getKindName())
 }

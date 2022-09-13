@@ -1,18 +1,22 @@
-import { ObjectLiteralExpression, PropertyAssignment, ts } from 'ts-morph'
+import { ObjectLiteralExpression } from 'ts-morph'
 import { PropState } from '../../shared/models'
 import { PropTypes } from '../../types'
 
 export function updatePropsObjectLiteral(node: ObjectLiteralExpression, updatedState: PropState) {
-  node
-    .getProperties()
-    .filter((p): p is PropertyAssignment => p.isKind(ts.SyntaxKind.PropertyAssignment))
-    .forEach(p => {
-      const propName = p.getName()
-      const { type, value } = updatedState[propName]
-      node.addPropertyAssignment({
-        name: propName,
-        initializer: type === PropTypes.string ? `'${value}'` : JSON.stringify(value)
-      })
-      p.remove()
+  Object.entries(updatedState).forEach(([propName, propState]) => {
+    const { type, value, expressionSource } = propState
+    let nodeValue: string | number | boolean
+    if (expressionSource !== undefined) {
+      nodeValue = value
+    } else if (type === PropTypes.string) {
+      nodeValue = `'${value}'`
+    } else {
+      nodeValue = JSON.stringify(value)
+    }
+    node.getProperty(propName)?.remove()
+    node.addPropertyAssignment({
+      name: propName,
+      initializer: nodeValue
     })
+  })
 }

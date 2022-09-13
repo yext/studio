@@ -20,7 +20,6 @@ export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
       acceptsChildren: false,
       editable: true,
       importIdentifier: './components/Banner',
-      global: false,
       propShape: {
         title: {
           type: PropTypes.string,

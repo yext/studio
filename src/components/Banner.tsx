@@ -5,11 +5,13 @@ export interface BannerProps {
   title?: string,
   /** A title that takes in streams data */
   subtitleUsingStreams?: StreamsString,
+  /** some stream data */
+  streamData?: StreamsData,
   /** 
    * Some random
    * number to display!
    */
-  randomNum?: StreamsData,
+  randomNum?: number,
   /**
    * A boolean to toggle nothing..
    */
@@ -32,6 +34,7 @@ export default function Banner(props: BannerProps) {
       </h1>
       <h3>{props.subtitleUsingStreams}</h3>
       {props.randomNum && <h2>{JSON.stringify(props.randomNum)}</h2>}
+      {props.streamData && <h2>{JSON.stringify(props.streamData)}</h2>}
       <h3>{props.someBool ? 'true' : 'false'}</h3>
     </div>
   );

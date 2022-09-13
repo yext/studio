@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
+import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata, PropState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
@@ -18,15 +18,17 @@ export default function PagePreview() {
 }
 
 function useElements() {
-  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
+  const { pageState, moduleNameToComponentMetadata, streamDocument, siteSettingsState } = useStudioContext()
   const importedComponents = useImportedComponents(pageState, moduleNameToComponentMetadata)
+  const siteSettingsObj = useSiteSettings(siteSettingsState)
 
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
     if (Object.keys(importedComponents).length === 0) {
       return null
     }
-    const elements = createStudioElements(pageState.componentsState, importedComponents, streamDocument)
+    const elements = createStudioElements(
+      pageState.componentsState, importedComponents, streamDocument, siteSettingsObj)
     const layoutName = pageState.layoutState.name
     if (importedComponents[layoutName]) {
       return createElement(importedComponents[layoutName], {}, elements)
@@ -36,21 +38,29 @@ function useElements() {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return elements
     }
-  }, [importedComponents, pageState.componentsState, pageState.layoutState.name, streamDocument])
+  }, [
+    importedComponents,
+    pageState.componentsState,
+    pageState.layoutState.name,
+    siteSettingsObj,
+    streamDocument
+  ])
 }
 
 function createStudioElements(
   components: ComponentState[],
   importedComponents: Record<string, ComponentImportType>,
-  streamDocument: Record<string, any>
+  streamDocument: Record<string, any>,
+  siteSettingsObj: Record<string, any>
 ): (ReactElement | null)[] {
   return components.map((c, i) => {
     if (!importedComponents[c.name]) {
       console.error(`Expected to find component loaded for ${c.name} but none found.`)
       return null
     }
-    const previewProps = getPreviewProps(c.props, streamDocument)
-    const children = createStudioElements(c.children ?? [], importedComponents, streamDocument)
+    const previewProps = getPreviewProps(c.props, streamDocument, siteSettingsObj)
+    const children = createStudioElements(
+      c.children ?? [], importedComponents, streamDocument, siteSettingsObj)
     const component = createElement(importedComponents[c.name], {
       ...previewProps,
       key: `${c.name}-${i}`
@@ -140,4 +150,12 @@ function getFunctionComponent(module: Record<string, unknown>, name: string): Co
   } else {
     return `Module ${name} is not a valid functional component.`
   }
+}
+
+function useSiteSettings(siteSettingsProp: PropState): Record<string, any> {
+  const siteSettingsObj = {}
+  Object.entries(siteSettingsProp).forEach(([propName, propData]) => {
+    siteSettingsObj[propName] = propData.value
+  })
+  return siteSettingsObj
 }
