@@ -26,10 +26,10 @@ export default function PropEditor({
   const className = classNames('flex flex-col flex-grow m-2 px-2 py-2 border-4', {
     'border-black': componentMetadata.global
   })
-  function updatePropState(propName: string, newPropState: Omit<PropStateTypes, 'type'>) {
+  function updatePropState(propName: string, newPropValue: Omit<PropStateTypes, 'type'>) {
     const mergedPropState = {
       type: propShape[propName].type,
-      ...newPropState
+      ...newPropValue
     }
     if (validatePropState(mergedPropState)) {
       setPropState({
