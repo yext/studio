@@ -29,14 +29,6 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <TestLayout>
-      <Header {...headerProps} />
-      <Card bgColor='#45de0d'>
-        <Card bgColor='#abcdef'>
-          <Card bgColor='#ffffee'>
-            <Card/>
-          </Card>
-        </Card>
-      </Card>
       <Banner
         randomNum={100}
         streamData={document.address.city}
@@ -54,8 +46,6 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         someBool={true}
         anotherColor='#9c8181'
       />
-      <Footer {...footerProps} />
-      <Footer {...footerProps} />
     </TestLayout>
   )
 }
