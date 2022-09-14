@@ -41,11 +41,11 @@ export default function Studio(props: StudioProps) {
 
   return (
     <StudioContext.Provider value={value}>
-      <div className='flex h-screen'>
+      {/* <div className='flex h-screen'> */}
         <LeftSidebar />
-        <PagePreview />
-        <RightSidebar />
-      </div>
+        {/* <PagePreview /> */}
+        {/* <RightSidebar /> */}
+      {/* </div> */}
     </StudioContext.Provider>
   )
 }

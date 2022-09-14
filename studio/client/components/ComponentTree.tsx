@@ -17,24 +17,23 @@ const CSS_CLASSES: Readonly<Classes> = {
 
 type ValidatedNodeList = (NodeModel<ComponentState> & {
   parent: string,
-  data: ComponentState
+  // data: ComponentState
 })[]
 type NodeList = NodeModel<ComponentState>[]
  
 export default function ComponentTree() {
   const { pageState, setPageState } = useStudioContext()
-  const [ tree, setTree ] = useState(() => pageState.componentsState.map(c => ({
+  const [ tree, setTree ] = useState<NodeList>(() => pageState.componentsState.map(c => ({
     id: c.uuid,
     parent: c.parentUUID ?? ROOT_ID,
     text: c.name,
-    droppable: true,
-    data: c
+    droppable: true
   })))
   console.log(JSON.stringify(tree, null, 2))
 
   const handleDrop = useCallback((tree: NodeList) => {
     console.log(tree)
-    validateTreeOrThrow(tree)
+    // validateTreeOrThrow(tree)
     // setPageState({
     //   ...pageState,
     //   componentsState: tree.map(n => ({
@@ -69,7 +68,7 @@ export default function ComponentTree() {
         // }}
         sort={false}
         insertDroppableFirst={false}
-        dropTargetOffset={10}
+        dropTargetOffset={5}
         initialOpen={true}
       />
     </DndProvider>
@@ -77,15 +76,21 @@ export default function ComponentTree() {
 }
 
 function validateTreeOrThrow(tree: NodeList): asserts tree is ValidatedNodeList {
-  if (tree.some(n => !n.data)) {
-    throw new Error('Missing ComponentState data in ComponentTree')
-  }
+  // if (tree.some(n => !n.data)) {
+  //   throw new Error('Missing ComponentState data in ComponentTree')
+  // }
   if (tree.some(n => typeof n.parent !== 'string')) {
     throw new Error('node.parent must be a string')
   }
 }
 
 function renderNode(node: NodeModel<ComponentState>, params: RenderParams) {
+  return (
+    <div>
+    {/* <div style={{ marginLeft: `${params.depth}em` }}> */}
+      {node.text} + {node.id.substring(0,3)}
+    </div>
+  )
   if (!node.data) {
     throw new Error('Node must have data')
   }

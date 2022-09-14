@@ -11,7 +11,7 @@ import '../../dist/output.css'
 export function Main() {
   return (
     <>
-      <Toast />
+      {/* <Toast /> */}
       <Studio {...virtualStudioContext} />
     </>
   )
