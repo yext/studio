@@ -21,14 +21,8 @@ export default function parsePageFile(filePath: string): PageState {
     }
   })
 
-  const uuidToComponentState = componentsState.reduce((prev, curr) => {
-    prev[curr.uuid] = curr
-    return prev
-  }, {})
-
   return {
     layoutState,
-    componentsState,
-    uuidToComponentState
+    componentsState
   }
 }

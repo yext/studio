@@ -8,7 +8,7 @@ import parseJsxAttributes from './parseJsxAttributes'
 export default function parseComponentState(
   c: JsxFragment | JsxElement | JsxSelfClosingElement,
   imports: Record<string, string[]>
-): Omit<ComponentState, 'depth' | 'parentUUID'> {
+): Omit<ComponentState, 'parentUUID'> {
   const uuid = v4()
 
   if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {

@@ -155,7 +155,7 @@ it('correctly parses page using streams paths', () => {
 
 it('parses nested components props and children correctly', () => {
   const result = parsePageFile(getRootPath('nestedComponents.tsx'))
-  expect(result.componentsState).toHaveLength(1)
+  expect(result.componentsState).toHaveLength(2)
   expect(result.componentsState[0]).toEqual(expect.objectContaining({
     props: {
       bgColor: {
@@ -164,12 +164,8 @@ it('parses nested components props and children correctly', () => {
       }
     }
   }))
-  expect(result.componentsState[0].children).toHaveLength(1)
-  expect(result.componentsState[0]?.children?.[0]).toEqual({
-    moduleName: 'localComponents',
-    name: 'Card',
+  expect(result.componentsState[1]).toEqual(expect.objectContaining({
     props: {},
-    uuid: 'mock-uuid',
-    parentUUIDsFromRoot: ['mock-uuid']
-  })
+    parentUUID: 'mock-uuid'
+  }))
 })

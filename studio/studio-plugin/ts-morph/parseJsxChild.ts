@@ -5,8 +5,7 @@ import parseComponentState from './parseComponentState'
 export default function parseJsxChild(
   c: JsxText | JsxExpression | JsxSelfClosingElement | JsxElement | JsxFragment,
   imports: Record<string, string[]>,
-  parentUUID?: string,
-  depth = 0
+  parentUUID?: string
 ): ComponentState[] {
   // All whitespace in Jsx is also considered JsxText, for example indentation
   if (c.isKind(SyntaxKind.JsxText)) {
@@ -21,7 +20,6 @@ export default function parseJsxChild(
 
   const selfState: ComponentState = {
     ...parseComponentState(c, imports),
-    depth,
     parentUUID
   }
 
@@ -30,8 +28,7 @@ export default function parseJsxChild(
   }
 
   const children: ComponentState[] = c.getJsxChildren()
-    .flatMap(c => parseJsxChild(c, imports, selfState.uuid, depth + 1))
+    .flatMap(c => parseJsxChild(c, imports, selfState.uuid))
     .filter((c): c is ComponentState => !!c)
-  // selfState.childrenUUID = children.map(c => c.uuid)
   return [ selfState, ...children ]
 }

@@ -3,7 +3,6 @@ import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMeta
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
-import getComponentStateOrThrow from './getComponentStateOrThrow'
 
 export default function PagePreview() {
   const { pageState } = useStudioContext()
@@ -55,10 +54,7 @@ function createStudioElements(
   siteSettingsObj: Record<string, any>,
   parent?: ComponentState
 ): (ReactElement | null)[] {
-  if (parent) {
-    components = components.filter(c => c.parentUUID === parent.uuid)
-  }
-  return components.map((c, i) => {
+  return components.filter(c => c.parentUUID === parent?.uuid).map((c, i) => {
     if (!importedComponents[c.name]) {
       console.error(`Expected to find component loaded for ${c.name} but none found.`)
       return null

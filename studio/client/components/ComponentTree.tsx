@@ -52,7 +52,7 @@ function ComponentNode({ componentState }: { componentState: ComponentState }) {
         onClick={updateActiveComponent}
       >
         {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={componentState.uuid} />}
-        {componentState.name}
+        {componentState.name} {componentState.uuid.substring(0, 3)}
         {hasUnsavedChanges(componentState, pageStateOnFile) && <div className='red'>*</div>}
       </div>
       {pageState.componentsState.filter(c => c.parentUUID === componentState.uuid).map(c => {
@@ -63,6 +63,6 @@ function ComponentNode({ componentState }: { componentState: ComponentState }) {
 }
 
 function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
-  const initialComponentState: ComponentState | undefined = pageStateOnFile.uuidToComponentState[componentState.uuid]
+  const initialComponentState: ComponentState = getComponentStateOrThrow(componentState.uuid, pageStateOnFile.componentsState)
   return !isEqual(componentState.props, initialComponentState?.props)
 }
