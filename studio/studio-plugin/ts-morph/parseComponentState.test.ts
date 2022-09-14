@@ -31,8 +31,7 @@ it('can parse nested components', () => {
         moduleName: 'localComponents',
         name: 'Card',
         uuid: 'mock-uuid',
-        props: {},
-        parentUUIDsFromRoot: ['mock-uuid'],
+        props: {}
       }
     ]
   })

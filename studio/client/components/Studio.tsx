@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { SiteSettingsProps } from './SiteSettings'
 import { PageState, ModuleNameToComponentMetadata, ComponentState } from '../../shared/models'
-import { StudioContext } from './useStudioContext'
+import { StudioContext, StudioContextType } from './useStudioContext'
 import RightSidebar from './RightSidebar'
 import PagePreview from './PagePreview'
 import LeftSidebar from './LeftSidebar'
@@ -21,10 +21,10 @@ export default function Studio(props: StudioProps) {
   const [pageState, setPageState] = useState(componentsOnPage.index)
   const [streamDocument, setStreamDocument] = useState({})
   const [siteSettingsState, setSiteSettingsState] = useState(siteSettings.propState)
-  const [activeComponentState, setActiveComponentState] = useState<ComponentState | undefined>()
+  const [activeComponentUUID, setActiveComponentUUID] = useState<string | undefined>()
   const [pageStateOnFile, setPageStateOnFile] = useState<PageState>(cloneDeep(componentsOnPage.index))
 
-  const value = {
+  const value: StudioContextType = {
     moduleNameToComponentMetadata,
     pageState,
     setPageState,
@@ -33,8 +33,8 @@ export default function Studio(props: StudioProps) {
     setSiteSettingsState,
     streamDocument,
     setStreamDocument,
-    activeComponentState,
-    setActiveComponentState,
+    activeComponentUUID,
+    setActiveComponentUUID,
     pageStateOnFile,
     setPageStateOnFile
   }

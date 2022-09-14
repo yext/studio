@@ -6,60 +6,33 @@ import getComponentModuleName from './getComponentModuleName'
 import parseJsxAttributes from './parseJsxAttributes'
 
 export default function parseComponentState(
-  c: JsxText | JsxExpression | JsxFragment | JsxElement | JsxSelfClosingElement,
-  imports: Record<string, string[]>,
-  parentUUIDsFromRoot?: string[]
-): ComponentState | null {
-  return deleteChildrenIfEmpty(undecoratedParseComponentState(c, imports, parentUUIDsFromRoot))
-}
-
-function undecoratedParseComponentState(
-  c: JsxText | JsxExpression | JsxFragment | JsxElement | JsxSelfClosingElement,
-  imports: Record<string, string[]>,
-  parentUUIDsFromRoot?: string[]
-): ComponentState | null {
-  if (c.isKind(SyntaxKind.JsxText)) {
-    if (c.getLiteralText().trim() !== '') {
-      throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported`)
-    }
-    return null
-  }
-  if (c.isKind(SyntaxKind.JsxExpression)) {
-    throw new Error(
-      `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`)
-  }
-
+  c: JsxFragment | JsxElement | JsxSelfClosingElement,
+  imports: Record<string, string[]>
+): Omit<ComponentState, 'depth' | 'parentUUID'> {
   const uuid = v4()
+
   if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
     const name = c.getTagNameNode().getText()
     return {
       ...parseElement(c, name, imports),
       name,
-      uuid,
-      parentUUIDsFromRoot
+      uuid
     }
-  }
-
-  const nextParentUUIDs = (parentUUIDsFromRoot ?? []).concat([ uuid ])
-  const children = parseChildren(c, imports, nextParentUUIDs)
-  if (c.isKind(SyntaxKind.JsxFragment)) {
+  } else if (c.isKind(SyntaxKind.JsxFragment)) {
     return {
       name: '',
       isFragment: true,
       uuid,
       props: {},
-      moduleName: 'builtIn',
-      parentUUIDsFromRoot,
-      children
+      moduleName: 'builtIn'
     }
-  }
-  const name = c.getOpeningElement().getTagNameNode().getText()
-  return {
-    ...parseElement(c, name, imports),
-    name,
-    uuid,
-    parentUUIDsFromRoot,
-    children
+  } else {
+    const name = c.getOpeningElement().getTagNameNode().getText()
+    return {
+      ...parseElement(c, name, imports),
+      name,
+      uuid
+    }
   }
 }
 
@@ -80,21 +53,4 @@ function parseElement(
     ? componentMetadata.globalProps ?? {}
     : parseJsxAttributes(attributes, componentMetadata)
   return { moduleName, props }
-}
-
-function parseChildren(
-  c: JsxFragment | JsxElement,
-  imports: Record<string, string[]>,
-  parentUUIDsFromRoot: string[]
-): ComponentState[] {
-  return c.getJsxChildren()
-    .map(c => parseComponentState(c, imports, parentUUIDsFromRoot))
-    .filter((c): c is ComponentState => !!c)
-}
-
-function deleteChildrenIfEmpty(data: ComponentState | null): ComponentState | null {
-  if (data?.children?.length === 0) {
-    delete data.children
-  }
-  return data
 }

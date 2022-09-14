@@ -2,7 +2,8 @@ import { PropStateTypes, PropTypes } from '../types'
 
 export type PageState = {
   layoutState: ComponentState,
-  componentsState: ComponentState[]
+  componentsState: ComponentState[],
+  uuidToComponentState: Record<string, ComponentState>
 }
 
 export interface ComponentState {
@@ -10,9 +11,10 @@ export interface ComponentState {
   props: PropState,
   uuid: string,
   moduleName: PossibleModuleNames,
-  children?: ComponentState[],
+  depth: number,
   isFragment?: true,
-  parentUUIDsFromRoot?: string[]
+  parentUUID?: string,
+  // childrenUUID?: string[]
 }
 
 export type PropState = {
