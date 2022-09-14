@@ -1,4 +1,4 @@
-import { JsxAttributeLike, JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, JsxText, SyntaxKind } from 'ts-morph'
+import { JsxAttributeLike, JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind } from 'ts-morph'
 import { v4 } from 'uuid'
 import { ComponentState, PossibleModuleNames, PropState } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'

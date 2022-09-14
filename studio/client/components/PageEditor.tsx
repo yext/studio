@@ -9,7 +9,7 @@ export function PageEditor(): JSX.Element | null {
     return null
   }
   const { moduleName, name, props } = getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
-  
+
   const componentMetadata: ComponentMetadata =
     moduleNameToComponentMetadata[moduleName][name]
 

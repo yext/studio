@@ -8,10 +8,10 @@ import { useStudioContext } from './useStudioContext'
 
 export default function ComponentTree() {
   const { pageState } = useStudioContext()
-
+  const rootLevelComponents = pageState.componentsState.filter(c => !c?.parentUUID)
   return (
     <div>
-      {pageState.componentsState.map(c => <ComponentNode componentState={c} key={c.uuid} />)}
+      {rootLevelComponents.map(c => <ComponentNode componentState={c} key={c.uuid} />)}
     </div>
   )
 }
@@ -63,6 +63,7 @@ function ComponentNode({ componentState }: { componentState: ComponentState }) {
 }
 
 function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
-  const initialComponentState: ComponentState = getComponentStateOrThrow(componentState.uuid, pageStateOnFile.componentsState)
+  const initialComponentState: ComponentState =
+    getComponentStateOrThrow(componentState.uuid, pageStateOnFile.componentsState)
   return !isEqual(componentState.props, initialComponentState?.props)
 }

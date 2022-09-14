@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SiteSettingsProps } from './SiteSettings'
-import { PageState, ModuleNameToComponentMetadata, ComponentState } from '../../shared/models'
+import { PageState, ModuleNameToComponentMetadata } from '../../shared/models'
 import { StudioContext, StudioContextType } from './useStudioContext'
 import RightSidebar from './RightSidebar'
 import PagePreview from './PagePreview'

@@ -1,6 +1,6 @@
 import { TemplateProps } from '@yext/pages'
 import { createContext, useContext, Dispatch, SetStateAction } from 'react'
-import { ComponentMetadata, ComponentState, PageState, PropState } from '../../shared/models'
+import { ComponentMetadata, PageState, PropState } from '../../shared/models'
 import { StudioProps } from './Studio'
 
 export interface StudioContextType {

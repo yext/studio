@@ -1,5 +1,4 @@
-import { ComponentState, PageState } from '../../shared/models';
-import { useStudioContext } from './useStudioContext';
+import { ComponentState } from '../../shared/models'
 
 export default function getComponentStateOrThrow(
   uuid: string,

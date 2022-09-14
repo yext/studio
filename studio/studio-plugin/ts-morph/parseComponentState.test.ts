@@ -1,7 +1,6 @@
-import { Project, SourceFile, SyntaxKind } from 'ts-morph'
+import { SyntaxKind } from 'ts-morph'
 import getSource from '../../tests/utils/getSource'
 import { PropTypes } from '../../types'
-import { tsCompilerOptions } from '../common'
 import parseComponentState from './parseComponentState'
 
 jest.mock('../componentMetadata')

@@ -1,6 +1,6 @@
 import { ComponentState } from '../../shared/models'
 
-type Handler<T> = (c: ComponentState, mappedChildren: T[]) => T
+type Handler<T> = (c: ComponentState, mappedChildren: T[], index: number) => T
 
 /**
  * Performs an Array.prototype.map over the given {@link ComponentState}s in order of depth, starting
@@ -11,8 +11,8 @@ export default function mapComponentStates<T>(
   handler: Handler<T>,
   parent?: ComponentState
 ): T[] {
-  return componentStates.filter(c => c.parentUUID === parent?.uuid).map((c) => {
+  return componentStates.filter(c => c.parentUUID === parent?.uuid).map((c, i) => {
     const children = mapComponentStates(componentStates, handler, c)
-    return handler(c, children)
+    return handler(c, children, i)
   })
 }

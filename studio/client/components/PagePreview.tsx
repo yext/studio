@@ -3,6 +3,7 @@ import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMeta
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
+import mapComponentStates from '../utils/mapComponentStates'
 
 export default function PagePreview() {
   const { pageState } = useStudioContext()
@@ -52,17 +53,13 @@ function createStudioElements(
   importedComponents: Record<string, ComponentImportType>,
   streamDocument: Record<string, any>,
   siteSettingsObj: Record<string, any>,
-  parent?: ComponentState
 ): (ReactElement | null)[] {
-  return components.filter(c => c.parentUUID === parent?.uuid).map((c, i) => {
+  return mapComponentStates(components, (c, children, i) => {
     if (!importedComponents[c.name]) {
       console.error(`Expected to find component loaded for ${c.name} but none found.`)
       return null
     }
     const previewProps = getPreviewProps(c.props, streamDocument, siteSettingsObj)
-
-    const children = createStudioElements(
-      components, importedComponents, streamDocument, siteSettingsObj, c)
 
     const component = createElement(importedComponents[c.name], {
       ...previewProps,
