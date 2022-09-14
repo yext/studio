@@ -3,8 +3,8 @@ import { ComponentState } from '../../shared/models'
 type Handler<T> = (c: ComponentState, mappedChildren: T[], index: number) => T
 
 /**
- * Performs an Array.prototype.map over the given {@link ComponentState}s in order of depth, starting
- * with the leaf nodes and working up.
+ * Performs an Array.prototype.map over the given {@link ComponentState}s in a level order traversal,
+ * but starting from the leaf nodes (deepest children) and working up
  */
 export default function mapComponentStates<T>(
   componentStates: ComponentState[],
