@@ -1,69 +1,126 @@
-import classNames from 'classnames'
-import { isEqual } from 'lodash'
-import { useCallback, useRef } from 'react'
-import { ComponentState, PageState } from '../../shared/models'
-import CustomContextMenu from './CustomContextMenu'
-import getComponentStateOrThrow from './getComponentStateOrThrow'
+import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree, PlaceholderRenderParams } from '@minoru/react-dnd-treeview'
+import { ReactElement, useCallback, useMemo } from 'react'
+import { ComponentState } from '../../shared/models'
+import ComponentNode from './ComponentNode'
 import { useStudioContext } from './useStudioContext'
 
+const ROOT_ID = 'tree-root-uuid'
+const CSS_CLASSES: Readonly<Classes> = {
+  root: 'p-4',
+  placeholder: 'relative',
+  listItem: 'relative'
+}
+
+type Node = NodeModel<ComponentState>
+type ValidatedNodeList = (Node & {
+  parent: string,
+  data: ComponentState
+})[]
+
 export default function ComponentTree() {
-  const { pageState } = useStudioContext()
-  const rootLevelComponents = pageState.componentsState.filter(c => !c?.parentUUID)
+  const { pageState, setPageState } = useStudioContext()
+  const tree = useMemo(() => {
+    return pageState.componentsState.map(c => ({
+      id: c.uuid,
+      parent: c.parentUUID ?? ROOT_ID,
+      text: c.name,
+      droppable: true,
+      data: c
+    }))
+  }, [pageState.componentsState])
+
+  const handleDrop = useCallback((tree: Node[]) => {
+    validateTreeOrThrow(tree)
+    setPageState({
+      ...pageState,
+      componentsState: tree.map(n => {
+        const componentState: ComponentState = {
+          ...n.data,
+          parentUUID: n.parent
+        }
+        if (componentState.parentUUID === ROOT_ID) {
+          delete componentState.parentUUID
+        }
+        return componentState
+      })
+    })
+  }, [pageState, setPageState])
+
   return (
-    <div>
-      {rootLevelComponents.map(c => <ComponentNode componentState={c} key={c.uuid} />)}
+    <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+      <Tree
+        tree={tree}
+        rootId={ROOT_ID}
+        classes={CSS_CLASSES}
+        dropTargetOffset={15}
+        initialOpen={true}
+        sort={false}
+        insertDroppableFirst={false}
+        onDrop={handleDrop}
+        canDrop={canDrop}
+        render={renderNode}
+        dragPreviewRender={renderDragPreview}
+        placeholderRender={renderPlaceholder}
+      />
+    </DndProvider>
+  )
+}
+
+function canDrop(_: Node[], opts: DropOptions<ComponentState>) {
+  const { dragSource, dropTargetId } = opts
+  if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
+    return true
+  }
+  // For this drag and drop library, returning undefined has different behavior than returning false.
+  // It means to use the default behavior.
+  return undefined
+}
+
+function renderNode(node: Node, params: RenderParams) {
+  if (!node.data) {
+    throw new Error('Node must have data')
+  }
+  return (
+    <ComponentNode
+      componentState={node.data}
+      depth={params.depth}
+      isOpen={params.isOpen}
+      hasChild={params.hasChild}
+      onToggle={params.onToggle}
+      isDropTarget={params.isDropTarget}
+    />
+  )
+}
+
+function renderDragPreview(monitorProps: DragLayerMonitorProps<ComponentState>) {
+  const item: DragItem<unknown> = monitorProps.item
+  return (
+    <div style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '4px 8px' }}>
+      <div className='flex'>{item.text}</div>
     </div>
   )
 }
 
-function ComponentNode({ componentState }: { componentState: ComponentState }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const {
-    activeComponentUUID,
-    setActiveComponentUUID,
-    pageStateOnFile,
-    moduleNameToComponentMetadata,
-    pageState
-  } = useStudioContext()
-
-  const updateActiveComponent = useCallback(() => {
-    if (activeComponentUUID !== componentState.uuid) {
-      setActiveComponentUUID(componentState.uuid)
-    } else {
-      setActiveComponentUUID(undefined)
-    }
-  }, [activeComponentUUID, componentState.uuid, setActiveComponentUUID])
-
-  const className = classNames('flex border-solid border-2 ', {
-    'border-indigo-600': activeComponentUUID === componentState.uuid,
-    'border-transparent': activeComponentUUID !== componentState.uuid
-  })
-
-  const isGlobal = moduleNameToComponentMetadata.localComponents[componentState.name].global
-
+function renderPlaceholder(
+  _: Node,
+  { depth }: PlaceholderRenderParams
+): ReactElement {
   return (
-    <div
-      key={componentState.uuid}
-      className='cursor-pointer select-none ml-4'
-    >
-      <div
-        className={className}
-        ref={ref}
-        onClick={updateActiveComponent}
-      >
-        {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={componentState.uuid} />}
-        {componentState.name} {componentState.uuid.substring(0, 3)}
-        {hasUnsavedChanges(componentState, pageStateOnFile) && <div className='red'>*</div>}
-      </div>
-      {pageState.componentsState.filter(c => c.parentUUID === componentState.uuid).map(c => {
-        return <ComponentNode componentState={c} key={c.uuid}/>
-      })}
-    </div>
+    <div style={{
+      left: `${depth}em`,
+      backgroundColor: 'red',
+      position: 'absolute',
+      width: '100%',
+      height: '2px'
+    }}></div>
   )
 }
 
-function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
-  const initialComponentState: ComponentState =
-    getComponentStateOrThrow(componentState.uuid, pageStateOnFile.componentsState)
-  return !isEqual(componentState.props, initialComponentState?.props)
+function validateTreeOrThrow(tree: Node[]): asserts tree is ValidatedNodeList {
+  if (tree.some(n => !n.data)) {
+    throw new Error('Missing ComponentState data in ComponentTree')
+  }
+  if (tree.some(n => typeof n.parent !== 'string')) {
+    throw new Error('node.parent must be a string')
+  }
 }

@@ -31,11 +31,12 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
     <TestLayout>
       <Header {...headerProps} />
       <Card bgColor='#45de0d'>
-        <Card bgColor='#abcdef'>
-          <Card bgColor='#ffffee'>
-            <Card/>
-          </Card>
+        <Card bgColor='#ffeeff'>
+          <Card bgColor='#eeffbb'/>
         </Card>
+        <Card bgColor='#abcdef'/>
+        <Card bgColor='#fafafa'/>
+        <Card bgColor='#abcdef'/>
       </Card>
       <Banner
         randomNum={100}

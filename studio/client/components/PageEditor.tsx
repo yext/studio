@@ -17,23 +17,23 @@ export function PageEditor(): JSX.Element | null {
     // TODO(oshi): we cannot use cloneDeep here over the spread operator.
     // If we do then activeComponentState will get out of sync and point to a ComponentState BEFORE the clone.
     // We should probably switch to using Redux instead of simple Context since the state is becoming complex.
-    const copy = [...pageState.componentsState]
+    const componentsStateShallowCopy = [...pageState.componentsState]
     if (componentMetadata.global) {
       // update propState for other instances of the same global functional component
-      copy.forEach(c => {
+      componentsStateShallowCopy.forEach(c => {
         if (c.name === name) {
           c.props = val
         }
       })
     } else {
-      const c = getComponentStateOrThrow(activeComponentUUID, copy)
+      const c = getComponentStateOrThrow(activeComponentUUID, componentsStateShallowCopy)
       if (c) {
         c.props = val
       }
     }
     setPageState({
       ...pageState,
-      componentsState: copy
+      componentsState: componentsStateShallowCopy
     })
   }
   return <PropEditor
