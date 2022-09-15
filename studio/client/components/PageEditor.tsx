@@ -1,5 +1,5 @@
 import { ComponentMetadata, PropState } from '../../shared/models'
-import getComponentStateOrThrow from './getComponentStateOrThrow'
+import { getComponentStateOrThrow } from './getComponentState'
 import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 
