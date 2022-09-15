@@ -3,7 +3,7 @@ import { isEqual } from 'lodash'
 import { useRef, useCallback } from 'react'
 import { ComponentState, PageState } from '../../shared/models'
 import CustomContextMenu from './CustomContextMenu'
-import getComponentStateOrThrow from './getComponentStateOrThrow'
+import { getComponentState } from './getComponentState'
 import { useStudioContext } from './useStudioContext'
 
 interface ComponentNodeProps {
@@ -67,7 +67,7 @@ export default function ComponentNode(props: ComponentNodeProps) {
 }
 
 function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
-  const initialComponentState: ComponentState =
-    getComponentStateOrThrow(componentState.uuid, pageStateOnFile.componentsState)
+  const initialComponentState: ComponentState | undefined =
+    getComponentState(componentState.uuid, pageStateOnFile.componentsState)
   return !isEqual(componentState.props, initialComponentState?.props)
 }
