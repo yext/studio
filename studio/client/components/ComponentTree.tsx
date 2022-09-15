@@ -2,48 +2,48 @@ import classNames from 'classnames'
 import { isEqual } from 'lodash'
 import { useCallback, useRef } from 'react'
 import { ComponentState, PageState } from '../../shared/models'
-import findComponentState from '../utils/findComponentState'
 import CustomContextMenu from './CustomContextMenu'
+import getComponentStateOrThrow from './getComponentStateOrThrow'
 import { useStudioContext } from './useStudioContext'
 
 export default function ComponentTree() {
-  const { pageState, } = useStudioContext()
-
+  const { pageState } = useStudioContext()
+  const rootLevelComponents = pageState.componentsState.filter(c => !c?.parentUUID)
   return (
     <div>
-      {pageState.componentsState.map(c => <ComponentNode c={c} key={c.uuid} />)}
+      {rootLevelComponents.map(c => <ComponentNode componentState={c} key={c.uuid} />)}
     </div>
   )
 }
 
-function ComponentNode({ c }: { c: ComponentState }) {
+function ComponentNode({ componentState }: { componentState: ComponentState }) {
   const ref = useRef<HTMLDivElement>(null)
   const {
-    activeComponentState,
-    setActiveComponentState,
+    activeComponentUUID,
+    setActiveComponentUUID,
     pageStateOnFile,
-    moduleNameToComponentMetadata
+    moduleNameToComponentMetadata,
+    pageState
   } = useStudioContext()
-  const activeComponentUUID = activeComponentState?.uuid
 
   const updateActiveComponent = useCallback(() => {
-    if (activeComponentUUID !== c.uuid) {
-      setActiveComponentState(c)
+    if (activeComponentUUID !== componentState.uuid) {
+      setActiveComponentUUID(componentState.uuid)
     } else {
-      setActiveComponentState(undefined)
+      setActiveComponentUUID(undefined)
     }
-  }, [activeComponentUUID, c, setActiveComponentState])
+  }, [activeComponentUUID, componentState.uuid, setActiveComponentUUID])
 
   const className = classNames('flex border-solid border-2 ', {
-    'border-indigo-600': activeComponentUUID === c.uuid,
-    'border-transparent': activeComponentUUID !== c.uuid
+    'border-indigo-600': activeComponentUUID === componentState.uuid,
+    'border-transparent': activeComponentUUID !== componentState.uuid
   })
 
-  const isGlobal = moduleNameToComponentMetadata.localComponents[c.name].global
+  const isGlobal = moduleNameToComponentMetadata.localComponents[componentState.name].global
 
   return (
     <div
-      key={c.uuid}
+      key={componentState.uuid}
       className='cursor-pointer select-none ml-4'
     >
       <div
@@ -51,16 +51,19 @@ function ComponentNode({ c }: { c: ComponentState }) {
         ref={ref}
         onClick={updateActiveComponent}
       >
-        {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={c.uuid} />}
-        {c.name}
-        {hasUnsavedChanges(c, pageStateOnFile) && <div className='red'>*</div>}
+        {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={componentState.uuid} />}
+        {componentState.name} {componentState.uuid.substring(0, 3)}
+        {hasUnsavedChanges(componentState, pageStateOnFile) && <div className='red'>*</div>}
       </div>
-      {c.children?.map(c => <ComponentNode c={c} key={c.uuid}/>)}
+      {pageState.componentsState.filter(c => c.parentUUID === componentState.uuid).map(c => {
+        return <ComponentNode componentState={c} key={c.uuid}/>
+      })}
     </div>
   )
 }
 
 function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
-  const initialComponentState = findComponentState(componentState, pageStateOnFile.componentsState)
+  const initialComponentState: ComponentState =
+    getComponentStateOrThrow(componentState.uuid, pageStateOnFile.componentsState)
   return !isEqual(componentState.props, initialComponentState?.props)
 }

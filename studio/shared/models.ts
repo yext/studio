@@ -10,9 +10,8 @@ export interface ComponentState {
   props: PropState,
   uuid: string,
   moduleName: PossibleModuleNames,
-  children?: ComponentState[],
   isFragment?: true,
-  parentUUIDsFromRoot?: string[]
+  parentUUID?: string
 }
 
 export type PropState = {

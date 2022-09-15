@@ -32,7 +32,9 @@ export default function createStudioPlugin(args): Plugin {
     studioCtxFilePaths.siteSettings,
     'SiteSettings'
   )
-  const getStudioProps = () => {
+  const getStudioProps = (): StudioProps => {
+    const indexPageState = parsePageFile(studioCtxFilePaths.pages.index)
+
     return {
       siteSettings: {
         componentMetadata: siteSettingsMetadata,
@@ -40,7 +42,7 @@ export default function createStudioPlugin(args): Plugin {
       },
       moduleNameToComponentMetadata,
       componentsOnPage: {
-        index: parsePageFile(studioCtxFilePaths.pages.index)
+        index: indexPageState,
       }
     }
   }

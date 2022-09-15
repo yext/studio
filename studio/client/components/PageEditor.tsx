@@ -1,17 +1,17 @@
 import { ComponentMetadata, PropState } from '../../shared/models'
-import findComponentState from '../utils/findComponentState'
-import iterateOverComponentsState from '../utils/iterateOverComponentsState'
+import getComponentStateOrThrow from './getComponentStateOrThrow'
 import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 
 export function PageEditor(): JSX.Element | null {
-  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentState } = useStudioContext()
-  if (!activeComponentState) {
+  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentUUID } = useStudioContext()
+  if (!activeComponentUUID) {
     return null
   }
+  const { moduleName, name, props } = getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
 
   const componentMetadata: ComponentMetadata =
-    moduleNameToComponentMetadata[activeComponentState.moduleName][activeComponentState.name]
+    moduleNameToComponentMetadata[moduleName][name]
 
   const setPropState = (val: PropState) => {
     // TODO(oshi): we cannot use cloneDeep here over the spread operator.
@@ -20,13 +20,13 @@ export function PageEditor(): JSX.Element | null {
     const copy = [...pageState.componentsState]
     if (componentMetadata.global) {
       // update propState for other instances of the same global functional component
-      iterateOverComponentsState(copy, c => {
-        if (c.name === activeComponentState.name) {
+      copy.forEach(c => {
+        if (c.name === name) {
           c.props = val
         }
       })
     } else {
-      const c = findComponentState(activeComponentState, copy)
+      const c = getComponentStateOrThrow(activeComponentUUID, copy)
       if (c) {
         c.props = val
       }
@@ -37,7 +37,7 @@ export function PageEditor(): JSX.Element | null {
     })
   }
   return <PropEditor
-    propState={activeComponentState.props}
+    propState={props}
     setPropState={setPropState}
     componentMetadata={componentMetadata}
   />

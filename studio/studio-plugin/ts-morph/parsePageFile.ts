@@ -2,7 +2,8 @@ import { ComponentState, PageState } from '../../shared/models'
 import { getSourceFile } from '../common'
 import parseImports from './parseImports'
 import parseLayoutState from './parseLayoutState'
-import parseComponentState from './parseComponentState'
+import { JsxChild } from 'ts-morph'
+import parseJsxChild from './parseJsxChild'
 
 export default function parsePageFile(filePath: string): PageState {
   const sourceFile = getSourceFile(filePath)
@@ -11,10 +12,11 @@ export default function parsePageFile(filePath: string): PageState {
   const { layoutState, layoutNode } = parseLayoutState(sourceFile, imports)
 
   const componentsState: ComponentState[] = []
-  layoutNode.getJsxChildren().forEach(n => {
-    const componentState = parseComponentState(n, imports)
+  layoutNode.getJsxChildren().forEach((c: JsxChild) => {
+    const componentState = parseJsxChild(c, imports)
+
     if (componentState) {
-      componentsState.push(componentState)
+      componentsState.push(...componentState)
     }
   })
 
