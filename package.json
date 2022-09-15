@@ -27,8 +27,6 @@
   },
   "homepage": "https://github.com/yext/studio-prototype#readme",
   "dependencies": {
-    "@dnd-kit/modifiers": "^6.0.0",
-    "@dnd-kit/sortable": "^7.0.1",
     "@minoru/react-dnd-treeview": "^3.1.0",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@originjs/vite-plugin-require-context": "^1.0.9",
