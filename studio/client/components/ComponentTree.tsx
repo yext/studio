@@ -3,45 +3,46 @@ import classNames from 'classnames'
 import { isEqual } from 'lodash'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { ComponentState, PageState } from '../../shared/models'
+import ComponentNode from './ComponentNode'
 import CustomContextMenu from './CustomContextMenu'
 import getComponentStateOrThrow from './getComponentStateOrThrow'
 import { useStudioContext } from './useStudioContext'
 
 const ROOT_ID = 'tree-root-uuid'
 const CSS_CLASSES: Readonly<Classes> = {
-  container: 'm-2',
+  root: 'p-4',
   placeholder: 'relative',
-  listItem: 'relative',
-  dropTarget: 'bg-lime-100'
+  listItem: 'relative'
 }
 
 type ValidatedNodeList = (NodeModel<ComponentState> & {
   parent: string,
-  // data: ComponentState
+  data: ComponentState
 })[]
 type NodeList = NodeModel<ComponentState>[]
  
 export default function ComponentTree() {
   const { pageState, setPageState } = useStudioContext()
-  const [ tree, setTree ] = useState<NodeList>(() => pageState.componentsState.map(c => ({
-    id: c.uuid,
-    parent: c.parentUUID ?? ROOT_ID,
-    text: c.name,
-    droppable: true
-  })))
-  console.log(JSON.stringify(tree, null, 2))
+
+  const tree = useMemo(() => {
+    return pageState.componentsState.map(c => ({
+      id: c.uuid,
+      parent: c.parentUUID ?? ROOT_ID,
+      text: c.name,
+      droppable: true,
+      data: c
+    }))
+  }, [pageState.componentsState]) 
 
   const handleDrop = useCallback((tree: NodeList) => {
-    console.log(tree)
-    // validateTreeOrThrow(tree)
-    // setPageState({
-    //   ...pageState,
-    //   componentsState: tree.map(n => ({
-    //     ...n.data,
-    //     ...n.parent && { parentUUID: n.parent}
-    //   }))
-    // })
-    setTree(tree)
+    validateTreeOrThrow(tree)
+    setPageState({
+      ...pageState,
+      componentsState: tree.map(n => ({
+        ...n.data,
+        ...(n.parent && n.parent !== ROOT_ID && { parentUUID: n.parent})
+      }))
+    })
   }, [pageState, setPageState])
 
   return (
@@ -49,7 +50,14 @@ export default function ComponentTree() {
       <Tree
         tree={tree}
         rootId={ROOT_ID}
-        canDrop={() => true}
+        canDrop={(_, { dragSource, dropTargetId }) => {
+          if (dragSource?.parent === dropTargetId) {
+            return true
+          }
+          // There is currently a bug in @minoru/react-dnd-treeview where you have to return undefined,
+          // instead of false, to get the expected behavior
+          return undefined
+        }}
         onDrop={handleDrop}
         render={renderNode}
         dragPreviewRender={monitorProps => {
@@ -60,15 +68,15 @@ export default function ComponentTree() {
             </div>
           )
         }}
-        // classes={CSS_CLASSES}
-        // placeholderRender={(_, { depth }) => {
-        //   return (
-        //     <div style={{ left: `${depth}em`, backgroundColor: 'red', position: 'absolute', width: '100%', height: '2px' }}></div>
-        //   )
-        // }}
+        classes={CSS_CLASSES}
+        placeholderRender={(_, { depth }) => {
+          return (
+            <div style={{ left: `${depth}em`, backgroundColor: 'red', position: 'absolute', width: '100%', height: '2px' }}></div>
+          )
+        }}
         sort={false}
         insertDroppableFirst={false}
-        dropTargetOffset={5}
+        dropTargetOffset={15}
         initialOpen={true}
       />
     </DndProvider>
@@ -76,85 +84,27 @@ export default function ComponentTree() {
 }
 
 function validateTreeOrThrow(tree: NodeList): asserts tree is ValidatedNodeList {
-  // if (tree.some(n => !n.data)) {
-  //   throw new Error('Missing ComponentState data in ComponentTree')
-  // }
+  if (tree.some(n => !n.data)) {
+    throw new Error('Missing ComponentState data in ComponentTree')
+  }
   if (tree.some(n => typeof n.parent !== 'string')) {
     throw new Error('node.parent must be a string')
   }
 }
 
 function renderNode(node: NodeModel<ComponentState>, params: RenderParams) {
-  return (
-    <div>
-    {/* <div style={{ marginLeft: `${params.depth}em` }}> */}
-      {node.text} + {node.id.substring(0,3)}
-    </div>
-  )
   if (!node.data) {
     throw new Error('Node must have data')
   }
-  return <ComponentNode componentState={node.data} {...params}/>
-}
-
-interface ComponentNodeProps extends RenderParams {
-  componentState: ComponentState
-}
-
-function ComponentNode(props: ComponentNodeProps) {
-  const {
-    componentState,
-    hasChild,
-    onToggle,
-    isOpen,
-    depth
-  } = props
-
-  const ref = useRef<HTMLDivElement>(null)
-  const {
-    activeComponentUUID,
-    setActiveComponentUUID,
-    pageStateOnFile,
-    moduleNameToComponentMetadata
-  } = useStudioContext()
-
-  const updateActiveComponent = useCallback(() => {
-    if (activeComponentUUID !== componentState.uuid) {
-      setActiveComponentUUID(componentState.uuid)
-    } else {
-      setActiveComponentUUID(undefined)
-    }
-  }, [activeComponentUUID, componentState.uuid, setActiveComponentUUID])
-
-  const className = classNames('flex border-solid border-2 ', {
-    'border-indigo-600': activeComponentUUID === componentState.uuid,
-    'border-transparent': activeComponentUUID !== componentState.uuid
-  })
-
-  const isGlobal = moduleNameToComponentMetadata.localComponents[componentState.name].global
 
   return (
-    <div
-      key={componentState.uuid}
-      className='flex cursor-grab select-none p-2'
-      style={{ marginLeft: `${depth}em` }}
-    >
-      <div
-        className={className}
-        ref={ref}
-        onClick={updateActiveComponent}
-      >
-        {!isGlobal && <CustomContextMenu elementRef={ref} componentUUID={componentState.uuid} />}
-        {componentState.name} {componentState.uuid.substring(0, 3)}
-        {hasUnsavedChanges(componentState, pageStateOnFile) && <div className='red'>*</div>}
-      </div>
-      {hasChild && <div className='cursor-pointer' onClick={onToggle}>&nbsp;{isOpen ? '[-]' : '[+]'}</div>}
-    </div>
+    <ComponentNode
+      componentState={node.data}
+      depth={params.depth}
+      isOpen={params.isOpen}
+      hasChild={params.hasChild}
+      onToggle={params.onToggle}
+      isDropTarget={params.isDropTarget}
+    />
   )
-}
-
-function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
-  const initialComponentState: ComponentState =
-    getComponentStateOrThrow(componentState.uuid, pageStateOnFile.componentsState)
-  return !isEqual(componentState.props, initialComponentState?.props)
 }
