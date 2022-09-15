@@ -1,4 +1,3 @@
-import type { RenderParams } from '@minoru/react-dnd-treeview'
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
 import { useRef, useCallback } from 'react'
@@ -8,12 +7,12 @@ import getComponentStateOrThrow from './getComponentStateOrThrow'
 import { useStudioContext } from './useStudioContext'
 
 interface ComponentNodeProps {
-  componentState: ComponentState
+  componentState: ComponentState,
   /** The below are props from {@link RenderParams} */
-  depth: number
-  isOpen: boolean;
-  hasChild: boolean;
-  onToggle(): void;
+  depth: number,
+  isOpen: boolean,
+  hasChild: boolean,
+  onToggle(): void,
   isDropTarget: boolean
 }
 

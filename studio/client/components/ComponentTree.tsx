@@ -1,11 +1,7 @@
-import { Classes, DndProvider, DragItem, DropOptions, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree } from '@minoru/react-dnd-treeview'
-import classNames from 'classnames'
-import { isEqual } from 'lodash'
-import { useCallback, useMemo, useRef, useState } from 'react'
-import { ComponentState, PageState } from '../../shared/models'
+import { Classes, DndProvider, DragItem, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree } from '@minoru/react-dnd-treeview'
+import { useCallback, useMemo } from 'react'
+import { ComponentState } from '../../shared/models'
 import ComponentNode from './ComponentNode'
-import CustomContextMenu from './CustomContextMenu'
-import getComponentStateOrThrow from './getComponentStateOrThrow'
 import { useStudioContext } from './useStudioContext'
 
 const ROOT_ID = 'tree-root-uuid'
@@ -20,7 +16,7 @@ type ValidatedNodeList = (NodeModel<ComponentState> & {
   data: ComponentState
 })[]
 type NodeList = NodeModel<ComponentState>[]
- 
+
 export default function ComponentTree() {
   const { pageState, setPageState } = useStudioContext()
 
@@ -32,7 +28,7 @@ export default function ComponentTree() {
       droppable: true,
       data: c
     }))
-  }, [pageState.componentsState]) 
+  }, [pageState.componentsState])
 
   const handleDrop = useCallback((tree: NodeList) => {
     validateTreeOrThrow(tree)
@@ -40,7 +36,7 @@ export default function ComponentTree() {
       ...pageState,
       componentsState: tree.map(n => ({
         ...n.data,
-        ...(n.parent && n.parent !== ROOT_ID && { parentUUID: n.parent})
+        ...(n.parent && n.parent !== ROOT_ID && { parentUUID: n.parent })
       }))
     })
   }, [pageState, setPageState])
