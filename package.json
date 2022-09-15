@@ -29,11 +29,7 @@
   "dependencies": {
     "@dnd-kit/modifiers": "^6.0.0",
     "@dnd-kit/sortable": "^7.0.1",
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
     "@minoru/react-dnd-treeview": "^3.1.0",
-    "@mui/icons-material": "^5.10.3",
-    "@mui/material": "^5.10.5",
     "@originjs/vite-plugin-commonjs": "^1.0.3",
     "@originjs/vite-plugin-require-context": "^1.0.9",
     "@restart/ui": "^1.4.0",

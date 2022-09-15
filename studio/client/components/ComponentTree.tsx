@@ -1,5 +1,5 @@
-import { Classes, DndProvider, DragItem, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree } from '@minoru/react-dnd-treeview'
-import { useCallback, useMemo } from 'react'
+import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree, PlaceholderRenderParams } from '@minoru/react-dnd-treeview'
+import { ReactElement, useCallback, useMemo } from 'react'
 import { ComponentState } from '../../shared/models'
 import ComponentNode from './ComponentNode'
 import { useStudioContext } from './useStudioContext'
@@ -11,15 +11,14 @@ const CSS_CLASSES: Readonly<Classes> = {
   listItem: 'relative'
 }
 
-type ValidatedNodeList = (NodeModel<ComponentState> & {
+type Node = NodeModel<ComponentState>
+type ValidatedNodeList = (Node & {
   parent: string,
   data: ComponentState
 })[]
-type NodeList = NodeModel<ComponentState>[]
 
 export default function ComponentTree() {
   const { pageState, setPageState } = useStudioContext()
-
   const tree = useMemo(() => {
     return pageState.componentsState.map(c => ({
       id: c.uuid,
@@ -30,14 +29,20 @@ export default function ComponentTree() {
     }))
   }, [pageState.componentsState])
 
-  const handleDrop = useCallback((tree: NodeList) => {
+  const handleDrop = useCallback((tree: Node[]) => {
     validateTreeOrThrow(tree)
     setPageState({
       ...pageState,
-      componentsState: tree.map(n => ({
-        ...n.data,
-        ...(n.parent && n.parent !== ROOT_ID && { parentUUID: n.parent })
-      }))
+      componentsState: tree.map(n => {
+        const componentState: ComponentState = {
+          ...n.data,
+          parentUUID: n.parent
+        }
+        if (componentState.parentUUID === ROOT_ID) {
+          delete componentState.parentUUID
+        }
+        return componentState
+      })
     })
   }, [pageState, setPageState])
 
@@ -46,53 +51,35 @@ export default function ComponentTree() {
       <Tree
         tree={tree}
         rootId={ROOT_ID}
-        canDrop={(_, { dragSource, dropTargetId }) => {
-          if (dragSource?.parent === dropTargetId) {
-            return true
-          }
-          // There is currently a bug in @minoru/react-dnd-treeview where you have to return undefined,
-          // instead of false, to get the expected behavior
-          return undefined
-        }}
-        onDrop={handleDrop}
-        render={renderNode}
-        dragPreviewRender={monitorProps => {
-          const item: DragItem<unknown> = monitorProps.item
-          return (
-            <div style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '4px 8px' }}>
-              <div className='flex'>{item.text}</div>
-            </div>
-          )
-        }}
         classes={CSS_CLASSES}
-        placeholderRender={(_, { depth }) => {
-          return (
-            <div style={{ left: `${depth}em`, backgroundColor: 'red', position: 'absolute', width: '100%', height: '2px' }}></div>
-          )
-        }}
-        sort={false}
-        insertDroppableFirst={false}
         dropTargetOffset={15}
         initialOpen={true}
+        sort={false}
+        insertDroppableFirst={false}
+        onDrop={handleDrop}
+        canDrop={canDrop}
+        render={renderNode}
+        dragPreviewRender={renderDragPreview}
+        placeholderRender={renderPlaceholder}
       />
     </DndProvider>
   )
 }
 
-function validateTreeOrThrow(tree: NodeList): asserts tree is ValidatedNodeList {
-  if (tree.some(n => !n.data)) {
-    throw new Error('Missing ComponentState data in ComponentTree')
+function canDrop(_: Node[], opts: DropOptions<ComponentState>) {
+  const { dragSource, dropTargetId } = opts
+  if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
+    return true
   }
-  if (tree.some(n => typeof n.parent !== 'string')) {
-    throw new Error('node.parent must be a string')
-  }
+  // For this drag and drop library, returning undefined has different behavior than returning false.
+  // It means to use the default behavior.
+  return undefined
 }
 
-function renderNode(node: NodeModel<ComponentState>, params: RenderParams) {
+function renderNode(node: Node, params: RenderParams) {
   if (!node.data) {
     throw new Error('Node must have data')
   }
-
   return (
     <ComponentNode
       componentState={node.data}
@@ -103,4 +90,37 @@ function renderNode(node: NodeModel<ComponentState>, params: RenderParams) {
       isDropTarget={params.isDropTarget}
     />
   )
+}
+
+function renderDragPreview(monitorProps: DragLayerMonitorProps<ComponentState>) {
+  const item: DragItem<unknown> = monitorProps.item
+  return (
+    <div style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '4px 8px' }}>
+      <div className='flex'>{item.text}</div>
+    </div>
+  )
+}
+
+function renderPlaceholder(
+  _: Node,
+  { depth }: PlaceholderRenderParams
+): ReactElement {
+  return (
+    <div style={{
+      left: `${depth}em`,
+      backgroundColor: 'red',
+      position: 'absolute',
+      width: '100%',
+      height: '2px'
+    }}></div>
+  )
+}
+
+function validateTreeOrThrow(tree: Node[]): asserts tree is ValidatedNodeList {
+  if (tree.some(n => !n.data)) {
+    throw new Error('Missing ComponentState data in ComponentTree')
+  }
+  if (tree.some(n => typeof n.parent !== 'string')) {
+    throw new Error('node.parent must be a string')
+  }
 }
