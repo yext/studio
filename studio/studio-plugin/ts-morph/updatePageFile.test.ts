@@ -75,7 +75,7 @@ it('can update props and add additional props', () => {
 it('can add additional components', () => {
   updatePageFile({
     layoutState,
-    componentsState: [ BannerOne ]
+    componentsState: [BannerOne]
   }, getRootPath('emptyPage.tsx'))
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining('emptyPage.tsx'),
@@ -118,4 +118,46 @@ it('can update the stream config', () => {
   const expectedPage = fs.readFileSync(getRootPath('streamsPageAfterUpdate.tsx'), 'utf-8')
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining('streamsPage.tsx'), expectedPage)
+})
+
+it('works with nested components', () => {
+  updatePageFile({
+    layoutState,
+    componentsState: [
+      {
+        name: 'Card',
+        props: {},
+        uuid: '1',
+        moduleName: 'localComponents'
+      },
+      {
+        name: 'Card',
+        props: {},
+        uuid: '2',
+        moduleName: 'localComponents',
+        parentUUID: '1'
+      },
+      {
+        name: 'Card',
+        props: {},
+        uuid: '3',
+        moduleName: 'localComponents',
+        parentUUID: '2'
+      },
+    ]
+  }, getRootPath('nestedComponents.tsx'))
+
+  expect(fs.writeFileSync).toHaveBeenCalledWith(expect.any(String),
+    expect.stringContaining(
+      `export default function Page() {
+  return (
+    <>
+      <Card>
+        <Card>
+          <Card />
+        </Card>
+      </Card>
+    </>
+  )
+}`))
 })

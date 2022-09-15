@@ -1,4 +1,4 @@
-import { ComponentState } from '../../shared/models'
+import { ComponentState } from './models'
 
 type Handler<T> = (c: ComponentState, mappedChildren: T[], index: number) => T
 
