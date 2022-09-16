@@ -10,6 +10,8 @@ export function validatePropState(propState: {
     switch (expressionSource) {
       case ExpressionSourceType.SiteSettings:
         return typeof value === 'string' && value.startsWith('siteSettings.')
+      case ExpressionSourceType.Stream:
+        return typeof value === 'string' && value.startsWith('document.')
       case ExpressionSourceType.Unknown:
         return typeof value === 'string'
       default:
@@ -25,8 +27,8 @@ export function validatePropState(propState: {
       return typeof value === 'boolean'
     case PropTypes.HexColor:
       return typeof value === 'string' && value.startsWith('#')
-    case PropTypes.StreamsData:
-      return typeof value === 'string' && value.startsWith('document.')
+    // case PropTypes.StreamsData:
+    //   return typeof value === 'string' && value.startsWith('document.')
     case PropTypes.StreamsString:
       if (typeof value !== 'string') return false
       if (value.startsWith('document.')) return true

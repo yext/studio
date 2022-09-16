@@ -1,7 +1,8 @@
 import { JsxAttributeLike, SyntaxKind } from 'ts-morph'
 import { ComponentMetadata, PropState } from '../../shared/models'
 import { validatePropState } from '../../shared/validatePropState'
-import { getExpressionSource, getPropName, getPropValue } from '../common'
+import { getExpressionSource } from '../../shared/getExpressionSource'
+import { getPropName, getPropValue } from '../common'
 
 export default function parseJsxAttributes(
   attributes: JsxAttributeLike[],

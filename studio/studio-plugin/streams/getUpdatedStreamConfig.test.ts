@@ -23,7 +23,7 @@ const COMPONENTS_STATE: ComponentState[] = [
     name: 'Banner',
     props: {
       streamPath: {
-        type: PropTypes.StreamsData,
+        type: PropTypes.string,
         value: 'document.id',
       }
     },

@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { ComponentState } from '../../shared/models'
-import { PropTypes } from '../../types'
+import { ExpressionSourceType, PropTypes } from '../../types'
 import getRootPath from '../getRootPath'
 import updatePageFile from './updatePageFile'
 
@@ -101,8 +101,9 @@ it('can update the stream config', () => {
       name: 'Banner',
       props: {
         streamsData: {
-          type: PropTypes.StreamsData,
-          value: 'document.favoriteColor'
+          type: PropTypes.string,
+          value: 'document.favoriteColor',
+          expressionSource: ExpressionSourceType.Stream
         },
         streamsString: {
           type: PropTypes.StreamsString,

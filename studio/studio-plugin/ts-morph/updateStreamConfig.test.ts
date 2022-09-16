@@ -2,7 +2,7 @@ import { ComponentState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getSourceFile } from '../common'
 import updateStreamConfig from './updateStreamConfig'
-import { PropTypes } from '../../types'
+import { ExpressionSourceType, PropTypes } from '../../types'
 
 jest.mock('../getRootPath')
 
@@ -27,8 +27,9 @@ const COMPONENTS_STATE: ComponentState[] = [
     name: 'Banner',
     props: {
       streamPath: {
-        type: PropTypes.StreamsData,
-        value: 'document.id'
+        type: PropTypes.string,
+        value: 'document.id',
+        expressionSource: ExpressionSourceType.Stream
       }
     },
     moduleName: 'localComponents',

@@ -2,7 +2,7 @@ import { TemplateConfig } from '@yext/pages'
 import { ComponentState } from '../../shared/models'
 import { v4 } from 'uuid'
 import { STREAMS_TEMPLATE_REGEX } from '../../shared/constants'
-import { PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
+import { ExpressionSourceType, PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
 import { isStreamsDataExpression } from '../../shared/isStreamsDataExpression'
 import { isTemplateString } from '../../shared/isTemplateString'
 
@@ -88,8 +88,8 @@ export function getStreamValues(
       return
     }
     Object.keys(props).forEach(propName => {
-      const { type, value } = props[propName]
-      if (type === PropTypes.StreamsData && isStreamsDataExpression(value)) {
+      const { type, value, expressionSource } = props[propName]
+      if (expressionSource === ExpressionSourceType.Stream) {
         valuesAccumulator.documentPaths.push(value)
       } else if (type === PropTypes.StreamsString) {
         if (isStreamsDataExpression(value)) {

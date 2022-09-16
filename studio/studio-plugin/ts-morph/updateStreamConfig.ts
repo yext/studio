@@ -42,7 +42,7 @@ function getStreamObjectLiteral(sourceFile: SourceFile): ObjectLiteralExpression
     return undefined
   }
   if (!variableDeclaration.isKind(ts.SyntaxKind.VariableDeclaration)) {
-    throw new Error(`Unrecognzied stream config export kind: "${variableDeclaration.getKindName()}`)
+    throw new Error(`Unrecognized stream config export kind: "${variableDeclaration.getKindName()}`)
   }
   return variableDeclaration.getFirstDescendantByKindOrThrow(ts.SyntaxKind.ObjectLiteralExpression)
 }

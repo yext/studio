@@ -128,16 +128,16 @@ export default function ExpressionProp(props: {
 }
 
 /**
- * Given a certain `streamsDataExpression` like `'document.addr'` that needs the last part of the
+ * Given a certain expression like `'document.addr'` that needs the last part of the
  * expression to be autocompleted to a certain `newValue` like `'address'`, return the updated value.
  * For the above example `'document.address'` would be returned.
  */
-function getUpdatedValue(streamsDataExpression: string, newValue: string) {
-  const lastDotIndex = streamsDataExpression.lastIndexOf('.')
+function getUpdatedValue(expression: string, newValue: string) {
+  const lastDotIndex = expression.lastIndexOf('.')
   if (lastDotIndex === -1) {
     return newValue
   }
-  return streamsDataExpression.substring(0, lastDotIndex) + '.' + newValue
+  return expression.substring(0, lastDotIndex) + '.' + newValue
 }
 
 /**

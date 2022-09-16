@@ -1,6 +1,5 @@
 export enum PropTypes {
   StreamsString = 'StreamsString',
-  StreamsData = 'StreamsData',
   HexColor = 'HexColor',
   number = 'number',
   string = 'string',
@@ -10,7 +9,6 @@ export enum PropTypes {
 
 export type PropStateTypes =
   (StreamsStringState |
-  StreamsDataState |
   HexColorState |
   NumberState |
   BooleanState |
@@ -26,17 +24,6 @@ export type StreamsStringExpression = `\`${string}\`` | StreamsDataExpression
 export type StreamsStringState = {
   type: PropTypes.StreamsString,
   value: StreamsStringExpression
-}
-
-// When StreamsData is used by a component it can be any streams document property
-export type StreamsData<T = unknown> = T
-// StreamsData is represented within studio as a StreamsDataExpression, which describes the path
-// in the streams document to the desired data. We do not support bracket notation for property access
-// except for indexing an array.
-export type StreamsDataExpression = `document.${string}`
-export type StreamsDataState = {
-  type: PropTypes.StreamsData,
-  value: StreamsDataExpression
 }
 
 // A hex color is represented within Studio and used in a component outside studio as the same type, HexColor
@@ -61,13 +48,35 @@ export type BooleanState = {
   value: boolean
 }
 
-export type ExpressionState = {
+export type ExpressionState = UnknownExpressionState | SiteSettingsExpressionState | StreamDataExpressionState
+
+export type UnknownExpressionState = {
   type: PropTypes,
   value: string,
-  expressionSource: ExpressionSourceType
+  expressionSource: ExpressionSourceType.Unknown
+}
+
+export type SiteSettingsExpressionState = {
+  type: PropTypes,
+  value: `siteSettings.${string}`,
+  expressionSource: ExpressionSourceType.SiteSettings
+}
+
+export type StreamDataExpressionState = {
+  type: PropTypes,
+  value: `document.${string}`,
+  expressionSource: ExpressionSourceType.Stream
 }
 
 export enum ExpressionSourceType {
-  Unknown = 'Unknown',
+  Unknown = 'unknown',
   SiteSettings = 'siteSettings',
+  Stream = 'stream'
 }
+
+// // When StreamsData is used by a component it can be any streams document property
+// export type StreamsData<T = unknown> = T
+// StreamsData is represented within studio as a StreamsDataExpression, which describes the path
+// in the streams document to the desired data. We do not support bracket notation for property access
+// except for indexing an array.
+export type StreamsDataExpression = `document.${string}`

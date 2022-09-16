@@ -1,7 +1,7 @@
 import { ObjectLiteralExpression, PropertyAssignment, ts } from 'ts-morph'
 import { PropShape, PropState } from '../../shared/models'
 import { validatePropState } from '../../shared/validatePropState'
-import { getExpressionSource } from './getExpressionSource'
+import { getExpressionSource } from '../../shared/getExpressionSource'
 import { getPropValue } from './getPropValue'
 
 export function getPropsState(

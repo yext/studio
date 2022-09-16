@@ -135,9 +135,9 @@ it('correctly parses page using streams paths', () => {
         name: 'Banner',
         props: {
           streamsData: {
-            type: PropTypes.StreamsData,
+            type: PropTypes.string,
             value: 'document.address.city',
-            expressionSource: ExpressionSourceType.Unknown,
+            expressionSource: ExpressionSourceType.Stream,
           },
           subtitleUsingStreams: {
             type: PropTypes.StreamsString,

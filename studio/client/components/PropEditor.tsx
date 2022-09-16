@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import { useCallback, useState } from 'react'
 import { PropState, ComponentMetadata } from '../../shared/models'
 import { validatePropState } from '../../shared/validatePropState'
+import { getExpressionSource } from '../../shared/getExpressionSource'
 import { ExpressionSourceType, PropStateTypes, PropTypes } from '../../types'
 import { ExpressionLogo } from './ExpressionLogo'
 import ExpressionProp from './ExpressionProp'
@@ -69,9 +70,7 @@ export default function PropEditor({
             case PropTypes.HexColor:
               return <InputProp {...sharedProps} htmlType='color' defaultValue='#ffffff'/>
             case PropTypes.StreamsString:
-              return <InputProp {...sharedProps} img={<KGLogo style={{ filter: 'sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg)' }}/>}/>
-            case PropTypes.StreamsData:
-              return <InputProp {...sharedProps} img={<KGLogo />}/>
+              return <InputProp {...sharedProps} /> //img={<KGLogo style={{ filter: 'sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg)' }}/>}
             default:
               console.error('Unknown prop type', propType, 'for propName', propName, 'in propState', propState)
               return null
@@ -91,19 +90,15 @@ export function InputProp<T extends string | number | boolean>(props: {
   propDoc?: string,
   htmlType?: string,
   expressionSource?: ExpressionSourceType,
-  img?: JSX.Element,
   onChange: (propName: string, newPropState: Omit<PropStateTypes, 'type'>) => void
 }): JSX.Element {
   const {
-    propType, propName, propValue, propDoc, onChange, htmlType = 'text', defaultValue, img, expressionSource } = props
-  const expressionInputOnly = [PropTypes.StreamsData, PropTypes.StreamsString].includes(propType)
-  const [inputType, setInputType] = useState<string>(expressionInputOnly || expressionSource ? 'expression' : htmlType)
+    propType, propName, propValue, propDoc, onChange, htmlType = 'text', defaultValue, expressionSource } = props
+  // const expressionInputOnly = [PropTypes.StreamsData, PropTypes.StreamsString].includes(propType)
+  const [inputType, setInputType] = useState<string>(expressionSource ? 'expression' : htmlType)
 
   const onExpressionPropChange = useCallback((val: string) => {
-    let expressionSource: ExpressionSourceType = ExpressionSourceType.Unknown
-    if (val.startsWith('siteSettings.')) {
-      expressionSource = ExpressionSourceType.SiteSettings
-    }
+    const expressionSource: ExpressionSourceType = getExpressionSource(val)
     onChange(propName, {
       value: val,
       expressionSource
@@ -123,15 +118,27 @@ export function InputProp<T extends string | number | boolean>(props: {
     }
   }
 
+  const Img = useCallback(() => {
+    if (!expressionSource) {
+      return null
+    }
+    switch (expressionSource) {
+      case ExpressionSourceType.Stream:
+        return <KGLogo />
+      default:
+        return <ExpressionLogo />
+    }
+  }, [expressionSource])
+
   return (
     <div className='flex flex-col'>
       <div className='flex mb-2 items-center'>
         <label className='peer label'>{propName}:</label>
-        {!expressionInputOnly &&
-          <select className="text-center h-fit ml-auto" onChange={e => options[e.target.value]()} value={inputType}>
-            {Object.keys(options).map(inputType => <option key={inputType}>{inputType}</option>)}
-          </select>
-        }
+        {/* {!expressionInputOnly && */}
+        <select className="text-center h-fit ml-auto" onChange={e => options[e.target.value]()} value={inputType}>
+          {Object.keys(options).map(inputType => <option key={inputType}>{inputType}</option>)}
+        </select>
+        {/* } */}
       </div>
       {propDoc && <ToolTip message={propDoc}/>}
       <div className='flex'>
@@ -149,7 +156,7 @@ export function InputProp<T extends string | number | boolean>(props: {
             onChange={onSimpleInputPropChange}
           />
         }
-        {!img && inputType === 'expression' ? <ExpressionLogo /> : img}
+        <Img />
       </div>
     </div>
   )
