@@ -2,6 +2,7 @@ import { ModuleNameToComponentMetadata } from '../../shared/models'
 import { PropTypes } from '../../types'
 
 export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
+  builtIn: {},
   localLayouts: {},
   localComponents: {
     Card: {
