@@ -19,7 +19,7 @@ export type PropState = {
 }
 
 export type ModuleNameToComponentMetadata = {
-  [moduleName in Exclude<PossibleModuleNames, 'builtIn'>]: ModuleMetadata
+  [moduleName in PossibleModuleNames]: ModuleMetadata
 }
 export type PossibleModuleNames = 'localComponents' | 'localLayouts' | 'builtIn'
 export type ModuleMetadata = {

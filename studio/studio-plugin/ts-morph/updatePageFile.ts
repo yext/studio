@@ -60,10 +60,11 @@ function createReturnStatement(
   currentReturnStatement: Node
 ): string {
   const elements = mapComponentStates<string>(componentsState, (c, children) => {
-    const isGlobal = (moduleNameToComponentMetadata[c.moduleName][c.name] as ComponentMetadata).global
+    const componentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
+    const isGlobal = componentMetadata.global
     if (isGlobal) {
       if (children.length > 0) {
-        throw new Error('Global components can not have children')
+        throw new Error('Global components cannot have children')
       }
       const globalNode = currentReturnStatement
         .getDescendantsOfKind(ts.SyntaxKind.JsxSelfClosingElement)

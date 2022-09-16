@@ -32,5 +32,6 @@ const localLayouts: ModuleMetadata = fs
 
 export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   localComponents,
-  localLayouts
+  localLayouts,
+  builtIn: {}
 }
