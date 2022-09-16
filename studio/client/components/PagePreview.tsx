@@ -3,7 +3,7 @@ import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMeta
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
-import mapComponentStates from '../utils/mapComponentStates'
+import mapComponentStates from '../../shared/mapComponentStates'
 
 export default function PagePreview() {
   const { pageState } = useStudioContext()

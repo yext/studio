@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
+import mapComponentStates from '../../shared/mapComponentStates'
 import { PageState, PropState, ComponentMetadata, ComponentState } from '../../shared/models'
 import { PropTypes } from '../../types'
 import { getSourceFile, prettify, getDefaultExport, getExportedObjectLiteral, updatePropsObjectLiteral } from '../common'
@@ -54,40 +55,49 @@ function getPageComponentFunction(
   throw new Error('Unhandled page component type: ' + (defaultExport as Node).getKindName())
 }
 
-function createReturnStatement(updatedState: PageState, currentReturnStatement: Node): string {
-  const elements = updatedState.componentsState.reduce((prev, next) => {
-    if (moduleNameToComponentMetadata[next.moduleName][next.name].global) {
+function createReturnStatement(
+  { componentsState, layoutState }: PageState,
+  currentReturnStatement: Node
+): string {
+  const elements = mapComponentStates<string>(componentsState, (c, children) => {
+    const componentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
+    const isGlobal = componentMetadata.global
+    if (isGlobal) {
+      if (children.length > 0) {
+        throw new Error('Global components cannot have children')
+      }
       const globalNode = currentReturnStatement
         .getDescendantsOfKind(ts.SyntaxKind.JsxSelfClosingElement)
-        .find(n => n.getTagNameNode().getText() === next.name)
+        .find(n => n.getTagNameNode().getText() === c.name)
       if (!globalNode) {
-        throw new Error(`Unable to find corresponding global component node: ${next.name}`)
+        throw new Error(`Unable to find corresponding global component node: ${c.name}`)
       }
-      return prev + '\n' + globalNode.getFullText()
+      return globalNode.getFullText()
     }
-    return prev + '\n' + createJsxSelfClosingElement(next.name, next.props)
-  }, '')
-  const layoutComponentName = updatedState.layoutState.name
+    if (children.length === 0) {
+      return `<${c.name} ` + createProps(c.props) + '/>'
+    } else {
+      return `<${c.name} ` + createProps(c.props) + '>\n' + children.join('\n') + `</${c.name}>`
+    }
+  }).join('\n')
+
+  const layoutComponentName = layoutState.name
   return `return (\n<${layoutComponentName}>\n${elements}\n</${layoutComponentName}>\n)`
 }
 
-function createJsxSelfClosingElement(
-  elementName: string,
-  props: PropState
-) {
-  let el = `<${elementName} `
-  Object.keys(props).forEach(propName => {
-    const propType = props[propName].type
-    const val = props[propName].value
-    if (props[propName].expressionSource === undefined
+function createProps(propState: PropState): string {
+  let propsString = ''
+  Object.keys(propState).forEach(propName => {
+    const propType = propState[propName].type
+    const val = propState[propName].value
+    if (propState[propName].expressionSource === undefined
         && (propType === PropTypes.string || propType === PropTypes.HexColor)) {
-      el += `${propName}='${val}' `
+      propsString += `${propName}='${val}' `
     } else {
-      el += `${propName}={${val}} `
+      propsString += `${propName}={${val}} `
     }
   })
-  el += '/>'
-  return el
+  return propsString
 }
 
 function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
