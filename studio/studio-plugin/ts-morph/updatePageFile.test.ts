@@ -103,12 +103,13 @@ it('can update the stream config', () => {
         streamsData: {
           type: PropTypes.string,
           value: 'document.favoriteColor',
-          expressionSource: ExpressionSourceType.Stream
+          expressionSources: [ExpressionSourceType.Stream]
         },
         streamsString: {
-          type: PropTypes.StreamsString,
+          type: PropTypes.string,
           // eslint-disable-next-line no-template-curly-in-string
-          value: '`hi ${document.title}`'
+          value: '`hi ${document.title}`',
+          expressionSources: [ExpressionSourceType.Stream]
         },
       },
       uuid: '1',
@@ -119,6 +120,29 @@ it('can update the stream config', () => {
   const expectedPage = fs.readFileSync(getRootPath('streamsPageAfterUpdate.tsx'), 'utf-8')
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining('streamsPage.tsx'), expectedPage)
+})
+
+it('can update page to use site settings based on expression source', () => {
+  updatePageFile({
+    layoutState,
+    componentsState: [{
+      name: 'Banner',
+      props: {
+        title: {
+          type: PropTypes.string,
+          value: 'siteSettings.apiKey',
+          expressionSources: [ExpressionSourceType.SiteSettings]
+        },
+      },
+      uuid: '1',
+      moduleName: 'localComponents'
+    },
+    BannerTwo]
+  }, getRootPath('testPage.tsx'))
+
+  const expectedPage = fs.readFileSync(getRootPath('testPageAfterExpressionUpdate.tsx'), 'utf-8')
+  expect(fs.writeFileSync).toHaveBeenCalledWith(
+    expect.stringContaining('testPage.tsx'), expectedPage)
 })
 
 it('works with nested components', () => {

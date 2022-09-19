@@ -1,5 +1,6 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
+import { isExpressionState } from '../../shared/isExpressionState'
 import mapComponentStates from '../../shared/mapComponentStates'
 import { PageState, PropState, ComponentMetadata, ComponentState } from '../../shared/models'
 import { PropTypes } from '../../types'
@@ -90,7 +91,7 @@ function createProps(propState: PropState): string {
   Object.keys(propState).forEach(propName => {
     const propType = propState[propName].type
     const val = propState[propName].value
-    if (propState[propName].expressionSource === undefined
+    if (!isExpressionState(propState[propName])
         && (propType === PropTypes.string || propType === PropTypes.HexColor)) {
       propsString += `${propName}='${val}' `
     } else {

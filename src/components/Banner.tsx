@@ -1,11 +1,11 @@
-import { HexColor, StreamsString } from "../../studio/types";
+import { HexColor } from "../../studio/types";
 
 export interface BannerProps {
   /** Banner title! */
   title?: string,
-  /** A title that takes in streams data */
-  subtitleUsingStreams?: StreamsString,
-  /** some stream data of type string */
+  /** A title using template string that takes in streams data */
+  subtitleUsingStreams?: string,
+  /** some stream expression with value of type string */
   streamData?: string,
   /** 
    * Some random

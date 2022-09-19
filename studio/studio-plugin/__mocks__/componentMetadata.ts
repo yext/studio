@@ -32,13 +32,13 @@ export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
           type: PropTypes.boolean
         },
         streamsData: {
-          type: PropTypes.StreamsData
+          type: PropTypes.string
         },
         streamsString: {
-          type: PropTypes.StreamsString
+          type: PropTypes.string
         },
         subtitleUsingStreams: {
-          type: PropTypes.StreamsString
+          type: PropTypes.string
         }
       },
     }

@@ -1,5 +1,5 @@
 import { ComponentState } from '../../shared/models'
-import { PropTypes } from '../../types'
+import { ExpressionSourceType, PropTypes } from '../../types'
 import updateStreamConfig, { getStreamValues, getUsedDocumentPaths } from './getUpdatedStreamConfig'
 
 const COMPONENTS_STATE: ComponentState[] = [
@@ -7,9 +7,10 @@ const COMPONENTS_STATE: ComponentState[] = [
     name: 'Banner',
     props: {
       streamTemplateString: {
-        type: PropTypes.StreamsString,
+        type: PropTypes.string,
         // eslint-disable-next-line no-template-curly-in-string
         value: '`${document.id}: ${document.address.line1}`',
+        expressionSources: [ExpressionSourceType.Stream, ExpressionSourceType.Stream]
       },
       notStreams: {
         type: PropTypes.number,
@@ -25,6 +26,7 @@ const COMPONENTS_STATE: ComponentState[] = [
       streamPath: {
         type: PropTypes.string,
         value: 'document.id',
+        expressionSources: [ExpressionSourceType.Stream]
       }
     },
     moduleName: 'localComponents',
@@ -52,21 +54,13 @@ it('works with no current config', () => {
 describe('getStreamValues', () => {
   it('parses out props that use streams', () => {
     const streamPropValues = getStreamValues(COMPONENTS_STATE)
-    expect(streamPropValues).toEqual({
-      // eslint-disable-next-line no-template-curly-in-string
-      templateStrings: ['`${document.id}: ${document.address.line1}`'],
-      documentPaths: [ 'document.id' ]
-    })
+    expect(streamPropValues).toEqual(['document.id', 'document.address.line1', 'document.id'])
   })
 })
 
 describe('getUsedDocumentPaths', () => {
   it('can parse document paths', () => {
-    const usedPaths = getUsedDocumentPaths({
-      // eslint-disable-next-line no-template-curly-in-string
-      templateStrings: ['`${document.id}: ${document.address.line1}`'],
-      documentPaths: [ 'document.id', 'document.emails[0]' ]
-    })
+    const usedPaths = getUsedDocumentPaths(['document.id', 'document.address.line1', 'document.id', 'document.emails[0]'])
     expect(usedPaths).toEqual(new Set(['document.id', 'document.address.line1', 'document.emails']))
   })
 })

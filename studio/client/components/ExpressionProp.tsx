@@ -1,20 +1,19 @@
 import { useStudioContext } from './useStudioContext'
 import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
 import useRootClose from '@restart/ui/useRootClose'
-import { PropTypes } from '../../types'
 import { isTemplateString } from '../../shared/isTemplateString'
-import getStreamDocumentOptions from '../utils/getStreamDocumentOptions'
+import getAutocompleteOptions from '../utils/getAutocompleteOptions'
 import getExpressionEndIndex from '../utils/getExpressionEndIndex'
 import getTemplateExpressionIndex from '../utils/getTemplateExpressionIndex'
+import { useSiteSettings } from '../utils/useSiteSettings'
 
 export default function ExpressionProp(props: {
   propValue: string | undefined,
-  propType: PropTypes,
   onChange: (val: string) => void
 }): JSX.Element {
-  const { propValue, propType, onChange } = props
+  const { propValue, onChange } = props
   const inputRef = useRef<HTMLInputElement>(null)
-  const options = useAutocompleteOptions(propValue, propType, inputRef)
+  const options = useAutocompleteOptions(propValue, inputRef)
   useRootClose(inputRef, () => setAutocompleteVisibility(false))
   const [selectionRangeUpdate, triggerSelectionRangeUpdate] = useState<number>()
 
@@ -101,7 +100,7 @@ export default function ExpressionProp(props: {
       return
     }
 
-    if (propType === PropTypes.StreamsString && isTemplateString(propValue)) {
+    if (isTemplateString(propValue)) {
       const expressionStartIndex = getTemplateExpressionIndex(propValue, selectionStart)
       if (expressionStartIndex === null) {
         return
@@ -109,10 +108,10 @@ export default function ExpressionProp(props: {
       const prefix = propValue.substring(0, expressionStartIndex)
       const alreadyHasClosingBrace = propValue.substring(expressionStartIndex).split(' ')[0].includes('}')
       const expressionEndIndex = getExpressionEndIndex(propValue, expressionStartIndex)
-      const streamsDataExpression = propValue.substring(expressionStartIndex, expressionEndIndex)
+      const dataExpression = propValue.substring(expressionStartIndex, expressionEndIndex)
       const suffix = propValue.substring(expressionEndIndex)
 
-      let newValue = prefix + getUpdatedValue(streamsDataExpression, value)
+      let newValue = prefix + getUpdatedValue(dataExpression, value)
       const newSelectionIndex = newValue.length
       if (!alreadyHasClosingBrace) {
         newValue += '}'
@@ -141,17 +140,21 @@ function getUpdatedValue(expression: string, newValue: string) {
 }
 
 /**
- * Returns the stream autocomplete options available given a certain string value.
+ * Returns the autocomplete options available given a certain string value.
  */
 function useAutocompleteOptions(
   propValue: string | undefined,
-  propType: PropTypes,
   inputRef: RefObject<HTMLInputElement>
 ): string[] {
-  const { streamDocument } = useStudioContext()
+  const { streamDocument, siteSettingsState } = useStudioContext()
+  const siteSettingsObj = useSiteSettings(siteSettingsState)
 
   const options = useMemo(() => {
-    if (propType === PropTypes.StreamsString && isTemplateString(propValue)) {
+    const options = {
+      document: streamDocument,
+      siteSettings: siteSettingsObj
+    }
+    if (isTemplateString(propValue)) {
       const selectionStart = getSelectionStart(inputRef)
       if (!selectionStart) {
         return []
@@ -163,10 +166,10 @@ function useAutocompleteOptions(
       const secondHalf = propValue.substring(templateExprIndex, propValue.length - 1).split(' ')[0]
       const closeBraceIndex = secondHalf.indexOf('}')
       const valueToSearch = closeBraceIndex === -1 ? secondHalf : secondHalf.substring(0, closeBraceIndex)
-      return getStreamDocumentOptions(valueToSearch, streamDocument)
+      return getAutocompleteOptions(valueToSearch, options)
     }
-    return getStreamDocumentOptions(propValue, streamDocument)
-  }, [inputRef, propValue, streamDocument, propType])
+    return getAutocompleteOptions(propValue, options)
+  }, [inputRef, propValue, siteSettingsObj, streamDocument])
 
   return options
 }

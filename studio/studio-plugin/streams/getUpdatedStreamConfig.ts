@@ -1,10 +1,11 @@
 import { TemplateConfig } from '@yext/pages'
 import { ComponentState } from '../../shared/models'
 import { v4 } from 'uuid'
-import { STREAMS_TEMPLATE_REGEX } from '../../shared/constants'
-import { ExpressionSourceType, PropTypes, StreamsDataExpression, StreamsStringExpression } from '../../types'
+import { TEMPLATE_STRING_EXPRESSION_REGEX } from '../../shared/constants'
+import { ExpressionSourceType, StreamsDataExpression } from '../../types'
 import { isStreamsDataExpression } from '../../shared/isStreamsDataExpression'
 import { isTemplateString } from '../../shared/isTemplateString'
+import { isExpressionState } from '../../shared/isExpressionState'
 
 /**
  * These are stream properties that will throw an error if specified within a {@link Stream.fields}, with
@@ -50,55 +51,40 @@ export default function getUpdatedStreamConfig(
 }
 
 export function getUsedDocumentPaths(
-  streamValues: StreamValues
+  streamValues: StreamsDataExpression[]
 ): Set<StreamsDataExpression> {
-  const usedPaths: StreamsDataExpression[] = streamValues.documentPaths.map(d => d.split('[')[0] as StreamsDataExpression)
-  streamValues.templateStrings.forEach(val => {
-    const streamPaths = [...val.matchAll(STREAMS_TEMPLATE_REGEX)].map(m => m[1])
-    streamPaths.forEach(streamPath => {
-      // Streams configs fields do not allow specifying an index of a field.
-      // Cutting off at the first left bracket also lets use sidestep bracket object property notation,
-      // which we don't support.
-      const streamPathTruncatedAtBracket = streamPath.split('[')[0]
-      if (!isStreamsDataExpression(streamPathTruncatedAtBracket)) {
-        throw new Error(
-          `Error when parsing stream config, document path "${streamPath}" does not start with a "document." prefix`)
-      }
-      usedPaths.push(streamPathTruncatedAtBracket)
-    })
-  })
+  // Streams configs fields do not allow specifying an index of a field.
+  // Cutting off at the first left bracket also lets use sidestep bracket object property notation,
+  // which we don't support.
+  const usedPaths: StreamsDataExpression[] = streamValues.map(d => d.split('[')[0] as StreamsDataExpression)
   return new Set(usedPaths)
-}
-
-type StreamValues = {
-  documentPaths: StreamsDataExpression[],
-  templateStrings: Exclude<StreamsStringExpression, StreamsDataExpression>[]
 }
 
 export function getStreamValues(
   componentsState: ComponentState[]
-): StreamValues {
-  const valuesAccumulator: StreamValues = {
-    documentPaths: [],
-    templateStrings: []
-  }
+): StreamsDataExpression[] {
+  const valuesAccumulator: StreamsDataExpression[] = []
 
   componentsState.forEach(({ props, moduleName }) => {
     if (moduleName === 'builtIn') {
       return
     }
     Object.keys(props).forEach(propName => {
-      const { type, value, expressionSource } = props[propName]
-      if (expressionSource === ExpressionSourceType.Stream) {
-        valuesAccumulator.documentPaths.push(value)
-      } else if (type === PropTypes.StreamsString) {
-        if (isStreamsDataExpression(value)) {
-          valuesAccumulator.documentPaths.push(value)
-        } else if (isTemplateString(value)) {
-          valuesAccumulator.templateStrings.push(value)
-        } else {
-          console.error(`Invalid string format for "value" field of type ${type}:`, value)
-        }
+      const propState = props[propName]
+      if (!isExpressionState(propState)) {
+        return
+      }
+      const { value } = propState
+      if (isTemplateString(value)) {
+        [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)].forEach(m => {
+          if (isStreamsDataExpression(m[1])) {
+            valuesAccumulator.push(m[1])
+          }
+        })
+      } else if (isStreamsDataExpression(value)) {
+        valuesAccumulator.push(value)
+      } else if (propState.expressionSources.some(s => s === ExpressionSourceType.Stream)) {
+        console.error('Invalid value for ExpressionSourceType.Stream:', value)
       }
     })
   })

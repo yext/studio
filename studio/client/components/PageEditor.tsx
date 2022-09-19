@@ -37,6 +37,7 @@ export function PageEditor(): JSX.Element | null {
     })
   }
   return <PropEditor
+    key={activeComponentUUID}
     propState={props}
     setPropState={setPropState}
     componentMetadata={componentMetadata}

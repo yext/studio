@@ -1,4 +1,4 @@
-export function isTemplateString(value: string | undefined): value is `\`${string}\`` {
+export function isTemplateString(value: unknown): value is `\`${string}\`` {
   if (typeof value !== 'string') {
     return false
   }

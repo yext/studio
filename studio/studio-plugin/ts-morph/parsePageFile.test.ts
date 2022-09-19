@@ -137,13 +137,13 @@ it('correctly parses page using streams paths', () => {
           streamsData: {
             type: PropTypes.string,
             value: 'document.address.city',
-            expressionSource: ExpressionSourceType.Stream,
+            expressionSources: [ExpressionSourceType.Stream],
           },
           subtitleUsingStreams: {
-            type: PropTypes.StreamsString,
+            type: PropTypes.string,
             // eslint-disable-next-line no-template-curly-in-string
             value: '`my prefix ${document.id} my suffix`',
-            expressionSource: ExpressionSourceType.Unknown,
+            expressionSources: [ExpressionSourceType.Stream],
           }
         },
         uuid: 'mock-uuid',

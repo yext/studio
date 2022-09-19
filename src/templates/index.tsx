@@ -50,8 +50,8 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
       <Banner
         title='custom title'
         randomNum={1}
-        streamData={document.emails[1]}
-        subtitleUsingStreams={`${document.lastName}`}
+        streamData={document.emails[0]}
+        subtitleUsingStreams={`${document.lastName} test ${siteSettings.experienceVersion}`}
         someBool={true}
         anotherColor='#9c8181'
       />

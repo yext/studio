@@ -1,9 +1,10 @@
 import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata, PropState } from '../../shared/models'
+import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
 import mapComponentStates from '../../shared/mapComponentStates'
+import { useSiteSettings } from '../utils/useSiteSettings'
 
 export default function PagePreview() {
   const { pageState } = useStudioContext()
@@ -28,8 +29,12 @@ function useElements() {
     if (Object.keys(importedComponents).length === 0) {
       return null
     }
+    const expressionSourcesValues = {
+      document: streamDocument,
+      siteSettings: siteSettingsObj
+    }
     const elements = createStudioElements(
-      pageState.componentsState, importedComponents, streamDocument, siteSettingsObj)
+      pageState.componentsState, importedComponents, expressionSourcesValues)
     const layoutName = pageState.layoutState.name
     if (importedComponents[layoutName]) {
       return createElement(importedComponents[layoutName], {}, elements)
@@ -51,16 +56,14 @@ function useElements() {
 function createStudioElements(
   components: ComponentState[],
   importedComponents: Record<string, ComponentImportType>,
-  streamDocument: Record<string, any>,
-  siteSettingsObj: Record<string, any>,
+  expressionSourcesValues: Record<string, Record<string, unknown>>,
 ): (ReactElement | null)[] {
   return mapComponentStates(components, (c, children, i) => {
     if (!importedComponents[c.name]) {
       console.error(`Expected to find component loaded for ${c.name} but none found.`)
       return null
     }
-    const previewProps = getPreviewProps(c.props, streamDocument, siteSettingsObj)
-
+    const previewProps = getPreviewProps(c.props, expressionSourcesValues)
     const component = createElement(importedComponents[c.name], {
       ...previewProps,
       key: `${c.name}-${i}`
@@ -151,12 +154,4 @@ function getFunctionComponent(module: Record<string, unknown>, name: string): Co
   } else {
     return `Module ${name} is not a valid functional component.`
   }
-}
-
-function useSiteSettings(siteSettingsProp: PropState): Record<string, any> {
-  const siteSettingsObj = {}
-  Object.entries(siteSettingsProp).forEach(([propName, propData]) => {
-    siteSettingsObj[propName] = propData.value
-  })
-  return siteSettingsObj
 }

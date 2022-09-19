@@ -1,1 +1,1 @@
-export const STREAMS_TEMPLATE_REGEX = /\${(.*?)}/g
+export const TEMPLATE_STRING_EXPRESSION_REGEX = /\${(.*?)}/g

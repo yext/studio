@@ -1,5 +1,6 @@
 import { SourceFile } from 'ts-morph'
 import { ComponentState } from '../../shared/models'
+import { isExpressionState } from '../../shared/isExpressionState'
 import { ExpressionSourceType } from '../../types'
 import path from 'path'
 import getRootPath from '../getRootPath'
@@ -8,8 +9,8 @@ export function updateFileImports(sourceFile: SourceFile, updatedComponentState:
   const expressionSourceTypeUsed: Set<string> = new Set()
   updatedComponentState.forEach(c =>
     Object.values(c.props).forEach(p => {
-      if (p.expressionSource) {
-        expressionSourceTypeUsed.add(p.expressionSource.toString())
+      if (isExpressionState(p)) {
+        p.expressionSources.forEach(s => expressionSourceTypeUsed.add(s.toString()))
       }
     })
   )
@@ -22,7 +23,10 @@ export function updateFileImports(sourceFile: SourceFile, updatedComponentState:
   expressionSourceTypeUsed.forEach(expressionSource => {
     if (expressionSource === ExpressionSourceType.SiteSettings.toString()) {
       const filePath = sourceFile.getFilePath()
-      const expressionImportSpecifier = path.relative(path.dirname(filePath), getRootPath('src/siteSettings'))
+      let expressionImportSpecifier = path.relative(path.dirname(filePath), getRootPath('src/siteSettings'))
+      if (expressionImportSpecifier.indexOf('/') === -1) {
+        expressionImportSpecifier = './' + expressionImportSpecifier
+      }
       sourceFile.addImportDeclaration({
         defaultImport: expressionSource,
         moduleSpecifier: expressionImportSpecifier
