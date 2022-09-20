@@ -54,7 +54,7 @@ export function getUsedDocumentPaths(
   streamValues: StreamsDataExpression[]
 ): Set<StreamsDataExpression> {
   // Streams configs fields do not allow specifying an index of a field.
-  // Cutting off at the first left bracket also lets use sidestep bracket object property notation,
+  // Cutting off at the first left bracket also lets us sidestep bracket object property notation,
   // which we don't support.
   const usedPaths: StreamsDataExpression[] = streamValues.map(d => d.split('[')[0] as StreamsDataExpression)
   return new Set(usedPaths)

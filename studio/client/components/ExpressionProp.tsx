@@ -146,8 +146,8 @@ function useAutocompleteOptions(
   propValue: string | undefined,
   inputRef: RefObject<HTMLInputElement>
 ): string[] {
-  const { streamDocument, siteSettingsState } = useStudioContext()
-  const siteSettingsObj = useSiteSettings(siteSettingsState)
+  const { streamDocument } = useStudioContext()
+  const siteSettingsObj = useSiteSettings()
 
   const options = useMemo(() => {
     const options = {

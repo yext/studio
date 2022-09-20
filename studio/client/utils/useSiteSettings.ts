@@ -1,8 +1,9 @@
-import { PropState } from '../../shared/models'
+import { useStudioContext } from '../components/useStudioContext'
 
-export function useSiteSettings(siteSettingsProp: PropState): Record<string, any> {
+export function useSiteSettings(): Record<string, unknown> {
+  const { siteSettingsState } = useStudioContext()
   const siteSettingsObj = {}
-  Object.entries(siteSettingsProp).forEach(([propName, propData]) => {
+  Object.entries(siteSettingsState).forEach(([propName, propData]) => {
     siteSettingsObj[propName] = propData.value
   })
   return siteSettingsObj

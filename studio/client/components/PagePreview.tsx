@@ -20,9 +20,9 @@ export default function PagePreview() {
 }
 
 function useElements() {
-  const { pageState, moduleNameToComponentMetadata, streamDocument, siteSettingsState } = useStudioContext()
+  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
   const importedComponents = useImportedComponents(pageState, moduleNameToComponentMetadata)
-  const siteSettingsObj = useSiteSettings(siteSettingsState)
+  const siteSettingsObj = useSiteSettings()
 
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
