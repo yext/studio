@@ -3,13 +3,17 @@ import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } fro
 import { isExpressionState } from '../../shared/isExpressionState'
 import mapComponentStates from '../../shared/mapComponentStates'
 import { PageState, PropState, ComponentMetadata, ComponentState } from '../../shared/models'
-import { PropTypes } from '../../types'
+import { ExpressionSourceType, PropTypes } from '../../types'
 import { getSourceFile, prettify, getDefaultExport, getExportedObjectLiteral, updatePropsObjectLiteral } from '../common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getRootPath from '../getRootPath'
 import { updateFileImports } from './updateFileImports'
 
 import updateStreamConfig from './updateStreamConfig'
+
+const expressionSourcePaths = {
+  [ExpressionSourceType.SiteSettings]: 'src/siteSettings'
+}
 
 interface UpdatePageFileOptions {
   updateStreamConfig?: boolean
@@ -35,7 +39,7 @@ export default function updatePageFile(
   pageComponent.removeStatement(returnStatementIndex)
   pageComponent.addStatements(newReturnStatement)
 
-  updateFileImports(sourceFile, updatedState.componentsState)
+  updateFileImports(sourceFile, updatedState.componentsState, expressionSourcePaths)
   if (options.updateStreamConfig) {
     updateStreamConfig(sourceFile, updatedState.componentsState)
   }
@@ -113,7 +117,7 @@ function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
         throw new Error(`Unable to find "globalProps" variable for file path: ${relativeFilePath}`)
       }
       updatePropsObjectLiteral(propsLiteralExp, c.props)
-      updateFileImports(sourceFile, [c])
+      updateFileImports(sourceFile, [c], expressionSourcePaths)
       const updatedFileText = prettify(sourceFile.getFullText())
       fs.writeFileSync(relativeFilePath, updatedFileText)
     }

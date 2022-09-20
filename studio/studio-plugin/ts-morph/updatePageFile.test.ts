@@ -122,29 +122,6 @@ it('can update the stream config', () => {
     expect.stringContaining('streamsPage.tsx'), expectedPage)
 })
 
-it('can update page to use site settings based on expression source', () => {
-  updatePageFile({
-    layoutState,
-    componentsState: [{
-      name: 'Banner',
-      props: {
-        title: {
-          type: PropTypes.string,
-          value: 'siteSettings.apiKey',
-          expressionSources: [ExpressionSourceType.SiteSettings]
-        },
-      },
-      uuid: '1',
-      moduleName: 'localComponents'
-    },
-    BannerTwo]
-  }, getRootPath('testPage.tsx'))
-
-  const expectedPage = fs.readFileSync(getRootPath('testPageAfterExpressionUpdate.tsx'), 'utf-8')
-  expect(fs.writeFileSync).toHaveBeenCalledWith(
-    expect.stringContaining('testPage.tsx'), expectedPage)
-})
-
 it('works with nested components', () => {
   updatePageFile({
     layoutState,

@@ -5,7 +5,11 @@ import { ExpressionSourceType } from '../../types'
 import path from 'path'
 import getRootPath from '../getRootPath'
 
-export function updateFileImports(sourceFile: SourceFile, updatedComponentState: ComponentState[]) {
+export function updateFileImports(
+  sourceFile: SourceFile,
+  updatedComponentState: ComponentState[],
+  expressionSourcePaths: { [key in ExpressionSourceType]?: string }
+) {
   const expressionSourceTypeUsed: Set<string> = new Set()
   updatedComponentState.forEach(c =>
     Object.values(c.props).forEach(p => {
@@ -22,11 +26,16 @@ export function updateFileImports(sourceFile: SourceFile, updatedComponentState:
   })
   expressionSourceTypeUsed.forEach(expressionSource => {
     if (expressionSource === ExpressionSourceType.SiteSettings.toString()) {
+      const expressionSourcePath = expressionSourcePaths[ExpressionSourceType.SiteSettings]
+      if (!expressionSourcePath) {
+        return
+      }
       const filePath = sourceFile.getFilePath()
-      let expressionImportSpecifier = path.relative(path.dirname(filePath), getRootPath('src/siteSettings'))
+      let expressionImportSpecifier = path.relative(path.dirname(filePath), getRootPath(expressionSourcePath))
       if (expressionImportSpecifier.indexOf('/') === -1) {
         expressionImportSpecifier = './' + expressionImportSpecifier
       }
+      console.log(expressionSource, expressionImportSpecifier)
       sourceFile.addImportDeclaration({
         defaultImport: expressionSource,
         moduleSpecifier: expressionImportSpecifier
