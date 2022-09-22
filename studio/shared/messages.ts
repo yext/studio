@@ -1,12 +1,13 @@
-import { CustomEventMap } from 'vite'
-import { PageState, PropState } from './models'
+import { CustomEventMap as BuiltInViteEvents } from 'vite'
+import { ComponentMetadata, ComponentState, PageState, PropShape, PropState } from './models'
 
 export enum MessageID {
   UpdatePageComponentProps = 'studio:UpdatePageComponentProps',
-  UpdateSiteSettingsProps = 'studio:UpdateSiteSettingsProps'
+  UpdateSiteSettingsProps = 'studio:UpdateSiteSettingsProps',
+  CreateComponent = 'studio:CreateComponent'
 }
 
-export interface StudioEventMap extends CustomEventMap {
+export interface StudioEventMap extends BuiltInViteEvents {
   [MessageID.UpdatePageComponentProps]: {
     state: PageState,
     pageFile: 'index.tsx'
@@ -14,10 +15,16 @@ export interface StudioEventMap extends CustomEventMap {
   [MessageID.UpdateSiteSettingsProps]: {
     state: PropState,
     path: 'src/siteSettings.ts'
+  },
+  [MessageID.CreateComponent]: {
+    name: string,
+    propShape: PropShape,
+    acceptsChildren: boolean,
+    childrenStates: ComponentState[]
   }
 }
 
-export type ResponseEventMap = CustomEventMap & {
+export type ResponseEventMap = BuiltInViteEvents & {
   [key in MessageID]: {
     type: 'success' | 'error',
     msg: string
