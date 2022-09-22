@@ -2,11 +2,16 @@ import { PropStateTypes, PropTypes } from '../types'
 
 export type PageState = {
   layoutState: ComponentState,
-  componentsState: ComponentState[]
+  componentsState: JsxElementState[]
 }
 
 export type JsxElementState = ComponentState | SymbolState
+export enum ElementStateType {
+  Component = 'component',
+  Symbol = 'symbol'
+}
 export type ComponentState = {
+  type?: ElementStateType.Component
   name: string,
   props: PropState,
   uuid: string,
@@ -15,8 +20,11 @@ export type ComponentState = {
   parentUUID?: string
 }
 export type SymbolState = {
-  symbolName: string,
-  uuid: string
+  type: ElementStateType.Symbol
+  name: string,
+  props: {},
+  uuid: string,
+  parentUUID?: string
 }
 
 export type PropState = {

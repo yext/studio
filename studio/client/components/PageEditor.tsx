@@ -1,4 +1,4 @@
-import { ComponentMetadata, PropState } from '../../shared/models'
+import { ComponentMetadata, ElementStateType, PropState } from '../../shared/models'
 import { getComponentStateOrThrow } from './getComponentState'
 import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
@@ -8,7 +8,15 @@ export function PageEditor(): JSX.Element | null {
   if (!activeComponentUUID) {
     return null
   }
-  const { moduleName, name, props } = getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
+  const activeComponentState = getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
+  if (activeComponentState.type === ElementStateType.Symbol) {
+    return (
+      <div>
+        TODO - display content tree
+      </div>
+    )
+  }
+  const { name, moduleName, props } = activeComponentState
 
   const componentMetadata: ComponentMetadata =
     moduleNameToComponentMetadata[moduleName][name]

@@ -1,13 +1,13 @@
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
 import { useRef, useCallback } from 'react'
-import { ComponentState, PageState } from '../../shared/models'
+import { ComponentState, ElementStateType, JsxElementState, PageState } from '../../shared/models'
 import CustomContextMenu from './CustomContextMenu'
 import { getComponentState } from './getComponentState'
 import { useStudioContext } from './useStudioContext'
 
 interface ComponentNodeProps {
-  componentState: ComponentState,
+  componentState: JsxElementState,
   /** The below are props from {@link RenderParams} */
   depth: number,
   isOpen: boolean,
@@ -48,7 +48,8 @@ export default function ComponentNode(props: ComponentNodeProps) {
     'bg-lime-100': isDropTarget
   })
 
-  const isGlobal = moduleNameToComponentMetadata.localComponents[componentState.name].global
+  const isGlobal = componentState.type !== ElementStateType.Symbol
+    && moduleNameToComponentMetadata.localComponents[componentState.name].global
 
   return (
     <div
@@ -66,8 +67,8 @@ export default function ComponentNode(props: ComponentNodeProps) {
   )
 }
 
-function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
-  const initialComponentState: ComponentState | undefined =
+function hasUnsavedChanges(componentState: JsxElementState, pageStateOnFile: PageState) {
+  const initialComponentState: JsxElementState | undefined =
     getComponentState(componentState.uuid, pageStateOnFile.componentsState)
   return !isEqual(componentState.props, initialComponentState?.props)
 }

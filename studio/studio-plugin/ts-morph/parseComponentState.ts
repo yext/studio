@@ -1,15 +1,14 @@
 import { JsxAttributeLike, JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind } from 'ts-morph'
 import { v4 } from 'uuid'
-import { ComponentState, PossibleModuleNames, PropState } from '../../shared/models'
+import { ComponentState, ElementStateType, JsxElementState, PossibleModuleNames, PropState } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getComponentModuleName, { getImportPath } from './getComponentModuleName'
 import parseJsxAttributes from './parseJsxAttributes'
-import parseSymbol from './parseSymbol'
 
 export default function parseComponentState(
   c: JsxFragment | JsxElement | JsxSelfClosingElement,
   imports: Record<string, string[]>
-): ComponentState {
+): JsxElementState {
   const uuid = v4()
   if (c.isKind(SyntaxKind.JsxFragment)) {
     return {
@@ -22,13 +21,16 @@ export default function parseComponentState(
   }
   const name = getName(c)
   const importPath = getImportPath(name, imports)
+  console.log('parsing', name, importPath)
   if (importPath.endsWith('.symbol')) {
     if (!c.isKind(SyntaxKind.JsxSelfClosingElement)) {
       throw new Error(`Symbol component ${name} must be a JsxSelfClosingElement`)
     }
     return {
+      type: ElementStateType.Symbol,
       uuid,
-      symbolName: name
+      name,
+      props: {}
     }
   }
 

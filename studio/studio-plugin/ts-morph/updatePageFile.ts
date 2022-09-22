@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import mapComponentStates from '../../shared/mapComponentStates'
-import { PageState, PropState, ComponentMetadata, ComponentState } from '../../shared/models'
+import { PageState, PropState, ComponentMetadata, ComponentState, JsxElementState, ElementStateType } from '../../shared/models'
 import { ExpressionSourceType, PropTypes } from '../../types'
 import { getSourceFile, prettify, getDefaultExport, getExportedObjectLiteral, updatePropsObjectLiteral } from '../common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
@@ -38,9 +38,11 @@ export default function updatePageFile(
   pageComponent.removeStatement(returnStatementIndex)
   pageComponent.addStatements(newReturnStatement)
 
-  updateFileImports(sourceFile, updatedState.componentsState, expressionSourcePaths)
+  // We currently do not support siteSettings and streams data inside of Symbols
+  const componentStates = updatedState.componentsState.filter((c): c is ComponentState => c.type !== ElementStateType.Symbol)
+  updateFileImports(sourceFile, componentStates, expressionSourcePaths)
   if (options.updateStreamConfig) {
-    updateStreamConfig(sourceFile, updatedState.componentsState)
+    updateStreamConfig(sourceFile, componentStates)
   }
 
   const updatedFileText = prettify(sourceFile.getFullText())
@@ -64,6 +66,9 @@ function createReturnStatement(
   currentReturnStatement: Node
 ): string {
   const elements = mapComponentStates<string>(componentsState, (c, children) => {
+    if (c.type === ElementStateType.Symbol) {
+      return `<${c.name} />`
+    }
     const componentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
     const isGlobal = componentMetadata.global
     if (isGlobal) {
@@ -104,8 +109,12 @@ function createProps(propState: PropState): string {
   return propsString
 }
 
-function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
+function updateGlobalComponentProps(updatedComponentState: JsxElementState[]) {
   updatedComponentState.forEach(c => {
+    if (c.type === ElementStateType.Symbol) {
+      // TODO
+      return
+    }
     const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
     if (componentMetadata.global) {
       const partialFilePath = componentMetadata.importIdentifier.split('src/components').at(-1)

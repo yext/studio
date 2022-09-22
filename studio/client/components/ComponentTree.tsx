@@ -1,6 +1,6 @@
 import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree, PlaceholderRenderParams } from '@minoru/react-dnd-treeview'
 import { ReactElement, useCallback, useMemo } from 'react'
-import { ComponentState } from '../../shared/models'
+import { ComponentState, JsxElementState } from '../../shared/models'
 import ComponentNode from './ComponentNode'
 import { useStudioContext } from './useStudioContext'
 
@@ -11,15 +11,15 @@ const CSS_CLASSES: Readonly<Classes> = {
   listItem: 'relative'
 }
 
-type Node = NodeModel<ComponentState>
+type Node = NodeModel<JsxElementState>
 type ValidatedNodeList = (Node & {
   parent: string,
-  data: ComponentState
+  data: JsxElementState
 })[]
 
 export default function ComponentTree() {
   const { pageState, setPageState } = useStudioContext()
-  const tree = useMemo(() => {
+  const tree: Node[] = useMemo(() => {
     return pageState.componentsState.map(c => ({
       id: c.uuid,
       parent: c.parentUUID ?? ROOT_ID,
@@ -34,7 +34,7 @@ export default function ComponentTree() {
     setPageState({
       ...pageState,
       componentsState: tree.map(n => {
-        const componentState: ComponentState = {
+        const componentState: JsxElementState = {
           ...n.data,
           parentUUID: n.parent
         }
@@ -66,7 +66,7 @@ export default function ComponentTree() {
   )
 }
 
-function canDrop(_: Node[], opts: DropOptions<ComponentState>) {
+function canDrop(_: Node[], opts: DropOptions<JsxElementState>) {
   const { dragSource, dropTargetId } = opts
   if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
     return true
@@ -92,7 +92,7 @@ function renderNode(node: Node, params: RenderParams) {
   )
 }
 
-function renderDragPreview(monitorProps: DragLayerMonitorProps<ComponentState>) {
+function renderDragPreview(monitorProps: DragLayerMonitorProps<JsxElementState>) {
   const item: DragItem<unknown> = monitorProps.item
   return (
     <div style={{ backgroundColor: 'aliceblue', borderRadius: '4px', padding: '4px 8px' }}>
@@ -118,7 +118,7 @@ function renderPlaceholder(
 
 function validateTreeOrThrow(tree: Node[]): asserts tree is ValidatedNodeList {
   if (tree.some(n => !n.data)) {
-    throw new Error('Missing ComponentState data in ComponentTree')
+    throw new Error('Missing JsxElementState data in ComponentTree')
   }
   if (tree.some(n => typeof n.parent !== 'string')) {
     throw new Error('node.parent must be a string')

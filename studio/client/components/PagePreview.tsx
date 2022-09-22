@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata } from '../../shared/models'
+import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata, ElementStateType, JsxElementState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
@@ -54,7 +54,7 @@ function useElements() {
 }
 
 function createStudioElements(
-  components: ComponentState[],
+  components: JsxElementState[],
   importedComponents: Record<string, ComponentImportType>,
   expressionSourcesValues: Record<string, Record<string, unknown>>,
 ): (ReactElement | null)[] {
@@ -94,7 +94,8 @@ function useImportedComponents(
   const modules = useMemo(() => {
     return import.meta.glob<Record<string, unknown>>([
       '../../../src/components/*.tsx',
-      '../../../src/layouts/*.tsx'
+      '../../../src/layouts/*.tsx',
+      '../../../src/symbols/*.tsx'
     ])
   }, [])
 
@@ -133,7 +134,16 @@ function useImportedComponents(
     const newLoadedComponents = {}
     Promise.all([
       importComponent(pageState.layoutState, '../../../src/layouts', newLoadedComponents),
-      ...pageState.componentsState.map(c => importComponent(c, '../../../src/components', newLoadedComponents))
+      ...pageState.componentsState.map(c => {
+        if (c.type === ElementStateType.Symbol) {
+          const componentFilePath = `../../../src/symbols/${c.name}.symbol.tsx`
+          console.log(modules, componentFilePath)
+          return modules[componentFilePath]().then(module => {
+            newLoadedComponents[c.name] = getFunctionComponent(module, c.name)
+          })
+        }
+        return importComponent(c, '../../../src/components', newLoadedComponents)
+      })
     ]).then(() => {
       setImportedComponents(prev => {
         const newState = { ...prev, ...newLoadedComponents }

@@ -36,6 +36,6 @@ export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   builtIn: {}
 }
 
-export const symbolNameToMetadata: Record<string, SymbolMetadata> = {
+export const nameToMetadata: Record<string, SymbolMetadata> = {
 
 }

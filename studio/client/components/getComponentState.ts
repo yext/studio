@@ -1,16 +1,16 @@
-import { ComponentState } from '../../shared/models'
+import { ComponentState, JsxElementState } from '../../shared/models'
 
 export function getComponentState(
   uuid: string,
-  componentsState: ComponentState[]
-): ComponentState | undefined {
+  componentsState: JsxElementState[]
+): JsxElementState | undefined {
   return componentsState.find(c => c.uuid === uuid)
 }
 
 export function getComponentStateOrThrow(
   uuid: string,
-  componentsState: ComponentState[]
-): ComponentState {
+  componentsState: JsxElementState[]
+): JsxElementState {
   const state = getComponentState(uuid, componentsState)
   if (!state) {
     throw new Error('Could not find ComponentState for uuid: ' + uuid)

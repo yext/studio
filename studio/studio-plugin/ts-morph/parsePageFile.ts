@@ -1,4 +1,4 @@
-import { ComponentState, PageState } from '../../shared/models'
+import { ComponentState, JsxElementState, PageState } from '../../shared/models'
 import { getSourceFile } from '../common'
 import parseImports from './parseImports'
 import parseLayoutState from './parseLayoutState'
@@ -11,7 +11,7 @@ export default function parsePageFile(filePath: string): PageState {
 
   const { layoutState, layoutNode } = parseLayoutState(sourceFile, imports)
 
-  const componentsState: ComponentState[] = []
+  const componentsState: JsxElementState[] = []
   layoutNode.getJsxChildren().forEach((c: JsxChild) => {
     const componentState = parseJsxChild(c, imports)
 

@@ -1,5 +1,5 @@
 import { SourceFile } from 'ts-morph'
-import { ComponentState } from '../../shared/models'
+import { ComponentState, ElementStateType, JsxElementState } from '../../shared/models'
 import { ExpressionSourceType } from '../../types'
 import path from 'path'
 import getRootPath from '../getRootPath'
@@ -11,13 +11,13 @@ export function updateFileImports(
   expressionSourcePaths: { [key in ExpressionSourceType]?: string }
 ) {
   const expressionSourceTypeUsed: Set<string> = new Set()
-  updatedComponentState.forEach(c =>
+  updatedComponentState.forEach(c => {
     Object.values(c.props).forEach(p => {
       if (p.isExpression) {
         getExpressionSources(p.value).forEach(s => expressionSourceTypeUsed.add(s.toString()))
       }
     })
-  )
+  })
   sourceFile.getImportDeclarations().forEach(importDeclaration => {
     const defaultImport = importDeclaration.getDefaultImport()?.getText()
     if (defaultImport && expressionSourceTypeUsed.has(defaultImport)) {
