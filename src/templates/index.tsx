@@ -12,6 +12,7 @@ import Footer, { globalProps as footerProps } from '../components/Footer.global'
 import Header, { globalProps as headerProps } from '../components/Header.global'
 import Card from '../components/Card'
 import siteSettings from '../siteSettings'
+import MyCard from '../symbols/MyCard'
 
 export const config: TemplateConfig = {
   stream: {
@@ -30,6 +31,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
     <TestLayout>
       <Header {...headerProps} />
+      <MyCard/>
       <Card bgColor='#45de0d'>
         <Card bgColor='#ffeeff'>
           <Card bgColor='#eeffbb' />
