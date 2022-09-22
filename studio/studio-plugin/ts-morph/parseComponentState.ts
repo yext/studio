@@ -2,23 +2,16 @@ import { JsxAttributeLike, JsxElement, JsxFragment, JsxSelfClosingElement, Synta
 import { v4 } from 'uuid'
 import { ComponentState, PossibleModuleNames, PropState } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
-import getComponentModuleName from './getComponentModuleName'
+import getComponentModuleName, { getImportPath } from './getComponentModuleName'
 import parseJsxAttributes from './parseJsxAttributes'
+import parseSymbol from './parseSymbol'
 
 export default function parseComponentState(
   c: JsxFragment | JsxElement | JsxSelfClosingElement,
   imports: Record<string, string[]>
-): Omit<ComponentState, 'parentUUID'> {
+): ComponentState {
   const uuid = v4()
-
-  if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
-    const name = c.getTagNameNode().getText()
-    return {
-      ...parseElement(c, name, imports),
-      name,
-      uuid
-    }
-  } else if (c.isKind(SyntaxKind.JsxFragment)) {
+  if (c.isKind(SyntaxKind.JsxFragment)) {
     return {
       name: '',
       isFragment: true,
@@ -26,13 +19,39 @@ export default function parseComponentState(
       props: {},
       moduleName: 'builtIn'
     }
-  } else {
-    const name = c.getOpeningElement().getTagNameNode().getText()
+  }
+  const name = getName(c)
+  const importPath = getImportPath(name, imports)
+  if (importPath.endsWith('.symbol')) {
+    if (!c.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      throw new Error(`Symbol component ${name} must be a JsxSelfClosingElement`)
+    }
+    return {
+      uuid,
+      symbolUUID
+    }
+  }
+
+  if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
     return {
       ...parseElement(c, name, imports),
       name,
       uuid
     }
+  } else {
+    return {
+      ...parseElement(c, name, imports),
+      name,
+      uuid
+    }
+  }
+}
+
+function getName(c: JsxElement | JsxSelfClosingElement) {
+  if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
+    return c.getTagNameNode().getText()
+  } else {
+    return c.getOpeningElement().getTagNameNode().getText()
   }
 }
 

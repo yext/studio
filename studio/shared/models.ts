@@ -5,13 +5,17 @@ export type PageState = {
   componentsState: ComponentState[]
 }
 
-export interface ComponentState {
+export type ComponentState = {
   name: string,
   props: PropState,
   uuid: string,
   moduleName: PossibleModuleNames,
   isFragment?: true,
   parentUUID?: string
+} | SymbolState
+type SymbolState = {
+  uuid: string,
+  symbolUUID: string
 }
 
 export type PropState = {
@@ -24,6 +28,10 @@ export type ModuleNameToComponentMetadata = {
 export type PossibleModuleNames = 'localComponents' | 'localLayouts' | 'builtIn'
 export type ModuleMetadata = {
   [componentName: string]: ComponentMetadata
+}
+
+export type SymbolMetadata = {
+  content: ComponentS
 }
 
 export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaData

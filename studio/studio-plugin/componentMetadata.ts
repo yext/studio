@@ -1,4 +1,4 @@
-import { ModuleMetadata, ModuleNameToComponentMetadata } from '../shared/models'
+import { ModuleMetadata, ModuleNameToComponentMetadata, SymbolMetadata } from '../shared/models'
 import fs from 'fs'
 import getRootPath from './getRootPath'
 import { getSourceFile } from './common'
@@ -34,4 +34,8 @@ export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   localComponents,
   localLayouts,
   builtIn: {}
+}
+
+const symbolUUIDToMetadata: Record<string, SymbolMetadata> = {
+
 }

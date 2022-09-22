@@ -1,26 +1,16 @@
 import { ComponentState } from '../../shared/models'
-import { SourceFile, JsxElement, JsxFragment, ts } from 'ts-morph'
+import { SourceFile, JsxElement, JsxFragment, ts, VariableDeclaration, FunctionDeclaration } from 'ts-morph'
 import { v4 } from 'uuid'
 import { getDefaultExport } from '../common'
 import getComponentModuleName from './getComponentModuleName'
+import getTopLevelJsxNode from './getTopLevelJsxNode'
 
 export default function parseLayoutState(
   sourceFile: SourceFile,
   imports: Record<string, string[]>
 ): { layoutState: ComponentState, layoutNode: JsxElement | JsxFragment } {
   const defaultExport = getDefaultExport(sourceFile)
-  const returnStatement = defaultExport.getFirstDescendantByKind(ts.SyntaxKind.ReturnStatement)
-  if (!returnStatement) {
-    throw new Error('No return statement found for page')
-  }
-  const JsxNodeWrapper = returnStatement.getFirstChildByKind(ts.SyntaxKind.ParenthesizedExpression)
-    ?? returnStatement
-  const topLevelJsxNode = JsxNodeWrapper.getChildren()
-    .find(n => n.getKind() === ts.SyntaxKind.JsxElement || n.getKind() === ts.SyntaxKind.JsxFragment)
-  if (!topLevelJsxNode) {
-    throw new Error('Unable to find top level JSX element or JsxFragment type from file.')
-  }
-
+  const topLevelJsxNode = getTopLevelJsxNode(defaultExport)
   let layoutState: ComponentState
   if (topLevelJsxNode.isKind(ts.SyntaxKind.JsxElement)) {
     const name = topLevelJsxNode.getOpeningElement().getTagNameNode().getText()
