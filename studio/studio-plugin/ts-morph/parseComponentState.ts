@@ -28,7 +28,7 @@ export default function parseComponentState(
     }
     return {
       uuid,
-      symbolUUID
+      symbolName: name
     }
   }
 

@@ -5,6 +5,7 @@ export type PageState = {
   componentsState: ComponentState[]
 }
 
+export type JsxElementState = ComponentState | SymbolState
 export type ComponentState = {
   name: string,
   props: PropState,
@@ -12,10 +13,10 @@ export type ComponentState = {
   moduleName: PossibleModuleNames,
   isFragment?: true,
   parentUUID?: string
-} | SymbolState
-type SymbolState = {
-  uuid: string,
-  symbolUUID: string
+}
+export type SymbolState = {
+  symbolName: string,
+  uuid: string
 }
 
 export type PropState = {
@@ -31,7 +32,7 @@ export type ModuleMetadata = {
 }
 
 export type SymbolMetadata = {
-  content: ComponentS
+  content: ComponentState[]
 }
 
 export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaData
