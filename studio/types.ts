@@ -7,7 +7,7 @@ export enum PropTypes {
 }
 
 export type PropStateTypes =
-  (HexColorState | NumberState | BooleanState | StringState) & { expressionSources?: never } | ExpressionState
+  (HexColorState | NumberState | BooleanState | StringState) & { isExpression?: false } | ExpressionState
 
 // A hex color is represented within Studio and used in a component outside studio as the same type, HexColor
 export type HexColor = `#${string}`
@@ -31,34 +31,10 @@ export type BooleanState = {
   value: boolean
 }
 
-export type ExpressionState =
-  UnknownExpressionState |
-  SiteSettingsExpressionState |
-  StreamDataExpressionState |
-  TemplateStringExpressionState
-
-export type UnknownExpressionState = {
+export type ExpressionState = {
   type: PropTypes,
   value: string,
-  expressionSources: [ExpressionSourceType.Unknown]
-}
-
-export type SiteSettingsExpressionState = {
-  type: PropTypes,
-  value: SiteSettingsExpression,
-  expressionSources: [ExpressionSourceType.SiteSettings]
-}
-
-export type StreamDataExpressionState = {
-  type: PropTypes,
-  value: StreamsDataExpression,
-  expressionSources: [ExpressionSourceType.Stream]
-}
-
-export type TemplateStringExpressionState = {
-  type: PropTypes.string,
-  value: TemplateStringExpression,
-  expressionSources: ExpressionSourceType[]
+  isExpression: true
 }
 
 export enum ExpressionSourceType {

@@ -1,5 +1,4 @@
 import { ObjectLiteralExpression } from 'ts-morph'
-import { isExpressionState } from '../../shared/isExpressionState'
 import { PropState } from '../../shared/models'
 import { PropTypes } from '../../types'
 
@@ -7,7 +6,7 @@ export function updatePropsObjectLiteral(node: ObjectLiteralExpression, updatedS
   Object.entries(updatedState).forEach(([propName, propState]) => {
     const { type, value } = propState
     let nodeValue: string | number | boolean
-    if (type === PropTypes.string && !isExpressionState(propState)) {
+    if (type === PropTypes.string && !propState.isExpression) {
       nodeValue = `'${value}'`
     } else {
       nodeValue = value.toString()

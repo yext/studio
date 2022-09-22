@@ -1,5 +1,5 @@
 import { ComponentState } from '../../shared/models'
-import { ExpressionSourceType, PropTypes } from '../../types'
+import { PropTypes } from '../../types'
 import updateStreamConfig, { getStreamValues, getUsedDocumentPaths } from './getUpdatedStreamConfig'
 
 const COMPONENTS_STATE: ComponentState[] = [
@@ -10,7 +10,7 @@ const COMPONENTS_STATE: ComponentState[] = [
         type: PropTypes.string,
         // eslint-disable-next-line no-template-curly-in-string
         value: '`${document.id}: ${document.address.line1}`',
-        expressionSources: [ExpressionSourceType.Stream, ExpressionSourceType.Stream]
+        isExpression: true
       },
       notStreams: {
         type: PropTypes.number,
@@ -26,7 +26,7 @@ const COMPONENTS_STATE: ComponentState[] = [
       streamPath: {
         type: PropTypes.string,
         value: 'document.id',
-        expressionSources: [ExpressionSourceType.Stream]
+        isExpression: true
       }
     },
     moduleName: 'localComponents',

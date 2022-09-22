@@ -1,15 +1,17 @@
 import { ExpressionSourceType, TemplateStringExpression } from '../types'
 import { TEMPLATE_STRING_EXPRESSION_REGEX } from './constants'
+import { isSiteSettingsExpression } from './isSiteSettingsExpression'
+import { isStreamsDataExpression } from './isStreamsDataExpression'
 import { isTemplateString } from './isTemplateString'
 
 export function getExpressionSources(value: unknown): ExpressionSourceType[] {
   if (typeof value !== 'string') {
     throw Error(`Unable to get the expression source from value: ${value}.\nExpression value must be of type string.`)
   }
-  if (value.startsWith('siteSettings.')) {
+  if (isSiteSettingsExpression(value)) {
     return [ExpressionSourceType.SiteSettings]
   }
-  if (value.startsWith('document.')) {
+  if (isStreamsDataExpression(value)) {
     return [ExpressionSourceType.Stream]
   }
   if (isTemplateString(value)) {

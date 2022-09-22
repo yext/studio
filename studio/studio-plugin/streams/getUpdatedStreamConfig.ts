@@ -2,10 +2,9 @@ import { TemplateConfig } from '@yext/pages'
 import { ComponentState } from '../../shared/models'
 import { v4 } from 'uuid'
 import { TEMPLATE_STRING_EXPRESSION_REGEX } from '../../shared/constants'
-import { ExpressionSourceType, StreamsDataExpression } from '../../types'
+import { StreamsDataExpression } from '../../types'
 import { isStreamsDataExpression } from '../../shared/isStreamsDataExpression'
 import { isTemplateString } from '../../shared/isTemplateString'
-import { isExpressionState } from '../../shared/isExpressionState'
 
 /**
  * These are stream properties that will throw an error if specified within a {@link Stream.fields}, with
@@ -71,7 +70,7 @@ export function getStreamValues(
     }
     Object.keys(props).forEach(propName => {
       const propState = props[propName]
-      if (!isExpressionState(propState)) {
+      if (!propState.isExpression) {
         return
       }
       const { value } = propState
@@ -83,8 +82,6 @@ export function getStreamValues(
         })
       } else if (isStreamsDataExpression(value)) {
         valuesAccumulator.push(value)
-      } else if (propState.expressionSources.some(s => s === ExpressionSourceType.Stream)) {
-        console.error('Invalid value for ExpressionSourceType.Stream:', value)
       }
     })
   })

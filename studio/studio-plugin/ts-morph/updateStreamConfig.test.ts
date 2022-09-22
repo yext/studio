@@ -2,7 +2,7 @@ import { ComponentState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getSourceFile } from '../common'
 import updateStreamConfig from './updateStreamConfig'
-import { ExpressionSourceType, PropTypes } from '../../types'
+import { PropTypes } from '../../types'
 
 jest.mock('../getRootPath')
 
@@ -29,7 +29,7 @@ const COMPONENTS_STATE: ComponentState[] = [
       streamPath: {
         type: PropTypes.string,
         value: 'document.id',
-        expressionSources: [ExpressionSourceType.Stream]
+        isExpression: true
       }
     },
     moduleName: 'localComponents',

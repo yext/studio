@@ -1,6 +1,6 @@
 import fs from 'fs'
 import { ComponentState } from '../../shared/models'
-import { ExpressionSourceType, PropTypes } from '../../types'
+import { PropTypes } from '../../types'
 import getRootPath from '../getRootPath'
 import updatePageFile from './updatePageFile'
 
@@ -103,13 +103,13 @@ it('can update the stream config', () => {
         streamsData: {
           type: PropTypes.string,
           value: 'document.favoriteColor',
-          expressionSources: [ExpressionSourceType.Stream]
+          isExpression: true
         },
         streamsString: {
           type: PropTypes.string,
           // eslint-disable-next-line no-template-curly-in-string
           value: '`hi ${document.title}`',
-          expressionSources: [ExpressionSourceType.Stream]
+          isExpression: true
         },
       },
       uuid: '1',

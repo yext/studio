@@ -12,11 +12,11 @@ export default function getAutocompleteOptions(
   if (!value) {
     return parentPaths.map(p => `${p}.`)
   }
-  let matchedParentPath = parentPaths.find(p => p.startsWith(value))
-  if (matchedParentPath) {
-    return [`${matchedParentPath}.`]
+  const matchedParentPaths = parentPaths.filter(p => p.startsWith(value))
+  if (matchedParentPaths.length > 0) {
+    return matchedParentPaths.map(p => `${p}.`)
   }
-  matchedParentPath = parentPaths.find(p => value.startsWith(`${p}.`))
+  const matchedParentPath = parentPaths.find(p => value.startsWith(`${p}.`))
   if (!matchedParentPath) {
     return []
   }

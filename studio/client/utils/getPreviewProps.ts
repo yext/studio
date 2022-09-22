@@ -3,8 +3,8 @@ import lodashGet from 'lodash/get.js'
 import { ExpressionSourceType, PropTypes } from '../../types'
 import { isTemplateString } from '../../shared/isTemplateString'
 import { TEMPLATE_STRING_EXPRESSION_REGEX } from '../../shared/constants'
-import { isExpressionState } from '../../shared/isExpressionState'
 import { validatePropState } from '../../shared/validatePropState'
+import { getExpressionSources } from '../../shared/getExpressionSources'
 
 export default function getPreviewProps(
   props: PropState,
@@ -17,14 +17,15 @@ export default function getPreviewProps(
     if (propData.value === null || propData.value === undefined) {
       return
     }
-    if (isExpressionState(propData)) {
+    if (propData.isExpression) {
       const expression = propData.value
+      const expressionSources = getExpressionSources(expression)
       if (isTemplateString(expression)) {
         transformedProps[propName] = getTemplateStringValue(
-          expression, propData.expressionSources, propData.type, expressionSourcesValues)
+          expression, expressionSources, propData.type, expressionSourcesValues)
       } else {
         transformedProps[propName] = getExpressionValue(
-          expression, propData.expressionSources[0], propData.type, expressionSourcesValues) ?? expression
+          expression, expressionSources[0], propData.type, expressionSourcesValues) ?? expression
       }
     } else {
       transformedProps[propName] = propData.value

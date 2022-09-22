@@ -1,14 +1,18 @@
 import { PropTypes, PropStateTypes, ExpressionSourceType } from '../types'
 import { TEMPLATE_STRING_EXPRESSION_REGEX } from './constants'
+import { getExpressionSources } from './getExpressionSources'
+import { isSiteSettingsExpression } from './isSiteSettingsExpression'
+import { isStreamsDataExpression } from './isStreamsDataExpression'
 import { isTemplateString } from './isTemplateString'
 
 export function validatePropState(propState: {
   type: PropTypes,
   value: unknown,
-  expressionSources?: ExpressionSourceType[]
+  isExpression?: boolean
 }): propState is PropStateTypes {
-  const { type, value, expressionSources } = propState
-  if (expressionSources) {
+  const { type, value, isExpression } = propState
+  if (isExpression) {
+    const expressionSources = getExpressionSources(value)
     if (isTemplateString(value)) {
       const paths = [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)].map(m => m[1])
       return paths.every((p, i) => validateExpressionValue(p, expressionSources[i]))
@@ -36,9 +40,9 @@ export function validatePropState(propState: {
 function validateExpressionValue(value: unknown, source: ExpressionSourceType) {
   switch (source) {
     case ExpressionSourceType.SiteSettings:
-      return typeof value === 'string' && value.startsWith('siteSettings.')
+      return isSiteSettingsExpression(value)
     case ExpressionSourceType.Stream:
-      return typeof value === 'string' && value.startsWith('document.')
+      return isStreamsDataExpression(value)
     case ExpressionSourceType.Unknown:
       return typeof value === 'string'
     default:

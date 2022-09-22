@@ -23,7 +23,7 @@ it('can update page to use site settings based on expression source', () => {
         title: {
           type: PropTypes.string,
           value: 'siteSettings.apiKey',
-          expressionSources: [ExpressionSourceType.SiteSettings]
+          isExpression: true
         },
       },
       uuid: '1',
