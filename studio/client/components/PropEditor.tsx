@@ -1,7 +1,8 @@
 import classNames from 'classnames'
-import { useCallback, useState } from 'react'
+import { ChangeEvent, useCallback } from 'react'
 import { PropState, ComponentMetadata } from '../../shared/models'
 import { validatePropState } from '../../shared/validatePropState'
+import { getExpressionSources } from '../../shared/getExpressionSources'
 import { ExpressionSourceType, PropStateTypes, PropTypes } from '../../types'
 import { ExpressionLogo } from './ExpressionLogo'
 import ExpressionProp from './ExpressionProp'
@@ -48,7 +49,7 @@ export default function PropEditor({
           const propDoc = propShape[propName].doc
           const propType = propShape[propName].type
           const value = propState[propName]?.value
-          const expressionSource = propState[propName]?.expressionSource
+          const isExpression = propState[propName]?.isExpression
           const key = propName + '-' + index
           const sharedProps = {
             propType,
@@ -56,7 +57,7 @@ export default function PropEditor({
             propName,
             propValue: value as any,
             propDoc,
-            expressionSource,
+            isExpression,
             onChange: updatePropState
           }
           switch (propType) {
@@ -68,10 +69,6 @@ export default function PropEditor({
               return <InputProp {...sharedProps} htmlType='number'/>
             case PropTypes.HexColor:
               return <InputProp {...sharedProps} htmlType='color' defaultValue='#ffffff'/>
-            case PropTypes.StreamsString:
-              return <InputProp {...sharedProps} img={<KGLogo style={{ filter: 'sepia(100%) saturate(300%) brightness(70%) hue-rotate(80deg)' }}/>}/>
-            case PropTypes.StreamsData:
-              return <InputProp {...sharedProps} img={<KGLogo />}/>
             default:
               console.error('Unknown prop type', propType, 'for propName', propName, 'in propState', propState)
               return null
@@ -90,55 +87,41 @@ export function InputProp<T extends string | number | boolean>(props: {
   defaultValue?: T,
   propDoc?: string,
   htmlType?: string,
-  expressionSource?: ExpressionSourceType,
-  img?: JSX.Element,
+  isExpression?: boolean,
   onChange: (propName: string, newPropState: Omit<PropStateTypes, 'type'>) => void
 }): JSX.Element {
-  const {
-    propType, propName, propValue, propDoc, onChange, htmlType = 'text', defaultValue, img, expressionSource } = props
-  const expressionInputOnly = [PropTypes.StreamsData, PropTypes.StreamsString].includes(propType)
-  const [inputType, setInputType] = useState<string>(expressionInputOnly || expressionSource ? 'expression' : htmlType)
-
-  const onExpressionPropChange = useCallback((val: string) => {
-    let expressionSource: ExpressionSourceType = ExpressionSourceType.Unknown
-    if (val.startsWith('siteSettings.')) {
-      expressionSource = ExpressionSourceType.SiteSettings
-    }
+  const { propType, propName, propValue, propDoc, onChange, htmlType = 'text', defaultValue, isExpression } = props
+  const inputType = isExpression ? 'expression' : htmlType
+  const onExpressionPropChange = useCallback((value: string) => {
     onChange(propName, {
-      value: val,
-      expressionSource
+      value,
+      isExpression: true
     })
   }, [onChange, propName])
 
-  const onSimpleInputPropChange = useCallback((val: T) => {
-    onChange(propName, { value: val, expressionSource: undefined })
+  const onSimpleInputPropChange = useCallback((value: T) => {
+    onChange(propName, { value })
   }, [onChange, propName])
 
-  const options: Record<string, () => void> = {
-    [htmlType]: () => {
-      setInputType(htmlType)
-    },
-    expression: () => {
-      setInputType('expression')
-    }
-  }
+  const onInputTypeChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
+    e.target.value === 'expression'
+      ? onExpressionPropChange(propValue?.toString())
+      : onSimpleInputPropChange(propValue)
+  }, [onExpressionPropChange, onSimpleInputPropChange, propValue])
 
   return (
     <div className='flex flex-col'>
       <div className='flex mb-2 items-center'>
         <label className='peer label'>{propName}:</label>
-        {!expressionInputOnly &&
-          <select className="text-center h-fit ml-auto" onChange={e => options[e.target.value]()} value={inputType}>
-            {Object.keys(options).map(inputType => <option key={inputType}>{inputType}</option>)}
-          </select>
-        }
+        <select className="text-center h-fit ml-auto" onChange={onInputTypeChange} value={inputType}>
+          {['expression', htmlType].map(inputType => <option key={inputType}>{inputType}</option>)}
+        </select>
       </div>
       {propDoc && <ToolTip message={propDoc}/>}
       <div className='flex'>
         {inputType === 'expression'
           ? <ExpressionProp
             propValue={propValue?.toString()}
-            propType={propType}
             onChange={onExpressionPropChange}
           />
           : <SimpleInputEditor
@@ -149,7 +132,8 @@ export function InputProp<T extends string | number | boolean>(props: {
             onChange={onSimpleInputPropChange}
           />
         }
-        {!img && inputType === 'expression' ? <ExpressionLogo /> : img}
+        {isExpression && getExpressionSources(propValue)
+          .every(s => s === ExpressionSourceType.Stream) ? <KGLogo /> : <ExpressionLogo />}
       </div>
     </div>
   )

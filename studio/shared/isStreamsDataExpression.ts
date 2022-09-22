@@ -1,7 +1,7 @@
 import { StreamsDataExpression } from '../types'
 
 export function isStreamsDataExpression(
-  value: string
+  value: unknown
 ): value is StreamsDataExpression {
-  return value.startsWith('document.')
+  return typeof value === 'string' && value.startsWith('document.')
 }

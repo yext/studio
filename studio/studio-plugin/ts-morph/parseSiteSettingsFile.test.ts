@@ -17,7 +17,7 @@ it('updates correctly', () => {
   expect(propState).toEqual({
     apiKey: {
       type: PropTypes.string,
-      value: '2d8c550071a64ea23e263118a2b0680b'
+      value: 'old_key'
     },
     businessId: {
       type: PropTypes.number,

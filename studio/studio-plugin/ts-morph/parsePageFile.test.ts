@@ -135,15 +135,15 @@ it('correctly parses page using streams paths', () => {
         name: 'Banner',
         props: {
           streamsData: {
-            type: PropTypes.StreamsData,
+            type: PropTypes.string,
             value: 'document.address.city',
-            expressionSource: ExpressionSourceType.Unknown,
+            isExpression: true
           },
           subtitleUsingStreams: {
-            type: PropTypes.StreamsString,
+            type: PropTypes.string,
             // eslint-disable-next-line no-template-curly-in-string
             value: '`my prefix ${document.id} my suffix`',
-            expressionSource: ExpressionSourceType.Unknown,
+            isExpression: true
           }
         },
         uuid: 'mock-uuid',

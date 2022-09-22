@@ -101,13 +101,15 @@ it('can update the stream config', () => {
       name: 'Banner',
       props: {
         streamsData: {
-          type: PropTypes.StreamsData,
-          value: 'document.favoriteColor'
+          type: PropTypes.string,
+          value: 'document.favoriteColor',
+          isExpression: true
         },
         streamsString: {
-          type: PropTypes.StreamsString,
+          type: PropTypes.string,
           // eslint-disable-next-line no-template-curly-in-string
-          value: '`hi ${document.title}`'
+          value: '`hi ${document.title}`',
+          isExpression: true
         },
       },
       uuid: '1',

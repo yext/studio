@@ -11,7 +11,7 @@ const COMPONENTS_STATE: ComponentState[] = [
     name: 'Banner',
     props: {
       streamTemplateString: {
-        type: PropTypes.StreamsString,
+        type: PropTypes.string,
         // eslint-disable-next-line no-template-curly-in-string
         value: '`${document.id}: ${document.address.line1}`',
       },
@@ -27,8 +27,9 @@ const COMPONENTS_STATE: ComponentState[] = [
     name: 'Banner',
     props: {
       streamPath: {
-        type: PropTypes.StreamsData,
-        value: 'document.id'
+        type: PropTypes.string,
+        value: 'document.id',
+        isExpression: true
       }
     },
     moduleName: 'localComponents',

@@ -7,5 +7,6 @@ node_modules/
 /localData
 /sites-config/features.json
 vite.config.ts.timestamp*
+/lib
 
 .DS_Store

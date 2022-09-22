@@ -32,11 +32,11 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
       <Header {...headerProps} />
       <Card bgColor='#45de0d'>
         <Card bgColor='#ffeeff'>
-          <Card bgColor='#eeffbb'/>
+          <Card bgColor='#eeffbb' />
         </Card>
-        <Card bgColor='#abcdef'/>
-        <Card bgColor='#fafafa'/>
-        <Card bgColor='#abcdef'/>
+        <Card bgColor='#abcdef' />
+        <Card bgColor='#fafafa' />
+        <Card bgColor='#abcdef' />
       </Card>
       <Banner
         randomNum={100}
@@ -50,8 +50,8 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
       <Banner
         title='custom title'
         randomNum={1}
-        streamData={document.emails[1]}
-        subtitleUsingStreams={`${document.lastName}`}
+        streamData={document.emails[0]}
+        subtitleUsingStreams={`${document.lastName} test ${siteSettings.experienceVersion}`}
         someBool={true}
         anotherColor='#9c8181'
       />

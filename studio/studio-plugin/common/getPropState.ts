@@ -1,7 +1,6 @@
 import { ObjectLiteralExpression, PropertyAssignment, ts } from 'ts-morph'
 import { PropShape, PropState } from '../../shared/models'
 import { validatePropState } from '../../shared/validatePropState'
-import { getExpressionSource } from './getExpressionSource'
 import { getPropValue } from './getPropValue'
 
 export function getPropsState(
@@ -13,11 +12,11 @@ export function getPropsState(
     .filter((p): p is PropertyAssignment => p.isKind(ts.SyntaxKind.PropertyAssignment))
     .forEach(p => {
       const propName = p.getName()
-      const { value, isExpressionType } = getPropValue(p.getInitializerOrThrow())
+      const { value, isExpression } = getPropValue(p.getInitializerOrThrow())
       const propState = {
         type: propShape[propName].type,
         value,
-        ...(isExpressionType && { expressionSource: getExpressionSource(value) })
+        isExpression
       }
       if (!validatePropState(propState)) {
         throw new Error(`Could not validate propState ${JSON.stringify(propState, null, 2)}`)

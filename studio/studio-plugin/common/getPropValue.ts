@@ -2,7 +2,7 @@ import { ts, Expression, StringLiteral, JsxExpression } from 'ts-morph'
 
 export function getPropValue(initializer: StringLiteral | Expression | JsxExpression): {
   value: string | number | boolean,
-  isExpressionType?: boolean
+  isExpression?: boolean
 } {
   if (initializer.isKind(ts.SyntaxKind.StringLiteral)) {
     return { value: initializer.compilerNode.text }
@@ -16,7 +16,7 @@ export function getPropValue(initializer: StringLiteral | Expression | JsxExpres
     expression.isKind(ts.SyntaxKind.ElementAccessExpression) ||
     expression.isKind(ts.SyntaxKind.Identifier)
   ) {
-    return { value: expression.getText(), isExpressionType: true }
+    return { value: expression.getText(), isExpression: true }
   } else if (
     expression.isKind(ts.SyntaxKind.NumericLiteral) ||
     expression.isKind(ts.SyntaxKind.FalseKeyword) ||
