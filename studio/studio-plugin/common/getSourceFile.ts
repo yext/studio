@@ -10,9 +10,11 @@ export const tsCompilerOptions = {
   }
 }
 
+const p = new Project(tsCompilerOptions)
 export function getSourceFile(file: string): SourceFile {
-  const p = new Project(tsCompilerOptions)
-  p.addSourceFilesAtPaths(file)
+  if (!p.getSourceFile(file)) {
+    p.addSourceFilesAtPaths(file)
+  }
   return p.getSourceFileOrThrow(file)
 }
 
