@@ -132,8 +132,8 @@ export function InputProp<T extends string | number | boolean>(props: {
             onChange={onSimpleInputPropChange}
           />
         }
-        {isExpression && getExpressionSources(propValue)
-          .every(s => s === ExpressionSourceType.Stream) ? <KGLogo /> : <ExpressionLogo />}
+        {isExpression && (getExpressionSources(propValue)
+          .every(s => s === ExpressionSourceType.Stream) ? <KGLogo /> : <ExpressionLogo />)}
       </div>
     </div>
   )
