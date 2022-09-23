@@ -18,16 +18,16 @@ type ValidatedNodeList = (Node & {
 })[]
 
 export default function ComponentTree() {
-  const { pageState, setPageState } = useStudioContext()
+  const { pageState, setPageState, moduleNameToComponentMetadata } = useStudioContext()
   const tree = useMemo(() => {
     return pageState.componentsState.map(c => ({
       id: c.uuid,
       parent: c.parentUUID ?? ROOT_ID,
       text: c.name,
-      droppable: true,
+      droppable: moduleNameToComponentMetadata[c.moduleName][c.name].acceptsChildren,
       data: c
     }))
-  }, [pageState.componentsState])
+  }, [moduleNameToComponentMetadata, pageState.componentsState])
 
   const handleDrop = useCallback((tree: Node[]) => {
     validateTreeOrThrow(tree)
@@ -67,7 +67,10 @@ export default function ComponentTree() {
 }
 
 function canDrop(_: Node[], opts: DropOptions<ComponentState>) {
-  const { dragSource, dropTargetId } = opts
+  const { dragSource, dropTargetId, dropTarget } = opts
+  if (dropTarget !== undefined && !dropTarget.droppable) {
+    return false
+  }
   if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
     return true
   }
