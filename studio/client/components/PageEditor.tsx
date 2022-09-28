@@ -11,15 +11,10 @@ export function PageEditor(): JSX.Element | null {
   }
   const activeComponentState = getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
   if (activeComponentState.type === ElementStateType.Symbol) {
-    const tree = symbolNameToMetadata[`${activeComponentState.name}.symbol.tsx`]?.content ?? []
     console.log(activeComponentState, symbolNameToMetadata)
     return (
       <div>
         TODO - display content tree
-        <ComponentTree
-          componentsState={tree}
-          setComponentsState={e => console.log('set page state', e)}
-        />
       </div>
     )
   }

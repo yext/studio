@@ -1,4 +1,5 @@
 import { ComponentState, JsxElementState } from '../../shared/models'
+import { useStudioContext } from './useStudioContext'
 
 export function getComponentState(
   uuid: string,
@@ -16,4 +17,12 @@ export function getComponentStateOrThrow(
     throw new Error('Could not find ComponentState for uuid: ' + uuid)
   }
   return state
+}
+
+export function useActiveComponentStateOrThrow(): JsxElementState | null {
+  const { activeComponentUUID, pageState } = useStudioContext()
+  const activeComponentState = activeComponentUUID
+    ? getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
+    : null
+  return activeComponentState
 }
