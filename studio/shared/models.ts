@@ -40,7 +40,7 @@ export type ModuleMetadata = {
 }
 
 export type SymbolMetadata = {
-  content: ComponentState[]
+  content: JsxElementState[]
 }
 
 export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaData

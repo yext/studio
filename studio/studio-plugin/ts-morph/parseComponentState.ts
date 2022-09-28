@@ -21,7 +21,6 @@ export default function parseComponentState(
   }
   const name = getName(c)
   const importPath = getImportPath(name, imports)
-  console.log('parsing', name, importPath)
   if (importPath.endsWith('.symbol')) {
     if (!c.isKind(SyntaxKind.JsxSelfClosingElement)) {
       throw new Error(`Symbol component ${name} must be a JsxSelfClosingElement`)

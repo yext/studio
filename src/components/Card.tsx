@@ -13,8 +13,7 @@ export default function Card(props: CardProps) {
       backgroundColor: props.bgColor,
       border: '8px ridge rgba(211, 220, 50, .6)'
     }}>
-      hi this is a card
-      {props.text}
+      {props.text ?? 'hi this is a card'}
       {props.children}
     </div>
   )

@@ -6,7 +6,7 @@ import configureServer from './configureServer'
 import { StudioProps } from '../client/components/Studio'
 import getRootPath from './getRootPath'
 import { getSourceFile } from './common'
-import { moduleNameToComponentMetadata } from './componentMetadata'
+import { moduleNameToComponentMetadata, symbolNameToMetadata } from './componentMetadata'
 import getPagePath from './getPagePath'
 import openBrowser from 'react-dev-utils/openBrowser.js'
 import { ComponentMetadata } from '../shared/models'
@@ -43,7 +43,8 @@ export default function createStudioPlugin(args): Plugin {
       moduleNameToComponentMetadata,
       componentsOnPage: {
         index: indexPageState,
-      }
+      },
+      symbolNameToMetadata
     }
   }
 

@@ -4,6 +4,7 @@ import getRootPath from './getRootPath'
 import { getSourceFile } from './common'
 import path from 'path'
 import parseComponentMetadata, { pathToPagePreview } from './ts-morph/parseComponentMetadata'
+import parseSymbolContent from './ts-morph/parseSymbolContent'
 
 const localComponents: ModuleMetadata = fs
   .readdirSync(getRootPath('src/components'), 'utf-8')
@@ -36,6 +37,15 @@ export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   builtIn: {}
 }
 
-export const nameToMetadata: Record<string, SymbolMetadata> = {
-
-}
+// TODO: the creation of symbolNameToMetadata is dependant on moduleNameToComponentMetadata existing first.
+// We should either manually pass moduleNameToComponentMetadata through every single method that needs it
+// (which currently is the vast majority of them) or find a better way to organize things.
+export const symbolNameToMetadata: Record<string, SymbolMetadata> = fs
+  .readdirSync(getRootPath('src/symbols'), 'utf-8')
+  .reduce((prev, curr) => {
+    const symbolMetadata: SymbolMetadata = {
+      content: parseSymbolContent(path.join(getRootPath('src/symbols'), curr))
+    }
+    prev[curr] = symbolMetadata
+    return prev
+  }, {} as Record<string, SymbolMetadata>)

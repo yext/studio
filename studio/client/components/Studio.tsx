@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { SiteSettingsProps } from './SiteSettings'
-import { PageState, ModuleNameToComponentMetadata } from '../../shared/models'
+import { PageState, ModuleNameToComponentMetadata, SymbolMetadata } from '../../shared/models'
 import { StudioContext, StudioContextType } from './useStudioContext'
 import RightSidebar from './RightSidebar'
 import PagePreview from './PagePreview'
@@ -13,7 +13,8 @@ export interface StudioProps {
   // only supports a page named "index" for now
   componentsOnPage: {
     index: PageState
-  }
+  },
+  symbolNameToMetadata: Record<string, SymbolMetadata>
 }
 
 export default function Studio(props: StudioProps) {

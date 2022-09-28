@@ -137,7 +137,6 @@ function useImportedComponents(
       ...pageState.componentsState.map(c => {
         if (c.type === ElementStateType.Symbol) {
           const componentFilePath = `../../../src/symbols/${c.name}.symbol.tsx`
-          console.log(modules, componentFilePath)
           return modules[componentFilePath]().then(module => {
             newLoadedComponents[c.name] = getFunctionComponent(module, c.name)
           })

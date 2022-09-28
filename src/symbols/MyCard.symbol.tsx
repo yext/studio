@@ -3,9 +3,9 @@ import Card from '../components/Card';
 
 export default function MyCard () {
   return (
-    <Card>
+    <Card text='this is a card inside a symbol'>
       <Banner/>
-      <Card/>
+      <Card text='this is the child card inside the symbol card'/>
     </Card>
   )
 }
