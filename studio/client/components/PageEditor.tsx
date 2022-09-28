@@ -1,18 +1,25 @@
 import { ComponentMetadata, ElementStateType, PropState } from '../../shared/models'
+import ComponentTree from './ComponentTree'
 import { getComponentStateOrThrow } from './getComponentState'
 import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 
 export function PageEditor(): JSX.Element | null {
-  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentUUID } = useStudioContext()
+  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentUUID, symbolNameToMetadata } = useStudioContext()
   if (!activeComponentUUID) {
     return null
   }
   const activeComponentState = getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
   if (activeComponentState.type === ElementStateType.Symbol) {
+    const tree = symbolNameToMetadata[`${activeComponentState.name}.symbol.tsx`]?.content ?? []
+    console.log(activeComponentState, symbolNameToMetadata)
     return (
       <div>
         TODO - display content tree
+        <ComponentTree
+          componentsState={tree}
+          setComponentsState={e => console.log('set page state', e)}
+        />
       </div>
     )
   }

@@ -24,6 +24,7 @@ export default function Studio(props: StudioProps) {
   const [siteSettingsState, setSiteSettingsState] = useState(siteSettings.propState)
   const [activeComponentUUID, setActiveComponentUUID] = useState<string | undefined>()
   const [pageStateOnFile, setPageStateOnFile] = useState<PageState>(cloneDeep(componentsOnPage.index))
+  const [symbolNameToMetadata, setSymbolNameToMetadata] = useState(props.symbolNameToMetadata)
 
   const value: StudioContextType = {
     moduleNameToComponentMetadata,
@@ -37,7 +38,9 @@ export default function Studio(props: StudioProps) {
     activeComponentUUID,
     setActiveComponentUUID,
     pageStateOnFile,
-    setPageStateOnFile
+    setPageStateOnFile,
+    symbolNameToMetadata,
+    setSymbolNameToMetadata
   }
 
   return (

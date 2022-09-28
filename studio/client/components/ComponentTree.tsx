@@ -2,7 +2,7 @@ import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, get
 import { ReactElement, useCallback, useMemo } from 'react'
 import { ComponentState, JsxElementState } from '../../shared/models'
 import ComponentNode from './ComponentNode'
-import { useStudioContext } from './useStudioContext'
+import { StudioContextType, useStudioContext } from './useStudioContext'
 
 const ROOT_ID = 'tree-root-uuid'
 const CSS_CLASSES: Readonly<Classes> = {
@@ -17,34 +17,35 @@ type ValidatedNodeList = (Node & {
   data: JsxElementState
 })[]
 
-export default function ComponentTree() {
-  const { pageState, setPageState } = useStudioContext()
+export default function ComponentTree(props: {
+  componentsState: JsxElementState[],
+  setComponentsState: (c: JsxElementState[]) => void
+}) {
+  const { componentsState, setComponentsState } = props;
   const tree: Node[] = useMemo(() => {
-    return pageState.componentsState.map(c => ({
+    return componentsState.map(c => ({
       id: c.uuid,
       parent: c.parentUUID ?? ROOT_ID,
       text: c.name,
       droppable: true,
       data: c
     }))
-  }, [pageState.componentsState])
+  }, [componentsState])
 
   const handleDrop = useCallback((tree: Node[]) => {
     validateTreeOrThrow(tree)
-    setPageState({
-      ...pageState,
-      componentsState: tree.map(n => {
-        const componentState: JsxElementState = {
-          ...n.data,
-          parentUUID: n.parent
-        }
-        if (componentState.parentUUID === ROOT_ID) {
-          delete componentState.parentUUID
-        }
-        return componentState
-      })
+    const updatedTree = tree.map(n => {
+      const componentState: JsxElementState = {
+        ...n.data,
+        parentUUID: n.parent
+      }
+      if (componentState.parentUUID === ROOT_ID) {
+        delete componentState.parentUUID
+      }
+      return componentState
     })
-  }, [pageState, setPageState])
+    setComponentsState(updatedTree)
+  }, [componentsState, setComponentsState])
 
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>

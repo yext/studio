@@ -15,7 +15,9 @@ export interface StudioContextType {
   activeComponentUUID: string | undefined,
   setActiveComponentUUID: Dispatch<SetStateAction<string | undefined>>,
   pageStateOnFile: PageState,
-  setPageStateOnFile: Dispatch<SetStateAction<PageState>>
+  setPageStateOnFile: Dispatch<SetStateAction<PageState>>,
+  symbolNameToMetadata: StudioProps['symbolNameToMetadata'],
+  setSymbolNameToMetadata: Dispatch<SetStateAction<StudioProps['symbolNameToMetadata']>>
 }
 
 export const StudioContext = createContext<StudioContextType | null>(null)
