@@ -11,7 +11,7 @@ export function PageEditor(): JSX.Element | null {
   const { moduleName, name, props } = getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
 
   const componentMetadata: ComponentMetadata =
-    moduleNameToComponentMetadata[moduleName][name]
+    moduleNameToComponentMetadata[moduleName].components[name]
 
   const setPropState = (val: PropState) => {
     // TODO(oshi): we cannot use cloneDeep here over the spread operator.

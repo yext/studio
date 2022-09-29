@@ -3,17 +3,20 @@ import { PropState } from './models'
 export interface ComponentExportConfig {
   /** Component's export identifier. */
   exportIdentifiers: string,
-  /** Additional imports required for component to work in PagePreview. */
-  additionalImports?: string[],
+  /** CSS imports required for component to work in PagePreview. */
+  cssImports?: string[],
   /** Initial props when component is added to page through Studio. */
   initialProps?: PropState
 }
 
 export interface StudioNpmComponentPlugin {
-  /** relative path from studio to the NPM package. */
-  packagePath: string,
-  /** Additional imports required for components from package to work in PagePreview. */
-  additionalImports?: string[],
+  /** name of the NPM module. */
+  moduleName: string,
+  /**
+   * CSS imports required for components from the NPM module to work in PagePreview.
+   * The path(s) must be relative paths from studio.
+   */
+  cssImports?: string[],
   /** List of components available to use by Studio. */
   exports: (string | ComponentExportConfig)[],
   /**
@@ -21,7 +24,7 @@ export interface StudioNpmComponentPlugin {
    * that need to be be converted to ESM during pre-bundling step since Vite's dev serves all
    * code as native ESM.
    *
-   * For dynamic import of NPM packages, CommonJS or UMD dependencies may not be discoverable
+   * For dynamic import of NPM modules, CommonJS or UMD dependencies may not be discoverable
    * by Vite during pre-bundling step. As such, use "nonEsmDeps" option to include any CommonJS
    * or UMD dependencies. This array will be included as part of Vite's config "optimizedDeps.include"
    * to force the listed dependencies to be pre-bundled.

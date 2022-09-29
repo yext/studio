@@ -24,7 +24,7 @@ export default function ComponentTree() {
       id: c.uuid,
       parent: c.parentUUID ?? ROOT_ID,
       text: c.name,
-      droppable: moduleNameToComponentMetadata[c.moduleName][c.name].acceptsChildren,
+      droppable: moduleNameToComponentMetadata[c.moduleName].components[c.name].acceptsChildren,
       data: c
     }))
   }, [moduleNameToComponentMetadata, pageState.componentsState])

@@ -79,10 +79,11 @@ export default function createStudioPlugin(args): Plugin {
     },
     config: {
       handler: (config: UserConfig, _env: ConfigEnv): UserConfig => {
+        // update vite config based on "nonEsmDeps" specified in studio's NPM component plugins
         const optimizeDepsIncludesArray = config.optimizeDeps?.include ?? []
-        Object.values(studioConfig.npmComponents).forEach(packageConfig => {
-          if (packageConfig.nonEsmDeps && packageConfig.nonEsmDeps.length > 0) {
-            optimizeDepsIncludesArray.push(...packageConfig.nonEsmDeps)
+        Object.values(studioConfig.npmComponents).forEach(moduleConfig => {
+          if (moduleConfig.nonEsmDeps && moduleConfig.nonEsmDeps.length > 0) {
+            optimizeDepsIncludesArray.push(...moduleConfig.nonEsmDeps)
           }
         })
         if (!config.optimizeDeps) {

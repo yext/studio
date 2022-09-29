@@ -9,7 +9,7 @@
     "dev:vite": "vite --config studio/vite.config.ts",
     "dev": "npm-run-all -p dev:tailwind dev:vite",
     "localData": "vite build && yext sites generate-test-data -a",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint studio --fix",
     "build": "vite build",
     "docs:dev": "vitepress dev docs",

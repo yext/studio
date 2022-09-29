@@ -1,6 +1,6 @@
 import { JsxAttributeLike, JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind } from 'ts-morph'
 import { v4 } from 'uuid'
-import { ComponentState, PossibleModuleNames, PropState } from '../../shared/models'
+import { ComponentState, PropState } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getComponentModuleName from './getComponentModuleName'
 import parseJsxAttributes from './parseJsxAttributes'
@@ -40,7 +40,7 @@ function parseElement(
   c: JsxElement | JsxSelfClosingElement,
   name: string,
   imports: Record<string, string[]>
-): { moduleName: PossibleModuleNames, props: PropState } {
+): { moduleName: string, props: PropState } {
   const moduleName = getComponentModuleName(name, imports, false)
   if (moduleName === 'builtIn') {
     throw new Error('parseComponentState does not currently support builtIn elements.')
@@ -48,7 +48,7 @@ function parseElement(
   const attributes: JsxAttributeLike[] = c.isKind(SyntaxKind.JsxSelfClosingElement)
     ? c.getAttributes()
     : c.getOpeningElement().getAttributes()
-  const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
+  const componentMetadata = moduleNameToComponentMetadata[moduleName].components[name]
   const props = componentMetadata.global
     ? componentMetadata.globalProps ?? {}
     : parseJsxAttributes(attributes, componentMetadata)
