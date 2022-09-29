@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
 import { useRef, useCallback } from 'react'
-import { ComponentState, ElementStateType, JsxElementState, PageState } from '../../shared/models'
+import { ElementStateType, JsxElementState, PageState } from '../../shared/models'
 import CustomContextMenu from './CustomContextMenu'
 import { getComponentState } from './getComponentState'
 import { useStudioContext } from './useStudioContext'

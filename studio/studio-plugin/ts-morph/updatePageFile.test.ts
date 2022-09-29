@@ -1,5 +1,5 @@
 import fs from 'fs'
-import { ComponentState } from '../../shared/models'
+import { RegularComponentState } from '../../shared/models'
 import { PropTypes } from '../../types'
 import getRootPath from '../getRootPath'
 import updatePageFile from './updatePageFile'
@@ -13,14 +13,14 @@ beforeEach(() => {
   jest.clearAllMocks()
 })
 
-const layoutState: ComponentState = {
+const layoutState: RegularComponentState = {
   name: '',
   props: {},
   uuid: '0',
   moduleName: 'localComponents'
 }
 
-const BannerOne: ComponentState = {
+const BannerOne: RegularComponentState = {
   name: 'Banner',
   props: {
     title: {
@@ -36,7 +36,7 @@ const BannerOne: ComponentState = {
   moduleName: 'localComponents'
 }
 
-const BannerTwo: ComponentState = {
+const BannerTwo: RegularComponentState = {
   name: 'Banner',
   props: {
     title: {

@@ -1,4 +1,4 @@
-import { ComponentState } from '../../shared/models'
+import { RegularComponentState } from '../../shared/models'
 import { SourceFile, JsxElement, JsxFragment, ts, VariableDeclaration, FunctionDeclaration } from 'ts-morph'
 import { v4 } from 'uuid'
 import { getDefaultExport } from '../common'
@@ -8,10 +8,10 @@ import getTopLevelJsxNode from './getTopLevelJsxNode'
 export default function parseLayoutState(
   sourceFile: SourceFile,
   imports: Record<string, string[]>
-): { layoutState: ComponentState, layoutNode: JsxElement | JsxFragment } {
+): { layoutState: RegularComponentState, layoutNode: JsxElement | JsxFragment } {
   const defaultExport = getDefaultExport(sourceFile)
   const topLevelJsxNode = getTopLevelJsxNode(defaultExport)
-  let layoutState: ComponentState
+  let layoutState: RegularComponentState
   if (topLevelJsxNode.isKind(ts.SyntaxKind.JsxElement)) {
     const name = topLevelJsxNode.getOpeningElement().getTagNameNode().getText()
     layoutState = {

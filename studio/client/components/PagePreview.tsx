@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentState, ComponentMetadata, ElementStateType, JsxElementState } from '../../shared/models'
+import { ModuleNameToComponentMetadata, PageState, ComponentMetadata, ElementStateType, JsxElementState, RegularComponentState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
@@ -98,7 +98,7 @@ function useImportedComponents(): Record<string, ComponentImportType> {
   }, [])
 
   const importComponent = useCallback((
-    c: ComponentState,
+    c: RegularComponentState,
     directoryPath: string,
     componentNameToComponent: Record<string, ComponentImportType>
   ): Promise<void> | null => {

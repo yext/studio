@@ -1,4 +1,4 @@
-import { ComponentState } from '../../shared/models'
+import { RegularComponentState } from '../../shared/models'
 import getRootPath from '../getRootPath'
 import { getSourceFile } from '../common'
 import updateStreamConfig from './updateStreamConfig'
@@ -6,7 +6,7 @@ import { PropTypes } from '../../types'
 
 jest.mock('../getRootPath')
 
-const COMPONENTS_STATE: ComponentState[] = [
+const COMPONENTS_STATE: RegularComponentState[] = [
   {
     name: 'Banner',
     props: {

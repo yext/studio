@@ -1,5 +1,4 @@
-import { JsxChild, JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, JsxText } from 'ts-morph'
-import { ComponentState, JsxElementState } from '../../shared/models'
+import { JsxElementState } from '../../shared/models'
 import { getDefaultExport, getSourceFile } from '../common'
 import getTopLevelJsxNode from './getTopLevelJsxNode'
 import parseImports from './parseImports'

@@ -1,8 +1,8 @@
-import { ComponentState } from '../../shared/models'
+import { RegularComponentState } from '../../shared/models'
 import { PropTypes } from '../../types'
 import updateStreamConfig, { getStreamValues, getUsedDocumentPaths } from './getUpdatedStreamConfig'
 
-const COMPONENTS_STATE: ComponentState[] = [
+const COMPONENTS_STATE: RegularComponentState[] = [
   {
     name: 'Banner',
     props: {

@@ -1,4 +1,4 @@
-import { ComponentState, JsxElementState } from './models'
+import { JsxElementState } from './models'
 
 type Handler<T> = (c: JsxElementState, mappedChildren: T[], index: number) => T
 

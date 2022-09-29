@@ -1,4 +1,4 @@
-import { ComponentState, JsxElementState } from '../../shared/models'
+import { JsxElementState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 
 export function getComponentState(

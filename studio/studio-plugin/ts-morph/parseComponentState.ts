@@ -1,6 +1,6 @@
 import { JsxAttributeLike, JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind } from 'ts-morph'
 import { v4 } from 'uuid'
-import { ComponentState, ElementStateType, JsxElementState, PossibleModuleNames, PropState } from '../../shared/models'
+import { ElementStateType, JsxElementState, PossibleModuleNames, PropState } from '../../shared/models'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
 import getComponentModuleName, { getImportPath } from './getComponentModuleName'
 import parseJsxAttributes from './parseJsxAttributes'

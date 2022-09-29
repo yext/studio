@@ -1,6 +1,6 @@
 import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree, PlaceholderRenderParams } from '@minoru/react-dnd-treeview'
 import { ReactElement, useCallback, useMemo } from 'react'
-import { ComponentState, JsxElementState } from '../../shared/models'
+import { JsxElementState } from '../../shared/models'
 import ComponentNode from './ComponentNode'
 import { StudioContextType, useStudioContext } from './useStudioContext'
 

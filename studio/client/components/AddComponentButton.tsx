@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { v4 } from 'uuid'
-import { ComponentState, ModuleMetadata, PossibleModuleNames, StandardComponentMetaData } from '../../shared/models'
+import { RegularComponentState, ModuleMetadata, PossibleModuleNames, StandardComponentMetaData } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 
 export default function AddComponentButton() {
@@ -12,7 +12,7 @@ export default function AddComponentButton() {
     componentName: string,
     componentMetadata: StandardComponentMetaData
   ) => {
-    const newComponentState: ComponentState = {
+    const newComponentState: RegularComponentState = {
       name: componentName,
       props: componentMetadata.initialProps || {},
       uuid: v4(),

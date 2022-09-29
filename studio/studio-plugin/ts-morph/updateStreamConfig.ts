@@ -1,6 +1,6 @@
 import { ObjectLiteralExpression, SourceFile, ts, VariableDeclarationKind } from 'ts-morph'
 import getUpdatedStreamConfig from '../streams/getUpdatedStreamConfig'
-import { ComponentState } from '../../shared/models'
+import { RegularComponentState } from '../../shared/models'
 import { TemplateConfig } from '@yext/pages'
 import { parseObjectLiteralExpression } from '../common'
 
@@ -9,7 +9,7 @@ import { parseObjectLiteralExpression } from '../common'
  */
 export default function updateStreamConfig(
   sourceFile: SourceFile,
-  componentsState: ComponentState[]
+  componentsState: RegularComponentState[]
 ): TemplateConfig {
   const streamObjectLiteral = getStreamObjectLiteral(sourceFile)
   const currentConfig = streamObjectLiteral &&

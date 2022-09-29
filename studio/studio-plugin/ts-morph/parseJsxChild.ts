@@ -1,5 +1,5 @@
 import { JsxText, JsxExpression, JsxSelfClosingElement, JsxElement, JsxFragment, SyntaxKind } from 'ts-morph'
-import { ComponentState, JsxElementState } from '../../shared/models'
+import { JsxElementState } from '../../shared/models'
 import parseComponentState from './parseComponentState'
 
 export default function parseJsxChild(

@@ -1,4 +1,4 @@
-import { ComponentState, JsxElementState, PageState } from '../../shared/models'
+import { JsxElementState, PageState } from '../../shared/models'
 import { getSourceFile } from '../common'
 import parseImports from './parseImports'
 import parseLayoutState from './parseLayoutState'

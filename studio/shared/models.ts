@@ -1,16 +1,16 @@
 import { PropStateTypes, PropTypes } from '../types'
 
 export type PageState = {
-  layoutState: ComponentState,
+  layoutState: RegularComponentState,
   componentsState: JsxElementState[]
 }
 
-export type JsxElementState = ComponentState | SymbolState
+export type JsxElementState = RegularComponentState | SymbolState
 export enum ElementStateType {
   Component = 'component',
   Symbol = 'symbol'
 }
-export type ComponentState = {
+export type RegularComponentState = {
   type?: ElementStateType.Component,
   name: string,
   props: PropState,

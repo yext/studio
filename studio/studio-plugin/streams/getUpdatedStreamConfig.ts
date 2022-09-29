@@ -1,5 +1,5 @@
 import { TemplateConfig } from '@yext/pages'
-import { ComponentState } from '../../shared/models'
+import { RegularComponentState } from '../../shared/models'
 import { v4 } from 'uuid'
 import { TEMPLATE_STRING_EXPRESSION_REGEX } from '../../shared/constants'
 import { StreamsDataExpression } from '../../types'
@@ -25,7 +25,7 @@ const NON_CONFIGURABLE_PROPERTIES = [
 ]
 
 export default function getUpdatedStreamConfig(
-  componentsState: ComponentState[],
+  componentsState: RegularComponentState[],
   currentConfig: TemplateConfig = {}
 ): TemplateConfig {
   const streamValues = getStreamValues(componentsState)
@@ -60,7 +60,7 @@ export function getUsedDocumentPaths(
 }
 
 export function getStreamValues(
-  componentsState: ComponentState[]
+  componentsState: RegularComponentState[]
 ): StreamsDataExpression[] {
   const valuesAccumulator: StreamsDataExpression[] = []
 
