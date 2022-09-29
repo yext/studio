@@ -1,11 +1,16 @@
 import { ComponentMetadata, ComponentStateType, PropState } from '../../shared/models'
-import ComponentTree from './ComponentTree'
 import { getComponentStateOrThrow } from './getComponentState'
 import PropEditor from './PropEditor'
 import { useStudioContext } from './useStudioContext'
 
 export function PageEditor(): JSX.Element | null {
-  const { activeComponentsState, setActiveComponentsState, moduleNameToComponentMetadata, activeComponentUUID, symbolNameToMetadata } = useStudioContext()
+  const {
+    activeComponentsState,
+    setActiveComponentsState,
+    moduleNameToComponentMetadata,
+    activeComponentUUID,
+    symbolNameToMetadata
+  } = useStudioContext()
   if (!activeComponentUUID) {
     return null
   }

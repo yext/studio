@@ -1,5 +1,5 @@
 import { RegularComponentState } from '../../shared/models'
-import { SourceFile, JsxElement, JsxFragment, ts, VariableDeclaration, FunctionDeclaration } from 'ts-morph'
+import { SourceFile, JsxElement, JsxFragment, ts } from 'ts-morph'
 import { v4 } from 'uuid'
 import { getDefaultExport } from '../common'
 import getComponentModuleName from './getComponentModuleName'

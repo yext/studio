@@ -39,7 +39,8 @@ export default function updatePageFile(
   pageComponent.addStatements(newReturnStatement)
 
   // We currently do not support siteSettings and streams data inside of Symbols
-  const componentStates = updatedState.componentsState.filter((c): c is RegularComponentState => c.type !== ComponentStateType.Symbol)
+  const componentStates = updatedState.componentsState.filter(
+    (c): c is RegularComponentState => c.type !== ComponentStateType.Symbol)
   updateFileImports(sourceFile, componentStates, expressionSourcePaths)
   if (options.updateStreamConfig) {
     updateStreamConfig(sourceFile, componentStates)

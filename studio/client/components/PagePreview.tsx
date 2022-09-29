@@ -1,10 +1,10 @@
-import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentMetadata, ComponentStateType, ComponentState, RegularComponentState } from '../../shared/models'
-import { useStudioContext } from './useStudioContext'
-import getPreviewProps from '../utils/getPreviewProps'
-import ComponentPreviewBoundary from './ComponentPreviewBoundary'
+import React, { createElement, FunctionComponent, ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import mapComponentStates from '../../shared/mapComponentStates'
+import { ComponentMetadata, ComponentState, ComponentStateType, RegularComponentState } from '../../shared/models'
+import getPreviewProps from '../utils/getPreviewProps'
 import { useSiteSettings } from '../utils/useSiteSettings'
+import ComponentPreviewBoundary from './ComponentPreviewBoundary'
+import { useStudioContext } from './useStudioContext'
 
 export default function PagePreview() {
   const { pageState } = useStudioContext()
@@ -20,7 +20,7 @@ export default function PagePreview() {
 }
 
 function useElements() {
-  const { pageState, moduleNameToComponentMetadata, streamDocument, activeComponentsState } = useStudioContext()
+  const { pageState, streamDocument, activeComponentsState } = useStudioContext()
   const importedComponents = useImportedComponents()
   const siteSettingsObj = useSiteSettings()
 
@@ -148,7 +148,7 @@ function useImportedComponents(): Record<string, ComponentImportType> {
         return newState
       })
     })
-  }, [importComponent, activeComponentsState, pageState.layoutState])
+  }, [importComponent, activeComponentsState, pageState.layoutState, modules])
 
   return importedComponents
 }

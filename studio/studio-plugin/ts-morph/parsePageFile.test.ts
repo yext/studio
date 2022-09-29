@@ -1,7 +1,7 @@
 import { ComponentState } from 'react'
 import parsePageFile from './parsePageFile'
 import getRootPath from '../getRootPath'
-import { ExpressionSourceType, PropTypes } from '../../types'
+import { PropTypes } from '../../types'
 
 jest.mock('../componentMetadata')
 jest.mock('../getRootPath')

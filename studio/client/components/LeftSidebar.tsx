@@ -1,15 +1,11 @@
-import ComponentTree from './ComponentTree'
 import AddComponentButton from './AddComponentButton'
-import StreamDocPicker from './StreamDocPicker'
+import ComponentTree from './ComponentTree'
 import SaveButton from './SaveButton'
-import { useStudioContext } from './useStudioContext'
-import { useCallback } from 'react'
-import { ComponentStateType, ComponentState } from '../../shared/models'
-import { getComponentStateOrThrow, useActiveComponentStateOrThrow } from './getComponentState'
+import StreamDocPicker from './StreamDocPicker'
 import SymbolEditor from './SymbolEditor'
+import { useStudioContext } from './useStudioContext'
 
 export default function LeftSidebar() {
-  const activeComponentState = useActiveComponentStateOrThrow()
   const { activeSymbolName } = useStudioContext()
 
   return (

@@ -1,8 +1,8 @@
-import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, getBackendOptions, MultiBackend, NodeModel, RenderParams, Tree, PlaceholderRenderParams } from '@minoru/react-dnd-treeview'
+import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, getBackendOptions, MultiBackend, NodeModel, PlaceholderRenderParams, RenderParams, Tree } from '@minoru/react-dnd-treeview'
 import { ReactElement, useCallback, useMemo } from 'react'
 import { ComponentState } from '../../shared/models'
 import ComponentNode from './ComponentNode'
-import { StudioContextType, useStudioContext } from './useStudioContext'
+import { useStudioContext } from './useStudioContext'
 
 const ROOT_ID = 'tree-root-uuid'
 const CSS_CLASSES: Readonly<Classes> = {

@@ -4,7 +4,11 @@ import { RegularComponentState, ModuleMetadata, PossibleModuleNames, StandardCom
 import { useStudioContext } from './useStudioContext'
 
 export default function AddComponentButton() {
-  const { moduleNameToComponentMetadata, activeComponentsState, setActiveComponentsState } = useStudioContext()
+  const {
+    moduleNameToComponentMetadata,
+    activeComponentsState,
+    setActiveComponentsState
+  } = useStudioContext()
   const [moduleName, setModuleName] = useState<PossibleModuleNames>('localComponents')
   const moduleMetadata: ModuleMetadata = moduleNameToComponentMetadata[moduleName]
 

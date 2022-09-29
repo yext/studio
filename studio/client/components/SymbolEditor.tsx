@@ -1,5 +1,4 @@
 import ComponentTree from './ComponentTree'
-import { useActiveComponentStateOrThrow } from './getComponentState'
 import { useStudioContext } from './useStudioContext'
 
 export default function SymbolEditor() {

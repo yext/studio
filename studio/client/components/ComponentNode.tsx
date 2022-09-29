@@ -1,7 +1,7 @@
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
-import { useRef, useCallback } from 'react'
-import { ComponentStateType, ComponentState, PageState } from '../../shared/models'
+import { useCallback, useRef } from 'react'
+import { ComponentState, ComponentStateType, PageState } from '../../shared/models'
 import CustomContextMenu from './CustomContextMenu'
 import { getComponentState } from './getComponentState'
 import { useStudioContext } from './useStudioContext'
@@ -47,7 +47,7 @@ export default function ComponentNode(props: ComponentNodeProps) {
     } else {
       setActiveComponentUUID(undefined)
     }
-  }, [activeComponentUUID, componentState.uuid, setActiveComponentUUID])
+  }, [componentState, activeComponentUUID, setActiveComponentUUID, setActiveSymbolName])
 
   const className = classNames('flex border-solid border-2 cursor-grab select-none p-2', {
     'border-indigo-600': activeComponentUUID === componentState.uuid,

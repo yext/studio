@@ -1,4 +1,4 @@
-import { SourceFile, JsxElement, JsxFragment, ts, VariableDeclaration, FunctionDeclaration, SyntaxKind } from 'ts-morph'
+import { FunctionDeclaration, JsxElement, JsxFragment, ts, VariableDeclaration } from 'ts-morph'
 
 export default function getTopLevelJsxNode(
   declaration: VariableDeclaration | FunctionDeclaration
