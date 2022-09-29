@@ -1,9 +1,9 @@
-import { JsxChild, JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, JsxText } from 'ts-morph';
-import { ComponentState, JsxElementState } from '../../shared/models';
-import { getDefaultExport, getSourceFile } from '../common';
-import getTopLevelJsxNode from './getTopLevelJsxNode';
-import parseImports from './parseImports';
-import parseJsxChild from './parseJsxChild';
+import { JsxChild, JsxElement, JsxExpression, JsxFragment, JsxSelfClosingElement, JsxText } from 'ts-morph'
+import { ComponentState, JsxElementState } from '../../shared/models'
+import { getDefaultExport, getSourceFile } from '../common'
+import getTopLevelJsxNode from './getTopLevelJsxNode'
+import parseImports from './parseImports'
+import parseJsxChild from './parseJsxChild'
 
 export default function parseSymbolContent(filePath: string): JsxElementState[] {
   const sourceFile = getSourceFile(filePath)

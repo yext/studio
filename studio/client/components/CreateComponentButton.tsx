@@ -1,6 +1,6 @@
-import { Modal } from "@restart/ui"
-import { useState } from "react"
-import { toast } from "react-toastify"
+import { Modal } from '@restart/ui'
+import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 export default function CreateComponentButton() {
   const [open, setOpen] = useState(false)
@@ -12,7 +12,7 @@ export default function CreateComponentButton() {
       }}>
         Create Component
       </button>
-      <Modal 
+      <Modal
         show={open}
         onHide={() => setOpen(false)}
         renderBackdrop={(props) => (

@@ -11,20 +11,22 @@ export enum ElementStateType {
   Symbol = 'symbol'
 }
 export type ComponentState = {
-  type?: ElementStateType.Component
+  type?: ElementStateType.Component,
   name: string,
   props: PropState,
   uuid: string,
   moduleName: PossibleModuleNames,
   isFragment?: true,
-  parentUUID?: string
+  parentUUID?: string,
+  parentSymbolUUID?: string
 }
 export type SymbolState = {
-  type: ElementStateType.Symbol
+  type: ElementStateType.Symbol,
   name: string,
-  props: {},
+  props: Record<string, never>,
   uuid: string,
-  parentUUID?: string
+  parentUUID?: string,
+  parentSymbolUUID?: string
 }
 
 export type PropState = {

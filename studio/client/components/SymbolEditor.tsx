@@ -1,23 +1,17 @@
-import ComponentTree from './ComponentTree';
-import { useActiveComponentStateOrThrow } from './getComponentState';
-import { useStudioContext } from './useStudioContext';
+import ComponentTree from './ComponentTree'
+import { useActiveComponentStateOrThrow } from './getComponentState'
+import { useStudioContext } from './useStudioContext'
 
 export default function SymbolEditor() {
-  const { symbolNameToMetadata } = useStudioContext()
-  const activeComponentState = useActiveComponentStateOrThrow()
-  if (!activeComponentState) {
-    return null
-  }
-
-  const tree = symbolNameToMetadata[`${activeComponentState.name}.symbol.tsx`]?.content ?? []
-
+  const { setActiveComponentUUID, setActiveSymbolName } = useStudioContext()
   return (
     <div>
       symbol editor
-      <ComponentTree
-        componentsState={tree}
-        setComponentsState={() => console.log('setting sub state')}
-      />
+      <button className='btn' onClick={() => {
+        setActiveComponentUUID(undefined)
+        setActiveSymbolName(undefined)
+      }}>return to full component tree</button>
+      <ComponentTree />
     </div>
   )
 }

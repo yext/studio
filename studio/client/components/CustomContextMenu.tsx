@@ -6,7 +6,7 @@ export default function CustomContextMenu(props: {
   componentUUID: string,
   elementRef: RefObject<HTMLElement>
 }) {
-  const { pageState, setPageState } = useStudioContext()
+  const { activeComponentsState, setActiveComponentsState } = useStudioContext()
   const [contextMenuAnchor, setContextMenuAnchor] = useState({ x: 0, y: 0 })
   const [contextMenuProps, toggleContextMenu] = useMenuState()
 
@@ -35,12 +35,9 @@ export default function CustomContextMenu(props: {
   }, [handleContextMenu, props.elementRef])
 
   function deleteComponent() {
-    setPageState({
-      ...pageState,
-      componentsState: pageState.componentsState.filter(c => {
-        return c.uuid !== props.componentUUID
-      })
-    })
+    setActiveComponentsState(activeComponentsState.filter(c => {
+      return c.uuid !== props.componentUUID
+    }))
   }
 
   return (

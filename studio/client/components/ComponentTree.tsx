@@ -17,20 +17,17 @@ type ValidatedNodeList = (Node & {
   data: JsxElementState
 })[]
 
-export default function ComponentTree(props: {
-  componentsState: JsxElementState[],
-  setComponentsState: (c: JsxElementState[]) => void
-}) {
-  const { componentsState, setComponentsState } = props;
+export default function ComponentTree() {
+  const { setActiveComponentsState, activeComponentsState } = useStudioContext()
   const tree: Node[] = useMemo(() => {
-    return componentsState.map(c => ({
+    return activeComponentsState.map(c => ({
       id: c.uuid,
       parent: c.parentUUID ?? ROOT_ID,
       text: c.name,
       droppable: true,
       data: c
     }))
-  }, [componentsState])
+  }, [activeComponentsState])
 
   const handleDrop = useCallback((tree: Node[]) => {
     validateTreeOrThrow(tree)
@@ -44,8 +41,8 @@ export default function ComponentTree(props: {
       }
       return componentState
     })
-    setComponentsState(updatedTree)
-  }, [componentsState, setComponentsState])
+    setActiveComponentsState(updatedTree)
+  }, [setActiveComponentsState])
 
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>

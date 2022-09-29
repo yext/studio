@@ -25,11 +25,33 @@ export default function Studio(props: StudioProps) {
   const [activeComponentUUID, setActiveComponentUUID] = useState<string | undefined>()
   const [pageStateOnFile, setPageStateOnFile] = useState<PageState>(cloneDeep(componentsOnPage.index))
   const [symbolNameToMetadata, setSymbolNameToMetadata] = useState(props.symbolNameToMetadata)
+  const [activeSymbolName, setActiveSymbolName] = useState<string | undefined>(undefined)
+
+  const activeComponentsState = activeSymbolName
+    ? symbolNameToMetadata[`${activeSymbolName}.symbol.tsx`]?.content
+    : pageState.componentsState
 
   const value: StudioContextType = {
-    moduleNameToComponentMetadata,
+    activeSymbolName,
+    setActiveSymbolName,
+    activeComponentsState,
+    setActiveComponentsState(componentsState) {
+      if (!activeSymbolName) {
+        setPageState({
+          ...pageState,
+          componentsState
+        })
+      } else {
+        setSymbolNameToMetadata({
+          ...symbolNameToMetadata,
+          activeSymbolName: {
+            content: componentsState
+          }
+        })
+      }
+    },
     pageState,
-    setPageState,
+    moduleNameToComponentMetadata,
     siteSettingsMetadata: siteSettings.componentMetadata,
     siteSettingsState,
     setSiteSettingsState,

@@ -20,9 +20,10 @@ export function getComponentStateOrThrow(
 }
 
 export function useActiveComponentStateOrThrow(): JsxElementState | null {
-  const { activeComponentUUID, pageState } = useStudioContext()
+  const { activeComponentUUID, activeComponentsState } = useStudioContext()
+  console.log(activeComponentUUID, activeComponentsState)
   const activeComponentState = activeComponentUUID
-    ? getComponentStateOrThrow(activeComponentUUID, pageState.componentsState)
+    ? getComponentStateOrThrow(activeComponentUUID, activeComponentsState)
     : null
   return activeComponentState
 }

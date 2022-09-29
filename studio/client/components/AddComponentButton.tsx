@@ -4,7 +4,7 @@ import { ComponentState, ModuleMetadata, PossibleModuleNames, StandardComponentM
 import { useStudioContext } from './useStudioContext'
 
 export default function AddComponentButton() {
-  const { moduleNameToComponentMetadata, pageState, setPageState } = useStudioContext()
+  const { moduleNameToComponentMetadata, activeComponentsState, setActiveComponentsState } = useStudioContext()
   const [moduleName, setModuleName] = useState<PossibleModuleNames>('localComponents')
   const moduleMetadata: ModuleMetadata = moduleNameToComponentMetadata[moduleName]
 
@@ -18,18 +18,15 @@ export default function AddComponentButton() {
       uuid: v4(),
       moduleName
     }
-    let i = pageState.componentsState.length - 1
-    while (i >= 0 && moduleMetadata[pageState.componentsState[i].name].global) {
+    let i = activeComponentsState.length - 1
+    while (i >= 0 && moduleMetadata[activeComponentsState[i].name].global) {
       i--
     }
-    const indexToInsert = i === -1 ? pageState.componentsState.length : i + 1
-    const newComponentsState = pageState.componentsState.slice(0)
+    const indexToInsert = i === -1 ? activeComponentsState.length : i + 1
+    const newComponentsState = activeComponentsState.slice(0)
     newComponentsState.splice(indexToInsert, 0, newComponentState)
-    setPageState({
-      ...pageState,
-      componentsState: newComponentsState
-    })
-  }, [moduleMetadata, moduleName, pageState, setPageState])
+    setActiveComponentsState(newComponentsState)
+  }, [moduleMetadata, moduleName, activeComponentsState, setActiveComponentsState])
 
   return (
     <>

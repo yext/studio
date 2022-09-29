@@ -31,10 +31,17 @@ export default function ComponentNode(props: ComponentNodeProps) {
     activeComponentUUID,
     setActiveComponentUUID,
     pageStateOnFile,
-    moduleNameToComponentMetadata
+    moduleNameToComponentMetadata,
+    setActiveSymbolName
   } = useStudioContext()
 
   const updateActiveComponent = useCallback(() => {
+    if (componentState.type === ElementStateType.Symbol) {
+      setActiveComponentUUID(undefined)
+      setActiveSymbolName(componentState.name)
+      return
+    }
+
     if (activeComponentUUID !== componentState.uuid) {
       setActiveComponentUUID(componentState.uuid)
     } else {

@@ -20,8 +20,8 @@ export default function PagePreview() {
 }
 
 function useElements() {
-  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
-  const importedComponents = useImportedComponents(pageState, moduleNameToComponentMetadata)
+  const { pageState, moduleNameToComponentMetadata, streamDocument, activeComponentsState } = useStudioContext()
+  const importedComponents = useImportedComponents()
   const siteSettingsObj = useSiteSettings()
 
   return useMemo(() => {
@@ -34,7 +34,7 @@ function useElements() {
       siteSettings: siteSettingsObj
     }
     const elements = createStudioElements(
-      pageState.componentsState, importedComponents, expressionSourcesValues)
+      activeComponentsState, importedComponents, expressionSourcesValues)
     const layoutName = pageState.layoutState.name
     if (importedComponents[layoutName]) {
       return createElement(importedComponents[layoutName], {}, elements)
@@ -46,7 +46,7 @@ function useElements() {
     }
   }, [
     importedComponents,
-    pageState.componentsState,
+    activeComponentsState,
     pageState.layoutState.name,
     siteSettingsObj,
     streamDocument
@@ -79,10 +79,8 @@ function createStudioElements(
 
 type ComponentImportType = FunctionComponent<Record<string, unknown>> | string
 
-function useImportedComponents(
-  pageState: PageState,
-  moduleNameToComponentMetadata: ModuleNameToComponentMetadata
-): Record<string, ComponentImportType> {
+function useImportedComponents(): Record<string, ComponentImportType> {
+  const { pageState, moduleNameToComponentMetadata, activeComponentsState } = useStudioContext()
   const [
     importedComponents,
     setImportedComponents
@@ -134,7 +132,7 @@ function useImportedComponents(
     const newLoadedComponents = {}
     Promise.all([
       importComponent(pageState.layoutState, '../../../src/layouts', newLoadedComponents),
-      ...pageState.componentsState.map(c => {
+      ...activeComponentsState.map(c => {
         if (c.type === ElementStateType.Symbol) {
           const componentFilePath = `../../../src/symbols/${c.name}.symbol.tsx`
           return modules[componentFilePath]().then(module => {
@@ -150,7 +148,7 @@ function useImportedComponents(
         return newState
       })
     })
-  }, [importComponent, pageState.componentsState, pageState.layoutState])
+  }, [importComponent, activeComponentsState, pageState.layoutState])
 
   return importedComponents
 }

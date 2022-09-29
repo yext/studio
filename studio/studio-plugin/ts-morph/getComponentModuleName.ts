@@ -5,7 +5,7 @@ export default function getComponentModuleName(
   imports: Record<string, string[]>,
   isLayout: boolean
 ): PossibleModuleNames {
-  let importPath = getImportPath(name, imports)
+  const importPath = getImportPath(name, imports)
   if (!importPath) {
     return 'builtIn'
   }
