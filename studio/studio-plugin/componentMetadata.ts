@@ -53,13 +53,6 @@ studioConfig.npmComponents?.forEach(npmModule => {
   npmComponents[npmModule.moduleName] = moduleMetadata
 })
 
-/**
-studioPlugin: '@yext/search-ui-react'
-filePath: from node_modules/
-importIdentifer: '../../../node_modules/@yext/search-ui-react' <= from pagePreview to this filePath
-PagePageview use importIdentifer
- */
-
 export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
   ...npmComponents,
   localComponents,
