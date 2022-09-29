@@ -43,7 +43,7 @@ studioConfig.npmComponents?.forEach(npmModule => {
   }
   npmModule.exports.forEach(component => {
     //TODO: properly extract info from actual npm module (SLAP-2392)
-    const componentIdentifier = typeof component === 'string' ? component : component.exportIdentifiers
+    const componentIdentifier = typeof component === 'string' ? component : component.exportIdentifier
     moduleMetadata.components[componentIdentifier] = {
       editable: true,
       importIdentifier: path.relative(pathToPagePreview, npmModulePath),

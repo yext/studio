@@ -2,7 +2,7 @@ import { PropState } from './models'
 
 export interface ComponentExportConfig {
   /** Component's export identifier. */
-  exportIdentifiers: string,
+  exportIdentifier: string,
   /** CSS imports required for component to work in PagePreview. */
   cssImports?: string[],
   /** Initial props when component is added to page through Studio. */
@@ -17,7 +17,11 @@ export interface StudioNpmModulePlugin {
    * The path(s) must be relative paths from project root directory.
    */
   cssImports?: string[],
-  /** List of components available to use by Studio. */
+  /**
+   * A list of components available to use by Studio.
+   * The list's element type can either be a "string" value of the component's export
+   * identifier or a "ComponentExportConfig" for more detailed configurations.
+   */
   exports: (string | ComponentExportConfig)[],
   /**
    * By default, during development, Vite will crawl through source code to detect
