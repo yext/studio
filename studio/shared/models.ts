@@ -21,7 +21,7 @@ export type PropState = {
 export type ModuleNameToComponentMetadata = {
   [moduleName in PossibleModuleNames]: ModuleMetadata
 }
-export type PossibleModuleNames = 'localComponents' | 'localLayouts' | 'builtIn'
+export type PossibleModuleNames = 'localComponents' | 'localLayouts' | 'builtIn' | 'npmComponents'
 export type ModuleMetadata = {
   [componentName: string]: ComponentMetadata
 }
