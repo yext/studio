@@ -9,7 +9,7 @@ export interface ComponentExportConfig {
   initialProps?: PropState
 }
 
-export interface StudioNpmComponentPlugin {
+export interface StudioNpmModulePlugin {
   /** name of the NPM module. */
   moduleName: string,
   /**

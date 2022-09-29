@@ -1,6 +1,6 @@
-import { StudioNpmComponentPlugin } from '../../studio/shared/StudioNpmComponentPlugin';
+import { StudioNpmModulePlugin } from '../../studio/shared/StudioNpmModulePlugin';
 
-export const searchUiReactStudioPlugin: StudioNpmComponentPlugin = {
+export const searchUiReactStudioPlugin: StudioNpmModulePlugin = {
   moduleName: '@yext/search-ui-react',
   exports: ['SearchBar'],
   cssImports: ['./node_modules/@yext/search-ui-react/lib/bundle.css'],
