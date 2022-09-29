@@ -80,6 +80,9 @@ export default function createStudioPlugin(args): Plugin {
     config: {
       handler: (config: UserConfig, _env: ConfigEnv): UserConfig => {
         // update vite config based on "nonEsmDeps" specified in studio's NPM component plugins
+        if (!studioConfig.npmComponents) {
+          return config
+        }
         const pluginsOptimizeDeps: string[] = []
         Object.values(studioConfig.npmComponents).forEach(moduleConfig => {
           if (moduleConfig.nonEsmDeps && moduleConfig.nonEsmDeps.length > 0) {
