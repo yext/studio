@@ -1,17 +1,17 @@
-import { JsxElementState } from '../../shared/models'
+import { ComponentState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 
 export function getComponentState(
   uuid: string,
-  componentsState: JsxElementState[]
-): JsxElementState | undefined {
+  componentsState: ComponentState[]
+): ComponentState | undefined {
   return componentsState.find(c => c.uuid === uuid)
 }
 
 export function getComponentStateOrThrow(
   uuid: string,
-  componentsState: JsxElementState[]
-): JsxElementState {
+  componentsState: ComponentState[]
+): ComponentState {
   const state = getComponentState(uuid, componentsState)
   if (!state) {
     throw new Error('Could not find ComponentState for uuid: ' + uuid)
@@ -19,7 +19,7 @@ export function getComponentStateOrThrow(
   return state
 }
 
-export function useActiveComponentStateOrThrow(): JsxElementState | null {
+export function useActiveComponentStateOrThrow(): ComponentState | null {
   const { activeComponentUUID, activeComponentsState } = useStudioContext()
   console.log(activeComponentUUID, activeComponentsState)
   const activeComponentState = activeComponentUUID

@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useCallback, useState, useMemo, createElement, useRef, ReactElement } from 'react'
-import { ModuleNameToComponentMetadata, PageState, ComponentMetadata, ElementStateType, JsxElementState, RegularComponentState } from '../../shared/models'
+import { ModuleNameToComponentMetadata, PageState, ComponentMetadata, ComponentStateType, ComponentState, RegularComponentState } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
@@ -54,7 +54,7 @@ function useElements() {
 }
 
 function createStudioElements(
-  components: JsxElementState[],
+  components: ComponentState[],
   importedComponents: Record<string, ComponentImportType>,
   expressionSourcesValues: Record<string, Record<string, unknown>>,
 ): (ReactElement | null)[] {
@@ -133,7 +133,7 @@ function useImportedComponents(): Record<string, ComponentImportType> {
     Promise.all([
       importComponent(pageState.layoutState, '../../../src/layouts', newLoadedComponents),
       ...activeComponentsState.map(c => {
-        if (c.type === ElementStateType.Symbol) {
+        if (c.type === ComponentStateType.Symbol) {
           const componentFilePath = `../../../src/symbols/${c.name}.symbol.tsx`
           return modules[componentFilePath]().then(module => {
             newLoadedComponents[c.name] = getFunctionComponent(module, c.name)

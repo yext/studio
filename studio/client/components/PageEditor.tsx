@@ -1,4 +1,4 @@
-import { ComponentMetadata, ElementStateType, PropState } from '../../shared/models'
+import { ComponentMetadata, ComponentStateType, PropState } from '../../shared/models'
 import ComponentTree from './ComponentTree'
 import { getComponentStateOrThrow } from './getComponentState'
 import PropEditor from './PropEditor'
@@ -10,7 +10,7 @@ export function PageEditor(): JSX.Element | null {
     return null
   }
   const activeComponentState = getComponentStateOrThrow(activeComponentUUID, activeComponentsState)
-  if (activeComponentState.type === ElementStateType.Symbol) {
+  if (activeComponentState.type === ComponentStateType.Symbol) {
     console.log(activeComponentState, symbolNameToMetadata)
     return (
       <div>

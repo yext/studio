@@ -1,6 +1,6 @@
 import { TemplateProps } from '@yext/pages'
 import { createContext, useContext, Dispatch, SetStateAction } from 'react'
-import { ComponentMetadata, JsxElementState, PageState, PropState } from '../../shared/models'
+import { ComponentMetadata, ComponentState, PageState, PropState } from '../../shared/models'
 import { StudioProps } from './Studio'
 
 export interface StudioContextType {
@@ -8,8 +8,8 @@ export interface StudioContextType {
   setActiveSymbolName: (val: string | undefined) => void,
   moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
   pageState: PageState,
-  activeComponentsState: JsxElementState[],
-  setActiveComponentsState: (componentsState: JsxElementState[]) => void,
+  activeComponentsState: ComponentState[],
+  setActiveComponentsState: (componentsState: ComponentState[]) => void,
   siteSettingsMetadata: ComponentMetadata,
   siteSettingsState: PropState,
   setSiteSettingsState: Dispatch<SetStateAction<PropState>>,

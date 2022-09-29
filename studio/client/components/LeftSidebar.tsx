@@ -4,7 +4,7 @@ import StreamDocPicker from './StreamDocPicker'
 import SaveButton from './SaveButton'
 import { useStudioContext } from './useStudioContext'
 import { useCallback } from 'react'
-import { ElementStateType, JsxElementState } from '../../shared/models'
+import { ComponentStateType, ComponentState } from '../../shared/models'
 import { getComponentStateOrThrow, useActiveComponentStateOrThrow } from './getComponentState'
 import SymbolEditor from './SymbolEditor'
 

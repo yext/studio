@@ -2,16 +2,16 @@ import { PropStateTypes, PropTypes } from '../types'
 
 export type PageState = {
   layoutState: RegularComponentState,
-  componentsState: JsxElementState[]
+  componentsState: ComponentState[]
 }
 
-export type JsxElementState = RegularComponentState | SymbolState
-export enum ElementStateType {
-  Component = 'component',
+export type ComponentState = RegularComponentState | SymbolState
+export enum ComponentStateType {
+  Regular = 'regular',
   Symbol = 'symbol'
 }
 export type RegularComponentState = {
-  type?: ElementStateType.Component,
+  type?: ComponentStateType.Regular,
   name: string,
   props: PropState,
   uuid: string,
@@ -20,7 +20,7 @@ export type RegularComponentState = {
   parentUUID?: string
 }
 export type SymbolState = {
-  type: ElementStateType.Symbol,
+  type: ComponentStateType.Symbol,
   name: string,
   props: Record<string, never>,
   uuid: string,
@@ -40,7 +40,7 @@ export type ModuleMetadata = {
 }
 
 export type SymbolMetadata = {
-  content: JsxElementState[]
+  content: ComponentState[]
 }
 
 export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaData

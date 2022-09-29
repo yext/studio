@@ -1,5 +1,5 @@
 import { SourceFile } from 'ts-morph'
-import { RegularComponentState, ElementStateType, JsxElementState } from '../../shared/models'
+import { RegularComponentState, ComponentStateType, ComponentState } from '../../shared/models'
 import { ExpressionSourceType } from '../../types'
 import path from 'path'
 import getRootPath from '../getRootPath'

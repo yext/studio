@@ -1,12 +1,12 @@
 import { JsxText, JsxExpression, JsxSelfClosingElement, JsxElement, JsxFragment, SyntaxKind } from 'ts-morph'
-import { JsxElementState } from '../../shared/models'
+import { ComponentState } from '../../shared/models'
 import parseComponentState from './parseComponentState'
 
 export default function parseJsxChild(
   c: JsxText | JsxExpression | JsxSelfClosingElement | JsxElement | JsxFragment,
   imports: Record<string, string[]>,
   parentUUID?: string
-): JsxElementState[] {
+): ComponentState[] {
   // All whitespace in Jsx is also considered JsxText, for example indentation
   if (c.isKind(SyntaxKind.JsxText)) {
     if (c.getLiteralText().trim() !== '') {
@@ -18,7 +18,7 @@ export default function parseJsxChild(
       `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`)
   }
 
-  const selfState: JsxElementState = {
+  const selfState: ComponentState = {
     ...parseComponentState(c, imports),
     parentUUID
   }
@@ -27,8 +27,8 @@ export default function parseJsxChild(
     return [ selfState ]
   }
 
-  const children: JsxElementState[] = c.getJsxChildren()
+  const children: ComponentState[] = c.getJsxChildren()
     .flatMap(c => parseJsxChild(c, imports, selfState.uuid))
-    .filter((c): c is JsxElementState => !!c)
+    .filter((c): c is ComponentState => !!c)
   return [ selfState, ...children ]
 }

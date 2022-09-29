@@ -1,13 +1,13 @@
 import classNames from 'classnames'
 import { isEqual } from 'lodash'
 import { useRef, useCallback } from 'react'
-import { ElementStateType, JsxElementState, PageState } from '../../shared/models'
+import { ComponentStateType, ComponentState, PageState } from '../../shared/models'
 import CustomContextMenu from './CustomContextMenu'
 import { getComponentState } from './getComponentState'
 import { useStudioContext } from './useStudioContext'
 
 interface ComponentNodeProps {
-  componentState: JsxElementState,
+  componentState: ComponentState,
   /** The below are props from {@link RenderParams} */
   depth: number,
   isOpen: boolean,
@@ -36,7 +36,7 @@ export default function ComponentNode(props: ComponentNodeProps) {
   } = useStudioContext()
 
   const updateActiveComponent = useCallback(() => {
-    if (componentState.type === ElementStateType.Symbol) {
+    if (componentState.type === ComponentStateType.Symbol) {
       setActiveComponentUUID(undefined)
       setActiveSymbolName(componentState.name)
       return
@@ -55,7 +55,7 @@ export default function ComponentNode(props: ComponentNodeProps) {
     'bg-lime-100': isDropTarget
   })
 
-  const isGlobal = componentState.type !== ElementStateType.Symbol
+  const isGlobal = componentState.type !== ComponentStateType.Symbol
     && moduleNameToComponentMetadata.localComponents[componentState.name].global
 
   return (
@@ -74,8 +74,8 @@ export default function ComponentNode(props: ComponentNodeProps) {
   )
 }
 
-function hasUnsavedChanges(componentState: JsxElementState, pageStateOnFile: PageState) {
-  const initialComponentState: JsxElementState | undefined =
+function hasUnsavedChanges(componentState: ComponentState, pageStateOnFile: PageState) {
+  const initialComponentState: ComponentState | undefined =
     getComponentState(componentState.uuid, pageStateOnFile.componentsState)
   return !isEqual(componentState.props, initialComponentState?.props)
 }

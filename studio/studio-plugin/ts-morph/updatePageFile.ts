@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { ArrowFunction, FunctionDeclaration, Node, ts, VariableDeclaration } from 'ts-morph'
 import mapComponentStates from '../../shared/mapComponentStates'
-import { PageState, PropState, ComponentMetadata, RegularComponentState, JsxElementState, ElementStateType } from '../../shared/models'
+import { PageState, PropState, ComponentMetadata, RegularComponentState, ComponentState, ComponentStateType } from '../../shared/models'
 import { ExpressionSourceType, PropTypes } from '../../types'
 import { getSourceFile, prettify, getDefaultExport, getExportedObjectLiteral, updatePropsObjectLiteral } from '../common'
 import { moduleNameToComponentMetadata } from '../componentMetadata'
@@ -39,7 +39,7 @@ export default function updatePageFile(
   pageComponent.addStatements(newReturnStatement)
 
   // We currently do not support siteSettings and streams data inside of Symbols
-  const componentStates = updatedState.componentsState.filter((c): c is RegularComponentState => c.type !== ElementStateType.Symbol)
+  const componentStates = updatedState.componentsState.filter((c): c is RegularComponentState => c.type !== ComponentStateType.Symbol)
   updateFileImports(sourceFile, componentStates, expressionSourcePaths)
   if (options.updateStreamConfig) {
     updateStreamConfig(sourceFile, componentStates)
@@ -66,7 +66,7 @@ function createReturnStatement(
   currentReturnStatement: Node
 ): string {
   const elements = mapComponentStates<string>(componentsState, (c, children) => {
-    if (c.type === ElementStateType.Symbol) {
+    if (c.type === ComponentStateType.Symbol) {
       return `<${c.name} />`
     }
     const componentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
@@ -109,9 +109,9 @@ function createProps(propState: PropState): string {
   return propsString
 }
 
-function updateGlobalComponentProps(updatedComponentState: JsxElementState[]) {
+function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
   updatedComponentState.forEach(c => {
-    if (c.type === ElementStateType.Symbol) {
+    if (c.type === ComponentStateType.Symbol) {
       // TODO
       return
     }
