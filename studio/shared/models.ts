@@ -17,16 +17,14 @@ export type ComponentState = {
   uuid: string,
   moduleName: PossibleModuleNames,
   isFragment?: true,
-  parentUUID?: string,
-  parentSymbolUUID?: string
+  parentUUID?: string
 }
 export type SymbolState = {
   type: ElementStateType.Symbol,
   name: string,
   props: Record<string, never>,
   uuid: string,
-  parentUUID?: string,
-  parentSymbolUUID?: string
+  parentUUID?: string
 }
 
 export type PropState = {
