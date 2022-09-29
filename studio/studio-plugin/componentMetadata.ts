@@ -38,7 +38,7 @@ studioConfig.npmComponents?.forEach(npmModule => {
   const moduleName = npmModule.moduleName
   const npmModulePath = resolveNpmModule(moduleName).split(moduleName)[0] + moduleName
   const moduleMetadata: ModuleMetadata = {
-    cssImports: npmModule.cssImports,
+    cssImports: npmModule.cssImports?.map(i => path.relative(pathToPagePreview, i)),
     components: {}
   }
   npmModule.exports.forEach(component => {

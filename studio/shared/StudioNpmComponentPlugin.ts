@@ -14,7 +14,7 @@ export interface StudioNpmComponentPlugin {
   moduleName: string,
   /**
    * CSS imports required for components from the NPM module to work in PagePreview.
-   * The path(s) must be relative paths from studio.
+   * The path(s) must be relative paths from project root directory.
    */
   cssImports?: string[],
   /** List of components available to use by Studio. */
