@@ -9,6 +9,5 @@ export default function parseSymbolContent(filePath: string): ComponentState[] {
   const imports = parseImports(sourceFile)
   const defaultExport = getDefaultExport(sourceFile)
   const topLevelJsxNode = getTopLevelJsxNode(defaultExport)
-  const elementStates: ComponentState[] = parseJsxChild(topLevelJsxNode, imports)
-  return elementStates
+  return parseJsxChild(topLevelJsxNode, imports)
 }
