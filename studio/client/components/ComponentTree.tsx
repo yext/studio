@@ -24,7 +24,7 @@ export default function ComponentTree() {
       id: c.uuid,
       parent: c.parentUUID ?? ROOT_ID,
       text: c.name,
-      droppable: true,
+      droppable: moduleNameToComponentMetadata[c.moduleName][c.name].acceptsChildren,
       data: c
     }))
   }, [activeComponentsState])
@@ -65,7 +65,10 @@ export default function ComponentTree() {
 }
 
 function canDrop(_: Node[], opts: DropOptions<ComponentState>) {
-  const { dragSource, dropTargetId } = opts
+  const { dragSource, dropTargetId, dropTarget } = opts
+  if (dropTarget !== undefined && !dropTarget.droppable) {
+    return false
+  }
   if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
     return true
   }
