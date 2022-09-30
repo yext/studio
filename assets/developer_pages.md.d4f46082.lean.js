@@ -1,1 +1,0 @@
-import{_ as s,c as n,o as a,a as l}from"./app.ea12e705.js";const A='{"title":"Pages","description":"","frontmatter":{},"headers":[],"relativePath":"developer/pages.md"}',p={},o=l("",11),e=[o];function t(c,r,F,D,y,i){return a(),n("div",null,e)}var d=s(p,[["render",t]]);export{A as __pageData,d as default};
