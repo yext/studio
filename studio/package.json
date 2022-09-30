@@ -4,7 +4,6 @@
   "description": "",
   "main": "index.js",
   "types": "./lib/studio/index.d.ts",
-  "type": "module",
   "scripts": {
     "dev:tailwind": "tailwindcss -i ../src/index.css -o ../dist/output.css -c tailwind.config.cjs --watch",
     "dev:vite": "vite --config vite.config.ts",
