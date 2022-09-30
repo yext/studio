@@ -34,7 +34,7 @@ localLayouts.components = fs
   }, {} as Record<string, ComponentMetadata>)
 
 const npmComponents: Record<string, ModuleMetadata> = {}
-studioConfig.npmComponents?.forEach(npmModule => {
+studioConfig.plugins?.forEach(npmModule => {
   const moduleName = npmModule.moduleName
   const npmModulePath = resolveNpmModule(moduleName).split(moduleName)[0] + moduleName
   const moduleMetadata: ModuleMetadata = {

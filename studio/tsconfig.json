@@ -24,7 +24,8 @@
     "studio-plugin",
     "shared",
     "vite.config.ts",
-    "tests"
+    "tests",
+    "index.ts"
   ],
   "exclude": [
     "**/__fixtures__/**",

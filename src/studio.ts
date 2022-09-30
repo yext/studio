@@ -1,8 +1,10 @@
-import { searchUiReactStudioPlugin } from "./studioPlugins/searchUiReactStudioPlugin";
+import { searchUiReactStudioPlugin } from "search-ui-react-plugin";
+import { StudioConfig } from "../studio";
 
-export default {
-  npmComponents: [searchUiReactStudioPlugin],
+const studioConfig: StudioConfig = {
+  plugins: [searchUiReactStudioPlugin],
   dirs: {
     pagesDir: './src/templates'   
   }
 }
+export default studioConfig
