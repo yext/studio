@@ -3,8 +3,7 @@ import { PageState, PropShape, PropState, RegularComponentState } from './models
 
 export enum MessageID {
   UpdatePageComponentProps = 'studio:UpdatePageComponentProps',
-  UpdateSiteSettingsProps = 'studio:UpdateSiteSettingsProps',
-  CreateComponent = 'studio:CreateComponent'
+  UpdateSiteSettingsProps = 'studio:UpdateSiteSettingsProps'
 }
 
 export interface StudioEventMap extends BuiltInViteEvents {
@@ -15,12 +14,6 @@ export interface StudioEventMap extends BuiltInViteEvents {
   [MessageID.UpdateSiteSettingsProps]: {
     state: PropState,
     path: 'src/siteSettings.ts'
-  },
-  [MessageID.CreateComponent]: {
-    name: string,
-    propShape: PropShape,
-    acceptsChildren: boolean,
-    childrenStates: RegularComponentState[]
   }
 }
 
