@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Use Node.js
         uses: actions/setup-node@v3
-      - run: npm ci
-      - run: cd ./search-ui-react-plugin && npm ci && npm run build && cd ../
-      - run: cd studio && npx tsc
+      # build studio
+      - run: cd studio && npm ci && npx tsc
+      # build plugin
+      - run: cd search-ui-react-plugin && npm ci && npm run build
+

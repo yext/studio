@@ -1,4 +1,4 @@
-import { StudioNpmModulePlugin } from 'studio-prototype'
+import { StudioNpmModulePlugin } from 'studio'
 
 export const searchUiReactStudioPlugin: StudioNpmModulePlugin = {
   moduleName: '@yext/search-ui-react',

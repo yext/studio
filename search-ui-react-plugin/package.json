@@ -7,8 +7,11 @@
     "build": "tsc"
   },
   "author": "",
-  "dependencies": {
-    "typescript": "^4.8.4",
-    "studio-prototype": "file:.."
+  "peerDependencies": {
+    "studio": "^1.0.0"
+  },
+  "devDependencies": {
+    "studio": "file:../studio",
+    "typescript": "^4.8.4"
   }
 }
