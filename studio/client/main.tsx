@@ -6,6 +6,8 @@ import { createRoot } from 'react-dom/client'
 //@ts-ignore TODO what's the best way to handle typescript and virtual modules? global.d.ts file?
 import virtualStudioContext from 'virtual:yext-studio'
 
+import '../../dist/output.css'
+
 export function Main() {
   return (
     <>
