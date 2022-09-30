@@ -1,6 +1,6 @@
 import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, getBackendOptions, MultiBackend, NodeModel, PlaceholderRenderParams, RenderParams, Tree } from '@minoru/react-dnd-treeview'
 import { ReactElement, useCallback, useMemo } from 'react'
-import { ComponentState } from '../../shared/models'
+import { ComponentState, ComponentStateType } from '../../shared/models'
 import ComponentNode from './ComponentNode'
 import { useStudioContext } from './useStudioContext'
 
@@ -18,16 +18,21 @@ type ValidatedNodeList = (Node & {
 })[]
 
 export default function ComponentTree() {
-  const { setActiveComponentsState, activeComponentsState } = useStudioContext()
+  const {
+    setActiveComponentsState,
+    activeComponentsState,
+    moduleNameToComponentMetadata
+  } = useStudioContext()
   const tree: Node[] = useMemo(() => {
     return activeComponentsState.map(c => ({
       id: c.uuid,
       parent: c.parentUUID ?? ROOT_ID,
       text: c.name,
-      droppable: moduleNameToComponentMetadata[c.moduleName][c.name].acceptsChildren,
+      droppable: c.type !== ComponentStateType.Symbol
+        && moduleNameToComponentMetadata[c.moduleName][c.name].acceptsChildren,
       data: c
     }))
-  }, [activeComponentsState])
+  }, [activeComponentsState, moduleNameToComponentMetadata])
 
   const handleDrop = useCallback((tree: Node[]) => {
     validateTreeOrThrow(tree)
