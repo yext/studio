@@ -8,20 +8,14 @@ export function PageEditor(): JSX.Element | null {
     activeComponentsState,
     setActiveComponentsState,
     moduleNameToComponentMetadata,
-    activeComponentUUID,
-    symbolNameToMetadata
+    activeComponentUUID
   } = useStudioContext()
   if (!activeComponentUUID) {
     return null
   }
   const activeComponentState = getComponentStateOrThrow(activeComponentUUID, activeComponentsState)
   if (activeComponentState.type === ComponentStateType.Symbol) {
-    console.log(activeComponentState, symbolNameToMetadata)
-    return (
-      <div>
-        TODO - display content tree
-      </div>
-    )
+    throw new Error('Cannot display PageEditor for Symbol')
   }
   const { name, moduleName, props } = activeComponentState
 
