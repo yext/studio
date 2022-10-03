@@ -12,6 +12,7 @@ import Footer, { globalProps as footerProps } from '../components/Footer.global'
 import Header, { globalProps as headerProps } from '../components/Header.global'
 import Card from '../components/Card'
 import siteSettings from '../siteSettings'
+import { SearchBar } from '@yext/search-ui-react'
 
 export const config: TemplateConfig = {
   stream: {
@@ -55,6 +56,7 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         someBool={true}
         anotherColor='#9c8181'
       />
+      <SearchBar placeholder='test' />
       <Footer {...footerProps} />
       <Footer {...footerProps} />
     </TestLayout>

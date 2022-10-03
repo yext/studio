@@ -36,13 +36,6 @@ function useElements() {
     const elements = createStudioElements(
       pageState.componentsState, importedComponents, expressionSourcesValues)
 
-    // TODO: hardcoded setup for external component to display on PagePreview.
-    // Remove this once parsing npm components props work (SLAP-2392) and can be added to pageState
-    const searchBarComponent = createElement(importedComponents['SearchBar'], {
-      key: 'mysearchbar'
-    })
-    elements.push(searchBarComponent)
-
     const layoutName = pageState.layoutState.name
     if (importedComponents[layoutName]) {
       return createElement(importedComponents[layoutName], {}, elements)
@@ -136,7 +129,8 @@ function useImportedComponents(
     }
     const moduleMetadata = moduleNameToComponentMetadata[moduleName]
     const { importIdentifier }: ComponentMetadata = moduleMetadata.components[name]
-    if (moduleName === InternalModuleNames.LocalComponents) {
+    if (moduleName === InternalModuleNames.LocalComponents
+      || moduleName === InternalModuleNames.LocalLayouts) {
       const componentFilePath = `${directoryPath}/${importIdentifier.split('/').at(-1)}`
       const importedModule = await modules[componentFilePath]()
       componentNameToComponent[name] = getFunctionComponent(importedModule, name)
@@ -152,14 +146,6 @@ function useImportedComponents(
   useEffect(() => {
     const newLoadedComponents = {}
     Promise.all([
-      // TODO: hardcoded setup for external component to display on PagePreview.
-      // Remove this after npm components parsing work (SLAP-2392), and loop through the npm components here
-      importComponent({
-        name: 'SearchBar',
-        props: {},
-        uuid: 'someuuid',
-        moduleName: '@yext/search-ui-react',
-      }, '', newLoadedComponents),
       importComponent(pageState.layoutState, '../../../src/layouts', newLoadedComponents),
       ...pageState.componentsState.map(c => importComponent(c, '../../../src/components', newLoadedComponents))
     ]).then(() => {

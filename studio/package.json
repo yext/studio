@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/yext/studio-prototype#readme",
   "dependencies": {
+    "@vitejs/plugin-react": "^2.1.0",
     "express": "^4.18.1",
     "lodash": "^4.17.21",
     "prettier": "^2.7.1",

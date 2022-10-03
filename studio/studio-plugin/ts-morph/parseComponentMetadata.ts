@@ -3,7 +3,7 @@ import { SourceFile } from 'ts-morph'
 import { getPropShape, getExportedObjectLiteral, getPropsState } from '../common'
 import path from 'path'
 
-export const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
+export const pathToPagePreviewDir = path.resolve(__dirname, '../../client/components')
 
 export default function parseComponentMetadata(
   sourceFile: SourceFile,
@@ -34,7 +34,7 @@ export default function parseComponentMetadata(
 
   function getImportIdentifier(): string {
     if (importIdentifier) return importIdentifier
-    return path.relative(pathToPagePreview, filePath)
+    return path.relative(pathToPagePreviewDir, filePath)
   }
 
   function isGlobalComponent(): boolean {

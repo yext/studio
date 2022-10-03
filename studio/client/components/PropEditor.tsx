@@ -55,7 +55,7 @@ export default function PropEditor({
             propType,
             key,
             propName,
-            propValue: value as any,
+            propValue: value,
             propDoc,
             isExpression,
             onChange: updatePropState
@@ -92,7 +92,7 @@ export function InputProp<T extends string | number | boolean>(props: {
 }): JSX.Element {
   const { propType, propName, propValue, propDoc, onChange, htmlType = 'text', defaultValue, isExpression } = props
   const inputType = isExpression ? 'expression' : htmlType
-  const onExpressionPropChange = useCallback((value: string) => {
+  const onExpressionPropChange = useCallback((value: string | undefined = '') => {
     onChange(propName, {
       value,
       isExpression: true
