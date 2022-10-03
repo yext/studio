@@ -88,15 +88,17 @@ function createStudioElements(
       key: `${c.name}-${i}`
     }, ...children)
 
-    const borderClassName = classNames('border-2 p-1 m-1', {
-      'border-blue-600': activeComponentUUID === c.uuid,
-      'border-transparent': activeComponentUUID !== c.uuid
+    const borderClassName = classNames('before:border-2 before:absolute before:w-full before:h-full', {
+      'before:border-red-600': activeComponentUUID === c.uuid,
+      'before:border-transparent': activeComponentUUID !== c.uuid
     })
 
     return (
       <ComponentPreviewBoundary key={`${JSON.stringify(previewProps)}-${c.uuid}`}>
-        <div className={borderClassName}>
-          {component}
+        <div className='relative'>
+          <div className={borderClassName}>
+            {component}
+          </div>
         </div>
       </ComponentPreviewBoundary>
     )
