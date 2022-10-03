@@ -9,17 +9,17 @@ const TestComponentMetadata: ComponentMetadata = {
   propShape: {
     randomText: {
       type: PropTypes.string,
-      doc: "some random text"
+      doc: 'some random text'
     },
     randomNum: {
       type: PropTypes.number,
-      doc: "a random number!"
+      doc: 'a random number!'
     }
   },
   initialProps: {},
   global: false,
   editable: true,
-  "importIdentifier": "../../studio-plugin/__fixtures__/node_modules/test-module",
+  importIdentifier: '../../studio-plugin/__fixtures__/node_modules/test-module',
   acceptsChildren: false
 }
 

@@ -84,7 +84,8 @@ export default function parseNpmModule(
   })
 
   const moduleMetadata: ModuleMetadata = {
-    cssImports: plugin.cssImports?.map(i => path.relative(pathToPagePreviewDir, path.resolve(pathToNodeModulesDir, i))),
+    cssImports: plugin.cssImports?.map(i =>
+      path.relative(pathToPagePreviewDir, path.resolve(pathToNodeModulesDir, i))),
     components: componentsToProps
   }
   return moduleMetadata
