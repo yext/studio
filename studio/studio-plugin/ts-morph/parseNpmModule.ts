@@ -101,7 +101,7 @@ function isExportedReactComponent(
     return false
   }
   const reactReturnType = ['JSX.Element', 'ReactElement', 'React.ReactElement']
-  if (returnTypeNode?.getChildren().some(n => !reactReturnType.includes(n.getText()))) {
+  if (returnTypeNode && !returnTypeNode.forEachChildAsArray().some(n => reactReturnType.includes(n.getText()))) {
     return false
   }
   return true
