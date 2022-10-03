@@ -5,6 +5,7 @@ import getPreviewProps from '../utils/getPreviewProps'
 import ComponentPreviewBoundary from './ComponentPreviewBoundary'
 import mapComponentStates from '../../shared/mapComponentStates'
 import { useSiteSettings } from '../utils/useSiteSettings'
+import classNames from 'classnames'
 
 export default function PagePreview() {
   const { pageState } = useStudioContext()
@@ -20,7 +21,11 @@ export default function PagePreview() {
 }
 
 function useElements() {
-  const { pageState, moduleNameToComponentMetadata, streamDocument } = useStudioContext()
+  const { pageState,
+    moduleNameToComponentMetadata,
+    streamDocument,
+    activeComponentUUID
+  } = useStudioContext()
   const importedComponents = useImportedComponents(pageState, moduleNameToComponentMetadata)
   const siteSettingsObj = useSiteSettings()
 
@@ -34,7 +39,11 @@ function useElements() {
       siteSettings: siteSettingsObj
     }
     const elements = createStudioElements(
-      pageState.componentsState, importedComponents, expressionSourcesValues)
+      pageState.componentsState,
+      importedComponents,
+      expressionSourcesValues,
+      activeComponentUUID
+    )
 
     // TODO: hardcoded setup for external component to display on PagePreview.
     // Remove this once parsing npm components props work (SLAP-2392) and can be added to pageState
@@ -57,7 +66,8 @@ function useElements() {
     pageState.componentsState,
     pageState.layoutState.name,
     siteSettingsObj,
-    streamDocument
+    streamDocument,
+    activeComponentUUID
   ])
 }
 
@@ -65,6 +75,7 @@ function createStudioElements(
   components: ComponentState[],
   importedComponents: Record<string, ImportType>,
   expressionSourcesValues: Record<string, Record<string, unknown>>,
+  activeComponentUUID?: string
 ): (ReactElement | null)[] {
   return mapComponentStates(components, (c, children, i) => {
     if (!importedComponents[c.name]) {
@@ -77,9 +88,16 @@ function createStudioElements(
       key: `${c.name}-${i}`
     }, ...children)
 
+    const borderClassName = classNames('border-2 p-1 m-1', {
+      'border-blue-600': activeComponentUUID === c.uuid,
+      'border-transparent': activeComponentUUID !== c.uuid
+    })
+
     return (
       <ComponentPreviewBoundary key={`${JSON.stringify(previewProps)}-${c.uuid}`}>
-        {component}
+        <div className={borderClassName}>
+          {component}
+        </div>
       </ComponentPreviewBoundary>
     )
   })
