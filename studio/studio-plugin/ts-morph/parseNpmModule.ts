@@ -52,15 +52,14 @@ export default function parseNpmModule(
       componentsToProps[componentName] = errorMetadataValue
       return
     }
+    const pluginInitialProps = componentConfigs.find(c => c.exportIdentifier === componentName)?.initialProps
     if (typeNode.isKind(ts.SyntaxKind.TypeLiteral)) {
       const properties = typeNode.getProperties().map(p => p.getStructure())
       const { propShape, acceptsChildren } = parsePropertyStructures(properties, absPath)
-      const initialProps = componentConfigs
-        .find(c => c.exportIdentifier === componentName)?.initialProps ?? {}
       componentsToProps[componentName] = {
         global: false,
         propShape,
-        initialProps,
+        initialProps: pluginInitialProps ?? {},
         importIdentifier,
         acceptsChildren,
         editable: true
@@ -69,6 +68,9 @@ export default function parseNpmModule(
       try {
         const typeName = typeNode.getTypeName().getText()
         const componentMetadata = parseComponentMetadata(sourceFile, absPath, typeName, importIdentifier)
+        if (!componentMetadata.global) {
+          componentMetadata.initialProps = pluginInitialProps ?? componentMetadata.initialProps
+        }
         componentsToProps[componentName] = componentMetadata
       } catch (err) {
         console.error(`Error parsing props for "${componentName}". Ignoring this component's props`)
