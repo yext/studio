@@ -64,7 +64,7 @@ function createReturnStatement(
   currentReturnStatement: Node
 ): string {
   const elements = mapComponentStates<string>(componentsState, (c, children) => {
-    const componentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
+    const componentMetadata = moduleNameToComponentMetadata[c.moduleName].components[c.name]
     const isGlobal = componentMetadata.global
     if (isGlobal) {
       if (children.length > 0) {
@@ -106,7 +106,8 @@ function createProps(propState: PropState): string {
 
 function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
   updatedComponentState.forEach(c => {
-    const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
+    const componentMetadata: ComponentMetadata =
+      moduleNameToComponentMetadata[c.moduleName].components[c.name]
     if (componentMetadata.global) {
       const partialFilePath = componentMetadata.importIdentifier.split('src/components').at(-1)
       const relativeFilePath = getRootPath(`src/components/${partialFilePath}`)

@@ -1,19 +1,19 @@
-import { PossibleModuleNames } from '../../shared/models'
+import { InternalModuleNames } from '../../shared/models'
 
 export default function getComponentModuleName(
   name: string,
   imports: Record<string, string[]>,
   isLayout: boolean
-): PossibleModuleNames {
+): string {
   let moduleName = Object.keys(imports).find(importIdentifier => {
     const importedNames = imports[importIdentifier]
     return importedNames.includes(name)
   })
   if (!moduleName) {
-    return 'builtIn'
+    return InternalModuleNames.LocalComponents
   }
   if (moduleName.startsWith('.')) {
-    moduleName = isLayout ? 'localLayouts' : 'localComponents'
+    moduleName = isLayout ? InternalModuleNames.LocalLayouts : InternalModuleNames.LocalComponents
   }
-  return moduleName as PossibleModuleNames
+  return moduleName
 }

@@ -9,7 +9,7 @@ export interface ComponentState {
   name: string,
   props: PropState,
   uuid: string,
-  moduleName: PossibleModuleNames,
+  moduleName: string,
   isFragment?: true,
   parentUUID?: string
 }
@@ -19,11 +19,20 @@ export type PropState = {
 }
 
 export type ModuleNameToComponentMetadata = {
-  [moduleName in PossibleModuleNames]: ModuleMetadata
+  [moduleName in InternalModuleNames]: ModuleMetadata
+} & {
+  [npmModuleName: string]: ModuleMetadata
 }
-export type PossibleModuleNames = 'localComponents' | 'localLayouts' | 'builtIn'
-export type ModuleMetadata = {
-  [componentName: string]: ComponentMetadata
+
+export enum InternalModuleNames {
+  LocalComponents = 'localComponents',
+  LocalLayouts = 'localLayouts',
+  BuiltIn = 'builtIn'
+}
+
+export interface ModuleMetadata {
+  cssImports?: string[],
+  components: Record<string, ComponentMetadata>
 }
 
 export type ComponentMetadata = StandardComponentMetaData | GlobalComponentMetaData
