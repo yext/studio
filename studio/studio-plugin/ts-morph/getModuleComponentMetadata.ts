@@ -38,7 +38,7 @@ export default function getModuleComponentMetadata(
       componentsToProps[componentName] = errorMetadataValue
       return
     }
-    componentsToProps[componentName] = getComponentMetaData(
+    componentsToProps[componentName] = getComponentMetadata(
       typeNode,
       componentName,
       sourceFile,
@@ -95,7 +95,7 @@ function isComponentParamTypeValid(
   return true
 }
 
-function getComponentMetaData(
+function getComponentMetadata(
   typeNode: TypeNode<ts.LiteralTypeNode> | TypeNode<ts.TypeReferenceNode>,
   componentName: string,
   sourceFile: SourceFile,
