@@ -30,7 +30,10 @@ it('can parse npm module components by providing component name', () => {
     cssImports: ['test-module/index.css']
   }
   const expectedModuleMetadata: ModuleMetadata = {
-    cssImports: ['../../studio-plugin/__fixtures__/node_modules/test-module/index.css'],
+    cssImports: [{
+      moduleExportPath: 'test-module/index.css',
+      relativePath: '../../studio-plugin/__fixtures__/node_modules/test-module/index.css'
+    }],
     components: {
       TestComponent: TestComponentMetadata
     }
@@ -53,7 +56,10 @@ it('can parse npm module components by providing ComponentExportConfig', () => {
     cssImports: ['test-module/index.css']
   }
   const expectedModuleMetadata: ModuleMetadata = {
-    cssImports: ['../../studio-plugin/__fixtures__/node_modules/test-module/index.css'],
+    cssImports: [{
+      moduleExportPath: 'test-module/index.css',
+      relativePath: '../../studio-plugin/__fixtures__/node_modules/test-module/index.css'
+    }],
     components: {
       TestComponent: {
         ...TestComponentMetadata,

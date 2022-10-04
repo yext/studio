@@ -1,13 +1,13 @@
-import { ts, TypeNode } from 'ts-morph'
+import { SourceFile, ts, TypeNode } from 'ts-morph'
 import { getSourceFile, parsePropertyStructures, resolveNpmModule } from '../common'
-import { ComponentMetadata, ModuleMetadata } from '../../shared/models'
+import { ComponentMetadata, CssImport, ModuleMetadata } from '../../shared/models'
 import parseComponentMetadata, { pathToPagePreviewDir } from './parseComponentMetadata'
 import path from 'path'
 import { ComponentExportConfig, StudioNpmModulePlugin } from '../../shared/StudioNpmModulePlugin'
 
 /**
  * Parses out the prop structures of all listed exported components for a particular npm module.
- * Also include any css imports defined in the module plugin for the components to display properly.
+ * Also process any css imports defined in the module plugin for the components to display properly.
  *
  * Currently only supports functional react components and prop types defined in "PropTypes" enum.
  */
@@ -22,13 +22,41 @@ export default function parseNpmModule(
 
   const componentConfigs: ComponentExportConfig[] = plugin.exports
     .map(c => typeof c === 'string' ? { exportIdentifier: c } : c)
-  const matchers = componentConfigs.map(c => c.exportIdentifier)
 
+  const moduleMetadata: ModuleMetadata = {
+    cssImports: getCssImports(plugin.cssImports, pathToNodeModulesDir),
+    components: getNpmComponentMetadata(sourceFile, absPath, importIdentifier, componentConfigs)
+  }
+  return moduleMetadata
+}
+
+function getCssImports(
+  pluginCssImports: string[] | undefined,
+  pathToNodeModulesDir: string
+): CssImport[] | undefined {
+  return pluginCssImports?.map(i => {
+    return {
+      moduleExportPath: i,
+      relativePath: path.relative(
+        pathToPagePreviewDir,
+        path.resolve(pathToNodeModulesDir, require.resolve(i))
+      )
+    }
+  })
+}
+
+function getNpmComponentMetadata(
+  sourceFile: SourceFile,
+  absPath: string,
+  importIdentifier: string,
+  componentConfigs: ComponentExportConfig[]
+): Record<string, ComponentMetadata> {
   const errorMetadataValue: Readonly<ComponentMetadata> = {
     editable: false,
     importIdentifier,
     acceptsChildren: false
   }
+  const matchers = componentConfigs.map(c => c.exportIdentifier)
   const componentsToProps: Record<string, ComponentMetadata> = {}
   sourceFile.getDescendantStatements().forEach(n => {
     if (!n.isKind(ts.SyntaxKind.FunctionDeclaration)) {
@@ -73,8 +101,7 @@ export default function parseNpmModule(
         }
         componentsToProps[componentName] = componentMetadata
       } catch (err) {
-        console.error(`Error parsing props for "${componentName}". Ignoring this component's props`)
-        console.error(err)
+        console.error(`Error parsing props for "${componentName}". Ignoring this component's props`, err)
         componentsToProps[componentName] = errorMetadataValue
       }
     } else {
@@ -82,13 +109,7 @@ export default function parseNpmModule(
       componentsToProps[componentName] = errorMetadataValue
     }
   })
-
-  const moduleMetadata: ModuleMetadata = {
-    cssImports: plugin.cssImports?.map(i =>
-      path.relative(pathToPagePreviewDir, path.resolve(pathToNodeModulesDir, i))),
-    components: componentsToProps
-  }
-  return moduleMetadata
+  return componentsToProps
 }
 
 function isExportedReactComponent(
@@ -102,7 +123,8 @@ function isExportedReactComponent(
     return false
   }
   const reactReturnType = ['JSX.Element', 'ReactElement', 'React.ReactElement']
-  if (returnTypeNode && !returnTypeNode.forEachChildAsArray().some(n => reactReturnType.includes(n.getText()))) {
+  if (returnTypeNode
+    && !returnTypeNode.forEachChildAsArray().some(n => reactReturnType.includes(n.getText()))) {
     return false
   }
   return true
