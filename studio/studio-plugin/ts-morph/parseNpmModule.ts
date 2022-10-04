@@ -24,13 +24,13 @@ export default function parseNpmModule(
     .map(c => typeof c === 'string' ? { exportIdentifier: c } : c)
 
   const moduleMetadata: ModuleMetadata = {
-    cssImports: getCssImports(plugin.cssImports, pathToNodeModulesDir),
-    components: getNpmComponentMetadata(sourceFile, absPath, importIdentifier, componentConfigs)
+    cssImports: getModuleCssImports(plugin.cssImports, pathToNodeModulesDir),
+    components: getModuleComponentMetadata(sourceFile, absPath, importIdentifier, componentConfigs)
   }
   return moduleMetadata
 }
 
-function getCssImports(
+function getModuleCssImports(
   pluginCssImports: string[] | undefined,
   pathToNodeModulesDir: string
 ): CssImport[] | undefined {
@@ -45,7 +45,7 @@ function getCssImports(
   })
 }
 
-function getNpmComponentMetadata(
+function getModuleComponentMetadata(
   sourceFile: SourceFile,
   absPath: string,
   importIdentifier: string,
