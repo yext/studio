@@ -30,8 +30,12 @@ export enum InternalModuleNames {
   BuiltIn = 'builtIn'
 }
 
+export interface CssImport {
+  moduleExportPath: string,
+  relativePath: string
+}
 export interface ModuleMetadata {
-  cssImports?: string[],
+  cssImports?: CssImport[],
   components: Record<string, ComponentMetadata>
 }
 

@@ -139,7 +139,7 @@ function useImportedComponents(
       componentNameToComponent[name] = getFunctionComponent(importedModule, name)
     }
     if (moduleMetadata.cssImports) {
-      await importCSS(moduleMetadata.cssImports)
+      await importCSS(moduleMetadata.cssImports.map(i => i.relativePath))
     }
   }, [moduleNameToComponentMetadata, modules, importCSS])
 
