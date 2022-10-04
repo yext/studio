@@ -1,7 +1,7 @@
 const path = require('path')
 
 const mapping = {
-  'test-module/index.css': path.resolve(__dirname, '../__fixtures__/node_modules/test-module/index.css')
+  'test-module/index.css': path.resolve(__dirname, '../__fixtures__/mock_modules/test-module/index.css')
 }
 
 function resolver(path, options) {

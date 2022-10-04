@@ -2,8 +2,14 @@ import { ComponentMetadata, ModuleMetadata } from '../../shared/models'
 import { StudioNpmModulePlugin } from '../../shared/StudioNpmModulePlugin'
 import { PropTypes } from '../../types'
 import parseNpmModule from './parseNpmModule'
+import path from 'path'
+import * as resolveNpmModule from '../common/resolveNpmModule'
 
 jest.mock('../getRootPath')
+
+jest.spyOn(resolveNpmModule, 'resolveNpmModule').mockImplementation((moduleName: string) => {
+  return path.resolve(__dirname, '../__fixtures__/mock_modules', moduleName, 'index.d.ts')
+})
 
 const TestComponentMetadata: ComponentMetadata = {
   propShape: {
@@ -19,7 +25,7 @@ const TestComponentMetadata: ComponentMetadata = {
   initialProps: {},
   global: false,
   editable: true,
-  importIdentifier: '../../studio-plugin/__fixtures__/node_modules/test-module',
+  importIdentifier: '../../studio-plugin/__fixtures__/mock_modules/test-module',
   acceptsChildren: false
 }
 
@@ -32,7 +38,7 @@ it('can parse npm module components by providing component name', () => {
   const expectedModuleMetadata: ModuleMetadata = {
     cssImports: [{
       moduleExportPath: 'test-module/index.css',
-      relativePath: '../../studio-plugin/__fixtures__/node_modules/test-module/index.css'
+      relativePath: '../../studio-plugin/__fixtures__/mock_modules/test-module/index.css'
     }],
     components: {
       TestComponent: TestComponentMetadata
@@ -58,7 +64,7 @@ it('can parse npm module components by providing ComponentExportConfig', () => {
   const expectedModuleMetadata: ModuleMetadata = {
     cssImports: [{
       moduleExportPath: 'test-module/index.css',
-      relativePath: '../../studio-plugin/__fixtures__/node_modules/test-module/index.css'
+      relativePath: '../../studio-plugin/__fixtures__/mock_modules/test-module/index.css'
     }],
     components: {
       TestComponent: {
