@@ -24,7 +24,10 @@ export default function getModuleComponentMetadata(
       return
     }
     const componentName = n.getName()
-    if (!componentName || !isExportedReactComponent(componentName, n.getReturnTypeNode(), matchers)) {
+    if (!componentName || !matchers.some(m => m === componentName)) {
+      return
+    }
+    if (!isExportedReactComponent(componentName, n.getReturnTypeNode())) {
       return
     }
     const parameters = n.getParameters()
@@ -52,11 +55,7 @@ export default function getModuleComponentMetadata(
 
 function isExportedReactComponent(
   componentName: string,
-  returnTypeNode: TypeNode | undefined,
-  matchers: string[]): boolean {
-  if (!matchers.some(m => m === componentName)) {
-    return false
-  }
+  returnTypeNode: TypeNode | undefined): boolean {
   if (componentName[0] !== componentName[0].toUpperCase()) {
     return false
   }
@@ -69,13 +68,10 @@ function isExportedReactComponent(
 }
 
 function isComponentParamCountValid(parameters: ParameterDeclaration[], componentName: string): boolean {
-  if (parameters.length !== 1) {
-    if (parameters.length > 1) {
-      console.error(`Found ${parameters.length} number of arguments for functional component ${componentName}, expected only 1. Ignoring this component's props.`)
-    }
-    return false
+  if (parameters.length > 1) {
+    console.error(`Found ${parameters.length} number of arguments for functional component ${componentName}, expected only 1. Ignoring this component's props.`)
   }
-  return true
+  return parameters.length === 1
 }
 
 function isComponentParamTypeValid(
