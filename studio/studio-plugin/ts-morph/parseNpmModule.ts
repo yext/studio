@@ -1,4 +1,4 @@
-import { SourceFile, ts, TypeNode } from 'ts-morph'
+import { ParameterDeclaration, SourceFile, ts, TypeNode } from 'ts-morph'
 import { getSourceFile, parsePropertyStructures, resolveNpmModule } from '../common'
 import { ComponentMetadata, CssImport, ModuleMetadata } from '../../shared/models'
 import parseComponentMetadata, { pathToPagePreviewDir } from './parseComponentMetadata'
@@ -58,6 +58,7 @@ function getModuleComponentMetadata(
   }
   const matchers = componentConfigs.map(c => c.exportIdentifier)
   const componentsToProps: Record<string, ComponentMetadata> = {}
+
   sourceFile.getDescendantStatements().forEach(n => {
     if (!n.isKind(ts.SyntaxKind.FunctionDeclaration)) {
       return
@@ -67,49 +68,82 @@ function getModuleComponentMetadata(
       return
     }
     const parameters = n.getParameters()
-    if (parameters.length !== 1) {
-      if (parameters.length > 1) {
-        console.error(`Found ${parameters.length} number of arguments for functional component ${componentName}, expected only 1. Ignoring this component's props.`)
-      }
+    if (!isComponentParamCountValid(parameters, componentName)) {
       componentsToProps[componentName] = errorMetadataValue
       return
     }
     const typeNode = parameters[0].getTypeNode()
-    if (!typeNode) {
-      console.error(`No type information found for "${componentName}"'s props. Ignoring this component's props.`)
+    if (!isComponentParamTypeValid(typeNode, componentName)) {
       componentsToProps[componentName] = errorMetadataValue
       return
     }
-    const pluginInitialProps = componentConfigs.find(c => c.exportIdentifier === componentName)?.initialProps
-    if (typeNode.isKind(ts.SyntaxKind.TypeLiteral)) {
-      const properties = typeNode.getProperties().map(p => p.getStructure())
-      const { propShape, acceptsChildren } = parsePropertyStructures(properties, absPath)
-      componentsToProps[componentName] = {
-        global: false,
-        propShape,
-        initialProps: pluginInitialProps ?? {},
-        importIdentifier,
-        acceptsChildren,
-        editable: true
-      }
-    } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
-      try {
-        const typeName = typeNode.getTypeName().getText()
-        const componentMetadata = parseComponentMetadata(sourceFile, absPath, typeName, importIdentifier)
-        if (!componentMetadata.global) {
-          componentMetadata.initialProps = pluginInitialProps ?? componentMetadata.initialProps
-        }
-        componentsToProps[componentName] = componentMetadata
-      } catch (err) {
-        console.error(`Error parsing props for "${componentName}". Ignoring this component's props`, err)
-        componentsToProps[componentName] = errorMetadataValue
-      }
-    } else {
-      console.error(`Unhandled parameter type "${typeNode.getKindName()}" found for "${componentName}". Ignoring this component's props.`)
-      componentsToProps[componentName] = errorMetadataValue
-    }
+    componentsToProps[componentName] = getComponentMetaData(
+      typeNode, componentName, sourceFile, absPath, importIdentifier, componentConfigs, errorMetadataValue)
   })
   return componentsToProps
+}
+
+function isComponentParamCountValid(parameters: ParameterDeclaration[], componentName: string): boolean {
+  if (parameters.length !== 1) {
+    if (parameters.length > 1) {
+      console.error(`Found ${parameters.length} number of arguments for functional component ${componentName}, expected only 1. Ignoring this component's props.`)
+    }
+    return false
+  }
+  return true
+}
+
+function isComponentParamTypeValid(
+  typeNode: TypeNode | undefined,
+  componentName: string
+): typeNode is TypeNode<ts.LiteralTypeNode> | TypeNode<ts.TypeReferenceNode> {
+  if (!typeNode) {
+    console.error(`No type information found for "${componentName}"'s props. Ignoring this component's props.`)
+    return false
+  }
+  const typeNodeKind = typeNode.getKind()
+  if (typeNodeKind !== ts.SyntaxKind.TypeLiteral && typeNodeKind !== ts.SyntaxKind.TypeReference) {
+    console.error(`Unhandled parameter type "${typeNode.getKindName()}" found for "${componentName}". Ignoring this component's props.`)
+    return false
+  }
+  return true
+}
+
+function getComponentMetaData(
+  typeNode: TypeNode<ts.LiteralTypeNode> | TypeNode<ts.TypeReferenceNode>,
+  componentName: string,
+  sourceFile: SourceFile,
+  absPath: string,
+  importIdentifier: string,
+  componentConfigs: ComponentExportConfig[],
+  errorMetadataValue: ComponentMetadata
+): ComponentMetadata {
+  const pluginInitialProps = componentConfigs.find(c => c.exportIdentifier === componentName)?.initialProps
+  if (typeNode.isKind(ts.SyntaxKind.TypeLiteral)) {
+    const properties = typeNode.getProperties().map(p => p.getStructure())
+    const { propShape, acceptsChildren } = parsePropertyStructures(properties, absPath)
+    return {
+      global: false,
+      propShape,
+      initialProps: pluginInitialProps ?? {},
+      importIdentifier,
+      acceptsChildren,
+      editable: true
+    }
+  } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
+    try {
+      const typeName = typeNode.getTypeName().getText()
+      const componentMetadata = parseComponentMetadata(sourceFile, absPath, typeName, importIdentifier)
+      if (!componentMetadata.global) {
+        componentMetadata.initialProps = pluginInitialProps ?? componentMetadata.initialProps
+      }
+      return componentMetadata
+    } catch (err) {
+      console.error(`Error parsing props for "${componentName}". Ignoring this component's props`, err)
+      return errorMetadataValue
+    }
+  }
+  return errorMetadataValue
 }
 
 function isExportedReactComponent(
