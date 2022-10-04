@@ -1,4 +1,3 @@
-
 import { ParameterDeclaration, SourceFile, ts, TypeNode } from 'ts-morph'
 import { getSourceFile, parsePropertyStructures } from '../common'
 import { ComponentMetadata } from '../../shared/models'
