@@ -83,6 +83,25 @@ function getModuleComponentMetadata(
   return componentsToProps
 }
 
+function isExportedReactComponent(
+  componentName: string,
+  returnTypeNode: TypeNode | undefined,
+  matchers: string[]): boolean {
+  if (!matchers.some(m => m === componentName)) {
+    return false
+  }
+  if (componentName[0] !== componentName[0].toUpperCase()) {
+    return false
+  }
+  const reactReturnType = ['JSX.Element', 'ReactElement', 'React.ReactElement']
+  if (returnTypeNode
+    && !returnTypeNode.forEachChildAsArray().some(n => reactReturnType.includes(n.getText()))) {
+    return false
+  }
+  return true
+}
+
+
 function isComponentParamCountValid(parameters: ParameterDeclaration[], componentName: string): boolean {
   if (parameters.length !== 1) {
     if (parameters.length > 1) {
@@ -144,22 +163,4 @@ function getComponentMetaData(
     }
   }
   return errorMetadataValue
-}
-
-function isExportedReactComponent(
-  componentName: string,
-  returnTypeNode: TypeNode | undefined,
-  matchers: string[]): boolean {
-  if (!matchers.some(m => m === componentName)) {
-    return false
-  }
-  if (componentName[0] !== componentName[0].toUpperCase()) {
-    return false
-  }
-  const reactReturnType = ['JSX.Element', 'ReactElement', 'React.ReactElement']
-  if (returnTypeNode
-    && !returnTypeNode.forEachChildAsArray().some(n => reactReturnType.includes(n.getText()))) {
-    return false
-  }
-  return true
 }
