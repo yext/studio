@@ -8,7 +8,7 @@
     "dev": "cd studio && npm run dev",
     "tsc": "cd studio && tsc",
     "localData": "cd studio && npm run build && cd .. && yext pages generate-test-data -a",
-    "test": "jest",
+    "test": "cd studio && npm run test",
     "lint": "eslint studio --fix"
   },
   "repository": {

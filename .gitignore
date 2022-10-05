@@ -1,5 +1,4 @@
 node_modules/
-!**/__fixtures__/node_modules/
 /dist
 **/docs/.vitepress/dist
 /.artifact-output

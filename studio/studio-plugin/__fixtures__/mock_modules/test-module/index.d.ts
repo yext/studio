@@ -1,5 +1,3 @@
-/// <reference types="react" />
-
 import { ReactElement } from 'react';
 
 /**

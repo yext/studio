@@ -4,13 +4,13 @@ import parseImports from '../ts-morph/parseImports'
 import { resolve } from 'path'
 import { PropShape, SpecialReactProps } from '../../shared/models'
 
-interface ParseablePropertyStructure extends
+export interface ParseablePropertyStructure extends
   JSDocableNodeStructure, TypedNodeStructure, PropertyNamedNodeStructure {}
 
 /**
  * Returns the {@link PropShape} and also whether or not the component accepts React children.
  */
-export function parsePropertyStructures(
+export function getPropShapeByPropStructures(
   properties: ParseablePropertyStructure[],
   filePath: string
 ): { propShape: PropShape, acceptsChildren: boolean } {
