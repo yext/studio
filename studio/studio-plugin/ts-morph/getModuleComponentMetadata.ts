@@ -1,5 +1,5 @@
-import { ParameterDeclaration, SourceFile, ts, TypeNode } from 'ts-morph'
-import { getSourceFile, parsePropertyStructures } from '../common'
+import { ParameterDeclaration, ts, TypeNode } from 'ts-morph'
+import { getSourceFile } from '../common'
 import { ComponentMetadata } from '../../shared/models'
 import parseComponentMetadata from './parseComponentMetadata'
 import { ComponentExportConfig, StudioNpmModulePlugin } from '../../shared/StudioNpmModulePlugin'
@@ -40,15 +40,17 @@ export default function getModuleComponentMetadata(
       componentsToProps[componentName] = errorMetadataValue
       return
     }
-    componentsToProps[componentName] = getComponentMetadata(
-      typeNode,
-      componentName,
-      sourceFile,
-      moduleAbsPath,
-      importIdentifier,
-      componentConfigs,
-      errorMetadataValue
-    )
+    const pluginInitialProps = componentConfigs.find(c => c.exportIdentifier === componentName)?.initialProps
+    const dataToParsePropsBy = typeNode.isKind(ts.SyntaxKind.TypeLiteral)
+      ? typeNode.getProperties().map(p => p.getStructure())
+      : typeNode.getText()
+    try {
+      componentsToProps[componentName] = parseComponentMetadata(
+        sourceFile, moduleAbsPath, dataToParsePropsBy, { importIdentifier, initialProps: pluginInitialProps })
+    } catch (err) {
+      console.error(`Error parsing props for "${componentName}". Ignoring this component's props`, err)
+      componentsToProps[componentName] = errorMetadataValue
+    }
   })
   return componentsToProps
 }
@@ -88,41 +90,4 @@ function isComponentParamTypeValid(
     return false
   }
   return true
-}
-
-function getComponentMetadata(
-  typeNode: TypeNode<ts.LiteralTypeNode> | TypeNode<ts.TypeReferenceNode>,
-  componentName: string,
-  sourceFile: SourceFile,
-  absPath: string,
-  importIdentifier: string,
-  componentConfigs: ComponentExportConfig[],
-  errorMetadataValue: ComponentMetadata
-): ComponentMetadata {
-  const pluginInitialProps = componentConfigs.find(c => c.exportIdentifier === componentName)?.initialProps
-  if (typeNode.isKind(ts.SyntaxKind.TypeLiteral)) {
-    const properties = typeNode.getProperties().map(p => p.getStructure())
-    const { propShape, acceptsChildren } = parsePropertyStructures(properties, absPath)
-    return {
-      global: false,
-      propShape,
-      initialProps: pluginInitialProps ?? {},
-      importIdentifier,
-      acceptsChildren,
-      editable: true
-    }
-  } else if (typeNode.isKind(ts.SyntaxKind.TypeReference)) {
-    try {
-      const typeName = typeNode.getTypeName().getText()
-      const componentMetadata = parseComponentMetadata(sourceFile, absPath, typeName, importIdentifier)
-      if (!componentMetadata.global) {
-        componentMetadata.initialProps = pluginInitialProps ?? componentMetadata.initialProps
-      }
-      return componentMetadata
-    } catch (err) {
-      console.error(`Error parsing props for "${componentName}". Ignoring this component's props`, err)
-      return errorMetadataValue
-    }
-  }
-  return errorMetadataValue
 }

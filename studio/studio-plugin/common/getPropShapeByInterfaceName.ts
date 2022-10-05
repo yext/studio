@@ -1,7 +1,7 @@
 import { ts, SourceFile, ImportSpecifier, InterfaceDeclaration, OptionalKind, PropertySignatureStructure } from 'ts-morph'
 import path from 'path'
 import { getSourceFile } from './getSourceFile'
-import { parsePropertyStructures } from './parsePropertyStructures'
+import { getPropShapeByPropStructures } from './getPropShapeByPropStructures'
 import { PropShape } from '../../shared/models'
 
 /**
@@ -56,7 +56,7 @@ function getPropsInterfaceDeclaration(
 /**
  * Returns the {@link PropShape} and also whether or not the component accepts React children.
  */
-export function getPropShape(
+export function getPropShapeByInterfaceName(
   sourceFile: SourceFile,
   filePath: string,
   interfaceName: string
@@ -67,5 +67,5 @@ export function getPropShape(
   } = getPropsInterfaceDeclaration(sourceFile, filePath, interfaceName)
   const properties: OptionalKind<PropertySignatureStructure>[]
     = propsInterfaceNode.getStructure().properties ?? []
-  return parsePropertyStructures(properties, propsFilePath)
+  return getPropShapeByPropStructures(properties, propsFilePath)
 }
