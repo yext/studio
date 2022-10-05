@@ -1,12 +1,11 @@
 node_modules/
 /dist
-/docs/.vitepress/dist
-/studio/lib
+**/docs/.vitepress/dist
 /.artifact-output
 /sites-rendered-output
 /localData
 /sites-config/features.json
 vite.config.ts.timestamp*
-/lib
+**/lib
 
 .DS_Store

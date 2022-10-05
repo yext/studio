@@ -1,0 +1,17 @@
+{
+  "name": "search-ui-react-plugin",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "author": "",
+  "peerDependencies": {
+    "studio": "^1.0.0"
+  },
+  "devDependencies": {
+    "studio": "file:../studio",
+    "typescript": "^4.8.4"
+  }
+}

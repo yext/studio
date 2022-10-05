@@ -9,7 +9,7 @@ export default function AddComponentButton() {
     activeComponentsState,
     setActiveComponentsState
   } = useStudioContext()
-  const [moduleName, setModuleName] = useState<PossibleModuleNames>('localComponents')
+  const [moduleName, setModuleName] = useState<string>(InternalModuleNames.LocalComponents)
   const moduleMetadata: ModuleMetadata = moduleNameToComponentMetadata[moduleName]
 
   const addComponentToPageState = useCallback((
@@ -23,7 +23,7 @@ export default function AddComponentButton() {
       moduleName
     }
     let i = activeComponentsState.length - 1
-    while (i >= 0 && moduleMetadata[activeComponentsState[i].name].global) {
+    while (i >= 0 && moduleMetadata.components[activeComponentsState[i].name].global) {
       i--
     }
     const indexToInsert = i === -1 ? activeComponentsState.length : i + 1
@@ -34,7 +34,7 @@ export default function AddComponentButton() {
 
   return (
     <>
-      <select className="select w-full max-w-xs" onChange={e => setModuleName(e.target.value as PossibleModuleNames)} value={moduleName}>
+      <select className="select w-full max-w-xs" onChange={e => setModuleName(e.target.value)} value={moduleName}>
         {Object.entries(moduleNameToComponentMetadata)
           .filter(([_, metadata]) => {
             return Object.values(metadata).filter(({ editable }) => editable).length > 0
@@ -46,7 +46,7 @@ export default function AddComponentButton() {
       <div className="dropdown mb-2">
         <label className="btn m-1" tabIndex={0}>Add Component</label>
         <ul className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" tabIndex={0}>
-          {Object.entries(moduleMetadata)
+          {Object.entries(moduleMetadata.components)
             .filter((moduleMetadataEntry): moduleMetadataEntry is [string, StandardComponentMetaData] => {
               const [_, data] = moduleMetadataEntry
               return !data.global && data.editable

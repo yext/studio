@@ -60,7 +60,7 @@ function parseElement(
   c: JsxElement | JsxSelfClosingElement,
   name: string,
   imports: Record<string, string[]>
-): { moduleName: PossibleModuleNames, props: PropState } {
+): { moduleName: string, props: PropState } {
   const moduleName = getComponentModuleName(name, imports, false)
   if (moduleName === 'builtIn') {
     throw new Error('parseComponentState does not currently support builtIn elements.')
@@ -68,7 +68,7 @@ function parseElement(
   const attributes: JsxAttributeLike[] = c.isKind(SyntaxKind.JsxSelfClosingElement)
     ? c.getAttributes()
     : c.getOpeningElement().getAttributes()
-  const componentMetadata = moduleNameToComponentMetadata[moduleName][name]
+  const componentMetadata = moduleNameToComponentMetadata[moduleName].components[name]
   const props = componentMetadata.global
     ? componentMetadata.globalProps ?? {}
     : parseJsxAttributes(attributes, componentMetadata)

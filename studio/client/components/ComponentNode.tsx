@@ -56,7 +56,7 @@ export default function ComponentNode(props: ComponentNodeProps) {
   })
 
   const isGlobal = componentState.type !== ComponentStateType.Symbol
-    && moduleNameToComponentMetadata.localComponents[componentState.name].global
+    && moduleNameToComponentMetadata.localComponents.components[componentState.name].global
 
   return (
     <div

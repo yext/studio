@@ -29,7 +29,7 @@ export default function ComponentTree() {
       parent: c.parentUUID ?? ROOT_ID,
       text: c.name,
       droppable: c.type !== ComponentStateType.Symbol
-        && moduleNameToComponentMetadata[c.moduleName][c.name].acceptsChildren,
+        && moduleNameToComponentMetadata[c.moduleName].components[c.name].acceptsChildren,
       data: c
     }))
   }, [activeComponentsState, moduleNameToComponentMetadata])

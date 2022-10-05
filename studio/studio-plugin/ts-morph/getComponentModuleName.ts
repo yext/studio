@@ -1,18 +1,21 @@
-import { PossibleModuleNames } from '../../shared/models'
+import { InternalModuleNames } from '../../shared/models'
 
 export default function getComponentModuleName(
   name: string,
   imports: Record<string, string[]>,
   isLayout: boolean
-): PossibleModuleNames {
-  const importPath = getImportPath(name, imports)
-  if (!importPath) {
-    return 'builtIn'
+): string {
+  let moduleName = Object.keys(imports).find(importIdentifier => {
+    const importedNames = imports[importIdentifier]
+    return importedNames.includes(name)
+  })
+  if (!moduleName) {
+    return InternalModuleNames.LocalComponents
   }
-  if (importPath.startsWith('.')) {
-    return isLayout ? 'localLayouts' : 'localComponents'
+  if (moduleName.startsWith('.')) {
+    moduleName = isLayout ? InternalModuleNames.LocalLayouts : InternalModuleNames.LocalComponents
   }
-  throw new Error(`Unknown component import path ${importPath} for component ${name}`)
+  return moduleName
 }
 
 export function getImportPath(name: string, imports: Record<string, string[]>): string {

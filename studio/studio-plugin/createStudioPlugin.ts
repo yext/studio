@@ -1,4 +1,4 @@
-import { Plugin } from 'vite'
+import { ConfigEnv, Plugin, UserConfig } from 'vite'
 import parseComponentMetadata from './ts-morph/parseComponentMetadata'
 import parseSiteSettingsFile from './ts-morph/parseSiteSettingsFile'
 import parsePageFile from './ts-morph/parsePageFile'
@@ -11,6 +11,7 @@ import getPagePath from './getPagePath'
 import openBrowser from 'react-dev-utils/openBrowser.js'
 import { ComponentMetadata } from '../shared/models'
 import path from 'path'
+import studioConfig from '../../src/studio'
 
 /**
  * Handles server-client communication.
@@ -75,6 +76,26 @@ export default function createStudioPlugin(args): Plugin {
     load(id) {
       if (id === resolvedVirtualModuleId) {
         return `export default ${JSON.stringify(ctx)}`
+      }
+    },
+    config: {
+      handler: (config: UserConfig, _env: ConfigEnv): UserConfig => {
+        // update vite config based on "nonEsmDeps" specified in studio's NPM component plugins
+        if (!studioConfig.plugins) {
+          return config
+        }
+        const pluginsOptimizeDeps: string[] = []
+        Object.values(studioConfig.plugins).forEach(moduleConfig => {
+          if (moduleConfig.nonEsmDeps && moduleConfig.nonEsmDeps.length > 0) {
+            pluginsOptimizeDeps.push(...moduleConfig.nonEsmDeps)
+          }
+        })
+        const devOptimizeDeps = config.optimizeDeps?.include ?? []
+        config.optimizeDeps = {
+          ...config.optimizeDeps,
+          include: [...devOptimizeDeps, ...pluginsOptimizeDeps]
+        }
+        return config
       }
     },
     configureServer,

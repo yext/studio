@@ -20,13 +20,10 @@
     ]
   },
   "include": [
-    "client",
-    "studio-plugin",
-    "shared",
-    "vite.config.ts",
-    "tests"
+    "index.ts"
   ],
   "exclude": [
+    "lib/**/*",
     "**/__fixtures__/**",
     "**/__mocks__/**"
   ]
