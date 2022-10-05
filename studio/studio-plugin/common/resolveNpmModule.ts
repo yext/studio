@@ -1,6 +1,6 @@
 import typescript, { ModuleResolutionHost } from 'typescript'
 import fs from 'fs'
-import { resolve } from 'path'
+import getRootPath from '../getRootPath'
 
 // 'typescript' is a CommonJS module, which may not support all module.exports as named exports
 const { resolveModuleName } = typescript
@@ -8,10 +8,10 @@ const { resolveModuleName } = typescript
 export function resolveNpmModule(moduleName: string): string {
   const customModuleResolutionHost: ModuleResolutionHost = {
     fileExists(fileName) {
-      return fs.existsSync(resolveTsFileName(fileName))
+      return fs.existsSync(getRootPath(fileName))
     },
     readFile(fileName) {
-      return fs.readFileSync(resolveTsFileName(fileName), 'utf-8')
+      return fs.readFileSync(getRootPath(fileName), 'utf-8')
     }
   }
 
@@ -19,10 +19,6 @@ export function resolveNpmModule(moduleName: string): string {
   if (!resolvedModule) {
     throw new Error(`Could not resolve module: "${moduleName}"`)
   }
-  const absPath = resolveTsFileName(resolvedModule.resolvedFileName)
+  const absPath = getRootPath(resolvedModule.resolvedFileName)
   return absPath
-
-  function resolveTsFileName(fileName: string) {
-    return resolve(__dirname, '../../..', fileName)
-  }
 }

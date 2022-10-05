@@ -3,8 +3,6 @@ import { PropState } from './models'
 export interface ComponentExportConfig {
   /** Component's export identifier. */
   exportIdentifier: string,
-  /** CSS imports required for component to work in PagePreview. */
-  cssImports?: string[],
   /** Initial props when component is added to page through Studio. */
   initialProps?: PropState
 }
@@ -14,7 +12,6 @@ export interface StudioNpmModulePlugin {
   moduleName: string,
   /**
    * CSS imports required for components from the NPM module to work in PagePreview.
-   * The path(s) must be relative paths from project root directory.
    */
   cssImports?: string[],
   /**

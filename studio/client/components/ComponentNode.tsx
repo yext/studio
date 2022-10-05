@@ -48,7 +48,8 @@ export default function ComponentNode(props: ComponentNodeProps) {
     'bg-lime-100': isDropTarget
   })
 
-  const isGlobal = moduleNameToComponentMetadata.localComponents.components[componentState.name].global
+  const moduleMetadata = moduleNameToComponentMetadata[componentState.moduleName]
+  const isGlobal = moduleMetadata.components[componentState.name].global
 
   return (
     <div

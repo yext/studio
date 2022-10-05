@@ -27,15 +27,14 @@
   },
   "homepage": "https://github.com/yext/studio-prototype#readme",
   "dependencies": {
-    "express": "^4.18.1",
+    "@vitejs/plugin-react": "^2.1.0",
     "lodash": "^4.17.21",
     "prettier": "^2.7.1",
     "resolve": "^1.22.1",
     "ts-morph": "^16.0.0",
     "uuid": "^9.0.0",
     "vite": "^3.1.1",
-    "tailwindcss": "^3.1.8",
-    "vite-plugin-commonjs": "^0.5.2"
+    "tailwindcss": "^3.1.8"
   },
   "devDependencies": {
     "@types/jest": "^29.0.2",

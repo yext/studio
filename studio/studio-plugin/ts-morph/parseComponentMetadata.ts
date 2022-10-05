@@ -1,17 +1,23 @@
 import { ComponentMetadata, PropState } from '../../shared/models'
 import { SourceFile } from 'ts-morph'
-import { getPropShape, getExportedObjectLiteral, getPropsState } from '../common'
+import { getPropShapeByInterfaceName, getExportedObjectLiteral, getPropsState, ParseablePropertyStructure, getPropShapeByPropStructures } from '../common'
 import path from 'path'
 
-export const pathToPagePreview = path.resolve(__dirname, '../../client/components/PagePreview')
+export const pathToPagePreviewDir = path.resolve(__dirname, '../../client/components')
 
 export default function parseComponentMetadata(
   sourceFile: SourceFile,
   filePath: string,
-  interfaceName: string,
-  importIdentifier?: string
+  dataToParsePropsBy: string | ParseablePropertyStructure[],
+  componentMetadataOverrides?: {
+    initialProps?: PropState,
+    importIdentifier?: string
+  },
 ): ComponentMetadata {
-  const { propShape, acceptsChildren } = getPropShape(sourceFile, filePath, interfaceName)
+  const { propShape, acceptsChildren } = typeof dataToParsePropsBy == 'string'
+    ? getPropShapeByInterfaceName(sourceFile, filePath, dataToParsePropsBy)
+    : getPropShapeByPropStructures(dataToParsePropsBy, filePath)
+
   if (isGlobalComponent()) {
     return {
       propShape,
@@ -27,14 +33,14 @@ export default function parseComponentMetadata(
       acceptsChildren,
       global: false,
       editable: true,
-      initialProps: parseComponentPropsValue('initialProps'),
+      initialProps: componentMetadataOverrides?.initialProps ?? parseComponentPropsValue('initialProps'),
       importIdentifier: getImportIdentifier()
     }
   }
 
   function getImportIdentifier(): string {
-    if (importIdentifier) return importIdentifier
-    return path.relative(pathToPagePreview, filePath)
+    if (componentMetadataOverrides?.importIdentifier) return componentMetadataOverrides.importIdentifier
+    return path.relative(pathToPagePreviewDir, filePath)
   }
 
   function isGlobalComponent(): boolean {
