@@ -6,12 +6,12 @@ export default function getModuleCssImports(
   pluginCssImports: string[] | undefined,
   pathToNodeModulesDir: string
 ): CssImport[] | undefined {
-  return pluginCssImports?.map(i => {
+  return pluginCssImports?.map(cssImportIdentifier => {
     return {
-      moduleExportPath: i,
+      moduleExportPath: cssImportIdentifier,
       relativePath: path.relative(
         pathToPagePreviewDir,
-        path.resolve(pathToNodeModulesDir, require.resolve(i))
+        path.resolve(pathToNodeModulesDir, require.resolve(cssImportIdentifier))
       )
     }
   })
