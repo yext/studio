@@ -70,7 +70,7 @@ function createReturnStatement(
     if (c.type === ComponentStateType.Symbol) {
       return `<${c.name} />`
     }
-    const componentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
+    const componentMetadata = moduleNameToComponentMetadata[c.moduleName].components[c.name]
     const isGlobal = componentMetadata.global
     if (isGlobal) {
       if (children.length > 0) {
@@ -116,7 +116,8 @@ function updateGlobalComponentProps(updatedComponentState: ComponentState[]) {
       // TODO
       return
     }
-    const componentMetadata: ComponentMetadata = moduleNameToComponentMetadata[c.moduleName][c.name]
+    const componentMetadata: ComponentMetadata =
+      moduleNameToComponentMetadata[c.moduleName].components[c.name]
     if (componentMetadata.global) {
       const partialFilePath = componentMetadata.importIdentifier.split('src/components').at(-1)
       const relativeFilePath = getRootPath(`src/components/${partialFilePath}`)

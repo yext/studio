@@ -44,14 +44,7 @@ function useElements() {
       console.error(`Unable to load Layout component "${layoutName}", render children components directly on page..`)
       return elements
     }
-  }, [
-    importedComponents,
-    activeComponentsState,
-    pageState.layoutState.name,
-    siteSettingsObj,
-    streamDocument,
-    activeComponentUUID
-  ])
+  }, [importedComponents, activeComponentsState, pageState.layoutState.name, siteSettingsObj, streamDocument])
 }
 
 function createStudioElements(

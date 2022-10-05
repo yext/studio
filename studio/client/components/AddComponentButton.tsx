@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { v4 } from 'uuid'
-import { RegularComponentState, ModuleMetadata, PossibleModuleNames, StandardComponentMetaData } from '../../shared/models'
+import { ModuleMetadata, RegularComponentState, StandardComponentMetaData, InternalModuleNames } from '../../shared/models'
 import { useStudioContext } from './useStudioContext'
 
 export default function AddComponentButton() {
