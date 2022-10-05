@@ -72,7 +72,7 @@ function createStudioElements(
 ): (ReactElement | null)[] {
   return mapComponentStates(components, (c, children, i) => {
     if (!importedComponents[c.name]) {
-      console.error(`Expected to find component loaded for ${c.name} but none found.`)
+      console.warn(`Expected to find component loaded for ${c.name} but none found - possibly due to a race condition.`)
       return null
     }
     const previewProps = getPreviewProps(c.props, expressionSourcesValues)

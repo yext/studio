@@ -19,8 +19,12 @@ export default function AddComponentButton() {
       moduleName
     }
     let i = pageState.componentsState.length - 1
-    while (i >= 0 && moduleMetadata.components[pageState.componentsState[i].name].global) {
-      i--
+    for (; i >= 0; i--) {
+      const currComponentState = pageState.componentsState[i]
+      const moduleMetadata = moduleNameToComponentMetadata[currComponentState.moduleName]
+      if (!moduleMetadata.components[currComponentState.name].global) {
+        break
+      }
     }
     const indexToInsert = i === -1 ? pageState.componentsState.length : i + 1
     const newComponentsState = pageState.componentsState.slice(0)
@@ -29,15 +33,15 @@ export default function AddComponentButton() {
       ...pageState,
       componentsState: newComponentsState
     })
-  }, [moduleMetadata, moduleName, pageState, setPageState])
+  }, [moduleName, moduleNameToComponentMetadata, pageState, setPageState])
 
   return (
     <>
       <select className="select w-full max-w-xs" onChange={e => setModuleName(e.target.value)} value={moduleName}>
         {Object.entries(moduleNameToComponentMetadata)
-          .filter(([_, metadata]) => {
-            return Object.values(metadata).filter(({ editable }) => editable).length > 0
-          })
+          .filter(([_, metadata]) =>
+            Object.values(metadata.components).filter(({ editable }) => editable).length > 0
+          )
           .map(([moduleName]) =>
             <option key={moduleName}>{moduleName}</option>
           )}

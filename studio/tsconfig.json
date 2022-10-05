@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "esnext",
+    "module": "CommonJS",
     "outDir": "lib",
     "strict": true,
     "esModuleInterop": true,
