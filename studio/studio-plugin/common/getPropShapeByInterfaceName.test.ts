@@ -1,6 +1,6 @@
 import getRootPath from '../getRootPath'
 import { PropTypes } from '../../types'
-import { getPropShape } from './getPropShape'
+import { getPropShapeByInterfaceName } from './getPropShapeByInterfaceName'
 import { getSourceFile } from './getSourceFile'
 import { PropShape } from '../../shared/models'
 
@@ -8,7 +8,7 @@ jest.spyOn(console, 'error').mockImplementation(jest.fn())
 jest.mock('../getRootPath')
 
 it('gets prop interface defined in the provided file path correctly', () => {
-  const { propShape } = getPropShape(
+  const { propShape } = getPropShapeByInterfaceName(
     getSourceFile(getRootPath('components/Banner.tsx')),
     getRootPath('components/Banner.tsx'),
     'BannerProps'
@@ -33,7 +33,7 @@ it('gets prop interface defined in the provided file path correctly', () => {
 })
 
 it('gets prop interface from an import correctly', () => {
-  const { propShape } = getPropShape(
+  const { propShape } = getPropShapeByInterfaceName(
     getSourceFile(getRootPath('components/SpecificHeader.global.tsx')),
     getRootPath('components/SpecificHeader.global.tsx'),
     'SpecificHeaderProps'

@@ -19,10 +19,11 @@ export default function AddComponentButton() {
       moduleName
     }
     let i = pageState.componentsState.length - 1
-    for(; i >= 0; i--) {
+    for (; i >= 0; i--) {
       const currComponentState = pageState.componentsState[i]
-      if (!moduleNameToComponentMetadata[currComponentState.moduleName].components[currComponentState.name].global) {
-        break;
+      const moduleMetadata = moduleNameToComponentMetadata[currComponentState.moduleName]
+      if (!moduleMetadata.components[currComponentState.name].global) {
+        break
       }
     }
     const indexToInsert = i === -1 ? pageState.componentsState.length : i + 1
@@ -32,7 +33,7 @@ export default function AddComponentButton() {
       ...pageState,
       componentsState: newComponentsState
     })
-  }, [moduleMetadata, moduleName, pageState, setPageState])
+  }, [moduleName, moduleNameToComponentMetadata, pageState, setPageState])
 
   return (
     <>
