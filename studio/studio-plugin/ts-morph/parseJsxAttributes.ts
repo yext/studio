@@ -3,6 +3,7 @@ import { ComponentMetadata, PropState } from '../../shared/models'
 import { validatePropState } from '../../shared/validatePropState'
 import { getPropName, getPropValue } from '../common'
 
+console.log('syntaxkind', SyntaxKind)
 export default function parseJsxAttributes(
   attributes: JsxAttributeLike[],
   componentMetaData: ComponentMetadata

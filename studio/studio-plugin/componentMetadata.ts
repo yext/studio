@@ -1,10 +1,11 @@
-import { ModuleMetadata, ModuleNameToComponentMetadata, SymbolMetadata } from '../shared/models'
+import { ComponentMetadata, ModuleMetadata, ModuleNameToComponentMetadata, SymbolMetadata } from '../shared/models'
 import fs from 'fs'
 import getRootPath from './getRootPath'
 import { getSourceFile, resolveNpmModule } from './common'
 import path from 'path'
 import parseComponentMetadata, { pathToPagePreview } from './ts-morph/parseComponentMetadata'
 import parseSymbolContent from './ts-morph/parseSymbolContent'
+import studioConfig from '../../src/studio'
 
 const localComponents: ModuleMetadata = { components: {} }
 localComponents.components = fs
@@ -63,6 +64,7 @@ export const moduleNameToComponentMetadata: ModuleNameToComponentMetadata = {
 // TODO: the creation of symbolNameToMetadata is dependant on moduleNameToComponentMetadata existing first.
 // We should either manually pass moduleNameToComponentMetadata through every single method that needs it
 // (which currently is the vast majority of them) or find a better way to organize things.
+// export const symbolNameToMetadata = {}
 export const symbolNameToMetadata: Record<string, SymbolMetadata> = fs
   .readdirSync(getRootPath('src/symbols'), 'utf-8')
   .reduce((prev, curr) => {
