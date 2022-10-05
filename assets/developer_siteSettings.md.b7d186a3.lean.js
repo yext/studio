@@ -1,1 +1,0 @@
-import{_ as s,c as n,o as a,a as p}from"./app.0d084477.js";const A='{"title":"Site Settings","description":"","frontmatter":{},"headers":[],"relativePath":"developer/siteSettings.md"}',l={},o=p("",4),e=[o];function t(c,r,D,i,y,F){return a(),n("div",null,e)}var d=s(l,[["render",t]]);export{A as __pageData,d as default};
