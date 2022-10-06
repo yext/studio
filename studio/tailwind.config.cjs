@@ -1,7 +1,7 @@
 module.exports = {
   content: [
     '../src/**/*.tsx',
-    './client/**/*.{js,ts,jsx,tsx}'
+    './client/**/*.tsx'
   ],
   important: true,
   theme: {
