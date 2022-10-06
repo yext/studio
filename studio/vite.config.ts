@@ -10,6 +10,9 @@ export default defineConfig(args => {
       createStudioPlugin(args)
     ],
     root: path.resolve(__dirname, '..'),
+    css: {
+      postcss: __dirname,
+    },
     server: {
       port: 3000
     },
