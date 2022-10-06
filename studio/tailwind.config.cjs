@@ -1,5 +1,8 @@
 module.exports = {
-  content: ['../src/**/*.tsx', 'client/**/*.tsx'],
+  content: [
+    '../src/**/*.tsx',
+    './client/**/*.tsx'
+  ],
   important: true,
   theme: {
     extend: {},
