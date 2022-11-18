@@ -22,4 +22,3 @@ jobs:
       - run: cd studio && npm ci && npx tsc
       # build plugin
       - run: cd search-ui-react-plugin && npm ci && npm run build
-
