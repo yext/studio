@@ -12,6 +12,6 @@
     "declarationMap": true,
     "sourceMap": true,
     "jsx": "react-jsx",
-    "target": "ESNext",
+    "target": "ESNext"
   }
 }

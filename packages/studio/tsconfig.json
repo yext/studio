@@ -3,13 +3,7 @@
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "lib",
-    "types": [
-      "node",
-      "vite/client"
-    ]
+    "types": ["node", "vite/client"]
   },
-  "include": [
-    "src",
-    "bin"
-  ]
+  "include": ["src", "bin"]
 }

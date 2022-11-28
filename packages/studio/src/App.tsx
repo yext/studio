@@ -3,5 +3,5 @@ export default function App() {
     <div className="App">
       <h1>Studio Client</h1>
     </div>
-  )
+  );
 }
