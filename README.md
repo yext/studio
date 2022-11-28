@@ -1,4 +1,4 @@
-This is a monorepo for Studio-related packages, using [Turbo](https://turbo.build/) build system and pnpm as package manager.
+This is a monorepo for Studio-related packages, using [Turbo](https://turbo.build/) build system and npm as package manager.
 
 ### Apps and Packages
 
@@ -12,5 +12,5 @@ It includes the following TypeScript-based packages/apps:
 To build all apps and packages, run the following command:
 
 ```
-pnpm run build
+npm run build
 ```
