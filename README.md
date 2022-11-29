@@ -1,19 +1,16 @@
-# Getting Started
+This is a monorepo for Studio-related packages, using [Turbo](https://turbo.build/) build system and npm as package manager.
 
-[WIP Documentation here](https://literate-winner-b469e570.pages.github.io/)
+### Apps and Packages
 
-## Available Scripts
+It includes the following TypeScript-based packages/apps:
 
-### `npm run localData`
+- `test-site`: a React app for local testing of `studio` package
+- `studio`: a code generation and editing tool for creating web applications
 
-Runs `yext pages generate-test-data` with some preparation steps and the flags Studio needs to operate properly.
-This is expected to be called at least once before `npm run dev`
+### Build
 
-### `npm run dev`
+To build all apps and packages, run the following command:
 
-Runs the app in development mode. Make sure to run `npm run localData` at least one time, and whenever changes
-are made to stream configs.
-
-Open [http://localhost:3000/studio/client](http://localhost:3000/studio/client) to view it in your browser.
-This URL is opened on startup.
-
+```
+npm run build
+```
