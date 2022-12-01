@@ -11,6 +11,7 @@ export default function createStudioPlugin(args: ConfigEnv): Plugin {
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
 
+  // TODO: pass actual data
   const ctx = "dummy studio data!";
 
   return {
