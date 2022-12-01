@@ -7,7 +7,8 @@
   "exports": {
     ".": {
       "types": "./lib/createStudioPlugin.d.ts",
-      "import": "./lib/createStudioPlugin.js"
+      "import": "./lib/createStudioPlugin.js",
+      "require": "./lib/createStudioPlugin.js"
     },
     "./virtual-module": {
       "types": "./virtual-module.d.ts"
