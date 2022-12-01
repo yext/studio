@@ -2,8 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "outDir": "lib",
-    "types": ["node", "vite/client"]
+    "outDir": "lib"
   },
-  "include": ["src", "bin"]
+  "include": ["src"]
 }

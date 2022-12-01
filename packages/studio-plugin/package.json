@@ -4,6 +4,15 @@
   "version": "0.0.0",
   "types": "lib/createStudioPlugin.d.ts",
   "main": "lib/createStudioPlugin.js",
+  "exports": {
+    ".": {
+      "types": "./lib/createStudioPlugin.d.ts",
+      "import": "./lib/createStudioPlugin.js"
+    },
+    "./virtual-module": {
+      "types": "./virtual-module.d.ts"
+    }
+  },
   "scripts": {
     "dev": "tsc --watch",
     "build": "tsc"
