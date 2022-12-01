@@ -1,0 +1,31 @@
+{
+  "name": "@yext/studio-plugin",
+  "private": true,
+  "version": "0.0.0",
+  "types": "lib/createStudioPlugin.d.ts",
+  "main": "lib/createStudioPlugin.js",
+  "exports": {
+    ".": {
+      "types": "./lib/createStudioPlugin.d.ts",
+      "import": "./lib/createStudioPlugin.js",
+      "require": "./lib/createStudioPlugin.js"
+    },
+    "./virtual-module": {
+      "types": "./virtual-module.d.ts"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "react-dev-utils": "^12.0.1"
+  },
+  "peerDependencies": {
+    "vite": "^3.2.3"
+  },
+  "devDependencies": {
+    "@types/react-dev-utils": "^9.0.11",
+    "vite": "^3.2.3"
+  }
+}
