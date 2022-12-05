@@ -23,9 +23,12 @@ export default class ComponentFile {
     this.studioSourceFile = new StudioSourceFile(filepath);
   }
 
-  getInitialProps(propShape: PropShape): PropValues {
+  private getInitialProps(propShape: PropShape): PropValues {
     const rawValues =
       this.studioSourceFile.parseExportedObjectLiteral("initialProps");
+    if (!rawValues) {
+      return {}
+    }
     const propValues: PropValues = {};
     Object.keys(rawValues).forEach((propName) => {
       const { value, isExpression } = rawValues[propName];
@@ -44,35 +47,20 @@ export default class ComponentFile {
   }
 
   getComponentMetadata(): ComponentMetadata {
-    const propsInterface = this.studioSourceFile.getInterfaceByName(
+    const propsInterface = this.studioSourceFile.parseInterface(
       `${this.componentName}Props`
     );
-    const properties = propsInterface.getStructure().properties;
-    if (!properties) {
-      return {
-        kind: FileMetadataKind.Component,
-      };
-    }
-
-    const studioImports = this.studioSourceFile.getImportsFromStudio();
+    const studioImports =
+      this.studioSourceFile.parseImports()["@yext/studio"] ?? [];
     const propShape: PropShape = {};
     let acceptsChildren = false;
 
-    properties.forEach((p) => {
-      const { name: propName, type } = p;
-      if (typeof type !== "string") {
-        console.error(
-          "Unable to parse prop:",
-          propName,
-          "for props interface for",
-          this.componentName
-        );
-        return;
-      }
+    Object.keys(propsInterface).forEach(propName => {
       if (propName === SpecialReactProps.Children) {
-        acceptsChildren = propName === SpecialReactProps.Children;
-        return;
+        acceptsChildren = true
+        return
       }
+      const { type, doc } = propsInterface[propName]
       if (!TypeGuards.isPropValueType(type)) {
         console.error(
           "Unrecognized prop type",
@@ -80,7 +68,7 @@ export default class ComponentFile {
           "in props interface for",
           this.componentName
         );
-        return;
+        return
       }
       if (!TypeGuards.isPrimitiveProp(type) && !studioImports.includes(type)) {
         console.error(
@@ -89,16 +77,11 @@ export default class ComponentFile {
           "in props interface for",
           this.componentName
         );
+        return
       }
+      propShape[propName] = { type, doc }
+    })
 
-      const jsdoc = p.docs
-        ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
-        .join("\n");
-      propShape[p.name] = {
-        type,
-        ...(jsdoc && { doc: jsdoc }),
-      };
-    });
 
     return {
       kind: FileMetadataKind.Component,

@@ -1,9 +1,17 @@
 import {
   Expression,
   ImportDeclaration,
+  InterfaceDeclaration,
   ObjectLiteralExpression,
   SyntaxKind,
 } from "ts-morph";
+
+export type ParsedInterface = {
+  [key: string]: {
+    type: string,
+    doc?: string
+  }
+}
 
 export type ParsedObjectLiteral = {
   [key: string]: {
@@ -97,5 +105,34 @@ export default class StaticParsingHelpers {
       namedImports,
       defaultImport,
     };
+  }
+
+  static parseInterfaceDeclaration(interfaceDeclaration: InterfaceDeclaration): ParsedInterface {
+    const properties = interfaceDeclaration.getStructure().properties;
+    if (!properties) {
+      return {}
+    }
+    const parsedInterface: ParsedInterface = {}
+    properties.forEach((p) => {
+      const { name: propName, type } = p;
+      if (typeof type !== "string") {
+        console.error(
+          "Unable to parse prop:",
+          propName,
+          "in props interface:",
+          interfaceDeclaration.getFullText()
+        );
+        return;
+      }
+
+      const jsdoc = p.docs
+        ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
+        .join("\n");
+        parsedInterface[p.name] = {
+          type,
+          ...(jsdoc && { doc: jsdoc }),
+        };
+      });
+    return parsedInterface
   }
 }

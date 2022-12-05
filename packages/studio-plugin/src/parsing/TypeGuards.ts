@@ -30,13 +30,13 @@ export default class TypeGuards {
   }
 
   static isPrimitiveProp(
-    propValueType: PropValueType
+    propValueType: string
   ): propValueType is PrimitivePropValueType {
     return [
       PropValueType.boolean,
       PropValueType.string,
       PropValueType.number,
-    ].includes(propValueType);
+    ].includes(propValueType as PropValueType);
   }
 
   static isPropValueType(type: string): type is PropValueType {

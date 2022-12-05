@@ -1,20 +1,21 @@
 import {
   ts,
-  InterfaceDeclaration,
   Project,
   SourceFile,
   SyntaxKind,
 } from "ts-morph";
 import typescript from "typescript";
 import StaticParsingHelpers, {
+  ParsedInterface,
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
-// 'typescript' is a CommonJS module, which may not support all module.exports as named exports
-const { JsxEmit } = typescript;
 
+/**
+ * The ts-morph Project instance for the entire app.
+ */
 const project = new Project({
   compilerOptions: {
-    jsx: JsxEmit.ReactJSX,
+    jsx: typescript.JsxEmit.ReactJSX,
   },
 });
 
@@ -32,15 +33,7 @@ export default class StudioSourceFile {
     this.sourceFile = project.getSourceFileOrThrow(filepath);
   }
 
-  getInterfaceByName(interfaceName: string): InterfaceDeclaration {
-    return this.sourceFile.getInterfaceOrThrow(interfaceName);
-  }
-
-  getImportsFromStudio(): string[] {
-    return this.parseImports()["@yext/studio"];
-  }
-
-  private parseImports(): Record<string, string[]> {
+  parseImports(): Record<string, string[]> {
     const importPathToImportNames: Record<string, string[]> = {};
 
     this.sourceFile
@@ -56,19 +49,25 @@ export default class StudioSourceFile {
     return importPathToImportNames;
   }
 
-  parseExportedObjectLiteral(variableName: string): ParsedObjectLiteral {
-    const exportSymbols = this.sourceFile.getExportSymbols();
-    const propSymbol = exportSymbols.find(
-      (s) => s.getEscapedName() === variableName
-    );
-    const objectLiteralExp = propSymbol
-      ?.getValueDeclaration()
-      ?.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression);
+  parseExportedObjectLiteral(variableName: string): ParsedObjectLiteral | undefined {
+    const variableStatement = this.sourceFile.getChildrenOfKind(SyntaxKind.VariableStatement).find(variableStatement => {
+      return variableStatement.isExported() &&
+        variableStatement.getFirstDescendantByKindOrThrow(SyntaxKind.VariableDeclaration).getName() === variableName
+    })
+    if (!variableStatement) {
+      return
+    }
+    const objectLiteralExp = variableStatement.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression);
     if (!objectLiteralExp) {
       throw new Error(
         `Could not find ObjectLiteralExpression for variable ${variableName}`
       );
     }
     return StaticParsingHelpers.parseObjectLiteral(objectLiteralExp);
+  }
+
+  parseInterface(interfaceName: string): ParsedInterface {
+    const interfaceDeclaration = this.sourceFile.getInterfaceOrThrow(interfaceName);
+    return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration)
   }
 }
