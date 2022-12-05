@@ -7,11 +7,11 @@ describe("parseExportedObjectLiteral", () => {
       ", but it is not an ObjectLiteralExpression",
     () => {
       const { project } = createTestSourceFile(
-        'export const a = "no an object";'
+        'export const a = "not an object";'
       );
       const studioSource = new StudioSourceFile("test.ts", project);
       expect(() => studioSource.parseExportedObjectLiteral("a")).toThrow(
-        'Could not find ObjectLiteralExpression within `export const a = "no an object";`'
+        'Could not find ObjectLiteralExpression within `export const a = "not an object";`'
       );
     }
   );
