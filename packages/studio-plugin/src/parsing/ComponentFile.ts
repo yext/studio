@@ -34,7 +34,9 @@ export default class ComponentFile {
     Object.keys(rawValues).forEach((propName) => {
       const { value, isExpression } = rawValues[propName];
       if (isExpression) {
-        throw new Error(`Expressions are not supported within initialProps for ${this.componentName}.`)
+        throw new Error(
+          `Expressions are not supported within initialProps for ${this.componentName}.`
+        );
       }
       const propValue = {
         valueType: propShape[propName].type,

@@ -1,5 +1,5 @@
 import { HexColor } from "@yext/studio";
-import './index.css';
+import "./index.css";
 
 export interface ComplexBannerProps {
   /** jsdoc */
@@ -13,7 +13,7 @@ export const initialProps: ComplexBannerProps = {
   bgColor: "#abcdef",
   num: 5,
   bool: false,
-  title: 'initial title',
+  title: "initial title",
 };
 
 export default function ComplexBanner(props: ComplexBannerProps) {

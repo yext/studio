@@ -8,6 +8,8 @@ export const initialProps: ExpressionInitiaBannerProps = {
   title: INITIAL_TITLE,
 };
 
-export default function ExpressionInitialBanner(props: ExpressionInitialBannerProps) {
+export default function ExpressionInitialBanner(
+  props: ExpressionInitialBannerProps
+) {
   return <div>{props.title}</div>;
 }

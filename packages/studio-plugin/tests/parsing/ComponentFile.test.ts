@@ -47,7 +47,7 @@ describe("getComponentMetadtata", () => {
         title: {
           kind: "literal",
           valueType: "string",
-          value: 'initial title',
+          value: "initial title",
         },
       },
     });

@@ -24,7 +24,7 @@ export type ParsedImport = {
   source: string;
   defaultImport?: string;
   namedImports: string[];
-}
+};
 
 /**
  * StaticParsingHelpers is a static class for housing lower level details for parsing
