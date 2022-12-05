@@ -26,7 +26,7 @@ export default class TypeGuards {
       case PropValueType.number:
         return typeof value === "number";
       case PropValueType.HexColor:
-        return typeof value === "string"
+        return typeof value === "string";
     }
     return false;
   }

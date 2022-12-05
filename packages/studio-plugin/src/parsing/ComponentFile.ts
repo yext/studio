@@ -42,7 +42,7 @@ export default class ComponentFile {
           "Invalid prop value: " + JSON.stringify(propValue, null, 2)
         );
       }
-      propValues[propName] = propValue
+      propValues[propName] = propValue;
     });
     return propValues;
   }
@@ -82,17 +82,17 @@ export default class ComponentFile {
       }
       propShape[propName] = { type };
       if (doc) {
-        propShape[propName].doc = doc
+        propShape[propName].doc = doc;
       }
     });
 
-    const initialProps = this.getInitialProps(propShape)
+    const initialProps = this.getInitialProps(propShape);
     const componentMetadata: ComponentMetadata = {
       kind: FileMetadataKind.Component,
       propShape,
     };
-    initialProps && (componentMetadata.initialProps = initialProps)
-    acceptsChildren && (componentMetadata.acceptsChildren = acceptsChildren)
-    return componentMetadata
+    initialProps && (componentMetadata.initialProps = initialProps);
+    acceptsChildren && (componentMetadata.acceptsChildren = acceptsChildren);
+    return componentMetadata;
   }
 }
