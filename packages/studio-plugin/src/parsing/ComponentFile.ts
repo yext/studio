@@ -3,13 +3,11 @@ import path from "path";
 import {
   ComponentMetadata,
   FileMetadataKind,
-  PropShape,
-  PropValueKind,
-  PropValues,
-  SpecialReactProps,
-} from "../types";
+} from "../types/ComponentMetadata";
 import TypeGuards from "./TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
+import { PropShape, SpecialReactProps } from "../types/PropShape";
+import { PropValueKind, PropValues } from "../types/PropValues";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example

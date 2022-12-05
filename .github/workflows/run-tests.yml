@@ -3,7 +3,11 @@ name: Run Tests
 on: [push, pull_request]
 
 jobs:
-  tests:
+  unit_tests:
     uses: yext/slapshot-reusable-workflows/.github/workflows/run_tests.yml@v1
     with:
       node_matrix: '["16.x", "18.x", "19.x"]'
+  build:
+    steps:
+      npm i
+      npm run build

@@ -1,4 +1,4 @@
-import { PropVal, PropValueKind, PropValueType } from "../types";
+import { PropVal, PropValueKind, PropValueType } from "../types/PropValues";
 
 type PrimitivePropValueType =
   | PropValueType.number
