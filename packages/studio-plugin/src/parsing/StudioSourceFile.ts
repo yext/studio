@@ -31,13 +31,11 @@ export default class StudioSourceFile {
   parseNamedImports(): Record<string, string[]> {
     const importPathToImportNames: Record<string, string[]> = {};
 
-    this.sourceFile
-      .getImportDeclarations()
-      .forEach((importDeclaration) => {
-        const { source, namedImports } =
-          StaticParsingHelpers.parseImport(importDeclaration);
-        importPathToImportNames[source] = [...namedImports];
-      });
+    this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
+      const { source, namedImports } =
+        StaticParsingHelpers.parseImport(importDeclaration);
+      importPathToImportNames[source] = [...namedImports];
+    });
     return importPathToImportNames;
   }
 

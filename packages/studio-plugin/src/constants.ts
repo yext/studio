@@ -1,1 +1,1 @@
-export const STUDIO_PACKAGE_NAME = '@yext/studio';
+export const STUDIO_PACKAGE_NAME = "@yext/studio";

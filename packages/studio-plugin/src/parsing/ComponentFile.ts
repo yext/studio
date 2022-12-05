@@ -9,7 +9,7 @@ import {
   SpecialReactProps,
 } from "../types";
 import TypeGuards from "./TypeGuards";
-import { STUDIO_PACKAGE_NAME } from '../constants';
+import { STUDIO_PACKAGE_NAME } from "../constants";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -70,7 +70,7 @@ export default class ComponentFile {
       }
       if (!TypeGuards.isPrimitiveProp(type) && !studioImports.includes(type)) {
         throw new Error(
-          `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in props interface for ${this.componentName}.`,
+          `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in props interface for ${this.componentName}.`
         );
       }
       propShape[propName] = { type };
@@ -83,8 +83,8 @@ export default class ComponentFile {
     return {
       kind: FileMetadataKind.Component,
       propShape,
-      ...initialProps && { initialProps },
-      ...acceptsChildren ? { acceptsChildren } : {}
+      ...(initialProps && { initialProps }),
+      ...(acceptsChildren ? { acceptsChildren } : {}),
     };
   }
 }
