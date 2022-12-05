@@ -16,7 +16,8 @@
   },
   "scripts": {
     "dev": "tsc --watch",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest"
   },
   "dependencies": {
     "react-dev-utils": "^12.0.1",
