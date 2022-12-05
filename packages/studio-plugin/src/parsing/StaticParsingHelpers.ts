@@ -118,12 +118,7 @@ export default class StaticParsingHelpers {
     properties.forEach((p) => {
       const { name: propName, type } = p;
       if (typeof type !== "string") {
-        console.error(
-          "Unable to parse prop:",
-          propName,
-          "in props interface:",
-          interfaceDeclaration.getFullText()
-        );
+        console.error(`Unable to parse prop: "${propName}" in props interface: ${interfaceDeclaration.getFullText()}`);
         return;
       }
 

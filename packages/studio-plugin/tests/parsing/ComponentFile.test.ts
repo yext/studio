@@ -11,6 +11,16 @@ describe("getComponentMetadtata", () => {
     })
   });
 
+  it("can parse a Banner component that accepts props.children", () => {
+    const pathToComponent = getComponentPath('NestedBanner')
+    const componentFile = new ComponentFile(pathToComponent)
+    expect(componentFile.getComponentMetadata()).toEqual({
+      kind: 'componentMetadata',
+      propShape: {},
+      acceptsChildren: true
+    })
+  });
+
   it("can parse a more complex Banner with docs, prop types imported from Studio, and initialprops", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent);
@@ -23,7 +33,22 @@ describe("getComponentMetadtata", () => {
         bgColor: { type: "HexColor" },
       },
       initialProps: {
-        bgColor: { valueType: "HexColor", kind: "literal", value: "#abcdef" },
+        bgColor: { kind: "literal", valueType: "HexColor", value: "#abcdef" },
+        bool: {
+          kind: "literal",
+          valueType: 'boolean',
+          value: false
+        },
+        num: {
+          kind: 'literal',
+          valueType: 'number',
+          value: 5,
+        },
+        title: {
+          kind: 'expression',
+          valueType: 'string',
+          value: 'INITIAL_TITLE'
+        }
       },
     });
   });
