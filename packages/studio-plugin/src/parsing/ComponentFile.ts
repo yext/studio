@@ -80,12 +80,11 @@ export default class ComponentFile {
     });
 
     const initialProps = this.getInitialProps(propShape);
-    const componentMetadata: ComponentMetadata = {
+    return {
       kind: FileMetadataKind.Component,
       propShape,
+      ...initialProps && { initialProps },
+      ...acceptsChildren ? { acceptsChildren } : {}
     };
-    initialProps && (componentMetadata.initialProps = initialProps);
-    acceptsChildren && (componentMetadata.acceptsChildren = acceptsChildren);
-    return componentMetadata;
   }
 }
