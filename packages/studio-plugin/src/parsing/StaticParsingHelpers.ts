@@ -20,6 +20,12 @@ export type ParsedObjectLiteral = {
   };
 };
 
+export type ParsedImport = {
+  source: string;
+  defaultImport?: string;
+  namedImports: string[];
+}
+
 /**
  * StaticParsingHelpers is a static class for housing lower level details for parsing
  * files within Studio.
@@ -78,15 +84,9 @@ export default class StaticParsingHelpers {
     return parsedValues;
   }
 
-  static parseImport(importDeclaration: ImportDeclaration): {
-    source: string;
-    defaultImport?: string;
-    namedImports: string[];
-  } {
+  static parseImport(importDeclaration: ImportDeclaration): ParsedImport {
     const source: string = importDeclaration.getModuleSpecifierValue();
-    const importClause = importDeclaration.getFirstDescendantByKind(
-      SyntaxKind.ImportClause
-    );
+    const importClause = importDeclaration.getImportClause();
     //  Ignore imports like `import 'index.css'` which lack an import clause
     if (!importClause) {
       return {
@@ -99,7 +99,7 @@ export default class StaticParsingHelpers {
       ?.getText();
     const namedImports: string[] = importClause
       .getNamedImports()
-      .map((n) => n.compilerNode.name.escapedText.toString());
+      .map((n) => n.getName());
     return {
       source,
       namedImports,

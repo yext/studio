@@ -14,7 +14,6 @@ describe("getComponentMetadtata", () => {
   it("can parse a more complex Banner with docs, prop types imported from Studio, and initialprops", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent);
-    console.log(componentFile.getComponentMetadata());
     expect(componentFile.getComponentMetadata()).toEqual({
       kind: "componentMetadata",
       propShape: {
@@ -28,8 +27,20 @@ describe("getComponentMetadtata", () => {
       },
     });
   });
+
+  it("Throws an Error when an import for HexColor is missing", () => {
+    const pathToComponent = getComponentPath("MissingImportBanner");
+    const componentFile = new ComponentFile(pathToComponent);
+    expect(() => componentFile.getComponentMetadata()).toThrowError(/^Missing import from/)
+  });
+
+  it("Throws an Error when an an unrecognized prop type is encountered", () => {
+    const pathToComponent = getComponentPath("UnrecognizedPropBanner");
+    const componentFile = new ComponentFile(pathToComponent);
+    expect(() => componentFile.getComponentMetadata()).toThrowError(/^Unrecognized prop type/)
+  });
 });
 
 function getComponentPath(componentName: string) {
-  return path.resolve(__dirname, `../__fixtures__/${componentName}.tsx`);
+  return path.resolve(__dirname, `../__fixtures__/ComponentFile/${componentName}.tsx`);
 }

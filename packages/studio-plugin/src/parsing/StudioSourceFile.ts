@@ -28,18 +28,15 @@ export default class StudioSourceFile {
     this.sourceFile = project.getSourceFileOrThrow(filepath);
   }
 
-  parseImports(): Record<string, string[]> {
+  parseNamedImports(): Record<string, string[]> {
     const importPathToImportNames: Record<string, string[]> = {};
 
     this.sourceFile
-      .getDescendantsOfKind(SyntaxKind.ImportDeclaration)
+      .getImportDeclarations()
       .forEach((importDeclaration) => {
-        const { source, namedImports, defaultImport } =
+        const { source, namedImports } =
           StaticParsingHelpers.parseImport(importDeclaration);
         importPathToImportNames[source] = [...namedImports];
-        if (defaultImport) {
-          importPathToImportNames[source].push(defaultImport);
-        }
       });
     return importPathToImportNames;
   }

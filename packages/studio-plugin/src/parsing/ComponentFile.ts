@@ -9,6 +9,7 @@ import {
   SpecialReactProps,
 } from "../types";
 import TypeGuards from "./TypeGuards";
+import { STUDIO_PACKAGE_NAME } from '../constants';
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -52,7 +53,7 @@ export default class ComponentFile {
       `${this.componentName}Props`
     );
     const studioImports =
-      this.studioSourceFile.parseImports()["@yext/studio"] ?? [];
+      this.studioSourceFile.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
     const propShape: PropShape = {};
     let acceptsChildren = false;
 
@@ -63,22 +64,14 @@ export default class ComponentFile {
       }
       const { type, doc } = propsInterface[propName];
       if (!TypeGuards.isPropValueType(type)) {
-        console.error(
-          "Unrecognized prop type",
-          type,
-          "in props interface for",
-          this.componentName
+        throw new Error(
+          `Unrecognized prop type ${type} in props interface for ${this.componentName}.`
         );
-        return;
       }
       if (!TypeGuards.isPrimitiveProp(type) && !studioImports.includes(type)) {
-        console.error(
-          "Missing import for",
-          type,
-          "in props interface for",
-          this.componentName
+        throw new Error(
+          `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in props interface for ${this.componentName}.`,
         );
-        return;
       }
       propShape[propName] = { type };
       if (doc) {
