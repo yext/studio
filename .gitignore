@@ -9,3 +9,6 @@ vite.config.ts.timestamp*
 **/lib
 
 .DS_Store
+
+apps/**
+**/dist/**

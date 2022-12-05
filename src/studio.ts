@@ -2,7 +2,7 @@ import { searchUiReactStudioPlugin } from "search-ui-react-plugin";
 import { StudioConfig } from "../studio";
 
 const studioConfig: StudioConfig = {
-  plugins: [searchUiReactStudioPlugin],
+  plugins: [],
   dirs: {
     pagesDir: './src/templates'   
   }

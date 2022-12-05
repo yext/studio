@@ -3,7 +3,8 @@ import { PageState, PropState } from './models'
 
 export enum MessageID {
   UpdatePageComponentProps = 'studio:UpdatePageComponentProps',
-  UpdateSiteSettingsProps = 'studio:UpdateSiteSettingsProps'
+  UpdateSiteSettingsProps = 'studio:UpdateSiteSettingsProps',
+  TEST = 'studio:thisisatest'
 }
 
 export interface StudioEventMap extends CustomEventMap {

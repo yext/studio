@@ -9,8 +9,8 @@ export default function Toast() {
     onSuccess: payload => toast.success(payload.msg),
     onError: payload => toast.error(payload.msg)
   }), [])
-  useMessageListener(MessageID.UpdatePageComponentProps, listenerOpts)
-  useMessageListener(MessageID.UpdateSiteSettingsProps, listenerOpts)
+  // useMessageListener(MessageID.UpdatePageComponentProps, listenerOpts)
+  // useMessageListener(MessageID.UpdateSiteSettingsProps, listenerOpts)
 
   return (
     <ToastContainer autoClose={1000}/>

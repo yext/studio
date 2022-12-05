@@ -29,6 +29,11 @@ export default function configureStudioServer(server: ViteDevServer) {
     return 'successfully edited: ' + pagePath
   })
 
+  registerListener(MessageID.TEST, data => {
+    console.log('hi, message received!', data)
+    return 'success test'
+  })
+
   registerListener(MessageID.UpdateSiteSettingsProps, data => {
     updateSiteSettingsFile(data.state, data.path)
     return 'successfully edited: ' + data.path

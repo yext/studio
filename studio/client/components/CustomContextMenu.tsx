@@ -1,12 +1,15 @@
 import { ControlledMenu, MenuItem, useMenuState } from '@szhsin/react-menu'
 import { RefObject, useCallback, useEffect, useState } from 'react'
+import { useStudioStore } from './Studio'
+// import { usePagesStore } from './Studio'
 import { useStudioContext } from './useStudioContext'
 
 export default function CustomContextMenu(props: {
   componentUUID: string,
   elementRef: RefObject<HTMLElement>
 }) {
-  const { pageState, setPageState } = useStudioContext()
+  // const { pageState, setPageState } = useStudioContext()
+  const [pageState, setPageState] = useStudioStore(s => [s.pages.getActivePageState(), s.pages.setActivePageState])
   const [contextMenuAnchor, setContextMenuAnchor] = useState({ x: 0, y: 0 })
   const [contextMenuProps, toggleContextMenu] = useMenuState()
 

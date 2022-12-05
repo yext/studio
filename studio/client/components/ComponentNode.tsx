@@ -4,7 +4,9 @@ import { useRef, useCallback } from 'react'
 import { ComponentState, PageState } from '../../shared/models'
 import CustomContextMenu from './CustomContextMenu'
 import { getComponentState } from './getComponentState'
+import { useStudioStore } from './Studio'
 import { useStudioContext } from './useStudioContext'
+// import { useComponentsStore, usePagesStore } from './Studio'
 
 interface ComponentNodeProps {
   componentState: ComponentState,
@@ -28,11 +30,11 @@ export default function ComponentNode(props: ComponentNodeProps) {
 
   const ref = useRef<HTMLDivElement>(null)
   const {
-    activeComponentUUID,
-    setActiveComponentUUID,
-    pageStateOnFile,
-    moduleNameToComponentMetadata
+    pageStateOnFile
   } = useStudioContext()
+
+  const moduleNameToComponentMetadata = useStudioStore(s => s.modules.moduleNameToMetadata)
+  const [activeComponentUUID, setActiveComponentUUID] = useStudioStore(s => [s.pages.activeComponentUUID, s.pages.setActiveComponentUUID])
 
   const updateActiveComponent = useCallback(() => {
     if (activeComponentUUID !== componentState.uuid) {

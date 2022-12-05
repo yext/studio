@@ -1,10 +1,15 @@
 import { useCallback, useState } from 'react'
 import { v4 } from 'uuid'
 import { ComponentState, ModuleMetadata, InternalModuleNames, StandardComponentMetaData } from '../../shared/models'
+import { useStudioStore } from './Studio'
+// import { useComponentsStore, usePagesStore } from './Studio'
 import { useStudioContext } from './useStudioContext'
 
 export default function AddComponentButton() {
-  const { moduleNameToComponentMetadata, pageState, setPageState } = useStudioContext()
+  // const { moduleNameToComponentMetadata, pageState, setPageState } = useStudioContext()
+  const moduleNameToComponentMetadata = useStudioStore(s => s.modules.moduleNameToMetadata)
+  const [pageState, setPageState] = useStudioStore(s => [s.pages.getActivePageState(), s.pages.setActivePageState])
+
   const [moduleName, setModuleName] = useState<string>(InternalModuleNames.LocalComponents)
   const moduleMetadata: ModuleMetadata = moduleNameToComponentMetadata[moduleName]
 
@@ -29,6 +34,7 @@ export default function AddComponentButton() {
     const indexToInsert = i === -1 ? pageState.componentsState.length : i + 1
     const newComponentsState = pageState.componentsState.slice(0)
     newComponentsState.splice(indexToInsert, 0, newComponentState)
+    console.log('here?')
     setPageState({
       ...pageState,
       componentsState: newComponentsState

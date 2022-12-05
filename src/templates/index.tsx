@@ -1,5 +1,5 @@
 import Banner from '../components/Banner'
-import TestLayout from '../layouts/TestLayout'
+// import TestLayout from '../layouts/TestLayout'
 import {
   Template,
   GetPath,
@@ -12,14 +12,14 @@ import Footer, { globalProps as footerProps } from '../components/Footer.global'
 import Header, { globalProps as headerProps } from '../components/Header.global'
 import Card from '../components/Card'
 import siteSettings from '../siteSettings'
-import { SearchBar } from '@yext/search-ui-react'
+// import { SearchBar } from '@yext/search-ui-react'
 
 export const config: TemplateConfig = {
   stream: {
     $id: 'studio-stream-id',
     filter: { entityTypes: ['ce_person'] },
     localization: { locales: ['en'], primary: false },
-    fields: ['address.city', 'emails', 'lastName'],
+    fields: [],
   },
 }
 
@@ -29,7 +29,7 @@ export const getPath: GetPath<TemplateProps> = ({ document }) => {
 
 const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
   return (
-    <TestLayout>
+    <div>
       <Header {...headerProps} />
       <Card bgColor='#45de0d'>
         <Card bgColor='#ffeeff'>
@@ -56,10 +56,9 @@ const IndexTemplate: Template<TemplateRenderProps> = ({ document }) => {
         someBool={true}
         anotherColor='#9c8181'
       />
-      <SearchBar placeholder='test' />
       <Footer {...footerProps} />
       <Footer {...footerProps} />
-    </TestLayout>
+    </div>
   )
 }
 

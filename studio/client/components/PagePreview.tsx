@@ -6,9 +6,11 @@ import ComponentPreviewBoundary from './ComponentPreviewBoundary'
 import mapComponentStates from '../../shared/mapComponentStates'
 import { useSiteSettings } from '../utils/useSiteSettings'
 import classNames from 'classnames'
+import { useStudioStore } from './Studio'
+// import { useComponentsStore, usePagesStore } from './Studio'
 
 export default function PagePreview() {
-  const { pageState } = useStudioContext()
+  const pageState = useStudioStore(s => s.pages.getActivePageState())
   const elements = useElements()
 
   return (
@@ -21,11 +23,11 @@ export default function PagePreview() {
 }
 
 function useElements() {
-  const { pageState,
-    moduleNameToComponentMetadata,
-    streamDocument,
-    activeComponentUUID
+  const {
+    streamDocument
   } = useStudioContext()
+  const [pageState, activeComponentUUID] = useStudioStore(s => [s.pages.getActivePageState(), s.pages.activeComponentUUID])
+  const moduleNameToComponentMetadata = useStudioStore(s => s.modules.moduleNameToMetadata)
   const importedComponents = useImportedComponents(pageState, moduleNameToComponentMetadata)
   const siteSettingsObj = useSiteSettings()
 
@@ -148,6 +150,7 @@ function useImportedComponents(
       return null
     }
     const moduleMetadata = moduleNameToComponentMetadata[moduleName]
+    console.log('moduleNameToComponentMetadata', moduleNameToComponentMetadata)
     const { importIdentifier }: ComponentMetadata = moduleMetadata.components[name]
     if (moduleName === InternalModuleNames.LocalComponents
       || moduleName === InternalModuleNames.LocalLayouts) {

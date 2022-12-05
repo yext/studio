@@ -4,16 +4,16 @@ import { ComponentMetadata, PageState, PropState } from '../../shared/models'
 import { StudioProps } from './Studio'
 
 export interface StudioContextType {
-  moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
-  pageState: PageState,
-  setPageState: Dispatch<SetStateAction<PageState>>,
-  siteSettingsMetadata: ComponentMetadata,
-  siteSettingsState: PropState,
-  setSiteSettingsState: Dispatch<SetStateAction<PropState>>,
+  // moduleNameToComponentMetadata: StudioProps['moduleNameToComponentMetadata'],
+  // pageState: PageState,
+  // setPageState: Dispatch<SetStateAction<PageState>>,
+  // siteSettingsMetadata: ComponentMetadata,
+  // siteSettingsState: PropState,
+  // setSiteSettingsState: Dispatch<SetStateAction<PropState>>,
   streamDocument: TemplateProps['document'],
   setStreamDocument: Dispatch<SetStateAction<TemplateProps['document']>>,
-  activeComponentUUID: string | undefined,
-  setActiveComponentUUID: Dispatch<SetStateAction<string | undefined>>,
+  // activeComponentUUID: string | undefined,
+  // setActiveComponentUUID: Dispatch<SetStateAction<string | undefined>>,
   pageStateOnFile: PageState,
   setPageStateOnFile: Dispatch<SetStateAction<PageState>>
 }

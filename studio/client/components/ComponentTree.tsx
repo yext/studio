@@ -2,7 +2,9 @@ import { Classes, DndProvider, DragItem, DragLayerMonitorProps, DropOptions, get
 import { ReactElement, useCallback, useMemo } from 'react'
 import { ComponentState } from '../../shared/models'
 import ComponentNode from './ComponentNode'
+import { useStudioStore } from './Studio'
 import { useStudioContext } from './useStudioContext'
+// import { useComponentsStore, usePagesStore } from './Studio'
 
 const ROOT_ID = 'tree-root-uuid'
 const CSS_CLASSES: Readonly<Classes> = {
@@ -18,7 +20,9 @@ type ValidatedNodeList = (Node & {
 })[]
 
 export default function ComponentTree() {
-  const { pageState, setPageState, moduleNameToComponentMetadata } = useStudioContext()
+  // const { pageState, setPageState, moduleNameToComponentMetadata } = useStudioContext()
+  const moduleNameToComponentMetadata = useStudioStore(s => s.modules.moduleNameToMetadata)
+  const [pageState, setPageState] = useStudioStore(s => [s.pages.getActivePageState(), s.pages.setActivePageState])
   const tree = useMemo(() => {
     return pageState.componentsState.map(c => ({
       id: c.uuid,

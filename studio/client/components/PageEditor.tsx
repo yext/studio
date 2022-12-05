@@ -1,10 +1,15 @@
 import { ComponentMetadata, PropState } from '../../shared/models'
 import { getComponentStateOrThrow } from './getComponentState'
 import PropEditor from './PropEditor'
+import { useStudioStore } from './Studio'
 import { useStudioContext } from './useStudioContext'
+// import { useComponentsStore, usePagesStore } from './Studio'
 
 export function PageEditor(): JSX.Element | null {
-  const { pageState, setPageState, moduleNameToComponentMetadata, activeComponentUUID } = useStudioContext()
+  const moduleNameToComponentMetadata = useStudioStore(s => s.modules.moduleNameToMetadata)
+  const [pageState, setPageState] = useStudioStore(s => [s.pages.getActivePageState(), s.pages.setActivePageState])
+  const activeComponentUUID = useStudioStore(s => s.pages.activeComponentUUID)
+  const updateActiveComponentProps = useStudioStore(s => s.pages.setActiveComponentProps)
   if (!activeComponentUUID) {
     return null
   }
@@ -38,7 +43,7 @@ export function PageEditor(): JSX.Element | null {
   }
   return <PropEditor
     propState={props}
-    setPropState={setPropState}
+    setPropState={updateActiveComponentProps}
     componentMetadata={componentMetadata}
   />
 }

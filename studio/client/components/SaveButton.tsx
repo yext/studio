@@ -4,9 +4,12 @@ import { MessageID } from '../../shared/messages'
 import { cloneDeep, isEqual } from 'lodash'
 import { useMemo } from 'react'
 import useMessageListener from './useMessageListener'
+import { useStudioStore } from './Studio'
+// import { usePagesStore } from './Studio'
 
 export default function SaveButton() {
-  const { pageState, pageStateOnFile, setPageStateOnFile } = useStudioContext()
+  const { pageStateOnFile, setPageStateOnFile } = useStudioContext()
+  const pageState = useStudioStore(s => s.pages.getActivePageState())
 
   const listenerOpts = useMemo(() => ({
     onSuccess: () => setPageStateOnFile(cloneDeep(pageState))
