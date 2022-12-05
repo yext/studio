@@ -45,7 +45,7 @@ export default class StudioSourceFile {
     variableName: string
   ): ParsedObjectLiteral | undefined {
     const variableStatement = this.sourceFile
-      .getChildrenOfKind(SyntaxKind.VariableStatement)
+      .getVariableStatements()
       .find((variableStatement) => {
         return (
           variableStatement.isExported() &&
