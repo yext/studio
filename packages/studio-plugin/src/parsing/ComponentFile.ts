@@ -23,11 +23,11 @@ export default class ComponentFile {
     this.studioSourceFile = new StudioSourceFile(filepath);
   }
 
-  private getInitialProps(propShape: PropShape): PropValues {
+  private getInitialProps(propShape: PropShape): PropValues | undefined {
     const rawValues =
       this.studioSourceFile.parseExportedObjectLiteral("initialProps");
     if (!rawValues) {
-      return {};
+      return undefined;
     }
     const propValues: PropValues = {};
     Object.keys(rawValues).forEach((propName) => {
@@ -42,6 +42,7 @@ export default class ComponentFile {
           "Invalid prop value: " + JSON.stringify(propValue, null, 2)
         );
       }
+      propValues[propName] = propValue
     });
     return propValues;
   }
@@ -79,14 +80,19 @@ export default class ComponentFile {
         );
         return;
       }
-      propShape[propName] = { type, doc };
+      propShape[propName] = { type };
+      if (doc) {
+        propShape[propName].doc = doc
+      }
     });
 
-    return {
+    const initialProps = this.getInitialProps(propShape)
+    const componentMetadata: ComponentMetadata = {
       kind: FileMetadataKind.Component,
       propShape,
-      acceptsChildren,
-      initialProps: this.getInitialProps(propShape),
     };
+    initialProps && (componentMetadata.initialProps = initialProps)
+    acceptsChildren && (componentMetadata.acceptsChildren = acceptsChildren)
+    return componentMetadata
   }
 }
