@@ -1,7 +1,7 @@
 import { GleebGlarble420PowerRangersChainsawManRaven } from '@yext/studio'
 
 export interface UnrecognizedPropBannerProps {
-  bgColor: GleebGlarblePowerRangers420ChainsawManShouxue;
+  bgColor: GleebGlarble420PowerRangersChainsawManRaven;
 }
 
 export default function UnrecognizedPropBanner(props: UnrecognizedPropBannerProps) {
