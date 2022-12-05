@@ -27,7 +27,7 @@ export default class ComponentFile {
     const rawValues =
       this.studioSourceFile.parseExportedObjectLiteral("initialProps");
     if (!rawValues) {
-      return {}
+      return {};
     }
     const propValues: PropValues = {};
     Object.keys(rawValues).forEach((propName) => {
@@ -55,12 +55,12 @@ export default class ComponentFile {
     const propShape: PropShape = {};
     let acceptsChildren = false;
 
-    Object.keys(propsInterface).forEach(propName => {
+    Object.keys(propsInterface).forEach((propName) => {
       if (propName === SpecialReactProps.Children) {
-        acceptsChildren = true
-        return
+        acceptsChildren = true;
+        return;
       }
-      const { type, doc } = propsInterface[propName]
+      const { type, doc } = propsInterface[propName];
       if (!TypeGuards.isPropValueType(type)) {
         console.error(
           "Unrecognized prop type",
@@ -68,7 +68,7 @@ export default class ComponentFile {
           "in props interface for",
           this.componentName
         );
-        return
+        return;
       }
       if (!TypeGuards.isPrimitiveProp(type) && !studioImports.includes(type)) {
         console.error(
@@ -77,11 +77,10 @@ export default class ComponentFile {
           "in props interface for",
           this.componentName
         );
-        return
+        return;
       }
-      propShape[propName] = { type, doc }
-    })
-
+      propShape[propName] = { type, doc };
+    });
 
     return {
       kind: FileMetadataKind.Component,

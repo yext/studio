@@ -1,9 +1,4 @@
-import {
-  ts,
-  Project,
-  SourceFile,
-  SyntaxKind,
-} from "ts-morph";
+import { ts, Project, SourceFile, SyntaxKind } from "ts-morph";
 import typescript from "typescript";
 import StaticParsingHelpers, {
   ParsedInterface,
@@ -49,15 +44,25 @@ export default class StudioSourceFile {
     return importPathToImportNames;
   }
 
-  parseExportedObjectLiteral(variableName: string): ParsedObjectLiteral | undefined {
-    const variableStatement = this.sourceFile.getChildrenOfKind(SyntaxKind.VariableStatement).find(variableStatement => {
-      return variableStatement.isExported() &&
-        variableStatement.getFirstDescendantByKindOrThrow(SyntaxKind.VariableDeclaration).getName() === variableName
-    })
+  parseExportedObjectLiteral(
+    variableName: string
+  ): ParsedObjectLiteral | undefined {
+    const variableStatement = this.sourceFile
+      .getChildrenOfKind(SyntaxKind.VariableStatement)
+      .find((variableStatement) => {
+        return (
+          variableStatement.isExported() &&
+          variableStatement
+            .getFirstDescendantByKindOrThrow(SyntaxKind.VariableDeclaration)
+            .getName() === variableName
+        );
+      });
     if (!variableStatement) {
-      return
+      return;
     }
-    const objectLiteralExp = variableStatement.getFirstDescendantByKind(ts.SyntaxKind.ObjectLiteralExpression);
+    const objectLiteralExp = variableStatement.getFirstDescendantByKind(
+      ts.SyntaxKind.ObjectLiteralExpression
+    );
     if (!objectLiteralExp) {
       throw new Error(
         `Could not find ObjectLiteralExpression for variable ${variableName}`
@@ -67,7 +72,8 @@ export default class StudioSourceFile {
   }
 
   parseInterface(interfaceName: string): ParsedInterface {
-    const interfaceDeclaration = this.sourceFile.getInterfaceOrThrow(interfaceName);
-    return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration)
+    const interfaceDeclaration =
+      this.sourceFile.getInterfaceOrThrow(interfaceName);
+    return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
   }
 }

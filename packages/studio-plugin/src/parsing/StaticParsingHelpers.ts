@@ -8,10 +8,10 @@ import {
 
 export type ParsedInterface = {
   [key: string]: {
-    type: string,
-    doc?: string
-  }
-}
+    type: string;
+    doc?: string;
+  };
+};
 
 export type ParsedObjectLiteral = {
   [key: string]: {
@@ -107,12 +107,14 @@ export default class StaticParsingHelpers {
     };
   }
 
-  static parseInterfaceDeclaration(interfaceDeclaration: InterfaceDeclaration): ParsedInterface {
+  static parseInterfaceDeclaration(
+    interfaceDeclaration: InterfaceDeclaration
+  ): ParsedInterface {
     const properties = interfaceDeclaration.getStructure().properties;
     if (!properties) {
-      return {}
+      return {};
     }
-    const parsedInterface: ParsedInterface = {}
+    const parsedInterface: ParsedInterface = {};
     properties.forEach((p) => {
       const { name: propName, type } = p;
       if (typeof type !== "string") {
@@ -128,11 +130,11 @@ export default class StaticParsingHelpers {
       const jsdoc = p.docs
         ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
         .join("\n");
-        parsedInterface[p.name] = {
-          type,
-          ...(jsdoc && { doc: jsdoc }),
-        };
-      });
-    return parsedInterface
+      parsedInterface[p.name] = {
+        type,
+        ...(jsdoc && { doc: jsdoc }),
+      };
+    });
+    return parsedInterface;
   }
 }
