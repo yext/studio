@@ -45,9 +45,9 @@ describe("getComponentMetadtata", () => {
           value: 5,
         },
         title: {
-          kind: "expression",
+          kind: "literal",
           valueType: "string",
-          value: "INITIAL_TITLE",
+          value: 'initial title',
         },
       },
     });
@@ -58,6 +58,14 @@ describe("getComponentMetadtata", () => {
     const componentFile = new ComponentFile(pathToComponent);
     expect(() => componentFile.getComponentMetadata()).toThrowError(
       /^Missing import from/
+    );
+  });
+
+  it("Throws an Error when an Expression is used within initialProps", () => {
+    const pathToComponent = getComponentPath("ExpressionInitialBanner");
+    const componentFile = new ComponentFile(pathToComponent);
+    expect(() => componentFile.getComponentMetadata()).toThrowError(
+      /^Expressions are not supported within initialProps/
     );
   });
 

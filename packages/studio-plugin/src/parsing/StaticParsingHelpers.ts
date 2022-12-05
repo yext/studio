@@ -24,7 +24,7 @@ export type ParsedImport = {
   source: string;
   defaultImport?: string;
   namedImports: string[];
-};
+}
 
 /**
  * StaticParsingHelpers is a static class for housing lower level details for parsing
@@ -67,13 +67,9 @@ export default class StaticParsingHelpers {
     const parsedValues: ParsedObjectLiteral = {};
     objectLiteral.getProperties().forEach((p) => {
       if (!p.isKind(SyntaxKind.PropertyAssignment)) {
-        console.error(
-          "Unrecognized node type",
-          p.getKindName(),
-          "for object literal",
-          p.getFullText()
+        throw new Error(
+          `Unrecognized node type: ${p.getKindName()} in object literal ${p.getFullText()}`
         );
-        return;
       }
       const key = p.getName();
       const value = StaticParsingHelpers.parseInitializer(
@@ -119,7 +115,10 @@ export default class StaticParsingHelpers {
       const { name: propName, type } = p;
       if (typeof type !== "string") {
         console.error(
-          `Unable to parse prop: "${propName}" in props interface: ${interfaceDeclaration.getFullText()}`
+          "Unable to parse prop:",
+          propName,
+          "in props interface:",
+          interfaceDeclaration.getFullText()
         );
         return;
       }

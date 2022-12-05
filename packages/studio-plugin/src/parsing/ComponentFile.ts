@@ -33,6 +33,9 @@ export default class ComponentFile {
     const propValues: PropValues = {};
     Object.keys(rawValues).forEach((propName) => {
       const { value, isExpression } = rawValues[propName];
+      if (isExpression) {
+        throw new Error(`Expressions are not supported within initialProps for ${this.componentName}.`)
+      }
       const propValue = {
         valueType: propShape[propName].type,
         kind: isExpression ? PropValueKind.Expression : PropValueKind.Literal,

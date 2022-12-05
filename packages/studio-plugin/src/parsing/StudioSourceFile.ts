@@ -8,7 +8,7 @@ import StaticParsingHelpers, {
 /**
  * The ts-morph Project instance for the entire app.
  */
-const project = new Project({
+const tsMorphProject = new Project({
   compilerOptions: {
     jsx: typescript.JsxEmit.ReactJSX,
   },
@@ -21,7 +21,7 @@ const project = new Project({
 export default class StudioSourceFile {
   private sourceFile: SourceFile;
 
-  constructor(filepath: string) {
+  constructor(filepath: string, project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
@@ -60,7 +60,7 @@ export default class StudioSourceFile {
     );
     if (!objectLiteralExp) {
       throw new Error(
-        `Could not find ObjectLiteralExpression for variable ${variableName}`
+        `Could not find ObjectLiteralExpression within \`${variableStatement.getFullText()}\`.`
       );
     }
     return StaticParsingHelpers.parseObjectLiteral(objectLiteralExp);
