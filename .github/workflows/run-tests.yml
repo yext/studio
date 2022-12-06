@@ -8,7 +8,9 @@ jobs:
     with:
       node_matrix: '["16.x", "18.x", "19.x"]'
       build_script: ''
+
   build:
+    runs-on: ubuntu-latest
     steps:
       - run: npm i
       - run: npm run build
