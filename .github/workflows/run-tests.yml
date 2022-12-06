@@ -10,5 +10,5 @@ jobs:
       build_script: ''
   build:
     steps:
-      -run: npm i
-      -run: npm run build
+      - run: npm i
+      - run: npm run build
