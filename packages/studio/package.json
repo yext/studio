@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "rm -rf lib && tsc && vite build",
     "preview": "vite preview",
     "lint": "eslint . && npm run prettier-check",
     "prettier-write": "prettier --write .",
