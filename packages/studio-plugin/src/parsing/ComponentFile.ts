@@ -38,7 +38,7 @@ export default class ComponentFile {
       }
       const propValue = {
         valueType: propShape[propName].type,
-        kind: isExpression ? PropValueKind.Expression : PropValueKind.Literal,
+        kind: PropValueKind.Literal,
         value,
       };
       if (!TypeGuards.isValidPropValue(propValue)) {
