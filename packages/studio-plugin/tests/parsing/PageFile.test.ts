@@ -1,14 +1,14 @@
 import PageFile from "../../src/parsing/PageFile";
-import { ComponentState, ComponentStateKind } from '../../src/types/State';
+import { ComponentState, ComponentStateKind } from "../../src/types/State";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import path from "path";
 
-jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }))
+jest.mock("uuid", () => ({ v4: () => "mock-uuid" }));
 
 const componentTree: ComponentState[] = [
   {
     kind: ComponentStateKind.Standard,
-    componentName: 'ComplexBanner',
+    componentName: "ComplexBanner",
     props: {
       num: {
         kind: PropValueKind.Literal,
@@ -18,24 +18,24 @@ const componentTree: ComponentState[] = [
       title: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.string,
-        value: 'first!'
+        value: "first!"
       }
     },
-    uuid: 'mock-uuid',
-    parentUUID: 'mock-uuid',
-    metadataUUID: getComponentPath('ComplexBanner')
+    uuid: "mock-uuid",
+    parentUUID: "mock-uuid",
+    metadataUUID: getComponentPath("ComplexBanner")
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: 'ComplexBanner',
+    componentName: "ComplexBanner",
     props: {},
-    uuid: 'mock-uuid',
-    parentUUID: 'mock-uuid',
-    metadataUUID: getComponentPath('ComplexBanner')
+    uuid: "mock-uuid",
+    parentUUID: "mock-uuid",
+    metadataUUID: getComponentPath("ComplexBanner")
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: 'ComplexBanner',
+    componentName: "ComplexBanner",
     props: {
       num: {
         kind: PropValueKind.Literal,
@@ -45,7 +45,7 @@ const componentTree: ComponentState[] = [
       title: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.string,
-        value: 'three'
+        value: "three"
       },
       bool: {
         kind: PropValueKind.Literal,
@@ -53,129 +53,146 @@ const componentTree: ComponentState[] = [
         value: false
       }
     },
-    uuid: 'mock-uuid',
-    parentUUID: 'mock-uuid',
-    metadataUUID: getComponentPath('ComplexBanner')
+    uuid: "mock-uuid",
+    parentUUID: "mock-uuid",
+    metadataUUID: getComponentPath("ComplexBanner")
   }
-]
+];
 
-it('correctly parses page with top-level React.Fragment', () => {
-  const pageFile = new PageFile(getPagePath('reactFragmentPage'));
+it("correctly parses page with top-level React.Fragment", () => {
+  const pageFile = new PageFile(getPagePath("reactFragmentPage"));
   const result = pageFile.getPageState();
 
   expect(result.componentTree).toEqual([
     {
       kind: ComponentStateKind.Fragment,
-      uuid: 'mock-uuid',
+      uuid: "mock-uuid",
     },
     ...componentTree
   ]);
-})
+});
 
-it('correctly parses page with top-level Fragment', () => {
-  const pageFile = new PageFile(getPagePath('fragmentPage'));
+it("correctly parses page with top-level Fragment", () => {
+  const pageFile = new PageFile(getPagePath("fragmentPage"));
   const result = pageFile.getPageState();
 
   expect(result.componentTree).toEqual([
     {
       kind: ComponentStateKind.Fragment,
-      uuid: 'mock-uuid',
+      uuid: "mock-uuid",
     },
     ...componentTree
   ]);
-})
+});
 
-it('correctly parses page with top-level Fragment in short syntax', () => {
-  const pageFile = new PageFile(getPagePath('shortFragmentSyntaxPage'));
+it("correctly parses page with top-level Fragment in short syntax", () => {
+  const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
   const result = pageFile.getPageState();
 
   expect(result.componentTree).toEqual([
     {
       kind: ComponentStateKind.Fragment,
-      uuid: 'mock-uuid',
+      uuid: "mock-uuid",
     },
     ...componentTree
   ]);
-})
+});
 
-it('correctly parses page with top-level div component and logs warning', () => {
-  const consoleWarnSpy = jest.spyOn(global.console, 'warn').mockImplementation();
-  const pageFile = new PageFile(getPagePath('divPage'));
+it("correctly parses page with top-level div component and logs warning", () => {
+  const consoleWarnSpy = jest.spyOn(global.console, "warn").mockImplementation();
+  const pageFile = new PageFile(getPagePath("divPage"));
   const result = pageFile.getPageState();
 
   expect(result.componentTree).toEqual([
     {
       kind: ComponentStateKind.Standard,
-      componentName: 'div',
+      componentName: "div",
       props: {},
-      uuid: 'mock-uuid',
-      metadataUUID: 'builtIn'
+      uuid: "mock-uuid",
+      metadataUUID: "builtIn"
     },
     ...componentTree
   ]);
 
   expect(consoleWarnSpy).toBeCalledWith("Props for builtIn element: 'div' are currently not supported.");
-})
+});
 
-it('correctly parses page with nested banner components', () => {
-  const pageFile = new PageFile(getPagePath('nestedBannerPage'));
+it("correctly parses page with nested banner components", () => {
+  const pageFile = new PageFile(getPagePath("nestedBannerPage"));
   const result = pageFile.getPageState();
 
   expect(result.componentTree).toEqual([
     {
       kind: ComponentStateKind.Standard,
-      componentName: 'NestedBanner',
+      componentName: "NestedBanner",
       props: {},
-      uuid: 'mock-uuid',
-      metadataUUID: getComponentPath('NestedBanner')
+      uuid: "mock-uuid",
+      metadataUUID: getComponentPath("NestedBanner")
     },
     componentTree[0],
     componentTree[1],
     {
       kind: ComponentStateKind.Standard,
-      componentName: 'NestedBanner',
+      componentName: "NestedBanner",
       props: {},
-      uuid: 'mock-uuid',
-      parentUUID: 'mock-uuid',
-      metadataUUID: getComponentPath('NestedBanner')
+      uuid: "mock-uuid",
+      parentUUID: "mock-uuid",
+      metadataUUID: getComponentPath("NestedBanner")
     },
     componentTree[2]
   ]);
-})
+});
 
-it('correctly parses CSS imports', () => {
-  const pageFile = new PageFile(getPagePath('shortFragmentSyntaxPage'));
+it("correctly parses CSS imports", () => {
+  const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
   const result = pageFile.getPageState();
 
   expect(result.cssImports).toEqual([
     "./index.css",
     "@yext/search-ui-react/index.css"
   ]);
-})
+});
 
-it('throws error when a JsxSpreadAttribute is found on the page', () => {
-  const pageFile = new PageFile(getPagePath('jsxSpreadAttributePage'));
+it("throws an error when no return statement is found in the default export", () => {
+  const pageFile = new PageFile(getPagePath("noReturnStatementPage"));
+
+  expect(() =>  pageFile.getPageState()).toThrowError(
+    "No return statement found for the page's default export."
+  );
+});
+
+it("throws an error when the return statement has no top-level Jsx node", () => {
+  const pageFile = new PageFile(getPagePath("noTopLevelJsxPage"));
+
+  expect(() =>  pageFile.getPageState()).toThrowError(
+    "Unable to find top-level JSX element or JSX fragment type in the page's default export."
+  );
+});
+
+
+it("throws an error when a JsxSpreadAttribute is found on the page", () => {
+  const pageFile = new PageFile(getPagePath("jsxSpreadAttributePage"));
 
   expect(() =>  pageFile.getPageState()).toThrowError(
     "JsxSpreadAttribute is not currently supported."
   );
-})
+});
 
-it('throws error when JsxText is found on the page', () => {
-  const pageFile = new PageFile(getPagePath('jsxTextPage'));
+it("throws an error when JsxText is found on the page", () => {
+  const pageFile = new PageFile(getPagePath("jsxTextPage"));
 
   expect(() =>  pageFile.getPageState()).toThrowError(
     "Found JsxText with content \"Text\". JsxText is not currently supported."
   );
-})
+});
 
-it('throws error when JsxExpression is found on the page', () => {
-  const pageFile = new PageFile(getPagePath('jsxExpressionPage'));
+it("throws an error when a JsxExpression is found on the page", () => {
+  const pageFile = new PageFile(getPagePath("jsxExpressionPage"));
 
   expect(() =>  pageFile.getPageState()).toThrowError(
     "Jsx nodes of kind \"JsxExpression\" are not supported for direct use in page files."
   );
-})
+});
 
 function getPagePath(pageName: string) {
   return path.resolve(

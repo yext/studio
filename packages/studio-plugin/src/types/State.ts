@@ -7,9 +7,9 @@ export type PageState = {
 
 export type ComponentState = StandardOrModuleComponentState | FragmentState;
 export enum ComponentStateKind {
-  Standard = 'standard',
-  Module = 'module',
-  Fragment = 'fragment', // when the component is a React.Fragment
+  Standard = "standard",
+  Module = "module",
+  Fragment = "fragment", // when the component is a React.Fragment
 }
 
 type StandardOrModuleComponentState = {

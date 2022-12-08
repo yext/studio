@@ -21,7 +21,7 @@ export default class PageFile {
     const defaultExport = this.studioSourceFile.parseDefaultExport();
     const returnStatement = defaultExport.getFirstDescendantByKind(ts.SyntaxKind.ReturnStatement);
     if (!returnStatement) {
-      throw new Error('No return statement found for page');
+      throw new Error("No return statement found for the page's default export.");
     }
     const JsxNodeWrapper = returnStatement.getFirstChildByKind(ts.SyntaxKind.ParenthesizedExpression)
       ?? returnStatement;
@@ -30,7 +30,7 @@ export default class PageFile {
         n.getKind() === ts.SyntaxKind.JsxElement || n.getKind() === ts.SyntaxKind.JsxFragment
       );
     if (!topLevelJsxNode) {
-      throw new Error('Unable to find top level JSX element or JsxFragment type from file.');
+      throw new Error("Unable to find top-level JSX element or JSX fragment type in the page's default export.");
     }
 
     const defaultImports = this.studioSourceFile.parseDefaultImports();
