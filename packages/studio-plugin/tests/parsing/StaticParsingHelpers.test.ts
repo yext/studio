@@ -30,7 +30,7 @@ describe("parseObjectLiteral", () => {
     );
     expect(() =>
       StaticParsingHelpers.parseObjectLiteral(objectLiteralExpression)
-    ).toThrowError(/^Unrecognized initialProps value .* CallExpression$/);
+    ).toThrowError(/^Unrecognized prop value .* CallExpression$/);
   });
 
   it("Throws an Error if the spread operator is used", () => {

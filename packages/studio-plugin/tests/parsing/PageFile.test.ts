@@ -1,7 +1,7 @@
 import PageFile from "../../src/parsing/PageFile";
 import { ComponentState, ComponentStateKind } from "../../src/types/State";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import path from "path";
+import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 
 jest.mock("uuid", () => ({ v4: () => "mock-uuid" }));
 
@@ -193,17 +193,3 @@ it("throws an error when a JsxExpression is found on the page", () => {
     "Jsx nodes of kind \"JsxExpression\" are not supported for direct use in page files."
   );
 });
-
-function getPagePath(pageName: string) {
-  return path.resolve(
-    __dirname,
-    `../__fixtures__/PageFile/${pageName}.tsx`
-  );
-}
-
-function getComponentPath(componentName: string) {
-  return path.resolve(
-    __dirname,
-    `../__fixtures__/ComponentFile/${componentName}.tsx`
-  );
-}

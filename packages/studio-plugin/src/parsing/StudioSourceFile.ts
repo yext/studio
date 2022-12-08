@@ -103,12 +103,12 @@ export default class StudioSourceFile {
     if (declarations.length === 0) {
       throw new Error("Error getting default export");
     }
-    const node = declarations[0];
-    if (node.isKind(SyntaxKind.ExportAssignment)) {
-      const identifierName = node.getFirstDescendantByKindOrThrow(SyntaxKind.Identifier).getText();
+    const exportDeclaration = declarations[0];
+    if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
+      const identifierName = exportDeclaration.getFirstDescendantByKindOrThrow(SyntaxKind.Identifier).getText();
       return this.sourceFile.getVariableDeclarationOrThrow(identifierName);
-    } else if (node.isKind(SyntaxKind.FunctionDeclaration)) {
-      return node;
+    } else if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
+      return exportDeclaration;
     }
     throw new Error("Error getting default export, no ExportAssignment or FunctionDeclaration found");
   }

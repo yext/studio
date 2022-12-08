@@ -1,5 +1,5 @@
-import path from "path";
 import ComponentFile from "../../src/parsing/ComponentFile";
+import { getComponentPath } from "../__utils__/getFixturePath";
 
 describe("getComponentMetadtata", () => {
   it("can parse a simple Banner component", () => {
@@ -77,10 +77,3 @@ describe("getComponentMetadtata", () => {
     );
   });
 });
-
-function getComponentPath(componentName: string) {
-  return path.resolve(
-    __dirname,
-    `../__fixtures__/ComponentFile/${componentName}.tsx`
-  );
-}

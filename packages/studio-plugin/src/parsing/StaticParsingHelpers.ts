@@ -5,11 +5,9 @@ import {
   JsxAttributeLike,
   JsxChild,
   JsxElement,
-  JsxExpression,
   JsxFragment,
   JsxSelfClosingElement,
   ObjectLiteralExpression,
-  StringLiteral,
   SyntaxKind
 } from "ts-morph";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -68,7 +66,7 @@ export default class StaticParsingHelpers {
       return { value: expression.getLiteralValue() };
     } else {
       throw new Error(
-        `Unrecognized initialProps value ${initializer.getFullText()} ` +
+        `Unrecognized prop value ${initializer.getFullText()} ` +
         `with kind: ${expression.getKindName()}`
       );
     }
@@ -148,7 +146,7 @@ export default class StaticParsingHelpers {
   }
 
   static parseComponentState(
-    c: JsxFragment | JsxElement | JsxSelfClosingElement,
+    component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
     parentUUID?: string
   ): ComponentState {
@@ -157,31 +155,31 @@ export default class StaticParsingHelpers {
       uuid: v4()
     };
 
-    function getJsxElementName(c: JsxElement): string {
-      return c.getOpeningElement().getTagNameNode().getText();
+    function getJsxElementName(element: JsxElement): string {
+      return element.getOpeningElement().getTagNameNode().getText();
     }
 
-    if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      const componentName = c.getTagNameNode().getText();
+    if (component.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      const componentName = component.getTagNameNode().getText();
       return {
         ...commonComponentState,
-        ...StaticParsingHelpers.parseElement(c, componentName, defaultImports),
+        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
         kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
         componentName
       };
     } else if (
-        c.isKind(SyntaxKind.JsxFragment)
-        || ["Fragment", "React.Fragment"].includes(getJsxElementName(c))
+        component.isKind(SyntaxKind.JsxFragment)
+        || ["Fragment", "React.Fragment"].includes(getJsxElementName(component))
       ) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment
       };
     } else {
-      const componentName = getJsxElementName(c);
+      const componentName = getJsxElementName(component);
       return {
         ...commonComponentState,
-        ...StaticParsingHelpers.parseElement(c, componentName, defaultImports),
+        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
         kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
         componentName
       };
@@ -234,7 +232,7 @@ export default class StaticParsingHelpers {
       if (!propType) {
         throw new Error("Could not find prop type for: " + jsxAttribute.getFullText());
       }
-      const { value, isExpression } = StaticParsingHelpers.getPropValue(jsxAttribute.getInitializerOrThrow());
+      const { value, isExpression } = StaticParsingHelpers.parseInitializer(jsxAttribute.getInitializerOrThrow());
       const propValue = {
         valueType: propType,
         value,
@@ -248,34 +246,6 @@ export default class StaticParsingHelpers {
       propValues[propName] = propValue;
     })
     return propValues;
-  }
-
-  static getPropValue(initializer: StringLiteral | Expression | JsxExpression): {
-    value: string | number | boolean,
-    isExpression?: boolean
-  } {
-    if (initializer.isKind(SyntaxKind.StringLiteral)) {
-      return { value: initializer.compilerNode.text };
-    }
-    const expression = initializer.isKind(SyntaxKind.JsxExpression)
-      ? initializer.getExpressionOrThrow()
-      : initializer;
-    if (
-      expression.isKind(SyntaxKind.PropertyAccessExpression) ||
-      expression.isKind(SyntaxKind.TemplateExpression) ||
-      expression.isKind(SyntaxKind.ElementAccessExpression) ||
-      expression.isKind(SyntaxKind.Identifier)
-    ) {
-      return { value: expression.getText(), isExpression: true };
-    } else if (
-      expression.isKind(SyntaxKind.NumericLiteral) ||
-      expression.isKind(SyntaxKind.FalseKeyword) ||
-      expression.isKind(SyntaxKind.TrueKeyword)
-    ) {
-      return { value: expression.getLiteralValue() };
-    } else {
-      throw new Error("Unrecognized Expression kind: " + expression.getKindName());
-    }
   }
 
   static parseJsxChild(

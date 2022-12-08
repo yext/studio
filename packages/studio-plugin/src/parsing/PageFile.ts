@@ -10,11 +10,9 @@ import path from "path";
  */
 export default class PageFile {
   private studioSourceFile: StudioSourceFile;
-  private filepath: string;
 
-  constructor(filepath: string) {
+  constructor(private filepath: string) {
     this.studioSourceFile = new StudioSourceFile(filepath);
-    this.filepath = filepath;
   }
 
   getPageState(): PageState {
@@ -34,6 +32,8 @@ export default class PageFile {
         + ` in the default export at path: "${this.filepath}"`);
     }
 
+    // For now, we are only supporting imports from files that export a component
+    // as the default export. We will add support for named exports at a later date.
     const defaultImports = this.studioSourceFile.parseDefaultImports();
     const absPathDefaultImports: Record<string, string> = Object.entries(defaultImports)
       .reduce((imports, [importIdentifier, importName]) => {
