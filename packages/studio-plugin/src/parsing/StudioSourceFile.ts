@@ -1,9 +1,10 @@
-import { ts, Project, SourceFile, SyntaxKind } from "ts-morph";
+import { ts, Project, SourceFile, SyntaxKind, VariableDeclaration, FunctionDeclaration } from "ts-morph";
 import typescript from "typescript";
 import StaticParsingHelpers, {
   ParsedInterface,
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
+import path from "path";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -39,6 +40,26 @@ export default class StudioSourceFile {
     return importPathToImportNames;
   }
 
+  parseDefaultImports(): Record<string, string> {
+    const importPathToImportName: Record<string, string> = {};
+
+    this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
+      const { source, defaultImport } =
+        StaticParsingHelpers.parseImport(importDeclaration);
+      
+      if (defaultImport) {
+        if (source.startsWith(".")) {
+          const filepath = path.resolve(this.sourceFile.getFilePath(), "..", source) + ".tsx";
+          importPathToImportName[filepath] = defaultImport;
+        } else {
+          importPathToImportName[source] = defaultImport;
+        }
+      }
+      
+    });
+    return importPathToImportName;
+  }
+
   parseExportedObjectLiteral(
     variableName: string
   ): ParsedObjectLiteral | undefined {
@@ -70,5 +91,20 @@ export default class StudioSourceFile {
     const interfaceDeclaration =
       this.sourceFile.getInterfaceOrThrow(interfaceName);
     return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
+  }
+
+  parseDefaultExport(): VariableDeclaration | FunctionDeclaration {
+    const declarations = this.sourceFile.getDefaultExportSymbolOrThrow().getDeclarations();
+    if (declarations.length === 0) {
+      throw new Error("Error getting default export");
+    }
+    const node = declarations[0];
+    if (node.isKind(ts.SyntaxKind.ExportAssignment)) {
+      const identifierName = node.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText();
+      return this.sourceFile.getVariableDeclarationOrThrow(identifierName);
+    } else if (node.isKind(ts.SyntaxKind.FunctionDeclaration)) {
+      return node;
+    }
+    throw new Error("Error getting default export, no ExportAssignment or FunctionDeclaration found");
   }
 }
