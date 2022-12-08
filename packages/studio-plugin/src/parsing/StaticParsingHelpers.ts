@@ -225,7 +225,7 @@ export default class StaticParsingHelpers {
     const propValues: PropValues = {};
     attributes.forEach((jsxAttribute: JsxAttributeLike) => {
       if (jsxAttribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
-        throw new Error("JsxSpreadAttribute is not currently supported");
+        throw new Error("JsxSpreadAttribute is not currently supported.");
       }
       const propName = jsxAttribute.getFirstDescendantByKind(SyntaxKind.Identifier)?.compilerNode.text;
       if (!propName) {
@@ -287,7 +287,7 @@ export default class StaticParsingHelpers {
     // All whitespace in Jsx is also considered JsxText, for example indentation
     if (c.isKind(SyntaxKind.JsxText)) {
       if (c.getLiteralText().trim() !== "") {
-        throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported`);
+        throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`);
       }
       return [];
     } else if (c.isKind(SyntaxKind.JsxExpression)) {

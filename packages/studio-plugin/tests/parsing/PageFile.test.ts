@@ -153,6 +153,30 @@ it('correctly parses CSS imports', () => {
   ]);
 })
 
+it('throws error when a JsxSpreadAttribute is found on the page', () => {
+  const pageFile = new PageFile(getPagePath('jsxSpreadAttributePage'));
+
+  expect(() =>  pageFile.getPageState()).toThrowError(
+    "JsxSpreadAttribute is not currently supported."
+  );
+})
+
+it('throws error when JsxText is found on the page', () => {
+  const pageFile = new PageFile(getPagePath('jsxTextPage'));
+
+  expect(() =>  pageFile.getPageState()).toThrowError(
+    "Found JsxText with content \"Text\". JsxText is not currently supported."
+  );
+})
+
+it('throws error when JsxExpression is found on the page', () => {
+  const pageFile = new PageFile(getPagePath('jsxExpressionPage'));
+
+  expect(() =>  pageFile.getPageState()).toThrowError(
+    "Jsx nodes of kind \"JsxExpression\" are not supported for direct use in page files."
+  );
+})
+
 function getPagePath(pageName: string) {
   return path.resolve(
     __dirname,

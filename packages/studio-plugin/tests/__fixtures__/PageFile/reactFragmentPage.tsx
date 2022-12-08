@@ -1,5 +1,4 @@
 import React from 'react';
-import "./index.css";
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 
 export default function IndexPage() {

@@ -1,4 +1,3 @@
-import "./index.css";
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 import NestedBanner from "../ComponentFile/NestedBanner";
 
