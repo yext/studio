@@ -196,9 +196,6 @@ export default class StaticParsingHelpers {
   ): { metadataUUID: string, props: PropValues } {
     const metadataUUID = Object.keys(defaultImports)
       .find(importIdentifier => defaultImports[importIdentifier] === name);
-    // if (!metadataUUID) {
-    //   throw new Error("parseComponentState does not currently support builtIn elements.");
-    // }
 
     const attributes: JsxAttributeLike[] = c.isKind(SyntaxKind.JsxSelfClosingElement)
       ? c.getAttributes()
@@ -210,6 +207,8 @@ export default class StaticParsingHelpers {
     if (metadataUUID) {
       const componentFile = new ComponentFile(metadataUUID);
       propShape = componentFile.getComponentMetadata().propShape;
+    } else {
+      console.warn(`Props for builtIn element: '${name}' are currently not supported.`)
     }
    
     const props = StaticParsingHelpers.parseJsxAttributes(attributes, propShape);

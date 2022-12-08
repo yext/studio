@@ -4,7 +4,6 @@ import StaticParsingHelpers, {
   ParsedInterface,
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
-import path from "path";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -46,18 +45,24 @@ export default class StudioSourceFile {
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source, defaultImport } =
         StaticParsingHelpers.parseImport(importDeclaration);
-      
+
       if (defaultImport) {
-        if (source.startsWith(".")) {
-          const filepath = path.resolve(this.sourceFile.getFilePath(), "..", source) + ".tsx";
-          importPathToImportName[filepath] = defaultImport;
-        } else {
-          importPathToImportName[source] = defaultImport;
-        }
+        importPathToImportName[source] = defaultImport;
       }
-      
     });
     return importPathToImportName;
+  }
+
+  parseCssImports(): string[] {
+    const cssImports: string[] = [];
+
+    this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
+      const { source } = StaticParsingHelpers.parseImport(importDeclaration);
+      if (source.endsWith(".css")) {
+        cssImports.push(source);
+      }
+    });
+    return cssImports;
   }
 
   parseExportedObjectLiteral(

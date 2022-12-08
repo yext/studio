@@ -5,7 +5,7 @@ import path from "path";
 
 jest.mock('uuid', () => ({ v4: () => 'mock-uuid' }))
 
-const componentsState: ComponentState[] = [
+const componentTree: ComponentState[] = [
   {
     kind: ComponentStateKind.Standard,
     componentName: 'ComplexBanner',
@@ -68,7 +68,7 @@ it('correctly parses page with top-level React.Fragment', () => {
       kind: ComponentStateKind.Fragment,
       uuid: 'mock-uuid',
     },
-    ...componentsState
+    ...componentTree
   ]);
 })
 
@@ -81,11 +81,11 @@ it('correctly parses page with top-level Fragment', () => {
       kind: ComponentStateKind.Fragment,
       uuid: 'mock-uuid',
     },
-    ...componentsState
+    ...componentTree
   ]);
 })
 
-it('correctly parse page with top-level Fragment in short syntax', () => {
+it('correctly parses page with top-level Fragment in short syntax', () => {
   const pageFile = new PageFile(getPagePath('shortFragmentSyntaxPage'));
   const result = pageFile.getPageState();
 
@@ -94,11 +94,12 @@ it('correctly parse page with top-level Fragment in short syntax', () => {
       kind: ComponentStateKind.Fragment,
       uuid: 'mock-uuid',
     },
-    ...componentsState
+    ...componentTree
   ]);
 })
 
-it('correctly parses page with top-level div component', () => {
+it('correctly parses page with top-level div component and logs warning', () => {
+  const consoleWarnSpy = jest.spyOn(global.console, 'warn').mockImplementation();
   const pageFile = new PageFile(getPagePath('divPage'));
   const result = pageFile.getPageState();
 
@@ -110,7 +111,45 @@ it('correctly parses page with top-level div component', () => {
       uuid: 'mock-uuid',
       metadataUUID: 'builtIn'
     },
-    ...componentsState
+    ...componentTree
+  ]);
+
+  expect(consoleWarnSpy).toBeCalledWith("Props for builtIn element: 'div' are currently not supported.");
+})
+
+it('correctly parses page with nested banner components', () => {
+  const pageFile = new PageFile(getPagePath('nestedBannerPage'));
+  const result = pageFile.getPageState();
+
+  expect(result.componentTree).toEqual([
+    {
+      kind: ComponentStateKind.Standard,
+      componentName: 'NestedBanner',
+      props: {},
+      uuid: 'mock-uuid',
+      metadataUUID: getComponentPath('NestedBanner')
+    },
+    componentTree[0],
+    componentTree[1],
+    {
+      kind: ComponentStateKind.Standard,
+      componentName: 'NestedBanner',
+      props: {},
+      uuid: 'mock-uuid',
+      parentUUID: 'mock-uuid',
+      metadataUUID: getComponentPath('NestedBanner')
+    },
+    componentTree[2]
+  ]);
+})
+
+it('correctly parses CSS imports', () => {
+  const pageFile = new PageFile(getPagePath('shortFragmentSyntaxPage'));
+  const result = pageFile.getPageState();
+
+  expect(result.cssImports).toEqual([
+    "./index.css",
+    "@yext/search-ui-react/index.css"
   ]);
 })
 

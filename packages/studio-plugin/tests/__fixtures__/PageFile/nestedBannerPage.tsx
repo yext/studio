@@ -1,13 +1,15 @@
 import "./index.css";
 import ComplexBanner from "../ComponentFile/ComplexBanner";
-import "@yext/search-ui-react/index.css";
+import NestedBanner from "../ComponentFile/NestedBanner";
 
 export default function IndexPage() {
   return (
-    <>
+    <NestedBanner>
       <ComplexBanner title="first!" num={1} />
       <ComplexBanner />
-      <ComplexBanner title="three" num={3} bool={false} />
-    </>
+      <NestedBanner>
+        <ComplexBanner title="three" num={3} bool={false} />
+      </NestedBanner>
+    </NestedBanner>
   );
 }
