@@ -157,7 +157,7 @@ it("throws an error when no return statement is found in the default export", ()
   const pageFile = new PageFile(getPagePath("noReturnStatementPage"));
 
   expect(() =>  pageFile.getPageState()).toThrowError(
-    "No return statement found for the page's default export."
+    /^No return statement found for the default export at path: /
   );
 });
 
@@ -165,7 +165,7 @@ it("throws an error when the return statement has no top-level Jsx node", () => 
   const pageFile = new PageFile(getPagePath("noTopLevelJsxPage"));
 
   expect(() =>  pageFile.getPageState()).toThrowError(
-    "Unable to find top-level JSX element or JSX fragment type in the page's default export."
+    /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
   );
 });
 

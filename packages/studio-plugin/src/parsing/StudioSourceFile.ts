@@ -1,4 +1,4 @@
-import { ts, Project, SourceFile, SyntaxKind, VariableDeclaration, FunctionDeclaration } from "ts-morph";
+import { Project, SourceFile, SyntaxKind, VariableDeclaration, FunctionDeclaration } from "ts-morph";
 import typescript from "typescript";
 import StaticParsingHelpers, {
   ParsedInterface,
@@ -82,7 +82,7 @@ export default class StudioSourceFile {
       return;
     }
     const objectLiteralExp = variableStatement.getFirstDescendantByKind(
-      ts.SyntaxKind.ObjectLiteralExpression
+      SyntaxKind.ObjectLiteralExpression
     );
     if (!objectLiteralExp) {
       throw new Error(
@@ -104,10 +104,10 @@ export default class StudioSourceFile {
       throw new Error("Error getting default export");
     }
     const node = declarations[0];
-    if (node.isKind(ts.SyntaxKind.ExportAssignment)) {
-      const identifierName = node.getFirstDescendantByKindOrThrow(ts.SyntaxKind.Identifier).getText();
+    if (node.isKind(SyntaxKind.ExportAssignment)) {
+      const identifierName = node.getFirstDescendantByKindOrThrow(SyntaxKind.Identifier).getText();
       return this.sourceFile.getVariableDeclarationOrThrow(identifierName);
-    } else if (node.isKind(ts.SyntaxKind.FunctionDeclaration)) {
+    } else if (node.isKind(SyntaxKind.FunctionDeclaration)) {
       return node;
     }
     throw new Error("Error getting default export, no ExportAssignment or FunctionDeclaration found");

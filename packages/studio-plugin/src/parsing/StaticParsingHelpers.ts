@@ -3,15 +3,14 @@ import {
   ImportDeclaration,
   InterfaceDeclaration,
   JsxAttributeLike,
+  JsxChild,
   JsxElement,
   JsxExpression,
   JsxFragment,
   JsxSelfClosingElement,
-  JsxText,
   ObjectLiteralExpression,
   StringLiteral,
-  SyntaxKind,
-  ts,
+  SyntaxKind
 } from "ts-morph";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import { v4 } from "uuid";
@@ -190,16 +189,16 @@ export default class StaticParsingHelpers {
   }
 
   static parseElement(
-    c: JsxElement | JsxSelfClosingElement,
+    component: JsxElement | JsxSelfClosingElement,
     name: string,
     defaultImports: Record<string, string>
   ): { metadataUUID: string, props: PropValues } {
     const metadataUUID = Object.keys(defaultImports)
       .find(importIdentifier => defaultImports[importIdentifier] === name);
 
-    const attributes: JsxAttributeLike[] = c.isKind(SyntaxKind.JsxSelfClosingElement)
-      ? c.getAttributes()
-      : c.getOpeningElement().getAttributes();
+    const attributes: JsxAttributeLike[] = component.isKind(SyntaxKind.JsxSelfClosingElement)
+      ? component.getAttributes()
+      : component.getOpeningElement().getAttributes();
     // This is temporarily added to get the component metadata. Once the state manager is
     // implemented, this data will be stored there and will not need to be computed here.
     // TODO: update to get component metadata from the state manager
@@ -220,7 +219,7 @@ export default class StaticParsingHelpers {
 
   static parseJsxAttributes(
     attributes: JsxAttributeLike[],
-    propShape: PropShape | undefined
+    propShape?: PropShape
   ): PropValues {
     const propValues: PropValues = {};
     attributes.forEach((jsxAttribute: JsxAttributeLike) => {
@@ -255,23 +254,23 @@ export default class StaticParsingHelpers {
     value: string | number | boolean,
     isExpression?: boolean
   } {
-    if (initializer.isKind(ts.SyntaxKind.StringLiteral)) {
+    if (initializer.isKind(SyntaxKind.StringLiteral)) {
       return { value: initializer.compilerNode.text };
     }
-    const expression = initializer.isKind(ts.SyntaxKind.JsxExpression)
+    const expression = initializer.isKind(SyntaxKind.JsxExpression)
       ? initializer.getExpressionOrThrow()
       : initializer;
     if (
-      expression.isKind(ts.SyntaxKind.PropertyAccessExpression) ||
-      expression.isKind(ts.SyntaxKind.TemplateExpression) ||
-      expression.isKind(ts.SyntaxKind.ElementAccessExpression) ||
-      expression.isKind(ts.SyntaxKind.Identifier)
+      expression.isKind(SyntaxKind.PropertyAccessExpression) ||
+      expression.isKind(SyntaxKind.TemplateExpression) ||
+      expression.isKind(SyntaxKind.ElementAccessExpression) ||
+      expression.isKind(SyntaxKind.Identifier)
     ) {
       return { value: expression.getText(), isExpression: true };
     } else if (
-      expression.isKind(ts.SyntaxKind.NumericLiteral) ||
-      expression.isKind(ts.SyntaxKind.FalseKeyword) ||
-      expression.isKind(ts.SyntaxKind.TrueKeyword)
+      expression.isKind(SyntaxKind.NumericLiteral) ||
+      expression.isKind(SyntaxKind.FalseKeyword) ||
+      expression.isKind(SyntaxKind.TrueKeyword)
     ) {
       return { value: expression.getLiteralValue() };
     } else {
@@ -280,13 +279,13 @@ export default class StaticParsingHelpers {
   }
 
   static parseJsxChild(
-    c: JsxText | JsxExpression | JsxSelfClosingElement | JsxElement | JsxFragment,
+    c: JsxChild,
     defaultImports: Record<string, string>,
     parentUUID?: string
   ): ComponentState[] {
     // All whitespace in Jsx is also considered JsxText, for example indentation
     if (c.isKind(SyntaxKind.JsxText)) {
-      if (c.getLiteralText().trim() !== "") {
+      if (c.getLiteralText().trim().length) {
         throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`);
       }
       return [];
