@@ -8,7 +8,9 @@ import {
   JsxFragment,
   JsxSelfClosingElement,
   JsxChild,
-  Identifier
+  Identifier,
+  PropertyAssignment,
+  ShorthandPropertyAssignment
 } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -118,17 +120,16 @@ export default class StudioSourceFile {
    * as follows:
    * - If there is only a single identifer (e.g. `export default Identifier;`),
    *   it will look for and return the declaration for that identifier.
-   * - If there is an array with a single identifier (e.g.
-   *   `export default [Identifier1];`), it will look for and return the
-   *   declaration for that identifier.
    * - If there is an object with a single property (e.g.
    *   `export default \{ key: val \};`), it will look for and return a
    *   declartion for the identifier of that field's value (i.e. `val`). This is
    *   also the case if property shorthand is used (e.g.
    *   `export default \{ Export1 \};` would look for a declaration of
    *   `Export1`.).
-   * - If there are multiple identifiers found for an array or multiple property
-   *   assignments found for an object, an error will be thrown.
+   * - If there are multiple property assignments found for an object, an error
+   *   will be thrown. If the export assignment is an array or if any assignments
+   *   don't have corresponding variable or function declarations (e.g. because
+   *   they are declared inline), it will also throw an error.
    */
   parseDefaultExport(): VariableDeclaration | FunctionDeclaration {
     const declarations = this.sourceFile.getDefaultExportSymbolOrThrow().getDeclarations();
@@ -139,31 +140,40 @@ export default class StudioSourceFile {
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
     } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const identifiers = exportDeclaration.getDescendantsOfKind(SyntaxKind.Identifier);
-      if (identifiers.length === 0) {
-        throw new Error("Error getting default export: No Identifier found for ExportAssignment.");
-      }
-      
-      let identifier: Identifier | undefined = undefined;
-      if (identifiers.length === 1) {
-        identifier = identifiers[0];
-      } else if (identifiers.length === 2) {
-        const objLiteralExp = exportDeclaration.getFirstDescendantByKind(
-          SyntaxKind.ObjectLiteralExpression
+      const assignment = exportDeclaration.getFirstDescendantOrThrow(n =>
+        n.isKind(SyntaxKind.ObjectLiteralExpression)
+        || n.isKind(SyntaxKind.Identifier)
+        || n.isKind(SyntaxKind.ArrayLiteralExpression)
+      );
+      if (assignment.isKind(SyntaxKind.ArrayLiteralExpression)) {
+        throw new Error(
+          "Error getting default export: ArrayLiteralExpresion is not supported for ExportAssignment."
         );
-        if (objLiteralExp) {
-          const propAssignment = objLiteralExp.getFirstDescendant(n =>
-            n.isKind(SyntaxKind.PropertyAssignment)
-            || n.isKind(SyntaxKind.ShorthandPropertyAssignment)
-          );
-          if (propAssignment?.isKind(SyntaxKind.PropertyAssignment)) {
-            // The value of the object's only property
-            identifier = identifiers[1];
-          }
-        }
       }
-      if (!identifier) {
-        throw new Error("Error getting default export: Too many Identifiers found for ExportAssignment.");
+
+      let identifier: Identifier;
+      if (assignment.isKind(SyntaxKind.Identifier)) {
+        identifier = assignment;
+      } else {
+        const propAssignments = assignment.getDescendants()
+          .filter((d): d is PropertyAssignment | ShorthandPropertyAssignment =>
+            d.isKind(SyntaxKind.PropertyAssignment) || d.isKind(SyntaxKind.ShorthandPropertyAssignment)
+          );
+        if (propAssignments.length === 0) {
+          throw new Error(
+            "Error getting default export: No properties found for ObjectLiteralExpression ExportAssignment."
+          );
+        }
+        if (propAssignments.length > 1) {
+          throw new Error(
+            "Error getting default export: Multiple properties found for ObjectLiteralExpression ExportAssignment."
+          );
+        }
+        if (propAssignments[0].isKind(SyntaxKind.PropertyAssignment)) {
+          identifier = propAssignments[0].getInitializerIfKindOrThrow(SyntaxKind.Identifier);
+        } else {
+          identifier = propAssignments[0].getFirstDescendantByKindOrThrow(SyntaxKind.Identifier);
+        }
       }
       const identifierName = identifier.getText();
       return this.sourceFile.getVariableDeclaration(identifierName)

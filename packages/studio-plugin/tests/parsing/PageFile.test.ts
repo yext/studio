@@ -159,6 +159,22 @@ describe("getPageState", () => {
     }
   );
 
+  it(
+    "correctly parses page with object export assignment of type React.Component",
+    () => {
+      const pageFile = new PageFile(getPagePath("reactComponentObjectPage"));
+      const result = pageFile.getPageState();
+
+      expect(result.componentTree).toEqual([
+        {
+          kind: ComponentStateKind.Fragment,
+          uuid: "mock-uuid",
+        },
+        ...componentTree
+      ]);
+    }
+  );
+
   it("correctly parses CSS imports", () => {
     const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
     const result = pageFile.getPageState();

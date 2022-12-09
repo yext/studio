@@ -34,7 +34,7 @@ describe("parseDefaultExport", () => {
       "correctly parses object with single regular property assignment",
       () => {
         const { project } = createTestSourceFile(
-          "const test = 1; const no = false; export default { num: test };"
+          "const test = 1; const no = false; export default { num: test } as Test;"
         );
         const studioSource = new StudioSourceFile("test.ts", project);
         const defaultExport = studioSource.parseDefaultExport();
@@ -56,16 +56,6 @@ describe("parseDefaultExport", () => {
       }
     );
 
-    it("correctly parses array with single identifier", () => {
-      const { project } = createTestSourceFile(
-        "const test = 1; const no = false; export default [test];"
-      );
-      const studioSource = new StudioSourceFile("test.ts", project);
-      const defaultExport = studioSource.parseDefaultExport();
-      expect(defaultExport.isKind(SyntaxKind.VariableDeclaration));
-      expect(defaultExport.getName()).toBe("test");
-    });
-
     it("correctly parses direct identifier", () => {
       const { project } = createTestSourceFile(
         "const test = 1; const no = false; export default test;"
@@ -75,86 +65,12 @@ describe("parseDefaultExport", () => {
       expect(defaultExport.isKind(SyntaxKind.VariableDeclaration));
       expect(defaultExport.getName()).toBe("test");
     });
-
-    describe("multiple identifier error", () => {
-      it(
-        "throws an error for object with multiple regular property assignments",
-        () => {
-          const { project } = createTestSourceFile(
-            "const test = 1; const no = false; export default { num: test, bool: no };"
-          );
-          const studioSource = new StudioSourceFile("test.ts", project);
-          expect(() => studioSource.parseDefaultExport()).toThrow(
-            "Error getting default export: Too many Identifiers found for ExportAssignment."
-          );
-        }
-      );
-  
-      it(
-        "throws an error for object with multiple shorthand property assignments",
-        () => {
-          const { project } = createTestSourceFile(
-            "const test = 1; const no = false; export default { test, no };"
-          );
-          const studioSource = new StudioSourceFile("test.ts", project);
-          expect(() => studioSource.parseDefaultExport()).toThrow(
-            "Error getting default export: Too many Identifiers found for ExportAssignment."
-          );
-        }
-      );
-  
-      it(
-        "throws an error for object with shorthand property assignment first",
-        () => {
-          const { project } = createTestSourceFile(
-            "const test = 1; const no = false; export default { test, bool: no };"
-          );
-          const studioSource = new StudioSourceFile("test.ts", project);
-          expect(() => studioSource.parseDefaultExport()).toThrow(
-            "Error getting default export: Too many Identifiers found for ExportAssignment."
-          );
-        }
-      );
-  
-      it(
-        "throws an error for object with regular property assignment first",
-        () => {
-          const { project } = createTestSourceFile(
-            "const test = 1; const no = false; export default { num: test, no };"
-          );
-          const studioSource = new StudioSourceFile("test.ts", project);
-          expect(() => studioSource.parseDefaultExport()).toThrow(
-            "Error getting default export: Too many Identifiers found for ExportAssignment."
-          );
-        }
-      );
-  
-      it("throws an error for array with multiple identifiers", () => {
-        const { project } = createTestSourceFile(
-          "const test = 1; const no = false; export default [test, no];"
-        );
-        const studioSource = new StudioSourceFile("test.ts", project);
-        expect(() => studioSource.parseDefaultExport()).toThrow(
-          "Error getting default export: Too many Identifiers found for ExportAssignment."
-        );
-      });
-    });
   });
 
   describe('export assignment of function declaration', () => {
     it("correctly parses object with single property assignment", () => {
       const { project } = createTestSourceFile(
-        "function test() {}; const no = false; export default { num: test };"
-      );
-      const studioSource = new StudioSourceFile("test.ts", project);
-      const defaultExport = studioSource.parseDefaultExport();
-      expect(defaultExport.isKind(SyntaxKind.FunctionDeclaration));
-      expect(defaultExport.getName()).toBe("test");
-    });
-
-    it("correctly parses array with single identifier", () => {
-      const { project } = createTestSourceFile(
-        "function test() {}; const no = false; export default [test];"
+        "function test() {}; const no = false; export default { num: test } as Test;"
       );
       const studioSource = new StudioSourceFile("test.ts", project);
       const defaultExport = studioSource.parseDefaultExport();
@@ -171,27 +87,92 @@ describe("parseDefaultExport", () => {
       expect(defaultExport.isKind(SyntaxKind.FunctionDeclaration));
       expect(defaultExport.getName()).toBe("test");
     });
+  });
 
-    describe("multiple identifier error", () => {
-      it("throws an error for object with multiple property assignments", () => {
+  describe("errors", () => {
+    it(
+      "throws an error for object with multiple regular property assignments",
+      () => {
         const { project } = createTestSourceFile(
-          "function test() {}; const no = false; export default { num: test, no };"
+          "const test = 1; const no = false; export default { num: test, bool: no };"
         );
         const studioSource = new StudioSourceFile("test.ts", project);
         expect(() => studioSource.parseDefaultExport()).toThrow(
-          "Error getting default export: Too many Identifiers found for ExportAssignment."
+          "Error getting default export: Multiple properties found for ObjectLiteralExpression ExportAssignment."
         );
-      });
+      }
+    );
 
-      it("throws an error for array with multiple identifiers", () => {
+    it(
+      "throws an error for object with multiple shorthand property assignments",
+      () => {
         const { project } = createTestSourceFile(
-          "function test() {}; const no = false; export default [test, no];"
+          "const test = 1; const no = false; export default { test, no };"
         );
         const studioSource = new StudioSourceFile("test.ts", project);
         expect(() => studioSource.parseDefaultExport()).toThrow(
-          "Error getting default export: Too many Identifiers found for ExportAssignment."
+          "Error getting default export: Multiple properties found for ObjectLiteralExpression ExportAssignment."
         );
-      });
+      }
+    );
+
+    it(
+      "throws an error for object with shorthand property assignment first",
+      () => {
+        const { project } = createTestSourceFile(
+          "const test = 1; const no = false; export default { test, bool: no };"
+        );
+        const studioSource = new StudioSourceFile("test.ts", project);
+        expect(() => studioSource.parseDefaultExport()).toThrow(
+          "Error getting default export: Multiple properties found for ObjectLiteralExpression ExportAssignment."
+        );
+      }
+    );
+
+    it(
+      "throws an error for object with regular property assignment first",
+      () => {
+        const { project } = createTestSourceFile(
+          "const test = 1; const no = false; export default { num: test, no };"
+        );
+        const studioSource = new StudioSourceFile("test.ts", project);
+        expect(() => studioSource.parseDefaultExport()).toThrow(
+          "Error getting default export: Multiple properties found for ObjectLiteralExpression ExportAssignment."
+        );
+      }
+    );
+
+    it("throws an error for object with no properties", () => {
+      const { project } = createTestSourceFile(
+        "const test = 1; const no = false; export default {};"
+      );
+      const studioSource = new StudioSourceFile("test.ts", project);
+      expect(() => studioSource.parseDefaultExport()).toThrow(
+        "Error getting default export: No properties found for ObjectLiteralExpression ExportAssignment."
+      );
+    });
+
+    it(
+      "throws an error for object with single property assignment initialized inline",
+      () => {
+        const { project } = createTestSourceFile(
+          "const test = 1; const no = false; export default { num: 1 };"
+        );
+        const studioSource = new StudioSourceFile("test.ts", project);
+        expect(() => studioSource.parseDefaultExport()).toThrow(
+          /^Expected to find an initializer of kind 'Identifier'./
+        );
+      }
+    );
+
+    it("throws an error for array", () => {
+      const { project } = createTestSourceFile(
+        "const test = 1; const no = false; export default [test];"
+      );
+      const studioSource = new StudioSourceFile("test.ts", project);
+      expect(() => studioSource.parseDefaultExport()).toThrow(
+        "Error getting default export: ArrayLiteralExpresion is not supported for ExportAssignment."
+      );
     });
   });
 });
