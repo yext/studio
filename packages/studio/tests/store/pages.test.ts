@@ -8,15 +8,6 @@ import {
 } from "@yext/studio-plugin";
 import { PagesStates } from "../../src/store/models/slices/pages";
 
-function setInitialState(initialState: PagesStates): void {
-  useStudioStore.setState({
-    pages: {
-      ...useStudioStore.getState().pages,
-      ...initialState,
-    },
-  });
-}
-
 const searchBarComponent: ComponentState = {
   name: "SearchBar",
   props: {
@@ -210,3 +201,12 @@ describe("PagesSlice", () => {
     });
   });
 });
+
+function setInitialState(initialState: PagesStates): void {
+  useStudioStore.setState({
+    pages: {
+      ...useStudioStore.getState().pages,
+      ...initialState,
+    },
+  });
+}
