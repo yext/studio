@@ -109,8 +109,7 @@ describe("getPageState", () => {
         kind: ComponentStateKind.Standard,
         componentName: "div",
         props: {},
-        uuid: "mock-uuid",
-        metadataUUID: "builtIn"
+        uuid: "mock-uuid"
       },
       ...componentTree
     ]);
@@ -191,7 +190,7 @@ describe("getPageState", () => {
       const pageFile = new PageFile(getPagePath("jsxSpreadAttributePage"));
 
       expect(() => pageFile.getPageState()).toThrowError(
-        "JsxSpreadAttribute is not currently supported."
+        "Error parsing `{...props}`: JsxSpreadAttribute is not currently supported."
       );
     });
 

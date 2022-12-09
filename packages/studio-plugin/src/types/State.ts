@@ -14,15 +14,18 @@ export enum ComponentStateKind {
 
 type StandardOrModuleComponentState = {
   kind: ComponentStateKind.Standard | ComponentStateKind.Module,
-  // The name of the component (i.e. Card or Banner).
+  /** The name of the component (i.e. Card or Banner). */
   componentName: string,
-  // Represents the props of the component.
+  /** Represents the props of the component. */
   props: PropValues,
-  // A unique UUID for this specific component instance.
+  /** A unique UUID for this specific component instance. */
   uuid: string,
-  // The UUID of the corresponding StandardComponentMetadata or ModuleMetadata.
-  metadataUUID: string,
-  // The UUID of the parent component in the tree, if one exists.
+  /**
+   * The UUID of the corresponding StandardComponentMetadata or ModuleMetadata,
+   * if it exists (i.e. not an instance of a builtIn component).
+   */
+  metadataUUID?: string,
+  /** The UUID of the parent component in the tree, if one exists. */
   parentUUID?: string,
 };
 

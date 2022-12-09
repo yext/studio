@@ -19,11 +19,11 @@ export default class PageFile {
     const defaultImports = this.studioSourceFile.parseDefaultImports();
     const absPathDefaultImports: Record<string, string> = Object.entries(defaultImports)
       .reduce((imports, [importIdentifier, importName]) => {
-        if (!path.isAbsolute(importIdentifier)) {
+        if (path.isAbsolute(importIdentifier)) {
+          imports[importIdentifier] = importName;
+        } else {
           const absoluteFilepath = path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
           imports[absoluteFilepath] = importName;
-        } else {
-          imports[importIdentifier] = importName;
         }
         return imports;
       }, {});

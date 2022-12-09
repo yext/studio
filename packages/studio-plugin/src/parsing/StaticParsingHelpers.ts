@@ -144,11 +144,11 @@ export default class StaticParsingHelpers {
     component: JsxElement | JsxSelfClosingElement,
     name: string,
     defaultImports: Record<string, string>,
-    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape}
-  ): { metadataUUID: string, props: PropValues } {
+    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape }
+  ): { metadataUUID?: string, props: PropValues } {
     const filepath = Object.keys(defaultImports)
       .find(importIdentifier => defaultImports[importIdentifier] === name);
-    
+
     const { metadataUUID, propShape } = getFileMetadata(filepath);
     if (!metadataUUID) {
       console.warn(`Props for builtIn element: '${name}' are currently not supported.`);
@@ -157,10 +157,10 @@ export default class StaticParsingHelpers {
     const attributes: JsxAttributeLike[] = component.isKind(SyntaxKind.JsxSelfClosingElement)
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
-   
+
     const props = StaticParsingHelpers.parseJsxAttributes(attributes, propShape);
-    return { 
-      metadataUUID: metadataUUID ?? "builtIn",
+    return {
+      metadataUUID,
       props
     };
   }
@@ -172,9 +172,10 @@ export default class StaticParsingHelpers {
     const propValues: PropValues = {};
     attributes.forEach((jsxAttribute: JsxAttributeLike) => {
       if (jsxAttribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
-        throw new Error("JsxSpreadAttribute is not currently supported.");
+        throw new Error(`Error parsing \`${jsxAttribute.getText()}\`:`
+          + " JsxSpreadAttribute is not currently supported.");
       }
-      const propName = jsxAttribute.getFirstDescendantByKind(SyntaxKind.Identifier)?.compilerNode.text;
+      const propName = jsxAttribute.getFirstDescendantByKind(SyntaxKind.Identifier)?.getText();
       if (!propName) {
         throw new Error("Could not parse jsx attribute prop name: " + jsxAttribute.getFullText());
       }
