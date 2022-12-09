@@ -7,7 +7,7 @@ jobs:
     uses: yext/slapshot-reusable-workflows/.github/workflows/run_tests.yml@v1
     with:
       node_matrix: '["16.x", "18.x", "19.x"]'
-      build_script: ''
+      build_script: 'cd packages/studio-plugin && npm run build'
 
   test_build:
     runs-on: ubuntu-latest
