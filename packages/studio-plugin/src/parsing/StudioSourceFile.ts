@@ -7,7 +7,8 @@ import {
   JsxElement,
   JsxFragment,
   JsxSelfClosingElement,
-  JsxChild
+  JsxChild,
+  Identifier
 } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -110,17 +111,51 @@ export default class StudioSourceFile {
     return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
   }
 
+  /**
+   * There is full support for default exports defined directly as function
+   * declarations. But, for exports defined as assignments, support is slightly
+   * restricted as follows:
+   * - If there is only a single identifer (e.g. `export default Identifier;`),
+   *   it will look for and return the declaration for that identifier.
+   * - If there is an array (e.g. `export default [Identifier1, Identifier 2];`),
+   *   it will only look for and return the declaration for the first identifier.
+   * - If there is an object (e.g. `export default \{ key1: val1, key2: val2 \};`),
+   *   it will only look for and return a declartion for the identifier of the
+   *   first field's value (i.e. `val1`). This is also the case if property
+   *   shorthand is used (e.g. `export default \{ Export1, Export2 \};` would look
+   *   for a declaration of `Export1`.), 
+   */
   parseDefaultExport(): VariableDeclaration | FunctionDeclaration {
     const declarations = this.sourceFile.getDefaultExportSymbolOrThrow().getDeclarations();
     if (declarations.length === 0) {
       throw new Error("Error getting default export");
     }
     const exportDeclaration = declarations[0];
-    if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const identifierName = exportDeclaration.getFirstDescendantByKindOrThrow(SyntaxKind.Identifier).getText();
-      return this.sourceFile.getVariableDeclarationOrThrow(identifierName);
-    } else if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
+    if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
+    } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
+      let identifier: Identifier | undefined = undefined;
+      const objLiteralExp = exportDeclaration.getFirstDescendantByKind(
+        SyntaxKind.ObjectLiteralExpression
+      );
+      if (objLiteralExp) {
+        const propAssignment = objLiteralExp.getFirstDescendant(n =>
+          n.isKind(SyntaxKind.PropertyAssignment)
+          || n.isKind(SyntaxKind.ShorthandPropertyAssignment)
+        );
+        if (propAssignment?.isKind(SyntaxKind.PropertyAssignment)) {
+          const identifiers = propAssignment.getDescendantsOfKind(SyntaxKind.Identifier);
+          if (identifiers.length > 1) {
+            // The value of the object's first property
+            identifier = identifiers[1];
+          }
+        }
+      }
+      identifier = identifier
+        ?? exportDeclaration.getFirstDescendantByKindOrThrow(SyntaxKind.Identifier);
+      const identifierName = identifier.getText();
+      return this.sourceFile.getVariableDeclaration(identifierName)
+        ?? this.sourceFile.getFunctionOrThrow(identifierName);
     }
     throw new Error("Error getting default export, no ExportAssignment or FunctionDeclaration found");
   }
@@ -163,20 +198,20 @@ export default class StudioSourceFile {
       throw new Error(
         `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`);
     }
-  
+
     const selfState: ComponentState = {
       ...this.parseComponentState(c, defaultImports),
       parentUUID
     };
-  
+
     if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      return [ selfState ];
+      return [selfState];
     }
-  
+
     const children: ComponentState[] = c.getJsxChildren()
       .flatMap(c => this.parseJsxChild(c, defaultImports, selfState.uuid))
       .filter((c): c is ComponentState => !!c);
-    return [ selfState, ...children ];
+    return [selfState, ...children];
   }
 
   parseComponentState(
@@ -202,9 +237,9 @@ export default class StudioSourceFile {
         componentName
       };
     } else if (
-        component.isKind(SyntaxKind.JsxFragment)
-        || ["Fragment", "React.Fragment"].includes(getJsxElementName(component))
-      ) {
+      component.isKind(SyntaxKind.JsxFragment)
+      || ["Fragment", "React.Fragment"].includes(getJsxElementName(component))
+    ) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment

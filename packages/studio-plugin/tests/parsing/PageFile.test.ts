@@ -59,137 +59,156 @@ const componentTree: ComponentState[] = [
   }
 ];
 
-it("correctly parses page with top-level React.Fragment", () => {
-  const pageFile = new PageFile(getPagePath("reactFragmentPage"));
-  const result = pageFile.getPageState();
+describe("getPageState", () => {
+  it("correctly parses page with top-level React.Fragment", () => {
+    const pageFile = new PageFile(getPagePath("reactFragmentPage"));
+    const result = pageFile.getPageState();
 
-  expect(result.componentTree).toEqual([
-    {
-      kind: ComponentStateKind.Fragment,
-      uuid: "mock-uuid",
-    },
-    ...componentTree
-  ]);
-});
+    expect(result.componentTree).toEqual([
+      {
+        kind: ComponentStateKind.Fragment,
+        uuid: "mock-uuid",
+      },
+      ...componentTree
+    ]);
+  });
 
-it("correctly parses page with top-level Fragment", () => {
-  const pageFile = new PageFile(getPagePath("fragmentPage"));
-  const result = pageFile.getPageState();
+  it("correctly parses page with top-level Fragment", () => {
+    const pageFile = new PageFile(getPagePath("fragmentPage"));
+    const result = pageFile.getPageState();
 
-  expect(result.componentTree).toEqual([
-    {
-      kind: ComponentStateKind.Fragment,
-      uuid: "mock-uuid",
-    },
-    ...componentTree
-  ]);
-});
+    expect(result.componentTree).toEqual([
+      {
+        kind: ComponentStateKind.Fragment,
+        uuid: "mock-uuid",
+      },
+      ...componentTree
+    ]);
+  });
 
-it("correctly parses page with top-level Fragment in short syntax", () => {
-  const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
-  const result = pageFile.getPageState();
+  it("correctly parses page with top-level Fragment in short syntax", () => {
+    const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
+    const result = pageFile.getPageState();
 
-  expect(result.componentTree).toEqual([
-    {
-      kind: ComponentStateKind.Fragment,
-      uuid: "mock-uuid",
-    },
-    ...componentTree
-  ]);
-});
+    expect(result.componentTree).toEqual([
+      {
+        kind: ComponentStateKind.Fragment,
+        uuid: "mock-uuid",
+      },
+      ...componentTree
+    ]);
+  });
 
-it("correctly parses page with top-level div component and logs warning", () => {
-  const consoleWarnSpy = jest.spyOn(global.console, "warn").mockImplementation();
-  const pageFile = new PageFile(getPagePath("divPage"));
-  const result = pageFile.getPageState();
+  it("correctly parses page with top-level div component and logs warning", () => {
+    const consoleWarnSpy = jest.spyOn(global.console, "warn").mockImplementation();
+    const pageFile = new PageFile(getPagePath("divPage"));
+    const result = pageFile.getPageState();
 
-  expect(result.componentTree).toEqual([
-    {
-      kind: ComponentStateKind.Standard,
-      componentName: "div",
-      props: {},
-      uuid: "mock-uuid",
-      metadataUUID: "builtIn"
-    },
-    ...componentTree
-  ]);
+    expect(result.componentTree).toEqual([
+      {
+        kind: ComponentStateKind.Standard,
+        componentName: "div",
+        props: {},
+        uuid: "mock-uuid",
+        metadataUUID: "builtIn"
+      },
+      ...componentTree
+    ]);
 
-  expect(consoleWarnSpy).toBeCalledWith("Props for builtIn element: 'div' are currently not supported.");
-});
+    expect(consoleWarnSpy).toBeCalledWith("Props for builtIn element: 'div' are currently not supported.");
+  });
 
-it("correctly parses page with nested banner components", () => {
-  const pageFile = new PageFile(getPagePath("nestedBannerPage"));
-  const result = pageFile.getPageState();
+  it("correctly parses page with nested banner components", () => {
+    const pageFile = new PageFile(getPagePath("nestedBannerPage"));
+    const result = pageFile.getPageState();
 
-  expect(result.componentTree).toEqual([
-    {
-      kind: ComponentStateKind.Standard,
-      componentName: "NestedBanner",
-      props: {},
-      uuid: "mock-uuid",
-      metadataUUID: getComponentPath("NestedBanner")
-    },
-    componentTree[0],
-    componentTree[1],
-    {
-      kind: ComponentStateKind.Standard,
-      componentName: "NestedBanner",
-      props: {},
-      uuid: "mock-uuid",
-      parentUUID: "mock-uuid",
-      metadataUUID: getComponentPath("NestedBanner")
-    },
-    componentTree[2]
-  ]);
-});
+    expect(result.componentTree).toEqual([
+      {
+        kind: ComponentStateKind.Standard,
+        componentName: "NestedBanner",
+        props: {},
+        uuid: "mock-uuid",
+        metadataUUID: getComponentPath("NestedBanner")
+      },
+      componentTree[0],
+      componentTree[1],
+      {
+        kind: ComponentStateKind.Standard,
+        componentName: "NestedBanner",
+        props: {},
+        uuid: "mock-uuid",
+        parentUUID: "mock-uuid",
+        metadataUUID: getComponentPath("NestedBanner")
+      },
+      componentTree[2]
+    ]);
+  });
 
-it("correctly parses CSS imports", () => {
-  const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
-  const result = pageFile.getPageState();
+  it(
+    "correctly parses page with variable statement and no parantheses around return statement",
+    () => {
+      const pageFile = new PageFile(getPagePath("noReturnParenthesesPage"));
+      const result = pageFile.getPageState();
 
-  expect(result.cssImports).toEqual([
-    "./index.css",
-    "@yext/search-ui-react/index.css"
-  ]);
-});
-
-it("throws an error when no return statement is found in the default export", () => {
-  const pageFile = new PageFile(getPagePath("noReturnStatementPage"));
-
-  expect(() =>  pageFile.getPageState()).toThrowError(
-    /^No return statement found for the default export at path: /
+      expect(result.componentTree).toEqual([
+        {
+          kind: ComponentStateKind.Fragment,
+          uuid: "mock-uuid",
+        },
+        componentTree[1]
+      ]);
+    }
   );
-});
 
-it("throws an error when the return statement has no top-level Jsx node", () => {
-  const pageFile = new PageFile(getPagePath("noTopLevelJsxPage"));
+  it("correctly parses CSS imports", () => {
+    const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
+    const result = pageFile.getPageState();
 
-  expect(() =>  pageFile.getPageState()).toThrowError(
-    /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
-  );
-});
+    expect(result.cssImports).toEqual([
+      "./index.css",
+      "@yext/search-ui-react/index.css"
+    ]);
+  });
 
+  describe('throws errors', () => {
+    it("throws an error when no return statement is found in the default export", () => {
+      const pageFile = new PageFile(getPagePath("noReturnStatementPage"));
 
-it("throws an error when a JsxSpreadAttribute is found on the page", () => {
-  const pageFile = new PageFile(getPagePath("jsxSpreadAttributePage"));
+      expect(() => pageFile.getPageState()).toThrowError(
+        /^No return statement found for the default export at path: /
+      );
+    });
 
-  expect(() =>  pageFile.getPageState()).toThrowError(
-    "JsxSpreadAttribute is not currently supported."
-  );
-});
+    it("throws an error when the return statement has no top-level Jsx node", () => {
+      const pageFile = new PageFile(getPagePath("noTopLevelJsxPage"));
 
-it("throws an error when JsxText is found on the page", () => {
-  const pageFile = new PageFile(getPagePath("jsxTextPage"));
+      expect(() => pageFile.getPageState()).toThrowError(
+        /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
+      );
+    });
 
-  expect(() =>  pageFile.getPageState()).toThrowError(
-    "Found JsxText with content \"Text\". JsxText is not currently supported."
-  );
-});
+    it("throws an error when a JsxSpreadAttribute is found on the page", () => {
+      const pageFile = new PageFile(getPagePath("jsxSpreadAttributePage"));
 
-it("throws an error when a JsxExpression is found on the page", () => {
-  const pageFile = new PageFile(getPagePath("jsxExpressionPage"));
+      expect(() => pageFile.getPageState()).toThrowError(
+        "JsxSpreadAttribute is not currently supported."
+      );
+    });
 
-  expect(() =>  pageFile.getPageState()).toThrowError(
-    "Jsx nodes of kind \"JsxExpression\" are not supported for direct use in page files."
-  );
+    it("throws an error when JsxText is found on the page", () => {
+      const pageFile = new PageFile(getPagePath("jsxTextPage"));
+
+      expect(() => pageFile.getPageState()).toThrowError(
+        "Found JsxText with content \"Text\". JsxText is not currently supported."
+      );
+    });
+
+    it("throws an error when a JsxExpression is found on the page", () => {
+      const pageFile = new PageFile(getPagePath("jsxExpressionPage"));
+
+      expect(() => pageFile.getPageState()).toThrowError(
+        "Jsx nodes of kind \"JsxExpression\" are not supported for direct use in page files."
+      );
+    });
+  });
 });
