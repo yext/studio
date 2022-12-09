@@ -3,7 +3,7 @@ import { ModuleMetadata } from "./ModuleMetadata";
 
 export enum FileMetadataKind {
   Component = "componentMetadata",
-  Module = "moduleMetadata"
+  Module = "moduleMetadata",
 }
 
-export type FileMetadata = ComponentMetadata | ModuleMetadata
+export type FileMetadata = ComponentMetadata | ModuleMetadata;

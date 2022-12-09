@@ -1,7 +1,7 @@
 import { ComponentState } from "./ComponentState";
 
 export type PageState = {
-  pageName: string,
-  componentTree: ComponentState[],
-  cssImports: string[]
+  pageName: string;
+  componentTree: ComponentState[];
+  cssImports: string[];
 };

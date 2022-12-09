@@ -15,4 +15,5 @@ export interface FileMetadataSliceActions {
  * Maintains metadata for Component and Module, available for users
  * to import and preview in Studio.
  */
-export type FileMetadataSlice = FileMetadataSliceStates & FileMetadataSliceActions;
+export type FileMetadataSlice = FileMetadataSliceStates &
+  FileMetadataSliceActions;

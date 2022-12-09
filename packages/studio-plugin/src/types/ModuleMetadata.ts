@@ -4,9 +4,8 @@ import { PropShape } from "./PropShape";
 import { PropValues } from "./PropValues";
 
 export type ModuleMetadata = {
-  kind: FileMetadataKind.Module,
-  componentTree: ComponentState[],
-  initialProps?: PropValues,
-  propShape?: PropShape,
-}
- 
+  kind: FileMetadataKind.Module;
+  componentTree: ComponentState[];
+  initialProps?: PropValues;
+  propShape?: PropShape;
+};

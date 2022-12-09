@@ -6,7 +6,10 @@ import {
   PropValues,
   PropValueType,
 } from "@yext/studio-plugin";
-import { PageSliceStates, PagesRecord } from "../../src/store/models/slices/pageSlice";
+import {
+  PageSliceStates,
+  PagesRecord,
+} from "../../src/store/models/slices/pageSlice";
 
 const searchBarComponent: ComponentState = {
   name: "SearchBar",
@@ -43,15 +46,15 @@ const buttonComponent: ComponentState = {
   },
   uuid: "button-uuid",
   metadataUUID: "button-metadata-uuid",
-}
+};
 const pages: PagesRecord = {
   universal: {
-    pageName: 'universal',
+    pageName: "universal",
     componentTree: [searchBarComponent],
     cssImports: ["index.css"],
   },
   vertical: {
-    pageName: 'vertical',
+    pageName: "vertical",
     componentTree: [resultsComponent],
     cssImports: [],
   },
@@ -74,7 +77,7 @@ describe("PageSlice", () => {
 
     it("updates existing active page's state using setActivePageState", () => {
       const newActivePageState: PageState = {
-        pageName: 'universal',
+        pageName: "universal",
         componentTree: [buttonComponent],
         cssImports: ["app.css"],
       };
@@ -90,37 +93,45 @@ describe("PageSlice", () => {
       setInitialState({
         pages,
         activePageName: "universal",
-        activeComponentUUID: 'searchbar-uuid'
+        activeComponentUUID: "searchbar-uuid",
       });
       const newActivePageState: PageState = {
-        pageName: 'universal',
+        pageName: "universal",
         componentTree: [buttonComponent],
         cssImports: ["app.css"],
       };
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual('searchbar-uuid');
+      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
+        "searchbar-uuid"
+      );
       useStudioStore.getState().pages.setActivePageState(newActivePageState);
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(undefined);
+      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
+        undefined
+      );
     });
 
     it("maintains active component uuid when it's still in page state using setActivePageState", () => {
       setInitialState({
         pages,
         activePageName: "universal",
-        activeComponentUUID: 'searchbar-uuid'
+        activeComponentUUID: "searchbar-uuid",
       });
       const newActivePageState: PageState = {
-        pageName: 'universal',
+        pageName: "universal",
         componentTree: [searchBarComponent, buttonComponent],
         cssImports: ["app.css"],
       };
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual('searchbar-uuid');
+      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
+        "searchbar-uuid"
+      );
       useStudioStore.getState().pages.setActivePageState(newActivePageState);
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual('searchbar-uuid');
+      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
+        "searchbar-uuid"
+      );
     });
 
     it("adds a new page's state using setActivePageState", () => {
       const newActivePageState: PageState = {
-        pageName: 'test',
+        pageName: "test",
         componentTree: [resultsComponent],
         cssImports: [],
       };
@@ -128,7 +139,7 @@ describe("PageSlice", () => {
       const actualPages = useStudioStore.getState().pages.pages;
       expect(actualPages).toEqual({
         ...pages,
-        test: newActivePageState
+        test: newActivePageState,
       });
     });
 
@@ -145,7 +156,7 @@ describe("PageSlice", () => {
       setInitialState({
         pages: {
           universal: {
-            pageName: 'universal',
+            pageName: "universal",
             componentTree: [searchBarComponent, resultsComponent],
             cssImports: [],
           },
@@ -180,7 +191,7 @@ describe("PageSlice", () => {
     it("logs an error when using setActiveComponentProps before an active component is not selected", () => {
       const initialPages = {
         universal: {
-          pageName: 'universal',
+          pageName: "universal",
           componentTree: [searchBarComponent],
           cssImports: [],
         },
@@ -219,7 +230,7 @@ describe("PageSlice", () => {
       setInitialState({
         pages: {
           universal: {
-            pageName: 'universal',
+            pageName: "universal",
             componentTree: [searchBarComponent],
             cssImports: [],
           },

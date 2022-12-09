@@ -1,11 +1,15 @@
 import { PageState, PropValues } from "@yext/studio-plugin";
-import { PageSlice, PageSliceStates, PagesRecord } from "../models/slices/pageSlice";
+import {
+  PageSlice,
+  PageSliceStates,
+  PagesRecord,
+} from "../models/slices/pageSlice";
 import { SliceCreator } from "../models/utils";
 
 const initialStates: PageSliceStates = {
   pages: {
     index: {
-      pageName: 'index',
+      pageName: "index",
       componentTree: [],
       cssImports: [],
     },
@@ -20,9 +24,13 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     setActivePageState: (pageState: PageState) =>
       set((store) => {
         if (pageState.pageName !== get().activePageName) {
-          store.activePageName = pageState.pageName
+          store.activePageName = pageState.pageName;
         }
-        if(!pageState.componentTree.find(component => component.uuid === store.activeComponentUUID)) {
+        if (
+          !pageState.componentTree.find(
+            (component) => component.uuid === store.activeComponentUUID
+          )
+        ) {
           store.activeComponentUUID = undefined;
         }
         store.pages[pageState.pageName] = pageState;
@@ -40,7 +48,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       return get()
         .getActivePageState()
-        .componentTree.find((component) => component.uuid === activeComponentUUID);
+        .componentTree.find(
+          (component) => component.uuid === activeComponentUUID
+        );
     },
     setActiveComponentProps: (props: PropValues) =>
       set((store) => {

@@ -1,7 +1,7 @@
 import { ComponentState, PageState, PropValues } from "@yext/studio-plugin";
 
 export interface PagesRecord {
-  [pageName: string]: PageState
+  [pageName: string]: PageState;
 }
 
 export interface PageSliceStates {
