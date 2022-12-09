@@ -8,8 +8,7 @@ import { SiteSettingsSlice } from "./slices/siteSettings";
  * handling actions and updating specific isolated set of data.
  */
 export interface StudioStore {
-  fileMetadatas: FileMetadatasSlice,
-  pages: PagesSlice,
-  siteSettings: SiteSettingsSlice
+  fileMetadatas: FileMetadatasSlice;
+  pages: PagesSlice;
+  siteSettings: SiteSettingsSlice;
 }
- 
