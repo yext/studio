@@ -3,7 +3,9 @@ import {
   ImportDeclaration,
   InterfaceDeclaration,
   JsxAttributeLike,
+  JsxChild,
   JsxElement,
+  JsxFragment,
   JsxSelfClosingElement,
   ObjectLiteralExpression,
   SyntaxKind,
@@ -140,6 +142,33 @@ export default class StaticParsingHelpers {
     return parsedInterface;
   }
 
+  static parseJsxChild<T>(
+    c: JsxChild,
+    handleJsxChild: (c: JsxFragment | JsxElement | JsxSelfClosingElement, parent?: T) => T
+  ): T[] {
+    // All whitespace in Jsx is also considered JsxText, for example indentation
+    if (c.isKind(SyntaxKind.JsxText)) {
+      if (c.getLiteralText().trim().length) {
+        throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`);
+      }
+      return [];
+    } else if (c.isKind(SyntaxKind.JsxExpression)) {
+      throw new Error(
+        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`);
+    }
+
+    const self: T = handleJsxChild(c);
+
+    if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      return [self];
+    }
+
+    const children: T[] = c.getJsxChildren()
+      .flatMap(c => this.parseJsxChild(c, (c) => handleJsxChild(c, self)))
+      .filter((c): c is T => !!c);
+    return [self, ...children];
+  }
+
   static parseElement(
     component: JsxElement | JsxSelfClosingElement,
     name: string,
@@ -197,5 +226,11 @@ export default class StaticParsingHelpers {
       propValues[propName] = propValue;
     });
     return propValues;
+  }
+
+  static parseJsxElementName(element: JsxElement | JsxSelfClosingElement): string {
+    return element.isKind(SyntaxKind.JsxSelfClosingElement)
+      ? element.getTagNameNode().getText()
+      : element.getOpeningElement().getTagNameNode().getText();
   }
 }

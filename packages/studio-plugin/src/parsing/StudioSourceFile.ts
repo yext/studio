@@ -7,7 +7,6 @@ import {
   JsxElement,
   JsxFragment,
   JsxSelfClosingElement,
-  JsxChild,
 } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -169,63 +168,27 @@ export default class StudioSourceFile {
         + ` in the default export at path: "${this.sourceFile.getFilePath()}"`);
     }
 
-    return this.parseJsxChild(
+    return StaticParsingHelpers.parseJsxChild(
       topLevelJsxNode,
-      defaultImports,
-      getFileMetadata
+      (child, parent) => this.parseComponentState(child, defaultImports, getFileMetadata, parent)
     );
-  }
-
-  parseJsxChild(
-    c: JsxChild,
-    defaultImports: Record<string, string>,
-    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape },
-    parentUUID?: string
-  ): ComponentState[] {
-    // All whitespace in Jsx is also considered JsxText, for example indentation
-    if (c.isKind(SyntaxKind.JsxText)) {
-      if (c.getLiteralText().trim().length) {
-        throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`);
-      }
-      return [];
-    } else if (c.isKind(SyntaxKind.JsxExpression)) {
-      throw new Error(
-        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`);
-    }
-
-    const selfState: ComponentState = {
-      ...this.parseComponentState(c, defaultImports, getFileMetadata),
-      parentUUID
-    };
-
-    if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      return [selfState];
-    }
-
-    const children: ComponentState[] = c.getJsxChildren()
-      .flatMap(c => this.parseJsxChild(c, defaultImports, getFileMetadata, selfState.uuid))
-      .filter((c): c is ComponentState => !!c);
-    return [selfState, ...children];
   }
 
   parseComponentState(
     component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
     getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape },
-    parentUUID?: string
+    parent?: ComponentState
   ): ComponentState {
     const commonComponentState = {
-      parentUUID,
+      parentUUID: parent?.uuid,
       uuid: v4()
     };
 
-    function getJsxElementName(element: JsxElement): string {
-      return element.getOpeningElement().getTagNameNode().getText();
-    }
-
     function isFragmentElement(element: JsxElement | JsxSelfClosingElement): boolean {
+      const name = StaticParsingHelpers.parseJsxElementName(element);
       return element.isKind(SyntaxKind.JsxElement)
-          && ["Fragment", "React.Fragment"].includes(getJsxElementName(element));
+          && ["Fragment", "React.Fragment"].includes(name);
     }
 
     if (component.isKind(SyntaxKind.JsxFragment) || isFragmentElement(component)) {
@@ -235,9 +198,7 @@ export default class StudioSourceFile {
       };
     }
 
-    const componentName = component.isKind(SyntaxKind.JsxSelfClosingElement)
-      ? component.getTagNameNode().getText()
-      : getJsxElementName(component);
+    const componentName = StaticParsingHelpers.parseJsxElementName(component);
 
     return {
       ...commonComponentState,
