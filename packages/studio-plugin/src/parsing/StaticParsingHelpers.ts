@@ -9,7 +9,6 @@ import {
   SyntaxKind
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../types/PropValues";
-import ComponentFile from "./ComponentFile";
 import { PropShape } from "../types/PropShape";
 import TypeGuards from "./TypeGuards";
 
@@ -144,24 +143,20 @@ export default class StaticParsingHelpers {
   static parseElement(
     component: JsxElement | JsxSelfClosingElement,
     name: string,
-    defaultImports: Record<string, string>
+    defaultImports: Record<string, string>,
+    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape}
   ): { metadataUUID: string, props: PropValues } {
-    const metadataUUID = Object.keys(defaultImports)
+    const filepath = Object.keys(defaultImports)
       .find(importIdentifier => defaultImports[importIdentifier] === name);
+    
+    const { metadataUUID, propShape } = getFileMetadata(filepath);
+    if (!metadataUUID) {
+      console.warn(`Props for builtIn element: '${name}' are currently not supported.`);
+    }
 
     const attributes: JsxAttributeLike[] = component.isKind(SyntaxKind.JsxSelfClosingElement)
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
-    // This is temporarily added to get the component metadata. Once the state manager is
-    // implemented, this data will be computed elsewhere and stored there.
-    // TODO: update to get component metadata from where it's computed for the state manager
-    let propShape: PropShape | undefined = undefined;
-    if (metadataUUID) {
-      const componentFile = new ComponentFile(metadataUUID);
-      propShape = componentFile.getComponentMetadata().propShape;
-    } else {
-      console.warn(`Props for builtIn element: '${name}' are currently not supported.`)
-    }
    
     const props = StaticParsingHelpers.parseJsxAttributes(attributes, propShape);
     return { 

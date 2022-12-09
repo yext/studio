@@ -17,6 +17,7 @@ import StaticParsingHelpers, {
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
 import { v4 } from "uuid";
+import { getFileMetadata } from "../getFileMetadata";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -128,7 +129,7 @@ export default class StudioSourceFile {
   parseDefaultExport(): VariableDeclaration | FunctionDeclaration {
     const declarations = this.sourceFile.getDefaultExportSymbolOrThrow().getDeclarations();
     if (declarations.length === 0) {
-      throw new Error("Error getting default export");
+      throw new Error("Error getting default export: No declaration node found.");
     }
     const exportDeclaration = declarations[0];
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
@@ -157,7 +158,7 @@ export default class StudioSourceFile {
       return this.sourceFile.getVariableDeclaration(identifierName)
         ?? this.sourceFile.getFunctionOrThrow(identifierName);
     }
-    throw new Error("Error getting default export, no ExportAssignment or FunctionDeclaration found");
+    throw new Error("Error getting default export: No ExportAssignment or FunctionDeclaration found.");
   }
 
   parseComponentTree(defaultImports: Record<string, string>): ComponentState[] {
@@ -228,30 +229,33 @@ export default class StudioSourceFile {
       return element.getOpeningElement().getTagNameNode().getText();
     }
 
-    if (component.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      const componentName = component.getTagNameNode().getText();
-      return {
-        ...commonComponentState,
-        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
-        kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
-        componentName
-      };
-    } else if (
-      component.isKind(SyntaxKind.JsxFragment)
-      || ["Fragment", "React.Fragment"].includes(getJsxElementName(component))
-    ) {
+    function isFragmentElement(element: JsxElement | JsxSelfClosingElement): boolean {
+      return element.isKind(SyntaxKind.JsxFragment)
+        || (element.isKind(SyntaxKind.JsxElement)
+          && ["Fragment", "React.Fragment"].includes(getJsxElementName(element)));
+    }
+
+    if (component.isKind(SyntaxKind.JsxFragment) || isFragmentElement(component)) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment
       };
-    } else {
-      const componentName = getJsxElementName(component);
-      return {
-        ...commonComponentState,
-        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
-        kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
-        componentName
-      };
     }
+
+    const componentName = component.isKind(SyntaxKind.JsxSelfClosingElement)
+      ? component.getTagNameNode().getText()
+      : getJsxElementName(component);
+
+    return {
+      ...commonComponentState,
+      ...StaticParsingHelpers.parseElement(
+        component,
+        componentName,
+        defaultImports,
+        getFileMetadata
+      ),
+      kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
+      componentName
+    };
   }
 }
