@@ -1,7 +1,5 @@
 import StudioSourceFile from "./StudioSourceFile";
 import { PageState } from "../types/State";
-import { JsxElement, JsxFragment, SyntaxKind } from "ts-morph";
-import StaticParsingHelpers from "./StaticParsingHelpers";
 import path from "path";
 
 /**
@@ -16,22 +14,6 @@ export default class PageFile {
   }
 
   getPageState(): PageState {
-    const defaultExport = this.studioSourceFile.parseDefaultExport();
-    const returnStatement = defaultExport.getFirstDescendantByKind(SyntaxKind.ReturnStatement);
-    if (!returnStatement) {
-      throw new Error(`No return statement found for the default export at path: "${this.filepath}"`);
-    }
-    const JsxNodeWrapper = returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression)
-      ?? returnStatement;
-    const topLevelJsxNode = JsxNodeWrapper.getChildren()
-      .find((n): n is JsxElement | JsxFragment =>
-        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment)
-      );
-    if (!topLevelJsxNode) {
-      throw new Error("Unable to find top-level JSX element or JSX fragment type"
-        + ` in the default export at path: "${this.filepath}"`);
-    }
-
     // For now, we are only supporting imports from files that export a component
     // as the default export. We will add support for named exports at a later date.
     const defaultImports = this.studioSourceFile.parseDefaultImports();
@@ -46,16 +28,9 @@ export default class PageFile {
         return imports;
       }, {});
 
-    const componentTree = StaticParsingHelpers.parseJsxChild(
-      topLevelJsxNode,
-      absPathDefaultImports
-    );
-
-    const cssImports = this.studioSourceFile.parseCssImports();
-
     return {
-      componentTree,
-      cssImports
+      componentTree: this.studioSourceFile.parseComponentTree(absPathDefaultImports),
+      cssImports: this.studioSourceFile.parseCssImports()
     }
   }
 }

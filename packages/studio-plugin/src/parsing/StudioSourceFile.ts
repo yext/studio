@@ -1,9 +1,21 @@
-import { Project, SourceFile, SyntaxKind, VariableDeclaration, FunctionDeclaration } from "ts-morph";
+import {
+  Project,
+  SourceFile,
+  SyntaxKind,
+  VariableDeclaration,
+  FunctionDeclaration,
+  JsxElement,
+  JsxFragment,
+  JsxSelfClosingElement,
+  JsxChild
+} from "ts-morph";
 import typescript from "typescript";
+import { ComponentState, ComponentStateKind } from "../types/State";
 import StaticParsingHelpers, {
   ParsedInterface,
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
+import { v4 } from "uuid";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -111,5 +123,100 @@ export default class StudioSourceFile {
       return exportDeclaration;
     }
     throw new Error("Error getting default export, no ExportAssignment or FunctionDeclaration found");
+  }
+
+  parseComponentTree(defaultImports: Record<string, string>): ComponentState[] {
+    const defaultExport = this.parseDefaultExport();
+    const returnStatement = defaultExport.getFirstDescendantByKind(SyntaxKind.ReturnStatement);
+    if (!returnStatement) {
+      throw new Error(`No return statement found for the default export at path: "${this.sourceFile.getFilePath()}"`);
+    }
+    const JsxNodeWrapper = returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression)
+      ?? returnStatement;
+    const topLevelJsxNode = JsxNodeWrapper.getChildren()
+      .find((n): n is JsxElement | JsxFragment =>
+        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment)
+      );
+    if (!topLevelJsxNode) {
+      throw new Error("Unable to find top-level JSX element or JSX fragment type"
+        + ` in the default export at path: "${this.sourceFile.getFilePath()}"`);
+    }
+
+    return this.parseJsxChild(
+      topLevelJsxNode,
+      defaultImports
+    );
+  }
+
+  parseJsxChild(
+    c: JsxChild,
+    defaultImports: Record<string, string>,
+    parentUUID?: string
+  ): ComponentState[] {
+    // All whitespace in Jsx is also considered JsxText, for example indentation
+    if (c.isKind(SyntaxKind.JsxText)) {
+      if (c.getLiteralText().trim().length) {
+        throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`);
+      }
+      return [];
+    } else if (c.isKind(SyntaxKind.JsxExpression)) {
+      throw new Error(
+        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`);
+    }
+  
+    const selfState: ComponentState = {
+      ...this.parseComponentState(c, defaultImports),
+      parentUUID
+    };
+  
+    if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      return [ selfState ];
+    }
+  
+    const children: ComponentState[] = c.getJsxChildren()
+      .flatMap(c => this.parseJsxChild(c, defaultImports, selfState.uuid))
+      .filter((c): c is ComponentState => !!c);
+    return [ selfState, ...children ];
+  }
+
+  parseComponentState(
+    component: JsxFragment | JsxElement | JsxSelfClosingElement,
+    defaultImports: Record<string, string>,
+    parentUUID?: string
+  ): ComponentState {
+    const commonComponentState = {
+      parentUUID,
+      uuid: v4()
+    };
+
+    function getJsxElementName(element: JsxElement): string {
+      return element.getOpeningElement().getTagNameNode().getText();
+    }
+
+    if (component.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      const componentName = component.getTagNameNode().getText();
+      return {
+        ...commonComponentState,
+        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
+        kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
+        componentName
+      };
+    } else if (
+        component.isKind(SyntaxKind.JsxFragment)
+        || ["Fragment", "React.Fragment"].includes(getJsxElementName(component))
+      ) {
+      return {
+        ...commonComponentState,
+        kind: ComponentStateKind.Fragment
+      };
+    } else {
+      const componentName = getJsxElementName(component);
+      return {
+        ...commonComponentState,
+        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
+        kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
+        componentName
+      };
+    }
   }
 }

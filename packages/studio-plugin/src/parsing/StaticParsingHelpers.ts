@@ -3,15 +3,11 @@ import {
   ImportDeclaration,
   InterfaceDeclaration,
   JsxAttributeLike,
-  JsxChild,
   JsxElement,
-  JsxFragment,
   JsxSelfClosingElement,
   ObjectLiteralExpression,
   SyntaxKind
 } from "ts-morph";
-import { ComponentState, ComponentStateKind } from "../types/State";
-import { v4 } from "uuid";
 import { PropValueKind, PropValues } from "../types/PropValues";
 import ComponentFile from "./ComponentFile";
 import { PropShape } from "../types/PropShape";
@@ -145,47 +141,6 @@ export default class StaticParsingHelpers {
     return parsedInterface;
   }
 
-  static parseComponentState(
-    component: JsxFragment | JsxElement | JsxSelfClosingElement,
-    defaultImports: Record<string, string>,
-    parentUUID?: string
-  ): ComponentState {
-    const commonComponentState = {
-      parentUUID,
-      uuid: v4()
-    };
-
-    function getJsxElementName(element: JsxElement): string {
-      return element.getOpeningElement().getTagNameNode().getText();
-    }
-
-    if (component.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      const componentName = component.getTagNameNode().getText();
-      return {
-        ...commonComponentState,
-        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
-        kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
-        componentName
-      };
-    } else if (
-        component.isKind(SyntaxKind.JsxFragment)
-        || ["Fragment", "React.Fragment"].includes(getJsxElementName(component))
-      ) {
-      return {
-        ...commonComponentState,
-        kind: ComponentStateKind.Fragment
-      };
-    } else {
-      const componentName = getJsxElementName(component);
-      return {
-        ...commonComponentState,
-        ...StaticParsingHelpers.parseElement(component, componentName, defaultImports),
-        kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
-        componentName
-      };
-    }
-  }
-
   static parseElement(
     component: JsxElement | JsxSelfClosingElement,
     name: string,
@@ -246,36 +201,5 @@ export default class StaticParsingHelpers {
       propValues[propName] = propValue;
     })
     return propValues;
-  }
-
-  static parseJsxChild(
-    c: JsxChild,
-    defaultImports: Record<string, string>,
-    parentUUID?: string
-  ): ComponentState[] {
-    // All whitespace in Jsx is also considered JsxText, for example indentation
-    if (c.isKind(SyntaxKind.JsxText)) {
-      if (c.getLiteralText().trim().length) {
-        throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`);
-      }
-      return [];
-    } else if (c.isKind(SyntaxKind.JsxExpression)) {
-      throw new Error(
-        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`);
-    }
-  
-    const selfState: ComponentState = {
-      ...StaticParsingHelpers.parseComponentState(c, defaultImports),
-      parentUUID
-    };
-  
-    if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      return [ selfState ];
-    }
-  
-    const children: ComponentState[] = c.getJsxChildren()
-      .flatMap(c => StaticParsingHelpers.parseJsxChild(c, defaultImports, selfState.uuid))
-      .filter((c): c is ComponentState => !!c);
-    return [ selfState, ...children ];
   }
 }
