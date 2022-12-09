@@ -1,5 +1,5 @@
 import { PageState, PropValues } from "@yext/studio-plugin";
-import { PageSlice, PageSliceStates } from "../models/slices/pageSlice";
+import { PageSlice, PageSliceStates, PagesRecord } from "../models/slices/pageSlice";
 import { SliceCreator } from "../models/utils";
 
 const initialStates: PageSliceStates = {
@@ -16,7 +16,7 @@ const initialStates: PageSliceStates = {
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pagesActions = {
-    setPages: (pages: Record<string, PageState>) => set({ pages }),
+    setPages: (pages: PagesRecord) => set({ pages }),
     setActivePageState: (pageState: PageState) =>
       set((store) => {
         if (pageState.pageName !== get().activePageName) {

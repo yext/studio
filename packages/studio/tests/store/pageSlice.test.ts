@@ -6,7 +6,7 @@ import {
   PropValues,
   PropValueType,
 } from "@yext/studio-plugin";
-import { PageSliceStates } from "../../src/store/models/slices/pageSlice";
+import { PageSliceStates, PagesRecord } from "../../src/store/models/slices/pageSlice";
 
 const searchBarComponent: ComponentState = {
   name: "SearchBar",
@@ -44,7 +44,7 @@ const buttonComponent: ComponentState = {
   uuid: "button-uuid",
   metadataUUID: "button-metadata-uuid",
 }
-const pages: Record<string, PageState> = {
+const pages: PagesRecord = {
   universal: {
     pageName: 'universal',
     componentTree: [searchBarComponent],
