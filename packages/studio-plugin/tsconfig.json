@@ -4,5 +4,6 @@
     "module": "CommonJS",
     "outDir": "lib"
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests"],
+  "exclude": ["tests/__fixtures__"],
 }
