@@ -1,9 +1,6 @@
+import { FileMetadataKind } from "./FileMetadata";
 import { PropShape } from "./PropShape";
 import { PropValues } from "./PropValues";
-
-export enum FileMetadataKind {
-  Component = "componentMetadata",
-}
 
 export type ComponentMetadata = {
   kind: FileMetadataKind.Component;

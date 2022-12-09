@@ -2,13 +2,13 @@
   "name": "@yext/studio-plugin",
   "private": true,
   "version": "0.0.0",
-  "types": "lib/createStudioPlugin.d.ts",
-  "main": "lib/createStudioPlugin.js",
+  "types": "lib/index.d.ts",
+  "main": "lib/index.js",
   "exports": {
     ".": {
-      "types": "./lib/createStudioPlugin.d.ts",
-      "import": "./lib/createStudioPlugin.js",
-      "require": "./lib/createStudioPlugin.js"
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.js"
     },
     "./virtual-module": {
       "types": "./virtual-module.d.ts"
