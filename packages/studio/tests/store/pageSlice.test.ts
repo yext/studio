@@ -73,21 +73,23 @@ describe("PageSlice", () => {
       });
     });
 
-    it('updates activePageName using setActivePageName', () => {
-      useStudioStore.getState().pages.setActivePageName('vertical')
-      const activePageName = useStudioStore.getState().pages.activePageName
-      expect(activePageName).toEqual('vertical')
-    })
+    it("updates activePageName using setActivePageName", () => {
+      useStudioStore.getState().pages.setActivePageName("vertical");
+      const activePageName = useStudioStore.getState().pages.activePageName;
+      expect(activePageName).toEqual("vertical");
+    });
 
-    it('logs an error when using setActivePageName for a page not found in store', () => {
-      const consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementation();
-      useStudioStore.getState().pages.setActivePageName('location')
-      const activePageName = useStudioStore.getState().pages.activePageName
-      expect(activePageName).toEqual('universal')
+    it("logs an error when using setActivePageName for a page not found in store", () => {
+      const consoleErrorSpy = jest
+        .spyOn(global.console, "error")
+        .mockImplementation();
+      useStudioStore.getState().pages.setActivePageName("location");
+      const activePageName = useStudioStore.getState().pages.activePageName;
+      expect(activePageName).toEqual("universal");
       expect(consoleErrorSpy).toBeCalledWith(
         'Error in setActivePage: Page "location" is not found in Store. Unable to set it as active page.'
       );
-    })
+    });
 
     it("updates existing active page's state using setActivePageState", () => {
       const newActivePageState: PageState = {

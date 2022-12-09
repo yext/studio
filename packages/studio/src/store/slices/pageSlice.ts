@@ -22,9 +22,11 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     setPages: (pages: PagesRecord) => set({ pages }),
     setActivePageName: (activePageName: string) => {
       if (get().pages[activePageName]) {
-        set({ activePageName })
+        set({ activePageName });
       } else {
-        console.error(`Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`)
+        console.error(
+          `Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`
+        );
       }
     },
     setActivePageState: (pageState: PageState) =>
