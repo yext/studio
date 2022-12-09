@@ -6,7 +6,7 @@ import {
   PropValues,
   PropValueType,
 } from "@yext/studio-plugin";
-import { PagesStates } from "../../src/store/models/slices/pages";
+import { PageSliceStates } from "../../src/store/models/slices/pageSlice";
 
 const searchBarComponent: ComponentState = {
   name: "SearchBar",
@@ -34,16 +34,18 @@ const resultsComponent: ComponentState = {
 };
 const pages: Record<string, PageState> = {
   universal: {
+    pageName: 'universal',
     componentTree: [searchBarComponent],
     cssImports: ["index.css"],
   },
   vertical: {
+    pageName: 'vertical',
     componentTree: [resultsComponent],
     cssImports: [],
   },
 };
 
-describe("PagesSlice", () => {
+describe("PageSlice", () => {
   it("updates pages using setPages", () => {
     useStudioStore.getState().pages.setPages(pages);
     const actualPages = useStudioStore.getState().pages.pages;
@@ -58,26 +60,9 @@ describe("PagesSlice", () => {
       });
     });
 
-    it("updates activePageName using setActivePage", () => {
-      useStudioStore.getState().pages.setActivePage("vertical");
-      const activePageName = useStudioStore.getState().pages.activePageName;
-      expect(activePageName).toEqual("vertical");
-    });
-
-    it("logs an error when using setActivePage for a page not found in store", () => {
-      const consoleErrorSpy = jest
-        .spyOn(global.console, "error")
-        .mockImplementation();
-      useStudioStore.getState().pages.setActivePage("location");
-      const activePageName = useStudioStore.getState().pages.activePageName;
-      expect(activePageName).toEqual("universal");
-      expect(consoleErrorSpy).toBeCalledWith(
-        'Error in setActivePage: Page "location" is not found in Store. Unable to set it as active page.'
-      );
-    });
-
-    it("updates active page's state using setActivePageState", () => {
+    it("updates existing active page's state using setActivePageState", () => {
       const newActivePageState: PageState = {
+        pageName: 'universal',
         componentTree: [
           {
             name: "Button",
@@ -102,6 +87,20 @@ describe("PagesSlice", () => {
       });
     });
 
+    it("updates new page's state using setActivePageState", () => {
+      const newActivePageState: PageState = {
+        pageName: 'test',
+        componentTree: [resultsComponent],
+        cssImports: [],
+      };
+      useStudioStore.getState().pages.setActivePageState(newActivePageState);
+      const actualPages = useStudioStore.getState().pages.pages;
+      expect(actualPages).toEqual({
+        ...pages,
+        test: newActivePageState
+      });
+    });
+
     it("returns active page's state using getActivePageState", () => {
       const activePageState = useStudioStore
         .getState()
@@ -115,6 +114,7 @@ describe("PagesSlice", () => {
       setInitialState({
         pages: {
           universal: {
+            pageName: 'universal',
             componentTree: [searchBarComponent, resultsComponent],
             cssImports: [],
           },
@@ -149,6 +149,7 @@ describe("PagesSlice", () => {
     it("logs an error when using setActiveComponentProps before an active component is not selected", () => {
       const initialPages = {
         universal: {
+          pageName: 'universal',
           componentTree: [searchBarComponent],
           cssImports: [],
         },
@@ -187,6 +188,7 @@ describe("PagesSlice", () => {
       setInitialState({
         pages: {
           universal: {
+            pageName: 'universal',
             componentTree: [searchBarComponent],
             cssImports: [],
           },
@@ -202,7 +204,7 @@ describe("PagesSlice", () => {
   });
 });
 
-function setInitialState(initialState: PagesStates): void {
+function setInitialState(initialState: PageSliceStates): void {
   useStudioStore.setState({
     pages: {
       ...useStudioStore.getState().pages,

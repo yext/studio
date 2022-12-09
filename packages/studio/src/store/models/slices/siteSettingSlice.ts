@@ -4,14 +4,14 @@ interface SiteSettingsMetadata {
   propShape: PropShape;
 }
 
-export interface SiteSettingsStates {
+export interface SiteSettingSliceStates {
   /** Metadata outlining site settings' interface properties */
   metadata?: SiteSettingsMetadata;
   /** Site setting's actual field values */
   state?: PropValues;
 }
 
-export interface SiteSettingsActions {
+export interface SiteSettingSliceActions {
   setMetadata: (metadata: SiteSettingsMetadata) => void;
   setState: (state: PropValues) => void;
 }
@@ -19,4 +19,4 @@ export interface SiteSettingsActions {
 /**
  * Maintains the site settings that apply to all pages.
  */
-export type SiteSettingsSlice = SiteSettingsStates & SiteSettingsActions;
+export type SiteSettingSlice = SiteSettingSliceStates & SiteSettingSliceActions;

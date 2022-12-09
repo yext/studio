@@ -1,6 +1,6 @@
 import { ComponentState, PageState, PropValues } from "@yext/studio-plugin";
 
-export interface PagesStates {
+export interface PageSliceStates {
   /** All constructed pages that can be preview in Studio. */
   pages: Record<string, PageState>;
   /** The name of the current page display in Studio. */
@@ -9,10 +9,9 @@ export interface PagesStates {
   activeComponentUUID?: string;
 }
 
-interface PagesActions {
+interface PageSliceActions {
   setPages: (state: Record<string, PageState>) => void;
 
-  setActivePage: (activePageName: string) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState;
 
@@ -25,4 +24,4 @@ interface PagesActions {
  * and composed by user through Studio, including the active page and component
  * state on preview.
  */
-export type PagesSlice = PagesStates & PagesActions;
+export type PageSlice = PageSliceStates & PageSliceActions;

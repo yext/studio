@@ -4,9 +4,9 @@ import {
   PropValueType,
 } from "@yext/studio-plugin";
 import { useStudioStore } from "../../src/store/store";
-import { FileMetadatasStates } from "../../src/store/models/slices/fileMetadatas";
+import { FileMetadataSliceStates } from "../../src/store/models/slices/fileMetadataSlice";
 
-describe("FileMetadatasSlice", () => {
+describe("FileMetadataSlice", () => {
   const componentMetadata: ComponentMetadata = {
     kind: FileMetadataKind.Component,
     propShape: {
@@ -52,7 +52,7 @@ describe("FileMetadatasSlice", () => {
   });
 });
 
-function setInitialState(initialState: FileMetadatasStates): void {
+function setInitialState(initialState: FileMetadataSliceStates): void {
   useStudioStore.setState({
     fileMetadatas: {
       ...useStudioStore.getState().fileMetadatas,

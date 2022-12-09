@@ -1,10 +1,11 @@
 import { PageState, PropValues } from "@yext/studio-plugin";
-import { PagesSlice, PagesStates } from "../models/slices/pages";
+import { PageSlice, PageSliceStates } from "../models/slices/pageSlice";
 import { SliceCreator } from "../models/utils";
 
-const initialStates: PagesStates = {
+const initialStates: PageSliceStates = {
   pages: {
     index: {
+      pageName: 'index',
       componentTree: [],
       cssImports: [],
     },
@@ -13,22 +14,15 @@ const initialStates: PagesStates = {
   activeComponentUUID: undefined,
 };
 
-export const createPagesSlice: SliceCreator<PagesSlice> = (set, get) => {
+export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pagesActions = {
     setPages: (pages: Record<string, PageState>) => set({ pages }),
-    setActivePage: (activePageName: string) => {
-      if (get().pages[activePageName]) {
-        set({ activePageName });
-      } else {
-        console.error(
-          `Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`
-        );
-      }
-    },
     setActivePageState: (pageState: PageState) =>
       set((store) => {
-        const activePageName = store.activePageName;
-        store.pages[activePageName] = pageState;
+        if (pageState.pageName !== get().activePageName) {
+          store.activePageName = pageState.pageName
+        }
+        store.pages[pageState.pageName] = pageState;
       }),
     getActivePageState: () => get().pages[get().activePageName],
   };
@@ -43,7 +37,7 @@ export const createPagesSlice: SliceCreator<PagesSlice> = (set, get) => {
       }
       return get()
         .getActivePageState()
-        .componentTree.find((c) => c.uuid === activeComponentUUID);
+        .componentTree.find((component) => component.uuid === activeComponentUUID);
     },
     setActiveComponentProps: (props: PropValues) =>
       set((store) => {

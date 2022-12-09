@@ -1,8 +1,8 @@
 import { FileMetadata } from "@yext/studio-plugin";
-import { FileMetadatasSlice } from "../models/slices/fileMetadatas";
+import { FileMetadataSlice } from "../models/slices/fileMetadataSlice";
 import { SliceCreator } from "../models/utils";
 
-export const createFileMetadatasSlice: SliceCreator<FileMetadatasSlice> = (
+export const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   set,
   get
 ) => ({

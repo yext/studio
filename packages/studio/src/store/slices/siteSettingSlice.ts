@@ -1,7 +1,7 @@
-import { SiteSettingsSlice } from "../models/slices/siteSettings";
+import { SiteSettingSlice } from "../models/slices/siteSettingSlice";
 import { SliceCreator } from "../models/utils";
 
-export const createSiteSettingsSlice: SliceCreator<SiteSettingsSlice> = (
+export const createSiteSettingSlice: SliceCreator<SiteSettingSlice> = (
   set
 ) => ({
   metadata: undefined,

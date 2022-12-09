@@ -1,8 +1,8 @@
 import { useStudioStore } from "../../src/store/store";
-import { SiteSettingsStates } from "../../src/store/models/slices/siteSettings";
+import { SiteSettingSliceStates } from "../../src/store/models/slices/siteSettingSlice";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 
-const siteSettingsMetadata: SiteSettingsStates["metadata"] = {
+const siteSettingsMetadata: SiteSettingSliceStates["metadata"] = {
   propShape: {
     apiKey: {
       type: PropValueType.string,
@@ -10,7 +10,7 @@ const siteSettingsMetadata: SiteSettingsStates["metadata"] = {
     },
   },
 };
-const siteSettingsValue: SiteSettingsStates["state"] = {
+const siteSettingsValue: SiteSettingSliceStates["state"] = {
   apiKey: {
     kind: PropValueKind.Literal,
     valueType: PropValueType.string,
@@ -18,7 +18,7 @@ const siteSettingsValue: SiteSettingsStates["state"] = {
   },
 };
 
-describe("SiteSettingsSlice", () => {
+describe("SiteSettingSlice", () => {
   it("updates siteSettings' metadata using setMetadata", () => {
     useStudioStore.getState().siteSettings.setMetadata(siteSettingsMetadata);
     const actualMetadata = useStudioStore.getState().siteSettings.metadata;
