@@ -224,9 +224,8 @@ export default class StudioSourceFile {
     }
 
     function isFragmentElement(element: JsxElement | JsxSelfClosingElement): boolean {
-      return element.isKind(SyntaxKind.JsxFragment)
-        || (element.isKind(SyntaxKind.JsxElement)
-          && ["Fragment", "React.Fragment"].includes(getJsxElementName(element)));
+      return element.isKind(SyntaxKind.JsxElement)
+          && ["Fragment", "React.Fragment"].includes(getJsxElementName(element));
     }
 
     if (component.isKind(SyntaxKind.JsxFragment) || isFragmentElement(component)) {
