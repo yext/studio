@@ -5,9 +5,9 @@ interface SiteSettingsMetadata {
 }
 
 export interface SiteSettingSliceStates {
-  /** Metadata outlining site settings' interface properties */
+  /** Metadata outlining site settings' interface properties. */
   metadata?: SiteSettingsMetadata;
-  /** Site setting's actual field values */
+  /** Site setting's actual field values. */
   state?: PropValues;
 }
 

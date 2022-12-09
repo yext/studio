@@ -22,6 +22,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         if (pageState.pageName !== get().activePageName) {
           store.activePageName = pageState.pageName
         }
+        if(!pageState.componentTree.find(component => component.uuid === store.activeComponentUUID)) {
+          store.activeComponentUUID = undefined;
+        }
         store.pages[pageState.pageName] = pageState;
       }),
     getActivePageState: () => get().pages[get().activePageName],
@@ -30,7 +33,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const activeComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) =>
       set({ activeComponentUUID }),
-    getActiveComponent: () => {
+    getActiveComponentState: () => {
       const activeComponentUUID = get().activeComponentUUID;
       if (!activeComponentUUID) {
         return undefined;
@@ -41,7 +44,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     setActiveComponentProps: (props: PropValues) =>
       set((store) => {
-        const activeComponent = get().getActiveComponent();
+        const activeComponent = get().getActiveComponentState();
         if (!activeComponent) {
           console.error(
             "Error in setActiveComponentProps: No active component selected in store."

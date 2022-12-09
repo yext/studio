@@ -17,7 +17,7 @@ interface PageSliceActions {
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentProps: (props: PropValues) => void;
-  getActiveComponent: () => ComponentState | undefined;
+  getActiveComponentState: () => ComponentState | undefined;
 }
 /**
  * Maintains information about pages and components parsed by Studio plugin
