@@ -1,7 +1,8 @@
 /**
- * When running jest tests, the stores are not automatically reset before each test run.
- * To avoid the case of the state of one test can affecting another, the code below
- * is to mock zustand's store from https://docs.pmnd.rs/zustand/guides/testing#typescript-usage.
+ * When running jest tests, the stores are not automatically reset before each
+ * test run. To avoid the case of the state of one test affecting another, the
+ * code below is to mock zustand's store from:
+ * https://docs.pmnd.rs/zustand/guides/testing#typescript-usage.
  */
 
 import { act } from "react-dom/test-utils";
