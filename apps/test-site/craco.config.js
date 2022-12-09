@@ -1,6 +1,6 @@
 module.exports = {
   webpack: {
-    configure: webpackConfig => {
+    configure: (webpackConfig) => {
       /**
        * CRA's usage of ModuleScopePlugin enforces a restriction that relative imports from
        * app's source directory shouldn't reach outside of it. This caused errors with the
@@ -9,10 +9,11 @@ module.exports = {
        * CRA's webpack config.
        */
       const scopePluginIndex = webpackConfig.resolve.plugins.findIndex(
-        ({ constructor }) => constructor && constructor.name === 'ModuleScopePlugin'
+        ({ constructor }) =>
+          constructor && constructor.name === "ModuleScopePlugin"
       );
       webpackConfig.resolve.plugins.splice(scopePluginIndex, 1);
       return webpackConfig;
-    }
-  }
+    },
+  },
 };
