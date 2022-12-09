@@ -233,4 +233,10 @@ export default class StaticParsingHelpers {
       ? element.getTagNameNode().getText()
       : element.getOpeningElement().getTagNameNode().getText();
   }
+
+  static isFragmentElement(element: JsxElement | JsxSelfClosingElement): boolean {
+    const name = StaticParsingHelpers.parseJsxElementName(element);
+    return element.isKind(SyntaxKind.JsxElement)
+        && ["Fragment", "React.Fragment"].includes(name);
+  }
 }

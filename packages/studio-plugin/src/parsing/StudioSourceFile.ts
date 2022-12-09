@@ -185,13 +185,9 @@ export default class StudioSourceFile {
       uuid: v4()
     };
 
-    function isFragmentElement(element: JsxElement | JsxSelfClosingElement): boolean {
-      const name = StaticParsingHelpers.parseJsxElementName(element);
-      return element.isKind(SyntaxKind.JsxElement)
-          && ["Fragment", "React.Fragment"].includes(name);
-    }
-
-    if (component.isKind(SyntaxKind.JsxFragment) || isFragmentElement(component)) {
+    if (component.isKind(SyntaxKind.JsxFragment)
+      || StaticParsingHelpers.isFragmentElement(component)
+    ) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment
