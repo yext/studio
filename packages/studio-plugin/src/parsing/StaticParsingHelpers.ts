@@ -153,8 +153,8 @@ export default class StaticParsingHelpers {
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
     // This is temporarily added to get the component metadata. Once the state manager is
-    // implemented, this data will be stored there and will not need to be computed here.
-    // TODO: update to get component metadata from the state manager
+    // implemented, this data will be computed elsewhere and stored there.
+    // TODO: update to get component metadata from where it's computed for the state manager
     let propShape: PropShape | undefined = undefined;
     if (metadataUUID) {
       const componentFile = new ComponentFile(metadataUUID);
