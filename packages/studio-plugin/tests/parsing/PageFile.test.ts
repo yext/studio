@@ -4,6 +4,26 @@ import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 
 jest.mock("uuid", () => ({ v4: () => "mock-uuid" }));
+jest.mock("../../src/getFileMetadata", () => ({
+  getFileMetadata: (filepath?: string) => {
+    let propShape;
+    if (filepath?.includes("ComplexBanner")) {
+      propShape = {
+        title: { type: 'string', doc: 'jsdoc' },
+        num: { type: 'number' },
+        bool: { type: 'boolean' },
+        bgColor: { type: 'HexColor' }
+      };
+    } else if (filepath?.includes("NestedBanner")) {
+      propShape = {};
+    }
+
+    return {
+      metadataUUID: filepath,
+      propShape
+    };
+  }
+}));
 
 const componentTree: ComponentState[] = [
   {
