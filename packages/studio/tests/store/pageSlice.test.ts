@@ -49,12 +49,10 @@ const buttonComponent: ComponentState = {
 };
 const pages: PagesRecord = {
   universal: {
-    pageName: "universal",
     componentTree: [searchBarComponent],
     cssImports: ["index.css"],
   },
   vertical: {
-    pageName: "vertical",
     componentTree: [resultsComponent],
     cssImports: [],
   },
@@ -75,9 +73,24 @@ describe("PageSlice", () => {
       });
     });
 
+    it('updates activePageName using setActivePageName', () => {
+      useStudioStore.getState().pages.setActivePageName('vertical')
+      const activePageName = useStudioStore.getState().pages.activePageName
+      expect(activePageName).toEqual('vertical')
+    })
+
+    it('logs an error when using setActivePageName for a page not found in store', () => {
+      const consoleErrorSpy = jest.spyOn(global.console, 'error').mockImplementation();
+      useStudioStore.getState().pages.setActivePageName('location')
+      const activePageName = useStudioStore.getState().pages.activePageName
+      expect(activePageName).toEqual('universal')
+      expect(consoleErrorSpy).toBeCalledWith(
+        'Error in setActivePage: Page "location" is not found in Store. Unable to set it as active page.'
+      );
+    })
+
     it("updates existing active page's state using setActivePageState", () => {
       const newActivePageState: PageState = {
-        pageName: "universal",
         componentTree: [buttonComponent],
         cssImports: ["app.css"],
       };
@@ -96,7 +109,6 @@ describe("PageSlice", () => {
         activeComponentUUID: "searchbar-uuid",
       });
       const newActivePageState: PageState = {
-        pageName: "universal",
         componentTree: [buttonComponent],
         cssImports: ["app.css"],
       };
@@ -116,7 +128,6 @@ describe("PageSlice", () => {
         activeComponentUUID: "searchbar-uuid",
       });
       const newActivePageState: PageState = {
-        pageName: "universal",
         componentTree: [searchBarComponent, buttonComponent],
         cssImports: ["app.css"],
       };
@@ -127,20 +138,6 @@ describe("PageSlice", () => {
       expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
         "searchbar-uuid"
       );
-    });
-
-    it("adds a new page's state using setActivePageState", () => {
-      const newActivePageState: PageState = {
-        pageName: "test",
-        componentTree: [resultsComponent],
-        cssImports: [],
-      };
-      useStudioStore.getState().pages.setActivePageState(newActivePageState);
-      const actualPages = useStudioStore.getState().pages.pages;
-      expect(actualPages).toEqual({
-        ...pages,
-        test: newActivePageState,
-      });
     });
 
     it("returns active page's state using getActivePageState", () => {
@@ -156,7 +153,6 @@ describe("PageSlice", () => {
       setInitialState({
         pages: {
           universal: {
-            pageName: "universal",
             componentTree: [searchBarComponent, resultsComponent],
             cssImports: [],
           },
@@ -230,7 +226,6 @@ describe("PageSlice", () => {
       setInitialState({
         pages: {
           universal: {
-            pageName: "universal",
             componentTree: [searchBarComponent],
             cssImports: [],
           },

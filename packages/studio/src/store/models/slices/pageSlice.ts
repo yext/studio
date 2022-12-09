@@ -16,6 +16,7 @@ export interface PageSliceStates {
 interface PageSliceActions {
   setPages: (state: PagesRecord) => void;
 
+  setActivePageName: (pageName: string) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState;
 

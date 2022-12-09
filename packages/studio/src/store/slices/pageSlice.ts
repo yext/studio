@@ -9,7 +9,6 @@ import { SliceCreator } from "../models/utils";
 const initialStates: PageSliceStates = {
   pages: {
     index: {
-      pageName: "index",
       componentTree: [],
       cssImports: [],
     },
@@ -21,11 +20,15 @@ const initialStates: PageSliceStates = {
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pagesActions = {
     setPages: (pages: PagesRecord) => set({ pages }),
+    setActivePageName: (activePageName: string) => {
+      if (get().pages[activePageName]) {
+        set({ activePageName })
+      } else {
+        console.error(`Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`)
+      }
+    },
     setActivePageState: (pageState: PageState) =>
       set((store) => {
-        if (pageState.pageName !== get().activePageName) {
-          store.activePageName = pageState.pageName;
-        }
         if (
           !pageState.componentTree.find(
             (component) => component.uuid === store.activeComponentUUID
@@ -33,7 +36,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         ) {
           store.activeComponentUUID = undefined;
         }
-        store.pages[pageState.pageName] = pageState;
+        store.pages[store.activePageName] = pageState;
       }),
     getActivePageState: () => get().pages[get().activePageName],
   };
