@@ -9,10 +9,10 @@ jest.mock("../../src/getFileMetadata", () => ({
     let propShape;
     if (filepath?.includes("ComplexBanner")) {
       propShape = {
-        title: { type: 'string', doc: 'jsdoc' },
-        num: { type: 'number' },
-        bool: { type: 'boolean' },
-        bgColor: { type: 'HexColor' }
+        title: { type: "string", doc: "jsdoc" },
+        num: { type: "number" },
+        bool: { type: "boolean" },
+        bgColor: { type: "HexColor" }
       };
     } else if (filepath?.includes("NestedBanner")) {
       propShape = {};
@@ -205,7 +205,7 @@ describe("getPageState", () => {
     ]);
   });
 
-  describe('throws errors', () => {
+  describe("throws errors", () => {
     it("throws an error when no return statement is found in the default export", () => {
       const pageFile = new PageFile(getPagePath("noReturnStatementPage"));
 
@@ -234,7 +234,7 @@ describe("getPageState", () => {
       const pageFile = new PageFile(getPagePath("jsxTextPage"));
 
       expect(() => pageFile.getPageState()).toThrowError(
-        "Found JsxText with content \"Text\". JsxText is not currently supported."
+        'Found JsxText with content "Text". JsxText is not currently supported.'
       );
     });
 
@@ -242,7 +242,7 @@ describe("getPageState", () => {
       const pageFile = new PageFile(getPagePath("jsxExpressionPage"));
 
       expect(() => pageFile.getPageState()).toThrowError(
-        "Jsx nodes of kind \"JsxExpression\" are not supported for direct use in page files."
+        'Jsx nodes of kind "JsxExpression" are not supported for direct use in page files.'
       );
     });
   });

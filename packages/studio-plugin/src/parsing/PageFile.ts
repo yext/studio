@@ -32,6 +32,6 @@ export default class PageFile {
     return {
       componentTree: this.studioSourceFile.parseComponentTree(absPathDefaultImports, getFileMetadata),
       cssImports: this.studioSourceFile.parseCssImports()
-    }
+    };
   }
 }

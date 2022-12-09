@@ -29,7 +29,7 @@ describe("parseDefaultExport", () => {
     expect(defaultExport.getName()).toBe("test");
   });
 
-  describe('export assignment of variable declaration', () => {
+  describe("export assignment of variable declaration", () => {
     it(
       "correctly parses object with single regular property assignment",
       () => {
@@ -67,7 +67,7 @@ describe("parseDefaultExport", () => {
     });
   });
 
-  describe('export assignment of function declaration', () => {
+  describe("export assignment of function declaration", () => {
     it("correctly parses object with single property assignment", () => {
       const { project } = createTestSourceFile(
         "function test() {}; const no = false; export default { num: test } as Test;"

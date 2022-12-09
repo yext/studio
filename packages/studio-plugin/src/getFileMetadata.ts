@@ -21,5 +21,5 @@ export function getFileMetadata(
   return {
     metadataUUID: filepath,
     propShape
-  }
+  };
 }

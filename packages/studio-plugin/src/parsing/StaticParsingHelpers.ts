@@ -6,7 +6,7 @@ import {
   JsxElement,
   JsxSelfClosingElement,
   ObjectLiteralExpression,
-  SyntaxKind
+  SyntaxKind,
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../types/PropValues";
 import { PropShape } from "../types/PropShape";
@@ -62,7 +62,7 @@ export default class StaticParsingHelpers {
     } else {
       throw new Error(
         `Unrecognized prop value ${initializer.getFullText()} ` +
-        `with kind: ${expression.getKindName()}`
+          `with kind: ${expression.getKindName()}`
       );
     }
   }
@@ -195,7 +195,7 @@ export default class StaticParsingHelpers {
         );
       }
       propValues[propName] = propValue;
-    })
+    });
     return propValues;
   }
 }
