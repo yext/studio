@@ -1,6 +1,7 @@
 import StudioSourceFile from "./StudioSourceFile";
 import { PageState } from "../types/State";
 import path from "path";
+import { getFileMetadata } from "../getFileMetadata";
 
 /**
  * PageFile is responsible for parsing a single page file, for example
@@ -29,7 +30,7 @@ export default class PageFile {
       }, {});
 
     return {
-      componentTree: this.studioSourceFile.parseComponentTree(absPathDefaultImports),
+      componentTree: this.studioSourceFile.parseComponentTree(absPathDefaultImports, getFileMetadata),
       cssImports: this.studioSourceFile.parseCssImports()
     }
   }

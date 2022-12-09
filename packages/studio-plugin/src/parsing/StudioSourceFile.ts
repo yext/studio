@@ -17,7 +17,7 @@ import StaticParsingHelpers, {
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
 import { v4 } from "uuid";
-import { getFileMetadata } from "../getFileMetadata";
+import { PropShape } from "../types/PropShape";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -114,17 +114,21 @@ export default class StudioSourceFile {
 
   /**
    * There is full support for default exports defined directly as function
-   * declarations. But, for exports defined as assignments, support is slightly
-   * restricted as follows:
+   * declarations. But, for exports defined as assignments, support is restricted
+   * as follows:
    * - If there is only a single identifer (e.g. `export default Identifier;`),
    *   it will look for and return the declaration for that identifier.
-   * - If there is an array (e.g. `export default [Identifier1, Identifier 2];`),
-   *   it will only look for and return the declaration for the first identifier.
-   * - If there is an object (e.g. `export default \{ key1: val1, key2: val2 \};`),
-   *   it will only look for and return a declartion for the identifier of the
-   *   first field's value (i.e. `val1`). This is also the case if property
-   *   shorthand is used (e.g. `export default \{ Export1, Export2 \};` would look
-   *   for a declaration of `Export1`.), 
+   * - If there is an array with a single identifier (e.g.
+   *   `export default [Identifier1];`), it will look for and return the
+   *   declaration for that identifier.
+   * - If there is an object with a single property (e.g.
+   *   `export default \{ key: val \};`), it will look for and return a
+   *   declartion for the identifier of that field's value (i.e. `val`). This is
+   *   also the case if property shorthand is used (e.g.
+   *   `export default \{ Export1 \};` would look for a declaration of
+   *   `Export1`.).
+   * - If there are multiple identifiers found for an array or multiple property
+   *   assignments found for an object, an error will be thrown.
    */
   parseDefaultExport(): VariableDeclaration | FunctionDeclaration {
     const declarations = this.sourceFile.getDefaultExportSymbolOrThrow().getDeclarations();
@@ -135,25 +139,32 @@ export default class StudioSourceFile {
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
     } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
+      const identifiers = exportDeclaration.getDescendantsOfKind(SyntaxKind.Identifier);
+      if (identifiers.length === 0) {
+        throw new Error("Error getting default export: No Identifier found for ExportAssignment.");
+      }
+      
       let identifier: Identifier | undefined = undefined;
-      const objLiteralExp = exportDeclaration.getFirstDescendantByKind(
-        SyntaxKind.ObjectLiteralExpression
-      );
-      if (objLiteralExp) {
-        const propAssignment = objLiteralExp.getFirstDescendant(n =>
-          n.isKind(SyntaxKind.PropertyAssignment)
-          || n.isKind(SyntaxKind.ShorthandPropertyAssignment)
+      if (identifiers.length === 1) {
+        identifier = identifiers[0];
+      } else if (identifiers.length === 2) {
+        const objLiteralExp = exportDeclaration.getFirstDescendantByKind(
+          SyntaxKind.ObjectLiteralExpression
         );
-        if (propAssignment?.isKind(SyntaxKind.PropertyAssignment)) {
-          const identifiers = propAssignment.getDescendantsOfKind(SyntaxKind.Identifier);
-          if (identifiers.length > 1) {
-            // The value of the object's first property
+        if (objLiteralExp) {
+          const propAssignment = objLiteralExp.getFirstDescendant(n =>
+            n.isKind(SyntaxKind.PropertyAssignment)
+            || n.isKind(SyntaxKind.ShorthandPropertyAssignment)
+          );
+          if (propAssignment?.isKind(SyntaxKind.PropertyAssignment)) {
+            // The value of the object's only property
             identifier = identifiers[1];
           }
         }
       }
-      identifier = identifier
-        ?? exportDeclaration.getFirstDescendantByKindOrThrow(SyntaxKind.Identifier);
+      if (!identifier) {
+        throw new Error("Error getting default export: Too many Identifiers found for ExportAssignment.");
+      }
       const identifierName = identifier.getText();
       return this.sourceFile.getVariableDeclaration(identifierName)
         ?? this.sourceFile.getFunctionOrThrow(identifierName);
@@ -161,7 +172,10 @@ export default class StudioSourceFile {
     throw new Error("Error getting default export: No ExportAssignment or FunctionDeclaration found.");
   }
 
-  parseComponentTree(defaultImports: Record<string, string>): ComponentState[] {
+  parseComponentTree(
+    defaultImports: Record<string, string>,
+    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape }
+  ): ComponentState[] {
     const defaultExport = this.parseDefaultExport();
     const returnStatement = defaultExport.getFirstDescendantByKind(SyntaxKind.ReturnStatement);
     if (!returnStatement) {
@@ -180,13 +194,15 @@ export default class StudioSourceFile {
 
     return this.parseJsxChild(
       topLevelJsxNode,
-      defaultImports
+      defaultImports,
+      getFileMetadata
     );
   }
 
   parseJsxChild(
     c: JsxChild,
     defaultImports: Record<string, string>,
+    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape },
     parentUUID?: string
   ): ComponentState[] {
     // All whitespace in Jsx is also considered JsxText, for example indentation
@@ -201,7 +217,7 @@ export default class StudioSourceFile {
     }
 
     const selfState: ComponentState = {
-      ...this.parseComponentState(c, defaultImports),
+      ...this.parseComponentState(c, defaultImports, getFileMetadata),
       parentUUID
     };
 
@@ -210,7 +226,7 @@ export default class StudioSourceFile {
     }
 
     const children: ComponentState[] = c.getJsxChildren()
-      .flatMap(c => this.parseJsxChild(c, defaultImports, selfState.uuid))
+      .flatMap(c => this.parseJsxChild(c, defaultImports, getFileMetadata, selfState.uuid))
       .filter((c): c is ComponentState => !!c);
     return [selfState, ...children];
   }
@@ -218,6 +234,7 @@ export default class StudioSourceFile {
   parseComponentState(
     component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
+    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape },
     parentUUID?: string
   ): ComponentState {
     const commonComponentState = {
