@@ -154,4 +154,56 @@ describe("getModuleMetadata", () => {
     };
     expect(moduleMetadata).toEqual(expectedModuleMetadata);
   });
+
+  it("can parse a Module comprised of Component type and Module type", () => {
+    const pathToModule = getModulePath("PanelWithComponentAndModule");
+    const moduleFile = new ModuleFile(pathToModule);
+    const moduleMetadata = moduleFile.getModuleMetadata();
+
+    const expectedModuleMetadata: ModuleMetadata = {
+      kind: FileMetadataKind.Module,
+      propShape: {
+        cardText: {
+          type: PropValueType.string,
+        },
+      },
+      componentTree: [
+        {
+          kind: ComponentStateKind.Fragment,
+          uuid: "mock-uuid-0",
+          parentUUID: undefined,
+        },
+        {
+          componentName: "Card",
+          kind: ComponentStateKind.Standard,
+          uuid: "mock-uuid-1",
+          parentUUID: "mock-uuid-0",
+          metadataUUID: "mock-metadataUUID",
+          props: {
+            text: {
+              kind: PropValueKind.Expression,
+              value: "cardText",
+              valueType: PropValueType.string,
+            },
+          },
+        },
+        {
+          componentName: "Tile",
+          kind: ComponentStateKind.Module,
+          uuid: "mock-uuid-2",
+          parentUUID: "mock-uuid-0",
+          metadataUUID: "mock-metadataUUID",
+          props: {
+            label: {
+              kind: PropValueKind.Literal,
+              value: "tile label",
+              valueType: PropValueType.string,
+            },
+          },
+        },
+      ],
+    };
+    expect(moduleMetadata).toEqual(expectedModuleMetadata);
+  });
+
 });
