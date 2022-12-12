@@ -1,4 +1,4 @@
-import { PageState, PropValues } from "@yext/studio-plugin";
+import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
 import {
   PageSlice,
   PageSliceStates,
@@ -69,7 +69,13 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         const components = store.pages[store.activePageName].componentTree;
         components.forEach((c) => {
           if (c.uuid === activeComponent.uuid) {
-            c.props = props;
+            if (c.kind === ComponentStateKind.Fragment) {
+              console.error(
+                "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
+              );
+            } else {
+              c.props = props;
+            }
           }
         });
       }),

@@ -1,6 +1,7 @@
 import { useStudioStore } from "../../src/store/store";
 import {
   ComponentState,
+  ComponentStateKind,
   PageState,
   PropValueKind,
   PropValues,
@@ -11,8 +12,13 @@ import {
   PagesRecord,
 } from "../../src/store/models/slices/pageSlice";
 
+const fragmentComponent: ComponentState = {
+  kind: ComponentStateKind.Fragment,
+  uuid: "fragment-uuid"
+}
 const searchBarComponent: ComponentState = {
-  name: "SearchBar",
+  kind: ComponentStateKind.Standard,
+  componentName: "SearchBar",
   props: {
     query: {
       kind: PropValueKind.Literal,
@@ -24,7 +30,8 @@ const searchBarComponent: ComponentState = {
   metadataUUID: "searchbar-metadata-uuid",
 };
 const resultsComponent: ComponentState = {
-  name: "results",
+  kind: ComponentStateKind.Standard,
+  componentName: "results",
   props: {
     limit: {
       kind: PropValueKind.Literal,
@@ -36,7 +43,8 @@ const resultsComponent: ComponentState = {
   metadataUUID: "results-metadata-uuid",
 };
 const buttonComponent: ComponentState = {
-  name: "Button",
+  kind: ComponentStateKind.Standard,
+  componentName: "Button",
   props: {
     clicked: {
       kind: PropValueKind.Literal,
@@ -180,13 +188,45 @@ describe("PageSlice", () => {
         },
       };
       useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
-      const actualPropValues =
-        useStudioStore.getState().pages.pages["universal"].componentTree[1]
-          .props;
+      const componentState = useStudioStore.getState().pages.pages["universal"].componentTree[1];
+      const actualPropValues = componentState.kind === ComponentStateKind.Fragment
+        ? undefined
+        : componentState.props;
       expect(actualPropValues).toEqual(newPropValues);
     });
 
-    it("logs an error when using setActiveComponentProps before an active component is not selected", () => {
+    it("logs an error when using setActiveComponentProps if the active component is a fragment", () => {
+      const initialPages = {
+        universal: {
+          pageName: "universal",
+          componentTree: [fragmentComponent, searchBarComponent],
+          cssImports: [],
+        },
+      };
+      setInitialState({
+        pages: initialPages,
+        activePageName: "universal",
+        activeComponentUUID: fragmentComponent.uuid,
+      });
+      const newPropValues: PropValues = {
+        clicked: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.boolean,
+          value: true,
+        },
+      };
+      const consoleErrorSpy = jest
+        .spyOn(global.console, "error")
+        .mockImplementation();
+      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
+      const actualPages = useStudioStore.getState().pages.pages;
+      expect(actualPages).toEqual(initialPages);
+      expect(consoleErrorSpy).toBeCalledWith(
+        "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
+      );
+    });
+
+    it("logs an error when using setActiveComponentProps before an active component is selected", () => {
       const initialPages = {
         universal: {
           pageName: "universal",
