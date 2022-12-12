@@ -1,4 +1,5 @@
 import { SyntaxKind } from "ts-morph";
+import { PropShape, PropValueType } from "../../lib";
 import StaticParsingHelpers from "../../src/parsing/StaticParsingHelpers";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 
@@ -30,7 +31,7 @@ describe("parseObjectLiteral", () => {
     );
     expect(() =>
       StaticParsingHelpers.parseObjectLiteral(objectLiteralExpression)
-    ).toThrowError(/^Unrecognized initialProps value .* CallExpression$/);
+    ).toThrowError(/^Unrecognized prop value .* CallExpression$/);
   });
 
   it("Throws an Error if the spread operator is used", () => {
@@ -43,5 +44,35 @@ describe("parseObjectLiteral", () => {
     expect(() =>
       StaticParsingHelpers.parseObjectLiteral(objectLiteralExpression)
     ).toThrowError(/^Unrecognized node type: SpreadAssignment/);
+  });
+});
+
+describe("parseJsxAttributes", () => {
+  const propShape: PropShape = {
+    title: { type: PropValueType.string, doc: "jsdoc" },
+  };
+
+  it("throws an error if a prop type isn't found", () => {
+    const { sourceFile } = createTestSourceFile(
+      `function Test() { return <Banner num={1} />; }`
+    );
+    const jsxAttributes = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.JsxSelfClosingElement
+    ).getAttributes();
+    expect(() =>
+      StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
+    ).toThrowError(/^Could not find prop type for:/);
+  });
+
+  it("throws an error if a prop value is invalid", () => {
+    const { sourceFile } = createTestSourceFile(
+      `function Test() { return <Banner title={1} />; }`
+    );
+    const jsxAttributes = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.JsxSelfClosingElement
+    ).getAttributes();
+    expect(() =>
+      StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
+    ).toThrowError(/^Invalid prop value:/);
   });
 });

@@ -6,7 +6,7 @@ export interface ComplexBannerProps {
   title?: string;
   num?: number;
   bool?: boolean;
-  bgColor: HexColor;
+  bgColor?: HexColor;
 }
 
 export const initialProps: ComplexBannerProps = {

@@ -1,4 +1,4 @@
-import { ComponentState } from "./ComponentState";
+import { ComponentState } from "./State";
 import { FileMetadataKind } from "./FileMetadata";
 import { PropShape } from "./PropShape";
 import { PropValues } from "./PropValues";

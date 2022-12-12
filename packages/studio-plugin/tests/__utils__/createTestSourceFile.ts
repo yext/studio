@@ -7,9 +7,9 @@ export default function createTestSourceFile(code: string) {
       jsx: typescript.JsxEmit.ReactJSX,
     },
   });
-  p.createSourceFile("test.ts", code);
+  p.createSourceFile("test.tsx", code);
   return {
-    sourceFile: p.getSourceFileOrThrow("test.ts"),
+    sourceFile: p.getSourceFileOrThrow("test.tsx"),
     project: p,
   };
 }
