@@ -56,9 +56,9 @@ describe("parseJsxAttributes", () => {
     const { sourceFile } = createTestSourceFile(
       `function Test() { return <Banner num={1} />; }`
     );
-    const jsxAttributes = sourceFile.getFirstDescendantByKindOrThrow(
-      SyntaxKind.JsxSelfClosingElement
-    ).getAttributes();
+    const jsxAttributes = sourceFile
+      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+      .getAttributes();
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Could not find prop type for:/);
@@ -68,9 +68,9 @@ describe("parseJsxAttributes", () => {
     const { sourceFile } = createTestSourceFile(
       `function Test() { return <Banner title={1} />; }`
     );
-    const jsxAttributes = sourceFile.getFirstDescendantByKindOrThrow(
-      SyntaxKind.JsxSelfClosingElement
-    ).getAttributes();
+    const jsxAttributes = sourceFile
+      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+      .getAttributes();
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Invalid prop value:/);

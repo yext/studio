@@ -1,8 +1,8 @@
 import { PropValues } from "./PropValues";
 
 export type PageState = {
-  componentTree: ComponentState[],
-  cssImports: string[]
+  componentTree: ComponentState[];
+  cssImports: string[];
 };
 
 export type ComponentState = StandardOrModuleComponentState | FragmentState;
@@ -13,24 +13,24 @@ export enum ComponentStateKind {
 }
 
 type StandardOrModuleComponentState = {
-  kind: ComponentStateKind.Standard | ComponentStateKind.Module,
+  kind: ComponentStateKind.Standard | ComponentStateKind.Module;
   /** The name of the component (i.e. Card or Banner). */
-  componentName: string,
+  componentName: string;
   /** Represents the props of the component. */
-  props: PropValues,
+  props: PropValues;
   /** A unique UUID for this specific component instance. */
-  uuid: string,
+  uuid: string;
   /**
    * The UUID of the corresponding StandardComponentMetadata or ModuleMetadata,
    * if it exists (i.e. not an instance of a builtIn component).
    */
-  metadataUUID?: string,
+  metadataUUID?: string;
   /** The UUID of the parent component in the tree, if one exists. */
-  parentUUID?: string,
+  parentUUID?: string;
 };
 
 type FragmentState = {
-  kind: ComponentStateKind.Fragment,
-  uuid: string,
-  parentUUID?: string,
+  kind: ComponentStateKind.Fragment;
+  uuid: string;
+  parentUUID?: string;
 };

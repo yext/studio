@@ -8,36 +8,40 @@ import {
   PropValueKind,
   PropValueType,
   PropShape,
-  FileMetadataKind
+  FileMetadataKind,
 } from "../../src";
 
-jest.mock('uuid');
+jest.mock("uuid");
 
 describe("getModuleMetadata", () => {
   beforeEach(() => {
     let uuidCount = 0;
     jest.spyOn(uuidUtils, "v4").mockImplementation(() => {
-      return `mock-uuid-${uuidCount++}`
-    })
-    jest.spyOn(getFileMetadataUtils, "getFileMetadata").mockImplementation((filepath) => {
-      let propShape: PropShape = {};
-      if (filepath?.endsWith("Card.tsx")) {
-        propShape = {
-          text: { type: PropValueType.string }
-        };
-      }
-      if (filepath?.endsWith("Tile.tsx")) {
-        propShape = {
-          label: { type: PropValueType.string }
-        };
-      }
-      return {
-        kind: filepath?.includes('components/') ? FileMetadataKind.Component : FileMetadataKind.Module,
-        metadataUUID: 'mock-metadataUUID',
-        propShape
-      };
+      return `mock-uuid-${uuidCount++}`;
     });
-  })
+    jest
+      .spyOn(getFileMetadataUtils, "getFileMetadata")
+      .mockImplementation((filepath) => {
+        let propShape: PropShape = {};
+        if (filepath?.endsWith("Card.tsx")) {
+          propShape = {
+            text: { type: PropValueType.string },
+          };
+        }
+        if (filepath?.endsWith("Tile.tsx")) {
+          propShape = {
+            label: { type: PropValueType.string },
+          };
+        }
+        return {
+          kind: filepath?.includes("components/")
+            ? FileMetadataKind.Component
+            : FileMetadataKind.Module,
+          metadataUUID: "mock-metadataUUID",
+          propShape,
+        };
+      });
+  });
 
   it("can parse a Module comprised of Component type", () => {
     const pathToModule = getModulePath("PanelWithComponents");
@@ -48,56 +52,56 @@ describe("getModuleMetadata", () => {
       kind: FileMetadataKind.Module,
       propShape: {
         topLevelCardText: {
-          type: PropValueType.string
-        }
+          type: PropValueType.string,
+        },
       },
       initialProps: {
         topLevelCardText: {
           kind: PropValueKind.Literal,
           value: "top level card",
-          valueType: PropValueType.string
-        }
+          valueType: PropValueType.string,
+        },
       },
       componentTree: [
         {
-          componentName: 'Card',
+          componentName: "Card",
           kind: ComponentStateKind.Standard,
-          uuid: 'mock-uuid-0',
+          uuid: "mock-uuid-0",
           parentUUID: undefined,
-          metadataUUID: 'mock-metadataUUID',
+          metadataUUID: "mock-metadataUUID",
           props: {
             text: {
               kind: PropValueKind.Expression,
-              value: 'topLevelCardText',
-              valueType: PropValueType.string
-            }
+              value: "topLevelCardText",
+              valueType: PropValueType.string,
+            },
           },
         },
         {
-          componentName: 'Banner',
+          componentName: "Banner",
           kind: ComponentStateKind.Standard,
-          uuid: 'mock-uuid-1',
-          parentUUID: 'mock-uuid-0',
-          metadataUUID: 'mock-metadataUUID',
+          uuid: "mock-uuid-1",
+          parentUUID: "mock-uuid-0",
+          metadataUUID: "mock-metadataUUID",
           props: {},
         },
         {
-          componentName: 'Card',
+          componentName: "Card",
           kind: ComponentStateKind.Standard,
-          uuid: 'mock-uuid-2',
-          parentUUID: 'mock-uuid-0',
-          metadataUUID: 'mock-metadataUUID',
+          uuid: "mock-uuid-2",
+          parentUUID: "mock-uuid-0",
+          metadataUUID: "mock-metadataUUID",
           props: {
             text: {
               kind: PropValueKind.Literal,
-              value: 'internal card',
-              valueType: PropValueType.string
-            }
+              value: "internal card",
+              valueType: PropValueType.string,
+            },
           },
-        }
+        },
       ],
-    }
-    expect(moduleMetadata).toEqual(expectedModuleMetadata)
+    };
+    expect(moduleMetadata).toEqual(expectedModuleMetadata);
   });
 
   it("can parse a Module comprised of Module type", () => {
@@ -109,45 +113,45 @@ describe("getModuleMetadata", () => {
       kind: FileMetadataKind.Module,
       propShape: {
         topTileLabel: {
-          type: PropValueType.string
-        }
+          type: PropValueType.string,
+        },
       },
       componentTree: [
         {
           kind: ComponentStateKind.Fragment,
-          uuid: 'mock-uuid-0',
+          uuid: "mock-uuid-0",
           parentUUID: undefined,
         },
         {
-          componentName: 'Tile',
+          componentName: "Tile",
           kind: ComponentStateKind.Module,
-          uuid: 'mock-uuid-1',
-          parentUUID: 'mock-uuid-0',
-          metadataUUID: 'mock-metadataUUID',
+          uuid: "mock-uuid-1",
+          parentUUID: "mock-uuid-0",
+          metadataUUID: "mock-metadataUUID",
           props: {
             label: {
               kind: PropValueKind.Expression,
-              value: 'topTileLabel',
-              valueType: PropValueType.string
-            }
+              value: "topTileLabel",
+              valueType: PropValueType.string,
+            },
           },
         },
         {
-          componentName: 'Tile',
+          componentName: "Tile",
           kind: ComponentStateKind.Module,
-          uuid: 'mock-uuid-2',
-          parentUUID: 'mock-uuid-0',
-          metadataUUID: 'mock-metadataUUID',
+          uuid: "mock-uuid-2",
+          parentUUID: "mock-uuid-0",
+          metadataUUID: "mock-metadataUUID",
           props: {
             label: {
               kind: PropValueKind.Literal,
-              value: 'bottom tile label',
-              valueType: PropValueType.string
-            }
+              value: "bottom tile label",
+              valueType: PropValueType.string,
+            },
           },
-        }
+        },
       ],
-    }
-    expect(moduleMetadata).toEqual(expectedModuleMetadata)
+    };
+    expect(moduleMetadata).toEqual(expectedModuleMetadata);
   });
 });

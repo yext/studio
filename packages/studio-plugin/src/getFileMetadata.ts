@@ -3,10 +3,10 @@ import { FileMetadataKind } from "./types/FileMetadata";
 import { PropShape } from "./types/PropShape";
 
 export type GetFileMetadataFn = (filepath?: string) => {
-  kind: FileMetadataKind,
-  metadataUUID?: string,
-  propShape?: PropShape,
-}
+  kind: FileMetadataKind;
+  metadataUUID?: string;
+  propShape?: PropShape;
+};
 
 /**
  * This is a temporary implementation to get the file metadata. Once the
@@ -24,13 +24,13 @@ export const getFileMetadata: GetFileMetadataFn = (filepath?: string) => {
     propShape = componentFile.getComponentMetadata().propShape;
   }
 
-  const kind = filepath?.includes('/components/')
+  const kind = filepath?.includes("/components/")
     ? FileMetadataKind.Component
-    : FileMetadataKind.Module
+    : FileMetadataKind.Module;
 
   return {
     kind,
     metadataUUID: filepath,
-    propShape
+    propShape,
   };
-}
+};

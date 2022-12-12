@@ -26,10 +26,18 @@ export default class ComponentFile {
         return false;
       }
       return true;
-    }
+    };
 
-    const propShape = FileMetadataParsingHelpers.getPropShape(this.studioSourceFile, this.componentName, onProp);
-    const initialProps = FileMetadataParsingHelpers.getInitialProps(this.studioSourceFile, this.componentName, propShape);
+    const propShape = FileMetadataParsingHelpers.getPropShape(
+      this.studioSourceFile,
+      this.componentName,
+      onProp
+    );
+    const initialProps = FileMetadataParsingHelpers.getInitialProps(
+      this.studioSourceFile,
+      this.componentName,
+      propShape
+    );
     return {
       kind: FileMetadataKind.Component,
       propShape,

@@ -52,7 +52,7 @@ describe("parseDefaultExport", () => {
   });
 
   describe("errors", () => {
-    it( "throws an error for object", () => {
+    it("throws an error for object", () => {
       const { project } = createTestSourceFile(
         "const test = 1; const no = false; export default { num: test };"
       );

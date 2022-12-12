@@ -9,7 +9,6 @@ import { STUDIO_PACKAGE_NAME } from "../constants";
  * files of type FileMetadata (e.g. Module or Component) within Studio.
  */
 export default class FileMetadataParsingHelpers {
-
   /**
    * Get initial props for a component, defined through a const variable "initialProps"
    * that match the interface `${componentName}Props`.
@@ -23,8 +22,9 @@ export default class FileMetadataParsingHelpers {
     studioSourceFile: StudioSourceFile,
     componentName: string,
     propShape: PropShape
-    ): PropValues | undefined {
-    const rawValues = studioSourceFile.parseExportedObjectLiteral("initialProps");
+  ): PropValues | undefined {
+    const rawValues =
+      studioSourceFile.parseExportedObjectLiteral("initialProps");
     if (!rawValues) {
       return undefined;
     }
@@ -50,10 +50,10 @@ export default class FileMetadataParsingHelpers {
     });
     return propValues;
   }
-  
+
   /**
    * Get shape of the component's props, defined through an interface `${componentName}Props`.
-   * 
+   *
    * @param studioSourceFile - StudioSourceFile instance for a component source file
    * @param componentName - Name of component exported in file
    * @param onProp - A function to execute when iterating through each field in the prop interface
@@ -68,14 +68,14 @@ export default class FileMetadataParsingHelpers {
       `${componentName}Props`
     );
     const studioImports =
-    studioSourceFile.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
+      studioSourceFile.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
     const propShape: PropShape = {};
     Object.keys(propsInterface).forEach((propName) => {
       const { type, doc } = propsInterface[propName];
-      if(onProp && !onProp(propName)) {
+      if (onProp && !onProp(propName)) {
         return;
-      } 
-  
+      }
+
       if (!TypeGuards.isPropValueType(type)) {
         throw new Error(
           `Unrecognized prop type ${type} in props interface for ${componentName}.`
@@ -92,5 +92,5 @@ export default class FileMetadataParsingHelpers {
       }
     });
     return propShape;
-}
+  }
 }

@@ -19,11 +19,22 @@ export default class ModuleFile {
   }
 
   getModuleMetadata(): ModuleMetadata {
-    const absPathDefaultImports = this.studioSourceFile.getAbsPathDefaultImports()
-    const componentTree = this.studioSourceFile.parseComponentTree(absPathDefaultImports, getFileMetadata)
+    const absPathDefaultImports =
+      this.studioSourceFile.getAbsPathDefaultImports();
+    const componentTree = this.studioSourceFile.parseComponentTree(
+      absPathDefaultImports,
+      getFileMetadata
+    );
 
-    const propShape = FileMetadataParsingHelpers.getPropShape(this.studioSourceFile, this.componentName);
-    const initialProps = FileMetadataParsingHelpers.getInitialProps(this.studioSourceFile, this.componentName, propShape);
+    const propShape = FileMetadataParsingHelpers.getPropShape(
+      this.studioSourceFile,
+      this.componentName
+    );
+    const initialProps = FileMetadataParsingHelpers.getInitialProps(
+      this.studioSourceFile,
+      this.componentName,
+      propShape
+    );
 
     return {
       kind: FileMetadataKind.Module,

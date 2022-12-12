@@ -6,7 +6,7 @@ import * as getFileMetadataUtils from "../../src/getFileMetadata";
 import * as uuidUtils from "uuid";
 import { FileMetadataKind, PropShape } from "../../src";
 
-jest.mock('uuid');
+jest.mock("uuid");
 
 const componentTree: ComponentState[] = [
   {
@@ -16,17 +16,17 @@ const componentTree: ComponentState[] = [
       num: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.number,
-        value: 1
+        value: 1,
       },
       title: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.string,
-        value: "first!"
-      }
+        value: "first!",
+      },
     },
     uuid: "mock-uuid-1",
     parentUUID: "mock-uuid-0",
-    metadataUUID: getComponentPath("ComplexBanner")
+    metadataUUID: getComponentPath("ComplexBanner"),
   },
   {
     kind: ComponentStateKind.Standard,
@@ -34,7 +34,7 @@ const componentTree: ComponentState[] = [
     props: {},
     uuid: "mock-uuid-2",
     parentUUID: "mock-uuid-0",
-    metadataUUID: getComponentPath("ComplexBanner")
+    metadataUUID: getComponentPath("ComplexBanner"),
   },
   {
     kind: ComponentStateKind.Standard,
@@ -43,51 +43,53 @@ const componentTree: ComponentState[] = [
       num: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.number,
-        value: 3
+        value: 3,
       },
       title: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.string,
-        value: "three"
+        value: "three",
       },
       bool: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.boolean,
-        value: false
-      }
+        value: false,
+      },
     },
     uuid: "mock-uuid-3",
     parentUUID: "mock-uuid-0",
-    metadataUUID: getComponentPath("ComplexBanner")
-  }
+    metadataUUID: getComponentPath("ComplexBanner"),
+  },
 ];
 
 describe("getPageState", () => {
   beforeEach(() => {
     let uuidCount = 0;
     jest.spyOn(uuidUtils, "v4").mockImplementation(() => {
-      return `mock-uuid-${uuidCount++}`
-    })
-    jest.spyOn(getFileMetadataUtils, "getFileMetadata").mockImplementation((filepath) => {
-      let propShape: PropShape = {};
-      if (filepath?.includes("ComplexBanner")) {
-        propShape = {
-          title: { type: PropValueType.string, doc: "jsdoc" },
-          num: { type: PropValueType.number },
-          bool: { type: PropValueType.boolean },
-          bgColor: { type: PropValueType.HexColor }
-        };
-      } else if (filepath?.includes("NestedBanner")) {
-        propShape = {};
-      }
-
-      return {
-        kind: FileMetadataKind.Component,
-        metadataUUID: filepath,
-        propShape
-      };
+      return `mock-uuid-${uuidCount++}`;
     });
-  })
+    jest
+      .spyOn(getFileMetadataUtils, "getFileMetadata")
+      .mockImplementation((filepath) => {
+        let propShape: PropShape = {};
+        if (filepath?.includes("ComplexBanner")) {
+          propShape = {
+            title: { type: PropValueType.string, doc: "jsdoc" },
+            num: { type: PropValueType.number },
+            bool: { type: PropValueType.boolean },
+            bgColor: { type: PropValueType.HexColor },
+          };
+        } else if (filepath?.includes("NestedBanner")) {
+          propShape = {};
+        }
+
+        return {
+          kind: FileMetadataKind.Component,
+          metadataUUID: filepath,
+          propShape,
+        };
+      });
+  });
 
   it("correctly parses page with top-level React.Fragment", () => {
     const pageFile = new PageFile(getPagePath("reactFragmentPage"));
@@ -98,7 +100,7 @@ describe("getPageState", () => {
         kind: ComponentStateKind.Fragment,
         uuid: "mock-uuid-0",
       },
-      ...componentTree
+      ...componentTree,
     ]);
   });
 
@@ -111,7 +113,7 @@ describe("getPageState", () => {
         kind: ComponentStateKind.Fragment,
         uuid: "mock-uuid-0",
       },
-      ...componentTree
+      ...componentTree,
     ]);
   });
 
@@ -124,12 +126,14 @@ describe("getPageState", () => {
         kind: ComponentStateKind.Fragment,
         uuid: "mock-uuid-0",
       },
-      ...componentTree
+      ...componentTree,
     ]);
   });
 
   it("correctly parses page with top-level div component and logs warning", () => {
-    const consoleWarnSpy = jest.spyOn(global.console, "warn").mockImplementation();
+    const consoleWarnSpy = jest
+      .spyOn(global.console, "warn")
+      .mockImplementation();
     const pageFile = new PageFile(getPagePath("divPage"));
     const result = pageFile.getPageState();
 
@@ -138,12 +142,14 @@ describe("getPageState", () => {
         kind: ComponentStateKind.Standard,
         componentName: "div",
         props: {},
-        uuid: "mock-uuid-0"
+        uuid: "mock-uuid-0",
       },
-      ...componentTree
+      ...componentTree,
     ]);
 
-    expect(consoleWarnSpy).toBeCalledWith("Props for builtIn element: 'div' are currently not supported.");
+    expect(consoleWarnSpy).toBeCalledWith(
+      "Props for builtIn element: 'div' are currently not supported."
+    );
   });
 
   it("correctly parses page with nested banner components", () => {
@@ -156,7 +162,7 @@ describe("getPageState", () => {
         componentName: "NestedBanner",
         props: {},
         uuid: "mock-uuid-0",
-        metadataUUID: getComponentPath("NestedBanner")
+        metadataUUID: getComponentPath("NestedBanner"),
       },
       componentTree[0],
       componentTree[1],
@@ -166,33 +172,30 @@ describe("getPageState", () => {
         props: {},
         uuid: "mock-uuid-3",
         parentUUID: "mock-uuid-0",
-        metadataUUID: getComponentPath("NestedBanner")
+        metadataUUID: getComponentPath("NestedBanner"),
       },
       {
         ...componentTree[2],
-        uuid: "mock-uuid-4"
-      }
+        uuid: "mock-uuid-4",
+      },
     ]);
   });
 
-  it(
-    "correctly parses page with variable statement and no parentheses around return statement",
-    () => {
-      const pageFile = new PageFile(getPagePath("noReturnParenthesesPage"));
-      const result = pageFile.getPageState();
+  it("correctly parses page with variable statement and no parentheses around return statement", () => {
+    const pageFile = new PageFile(getPagePath("noReturnParenthesesPage"));
+    const result = pageFile.getPageState();
 
-      expect(result.componentTree).toEqual([
-        {
-          kind: ComponentStateKind.Fragment,
-          uuid: "mock-uuid-0",
-        },
-        {
-          ...componentTree[1],
-          uuid: "mock-uuid-1"
-        }
-      ]);
-    }
-  );
+    expect(result.componentTree).toEqual([
+      {
+        kind: ComponentStateKind.Fragment,
+        uuid: "mock-uuid-0",
+      },
+      {
+        ...componentTree[1],
+        uuid: "mock-uuid-1",
+      },
+    ]);
+  });
 
   it("correctly parses CSS imports", () => {
     const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
@@ -200,7 +203,7 @@ describe("getPageState", () => {
 
     expect(result.cssImports).toEqual([
       "./index.css",
-      "@yext/search-ui-react/index.css"
+      "@yext/search-ui-react/index.css",
     ]);
   });
 

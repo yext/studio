@@ -38,10 +38,10 @@ export type ParsedImport = {
 };
 
 export type ParsedElement = {
-  metadataUUID?: string,
-  props: PropValues,
-  kind: ComponentStateKind
-}
+  metadataUUID?: string;
+  props: PropValues;
+  kind: ComponentStateKind;
+};
 
 /**
  * StaticParsingHelpers is a static class for housing lower level details for parsing
@@ -153,17 +153,23 @@ export default class StaticParsingHelpers {
 
   static parseJsxChild<T>(
     c: JsxChild,
-    handleJsxChild: (c: JsxFragment | JsxElement | JsxSelfClosingElement, parent?: T) => T
+    handleJsxChild: (
+      c: JsxFragment | JsxElement | JsxSelfClosingElement,
+      parent?: T
+    ) => T
   ): T[] {
     // All whitespace in Jsx is also considered JsxText, for example indentation
     if (c.isKind(SyntaxKind.JsxText)) {
       if (c.getLiteralText().trim().length) {
-        throw new Error(`Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`);
+        throw new Error(
+          `Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`
+        );
       }
       return [];
     } else if (c.isKind(SyntaxKind.JsxExpression)) {
       throw new Error(
-        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`);
+        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`
+      );
     }
 
     const self: T = handleJsxChild(c);
@@ -172,8 +178,9 @@ export default class StaticParsingHelpers {
       return [self];
     }
 
-    const children: T[] = c.getJsxChildren()
-      .flatMap(c => this.parseJsxChild(c, (c) => handleJsxChild(c, self)))
+    const children: T[] = c
+      .getJsxChildren()
+      .flatMap((c) => this.parseJsxChild(c, (c) => handleJsxChild(c, self)))
       .filter((c): c is T => !!c);
     return [self, ...children];
   }
@@ -184,26 +191,39 @@ export default class StaticParsingHelpers {
     defaultImports: Record<string, string>,
     getFileMetadata: GetFileMetadataFn
   ): ParsedElement {
-    const filepath = Object.keys(defaultImports)
-      .find(importIdentifier => defaultImports[importIdentifier] === name);
+    const filepath = Object.keys(defaultImports).find(
+      (importIdentifier) => defaultImports[importIdentifier] === name
+    );
 
-    const { metadataUUID, kind:fileMetadataKind, propShape } = getFileMetadata(filepath);
+    const {
+      metadataUUID,
+      kind: fileMetadataKind,
+      propShape,
+    } = getFileMetadata(filepath);
     if (!metadataUUID) {
-      console.warn(`Props for builtIn element: '${name}' are currently not supported.`);
+      console.warn(
+        `Props for builtIn element: '${name}' are currently not supported.`
+      );
     }
 
-    const attributes: JsxAttributeLike[] = component.isKind(SyntaxKind.JsxSelfClosingElement)
+    const attributes: JsxAttributeLike[] = component.isKind(
+      SyntaxKind.JsxSelfClosingElement
+    )
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
 
-    const props = StaticParsingHelpers.parseJsxAttributes(attributes, propShape);
-    const kind = fileMetadataKind === FileMetadataKind.Module
-      ? ComponentStateKind.Module
-      : ComponentStateKind.Standard
+    const props = StaticParsingHelpers.parseJsxAttributes(
+      attributes,
+      propShape
+    );
+    const kind =
+      fileMetadataKind === FileMetadataKind.Module
+        ? ComponentStateKind.Module
+        : ComponentStateKind.Standard;
     return {
       metadataUUID,
       props,
-      kind
+      kind,
     };
   }
 
@@ -214,22 +234,33 @@ export default class StaticParsingHelpers {
     const propValues: PropValues = {};
     attributes.forEach((jsxAttribute: JsxAttributeLike) => {
       if (jsxAttribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
-        throw new Error(`Error parsing \`${jsxAttribute.getText()}\`:`
-          + " JsxSpreadAttribute is not currently supported.");
+        throw new Error(
+          `Error parsing \`${jsxAttribute.getText()}\`:` +
+            " JsxSpreadAttribute is not currently supported."
+        );
       }
-      const propName = jsxAttribute.getFirstDescendantByKind(SyntaxKind.Identifier)?.getText();
+      const propName = jsxAttribute
+        .getFirstDescendantByKind(SyntaxKind.Identifier)
+        ?.getText();
       if (!propName) {
-        throw new Error("Could not parse jsx attribute prop name: " + jsxAttribute.getFullText());
+        throw new Error(
+          "Could not parse jsx attribute prop name: " +
+            jsxAttribute.getFullText()
+        );
       }
       const propType = propShape?.[propName]?.type;
       if (!propType) {
-        throw new Error("Could not find prop type for: " + jsxAttribute.getFullText());
+        throw new Error(
+          "Could not find prop type for: " + jsxAttribute.getFullText()
+        );
       }
-      const { value, isExpression } = StaticParsingHelpers.parseInitializer(jsxAttribute.getInitializerOrThrow());
+      const { value, isExpression } = StaticParsingHelpers.parseInitializer(
+        jsxAttribute.getInitializerOrThrow()
+      );
       const propValue = {
         valueType: propType,
         value,
-        kind: isExpression ? PropValueKind.Expression : PropValueKind.Literal
+        kind: isExpression ? PropValueKind.Expression : PropValueKind.Literal,
       };
       if (!TypeGuards.isValidPropValue(propValue)) {
         throw new Error(
@@ -241,15 +272,21 @@ export default class StaticParsingHelpers {
     return propValues;
   }
 
-  static parseJsxElementName(element: JsxElement | JsxSelfClosingElement): string {
+  static parseJsxElementName(
+    element: JsxElement | JsxSelfClosingElement
+  ): string {
     return element.isKind(SyntaxKind.JsxSelfClosingElement)
       ? element.getTagNameNode().getText()
       : element.getOpeningElement().getTagNameNode().getText();
   }
 
-  static isFragmentElement(element: JsxElement | JsxSelfClosingElement): boolean {
+  static isFragmentElement(
+    element: JsxElement | JsxSelfClosingElement
+  ): boolean {
     const name = StaticParsingHelpers.parseJsxElementName(element);
-    return element.isKind(SyntaxKind.JsxElement)
-        && ["Fragment", "React.Fragment"].includes(name);
+    return (
+      element.isKind(SyntaxKind.JsxElement) &&
+      ["Fragment", "React.Fragment"].includes(name)
+    );
   }
 }
