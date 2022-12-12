@@ -205,5 +205,4 @@ describe("getModuleMetadata", () => {
     };
     expect(moduleMetadata).toEqual(expectedModuleMetadata);
   });
-
 });
