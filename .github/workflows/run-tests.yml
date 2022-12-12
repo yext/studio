@@ -7,7 +7,7 @@ jobs:
     uses: yext/slapshot-reusable-workflows/.github/workflows/run_tests.yml@v1
     with:
       node_matrix: '["16.x", "18.x", "19.x"]'
-      build_script: ''
+      build_script: "npm run build -w=packages/studio-plugin"
 
   test_build:
     runs-on: ubuntu-latest
@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
-          registry-url: 'https://registry.npmjs.org'
+          registry-url: "https://registry.npmjs.org"
       - run: npm ci --ignore-scripts
       - run: npm rebuild
       - run: npm run build
