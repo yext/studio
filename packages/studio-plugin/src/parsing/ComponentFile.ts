@@ -2,7 +2,7 @@ import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
 import { ComponentMetadata } from "../types/ComponentMetadata";
 import { SpecialReactProps } from "../types/PropShape";
-import FileMetadataParsingHelpers from "./FileMetadataParsingHelper";
+import FileMetadataParsingHelpers from "./FileMetadataParsingHelpers";
 import { FileMetadataKind } from "../types/FileMetadata";
 
 /**

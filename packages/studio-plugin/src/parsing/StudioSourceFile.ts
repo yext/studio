@@ -66,6 +66,25 @@ export default class StudioSourceFile {
     return importPathToImportName;
   }
 
+  getAbsPathDefaultImports(): Record<string, string> {
+    // For now, we are only supporting imports from files that export a component
+    // as the default export. We will add support for named exports at a later date.
+    const defaultImports = this.parseDefaultImports();
+    return Object.entries(defaultImports).reduce(
+      (imports, [importIdentifier, importName]) => {
+        if (path.isAbsolute(importIdentifier)) {
+          imports[importIdentifier] = importName;
+        } else {
+          const absoluteFilepath =
+            path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
+          imports[absoluteFilepath] = importName;
+        }
+        return imports;
+      },
+      {}
+    );
+  }
+
   parseCssImports(): string[] {
     const cssImports: string[] = [];
 
@@ -155,25 +174,6 @@ export default class StudioSourceFile {
     }
     throw new Error(
       "Error getting default export: No ExportAssignment or FunctionDeclaration found."
-    );
-  }
-
-  getAbsPathDefaultImports(): Record<string, string> {
-    // For now, we are only supporting imports from files that export a component
-    // as the default export. We will add support for named exports at a later date.
-    const defaultImports = this.parseDefaultImports();
-    return Object.entries(defaultImports).reduce(
-      (imports, [importIdentifier, importName]) => {
-        if (path.isAbsolute(importIdentifier)) {
-          imports[importIdentifier] = importName;
-        } else {
-          const absoluteFilepath =
-            path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
-          imports[absoluteFilepath] = importName;
-        }
-        return imports;
-      },
-      {}
     );
   }
 

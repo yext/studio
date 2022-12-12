@@ -1,6 +1,6 @@
 import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
-import FileMetadataParsingHelpers from "./FileMetadataParsingHelper";
+import FileMetadataParsingHelpers from "./FileMetadataParsingHelpers";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { getFileMetadata } from "../getFileMetadata";
