@@ -73,6 +73,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
               console.error(
                 "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
               );
+              return;
             } else {
               c.props = props;
             }
