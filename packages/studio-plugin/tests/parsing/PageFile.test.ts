@@ -236,7 +236,7 @@ describe("getPageState", () => {
       const pageFile = new PageFile(getPagePath("jsxTextPage"));
 
       expect(() => pageFile.getPageState()).toThrowError(
-        'Found JsxText with content "Text". JsxText is not currently supported.'
+        'Found JsxText with content "\n      Text\n      ". JsxText is not currently supported.'
       );
     });
 
