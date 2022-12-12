@@ -15,7 +15,8 @@ import StaticParsingHelpers, {
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
 import { v4 } from "uuid";
-import { PropShape } from "../types/PropShape";
+import path from "path"
+import { GetFileMetadataFn } from "../getFileMetadata";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -33,7 +34,7 @@ const tsMorphProject = new Project({
 export default class StudioSourceFile {
   private sourceFile: SourceFile;
 
-  constructor(filepath: string, project = tsMorphProject) {
+  constructor(private filepath: string, project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
@@ -148,9 +149,25 @@ export default class StudioSourceFile {
     throw new Error("Error getting default export: No ExportAssignment or FunctionDeclaration found.");
   }
 
+  getAbsPathDefaultImports(): Record<string, string> {
+    // For now, we are only supporting imports from files that export a component
+    // as the default export. We will add support for named exports at a later date.
+    const defaultImports = this.parseDefaultImports();
+    return Object.entries(defaultImports)
+      .reduce((imports, [importIdentifier, importName]) => {
+        if (path.isAbsolute(importIdentifier)) {
+          imports[importIdentifier] = importName;
+        } else {
+          const absoluteFilepath = path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
+          imports[absoluteFilepath] = importName;
+        }
+        return imports;
+      }, {});
+  }
+
   parseComponentTree(
     defaultImports: Record<string, string>,
-    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape }
+    getFileMetadata: GetFileMetadataFn
   ): ComponentState[] {
     const defaultExport = this.parseDefaultExport();
     const returnStatement = defaultExport.getFirstDescendantByKind(SyntaxKind.ReturnStatement);
@@ -177,7 +194,7 @@ export default class StudioSourceFile {
   parseComponentState(
     component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
-    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape },
+    getFileMetadata: GetFileMetadataFn,
     parent?: ComponentState
   ): ComponentState {
     const commonComponentState = {
@@ -204,7 +221,6 @@ export default class StudioSourceFile {
         defaultImports,
         getFileMetadata
       ),
-      kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
       componentName
     };
   }

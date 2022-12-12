@@ -13,6 +13,9 @@ import {
 import { PropValueKind, PropValues } from "../types/PropValues";
 import { PropShape } from "../types/PropShape";
 import TypeGuards from "./TypeGuards";
+import { FileMetadataKind } from "../types/FileMetadata";
+import { ComponentStateKind } from "../types/State";
+import { GetFileMetadataFn } from "../getFileMetadata";
 
 export type ParsedInterface = {
   [key: string]: {
@@ -33,6 +36,12 @@ export type ParsedImport = {
   defaultImport?: string;
   namedImports: string[];
 };
+
+export type ParsedElement = {
+  metadataUUID?: string,
+  props: PropValues,
+  kind: ComponentStateKind
+}
 
 /**
  * StaticParsingHelpers is a static class for housing lower level details for parsing
@@ -173,12 +182,12 @@ export default class StaticParsingHelpers {
     component: JsxElement | JsxSelfClosingElement,
     name: string,
     defaultImports: Record<string, string>,
-    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape }
-  ): { metadataUUID?: string, props: PropValues } {
+    getFileMetadata: GetFileMetadataFn
+  ): ParsedElement {
     const filepath = Object.keys(defaultImports)
       .find(importIdentifier => defaultImports[importIdentifier] === name);
 
-    const { metadataUUID, propShape } = getFileMetadata(filepath);
+    const { metadataUUID, kind:fileMetadataKind, propShape } = getFileMetadata(filepath);
     if (!metadataUUID) {
       console.warn(`Props for builtIn element: '${name}' are currently not supported.`);
     }
@@ -188,9 +197,13 @@ export default class StaticParsingHelpers {
       : component.getOpeningElement().getAttributes();
 
     const props = StaticParsingHelpers.parseJsxAttributes(attributes, propShape);
+    const kind = fileMetadataKind === FileMetadataKind.Module
+      ? ComponentStateKind.Module
+      : ComponentStateKind.Standard
     return {
       metadataUUID,
-      props
+      props,
+      kind
     };
   }
 

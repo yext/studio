@@ -7,10 +7,14 @@ function getFixturePath(fixturePath: string): string {
   );
 }
 
-export function getPagePath(pageName: string) {
+export function getPagePath(pageName: string): string {
   return getFixturePath("PageFile/" + pageName);
 }
 
-export function getComponentPath(componentName: string) {
+export function getComponentPath(componentName: string): string {
   return getFixturePath("ComponentFile/" + componentName);
+}
+
+export function getModulePath(moduleName: string): string {
+  return getFixturePath("ModuleFile/" + moduleName);
 }
