@@ -1,7 +1,7 @@
 export interface SiteSettings {
-  mySetting: string
+  mySetting: string;
 }
 
 export default {
-  mySetting: 'just the two of us'
-}
+  mySetting: "just the two of us",
+};

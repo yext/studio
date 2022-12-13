@@ -208,10 +208,10 @@ export default class StaticParsingHelpers {
       : component.getOpeningElement().getAttributes();
 
     const kind =
-    fileMetadataKind === FileMetadataKind.Module
-      ? ComponentStateKind.Module
-      : ComponentStateKind.Standard;
-    
+      fileMetadataKind === FileMetadataKind.Module
+        ? ComponentStateKind.Module
+        : ComponentStateKind.Standard;
+
     if (!metadataUUID) {
       if (attributes.length > 0) {
         console.warn(
@@ -220,8 +220,8 @@ export default class StaticParsingHelpers {
       }
       return {
         kind,
-        props: {}
-      }
+        props: {},
+      };
     }
 
     const props = StaticParsingHelpers.parseJsxAttributes(
@@ -259,7 +259,11 @@ export default class StaticParsingHelpers {
       const propType = propShape?.[propName]?.type;
       if (!propType) {
         throw new Error(
-          `Could not find prop type for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(propShape, null, 2)}`
+          `Could not find prop type for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(
+            propShape,
+            null,
+            2
+          )}`
         );
       }
       const { value, isExpression } = StaticParsingHelpers.parseInitializer(

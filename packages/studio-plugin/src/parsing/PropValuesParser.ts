@@ -1,7 +1,9 @@
-import { SyntaxKind } from 'ts-morph';
+import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../types/PropShape";
 import { PropValueKind, PropValues } from "../types/PropValues";
-import StaticParsingHelpers, { ParsedObjectLiteral } from './StaticParsingHelpers';
+import StaticParsingHelpers, {
+  ParsedObjectLiteral,
+} from "./StaticParsingHelpers";
 import StudioSourceFile from "./StudioSourceFile";
 import TypeGuards from "./TypeGuards";
 
@@ -9,9 +11,7 @@ import TypeGuards from "./TypeGuards";
  * PropValuesParser is a class for parsing object literals in a Studio file into PropValues.
  */
 export default class PropValuesParser {
-  constructor(
-    private studioSourceFile: StudioSourceFile
-  ) {}
+  constructor(private studioSourceFile: StudioSourceFile) {}
 
   /**
    * Parses the given exported variable into PropValues.
@@ -20,7 +20,10 @@ export default class PropValuesParser {
    * @param propShape - Shape of the component's props
    * @param variableName - the variable to parse into PropValues.
    */
-  parsePropValues(propShape: PropShape, variableName: string): PropValues | undefined {
+  parsePropValues(
+    propShape: PropShape,
+    variableName: string
+  ): PropValues | undefined {
     const rawValues = this.getRawValues(variableName);
     if (!rawValues) {
       return undefined;
@@ -32,10 +35,12 @@ export default class PropValuesParser {
     if (!variableName) {
       const defaultExport = this.studioSourceFile.getDefaultExport();
       if (!defaultExport) {
-        return undefined
+        return undefined;
       }
       if (!defaultExport.isKind(SyntaxKind.ObjectLiteralExpression)) {
-        throw new Error(`Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath}`);
+        throw new Error(
+          `Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath}`
+        );
       }
       return StaticParsingHelpers.parseObjectLiteral(defaultExport);
     }
@@ -47,9 +52,7 @@ export default class PropValuesParser {
     Object.keys(rawValues).forEach((propName) => {
       const { value, isExpression } = rawValues[propName];
       if (isExpression) {
-        throw new Error(
-          `Expressions are not supported within object literal.`
-        );
+        throw new Error(`Expressions are not supported within object literal.`);
       }
       const propValue = {
         valueType: propShape[propName].type,

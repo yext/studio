@@ -3,7 +3,7 @@ import path from "path";
 import { ComponentMetadata } from "../types/ComponentMetadata";
 import { SpecialReactProps } from "../types/PropShape";
 import { FileMetadataKind } from "../types/FileMetadata";
-import FileMetadataParser from './FileMetadataParser';
+import FileMetadataParser from "./FileMetadataParser";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -12,12 +12,15 @@ import FileMetadataParser from './FileMetadataParser';
 export default class ComponentFile {
   private studioSourceFile: StudioSourceFile;
   private componentName: string;
-  private fileMetadataParser: FileMetadataParser
+  private fileMetadataParser: FileMetadataParser;
 
   constructor(filepath: string) {
     this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFile = new StudioSourceFile(filepath);
-    this.fileMetadataParser = new FileMetadataParser(this.componentName, this.studioSourceFile)
+    this.fileMetadataParser = new FileMetadataParser(
+      this.componentName,
+      this.studioSourceFile
+    );
   }
 
   getComponentMetadata(): ComponentMetadata {
@@ -26,7 +29,7 @@ export default class ComponentFile {
       if (propName === SpecialReactProps.Children) {
         acceptsChildren = true;
       }
-      return propName !== SpecialReactProps.Children
+      return propName !== SpecialReactProps.Children;
     };
 
     return {

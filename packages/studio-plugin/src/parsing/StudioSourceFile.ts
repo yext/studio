@@ -45,7 +45,7 @@ export default class StudioSourceFile {
   }
 
   getFilepath() {
-    return this.filepath
+    return this.filepath;
   }
 
   parseNamedImports(): Record<string, string[]> {
@@ -132,16 +132,20 @@ export default class StudioSourceFile {
   }
 
   parseInterface(interfaceName: string): ParsedInterface | undefined {
-    const interfaceDeclaration =
-      this.sourceFile.getInterface(interfaceName);
+    const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
     if (!interfaceDeclaration) {
       return undefined;
     }
     return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
   }
 
-  getDefaultExport(): FunctionDeclaration | Identifier | ObjectLiteralExpression | ArrayLiteralExpression | undefined{
-    const defaultExportSymbol = this.sourceFile.getDefaultExportSymbol()
+  getDefaultExport():
+    | FunctionDeclaration
+    | Identifier
+    | ObjectLiteralExpression
+    | ArrayLiteralExpression
+    | undefined {
+    const defaultExportSymbol = this.sourceFile.getDefaultExportSymbol();
     if (!defaultExportSymbol) {
       return undefined;
     }
@@ -150,17 +154,27 @@ export default class StudioSourceFile {
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
     } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const identifier = exportDeclaration.getFirstChildByKind(SyntaxKind.Identifier)
-      const objectLiteral = exportDeclaration.getFirstChildByKind(SyntaxKind.ObjectLiteralExpression);
-      const arrayLiteral = exportDeclaration.getFirstChildByKind(SyntaxKind.ArrayLiteralExpression)
+      const identifier = exportDeclaration.getFirstChildByKind(
+        SyntaxKind.Identifier
+      );
+      const objectLiteral = exportDeclaration.getFirstChildByKind(
+        SyntaxKind.ObjectLiteralExpression
+      );
+      const arrayLiteral = exportDeclaration.getFirstChildByKind(
+        SyntaxKind.ArrayLiteralExpression
+      );
       const assignment = identifier ?? objectLiteral ?? arrayLiteral;
       if (!assignment) {
         throw new Error(
           `Error parsing default export in \`${exportDeclaration.getFullText()}\`, expected either an Identifier, ObjectLiteralExpression, or ArrayLiteralExpression.`
         );
       }
-      if ([identifier, objectLiteral, arrayLiteral].filter(n => !!n).length > 1) {
-        throw new Error(`Unexpected state, multiple nodes found when parsing default export \`${exportDeclaration.getFullText()}\``)
+      if (
+        [identifier, objectLiteral, arrayLiteral].filter((n) => !!n).length > 1
+      ) {
+        throw new Error(
+          `Unexpected state, multiple nodes found when parsing default export \`${exportDeclaration.getFullText()}\``
+        );
       }
       return assignment;
     }
@@ -181,14 +195,19 @@ export default class StudioSourceFile {
    *   `export default \{ key: val \};`), an array (e.g.
    *   `export default [Identifier];`), etc., an error will be thrown.
    */
-  private getDefaultExportReactComponent(): VariableDeclaration | FunctionDeclaration {
+  private getDefaultExportReactComponent():
+    | VariableDeclaration
+    | FunctionDeclaration {
     const defaultExport = this.getDefaultExport();
     if (!defaultExport) {
       throw new Error(
         "Error getting default export: No declaration node found."
       );
     }
-    if (defaultExport.isKind(SyntaxKind.ObjectLiteralExpression) || defaultExport.isKind(SyntaxKind.ArrayLiteralExpression)) {
+    if (
+      defaultExport.isKind(SyntaxKind.ObjectLiteralExpression) ||
+      defaultExport.isKind(SyntaxKind.ArrayLiteralExpression)
+    ) {
       throw new Error(
         "Error getting default export React component: Only a direct Identifier is supported for ExportAssignment."
       );

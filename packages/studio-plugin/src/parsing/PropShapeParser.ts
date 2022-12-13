@@ -3,14 +3,11 @@ import StudioSourceFile from "./StudioSourceFile";
 import TypeGuards from "./TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 
-
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
  */
 export default class PropShapeParser {
-  constructor(
-    private studioSourceFile: StudioSourceFile
-  ) {}
+  constructor(private studioSourceFile: StudioSourceFile) {}
 
   /**
    * Get shape of the component's props, defined through an interface `${componentName}Props`.
@@ -18,12 +15,15 @@ export default class PropShapeParser {
    * @param onProp - A function to execute when iterating through each field in the prop interface
    * @returns shape of the component's props
    */
-  parsePropShape(interfaceName: string, onProp?: (propName: string) => boolean): PropShape {
+  parsePropShape(
+    interfaceName: string,
+    onProp?: (propName: string) => boolean
+  ): PropShape {
     const propsInterface = this.studioSourceFile.parseInterface(interfaceName);
     const studioImports =
       this.studioSourceFile.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
     if (!propsInterface) {
-      return {}
+      return {};
     }
     const propShape: PropShape = {};
     Object.keys(propsInterface).forEach((propName) => {

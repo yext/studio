@@ -3,7 +3,7 @@ import path from "path";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { getFileMetadata } from "../getFileMetadata";
-import FileMetadataParser from './FileMetadataParser';
+import FileMetadataParser from "./FileMetadataParser";
 
 /**
  * ModuleFile is responsible for parsing a single module file, for example
@@ -12,12 +12,15 @@ import FileMetadataParser from './FileMetadataParser';
 export default class ModuleFile {
   private studioSourceFile: StudioSourceFile;
   private componentName: string;
-  private fileMetadataParser: FileMetadataParser
+  private fileMetadataParser: FileMetadataParser;
 
   constructor(filepath: string) {
     this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFile = new StudioSourceFile(filepath);
-    this.fileMetadataParser = new FileMetadataParser(this.componentName, this.studioSourceFile);
+    this.fileMetadataParser = new FileMetadataParser(
+      this.componentName,
+      this.studioSourceFile
+    );
   }
 
   getModuleMetadata(): ModuleMetadata {
@@ -31,7 +34,7 @@ export default class ModuleFile {
     return {
       kind: FileMetadataKind.Module,
       componentTree,
-      ...this.fileMetadataParser.parse()
+      ...this.fileMetadataParser.parse(),
     };
   }
 }

@@ -5,17 +5,17 @@ function getFixturePath(fixturePath: string): string {
 }
 
 export function getPagePath(pageName: string): string {
-  return getFixturePath(path.join("PageFile", pageName + '.tsx'));
+  return getFixturePath(path.join("PageFile", pageName + ".tsx"));
 }
 
 export function getComponentPath(componentName: string): string {
-  return getFixturePath(path.join("ComponentFile", componentName + '.tsx'));
+  return getFixturePath(path.join("ComponentFile", componentName + ".tsx"));
 }
 
 export function getModulePath(moduleName: string): string {
-  return getFixturePath(path.join("ModuleFile", moduleName + '.tsx'));
+  return getFixturePath(path.join("ModuleFile", moduleName + ".tsx"));
 }
 
-export function getSiteSettingsPath(fileName = 'siteSettings.ts'): string {
-  return getFixturePath(path.join("SiteSettingsFile", fileName))
+export function getSiteSettingsPath(fileName = "siteSettings.ts"): string {
+  return getFixturePath(path.join("SiteSettingsFile", fileName));
 }

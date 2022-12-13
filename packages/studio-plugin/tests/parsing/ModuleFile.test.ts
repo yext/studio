@@ -9,7 +9,7 @@ import {
   PropShape,
   FileMetadataKind,
 } from "../../src";
-import { spyOnUUID } from '../__utils__/spies';
+import { spyOnUUID } from "../__utils__/spies";
 
 jest.mock("uuid");
 

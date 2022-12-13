@@ -1,8 +1,8 @@
 import { PropShape } from "../types/PropShape";
 import { PropValues } from "../types/PropValues";
 import StudioSourceFile from "./StudioSourceFile";
-import PropValuesParser from './PropValuesParser';
-import PropShapeParser from './PropShapeParser';
+import PropValuesParser from "./PropValuesParser";
+import PropShapeParser from "./PropShapeParser";
 
 /**
  * FileMetadataParsingHelper is a class for housing shared parsing logic for
@@ -16,10 +16,8 @@ export default class FileMetadataParser {
     private componentName: string,
     studioSourceFile: StudioSourceFile
   ) {
-    this.propValuesParser = new PropValuesParser(
-      studioSourceFile
-    );
-    this.propShapeParser = new PropShapeParser(studioSourceFile)
+    this.propValuesParser = new PropValuesParser(studioSourceFile);
+    this.propShapeParser = new PropShapeParser(studioSourceFile);
   }
 
   /**
@@ -30,8 +28,8 @@ export default class FileMetadataParser {
     const initialProps = this.parseInitialProps(propShape);
     return {
       propShape,
-      ...(initialProps && { initialProps })
-    }
+      ...(initialProps && { initialProps }),
+    };
   }
 
   /**
@@ -42,7 +40,7 @@ export default class FileMetadataParser {
    * @returns field values for "initialProps" variable in file
    */
   private parseInitialProps(propShape: PropShape): PropValues | undefined {
-    return this.propValuesParser.parsePropValues(propShape, 'initialProps')
+    return this.propValuesParser.parsePropValues(propShape, "initialProps");
   }
 
   /**
@@ -52,6 +50,9 @@ export default class FileMetadataParser {
    * @returns shape of the component's props
    */
   private parsePropShape(onProp?: (propName: string) => boolean): PropShape {
-    return this.propShapeParser.parsePropShape(`${this.componentName}Props`, onProp)
+    return this.propShapeParser.parsePropShape(
+      `${this.componentName}Props`,
+      onProp
+    );
   }
 }

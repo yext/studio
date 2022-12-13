@@ -1,7 +1,7 @@
 import { SyntaxKind } from "ts-morph";
 import StudioSourceFile from "../../src/parsing/StudioSourceFile";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
-import expectSyntaxKind from '../__utils__/expectSyntaxKind';
+import expectSyntaxKind from "../__utils__/expectSyntaxKind";
 
 describe("parseExportedObjectLiteral", () => {
   it(
@@ -26,7 +26,7 @@ describe("getDefaultExport", () => {
     );
     const studioSource = new StudioSourceFile("test.tsx", project);
     const defaultExport = studioSource.getDefaultExport();
-    expectSyntaxKind(defaultExport, SyntaxKind.FunctionDeclaration)
+    expectSyntaxKind(defaultExport, SyntaxKind.FunctionDeclaration);
     expect(defaultExport.getName()).toBe("test");
   });
 
@@ -37,7 +37,7 @@ describe("getDefaultExport", () => {
       );
       const studioSource = new StudioSourceFile("test.tsx", project);
       const defaultExport = studioSource.getDefaultExport();
-      expectSyntaxKind(defaultExport, SyntaxKind.Identifier)
+      expectSyntaxKind(defaultExport, SyntaxKind.Identifier);
       expect(defaultExport.getText()).toBe("test");
     });
   });
@@ -48,7 +48,7 @@ describe("getDefaultExport", () => {
     );
     const studioSource = new StudioSourceFile("test.tsx", project);
     const defaultExport = studioSource.getDefaultExport();
-    expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression)
+    expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression);
   });
 
   it("correctly gets an ArrayLiteralExpression", () => {
@@ -57,6 +57,6 @@ describe("getDefaultExport", () => {
     );
     const studioSource = new StudioSourceFile("test.tsx", project);
     const defaultExport = studioSource.getDefaultExport();
-    expectSyntaxKind(defaultExport, SyntaxKind.ArrayLiteralExpression)
+    expectSyntaxKind(defaultExport, SyntaxKind.ArrayLiteralExpression);
   });
 });
