@@ -1,7 +1,7 @@
 import Tile from "../modules/Tile";
 
 interface PanelWithModulesProps {
-  topTileLabel: string;
+  topTileLabel?: string;
 }
 
 export default function PanelWithModules({

@@ -180,7 +180,7 @@ export default class StaticParsingHelpers {
 
     const children: T[] = c
       .getJsxChildren()
-      .flatMap((c) => this.parseJsxChild(c, (c) => handleJsxChild(c, self)))
+      .flatMap((c) => this.parseJsxChild(c, (child, parent?: T) => handleJsxChild(child, parent ?? self)))
       .filter((c): c is T => !!c);
     return [self, ...children];
   }

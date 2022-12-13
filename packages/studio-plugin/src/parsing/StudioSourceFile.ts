@@ -7,6 +7,8 @@ import {
   JsxElement,
   JsxFragment,
   JsxSelfClosingElement,
+  ObjectLiteralExpression,
+  VariableDeclarationKind,
 } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -17,6 +19,8 @@ import StaticParsingHelpers, {
 import { v4 } from "uuid";
 import path from "path";
 import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
+import prettier from "prettier";
+import vm from 'vm'
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -34,11 +38,66 @@ const tsMorphProject = new Project({
 export default class StudioSourceFile {
   private sourceFile: SourceFile;
 
-  constructor(private filepath: string, project = tsMorphProject) {
+  constructor(private filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
     this.sourceFile = project.getSourceFileOrThrow(filepath);
+  }
+
+  /**
+   * Run prettier on the source file's content.
+   *
+   * @returns the formatted content 
+   */
+  prettify(): string {
+    return prettier.format(this.sourceFile.getFullText(), {
+      parser: "typescript",
+    });
+  }
+
+  /**
+   * Mutates the source file by adding missing import declarations for identifiers
+   * that are referenced in the file, removing import declarations that are no longer
+   * needed, and adding any provided css imports.
+   *
+   * @param cssImports - css file paths to add as import declarations to the file
+   */
+  updateFileImports(cssImports?: string[]) {
+    this.sourceFile.fixMissingImports();
+    cssImports?.forEach((importSource) => {
+      this.sourceFile.addImportDeclaration({
+        moduleSpecifier: importSource
+      })
+    })
+    this.sourceFile.organizeImports()
+  }
+
+  /**
+   * Add an import to source file if it's not already imported, either
+   * by setting default and named imports to an existing import declaration
+   * matching the provided source or creating a new import declaration node.
+   *
+   * @param importData - the import and source identifier(s) to add to file.
+   */
+  addFileImport(importData: {
+    source: string,
+    defaultImport?: string,
+    namedImports?: string[]
+  }): void {
+    const { source, namedImports, defaultImport } = importData
+    const importDeclaration = this.sourceFile
+      .getImportDeclaration(i => i.getModuleSpecifierValue() !== source)
+    if (importDeclaration) {
+      namedImports && importDeclaration.addNamedImports(namedImports)
+      defaultImport && importDeclaration.setDefaultImport(defaultImport)
+    } else {
+      this.sourceFile.addImportDeclaration({
+        moduleSpecifier: source,
+        namedImports,
+        defaultImport
+      })
+    }
   }
 
   parseNamedImports(): Record<string, string[]> {
@@ -97,9 +156,9 @@ export default class StudioSourceFile {
     return cssImports;
   }
 
-  parseExportedObjectLiteral(
+  getExportedObjectExpression(
     variableName: string
-  ): ParsedObjectLiteral | undefined {
+  ): ObjectLiteralExpression | undefined {
     const variableStatement = this.sourceFile
       .getVariableStatements()
       .find((variableStatement) => {
@@ -121,7 +180,30 @@ export default class StudioSourceFile {
         `Could not find ObjectLiteralExpression within \`${variableStatement.getFullText()}\`.`
       );
     }
+    return objectLiteralExp;
+  }
+
+  parseExportedObjectLiteral(
+    variableName: string
+  ): ParsedObjectLiteral | undefined {
+    const objectLiteralExp = this.getExportedObjectExpression(variableName)
+    if (!objectLiteralExp) {
+      return;
+    }
     return StaticParsingHelpers.parseObjectLiteral(objectLiteralExp);
+  }
+
+  /**
+   * This function takes in an {@link ObjectLiteralExpression} and returns it's data.
+   *
+   * It converts a js object string and converts it into an object using vm.runInNewContext,
+   * which can be thought of as a safe version of `eval`. Note that we cannot use JSON.parse here,
+   * because we are working with a js object not a JSON.
+   */
+  getCompiledObjectLiteral<T>(
+    objectLiteralExp: ObjectLiteralExpression
+  ): T {
+    return vm.runInNewContext('(' + objectLiteralExp.getText() + ')')
   }
 
   parseInterface(interfaceName: string): ParsedInterface {
@@ -244,5 +326,58 @@ export default class StudioSourceFile {
       ),
       componentName,
     };
+  }
+
+  /**
+   * Adds a variable statement at the top of the file,
+   * under the last import statement, if any.
+   *
+   * @param name - the variable's name for the left side of the statement
+   * @param content - the variable's content for the right side of the statement
+   */
+  addVariableStatement(name: string, content: string, type?: string): void {
+    const lastImportStatementIndex = this.sourceFile
+      .getLastChildByKind(SyntaxKind.ImportDeclaration)
+      ?.getChildIndex() ?? -1
+    this.sourceFile.insertVariableStatement(lastImportStatementIndex + 1, {
+      isExported: true,
+      declarationKind: VariableDeclarationKind.Const,
+      declarations: [{ name, type, initializer: content }]
+    })
+  }
+
+  /**
+   * Performs an Array.prototype.map over the given {@link ComponentState}s in
+   * a level order traversal, starting from the leaf nodes (deepest children)
+   * and working up to root node.
+   * 
+   * @param componentStates - the component tree to perform on
+   * @param handler - a function to execute on each component
+   * @param parent - the top-most parent or root node to work up to
+   *
+   * @returns an array of elements returned by the handler function
+   */
+  mapComponentStates<T>(
+    componentStates: ComponentState[],
+    handler: (component: ComponentState, mappedChildren: T[]) => T,
+    parent?: ComponentState
+  ): T[] {
+    const directChildren: ComponentState[] = [];
+    const nonDirectChildren: ComponentState[] = [];
+    componentStates.forEach((component) => {
+      if (component.parentUUID === parent?.uuid) {
+        directChildren.push(component);
+      } else if (component.uuid !== parent?.uuid) {
+        nonDirectChildren.push(component);
+      }
+    });
+    return directChildren.map((component) => {
+      const children = this.mapComponentStates(
+        nonDirectChildren,
+        handler,
+        component
+      );
+      return handler(component, children);
+    });
   }
 }

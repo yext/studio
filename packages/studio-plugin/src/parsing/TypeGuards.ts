@@ -45,4 +45,11 @@ export default class TypeGuards {
     const propTypes = Object.values(PropValueType);
     return propTypes.includes(type as PropValueType);
   }
+
+  static isTemplateString(value: unknown): value is `\`${string}\`` {
+    return typeof value == 'string'
+      && value.startsWith('`')
+      && value.endsWith('`')
+      && value.length >= 2
+  }
 }
