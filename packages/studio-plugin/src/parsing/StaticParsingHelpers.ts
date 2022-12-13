@@ -200,11 +200,6 @@ export default class StaticParsingHelpers {
       kind: fileMetadataKind,
       propShape,
     } = getFileMetadata(filepath);
-    if (!metadataUUID) {
-      console.warn(
-        `Props for builtIn element: '${name}' are currently not supported.`
-      );
-    }
 
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
@@ -212,14 +207,27 @@ export default class StaticParsingHelpers {
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
 
+    const kind =
+    fileMetadataKind === FileMetadataKind.Module
+      ? ComponentStateKind.Module
+      : ComponentStateKind.Standard;
+    
+    if (!metadataUUID) {
+      if (attributes.length > 0) {
+        console.warn(
+          `Props for builtIn element: '${name}' are currently not supported.`
+        );
+      }
+      return {
+        kind,
+        props: {}
+      }
+    }
+
     const props = StaticParsingHelpers.parseJsxAttributes(
       attributes,
       propShape
     );
-    const kind =
-      fileMetadataKind === FileMetadataKind.Module
-        ? ComponentStateKind.Module
-        : ComponentStateKind.Standard;
     return {
       metadataUUID,
       props,
@@ -251,7 +259,7 @@ export default class StaticParsingHelpers {
       const propType = propShape?.[propName]?.type;
       if (!propType) {
         throw new Error(
-          "Could not find prop type for: " + jsxAttribute.getFullText()
+          `Could not find prop type for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(propShape, null, 2)}`
         );
       }
       const { value, isExpression } = StaticParsingHelpers.parseInitializer(

@@ -2,8 +2,8 @@ import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
 import { ComponentMetadata } from "../types/ComponentMetadata";
 import { SpecialReactProps } from "../types/PropShape";
-import FileMetadataParsingHelper from "./FileMetadataParsingHelper";
 import { FileMetadataKind } from "../types/FileMetadata";
+import FileMetadataParser from './FileMetadataParser';
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -12,15 +12,12 @@ import { FileMetadataKind } from "../types/FileMetadata";
 export default class ComponentFile {
   private studioSourceFile: StudioSourceFile;
   private componentName: string;
-  private fileMetadataParsingHelper: FileMetadataParsingHelper;
+  private fileMetadataParser: FileMetadataParser
 
   constructor(filepath: string) {
     this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFile = new StudioSourceFile(filepath);
-    this.fileMetadataParsingHelper = new FileMetadataParsingHelper(
-      this.componentName,
-      this.studioSourceFile
-    );
+    this.fileMetadataParser = new FileMetadataParser(this.componentName, this.studioSourceFile)
   }
 
   getComponentMetadata(): ComponentMetadata {
@@ -28,18 +25,13 @@ export default class ComponentFile {
     const onProp = (propName: string): boolean => {
       if (propName === SpecialReactProps.Children) {
         acceptsChildren = true;
-        return false;
       }
-      return true;
+      return propName !== SpecialReactProps.Children
     };
 
-    const propShape = this.fileMetadataParsingHelper.getPropShape(onProp);
-    const initialProps =
-      this.fileMetadataParsingHelper.getInitialProps(propShape);
     return {
       kind: FileMetadataKind.Component,
-      propShape,
-      ...(initialProps && { initialProps }),
+      ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
     };
   }

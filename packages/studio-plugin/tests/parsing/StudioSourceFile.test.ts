@@ -1,6 +1,7 @@
 import { SyntaxKind } from "ts-morph";
 import StudioSourceFile from "../../src/parsing/StudioSourceFile";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
+import expectSyntaxKind from '../__utils__/expectSyntaxKind';
 
 describe("parseExportedObjectLiteral", () => {
   it(
@@ -18,58 +19,44 @@ describe("parseExportedObjectLiteral", () => {
   );
 });
 
-describe("parseDefaultExport", () => {
-  it("correctly parses direct function declaration", () => {
+describe("getDefaultExport", () => {
+  it("correctly gets direct function declaration", () => {
     const { project } = createTestSourceFile(
       "export const no = false; export default function test() {}"
     );
     const studioSource = new StudioSourceFile("test.tsx", project);
-    const defaultExport = studioSource.parseDefaultExport();
-    expect(defaultExport.isKind(SyntaxKind.FunctionDeclaration));
+    const defaultExport = studioSource.getDefaultExport();
+    expectSyntaxKind(defaultExport, SyntaxKind.FunctionDeclaration)
     expect(defaultExport.getName()).toBe("test");
   });
 
   describe("export assignment", () => {
-    it("correctly parses direct identifier of variable declaration", () => {
+    it("correctly gets name of direct identifier", () => {
       const { project } = createTestSourceFile(
         "const test = 1; const no = false; export default test;"
       );
       const studioSource = new StudioSourceFile("test.tsx", project);
-      const defaultExport = studioSource.parseDefaultExport();
-      expect(defaultExport.isKind(SyntaxKind.VariableDeclaration));
-      expect(defaultExport.getName()).toBe("test");
-    });
-
-    it("correctly parses direct identifier of function declaration", () => {
-      const { project } = createTestSourceFile(
-        "function test() {}; const no = false; export default test;"
-      );
-      const studioSource = new StudioSourceFile("test.tsx", project);
-      const defaultExport = studioSource.parseDefaultExport();
-      expect(defaultExport.isKind(SyntaxKind.FunctionDeclaration));
-      expect(defaultExport.getName()).toBe("test");
+      const defaultExport = studioSource.getDefaultExport();
+      expectSyntaxKind(defaultExport, SyntaxKind.Identifier)
+      expect(defaultExport.getText()).toBe("test");
     });
   });
 
-  describe("errors", () => {
-    it("throws an error for object", () => {
-      const { project } = createTestSourceFile(
-        "const test = 1; const no = false; export default { num: test };"
-      );
-      const studioSource = new StudioSourceFile("test.tsx", project);
-      expect(() => studioSource.parseDefaultExport()).toThrow(
-        "Error getting default export: Only a direct Identifier is supported for ExportAssignment."
-      );
-    });
+  it("correctly gets an ObjectLiteralExpression", () => {
+    const { project } = createTestSourceFile(
+      "const test = 1; const no = false; export default { num: test };"
+    );
+    const studioSource = new StudioSourceFile("test.tsx", project);
+    const defaultExport = studioSource.getDefaultExport();
+    expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression)
+  });
 
-    it("throws an error for array", () => {
-      const { project } = createTestSourceFile(
-        "const test = 1; const no = false; export default [test];"
-      );
-      const studioSource = new StudioSourceFile("test.tsx", project);
-      expect(() => studioSource.parseDefaultExport()).toThrow(
-        "Error getting default export: Only a direct Identifier is supported for ExportAssignment."
-      );
-    });
+  it("correctly gets an ArrayLiteralExpression", () => {
+    const { project } = createTestSourceFile(
+      "const test = 1; const no = false; export default [test];"
+    );
+    const studioSource = new StudioSourceFile("test.tsx", project);
+    const defaultExport = studioSource.getDefaultExport();
+    expectSyntaxKind(defaultExport, SyntaxKind.ArrayLiteralExpression)
   });
 });

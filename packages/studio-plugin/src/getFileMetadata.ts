@@ -22,9 +22,9 @@ export function getFileMetadata(filepath?: string): {
     propShape = componentFile.getComponentMetadata().propShape;
   }
 
-  const kind = filepath?.includes("/components/")
-    ? FileMetadataKind.Component
-    : FileMetadataKind.Module;
+  const kind = filepath?.includes("/modules/")
+    ? FileMetadataKind.Module
+    : FileMetadataKind.Component;
 
   return {
     kind,
