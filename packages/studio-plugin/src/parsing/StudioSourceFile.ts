@@ -15,7 +15,8 @@ import StaticParsingHelpers, {
   ParsedObjectLiteral,
 } from "./StaticParsingHelpers";
 import { v4 } from "uuid";
-import { PropShape } from "../types/PropShape";
+import path from "path";
+import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -33,7 +34,7 @@ const tsMorphProject = new Project({
 export default class StudioSourceFile {
   private sourceFile: SourceFile;
 
-  constructor(filepath: string, project = tsMorphProject) {
+  constructor(private filepath: string, project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
@@ -63,6 +64,25 @@ export default class StudioSourceFile {
       }
     });
     return importPathToImportName;
+  }
+
+  getAbsPathDefaultImports(): Record<string, string> {
+    // For now, we are only supporting imports from files that export a component
+    // as the default export. We will add support for named exports at a later date.
+    const defaultImports = this.parseDefaultImports();
+    return Object.entries(defaultImports).reduce(
+      (imports, [importIdentifier, importName]) => {
+        if (path.isAbsolute(importIdentifier)) {
+          imports[importIdentifier] = importName;
+        } else {
+          const absoluteFilepath =
+            path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
+          imports[absoluteFilepath] = importName;
+        }
+        return imports;
+      },
+      {}
+    );
   }
 
   parseCssImports(): string[] {
@@ -123,18 +143,23 @@ export default class StudioSourceFile {
    *   `export default [Identifier];`), etc., an error will be thrown.
    */
   parseDefaultExport(): VariableDeclaration | FunctionDeclaration {
-    const declarations = this.sourceFile.getDefaultExportSymbolOrThrow().getDeclarations();
+    const declarations = this.sourceFile
+      .getDefaultExportSymbolOrThrow()
+      .getDeclarations();
     if (declarations.length === 0) {
-      throw new Error("Error getting default export: No declaration node found.");
+      throw new Error(
+        "Error getting default export: No declaration node found."
+      );
     }
     const exportDeclaration = declarations[0];
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
     } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const assignment = exportDeclaration.getFirstDescendantOrThrow(n =>
-        n.isKind(SyntaxKind.ObjectLiteralExpression)
-        || n.isKind(SyntaxKind.Identifier)
-        || n.isKind(SyntaxKind.ArrayLiteralExpression)
+      const assignment = exportDeclaration.getFirstDescendantOrThrow(
+        (n) =>
+          n.isKind(SyntaxKind.ObjectLiteralExpression) ||
+          n.isKind(SyntaxKind.Identifier) ||
+          n.isKind(SyntaxKind.ArrayLiteralExpression)
       );
       if (!assignment.isKind(SyntaxKind.Identifier)) {
         throw new Error(
@@ -142,55 +167,68 @@ export default class StudioSourceFile {
         );
       }
       const identifierName = assignment.getText();
-      return this.sourceFile.getVariableDeclaration(identifierName)
-        ?? this.sourceFile.getFunctionOrThrow(identifierName);
+      return (
+        this.sourceFile.getVariableDeclaration(identifierName) ??
+        this.sourceFile.getFunctionOrThrow(identifierName)
+      );
     }
-    throw new Error("Error getting default export: No ExportAssignment or FunctionDeclaration found.");
+    throw new Error(
+      "Error getting default export: No ExportAssignment or FunctionDeclaration found."
+    );
   }
 
   parseComponentTree(
     defaultImports: Record<string, string>,
-    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape }
+    getFileMetadata: typeof getFileMetadataFn
   ): ComponentState[] {
     const defaultExport = this.parseDefaultExport();
-    const returnStatement = defaultExport.getFirstDescendantByKind(SyntaxKind.ReturnStatement);
+    const returnStatement = defaultExport.getFirstDescendantByKind(
+      SyntaxKind.ReturnStatement
+    );
     if (!returnStatement) {
-      throw new Error(`No return statement found for the default export at path: "${this.sourceFile.getFilePath()}"`);
-    }
-    const JsxNodeWrapper = returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression)
-      ?? returnStatement;
-    const topLevelJsxNode = JsxNodeWrapper.getChildren()
-      .find((n): n is JsxElement | JsxFragment =>
-        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment)
+      throw new Error(
+        `No return statement found for the default export at path: "${this.sourceFile.getFilePath()}"`
       );
+    }
+    const JsxNodeWrapper =
+      returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression) ??
+      returnStatement;
+    const topLevelJsxNode = JsxNodeWrapper.getChildren().find(
+      (n): n is JsxElement | JsxFragment =>
+        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment)
+    );
     if (!topLevelJsxNode) {
-      throw new Error("Unable to find top-level JSX element or JSX fragment type"
-        + ` in the default export at path: "${this.sourceFile.getFilePath()}"`);
+      throw new Error(
+        "Unable to find top-level JSX element or JSX fragment type" +
+          ` in the default export at path: "${this.sourceFile.getFilePath()}"`
+      );
     }
 
     return StaticParsingHelpers.parseJsxChild(
       topLevelJsxNode,
-      (child, parent) => this.parseComponentState(child, defaultImports, getFileMetadata, parent)
+      (child, parent) =>
+        this.parseComponentState(child, defaultImports, getFileMetadata, parent)
     );
   }
 
   parseComponentState(
     component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
-    getFileMetadata: (filepath?: string) => { metadataUUID?: string, propShape?: PropShape },
+    getFileMetadata: typeof getFileMetadataFn,
     parent?: ComponentState
   ): ComponentState {
     const commonComponentState = {
       parentUUID: parent?.uuid,
-      uuid: v4()
+      uuid: v4(),
     };
 
-    if (component.isKind(SyntaxKind.JsxFragment)
-      || StaticParsingHelpers.isFragmentElement(component)
+    if (
+      component.isKind(SyntaxKind.JsxFragment) ||
+      StaticParsingHelpers.isFragmentElement(component)
     ) {
       return {
         ...commonComponentState,
-        kind: ComponentStateKind.Fragment
+        kind: ComponentStateKind.Fragment,
       };
     }
 
@@ -204,8 +242,7 @@ export default class StudioSourceFile {
         defaultImports,
         getFileMetadata
       ),
-      kind: ComponentStateKind.Standard, // TODO: determine when this would be Module kind
-      componentName
+      componentName,
     };
   }
 }

@@ -1,4 +1,5 @@
 import ComponentFile from "./parsing/ComponentFile";
+import { FileMetadataKind } from "./types/FileMetadata";
 import { PropShape } from "./types/PropShape";
 
 /**
@@ -9,17 +10,25 @@ import { PropShape } from "./types/PropShape";
  * TODO: update to get component metadata from where it's computed for the
  * state manager.
  */
-export function getFileMetadata(
-  filepath?: string
-): { metadataUUID?: string, propShape?: PropShape } {
+
+export function getFileMetadata(filepath?: string): {
+  kind: FileMetadataKind;
+  metadataUUID?: string;
+  propShape?: PropShape;
+} {
   let propShape: PropShape | undefined = undefined;
   if (filepath) {
     const componentFile = new ComponentFile(filepath);
     propShape = componentFile.getComponentMetadata().propShape;
   }
 
+  const kind = filepath?.includes("/components/")
+    ? FileMetadataKind.Component
+    : FileMetadataKind.Module;
+
   return {
+    kind,
     metadataUUID: filepath,
-    propShape
+    propShape,
   };
 }

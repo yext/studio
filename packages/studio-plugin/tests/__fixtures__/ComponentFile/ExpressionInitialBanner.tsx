@@ -4,7 +4,7 @@ export interface ExpressionInitialBannerProps {
   title?: string;
 }
 
-export const initialProps: ExpressionInitiaBannerProps = {
+export const initialProps: ExpressionInitialBannerProps = {
   title: INITIAL_TITLE,
 };
 

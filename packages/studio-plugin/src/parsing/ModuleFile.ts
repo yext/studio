@@ -1,15 +1,15 @@
 import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
-import { ComponentMetadata } from "../types/ComponentMetadata";
-import { SpecialReactProps } from "../types/PropShape";
 import FileMetadataParsingHelper from "./FileMetadataParsingHelper";
+import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
+import { getFileMetadata } from "../getFileMetadata";
 
 /**
- * ComponentFile is responsible for parsing a single component file, for example
- * `src/components/Banner.tsx`.
+ * ModuleFile is responsible for parsing a single module file, for example
+ * `src/modules/Card.tsx`.
  */
-export default class ComponentFile {
+export default class ModuleFile {
   private studioSourceFile: StudioSourceFile;
   private componentName: string;
   private fileMetadataParsingHelper: FileMetadataParsingHelper;
@@ -23,24 +23,23 @@ export default class ComponentFile {
     );
   }
 
-  getComponentMetadata(): ComponentMetadata {
-    let acceptsChildren = false;
-    const onProp = (propName: string): boolean => {
-      if (propName === SpecialReactProps.Children) {
-        acceptsChildren = true;
-        return false;
-      }
-      return true;
-    };
+  getModuleMetadata(): ModuleMetadata {
+    const absPathDefaultImports =
+      this.studioSourceFile.getAbsPathDefaultImports();
+    const componentTree = this.studioSourceFile.parseComponentTree(
+      absPathDefaultImports,
+      getFileMetadata
+    );
 
-    const propShape = this.fileMetadataParsingHelper.getPropShape(onProp);
+    const propShape = this.fileMetadataParsingHelper.getPropShape();
     const initialProps =
       this.fileMetadataParsingHelper.getInitialProps(propShape);
+
     return {
-      kind: FileMetadataKind.Component,
+      kind: FileMetadataKind.Module,
       propShape,
+      componentTree,
       ...(initialProps && { initialProps }),
-      ...(acceptsChildren ? { acceptsChildren } : {}),
     };
   }
 }
