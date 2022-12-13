@@ -20,7 +20,7 @@ import { v4 } from "uuid";
 import path from "path";
 import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 import prettier from "prettier";
-import vm from 'vm'
+import vm from "vm";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -48,7 +48,7 @@ export default class StudioSourceFile {
   /**
    * Run prettier on the source file's content.
    *
-   * @returns the formatted content 
+   * @returns the formatted content
    */
   prettify(): string {
     return prettier.format(this.sourceFile.getFullText(), {
@@ -67,10 +67,10 @@ export default class StudioSourceFile {
     this.sourceFile.fixMissingImports();
     cssImports?.forEach((importSource) => {
       this.sourceFile.addImportDeclaration({
-        moduleSpecifier: importSource
-      })
-    })
-    this.sourceFile.organizeImports()
+        moduleSpecifier: importSource,
+      });
+    });
+    this.sourceFile.organizeImports();
   }
 
   /**
@@ -81,22 +81,23 @@ export default class StudioSourceFile {
    * @param importData - the import and source identifier(s) to add to file.
    */
   addFileImport(importData: {
-    source: string,
-    defaultImport?: string,
-    namedImports?: string[]
+    source: string;
+    defaultImport?: string;
+    namedImports?: string[];
   }): void {
-    const { source, namedImports, defaultImport } = importData
-    const importDeclaration = this.sourceFile
-      .getImportDeclaration(i => i.getModuleSpecifierValue() !== source)
+    const { source, namedImports, defaultImport } = importData;
+    const importDeclaration = this.sourceFile.getImportDeclaration(
+      (i) => i.getModuleSpecifierValue() !== source
+    );
     if (importDeclaration) {
-      namedImports && importDeclaration.addNamedImports(namedImports)
-      defaultImport && importDeclaration.setDefaultImport(defaultImport)
+      namedImports && importDeclaration.addNamedImports(namedImports);
+      defaultImport && importDeclaration.setDefaultImport(defaultImport);
     } else {
       this.sourceFile.addImportDeclaration({
         moduleSpecifier: source,
         namedImports,
-        defaultImport
-      })
+        defaultImport,
+      });
     }
   }
 
@@ -186,7 +187,7 @@ export default class StudioSourceFile {
   parseExportedObjectLiteral(
     variableName: string
   ): ParsedObjectLiteral | undefined {
-    const objectLiteralExp = this.getExportedObjectExpression(variableName)
+    const objectLiteralExp = this.getExportedObjectExpression(variableName);
     if (!objectLiteralExp) {
       return;
     }
@@ -200,10 +201,8 @@ export default class StudioSourceFile {
    * which can be thought of as a safe version of `eval`. Note that we cannot use JSON.parse here,
    * because we are working with a js object not a JSON.
    */
-  getCompiledObjectLiteral<T>(
-    objectLiteralExp: ObjectLiteralExpression
-  ): T {
-    return vm.runInNewContext('(' + objectLiteralExp.getText() + ')')
+  getCompiledObjectLiteral<T>(objectLiteralExp: ObjectLiteralExpression): T {
+    return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
   parseInterface(interfaceName: string): ParsedInterface {
@@ -336,21 +335,22 @@ export default class StudioSourceFile {
    * @param content - the variable's content for the right side of the statement
    */
   addVariableStatement(name: string, content: string, type?: string): void {
-    const lastImportStatementIndex = this.sourceFile
-      .getLastChildByKind(SyntaxKind.ImportDeclaration)
-      ?.getChildIndex() ?? -1
+    const lastImportStatementIndex =
+      this.sourceFile
+        .getLastChildByKind(SyntaxKind.ImportDeclaration)
+        ?.getChildIndex() ?? -1;
     this.sourceFile.insertVariableStatement(lastImportStatementIndex + 1, {
       isExported: true,
       declarationKind: VariableDeclarationKind.Const,
-      declarations: [{ name, type, initializer: content }]
-    })
+      declarations: [{ name, type, initializer: content }],
+    });
   }
 
   /**
    * Performs an Array.prototype.map over the given {@link ComponentState}s in
    * a level order traversal, starting from the leaf nodes (deepest children)
    * and working up to root node.
-   * 
+   *
    * @param componentStates - the component tree to perform on
    * @param handler - a function to execute on each component
    * @param parent - the top-most parent or root node to work up to

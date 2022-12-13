@@ -47,9 +47,11 @@ export default class TypeGuards {
   }
 
   static isTemplateString(value: unknown): value is `\`${string}\`` {
-    return typeof value == 'string'
-      && value.startsWith('`')
-      && value.endsWith('`')
-      && value.length >= 2
+    return (
+      typeof value == "string" &&
+      value.startsWith("`") &&
+      value.endsWith("`") &&
+      value.length >= 2
+    );
   }
 }

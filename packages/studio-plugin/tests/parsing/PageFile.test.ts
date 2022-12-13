@@ -1,7 +1,11 @@
 import PageFile from "../../src/parsing/PageFile";
 import { ComponentState, ComponentStateKind } from "../../src/types/State";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getModulePath, getPagePath } from "../__utils__/getFixturePath";
+import {
+  getComponentPath,
+  getModulePath,
+  getPagePath,
+} from "../__utils__/getFixturePath";
 import * as getFileMetadataUtils from "../../src/getFileMetadata";
 import * as uuidUtils from "uuid";
 import fs from "fs";
@@ -15,7 +19,7 @@ jest.mock("uuid");
 const fragmentComponent: ComponentState = {
   kind: ComponentStateKind.Fragment,
   uuid: "mock-uuid-0",
-}
+};
 
 const componentTree: ComponentState[] = [
   {
@@ -94,63 +98,63 @@ const nestedBannerComponentTree: ComponentState[] = [
     parentUUID: "mock-uuid-3",
     uuid: "mock-uuid-4",
   },
-]
+];
 
 const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
   fragmentComponent,
   {
     kind: ComponentStateKind.Standard,
-    componentName: 'SimpleBanner',
+    componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-1",
     props: {
       title: {
         kind: PropValueKind.Expression,
         value: "document.title",
-        valueType: PropValueType.string
-      }
+        valueType: PropValueType.string,
+      },
     },
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: 'SimpleBanner',
+    componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-2",
     props: {
       title: {
         kind: PropValueKind.Expression,
         value: "`this is ${document.stringLiteral}`",
-        valueType: PropValueType.string
-      }
+        valueType: PropValueType.string,
+      },
     },
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: 'SimpleBanner',
+    componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-3",
     props: {
       title: {
         kind: PropValueKind.Expression,
         value: "document.arrayIndex[0]",
-        valueType: PropValueType.string
-      }
+        valueType: PropValueType.string,
+      },
     },
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: 'SimpleBanner',
+    componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-4",
     props: {
       title: {
         kind: PropValueKind.Literal,
-        value:'document.notAStreamField',
-        valueType: PropValueType.string
-      }
+        value: "document.notAStreamField",
+        valueType: PropValueType.string,
+      },
     },
-  }
-]
+  },
+];
 
 describe("getPageState", () => {
   beforeEach(() => {
@@ -185,30 +189,21 @@ describe("getPageState", () => {
     const pageFile = new PageFile(getPagePath("reactFragmentPage"));
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([
-      fragmentComponent,
-      ...componentTree,
-    ]);
+    expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
   it("correctly parses page with top-level Fragment", () => {
     const pageFile = new PageFile(getPagePath("fragmentPage"));
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([
-      fragmentComponent,
-      ...componentTree,
-    ]);
+    expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
   it("correctly parses page with top-level Fragment in short syntax", () => {
     const pageFile = new PageFile(getPagePath("shortFragmentSyntaxPage"));
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([
-      fragmentComponent,
-      ...componentTree,
-    ]);
+    expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
   it("correctly parses page with top-level div component and logs warning", () => {
@@ -309,83 +304,108 @@ describe("getPageState", () => {
 describe("updatePageFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
-    jest.spyOn(fs, 'writeFileSync').mockImplementation();
+    jest.spyOn(fs, "writeFileSync").mockImplementation();
     tsMorphProject = new Project({
       compilerOptions: {
         jsx: typescript.JsxEmit.ReactJSX,
       },
     });
-  })
+  });
 
   describe("page return statement", () => {
     it("adds new sibling and children components", () => {
       new ComponentFile(getComponentPath("ComplexBanner"), tsMorphProject);
       new ComponentFile(getComponentPath("NestedBanner"), tsMorphProject);
-      const pageFile = new PageFile(getPagePath("updatePageFile/PageWithAComponent"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/PageWithAComponent"),
+        tsMorphProject
+      );
       pageFile.updatePageFile({
         componentTree: nestedBannerComponentTree,
         cssImports: [],
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('PageWithAComponent.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/PageWithMultipleComponents'), 'utf-8')
-      )
-    })
+        expect.stringContaining("PageWithAComponent.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithMultipleComponents"),
+          "utf-8"
+        )
+      );
+    });
 
     it("remove components that are not part of the new page's component tree", () => {
       new ComponentFile(getComponentPath("ComplexBanner"), tsMorphProject);
-      const pageFile = new PageFile(getPagePath("updatePageFile/PageWithMultipleComponents"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/PageWithMultipleComponents"),
+        tsMorphProject
+      );
       pageFile.updatePageFile({
-        componentTree: [{
-          kind: ComponentStateKind.Standard,
-          componentName: "ComplexBanner",
-          props: {},
-          uuid: "mock-uuid-0",
-        }],
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            props: {},
+            uuid: "mock-uuid-0",
+          },
+        ],
         cssImports: [],
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('PageWithMultipleComponents.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/PageWithAComponent'), 'utf-8')
-      )
-    })
-  })
+        expect.stringContaining("PageWithMultipleComponents.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithAComponent"),
+          "utf-8"
+        )
+      );
+    });
+  });
 
   describe("stream config", () => {
     beforeEach(() => {
-      jest.spyOn(uuidUtils, "v4").mockReturnValue('mock-uuid-value');
-    })
+      jest.spyOn(uuidUtils, "v4").mockReturnValue("mock-uuid-value");
+    });
 
     it("adds template config variable when it is not already defined", () => {
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
-      const pageFile = new PageFile(getPagePath("updatePageFile/EmptyPage"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/EmptyPage"),
+        tsMorphProject
+      );
       pageFile.updatePageFile(
         {
-          componentTree: [{
-            kind: ComponentStateKind.Standard,
-            componentName: 'SimpleBanner',
-            uuid: "mock-uuid-0",
-            props: {
-              title: {
-                kind: PropValueKind.Expression,
-                value: 'document.title',
-                valueType: PropValueType.string
-              }
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "SimpleBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.title",
+                  valueType: PropValueType.string,
+                },
+              },
             },
-          }],
+          ],
           cssImports: [],
         },
         { updateStreamConfig: true }
       );
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('EmptyPage.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/PageWithStreamConfig'), 'utf-8')
-      )
-    })
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithStreamConfig"),
+          "utf-8"
+        )
+      );
+    });
 
     it("adds new stream document paths used in new page state", () => {
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
-      const pageFile = new PageFile(getPagePath("updatePageFile/EmptyPage"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/EmptyPage"),
+        tsMorphProject
+      );
       pageFile.updatePageFile(
         {
           componentTree: streamConfigMultipleFieldsComponentTree,
@@ -394,92 +414,118 @@ describe("updatePageFile", () => {
         { updateStreamConfig: true }
       );
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('EmptyPage.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/PageWithStreamConfigMultipleFields'), 'utf-8')
-      )
-    })
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
+          "utf-8"
+        )
+      );
+    });
 
     it("removes unused stream document paths", () => {
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
-      const pageFile = new PageFile(getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
+        tsMorphProject
+      );
       pageFile.updatePageFile(
         {
-          componentTree: [{
-            kind: ComponentStateKind.Standard,
-            componentName: 'SimpleBanner',
-            uuid: "mock-uuid-0",
-            props: {
-              title: {
-                kind: PropValueKind.Expression,
-                value: 'document.title',
-                valueType: PropValueType.string
-              }
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "SimpleBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.title",
+                  valueType: PropValueType.string,
+                },
+              },
             },
-          }],
+          ],
           cssImports: [],
         },
         { updateStreamConfig: true }
       );
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('PageWithStreamConfigMultipleFields.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/PageWithStreamConfig'), 'utf-8')
-      )
-    })
-  })
+        expect.stringContaining("PageWithStreamConfigMultipleFields.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithStreamConfig"),
+          "utf-8"
+        )
+      );
+    });
+  });
 
   describe("imports", () => {
     it("adds css imports", () => {
-      const pageFile = new PageFile(getPagePath("updatePageFile/EmptyPage"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/EmptyPage"),
+        tsMorphProject
+      );
       pageFile.updatePageFile({
         componentTree: [fragmentComponent],
-        cssImports: ['../index.css', './App.css'],
+        cssImports: ["../index.css", "./App.css"],
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('EmptyPage.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/PageWithCssImports'), 'utf-8')
-      )
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithCssImports"),
+          "utf-8"
+        )
+      );
     });
 
     it("adds missing imports", () => {
       new ComponentFile(getModulePath("PanelWithModules"), tsMorphProject);
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
-      const pageFile = new PageFile(getPagePath("updatePageFile/EmptyPage"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/EmptyPage"),
+        tsMorphProject
+      );
       pageFile.updatePageFile({
         componentTree: [
           fragmentComponent,
           {
             kind: ComponentStateKind.Standard,
-            componentName: 'SimpleBanner',
+            componentName: "SimpleBanner",
             props: {},
             uuid: "mock-uuid-1",
-            parentUUID: "mock-uuid-0"
+            parentUUID: "mock-uuid-0",
           },
           {
             kind: ComponentStateKind.Module,
-            componentName: 'PanelWithModules',
+            componentName: "PanelWithModules",
             props: {},
             uuid: "mock-uuid-2",
-            parentUUID: "mock-uuid-0"
-          }
+            parentUUID: "mock-uuid-0",
+          },
         ],
         cssImports: [],
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('EmptyPage.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/PageWithComponentImports'), 'utf-8')
-      )
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithComponentImports"),
+          "utf-8"
+        )
+      );
     });
 
     it("removes unused imports", () => {
-      const pageFile = new PageFile(getPagePath("updatePageFile/PageWithUnusedImports"), tsMorphProject);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/PageWithUnusedImports"),
+        tsMorphProject
+      );
       pageFile.updatePageFile({
         componentTree: [fragmentComponent],
         cssImports: [],
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining('PageWithUnusedImports.tsx'),
-        fs.readFileSync(getPagePath('updatePageFile/EmptyPage'), 'utf-8')
-      )
+        expect.stringContaining("PageWithUnusedImports.tsx"),
+        fs.readFileSync(getPagePath("updatePageFile/EmptyPage"), "utf-8")
+      );
     });
-  })
+  });
 });

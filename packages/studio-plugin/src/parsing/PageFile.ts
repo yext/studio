@@ -17,7 +17,7 @@ import StreamParsingHelper from "./StreamParsingHelper";
  */
 interface UpdatePageFileOptions {
   /** Whether to update stream config specified in the "config" variable in the page file. */
-  updateStreamConfig?: boolean
+  updateStreamConfig?: boolean;
 }
 
 /**
@@ -30,7 +30,7 @@ export default class PageFile {
 
   constructor(private filepath: string, project?: Project) {
     this.studioSourceFile = new StudioSourceFile(filepath, project);
-    this.streamParsingHelper = new StreamParsingHelper(this.studioSourceFile)
+    this.streamParsingHelper = new StreamParsingHelper(this.studioSourceFile);
   }
 
   getPageState(): PageState {
@@ -64,9 +64,8 @@ export default class PageFile {
   }
 
   private createReturnStatement(componentTree: ComponentState[]): string {
-    const elements = this.studioSourceFile.mapComponentStates<string>(
-      componentTree,
-      (c, children): string => {
+    const elements = this.studioSourceFile
+      .mapComponentStates<string>(componentTree, (c, children): string => {
         if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
         } else if (children.length === 0) {
@@ -80,8 +79,8 @@ export default class PageFile {
             `</${c.componentName}>`
           );
         }
-      }
-    ).join("\n");
+      })
+      .join("\n");
     return `return (${elements})`;
   }
 
@@ -94,7 +93,10 @@ export default class PageFile {
    * @param updatedPageState - the updated state for the page file
    * @param options - configuration to the source file's update process
    */
-  updatePageFile(updatedPageState: PageState, options: UpdatePageFileOptions = {}): void {
+  updatePageFile(
+    updatedPageState: PageState,
+    options: UpdatePageFileOptions = {}
+  ): void {
     const defaultExport = this.studioSourceFile.parseDefaultExport();
     const pageComponent = defaultExport.isKind(SyntaxKind.VariableDeclaration)
       ? defaultExport.getFirstDescendantByKindOrThrow(SyntaxKind.ArrowFunction)
@@ -113,7 +115,9 @@ export default class PageFile {
     pageComponent.addStatements(newReturnStatement);
 
     if (options.updateStreamConfig) {
-      this.streamParsingHelper.updateStreamConfig(updatedPageState.componentTree);
+      this.streamParsingHelper.updateStreamConfig(
+        updatedPageState.componentTree
+      );
       this.streamParsingHelper.addStreamImport(this.studioSourceFile);
     }
     this.studioSourceFile.updateFileImports(updatedPageState.cssImports);
