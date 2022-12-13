@@ -140,15 +140,12 @@ export default class StudioSourceFile {
     return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
   }
 
-  getDefaultExport(): FunctionDeclaration | Identifier | ObjectLiteralExpression | ArrayLiteralExpression {
-    const declarations = this.sourceFile
-      .getDefaultExportSymbolOrThrow()
-      .getDeclarations();
-    if (declarations.length === 0) {
-      throw new Error(
-        "Error getting default export: No declaration node found."
-      );
+  getDefaultExport(): FunctionDeclaration | Identifier | ObjectLiteralExpression | ArrayLiteralExpression | undefined{
+    const defaultExportSymbol = this.sourceFile.getDefaultExportSymbol()
+    if (!defaultExportSymbol) {
+      return undefined;
     }
+    const declarations = defaultExportSymbol.getDeclarations();
     const exportDeclaration = declarations[0];
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
@@ -186,6 +183,11 @@ export default class StudioSourceFile {
    */
   private getDefaultExportReactComponent(): VariableDeclaration | FunctionDeclaration {
     const defaultExport = this.getDefaultExport();
+    if (!defaultExport) {
+      throw new Error(
+        "Error getting default export: No declaration node found."
+      );
+    }
     if (defaultExport.isKind(SyntaxKind.ObjectLiteralExpression) || defaultExport.isKind(SyntaxKind.ArrayLiteralExpression)) {
       throw new Error(
         "Error getting default export React component: Only a direct Identifier is supported for ExportAssignment."

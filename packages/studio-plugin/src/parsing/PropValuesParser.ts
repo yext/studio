@@ -20,7 +20,7 @@ export default class PropValuesParser {
    * @param propShape - Shape of the component's props
    * @param variableName - the variable to parse into PropValues.
    */
-  parsePropValues(propShape: PropShape, variableName?: string): PropValues | undefined {
+  parsePropValues(propShape: PropShape, variableName: string): PropValues | undefined {
     const rawValues = this.getRawValues(variableName);
     if (!rawValues) {
       return undefined;
@@ -28,9 +28,12 @@ export default class PropValuesParser {
     return this.parseRawValues(rawValues, propShape);
   }
 
-  private getRawValues(variableName?: string) {
+  private getRawValues(variableName?: string): ParsedObjectLiteral | undefined {
     if (!variableName) {
       const defaultExport = this.studioSourceFile.getDefaultExport();
+      if (!defaultExport) {
+        return undefined
+      }
       if (!defaultExport.isKind(SyntaxKind.ObjectLiteralExpression)) {
         throw new Error(`Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath}`);
       }

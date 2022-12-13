@@ -1,7 +1,6 @@
 import { PropShape, PropValues } from '../types'
 import PropShapeParser from './PropShapeParser';
 import PropValuesParser from './PropValuesParser';
-import { ParsedInterface } from './StaticParsingHelpers';
 import StudioSourceFile from './StudioSourceFile'
 
 export interface SiteSettings {
@@ -24,7 +23,10 @@ export default class SiteSettingsFile {
 
   getSiteSettings(): SiteSettings {
     const siteSettingsShape: PropShape = this.propShapeParser.parsePropShape('SiteSettings');
-    const values = this.propValuesParser.parsePropValues(siteSettingsShape) ?? {};
+    const values = this.propValuesParser.parsePropValues(siteSettingsShape);
+    if (!values) {
+      throw new Error('No default export found for site settings');
+    }
     return {
       shape: siteSettingsShape,
       values
