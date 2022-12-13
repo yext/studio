@@ -2,12 +2,6 @@ import ComponentFile from "./parsing/ComponentFile";
 import { FileMetadataKind } from "./types/FileMetadata";
 import { PropShape } from "./types/PropShape";
 
-export type GetFileMetadataFn = (filepath?: string) => {
-  kind: FileMetadataKind;
-  metadataUUID?: string;
-  propShape?: PropShape;
-};
-
 /**
  * This is a temporary implementation to get the file metadata. Once the
  * state manager is implemented, this data will be computed elsewhere and
@@ -17,7 +11,11 @@ export type GetFileMetadataFn = (filepath?: string) => {
  * state manager.
  */
 
-export const getFileMetadata: GetFileMetadataFn = (filepath?: string) => {
+export function getFileMetadata(filepath?: string): {
+  kind: FileMetadataKind;
+  metadataUUID?: string;
+  propShape?: PropShape;
+} {
   let propShape: PropShape | undefined = undefined;
   if (filepath) {
     const componentFile = new ComponentFile(filepath);
@@ -33,4 +31,4 @@ export const getFileMetadata: GetFileMetadataFn = (filepath?: string) => {
     metadataUUID: filepath,
     propShape,
   };
-};
+}

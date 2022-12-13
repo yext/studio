@@ -5,26 +5,25 @@ import TypeGuards from "./TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 
 /**
- * FileMetadataParsingHelpers is a static class for housing shared parsing logic for
+ * FileMetadataParsingHelper is a class for housing shared parsing logic for
  * files of type FileMetadata (e.g. Module or Component) within Studio.
  */
-export default class FileMetadataParsingHelpers {
+export default class FileMetadataParsingHelper {
+  constructor(
+    private componentName: string,
+    private studioSourceFile: StudioSourceFile
+  ) {}
+
   /**
    * Get initial props for a component, defined through a const variable "initialProps"
    * that match the interface `${componentName}Props`.
    *
-   * @param studioSourceFile - StudioSourceFile instance for a component source file
-   * @param componentName - Name of component exported in file
    * @param propShape - Shape of the component's props
    * @returns field values for "initialProps" variable in file
    */
-  static getInitialProps(
-    studioSourceFile: StudioSourceFile,
-    componentName: string,
-    propShape: PropShape
-  ): PropValues | undefined {
+  getInitialProps(propShape: PropShape): PropValues | undefined {
     const rawValues =
-      studioSourceFile.parseExportedObjectLiteral("initialProps");
+      this.studioSourceFile.parseExportedObjectLiteral("initialProps");
     if (!rawValues) {
       return undefined;
     }
@@ -33,7 +32,7 @@ export default class FileMetadataParsingHelpers {
       const { value, isExpression } = rawValues[propName];
       if (isExpression) {
         throw new Error(
-          `Expressions are not supported within initialProps for ${componentName}.`
+          `Expressions are not supported within initialProps for ${this.componentName}.`
         );
       }
       const propValue = {
@@ -54,21 +53,15 @@ export default class FileMetadataParsingHelpers {
   /**
    * Get shape of the component's props, defined through an interface `${componentName}Props`.
    *
-   * @param studioSourceFile - StudioSourceFile instance for a component source file
-   * @param componentName - Name of component exported in file
    * @param onProp - A function to execute when iterating through each field in the prop interface
    * @returns shape of the component's props
    */
-  static getPropShape(
-    studioSourceFile: StudioSourceFile,
-    componentName: string,
-    onProp?: (propName: string) => boolean
-  ): PropShape {
-    const propsInterface = studioSourceFile.parseInterface(
-      `${componentName}Props`
+  getPropShape(onProp?: (propName: string) => boolean): PropShape {
+    const propsInterface = this.studioSourceFile.parseInterface(
+      `${this.componentName}Props`
     );
     const studioImports =
-      studioSourceFile.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
+      this.studioSourceFile.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
     const propShape: PropShape = {};
     Object.keys(propsInterface).forEach((propName) => {
       const { type, doc } = propsInterface[propName];
@@ -78,12 +71,12 @@ export default class FileMetadataParsingHelpers {
 
       if (!TypeGuards.isPropValueType(type)) {
         throw new Error(
-          `Unrecognized prop type ${type} in props interface for ${componentName}.`
+          `Unrecognized prop type ${type} in props interface for ${this.componentName}.`
         );
       }
       if (!TypeGuards.isPrimitiveProp(type) && !studioImports.includes(type)) {
         throw new Error(
-          `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in props interface for ${componentName}.`
+          `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in props interface for ${this.componentName}.`
         );
       }
       propShape[propName] = { type };

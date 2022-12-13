@@ -16,7 +16,7 @@ import StaticParsingHelpers, {
 } from "./StaticParsingHelpers";
 import { v4 } from "uuid";
 import path from "path";
-import { GetFileMetadataFn } from "../getFileMetadata";
+import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 
 /**
  * The ts-morph Project instance for the entire app.
@@ -179,7 +179,7 @@ export default class StudioSourceFile {
 
   parseComponentTree(
     defaultImports: Record<string, string>,
-    getFileMetadata: GetFileMetadataFn
+    getFileMetadata: typeof getFileMetadataFn
   ): ComponentState[] {
     const defaultExport = this.parseDefaultExport();
     const returnStatement = defaultExport.getFirstDescendantByKind(
@@ -214,7 +214,7 @@ export default class StudioSourceFile {
   parseComponentState(
     component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
-    getFileMetadata: GetFileMetadataFn,
+    getFileMetadata: typeof getFileMetadataFn,
     parent?: ComponentState
   ): ComponentState {
     const commonComponentState = {

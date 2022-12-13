@@ -14,10 +14,14 @@ export default class PageFile {
   }
 
   getPageState(): PageState {
-    const absPathDefaultImports = this.studioSourceFile.getAbsPathDefaultImports()
+    const absPathDefaultImports =
+      this.studioSourceFile.getAbsPathDefaultImports();
     return {
-      componentTree: this.studioSourceFile.parseComponentTree(absPathDefaultImports, getFileMetadata),
-      cssImports: this.studioSourceFile.parseCssImports()
+      componentTree: this.studioSourceFile.parseComponentTree(
+        absPathDefaultImports,
+        getFileMetadata
+      ),
+      cssImports: this.studioSourceFile.parseCssImports(),
     };
   }
 }

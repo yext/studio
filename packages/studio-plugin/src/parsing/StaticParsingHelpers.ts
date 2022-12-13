@@ -15,7 +15,7 @@ import { PropShape } from "../types/PropShape";
 import TypeGuards from "./TypeGuards";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { ComponentStateKind } from "../types/State";
-import { GetFileMetadataFn } from "../getFileMetadata";
+import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 
 export type ParsedInterface = {
   [key: string]: {
@@ -189,7 +189,7 @@ export default class StaticParsingHelpers {
     component: JsxElement | JsxSelfClosingElement,
     name: string,
     defaultImports: Record<string, string>,
-    getFileMetadata: GetFileMetadataFn
+    getFileMetadata: typeof getFileMetadataFn
   ): ParsedElement {
     const filepath = Object.keys(defaultImports).find(
       (importIdentifier) => defaultImports[importIdentifier] === name

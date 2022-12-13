@@ -1,6 +1,6 @@
 import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
-import FileMetadataParsingHelpers from "./FileMetadataParsingHelpers";
+import FileMetadataParsingHelper from "./FileMetadataParsingHelper";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { getFileMetadata } from "../getFileMetadata";
@@ -12,10 +12,15 @@ import { getFileMetadata } from "../getFileMetadata";
 export default class ModuleFile {
   private studioSourceFile: StudioSourceFile;
   private componentName: string;
+  private fileMetadataParsingHelper: FileMetadataParsingHelper;
 
   constructor(filepath: string) {
     this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFile = new StudioSourceFile(filepath);
+    this.fileMetadataParsingHelper = new FileMetadataParsingHelper(
+      this.componentName,
+      this.studioSourceFile
+    );
   }
 
   getModuleMetadata(): ModuleMetadata {
@@ -26,15 +31,9 @@ export default class ModuleFile {
       getFileMetadata
     );
 
-    const propShape = FileMetadataParsingHelpers.getPropShape(
-      this.studioSourceFile,
-      this.componentName
-    );
-    const initialProps = FileMetadataParsingHelpers.getInitialProps(
-      this.studioSourceFile,
-      this.componentName,
-      propShape
-    );
+    const propShape = this.fileMetadataParsingHelper.getPropShape();
+    const initialProps =
+      this.fileMetadataParsingHelper.getInitialProps(propShape);
 
     return {
       kind: FileMetadataKind.Module,
