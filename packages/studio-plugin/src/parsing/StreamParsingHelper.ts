@@ -35,8 +35,7 @@ const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
 const TEMPLATE_STRING_EXPRESSION_REGEX = /\${(.*?)}/g;
 
 /**
- * StreamParsingHelpers is a class for housing data parsing
- * logic for Stream within Studio.
+ * StreamParsingHelper is a class for housing data parsing logic for Stream in PageFile.
  */
 export default class StreamParsingHelper {
   constructor(private studioSourceFile: StudioSourceFile) {}
