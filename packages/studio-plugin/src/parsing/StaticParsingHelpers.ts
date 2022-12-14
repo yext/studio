@@ -358,18 +358,6 @@ export default class StaticParsingHelpers {
     return foundNode;
   }
 
-  /**
-   * Similar to ts-morph's getFirstDescendantByKind but accepts multiple kinds.
-   */
-  static getFirstDescendantOfKind<T extends ReadonlyArray<SyntaxKind>>(
-    node: Node,
-    ...kinds: T
-  ): KindToNodeMappings[ElementType<typeof kinds>] | undefined {
-    return node.getFirstDescendant((n) => !!kinds.find((k) => n.isKind(k))) as
-      | KindToNodeMappings[ElementType<typeof kinds>]
-      | undefined;
-  }
-
   static parseExportAssignment(
     exportAssignment: ExportAssignment
   ): Identifier | ObjectLiteralExpression | ArrayLiteralExpression {
