@@ -41,5 +41,9 @@ type FragmentState = {
 
 type BuiltInState = {
   kind: ComponentStateKind.BuiltIn;
+  componentName: string;
   uuid: string;
+  /** We currently do not support props on built in elements. */
+  props: {};
+  parentUUID?: string;
 };

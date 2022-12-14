@@ -205,9 +205,7 @@ export default class StudioSourceFileParser {
    *   `export default \{ key: val \};`), an array (e.g.
    *   `export default [Identifier];`), etc., an error will be thrown.
    */
-  private getDefaultExportReactComponent():
-    | VariableDeclaration
-    | FunctionDeclaration {
+  getDefaultExportReactComponent(): VariableDeclaration | FunctionDeclaration {
     const defaultExport = this.getDefaultExport();
     if (!defaultExport) {
       throw new Error(
