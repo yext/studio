@@ -42,7 +42,7 @@ it('getPages', () => {
       componentTree: [
         expect.objectContaining({
           componentName: 'div',
-          kind: ComponentStateKind.Standard
+          kind: ComponentStateKind.BuiltIn
         }),
         expect.objectContaining({
           componentName: "Card",
