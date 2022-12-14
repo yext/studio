@@ -1,13 +1,15 @@
 import PageFile from "../../src/parsing/PageFile";
 import { ComponentStateKind } from "../../src/types/State";
 import { PropValueType } from "../../src/types/PropValues";
-import {
-  getPagePath,
-} from "../__utils__/getFixturePath";
+import { getPagePath } from "../__utils__/getFixturePath";
 import * as getFileMetadataUtils from "../../src/getFileMetadata";
 import * as uuidUtils from "uuid";
 import { FileMetadataKind, PropShape } from "../../src";
-import { componentTree, fragmentComponent, nestedBannerComponentTree } from "../__fixtures__/componentStates";
+import {
+  componentTree,
+  fragmentComponent,
+  nestedBannerComponentTree,
+} from "../__fixtures__/componentStates";
 
 jest.mock("uuid");
 
