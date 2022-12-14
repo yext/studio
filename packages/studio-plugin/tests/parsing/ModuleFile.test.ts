@@ -9,13 +9,13 @@ import {
   PropShape,
   FileMetadataKind,
 } from "../../src";
-import { spyOnUUID } from "../__utils__/spies";
+import { mockUUID } from "../__utils__/spies";
 
 jest.mock("uuid");
 
 describe("getModuleMetadata", () => {
   beforeEach(() => {
-    spyOnUUID();
+    mockUUID();
     jest
       .spyOn(getFileMetadataUtils, "getFileMetadata")
       .mockImplementation((filepath) => {
