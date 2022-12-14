@@ -14,8 +14,8 @@ import {
 
 const fragmentComponent: ComponentState = {
   kind: ComponentStateKind.Fragment,
-  uuid: "fragment-uuid"
-}
+  uuid: "fragment-uuid",
+};
 const searchBarComponent: ComponentState = {
   kind: ComponentStateKind.Standard,
   componentName: "SearchBar",
@@ -188,10 +188,12 @@ describe("PageSlice", () => {
         },
       };
       useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
-      const componentState = useStudioStore.getState().pages.pages["universal"].componentTree[1];
-      const actualPropValues = componentState.kind === ComponentStateKind.Fragment
-        ? undefined
-        : componentState.props;
+      const componentState =
+        useStudioStore.getState().pages.pages["universal"].componentTree[1];
+      const actualPropValues =
+        componentState.kind === ComponentStateKind.Fragment
+          ? undefined
+          : componentState.props;
       expect(actualPropValues).toEqual(newPropValues);
     });
 
