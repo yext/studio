@@ -139,7 +139,7 @@ describe("getPageState", () => {
 
     expect(result.componentTree).toEqual([
       {
-        kind: ComponentStateKind.Standard,
+        kind: ComponentStateKind.BuiltIn,
         componentName: "div",
         props: {},
         uuid: "mock-uuid-0",
@@ -245,6 +245,30 @@ describe("getPageState", () => {
 
       expect(() => pageFile.getPageState()).toThrowError(
         'Jsx nodes of kind "JsxExpression" are not supported for direct use in page files.'
+      );
+    });
+
+    it("throws an error when a JsxExpression is found on the page", () => {
+      const pageFile = new PageFile(getPagePath("jsxExpressionPage"));
+
+      expect(() => pageFile.getPageState()).toThrowError(
+        'Jsx nodes of kind "JsxExpression" are not supported for direct use in page files.'
+      );
+    });
+
+    it("throws when an ObjectLiteralExpression is returned by the page", () => {
+      const pageFile = new PageFile(getPagePath("returnsObject"));
+
+      expect(() => pageFile.getPageState()).toThrowError(
+        /^Unable to find top-level JSX element or JSX fragment/
+      );
+    });
+
+    it("throws when an ArrayLiteralExpression is returned by the page", () => {
+      const pageFile = new PageFile(getPagePath("returnsArray"));
+
+      expect(() => pageFile.getPageState()).toThrowError(
+        /^Unable to find top-level JSX element or JSX fragment/
       );
     });
   });

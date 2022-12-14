@@ -1,5 +1,8 @@
 import {
+  ArrayLiteralExpression,
+  ExportAssignment,
   Expression,
+  Identifier,
   ImportDeclaration,
   InterfaceDeclaration,
   JsxAttributeLike,
@@ -7,7 +10,10 @@ import {
   JsxElement,
   JsxFragment,
   JsxSelfClosingElement,
+  KindToNodeMappings,
+  Node,
   ObjectLiteralExpression,
+  ParenthesizedExpression,
   SyntaxKind,
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../types/PropValues";
@@ -196,8 +202,8 @@ export default class StaticParsingHelpers {
     );
 
     const {
-      metadataUUID,
       kind: fileMetadataKind,
+      metadataUUID,
       propShape,
     } = getFileMetadata(filepath);
 
@@ -207,11 +213,6 @@ export default class StaticParsingHelpers {
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
 
-    const kind =
-      fileMetadataKind === FileMetadataKind.Module
-        ? ComponentStateKind.Module
-        : ComponentStateKind.Standard;
-
     if (!metadataUUID) {
       if (attributes.length > 0) {
         console.warn(
@@ -219,19 +220,24 @@ export default class StaticParsingHelpers {
         );
       }
       return {
-        kind,
+        kind: ComponentStateKind.BuiltIn,
         props: {},
       };
     }
+
+    const componentStateKind =
+      fileMetadataKind === FileMetadataKind.Module
+        ? ComponentStateKind.Module
+        : ComponentStateKind.Standard;
 
     const props = StaticParsingHelpers.parseJsxAttributes(
       attributes,
       propShape
     );
     return {
+      kind: componentStateKind,
       metadataUUID,
       props,
-      kind,
     };
   }
 
@@ -301,4 +307,99 @@ export default class StaticParsingHelpers {
       ["Fragment", "React.Fragment"].includes(name)
     );
   }
+
+  /**
+   * Recursively unwraps a ParenthesizedExpression to its last layer.
+   */
+  static unwrapParensExpression(
+    parensExpression: ParenthesizedExpression
+  ): ParenthesizedExpression {
+    let node: ParenthesizedExpression = parensExpression;
+    let nextNode = node.getFirstChildByKind(SyntaxKind.ParenthesizedExpression);
+    while (nextNode?.isKind(SyntaxKind.ParenthesizedExpression)) {
+      nextNode = node.getFirstChildByKind(SyntaxKind.ParenthesizedExpression);
+      if (nextNode) {
+        node = nextNode;
+      }
+    }
+    return node;
+  }
+
+  /**
+   * Similar to ts-morph's getFirstChildByKind but accepts multiple kinds.
+   */
+  static getFirstChildOfKind<T extends ReadonlyArray<SyntaxKind>>(
+    node: Node,
+    ...kinds: T
+  ): KindToNodeMappings[ElementType<typeof kinds>] | undefined {
+    return node.getFirstChild((n) => !!kinds.find((k) => n.isKind(k))) as
+      | KindToNodeMappings[ElementType<typeof kinds>]
+      | undefined;
+  }
+
+  static getFirstChildOfKindOrThrow<T extends ReadonlyArray<SyntaxKind>>(
+    node: Node,
+    ...kinds: T
+  ): KindToNodeMappings[ElementType<typeof kinds>] {
+    const foundNode = StaticParsingHelpers.getFirstChildOfKind(node, ...kinds);
+    if (!foundNode) {
+      throw new Error(
+        `Could not find a child of kind ${kinds
+          .map((k) => {
+            const expectedKindName = Object.entries(SyntaxKind).find(
+              ([_, value]) => value === k
+            )?.[0];
+            return expectedKindName;
+          })
+          .join(", ")} in node \`${node.getFullText()}\`.`
+      );
+    }
+    return foundNode;
+  }
+
+  /**
+   * Similar to ts-morph's getFirstDescendantByKind but accepts multiple kinds.
+   */
+  static getFirstDescendantOfKind<T extends ReadonlyArray<SyntaxKind>>(
+    node: Node,
+    ...kinds: T
+  ): KindToNodeMappings[ElementType<typeof kinds>] | undefined {
+    return node.getFirstDescendant((n) => !!kinds.find((k) => n.isKind(k))) as
+      | KindToNodeMappings[ElementType<typeof kinds>]
+      | undefined;
+  }
+
+  static parseExportAssignment(
+    exportAssignment: ExportAssignment
+  ): Identifier | ObjectLiteralExpression | ArrayLiteralExpression {
+    let parentNode: Node = exportAssignment;
+
+    const asExpression = parentNode.getFirstChildByKind(
+      SyntaxKind.AsExpression
+    );
+    if (asExpression) {
+      parentNode = asExpression;
+    }
+
+    const parensExpression = parentNode.getFirstChildByKind(
+      SyntaxKind.ParenthesizedExpression
+    );
+    if (parensExpression) {
+      parentNode =
+        StaticParsingHelpers.unwrapParensExpression(parensExpression);
+    }
+
+    return StaticParsingHelpers.getFirstChildOfKindOrThrow(
+      parentNode,
+      SyntaxKind.ObjectLiteralExpression,
+      SyntaxKind.ArrayLiteralExpression,
+      SyntaxKind.Identifier
+    );
+  }
 }
+
+type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
+  infer ElementType
+>
+  ? ElementType
+  : never;

@@ -139,6 +139,13 @@ export default class StudioSourceFile {
     return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
   }
 
+  /**
+   * Returns the default exported node, if one exists.
+   *
+   * If the exported node uses an AsExpression (type assertion) or is wrapped in a
+   * ParenthesizedExpression, those will be unwrapped and the underlying node will be
+   * returned instead.
+   */
   getDefaultExport():
     | FunctionDeclaration
     | Identifier
@@ -154,26 +161,11 @@ export default class StudioSourceFile {
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
     } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const identifier = exportDeclaration.getFirstChildByKind(
-        SyntaxKind.Identifier
-      );
-      const objectLiteral = exportDeclaration.getFirstChildByKind(
-        SyntaxKind.ObjectLiteralExpression
-      );
-      const arrayLiteral = exportDeclaration.getFirstChildByKind(
-        SyntaxKind.ArrayLiteralExpression
-      );
-      const assignment = identifier ?? objectLiteral ?? arrayLiteral;
+      const assignment =
+        StaticParsingHelpers.parseExportAssignment(exportDeclaration);
       if (!assignment) {
         throw new Error(
           `Error parsing default export in \`${exportDeclaration.getFullText()}\`, expected either an Identifier, ObjectLiteralExpression, or ArrayLiteralExpression.`
-        );
-      }
-      if (
-        [identifier, objectLiteral, arrayLiteral].filter((n) => !!n).length > 1
-      ) {
-        throw new Error(
-          `Unexpected state, multiple nodes found when parsing default export \`${exportDeclaration.getFullText()}\``
         );
       }
       return assignment;

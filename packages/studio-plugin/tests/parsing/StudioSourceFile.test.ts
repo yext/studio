@@ -51,6 +51,15 @@ describe("getDefaultExport", () => {
     expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression);
   });
 
+  it("correctly gets an ObjectLiteralExpression wrapped in parenthesis", () => {
+    const { project } = createTestSourceFile(
+      "const test = 1; const no = false; export default ({ num: test });"
+    );
+    const studioSource = new StudioSourceFile("test.tsx", project);
+    const defaultExport = studioSource.getDefaultExport();
+    expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression);
+  });
+
   it("correctly gets an ArrayLiteralExpression", () => {
     const { project } = createTestSourceFile(
       "const test = 1; const no = false; export default [test];"
@@ -58,5 +67,14 @@ describe("getDefaultExport", () => {
     const studioSource = new StudioSourceFile("test.tsx", project);
     const defaultExport = studioSource.getDefaultExport();
     expectSyntaxKind(defaultExport, SyntaxKind.ArrayLiteralExpression);
+  });
+
+  it("correctly gets an ObjectLiteralExpression with a type assertion", () => {
+    const { project } = createTestSourceFile(
+      "export default { apiKey: '123' } as SiteSettings;"
+    );
+    const studioSource = new StudioSourceFile("test.tsx", project);
+    const defaultExport = studioSource.getDefaultExport();
+    expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression);
   });
 });

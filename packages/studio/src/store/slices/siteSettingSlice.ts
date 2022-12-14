@@ -4,8 +4,8 @@ import { SliceCreator } from "../models/utils";
 export const createSiteSettingSlice: SliceCreator<SiteSettingSlice> = (
   set
 ) => ({
-  metadata: undefined,
-  state: undefined,
-  setMetadata: (metadata) => set({ metadata }),
-  setState: (state) => set({ state }),
+  shape: undefined,
+  values: undefined,
+  setShape: (shape) => set({ shape }),
+  setValues: (values) => set({ values }),
 });

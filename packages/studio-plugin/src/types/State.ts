@@ -9,7 +9,8 @@ export type ComponentState = StandardOrModuleComponentState | FragmentState;
 export enum ComponentStateKind {
   Standard = "standard",
   Module = "module",
-  Fragment = "fragment", // when the component is a React.Fragment
+  Fragment = "fragment", // when the component is a React.Fragment,
+  BuiltIn = "builtIn", // for built in elements like div and img
 }
 
 type StandardOrModuleComponentState = {
