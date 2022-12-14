@@ -1,16 +1,4 @@
-import {
-  Project,
-  SourceFile,
-  SyntaxKind,
-  VariableDeclaration,
-  FunctionDeclaration,
-  JsxElement,
-  JsxFragment,
-  JsxSelfClosingElement,
-  ObjectLiteralExpression,
-  Identifier,
-  ArrayLiteralExpression,
-} from "ts-morph";
+import { Project } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState } from "../types/State";
 import { Mixin } from "ts-mixer";
