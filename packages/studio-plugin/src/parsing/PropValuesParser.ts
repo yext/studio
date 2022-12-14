@@ -41,7 +41,7 @@ export default class PropValuesParser {
     }
     if (!defaultExport.isKind(SyntaxKind.ObjectLiteralExpression)) {
       throw new Error(
-        `Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath}`
+        `Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath()}`
       );
     }
     return StaticParsingHelpers.parseObjectLiteral(defaultExport);

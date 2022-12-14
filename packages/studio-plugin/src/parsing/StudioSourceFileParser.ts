@@ -1,5 +1,6 @@
 import {
   Project,
+  SourceFile,
   SyntaxKind,
   VariableDeclaration,
   FunctionDeclaration,
@@ -7,7 +8,8 @@ import {
   JsxFragment,
   JsxSelfClosingElement,
   ObjectLiteralExpression,
-  SourceFile,
+  Identifier,
+  ArrayLiteralExpression,
 } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -147,10 +149,48 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
-  parseInterface(interfaceName: string): ParsedInterface {
-    const interfaceDeclaration =
-      this.sourceFile.getInterfaceOrThrow(interfaceName);
+  parseInterface(interfaceName: string): ParsedInterface | undefined {
+    const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
+    if (!interfaceDeclaration) {
+      return undefined;
+    }
     return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
+  }
+
+  /**
+   * Returns the default exported node, if one exists.
+   *
+   * If the exported node uses an AsExpression (type assertion) or is wrapped in a
+   * ParenthesizedExpression, those will be unwrapped and the underlying node will be
+   * returned instead.
+   */
+  getDefaultExport():
+    | FunctionDeclaration
+    | Identifier
+    | ObjectLiteralExpression
+    | ArrayLiteralExpression
+    | undefined {
+    const defaultExportSymbol = this.sourceFile.getDefaultExportSymbol();
+    if (!defaultExportSymbol) {
+      return undefined;
+    }
+    const declarations = defaultExportSymbol.getDeclarations();
+    const exportDeclaration = declarations[0];
+    if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
+      return exportDeclaration;
+    } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
+      const assignment =
+        StaticParsingHelpers.parseExportAssignment(exportDeclaration);
+      if (!assignment) {
+        throw new Error(
+          `Error parsing default export in \`${exportDeclaration.getFullText()}\`, expected either an Identifier, ObjectLiteralExpression, or ArrayLiteralExpression.`
+        );
+      }
+      return assignment;
+    }
+    throw new Error(
+      "Error getting default export: No ExportAssignment or FunctionDeclaration found."
+    );
   }
 
   /**
@@ -165,46 +205,38 @@ export default class StudioSourceFileParser {
    *   `export default \{ key: val \};`), an array (e.g.
    *   `export default [Identifier];`), etc., an error will be thrown.
    */
-  parseDefaultExport(): VariableDeclaration | FunctionDeclaration {
-    const declarations = this.sourceFile
-      .getDefaultExportSymbolOrThrow()
-      .getDeclarations();
-    if (declarations.length === 0) {
+  private getDefaultExportReactComponent():
+    | VariableDeclaration
+    | FunctionDeclaration {
+    const defaultExport = this.getDefaultExport();
+    if (!defaultExport) {
       throw new Error(
         "Error getting default export: No declaration node found."
       );
     }
-    const exportDeclaration = declarations[0];
-    if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
-      return exportDeclaration;
-    } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const assignment = exportDeclaration.getFirstDescendantOrThrow(
-        (n) =>
-          n.isKind(SyntaxKind.ObjectLiteralExpression) ||
-          n.isKind(SyntaxKind.Identifier) ||
-          n.isKind(SyntaxKind.ArrayLiteralExpression)
+    if (
+      defaultExport.isKind(SyntaxKind.ObjectLiteralExpression) ||
+      defaultExport.isKind(SyntaxKind.ArrayLiteralExpression)
+    ) {
+      throw new Error(
+        "Error getting default export React component: Only a direct Identifier is supported for ExportAssignment."
       );
-      if (!assignment.isKind(SyntaxKind.Identifier)) {
-        throw new Error(
-          "Error getting default export: Only a direct Identifier is supported for ExportAssignment."
-        );
-      }
-      const identifierName = assignment.getText();
+    }
+    if (defaultExport.isKind(SyntaxKind.Identifier)) {
+      const identifierName = defaultExport.getText();
       return (
         this.sourceFile.getVariableDeclaration(identifierName) ??
         this.sourceFile.getFunctionOrThrow(identifierName)
       );
     }
-    throw new Error(
-      "Error getting default export: No ExportAssignment or FunctionDeclaration found."
-    );
+    return defaultExport;
   }
 
   parseComponentTree(
     defaultImports: Record<string, string>,
     getFileMetadata: typeof getFileMetadataFn
   ): ComponentState[] {
-    const defaultExport = this.parseDefaultExport();
+    const defaultExport = this.getDefaultExportReactComponent();
     const returnStatement = defaultExport.getFirstDescendantByKind(
       SyntaxKind.ReturnStatement
     );

@@ -32,9 +32,12 @@ export const tsMorphProject = new Project({
  * classes/helper functions.
  */
 export default class StudioSourceFile extends Mixin(StudioSourceFileWriter, StudioSourceFileParser) {
-
   constructor(filepath: string, project: Project = tsMorphProject) {
     super(filepath, project);
+  }
+
+  getFilepath() {
+    return this.filepath;
   }
 
   /**
