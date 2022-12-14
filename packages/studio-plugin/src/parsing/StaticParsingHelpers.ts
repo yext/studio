@@ -162,7 +162,8 @@ export default class StaticParsingHelpers {
     handleJsxChild: (
       c: JsxFragment | JsxElement | JsxSelfClosingElement,
       parent?: T
-    ) => T
+    ) => T,
+    parent?: T
   ): T[] {
     // All whitespace in Jsx is also considered JsxText, for example indentation
     if (c.isKind(SyntaxKind.JsxText)) {
@@ -178,7 +179,7 @@ export default class StaticParsingHelpers {
       );
     }
 
-    const self: T = handleJsxChild(c);
+    const self: T = handleJsxChild(c, parent);
 
     if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
       return [self];
@@ -186,8 +187,8 @@ export default class StaticParsingHelpers {
 
     const children: T[] = c
       .getJsxChildren()
-      .flatMap((c) => this.parseJsxChild(c, (c) => handleJsxChild(c, self)))
-      .filter((c): c is T => !!c);
+      .flatMap((child) => this.parseJsxChild(child, handleJsxChild, self))
+      .filter((child): child is T => !!child);
     return [self, ...children];
   }
 

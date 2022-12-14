@@ -2,7 +2,7 @@ import Banner from "../components/Banner";
 import Card from "../components/Card";
 
 interface PanelWithComponentsProps {
-  topLevelCardText: string;
+  topLevelCardText?: string;
 }
 
 export const initialProps: PanelWithComponentsProps = {

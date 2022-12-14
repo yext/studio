@@ -4,6 +4,7 @@ import { ComponentMetadata } from "../types/ComponentMetadata";
 import { SpecialReactProps } from "../types/PropShape";
 import { FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "./FileMetadataParser";
+import { Project } from "ts-morph";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -14,9 +15,9 @@ export default class ComponentFile {
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string) {
+  constructor(filepath: string, project?: Project) {
     this.componentName = path.basename(filepath, ".tsx");
-    this.studioSourceFile = new StudioSourceFile(filepath);
+    this.studioSourceFile = new StudioSourceFile(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.componentName,
       this.studioSourceFile
