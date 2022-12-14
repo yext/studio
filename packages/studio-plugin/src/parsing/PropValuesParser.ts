@@ -22,7 +22,7 @@ export default class PropValuesParser {
    */
   parsePropValues(
     propShape: PropShape,
-    variableName: string
+    variableName?: string
   ): PropValues | undefined {
     const rawValues = this.getRawValues(variableName);
     if (!rawValues) {
