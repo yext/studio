@@ -4,6 +4,7 @@ import FileMetadataParsingHelper from "./FileMetadataParsingHelper";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { getFileMetadata } from "../getFileMetadata";
+import { Project } from "ts-morph";
 
 /**
  * ModuleFile is responsible for parsing a single module file, for example
@@ -14,9 +15,9 @@ export default class ModuleFile {
   private componentName: string;
   private fileMetadataParsingHelper: FileMetadataParsingHelper;
 
-  constructor(filepath: string) {
+  constructor(filepath: string, project?: Project) {
     this.componentName = path.basename(filepath, ".tsx");
-    this.studioSourceFile = new StudioSourceFile(filepath);
+    this.studioSourceFile = new StudioSourceFile(filepath, project);
     this.fileMetadataParsingHelper = new FileMetadataParsingHelper(
       this.componentName,
       this.studioSourceFile

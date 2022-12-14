@@ -1,5 +1,5 @@
 export interface SimpleBannerProps {
-  title: string;
+  title?: string;
 }
 
 export default function SimpleBanner(props: SimpleBannerProps) {
