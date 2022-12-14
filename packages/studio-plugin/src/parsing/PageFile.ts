@@ -10,7 +10,7 @@ import {
   ComponentStateKind,
   PageState,
 } from "../types";
-import StreamParsingHelper from "./StreamParsingHelper";
+import StreamConfigOperator from "./StreamConfigOperator";
 
 /**
  * Configuration options to the page file's update process
@@ -26,11 +26,11 @@ interface UpdatePageFileOptions {
  */
 export default class PageFile {
   private studioSourceFile: StudioSourceFile;
-  private streamParsingHelper: StreamParsingHelper;
+  private streamConfigOperator: StreamConfigOperator;
 
   constructor(private filepath: string, project?: Project) {
     this.studioSourceFile = new StudioSourceFile(filepath, project);
-    this.streamParsingHelper = new StreamParsingHelper(this.studioSourceFile);
+    this.streamConfigOperator = new StreamConfigOperator(this.studioSourceFile);
   }
 
   getPageState(): PageState {
@@ -115,10 +115,10 @@ export default class PageFile {
     pageComponent.addStatements(newReturnStatement);
 
     if (options.updateStreamConfig) {
-      this.streamParsingHelper.updateStreamConfig(
+      this.streamConfigOperator.updateStreamConfig(
         updatedPageState.componentTree
       );
-      this.streamParsingHelper.addStreamImport(this.studioSourceFile);
+      this.streamConfigOperator.addStreamImport(this.studioSourceFile);
     }
     this.studioSourceFile.updateFileImports(updatedPageState.cssImports);
 
