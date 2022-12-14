@@ -118,7 +118,7 @@ export default class PageFile {
       this.streamConfigOperator.updateStreamConfig(
         updatedPageState.componentTree
       );
-      this.streamConfigOperator.addStreamImport(this.studioSourceFile);
+      this.streamConfigOperator.addStreamImport();
     }
     this.studioSourceFile.updateFileImports(updatedPageState.cssImports);
 

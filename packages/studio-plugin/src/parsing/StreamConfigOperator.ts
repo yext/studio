@@ -147,8 +147,8 @@ export default class StreamConfigOperator {
     }
   }
 
-  addStreamImport(studioSourceFile: StudioSourceFile): void {
-    studioSourceFile.addFileImport({
+  addStreamImport(): void {
+    this.studioSourceFile.addFileImport({
       source: PAGES_PACKAGE_NAME,
       namedImports: [STREAM_CONFIG_VARIABLE_TYPE],
     });
