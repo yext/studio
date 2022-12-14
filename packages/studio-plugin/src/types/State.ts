@@ -5,7 +5,10 @@ export type PageState = {
   cssImports: string[];
 };
 
-export type ComponentState = StandardOrModuleComponentState | FragmentState | BuiltInState;
+export type ComponentState =
+  | StandardOrModuleComponentState
+  | FragmentState
+  | BuiltInState;
 export enum ComponentStateKind {
   Standard = "standard",
   Module = "module",
@@ -39,4 +42,4 @@ type FragmentState = {
 type BuiltInState = {
   kind: ComponentStateKind.BuiltIn;
   uuid: string;
-}
+};

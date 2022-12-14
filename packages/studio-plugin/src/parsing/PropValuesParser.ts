@@ -32,22 +32,25 @@ export default class PropValuesParser {
   }
 
   private getRawValues(variableName?: string): ParsedObjectLiteral | undefined {
-    if (!variableName) {
-      const defaultExport = this.studioSourceFile.getDefaultExport();
-      if (!defaultExport) {
-        return undefined;
-      }
-      if (!defaultExport.isKind(SyntaxKind.ObjectLiteralExpression)) {
-        throw new Error(
-          `Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath}`
-        );
-      }
-      return StaticParsingHelpers.parseObjectLiteral(defaultExport);
+    if (variableName) {
+      return this.studioSourceFile.parseExportedObjectLiteral(variableName);
     }
-    return this.studioSourceFile.parseExportedObjectLiteral(variableName);
+    const defaultExport = this.studioSourceFile.getDefaultExport();
+    if (!defaultExport) {
+      return undefined;
+    }
+    if (!defaultExport.isKind(SyntaxKind.ObjectLiteralExpression)) {
+      throw new Error(
+        `Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath}`
+      );
+    }
+    return StaticParsingHelpers.parseObjectLiteral(defaultExport);
   }
 
-  private parseRawValues(rawValues: ParsedObjectLiteral, propShape: PropShape) {
+  private parseRawValues(
+    rawValues: ParsedObjectLiteral,
+    propShape: PropShape
+  ): PropValues {
     const propValues: PropValues = {};
     Object.keys(rawValues).forEach((propName) => {
       const { value, isExpression } = rawValues[propName];

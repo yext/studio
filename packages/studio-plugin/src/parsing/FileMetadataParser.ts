@@ -3,6 +3,7 @@ import { PropValues } from "../types/PropValues";
 import StudioSourceFile from "./StudioSourceFile";
 import PropValuesParser from "./PropValuesParser";
 import PropShapeParser from "./PropShapeParser";
+import { FileMetadata } from "../types";
 
 /**
  * FileMetadataParsingHelper is a class for housing shared parsing logic for
@@ -23,7 +24,9 @@ export default class FileMetadataParser {
   /**
    * Parses the propShape and initialProps used in FileMetadata.
    */
-  parse(onProp?: (propName: string) => boolean) {
+  parse(
+    onProp?: (propName: string) => boolean
+  ): Pick<FileMetadata, "initialProps" | "propShape"> {
     const propShape = this.parsePropShape(onProp);
     const initialProps = this.parseInitialProps(propShape);
     return {
