@@ -7,7 +7,7 @@
   },
   "scripts": {
     "dev": "npx tsc --watch --preserveWatchOutput",
-    "build": "rm -rf lib && tsc && vite build",
+    "build": "rm -rf lib && tsc",
     "preview": "vite preview",
     "lint": "eslint . && npm run prettier-check",
     "prettier-write": "prettier --write .",

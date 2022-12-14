@@ -2,8 +2,8 @@
   "name": "@yext/studio-plugin",
   "private": true,
   "version": "0.0.0",
-  "types": "lib/index.d.ts",
-  "main": "lib/index.js",
+  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",

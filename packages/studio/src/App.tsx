@@ -1,7 +1,7 @@
 import { useStudioStore } from './store/store';
 
 export default function App() {
-  const state = useStudioStore(store => state)
+  const state = useStudioStore(store => store)
   console.log(state)
   return (
     <div className="App">
