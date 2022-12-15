@@ -202,7 +202,7 @@ export default class StudioSourceFileParser {
     const defaultExport = this.getDefaultExport();
     if (!defaultExport) {
       throw new Error(
-        "Error getting default export: No declaration node found."
+        `Error getting default export: No declaration node found in ${this.filepath}.`
       );
     }
     if (

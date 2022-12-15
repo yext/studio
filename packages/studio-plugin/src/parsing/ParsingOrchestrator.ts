@@ -13,7 +13,7 @@ export interface StudioData {
   },
   componentMetadata: ComponentMetadata[]
   moduleMetadata: ModuleMetadata[],
-  siteSettings: SiteSettings
+  siteSettings?: SiteSettings
 }
 
 /**
@@ -29,6 +29,9 @@ export default class ParsingOrchestrator {
   }) {}
 
   getComponentMetadata(): StudioData['componentMetadata'] {
+    if (!fs.existsSync(this.paths.components)) {
+      return []
+    }
     return fs.readdirSync(this.paths.components, 'utf-8').map(filename => {
       const componentFile = new ComponentFile(path.join(this.paths.components, filename))
       return componentFile.getComponentMetadata();
@@ -36,6 +39,9 @@ export default class ParsingOrchestrator {
   }
 
   getModuleMetadata(): StudioData['moduleMetadata'] {
+    if (!fs.existsSync(this.paths.modules)) {
+      return []
+    }
     return fs.readdirSync(this.paths.modules, 'utf-8').map(filename => {
       const componentFile = new ModuleFile(path.join(this.paths.modules, filename))
       return componentFile.getModuleMetadata();
@@ -43,6 +49,9 @@ export default class ParsingOrchestrator {
   }
 
   getPages(): StudioData['pages'] {
+    if (!fs.existsSync(this.paths.pages)) {
+      throw new Error(`The pages directory does not exist, expected directory to be at "${this.paths.pages}".`)
+    }
     return fs.readdirSync(this.paths.pages, 'utf-8').reduce((prev, curr) => {
       const pageName = path.basename(curr, '.tsx');
       const pageFile = new PageFile(path.join(this.paths.pages, curr));
@@ -52,6 +61,9 @@ export default class ParsingOrchestrator {
   }
 
   getSiteSettings(): StudioData['siteSettings'] {
+    if (!fs.existsSync(this.paths.siteSettings)) {
+      return
+    }
     return new SiteSettingsFile(this.paths.siteSettings).getSiteSettings()
   }
 }
