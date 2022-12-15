@@ -5,7 +5,7 @@ import { ComponentStateKind, FileMetadataKind } from "../src";
 
 describe("aggregates data as expected", () => {
   const studioPaths = getStudioPaths(
-    path.resolve(__dirname, "../__fixtures__/ParsingOrchestrator")
+    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
   );
   const orchestrator = new ParsingOrchestrator(studioPaths);
   const studioData = orchestrator.getStudioData();
@@ -96,7 +96,7 @@ it("throws an error when the page imports components from unexpected folders", (
   const studioPaths = getStudioPaths("thisFolderDoesNotExist");
   studioPaths.pages = path.resolve(
     __dirname,
-    "../__fixtures__/ParsingOrchestrator/pages"
+    "./__fixtures__/ParsingOrchestrator/pages"
   );
 
   const orchestrator = new ParsingOrchestrator(studioPaths);
@@ -107,7 +107,7 @@ it("throws an error when the page imports components from unexpected folders", (
 
 it("throws when the pages folder does not exist", () => {
   const studioPaths = getStudioPaths(
-    path.resolve(__dirname, "../__fixtures__/ParsingOrchestrator")
+    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
   );
   studioPaths.pages = "thisFolderDoesNotExist";
 
