@@ -29,7 +29,16 @@ export default class ParsingOrchestrator {
     }
   ) {}
 
-  getComponentMetadata(): StudioData["componentMetadata"] {
+  getStudioData(): StudioData {
+    return {
+      pages: this.getPages(),
+      componentMetadata: this.getComponentMetadata(),
+      moduleMetadata: this.getModuleMetadata(),
+      siteSettings: this.getSiteSettings(),
+    };
+  }
+
+  private getComponentMetadata(): StudioData["componentMetadata"] {
     if (!fs.existsSync(this.paths.components)) {
       return [];
     }
@@ -41,7 +50,7 @@ export default class ParsingOrchestrator {
     });
   }
 
-  getModuleMetadata(): StudioData["moduleMetadata"] {
+  private getModuleMetadata(): StudioData["moduleMetadata"] {
     if (!fs.existsSync(this.paths.modules)) {
       return [];
     }
@@ -53,7 +62,7 @@ export default class ParsingOrchestrator {
     });
   }
 
-  getPages(): StudioData["pages"] {
+  private getPages(): StudioData["pages"] {
     if (!fs.existsSync(this.paths.pages)) {
       throw new Error(
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
@@ -67,7 +76,7 @@ export default class ParsingOrchestrator {
     }, {});
   }
 
-  getSiteSettings(): StudioData["siteSettings"] {
+  private getSiteSettings(): StudioData["siteSettings"] {
     if (!fs.existsSync(this.paths.siteSettings)) {
       return;
     }

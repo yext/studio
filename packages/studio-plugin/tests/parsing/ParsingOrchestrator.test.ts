@@ -8,9 +8,10 @@ describe("aggregates data as expected", () => {
     path.resolve(__dirname, "../__fixtures__/ParsingOrchestrator")
   );
   const orchestrator = new ParsingOrchestrator(studioPaths);
+  const studioData = orchestrator.getStudioData();
 
   it("getComponentMetadata", () => {
-    expect(orchestrator.getComponentMetadata()).toEqual([
+    expect(studioData.componentMetadata).toEqual([
       expect.objectContaining({
         kind: FileMetadataKind.Component,
         propShape: expect.anything(),
@@ -24,7 +25,7 @@ describe("aggregates data as expected", () => {
   });
 
   it("getModuleMetadata", () => {
-    expect(orchestrator.getModuleMetadata()).toEqual([
+    expect(studioData.moduleMetadata).toEqual([
       {
         kind: FileMetadataKind.Module,
         componentTree: [
@@ -47,7 +48,7 @@ describe("aggregates data as expected", () => {
   });
 
   it("getPages", () => {
-    expect(orchestrator.getPages()).toEqual({
+    expect(studioData.pages).toEqual({
       basicPage: {
         componentTree: [
           expect.objectContaining({
@@ -82,34 +83,38 @@ describe("aggregates data as expected", () => {
   });
 
   it("getSiteSettings", () => {
-    expect(orchestrator.getSiteSettings()).toEqual({
+    expect(studioData.siteSettings).toEqual({
       shape: expect.anything(),
       values: expect.anything(),
     });
   });
 });
 
-describe("behavior when expected folders do not exist", () => {
-  const studioPaths = getStudioPaths(
-    path.resolve(__dirname, "thisFolderDoesNotExist")
+it("behavior when expected folders except for pages do not exist", () => {
+  const studioPaths = getStudioPaths("thisFolderDoesNotExist");
+  studioPaths.pages = path.resolve(
+    __dirname,
+    "../__fixtures__/ParsingOrchestrator/pages"
   );
+
   const orchestrator = new ParsingOrchestrator(studioPaths);
+  const studioData = orchestrator.getStudioData();
 
-  it("getComponentMetadata", () => {
-    expect(orchestrator.getComponentMetadata()).toEqual([]);
+  expect(studioData).toEqual({
+    componentMetadata: [],
+    moduleMetadata: [],
+    pages: expect.anything(),
   });
+});
 
-  it("getModuleMetadata", () => {
-    expect(orchestrator.getModuleMetadata()).toEqual([]);
-  });
+it("throws when the pages folder does not exist", () => {
+  const studioPaths = getStudioPaths(
+    path.resolve(__dirname, "../__fixtures__/ParsingOrchestrator")
+  );
+  studioPaths.pages = "thisFolderDoesNotExist";
 
-  it("getPages", () => {
-    expect(() => orchestrator.getPages()).toThrow(
-      /^The pages directory does not exist/
-    );
-  });
-
-  it("getSiteSettings", () => {
-    expect(orchestrator.getSiteSettings()).toEqual(undefined);
-  });
+  const orchestrator = new ParsingOrchestrator(studioPaths);
+  expect(() => orchestrator.getStudioData()).toThrow(
+    /^The pages directory does not exist/
+  );
 });
