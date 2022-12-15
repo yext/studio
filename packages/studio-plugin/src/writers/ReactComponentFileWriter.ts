@@ -1,6 +1,14 @@
 import { ArrowFunction, FunctionDeclaration, SyntaxKind } from "ts-morph";
 import StudioSourceFile from "../sourcefiles/StudioSourceFile";
-import { ComponentState, ComponentStateKind, FileMetadata, PropShape, PropValueKind, PropValues, PropValueType } from "../types";
+import {
+  ComponentState,
+  ComponentStateKind,
+  FileMetadata,
+  PropShape,
+  PropValueKind,
+  PropValues,
+  PropValueType,
+} from "../types";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -53,13 +61,15 @@ export default class ReactComponentFileWriter {
 
   updateReturnStatement(
     functionComponent: FunctionDeclaration | ArrowFunction,
-    componentTree: ComponentState[],
+    componentTree: ComponentState[]
   ) {
     const returnStatementIndex = functionComponent
       .getDescendantStatements()
       .findIndex((n) => n.isKind(SyntaxKind.ReturnStatement));
     if (returnStatementIndex < 0) {
-      throw new Error(`No return statement found at page: "${this.studioSourceFile.getFilepath()}"`);
+      throw new Error(
+        `No return statement found at page: "${this.studioSourceFile.getFilepath()}"`
+      );
     }
     const newReturnStatement = this.createReturnStatement(componentTree);
     functionComponent.removeStatement(returnStatementIndex);
@@ -73,24 +83,32 @@ export default class ReactComponentFileWriter {
       name: key,
       type: value.type,
       hasQuestionToken: true,
-      ...(value.doc && { docs: [value.doc] })
-     }))
-    this.studioSourceFile.updateInterface(interfaceName, properties)
+      ...(value.doc && { docs: [value.doc] }),
+    }));
+    this.studioSourceFile.updateInterface(interfaceName, properties);
   }
 
   updateInitialProps(initialProps: PropValues) {
     const stringifyProperties = Object.entries(initialProps)
       .map(([key, { kind, valueType, value }]) => {
         if (kind === PropValueKind.Expression) {
-          throw new Error(`Prop ${key} in ${this.componentName} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`);
+          throw new Error(
+            `Prop ${key} in ${this.componentName} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`
+          );
         }
-        const stringifyPropVal = valueType === PropValueType.string || valueType === PropValueType.HexColor
-         ? `'${value}'`
-         : value.toString()
-        return `${key} : ${stringifyPropVal}`
+        const stringifyPropVal =
+          valueType === PropValueType.string ||
+          valueType === PropValueType.HexColor
+            ? `'${value}'`
+            : value.toString();
+        return `${key} : ${stringifyPropVal}`;
       })
-      .join(',')
-    this.studioSourceFile.updateVariableStatement("initialProps", `{ ${stringifyProperties} }`, `${this.componentName}Props`)
+      .join(",");
+    this.studioSourceFile.updateVariableStatement(
+      "initialProps",
+      `{ ${stringifyProperties} }`,
+      `${this.componentName}Props`
+    );
   }
 
   /**
@@ -106,29 +124,38 @@ export default class ReactComponentFileWriter {
     cssImports,
     onFileUpdate,
   }: {
-    componentTree: ComponentState[],
-    fileMetadata?: FileMetadata,
-    cssImports?: string[],
-    onFileUpdate?: (functionComponent: FunctionDeclaration | ArrowFunction) => void,
+    componentTree: ComponentState[];
+    fileMetadata?: FileMetadata;
+    cssImports?: string[];
+    onFileUpdate?: (
+      functionComponent: FunctionDeclaration | ArrowFunction
+    ) => void;
   }): void {
-    const defaultExport = this.studioSourceFile.getDefaultExportReactComponent();
-    const functionComponent = defaultExport.isKind(SyntaxKind.VariableDeclaration)
+    const defaultExport =
+      this.studioSourceFile.getDefaultExportReactComponent();
+    const functionComponent = defaultExport.isKind(
+      SyntaxKind.VariableDeclaration
+    )
       ? defaultExport.getFirstDescendantByKindOrThrow(SyntaxKind.ArrowFunction)
       : defaultExport;
 
     onFileUpdate?.(functionComponent);
     if (fileMetadata) {
-      const { initialProps, propShape } = fileMetadata
+      const { initialProps, propShape } = fileMetadata;
       if (initialProps) {
-        this.updateInitialProps(initialProps)
+        this.updateInitialProps(initialProps);
       }
       if (propShape) {
-        this.updatePropInterface(propShape)
-        this.studioSourceFile.updateFunctionParameter(functionComponent, Object.keys(propShape), `${this.componentName}Props`)
+        this.updatePropInterface(propShape);
+        this.studioSourceFile.updateFunctionParameter(
+          functionComponent,
+          Object.keys(propShape),
+          `${this.componentName}Props`
+        );
       }
     }
-    this.updateReturnStatement(functionComponent, componentTree)
+    this.updateReturnStatement(functionComponent, componentTree);
     this.studioSourceFile.updateFileImports(cssImports);
-    this.studioSourceFile.writeToFile()
+    this.studioSourceFile.writeToFile();
   }
 }

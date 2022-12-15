@@ -14,7 +14,8 @@ describe("updateModuleFile", () => {
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    jest.spyOn(ModuleFile.prototype as any, 'getComponentName')
+    jest
+      .spyOn(ModuleFile.prototype as any, "getComponentName")
       .mockImplementation(() => "Panel");
     tsMorphProject = new Project({
       compilerOptions: {
@@ -24,8 +25,11 @@ describe("updateModuleFile", () => {
   });
 
   it("updates page component based on ModuleFileMetadata's component tree", () => {
-    addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")])
-    const moduleFile = new ModuleFile(getModulePath("updateModuleFile/EmptyModule"), tsMorphProject)
+    addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+    const moduleFile = new ModuleFile(
+      getModulePath("updateModuleFile/EmptyModule"),
+      tsMorphProject
+    );
     moduleFile.updateModuleFile({
       kind: FileMetadataKind.Module,
       componentTree: [complexBannerComponent],

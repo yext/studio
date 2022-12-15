@@ -1,9 +1,7 @@
 import StudioSourceFile from "./StudioSourceFile";
 import { getFileMetadata } from "../getFileMetadata";
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
-import {
-  PageState,
-} from "../types";
+import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
 import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import path from "path";
@@ -59,7 +57,9 @@ export default class PageFile {
     updatedPageState: PageState,
     options: UpdatePageFileOptions = {}
   ): void {
-    const onFileUpdate = (pageComponent: FunctionDeclaration | ArrowFunction) => {
+    const onFileUpdate = (
+      pageComponent: FunctionDeclaration | ArrowFunction
+    ) => {
       if (options.updateStreamConfig) {
         this.streamConfigWriter.updateStreamConfig(
           updatedPageState.componentTree
@@ -67,12 +67,12 @@ export default class PageFile {
         this.streamConfigWriter.addStreamParameter(pageComponent);
         this.streamConfigWriter.addStreamImport();
       }
-    }
+    };
 
     this.reactComponentFileWriter.updateFile({
       componentTree: updatedPageState.componentTree,
       cssImports: updatedPageState.cssImports,
-      onFileUpdate
-    })
+      onFileUpdate,
+    });
   }
 }

@@ -1,17 +1,12 @@
 import PageFile from "../../src/sourcefiles/PageFile";
 import { ComponentStateKind } from "../../src/types/State";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import {
-  getComponentPath,
-  getPagePath,
-} from "../__utils__/getFixturePath";
+import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 import * as uuidUtils from "uuid";
 import fs from "fs";
 import typescript from "typescript";
 import { Project } from "ts-morph";
-import {
-  streamConfigMultipleFieldsComponentTree,
-} from "../__fixtures__/componentStates";
+import { streamConfigMultipleFieldsComponentTree } from "../__fixtures__/componentStates";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 
 jest.mock("uuid");
@@ -28,23 +23,25 @@ describe("updatePageFile", () => {
   });
 
   it("updates page component based on PageState's component tree", () => {
-    addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")])
-    const pageFile = new PageFile(getPagePath("updatePageFile/EmptyPage"), tsMorphProject)
+    addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+    const pageFile = new PageFile(
+      getPagePath("updatePageFile/EmptyPage"),
+      tsMorphProject
+    );
     pageFile.updatePageFile({
-      componentTree: [{
-        kind: ComponentStateKind.Standard,
-        componentName: "ComplexBanner",
-        props: {},
-        uuid: "mock-uuid-0",
-      }],
+      componentTree: [
+        {
+          kind: ComponentStateKind.Standard,
+          componentName: "ComplexBanner",
+          props: {},
+          uuid: "mock-uuid-0",
+        },
+      ],
       cssImports: [],
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyPage.tsx"),
-      fs.readFileSync(
-        getPagePath("updatePageFile/PageWithAComponent"),
-        "utf-8"
-      )
+      fs.readFileSync(getPagePath("updatePageFile/PageWithAComponent"), "utf-8")
     );
   });
 
@@ -54,7 +51,7 @@ describe("updatePageFile", () => {
     });
 
     it("adds template config variable when it is not already defined", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")])
+      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
         tsMorphProject
@@ -89,7 +86,7 @@ describe("updatePageFile", () => {
     });
 
     it("adds new stream document paths used in new page state", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")])
+      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
         tsMorphProject
@@ -111,7 +108,7 @@ describe("updatePageFile", () => {
     });
 
     it("removes unused stream document paths", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")])
+      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
         tsMorphProject

@@ -16,7 +16,7 @@ export const complexBannerComponent: ComponentState = {
   componentName: "ComplexBanner",
   props: {},
   uuid: "mock-uuid-0",
-}
+};
 
 export const componentTree: ComponentState[] = [
   {

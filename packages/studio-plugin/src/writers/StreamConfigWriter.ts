@@ -150,10 +150,13 @@ export default class StreamConfigWriter {
       source: PAGES_PACKAGE_NAME,
       namedImports: [STREAM_CONFIG_VARIABLE_TYPE, STREAM_PAGE_PROPS_TYPE],
     });
-    
   }
 
   addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
-    this.studioSourceFile.updateFunctionParameter(componentFunction, ['document'], STREAM_PAGE_PROPS_TYPE)
+    this.studioSourceFile.updateFunctionParameter(
+      componentFunction,
+      ["document"],
+      STREAM_PAGE_PROPS_TYPE
+    );
   }
 }

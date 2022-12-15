@@ -15,7 +15,7 @@ export default class ModuleFile {
   private studioSourceFile: StudioSourceFile;
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
-  private reactComponentFileWriter: ReactComponentFileWriter
+  private reactComponentFileWriter: ReactComponentFileWriter;
 
   constructor(filepath: string, project?: Project) {
     this.studioSourceFile = new StudioSourceFile(filepath, project);
@@ -27,7 +27,7 @@ export default class ModuleFile {
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       this.componentName,
       this.studioSourceFile
-      );
+    );
   }
 
   private getComponentName(): string {
@@ -53,6 +53,6 @@ export default class ModuleFile {
     this.reactComponentFileWriter.updateFile({
       componentTree: moduleMetadata.componentTree,
       fileMetadata: moduleMetadata,
-    })
+    });
   }
 }

@@ -100,7 +100,7 @@ export default class StudioSourceFileWriter {
    * @param type - the variable's type
    */
   updateVariableStatement(name: string, content: string, type?: string): void {
-    const variableStatement = this.sourceFile.getVariableStatement(name)
+    const variableStatement = this.sourceFile.getVariableStatement(name);
     variableStatement?.remove();
     const lastImportStatementIndex =
       this.sourceFile
@@ -122,9 +122,12 @@ export default class StudioSourceFileWriter {
    * @param name - the interface's name
    * @param properties - the interface's properties
    */
-  updateInterface(name: string, properties: OptionalKind<PropertySignatureStructure>[]): void {
-    const interfaceDeclaration = this.sourceFile.getInterface(name)
-    interfaceDeclaration?.remove()
+  updateInterface(
+    name: string,
+    properties: OptionalKind<PropertySignatureStructure>[]
+  ): void {
+    const interfaceDeclaration = this.sourceFile.getInterface(name);
+    interfaceDeclaration?.remove();
     const lastImportStatementIndex =
       this.sourceFile
         .getLastChildByKind(SyntaxKind.ImportDeclaration)
@@ -132,8 +135,8 @@ export default class StudioSourceFileWriter {
     this.sourceFile.insertInterface(lastImportStatementIndex + 1, {
       isExported: true,
       name,
-      properties
-    })
+      properties,
+    });
   }
 
   /**
@@ -153,10 +156,10 @@ export default class StudioSourceFileWriter {
     type: string,
     index = 0
   ): void {
-      functionNode.getParameters()[index]?.remove()
-      functionNode.insertParameter(index, {
-      name: `{ ${props.join(', ')} }`,
-      type
-    })
+    functionNode.getParameters()[index]?.remove();
+    functionNode.insertParameter(index, {
+      name: `{ ${props.join(", ")} }`,
+      type,
+    });
   }
 }
