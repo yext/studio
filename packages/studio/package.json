@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "bin": {
-    "studio": "./lib/bin/studio.js"
+    "studio": "./bin/studio.js"
   },
   "scripts": {
     "dev": "npx tsc --watch --preserveWatchOutput",
