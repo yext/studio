@@ -2,7 +2,7 @@ import { ConfigEnv, Plugin } from "vite";
 import openBrowser from "react-dev-utils/openBrowser.js";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import path from "path";
-import getStudioPaths from './parsers/getStudioPaths';
+import getStudioPaths from "./parsers/getStudioPaths";
 
 /**
  * Handles server-client communication.

@@ -4,8 +4,8 @@ import { v4 } from "uuid";
 import { PAGES_PACKAGE_NAME } from "../constants";
 import TypeGuards from "../parsers/helpers/TypeGuards";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import { PropValueKind } from '../types/PropValues';
-import { ComponentState, ComponentStateKind } from '../types/State';
+import { PropValueKind } from "../types/PropValues";
+import { ComponentState, ComponentStateKind } from "../types/State";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 
 /**

@@ -14,5 +14,5 @@ export {
   ComponentState,
   PageState,
   ComponentStateKind,
-  StudioData
+  StudioData,
 } from "./types";

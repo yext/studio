@@ -1,5 +1,10 @@
 export { PropShape } from "./PropShape";
-export { PropValues, PropValueKind, PropValueType, PropVal } from "./PropValues";
+export {
+  PropValues,
+  PropValueKind,
+  PropValueType,
+  PropVal,
+} from "./PropValues";
 export { ComponentMetadata } from "./ComponentMetadata";
 export { ModuleMetadata } from "./ModuleMetadata";
 export { FileMetadata, FileMetadataKind } from "./FileMetadata";
