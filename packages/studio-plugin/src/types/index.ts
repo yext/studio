@@ -5,4 +5,4 @@ export * from "./ModuleMetadata";
 export * from "./FileMetadata";
 export * from "./State";
 
-export { StudioData } from '../parsing/ParsingOrchestrator';
+export { StudioData } from "../parsing/ParsingOrchestrator";
