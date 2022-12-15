@@ -5,11 +5,15 @@ export type PageState = {
   cssImports: string[];
 };
 
-export type ComponentState = StandardOrModuleComponentState | FragmentState;
+export type ComponentState =
+  | StandardOrModuleComponentState
+  | FragmentState
+  | BuiltInState;
 export enum ComponentStateKind {
   Standard = "standard",
   Module = "module",
-  Fragment = "fragment", // when the component is a React.Fragment
+  Fragment = "fragment", // when the component is a React.Fragment,
+  BuiltIn = "builtIn", // for built in elements like div and img
 }
 
 type StandardOrModuleComponentState = {
@@ -32,5 +36,14 @@ type StandardOrModuleComponentState = {
 type FragmentState = {
   kind: ComponentStateKind.Fragment;
   uuid: string;
+  parentUUID?: string;
+};
+
+type BuiltInState = {
+  kind: ComponentStateKind.BuiltIn;
+  componentName: string;
+  uuid: string;
+  /** We currently do not support props on built in elements. */
+  props: {};
   parentUUID?: string;
 };

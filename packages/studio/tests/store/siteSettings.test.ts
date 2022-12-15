@@ -2,15 +2,13 @@ import { useStudioStore } from "../../src/store/store";
 import { SiteSettingSliceStates } from "../../src/store/models/slices/siteSettingSlice";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 
-const siteSettingsMetadata: SiteSettingSliceStates["metadata"] = {
-  propShape: {
-    apiKey: {
-      type: PropValueType.string,
-      doc: "api key to power the site",
-    },
+const siteSettingsShape: SiteSettingSliceStates["shape"] = {
+  apiKey: {
+    type: PropValueType.string,
+    doc: "api key to power the site",
   },
 };
-const siteSettingsValue: SiteSettingSliceStates["state"] = {
+const siteSettingsValue: SiteSettingSliceStates["values"] = {
   apiKey: {
     kind: PropValueKind.Literal,
     valueType: PropValueType.string,
@@ -19,15 +17,15 @@ const siteSettingsValue: SiteSettingSliceStates["state"] = {
 };
 
 describe("SiteSettingSlice", () => {
-  it("updates siteSettings' metadata using setMetadata", () => {
-    useStudioStore.getState().siteSettings.setMetadata(siteSettingsMetadata);
-    const actualMetadata = useStudioStore.getState().siteSettings.metadata;
-    expect(actualMetadata).toEqual(siteSettingsMetadata);
+  it("updates siteSettings' shape using setShape", () => {
+    useStudioStore.getState().siteSettings.setShape(siteSettingsShape);
+    const actualMetadata = useStudioStore.getState().siteSettings.shape;
+    expect(actualMetadata).toEqual(siteSettingsShape);
   });
 
   it("updates siteSettings' state values using setState", () => {
-    useStudioStore.getState().siteSettings.setState(siteSettingsValue);
-    const actualValue = useStudioStore.getState().siteSettings.state;
+    useStudioStore.getState().siteSettings.setValues(siteSettingsValue);
+    const actualValue = useStudioStore.getState().siteSettings.values;
     expect(actualValue).toEqual(siteSettingsValue);
   });
 });

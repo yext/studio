@@ -1,19 +1,15 @@
 import { PropShape, PropValues } from "@yext/studio-plugin";
 
-interface SiteSettingsMetadata {
-  propShape: PropShape;
-}
-
 export interface SiteSettingSliceStates {
   /** Metadata outlining site settings' interface properties. */
-  metadata?: SiteSettingsMetadata;
+  shape?: PropShape;
   /** Site setting's actual field values. */
-  state?: PropValues;
+  values?: PropValues;
 }
 
 export interface SiteSettingSliceActions {
-  setMetadata: (metadata: SiteSettingsMetadata) => void;
-  setState: (state: PropValues) => void;
+  setShape: (shape: PropShape) => void;
+  setValues: (state: PropValues) => void;
 }
 
 /**

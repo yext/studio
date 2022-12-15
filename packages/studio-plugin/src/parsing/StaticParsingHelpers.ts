@@ -1,5 +1,8 @@
 import {
+  ArrayLiteralExpression,
+  ExportAssignment,
   Expression,
+  Identifier,
   ImportDeclaration,
   InterfaceDeclaration,
   JsxAttributeLike,
@@ -7,7 +10,9 @@ import {
   JsxElement,
   JsxFragment,
   JsxSelfClosingElement,
+  Node,
   ObjectLiteralExpression,
+  ParenthesizedExpression,
   SyntaxKind,
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../types/PropValues";
@@ -16,6 +21,7 @@ import TypeGuards from "./TypeGuards";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { ComponentStateKind } from "../types/State";
 import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
+import TsMorphHelpers from "./TsMorphHelpers";
 
 export type ParsedInterface = {
   [key: string]: {
@@ -197,15 +203,10 @@ export default class StaticParsingHelpers {
     );
 
     const {
-      metadataUUID,
       kind: fileMetadataKind,
+      metadataUUID,
       propShape,
     } = getFileMetadata(filepath);
-    if (!metadataUUID) {
-      console.warn(
-        `Props for builtIn element: '${name}' are currently not supported.`
-      );
-    }
 
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
@@ -213,18 +214,31 @@ export default class StaticParsingHelpers {
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
 
+    if (!metadataUUID) {
+      if (attributes.length > 0) {
+        console.warn(
+          `Props for builtIn element: '${name}' are currently not supported.`
+        );
+      }
+      return {
+        kind: ComponentStateKind.BuiltIn,
+        props: {},
+      };
+    }
+
+    const componentStateKind =
+      fileMetadataKind === FileMetadataKind.Module
+        ? ComponentStateKind.Module
+        : ComponentStateKind.Standard;
+
     const props = StaticParsingHelpers.parseJsxAttributes(
       attributes,
       propShape
     );
-    const kind =
-      fileMetadataKind === FileMetadataKind.Module
-        ? ComponentStateKind.Module
-        : ComponentStateKind.Standard;
     return {
+      kind: componentStateKind,
       metadataUUID,
       props,
-      kind,
     };
   }
 
@@ -252,7 +266,11 @@ export default class StaticParsingHelpers {
       const propType = propShape?.[propName]?.type;
       if (!propType) {
         throw new Error(
-          "Could not find prop type for: " + jsxAttribute.getFullText()
+          `Could not find prop type for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(
+            propShape,
+            null,
+            2
+          )}`
         );
       }
       const { value, isExpression } = StaticParsingHelpers.parseInitializer(
@@ -288,6 +306,53 @@ export default class StaticParsingHelpers {
     return (
       element.isKind(SyntaxKind.JsxElement) &&
       ["Fragment", "React.Fragment"].includes(name)
+    );
+  }
+
+  /**
+   * Recursively unwraps a ParenthesizedExpression to its last layer.
+   */
+  static unwrapParensExpression(
+    parensExpression: ParenthesizedExpression
+  ): ParenthesizedExpression {
+    let node: ParenthesizedExpression = parensExpression;
+    let nextNode: ParenthesizedExpression | undefined = node;
+    while (nextNode) {
+      nextNode = nextNode.getFirstChildByKind(
+        SyntaxKind.ParenthesizedExpression
+      );
+      if (nextNode) {
+        node = nextNode;
+      }
+    }
+    return node;
+  }
+
+  static parseExportAssignment(
+    exportAssignment: ExportAssignment
+  ): Identifier | ObjectLiteralExpression | ArrayLiteralExpression {
+    let parentNode: Node = exportAssignment;
+
+    const asExpression = parentNode.getFirstChildByKind(
+      SyntaxKind.AsExpression
+    );
+    if (asExpression) {
+      parentNode = asExpression;
+    }
+
+    const parensExpression = parentNode.getFirstChildByKind(
+      SyntaxKind.ParenthesizedExpression
+    );
+    if (parensExpression) {
+      parentNode =
+        StaticParsingHelpers.unwrapParensExpression(parensExpression);
+    }
+
+    return TsMorphHelpers.getFirstChildOfKindOrThrow(
+      parentNode,
+      SyntaxKind.ObjectLiteralExpression,
+      SyntaxKind.ArrayLiteralExpression,
+      SyntaxKind.Identifier
     );
   }
 }

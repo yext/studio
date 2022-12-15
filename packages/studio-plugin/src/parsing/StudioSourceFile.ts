@@ -1,9 +1,7 @@
-import {
-  Project,
-} from "ts-morph";
+import { Project } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState } from "../types/State";
-import { Mixin } from 'ts-mixer';
+import { Mixin } from "ts-mixer";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 
@@ -21,10 +19,16 @@ export const tsMorphProject = new Project({
  * file used by Studio. Lower level details should be delegated to separate static
  * classes/helper functions.
  */
-export default class StudioSourceFile extends Mixin(StudioSourceFileWriter, StudioSourceFileParser) {
-
+export default class StudioSourceFile extends Mixin(
+  StudioSourceFileWriter,
+  StudioSourceFileParser
+) {
   constructor(filepath: string, project: Project = tsMorphProject) {
     super(filepath, project);
+  }
+
+  getFilepath() {
+    return this.filepath;
   }
 
   /**

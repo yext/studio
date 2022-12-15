@@ -1,4 +1,9 @@
-import { ComponentState, ComponentStateKind, PropValueKind, PropValueType } from "../../src";
+import {
+  ComponentState,
+  ComponentStateKind,
+  PropValueKind,
+  PropValueType,
+} from "../../src";
 import { getComponentPath } from "../__utils__/getFixturePath";
 
 export const fragmentComponent: ComponentState = {

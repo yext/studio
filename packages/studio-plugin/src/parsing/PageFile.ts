@@ -97,7 +97,8 @@ export default class PageFile {
     updatedPageState: PageState,
     options: UpdatePageFileOptions = {}
   ): void {
-    const defaultExport = this.studioSourceFile.parseDefaultExport();
+    const defaultExport =
+      this.studioSourceFile.getDefaultExportReactComponent();
     const pageComponent = defaultExport.isKind(SyntaxKind.VariableDeclaration)
       ? defaultExport.getFirstDescendantByKindOrThrow(SyntaxKind.ArrowFunction)
       : defaultExport;

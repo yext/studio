@@ -65,7 +65,7 @@ describe("getComponentMetadtata", () => {
     const pathToComponent = getComponentPath("ExpressionInitialBanner");
     const componentFile = new ComponentFile(pathToComponent);
     expect(() => componentFile.getComponentMetadata()).toThrowError(
-      /^Expressions are not supported within initialProps/
+      /^Expressions are not supported within object literal/
     );
   });
 
@@ -73,7 +73,7 @@ describe("getComponentMetadtata", () => {
     const pathToComponent = getComponentPath("UnrecognizedPropBanner");
     const componentFile = new ComponentFile(pathToComponent);
     expect(() => componentFile.getComponentMetadata()).toThrowError(
-      /^Unrecognized prop type/
+      /^Unrecognized type/
     );
   });
 });

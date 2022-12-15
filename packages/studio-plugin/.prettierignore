@@ -1,1 +1,3 @@
 tests/__fixtures__/PageFile/noReturnParenthesesPage.tsx
+lib/
+coverage/

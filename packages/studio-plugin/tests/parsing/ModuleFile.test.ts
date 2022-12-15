@@ -1,6 +1,5 @@
 import ModuleFile from "../../src/parsing/ModuleFile";
 import * as getFileMetadataUtils from "../../src/getFileMetadata";
-import * as uuidUtils from "uuid";
 import { getModulePath } from "../__utils__/getFixturePath";
 import {
   ComponentStateKind,
@@ -10,15 +9,13 @@ import {
   PropShape,
   FileMetadataKind,
 } from "../../src";
+import { mockUUID } from "../__utils__/spies";
 
 jest.mock("uuid");
 
 describe("getModuleMetadata", () => {
   beforeEach(() => {
-    let uuidCount = 0;
-    jest.spyOn(uuidUtils, "v4").mockImplementation(() => {
-      return `mock-uuid-${uuidCount++}`;
-    });
+    mockUUID();
     jest
       .spyOn(getFileMetadataUtils, "getFileMetadata")
       .mockImplementation((filepath) => {

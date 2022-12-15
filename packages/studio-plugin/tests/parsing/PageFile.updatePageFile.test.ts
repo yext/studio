@@ -11,7 +11,11 @@ import fs from "fs";
 import ComponentFile from "../../src/parsing/ComponentFile";
 import typescript from "typescript";
 import { Project } from "ts-morph";
-import { fragmentComponent, nestedBannerComponentTree, streamConfigMultipleFieldsComponentTree } from "../__fixtures__/componentStates";
+import {
+  fragmentComponent,
+  nestedBannerComponentTree,
+  streamConfigMultipleFieldsComponentTree,
+} from "../__fixtures__/componentStates";
 
 jest.mock("uuid");
 
