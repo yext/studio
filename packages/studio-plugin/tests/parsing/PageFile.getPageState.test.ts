@@ -9,10 +9,9 @@ import {
   fragmentComponent,
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
-import createTsMorphProject from '../../src/parsing/createTsMorphProject';
+import createTsMorphProject from "../../src/parsing/createTsMorphProject";
 
 jest.mock("uuid");
-
 
 function mockGetFileMetadata(filepath: string): FileMetadata {
   let propShape: PropShape = {};
@@ -31,12 +30,16 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
     kind: FileMetadataKind.Component,
     metadataUUID: filepath,
     propShape,
-    filepath
+    filepath,
   };
 }
 
 function createPageFile(pageName: string) {
-  return new PageFile(getPagePath(pageName), mockGetFileMetadata, createTsMorphProject());
+  return new PageFile(
+    getPagePath(pageName),
+    mockGetFileMetadata,
+    createTsMorphProject()
+  );
 }
 
 describe("getPageState", () => {
@@ -48,21 +51,21 @@ describe("getPageState", () => {
   });
 
   it("correctly parses page with top-level React.Fragment", () => {
-    const pageFile = createPageFile('reactFragmentPage');
+    const pageFile = createPageFile("reactFragmentPage");
     const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
   it("correctly parses page with top-level Fragment", () => {
-    const pageFile = createPageFile("fragmentPage")
+    const pageFile = createPageFile("fragmentPage");
     const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
   it("correctly parses page with top-level Fragment in short syntax", () => {
-    const pageFile = createPageFile("shortFragmentSyntaxPage")
+    const pageFile = createPageFile("shortFragmentSyntaxPage");
     const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
@@ -72,7 +75,7 @@ describe("getPageState", () => {
     const consoleWarnSpy = jest
       .spyOn(global.console, "warn")
       .mockImplementation();
-    const pageFile = createPageFile('divPage')
+    const pageFile = createPageFile("divPage");
     const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([

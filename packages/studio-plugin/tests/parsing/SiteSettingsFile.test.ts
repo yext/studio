@@ -1,4 +1,4 @@
-import createTsMorphProject from '../../src/parsing/createTsMorphProject';
+import createTsMorphProject from "../../src/parsing/createTsMorphProject";
 import SiteSettingsFile from "../../src/parsing/SiteSettingsFile";
 import { getSiteSettingsPath } from "../__utils__/getFixturePath";
 

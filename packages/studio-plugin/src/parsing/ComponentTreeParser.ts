@@ -12,7 +12,9 @@ import { FileMetadata, FileMetadataKind, PropValues } from "../types";
 import TypeGuards from "./TypeGuards";
 import StudioSourceFile from "./StudioSourceFile";
 
-export type GetFileMetadata = (filepath: string) => Omit<FileMetadata, 'componentTree'>;
+export type GetFileMetadata = (
+  filepath: string
+) => Omit<FileMetadata, "componentTree">;
 
 export default class ComponentTreeParser {
   constructor(

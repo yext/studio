@@ -1,5 +1,5 @@
 import ComponentFile from "../../src/parsing/ComponentFile";
-import createTsMorphProject from '../../src/parsing/createTsMorphProject';
+import createTsMorphProject from "../../src/parsing/createTsMorphProject";
 import { getComponentPath } from "../__utils__/getFixturePath";
 
 describe("getComponentMetadata", () => {
@@ -9,7 +9,7 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("SimpleBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(componentFile.getComponentMetadata()).toEqual({
-      filepath: expect.stringContaining('ComponentFile/SimpleBanner.tsx'),
+      filepath: expect.stringContaining("ComponentFile/SimpleBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
       propShape: { title: { type: "string" } },
@@ -20,7 +20,7 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("NestedBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(componentFile.getComponentMetadata()).toEqual({
-      filepath: expect.stringContaining('ComponentFile/NestedBanner.tsx'),
+      filepath: expect.stringContaining("ComponentFile/NestedBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
       propShape: {},
@@ -32,7 +32,7 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(componentFile.getComponentMetadata()).toEqual({
-      filepath: expect.stringContaining('ComponentFile/ComplexBanner.tsx'),
+      filepath: expect.stringContaining("ComponentFile/ComplexBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
       propShape: {

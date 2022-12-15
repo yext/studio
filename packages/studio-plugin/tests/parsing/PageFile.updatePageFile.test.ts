@@ -16,7 +16,7 @@ import {
   nestedBannerComponentTree,
   streamConfigMultipleFieldsComponentTree,
 } from "../__fixtures__/componentStates";
-import createTsMorphProject from '../../src/parsing/createTsMorphProject';
+import createTsMorphProject from "../../src/parsing/createTsMorphProject";
 
 jest.mock("uuid");
 

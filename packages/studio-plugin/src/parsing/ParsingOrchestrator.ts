@@ -1,16 +1,12 @@
 import path from "path";
-import {
-  ComponentMetadata,
-  FileMetadata,
-  PageState,
-} from "../types";
+import { ComponentMetadata, FileMetadata, PageState } from "../types";
 import fs from "fs";
 import ComponentFile from "./ComponentFile";
 import ModuleFile from "./ModuleFile";
 import PageFile from "./PageFile";
 import SiteSettingsFile, { SiteSettings } from "./SiteSettingsFile";
 import { Project } from "ts-morph";
-import createTsMorphProject from './createTsMorphProject';
+import createTsMorphProject from "./createTsMorphProject";
 
 export interface StudioData {
   pageNameToPageState: Record<string, PageState>;
@@ -21,7 +17,7 @@ export interface StudioData {
 /**
  * The ts-morph Project instance for the entire app.
  */
-const tsMorphProject: Project = createTsMorphProject()
+const tsMorphProject: Project = createTsMorphProject();
 
 /**
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.

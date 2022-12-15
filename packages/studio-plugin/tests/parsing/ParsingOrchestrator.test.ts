@@ -11,38 +11,42 @@ describe("aggregates data as expected", () => {
   const studioData = orchestrator.getStudioData();
 
   it("UUIDToFileMetadata", () => {
-    const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata)
-    expect(fileMetadataArray).toHaveLength(4)
+    const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
+    expect(fileMetadataArray).toHaveLength(4);
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining('components/Card.tsx'),
-        kind: FileMetadataKind.Component
+        filepath: expect.stringContaining("components/Card.tsx"),
+        kind: FileMetadataKind.Component,
       })
-    )
+    );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining('components/NestedBanner.tsx'),
+        filepath: expect.stringContaining("components/NestedBanner.tsx"),
         kind: FileMetadataKind.Component,
         acceptsChildren: true,
       })
-    )
-    expect(fileMetadataArray).toContainEqual(expect.objectContaining({
-      filepath: expect.stringContaining('modules/BannerWithCard.tsx'),
-      kind: FileMetadataKind.Module,
-      componentTree: [
-        expect.objectContaining({ componentName: "NestedBanner" }),
-        expect.objectContaining({ componentName: "Card" }),
-      ]
-    }))
-    expect(fileMetadataArray).toContainEqual(expect.objectContaining({
-      filepath: expect.stringContaining('modules/NestedModule.tsx'),
-      kind: FileMetadataKind.Module,
-      componentTree: [
-        expect.objectContaining({ kind: ComponentStateKind.Fragment }),
-        expect.objectContaining({ componentName: "BannerWithCard" }),
-        expect.objectContaining({ componentName: "BannerWithCard" }),
-      ]
-    }));
+    );
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("modules/BannerWithCard.tsx"),
+        kind: FileMetadataKind.Module,
+        componentTree: [
+          expect.objectContaining({ componentName: "NestedBanner" }),
+          expect.objectContaining({ componentName: "Card" }),
+        ],
+      })
+    );
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("modules/NestedModule.tsx"),
+        kind: FileMetadataKind.Module,
+        componentTree: [
+          expect.objectContaining({ kind: ComponentStateKind.Fragment }),
+          expect.objectContaining({ componentName: "BannerWithCard" }),
+          expect.objectContaining({ componentName: "BannerWithCard" }),
+        ],
+      })
+    );
   });
 
   it("pageNameToPageState", () => {
