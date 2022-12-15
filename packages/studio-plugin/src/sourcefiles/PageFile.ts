@@ -5,7 +5,9 @@ import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import path from "path";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
-import ComponentTreeParser, { GetFileMetadata } from '../parsers/ComponentTreeParser';
+import ComponentTreeParser, {
+  GetFileMetadata,
+} from "../parsers/ComponentTreeParser";
 
 /**
  * Configuration options to the page file's update process
@@ -25,27 +27,42 @@ export default class PageFile {
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
 
-  constructor(filepath: string, getFileMetadata: GetFileMetadata, project: Project) {
+  constructor(
+    filepath: string,
+    getFileMetadata: GetFileMetadata,
+    project: Project
+  ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
-    const pageComponentName = path.basename(this.studioSourceFileParser.getFilepath(), ".tsx");
-    const studioSourceFileWriter = new StudioSourceFileWriter(filepath, project)
-    
+    const pageComponentName = path.basename(
+      this.studioSourceFileParser.getFilepath(),
+      ".tsx"
+    );
+    const studioSourceFileWriter = new StudioSourceFileWriter(
+      filepath,
+      project
+    );
+
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
       this.studioSourceFileParser
-      );
+    );
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
       studioSourceFileWriter,
       this.studioSourceFileParser
     );
-    this.componentTreeParser = new ComponentTreeParser(this.studioSourceFileParser, getFileMetadata);
+    this.componentTreeParser = new ComponentTreeParser(
+      this.studioSourceFileParser,
+      getFileMetadata
+    );
   }
 
   getPageState(): PageState {
     const absPathDefaultImports =
       this.studioSourceFileParser.getAbsPathDefaultImports();
-    const componentTree = this.componentTreeParser.parseComponentTree(absPathDefaultImports)
+    const componentTree = this.componentTreeParser.parseComponentTree(
+      absPathDefaultImports
+    );
     const cssImports = this.studioSourceFileParser.parseCssImports();
     return {
       componentTree,

@@ -11,8 +11,13 @@ describe("parseExportedObjectLiteral", () => {
       const { project } = createTestSourceFile(
         'export const a = "not an object";'
       );
-      const studioSourceFileParser = new StudioSourceFileParser("test.tsx", project);
-      expect(() => studioSourceFileParser.parseExportedObjectLiteral("a")).toThrow(
+      const studioSourceFileParser = new StudioSourceFileParser(
+        "test.tsx",
+        project
+      );
+      expect(() =>
+        studioSourceFileParser.parseExportedObjectLiteral("a")
+      ).toThrow(
         'Could not find ObjectLiteralExpression within `export const a = "not an object";`'
       );
     }
@@ -24,7 +29,10 @@ describe("getDefaultExport", () => {
     const { project } = createTestSourceFile(
       "export const no = false; export default function test() {}"
     );
-    const studioSourceFileParser = new StudioSourceFileParser("test.tsx", project);
+    const studioSourceFileParser = new StudioSourceFileParser(
+      "test.tsx",
+      project
+    );
     const defaultExport = studioSourceFileParser.getDefaultExport();
     expectSyntaxKind(defaultExport, SyntaxKind.FunctionDeclaration);
     expect(defaultExport.getName()).toBe("test");
@@ -35,7 +43,10 @@ describe("getDefaultExport", () => {
       const { project } = createTestSourceFile(
         "const test = 1; const no = false; export default test;"
       );
-      const studioSourceFileParser = new StudioSourceFileParser("test.tsx", project);
+      const studioSourceFileParser = new StudioSourceFileParser(
+        "test.tsx",
+        project
+      );
       const defaultExport = studioSourceFileParser.getDefaultExport();
       expectSyntaxKind(defaultExport, SyntaxKind.Identifier);
       expect(defaultExport.getText()).toBe("test");
@@ -46,7 +57,10 @@ describe("getDefaultExport", () => {
     const { project } = createTestSourceFile(
       "const test = 1; const no = false; export default { num: test };"
     );
-    const studioSourceFileParser = new StudioSourceFileParser("test.tsx", project);
+    const studioSourceFileParser = new StudioSourceFileParser(
+      "test.tsx",
+      project
+    );
     const defaultExport = studioSourceFileParser.getDefaultExport();
     expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression);
   });
@@ -55,7 +69,10 @@ describe("getDefaultExport", () => {
     const { project } = createTestSourceFile(
       "const test = 1; const no = false; export default ({ num: test });"
     );
-    const studioSourceFileParser = new StudioSourceFileParser("test.tsx", project);
+    const studioSourceFileParser = new StudioSourceFileParser(
+      "test.tsx",
+      project
+    );
     const defaultExport = studioSourceFileParser.getDefaultExport();
     expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression);
   });
@@ -64,7 +81,10 @@ describe("getDefaultExport", () => {
     const { project } = createTestSourceFile(
       "const test = 1; const no = false; export default [test];"
     );
-    const studioSourceFileParser = new StudioSourceFileParser("test.tsx", project);
+    const studioSourceFileParser = new StudioSourceFileParser(
+      "test.tsx",
+      project
+    );
     const defaultExport = studioSourceFileParser.getDefaultExport();
     expectSyntaxKind(defaultExport, SyntaxKind.ArrayLiteralExpression);
   });
@@ -73,7 +93,10 @@ describe("getDefaultExport", () => {
     const { project } = createTestSourceFile(
       "export default { apiKey: '123' } as SiteSettings;"
     );
-    const studioSourceFileParser = new StudioSourceFileParser("test.tsx", project);
+    const studioSourceFileParser = new StudioSourceFileParser(
+      "test.tsx",
+      project
+    );
     const defaultExport = studioSourceFileParser.getDefaultExport();
     expectSyntaxKind(defaultExport, SyntaxKind.ObjectLiteralExpression);
   });

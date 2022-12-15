@@ -8,9 +8,9 @@ import {
 import { ComponentState, ComponentStateKind } from "../types/State";
 import { v4 } from "uuid";
 import { FileMetadata, FileMetadataKind, PropValues } from "../types";
-import StudioSourceFileParser from './StudioSourceFileParser';
-import StaticParsingHelpers from './helpers/StaticParsingHelpers';
-import TypeGuards from './helpers/TypeGuards';
+import StudioSourceFileParser from "./StudioSourceFileParser";
+import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
+import TypeGuards from "./helpers/TypeGuards";
 
 export type GetFileMetadata = (
   filepath: string

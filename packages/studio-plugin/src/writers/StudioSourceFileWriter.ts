@@ -16,7 +16,7 @@ import fs from "fs";
  * mutating source files used by Studio.
  */
 export default class StudioSourceFileWriter {
-  private sourceFile: SourceFile
+  private sourceFile: SourceFile;
 
   constructor(private filepath: string, project: Project) {
     if (!project.getSourceFile(filepath)) {

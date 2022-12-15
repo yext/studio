@@ -5,12 +5,12 @@ import {
   PropValueKind,
   PropValueType,
   PropShape,
-  FileMetadataKind
+  FileMetadataKind,
 } from "../../src";
 import { mockUUID } from "../__utils__/spies";
-import { GetFileMetadata } from '../../src/parsers/ComponentTreeParser';
-import { createTsMorphProject } from '../../src/ParsingOrchestrator';
-import ModuleFile from '../../src/sourcefiles/ModuleFile';
+import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
+import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import ModuleFile from "../../src/sourcefiles/ModuleFile";
 
 jest.mock("uuid");
 

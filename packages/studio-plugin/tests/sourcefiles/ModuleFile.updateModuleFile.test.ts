@@ -35,7 +35,7 @@ describe("updateModuleFile", () => {
       kind: FileMetadataKind.Module,
       componentTree: [complexBannerComponent],
       metadataUUID: "mock-uuid",
-      filepath: "mock-filepath"
+      filepath: "mock-filepath",
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyModule.tsx"),

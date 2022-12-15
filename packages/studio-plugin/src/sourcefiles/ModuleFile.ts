@@ -6,7 +6,9 @@ import { Project } from "ts-morph";
 import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
-import ComponentTreeParser, { GetFileMetadata } from '../parsers/ComponentTreeParser';
+import ComponentTreeParser, {
+  GetFileMetadata,
+} from "../parsers/ComponentTreeParser";
 
 /**
  * ModuleFile is responsible for parsing a single module file, for example
@@ -19,7 +21,11 @@ export default class ModuleFile {
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
 
-  constructor(filepath: string, getFileMetadata: GetFileMetadata, project: Project) {
+  constructor(
+    filepath: string,
+    getFileMetadata: GetFileMetadata,
+    project: Project
+  ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.componentName = this.getComponentName();
     this.fileMetadataParser = new FileMetadataParser(
@@ -29,9 +35,12 @@ export default class ModuleFile {
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       this.componentName,
       new StudioSourceFileWriter(filepath, project),
-      this.studioSourceFileParser,
+      this.studioSourceFileParser
     );
-    this.componentTreeParser = new ComponentTreeParser(this.studioSourceFileParser, getFileMetadata);
+    this.componentTreeParser = new ComponentTreeParser(
+      this.studioSourceFileParser,
+      getFileMetadata
+    );
   }
 
   private getComponentName(): string {
@@ -41,13 +50,15 @@ export default class ModuleFile {
   getModuleMetadata(): ModuleMetadata {
     const absPathDefaultImports =
       this.studioSourceFileParser.getAbsPathDefaultImports();
-    const componentTree = this.componentTreeParser.parseComponentTree(absPathDefaultImports);
+    const componentTree = this.componentTreeParser.parseComponentTree(
+      absPathDefaultImports
+    );
 
     return {
       kind: FileMetadataKind.Module,
       componentTree,
       ...this.fileMetadataParser.parse(),
-      filepath: this.studioSourceFileParser.getFilepath()
+      filepath: this.studioSourceFileParser.getFilepath(),
     };
   }
 

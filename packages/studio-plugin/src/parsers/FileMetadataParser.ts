@@ -4,7 +4,7 @@ import PropValuesParser from "./PropValuesParser";
 import PropShapeParser from "./PropShapeParser";
 import { FileMetadata } from "../types";
 import { v4 } from "uuid";
-import StudioSourceFileParser from './StudioSourceFileParser';
+import StudioSourceFileParser from "./StudioSourceFileParser";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for
