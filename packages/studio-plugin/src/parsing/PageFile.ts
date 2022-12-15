@@ -11,6 +11,7 @@ import {
   FileMetadata,
 } from "../types";
 import StreamConfigOperator from "./StreamConfigOperator";
+import ComponentTreeParser from './ComponentTreeParser';
 
 /**
  * Configuration options to the page file's update process
@@ -27,16 +28,18 @@ interface UpdatePageFileOptions {
 export default class PageFile {
   private studioSourceFile: StudioSourceFile;
   private streamConfigOperator: StreamConfigOperator;
+  private componentTreeParser: ComponentTreeParser;
 
   constructor(private filepath: string, getFileMetadata: (filepath: string) => FileMetadata, project: Project) {
-    this.studioSourceFile = new StudioSourceFile(filepath, getFileMetadata, project);
+    this.studioSourceFile = new StudioSourceFile(filepath, project);
     this.streamConfigOperator = new StreamConfigOperator(this.studioSourceFile);
+    this.componentTreeParser = new ComponentTreeParser(this.studioSourceFile, getFileMetadata)
   }
 
   getPageState(): PageState {
     const defaultImports = this.studioSourceFile.getAbsPathDefaultImports();
     return {
-      componentTree: this.studioSourceFile.parseComponentTree(defaultImports),
+      componentTree: this.componentTreeParser.parseComponentTree(defaultImports),
       cssImports: this.studioSourceFile.parseCssImports(),
     };
   }

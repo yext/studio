@@ -80,7 +80,7 @@ export default class ParsingOrchestrator {
       return this.filepathToFileMetadata[absPath]
     }
     if (absPath.startsWith(this.paths.components)) {
-      const componentFile = new ComponentFile(absPath, this.getFileMetadata, tsMorphProject);
+      const componentFile = new ComponentFile(absPath, tsMorphProject);
       return componentFile.getComponentMetadata();
     }
     if (absPath.startsWith(this.paths.modules)) {
@@ -109,6 +109,7 @@ export default class ParsingOrchestrator {
     if (!fs.existsSync(this.paths.siteSettings)) {
       return;
     }
-    return new SiteSettingsFile(this.paths.siteSettings, this.getFileMetadata, tsMorphProject).getSiteSettings();
+    const siteSettingsFile = new SiteSettingsFile(this.paths.siteSettings, tsMorphProject)
+    return siteSettingsFile.getSiteSettings();
   }
 }

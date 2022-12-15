@@ -1,9 +1,8 @@
 import { Project } from "ts-morph";
-import typescript from "typescript";
 import { ComponentState } from "../types/State";
 import { Mixin } from "ts-mixer";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
-import StudioSourceFileParser, { GetFileMetadata } from "./StudioSourceFileParser";
+import StudioSourceFileParser from "./StudioSourceFileParser";
 
 /**
  * StudioSourceFile contains shared business logic for parsing and updating source
@@ -14,8 +13,8 @@ export default class StudioSourceFile extends Mixin(
   StudioSourceFileWriter,
   StudioSourceFileParser
 ) {
-  constructor(filepath: string, getFileMetadata: GetFileMetadata, project: Project) {
-    super(filepath, getFileMetadata, project);
+  constructor(filepath: string, project: Project) {
+    super(filepath, project);
   }
 
   getFilepath() {
