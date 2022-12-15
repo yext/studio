@@ -6,5 +6,9 @@ export interface NestedBannerProps {
 }
 
 export default function NestedBanner(props: NestedBannerProps) {
-  return <div>Nest me: {props.text} {props.children}</div>;
+  return (
+    <div>
+      Nest me: {props.text} {props.children}
+    </div>
+  );
 }

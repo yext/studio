@@ -9,9 +9,7 @@ export const initialProps: BannerWithCardProps = {
   bannerText: "top level text",
 };
 
-export default function BannerWithCard({
-  bannerText,
-}: BannerWithCardProps) {
+export default function BannerWithCard({ bannerText }: BannerWithCardProps) {
   return (
     <NestedBanner text={bannerText}>
       <Card text="internal card" />

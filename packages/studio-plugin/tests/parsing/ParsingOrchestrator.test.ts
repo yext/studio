@@ -1,27 +1,34 @@
-import ParsingOrchestrator from '../../src/parsing/ParsingOrchestrator'
-import path from 'path'
-import getStudioPaths from '../../src/parsing/getStudioPaths';
-import { ComponentStateKind, FileMetadataKind } from '../../src';
+import ParsingOrchestrator from "../../src/parsing/ParsingOrchestrator";
+import path from "path";
+import getStudioPaths from "../../src/parsing/getStudioPaths";
+import { ComponentStateKind, FileMetadataKind } from "../../src";
 
-it('getComponentMetadata', () => {
-  const orchestrator = createOrchestrator()
+it("getComponentMetadata", () => {
+  const orchestrator = createOrchestrator();
   expect(orchestrator.getComponentMetadata()).toEqual([
-    expect.objectContaining({ kind: FileMetadataKind.Component, propShape: expect.anything() }),
-    expect.objectContaining({ kind: FileMetadataKind.Component, propShape: expect.anything(), acceptsChildren: true })
-  ])
-})
+    expect.objectContaining({
+      kind: FileMetadataKind.Component,
+      propShape: expect.anything(),
+    }),
+    expect.objectContaining({
+      kind: FileMetadataKind.Component,
+      propShape: expect.anything(),
+      acceptsChildren: true,
+    }),
+  ]);
+});
 
-it('getModuleMetadata', () => {
-  const orchestrator = createOrchestrator()
+it("getModuleMetadata", () => {
+  const orchestrator = createOrchestrator();
   expect(orchestrator.getModuleMetadata()).toEqual([
     {
       kind: FileMetadataKind.Module,
       componentTree: [
-        expect.objectContaining({ componentName: 'NestedBanner' }),
-        expect.objectContaining({ componentName: 'Card' }),
+        expect.objectContaining({ componentName: "NestedBanner" }),
+        expect.objectContaining({ componentName: "Card" }),
       ],
       initialProps: expect.anything(),
-      propShape: expect.anything()
+      propShape: expect.anything(),
     },
     {
       kind: FileMetadataKind.Module,
@@ -30,48 +37,50 @@ it('getModuleMetadata', () => {
         expect.objectContaining({ componentName: "BannerWithCard" }),
         expect.objectContaining({ componentName: "BannerWithCard" }),
       ],
-      propShape: expect.anything()
-    }
-  ])
-})
+      propShape: expect.anything(),
+    },
+  ]);
+});
 
-it('getPages', () => {
-  const orchestrator = createOrchestrator()
+it("getPages", () => {
+  const orchestrator = createOrchestrator();
   expect(orchestrator.getPages()).toEqual({
     basicPage: {
       componentTree: [
         expect.objectContaining({
-          componentName: 'div',
-          kind: ComponentStateKind.BuiltIn
+          componentName: "div",
+          kind: ComponentStateKind.BuiltIn,
         }),
         expect.objectContaining({
           componentName: "Card",
-          kind: ComponentStateKind.Standard
+          kind: ComponentStateKind.Standard,
         }),
         expect.objectContaining({
           componentName: "Card",
-          kind: ComponentStateKind.Standard
-        })
+          kind: ComponentStateKind.Standard,
+        }),
       ],
-      cssImports: []
+      cssImports: [],
     },
     pageWithModules: {
       componentTree: [
         expect.objectContaining({
-          componentName: 'NestedBanner',
-          kind: ComponentStateKind.Standard
+          componentName: "NestedBanner",
+          kind: ComponentStateKind.Standard,
         }),
         expect.objectContaining({
-          componentName: 'NestedModule',
-          kind: ComponentStateKind.Module
-        })
+          componentName: "NestedModule",
+          kind: ComponentStateKind.Module,
+        }),
       ],
-      cssImports: []
-    }
-  })
-})
+      cssImports: [],
+    },
+  });
+});
 
 function createOrchestrator() {
-  const studioPaths = getStudioPaths(path.resolve(__dirname, '../__fixtures__/ParsingOrchestrator'))
-  return new ParsingOrchestrator(studioPaths)
+  const studioPaths = getStudioPaths(
+    path.resolve(__dirname, "../__fixtures__/ParsingOrchestrator")
+  );
+  return new ParsingOrchestrator(studioPaths);
 }

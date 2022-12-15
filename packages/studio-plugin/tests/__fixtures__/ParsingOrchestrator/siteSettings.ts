@@ -1,7 +1,7 @@
 export interface SiteSettings {
-  apiKey: string
+  apiKey: string;
 }
 
 export default {
-  apiKey: 'dummy key'
-} as SiteSettings
+  apiKey: "dummy key",
+} as SiteSettings;
