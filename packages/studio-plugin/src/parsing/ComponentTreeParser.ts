@@ -8,17 +8,21 @@ import {
 import { ComponentState, ComponentStateKind } from "../types/State";
 import StaticParsingHelpers from "./StaticParsingHelpers";
 import { v4 } from "uuid";
-import { FileMetadata, FileMetadataKind, PropValues } from '../types';
-import TypeGuards from './TypeGuards';
-import StudioSourceFile from './StudioSourceFile';
+import { FileMetadata, FileMetadataKind, PropValues } from "../types";
+import TypeGuards from "./TypeGuards";
+import StudioSourceFile from "./StudioSourceFile";
 
-export type GetFileMetadata = (filepath: string) => FileMetadata
+export type GetFileMetadata = (filepath: string) => FileMetadata;
 
 export default class ComponentTreeParser {
-  constructor(private studioSourceFile: StudioSourceFile, private getFileMetadata: GetFileMetadata) {}
+  constructor(
+    private studioSourceFile: StudioSourceFile,
+    private getFileMetadata: GetFileMetadata
+  ) {}
 
   parseComponentTree(defaultImports: Record<string, string>): ComponentState[] {
-    const defaultExport = this.studioSourceFile.getDefaultExportReactComponent();
+    const defaultExport =
+      this.studioSourceFile.getDefaultExportReactComponent();
     const returnStatement = defaultExport.getFirstDescendantByKind(
       SyntaxKind.ReturnStatement
     );
@@ -43,8 +47,7 @@ export default class ComponentTreeParser {
 
     return StaticParsingHelpers.parseJsxChild(
       topLevelJsxNode,
-      (child, parent) =>
-        this.parseComponentState(child, defaultImports, parent)
+      (child, parent) => this.parseComponentState(child, defaultImports, parent)
     );
   }
 
@@ -66,7 +69,11 @@ export default class ComponentTreeParser {
     }
 
     const componentName = StaticParsingHelpers.parseJsxElementName(component);
-    const parsedElement = this.parseElement(component, componentName, defaultImports);
+    const parsedElement = this.parseElement(
+      component,
+      componentName,
+      defaultImports
+    );
 
     return {
       ...commonComponentState,
@@ -75,7 +82,11 @@ export default class ComponentTreeParser {
     };
   }
 
-  private parseElement(component: JsxElement | JsxSelfClosingElement, componentName: string, defaultImports: Record<string, string>): {
+  private parseElement(
+    component: JsxElement | JsxSelfClosingElement,
+    componentName: string,
+    defaultImports: Record<string, string>
+  ): {
     kind: ComponentStateKind;
     props: PropValues;
     metadataUUID?: string;
@@ -89,7 +100,7 @@ export default class ComponentTreeParser {
     const filepath = Object.keys(defaultImports).find(
       (importIdentifier) => defaultImports[importIdentifier] === componentName
     );
-    const assumeIsBuiltInElement = filepath === undefined
+    const assumeIsBuiltInElement = filepath === undefined;
     if (assumeIsBuiltInElement) {
       if (attributes.length > 0) {
         console.warn(
@@ -124,5 +135,4 @@ export default class ComponentTreeParser {
       props,
     };
   }
-
 }

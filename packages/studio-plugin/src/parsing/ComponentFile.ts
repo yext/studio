@@ -37,7 +37,7 @@ export default class ComponentFile {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
-      filepath: this.filepath
+      filepath: this.filepath,
     };
   }
 }

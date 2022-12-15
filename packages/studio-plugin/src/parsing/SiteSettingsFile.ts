@@ -1,4 +1,4 @@
-import { Project } from 'ts-morph';
+import { Project } from "ts-morph";
 import { PropShape, PropValues } from "../types";
 import PropShapeParser from "./PropShapeParser";
 import PropValuesParser from "./PropValuesParser";

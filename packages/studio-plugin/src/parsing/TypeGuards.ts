@@ -1,6 +1,11 @@
-import { JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind } from 'ts-morph';
+import {
+  JsxElement,
+  JsxFragment,
+  JsxSelfClosingElement,
+  SyntaxKind,
+} from "ts-morph";
 import { PropVal, PropValueKind, PropValueType } from "../types/PropValues";
-import StaticParsingHelpers from './StaticParsingHelpers';
+import StaticParsingHelpers from "./StaticParsingHelpers";
 
 type PrimitivePropValueType =
   | PropValueType.number
