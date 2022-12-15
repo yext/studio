@@ -25,7 +25,8 @@
     "eslint-plugin-tsdoc": "^0.2.17",
     "prettier": "2.7.1",
     "@yext/studio": "*",
-    "typescript": "^4.9.3"
+    "typescript": "^4.9.3",
+    "test-bin": "*"
   },
   "scripts": {
     "dev": "npx studio",

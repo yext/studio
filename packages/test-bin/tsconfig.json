@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "outDir": "lib",
+    "types": ["node", "vite/client", "@yext/studio-plugin/virtual-module"],
+    "allowJs": true
+  },
+  "include": ["src", "bin"]
+}

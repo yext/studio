@@ -1,7 +1,6 @@
 import { ConfigEnv, Plugin } from "vite";
 import openBrowser from "react-dev-utils/openBrowser.js";
-import ParsingOrchestrator, { StudioData } from "./parsing/ParsingOrchestrator";
-import getStudioPaths from "./parsing/getStudioPaths";
+import ParsingOrchestrator, { StudioData, getStudioPaths } from "./ParsingOrchestrator";
 import path from "path";
 
 /**
@@ -16,13 +15,7 @@ export default function createStudioPlugin(args: ConfigEnv): Plugin {
   const pathToUserSrc = path.join(process.cwd(), "src");
   const studioPaths = getStudioPaths(pathToUserSrc);
   const orchestrator = new ParsingOrchestrator(studioPaths);
-
-  const studioData: StudioData = {
-    pages: orchestrator.getPages(),
-    componentMetadata: orchestrator.getComponentMetadata(),
-    moduleMetadata: orchestrator.getModuleMetadata(),
-    siteSettings: orchestrator.getSiteSettings(),
-  };
+  const studioData = orchestrator.getStudioData();
 
   return {
     name: "yext-studio-vite-plugin",
