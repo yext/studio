@@ -51,7 +51,7 @@ export default class ReactComponentFileWriter {
    *
    * @returns an array of elements returned by the handler function
    */
-  mapComponentStates<T>(
+  private mapComponentStates<T>(
     componentStates: ComponentState[],
     handler: (component: ComponentState, mappedChildren: T[]) => T,
     parent?: ComponentState
@@ -95,7 +95,7 @@ export default class ReactComponentFileWriter {
     return `return (${elements})`;
   }
 
-  updateReturnStatement(
+  private updateReturnStatement(
     functionComponent: FunctionDeclaration | ArrowFunction,
     componentTree: ComponentState[]
   ) {
@@ -112,7 +112,7 @@ export default class ReactComponentFileWriter {
     functionComponent.addStatements(newReturnStatement);
   }
 
-  updatePropInterface(propShape: PropShape) {
+  private updatePropInterface(propShape: PropShape) {
     const interfaceName = `${this.componentName}Props`;
     const properties = Object.entries(propShape).map(([key, value]) => ({
       name: key,
@@ -123,7 +123,7 @@ export default class ReactComponentFileWriter {
     this.studioSourceFileWriter.updateInterface(interfaceName, properties);
   }
 
-  updateInitialProps(initialProps: PropValues) {
+  private updateInitialProps(initialProps: PropValues) {
     const stringifyProperties = Object.entries(initialProps)
       .map(([key, { kind, valueType, value }]) => {
         if (kind === PropValueKind.Expression) {

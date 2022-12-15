@@ -27,9 +27,9 @@ import { tsMorphProject } from "../tsMorphProject";
  * parsing source files used by Studio.
  */
 export default class StudioSourceFileParser {
-  protected sourceFile: SourceFile;
+  private sourceFile: SourceFile;
 
-  constructor(protected filepath: string, project: Project = tsMorphProject) {
+  constructor(private filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }

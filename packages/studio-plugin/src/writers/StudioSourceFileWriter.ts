@@ -17,9 +17,9 @@ import { tsMorphProject } from "../tsMorphProject";
  * mutating source files used by Studio.
  */
 export default class StudioSourceFileWriter {
-  protected sourceFile: SourceFile
+  private sourceFile: SourceFile
 
-  constructor(protected filepath: string, project: Project = tsMorphProject) {
+  constructor(private filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
