@@ -179,14 +179,7 @@ export default class StudioSourceFileParser {
     if (exportDeclaration.isKind(SyntaxKind.FunctionDeclaration)) {
       return exportDeclaration;
     } else if (exportDeclaration.isKind(SyntaxKind.ExportAssignment)) {
-      const assignment =
-        StaticParsingHelpers.parseExportAssignment(exportDeclaration);
-      if (!assignment) {
-        throw new Error(
-          `Error parsing default export in \`${exportDeclaration.getFullText()}\`, expected either an Identifier, ObjectLiteralExpression, or ArrayLiteralExpression.`
-        );
-      }
-      return assignment;
+      return StaticParsingHelpers.parseExportAssignment(exportDeclaration);
     }
     throw new Error(
       "Error getting default export: No ExportAssignment or FunctionDeclaration found."

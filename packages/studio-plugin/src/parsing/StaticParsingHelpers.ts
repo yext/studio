@@ -10,7 +10,6 @@ import {
   JsxElement,
   JsxFragment,
   JsxSelfClosingElement,
-  KindToNodeMappings,
   Node,
   ObjectLiteralExpression,
   ParenthesizedExpression,
@@ -22,6 +21,7 @@ import TypeGuards from "./TypeGuards";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { ComponentStateKind } from "../types/State";
 import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
+import TsMorphHelpers from "./TsMorphHelpers";
 
 export type ParsedInterface = {
   [key: string]: {
@@ -316,46 +316,16 @@ export default class StaticParsingHelpers {
     parensExpression: ParenthesizedExpression
   ): ParenthesizedExpression {
     let node: ParenthesizedExpression = parensExpression;
-    let nextNode = node.getFirstChildByKind(SyntaxKind.ParenthesizedExpression);
-    while (nextNode?.isKind(SyntaxKind.ParenthesizedExpression)) {
-      nextNode = node.getFirstChildByKind(SyntaxKind.ParenthesizedExpression);
+    let nextNode: ParenthesizedExpression | undefined = node;
+    while (nextNode) {
+      nextNode = nextNode.getFirstChildByKind(
+        SyntaxKind.ParenthesizedExpression
+      );
       if (nextNode) {
         node = nextNode;
       }
     }
     return node;
-  }
-
-  /**
-   * Similar to ts-morph's getFirstChildByKind but accepts multiple kinds.
-   */
-  static getFirstChildOfKind<T extends ReadonlyArray<SyntaxKind>>(
-    node: Node,
-    ...kinds: T
-  ): KindToNodeMappings[ElementType<typeof kinds>] | undefined {
-    return node.getFirstChild((n) => !!kinds.find((k) => n.isKind(k))) as
-      | KindToNodeMappings[ElementType<typeof kinds>]
-      | undefined;
-  }
-
-  static getFirstChildOfKindOrThrow<T extends ReadonlyArray<SyntaxKind>>(
-    node: Node,
-    ...kinds: T
-  ): KindToNodeMappings[ElementType<typeof kinds>] {
-    const foundNode = StaticParsingHelpers.getFirstChildOfKind(node, ...kinds);
-    if (!foundNode) {
-      throw new Error(
-        `Could not find a child of kind ${kinds
-          .map((k) => {
-            const expectedKindName = Object.entries(SyntaxKind).find(
-              ([_, value]) => value === k
-            )?.[0];
-            return expectedKindName;
-          })
-          .join(", ")} in node \`${node.getFullText()}\`.`
-      );
-    }
-    return foundNode;
   }
 
   static parseExportAssignment(
@@ -378,7 +348,7 @@ export default class StaticParsingHelpers {
         StaticParsingHelpers.unwrapParensExpression(parensExpression);
     }
 
-    return StaticParsingHelpers.getFirstChildOfKindOrThrow(
+    return TsMorphHelpers.getFirstChildOfKindOrThrow(
       parentNode,
       SyntaxKind.ObjectLiteralExpression,
       SyntaxKind.ArrayLiteralExpression,

@@ -6,7 +6,7 @@ import PropShapeParser from "./PropShapeParser";
 import { FileMetadata } from "../types";
 
 /**
- * FileMetadataParsingHelper is a class for housing shared parsing logic for
+ * FileMetadataParser is a class for housing shared parsing logic for
  * files of type FileMetadata (e.g. Module or Component) within Studio.
  */
 export default class FileMetadataParser {
@@ -23,6 +23,9 @@ export default class FileMetadataParser {
 
   /**
    * Parses the propShape and initialProps used in FileMetadata.
+   *
+   * @param onProp - A function to execute when iterating through each field in the prop interface
+   * @returns the propShape and initialProps
    */
   parse(
     onProp?: (propName: string) => boolean
