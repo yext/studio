@@ -1,6 +1,6 @@
-import { ArrowFunction, FunctionDeclaration, StructureKind, SyntaxKind } from "ts-morph";
+import { ArrowFunction, FunctionDeclaration, SyntaxKind } from "ts-morph";
 import StudioSourceFile from "../files/StudioSourceFile";
-import { ComponentState, ComponentStateKind, FileMetadata, PropShape, PropVal, PropValueKind, PropValues, PropValueType } from "../types";
+import { ComponentState, ComponentStateKind, FileMetadata, PropShape, PropValueKind, PropValues, PropValueType } from "../types";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -51,7 +51,7 @@ export default class ReactComponentFileWriter {
     return `return (${elements})`;
   }
 
-  private updateReturnStatement(
+  updateReturnStatement(
     functionComponent: FunctionDeclaration | ArrowFunction,
     componentTree: ComponentState[],
   ) {
@@ -69,54 +69,37 @@ export default class ReactComponentFileWriter {
 
   updatePropInterface(propShape: PropShape) {
     const interfaceName = `${this.componentName}Props`;
-    const interfaceDeclaration = this.studioSourceFile.getInterface(interfaceName)
     const properties = Object.entries(propShape).map(([key, value]) => ({
       name: key,
       type: value.type,
       hasQuestionToken: true,
       ...(value.doc && { docs: [value.doc] })
      }))
-    if (interfaceDeclaration) {
-      this.studioSourceFile.updateInterface(
-        interfaceDeclaration,
-        properties
-      )
-    } else {
-      this.studioSourceFile.addInterface(interfaceName,  properties)
-    }
-  }
-
-  private getStringifyInitialPropVal(
-    propName: string,
-    { kind, valueType, value }: PropVal
-  ): string {
-    if (kind === PropValueKind.Expression) {
-      throw new Error(`Prop ${propName} in ${this.componentName} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`);
-    }
-    return valueType === PropValueType.string || valueType === PropValueType.HexColor
-     ? `'${value}'`
-     : value.toString()
+    this.studioSourceFile.updateInterface(interfaceName, properties)
   }
 
   updateInitialProps(initialProps: PropValues) {
-    const initialPropsExpression = this.studioSourceFile.getExportedObjectExpression("initialProps")
-    if (initialPropsExpression) {
-      this.studioSourceFile.updateObjectLiteral(
-        initialPropsExpression,
-        Object.entries(initialProps).map(([key, value]) => ({
-          kind: StructureKind.PropertyAssignment,
-          name: key,
-          initializer: this.getStringifyInitialPropVal(key, value)
-        }))
-      )
-    } else {
-      const stringifyProperties = Object.entries(initialProps)
-        .map(([key, value]) => `${key} : ${this.getStringifyInitialPropVal(key, value)}`)
-        .join(',')
-      this.studioSourceFile.addVariableStatement("initialProps", `{ ${stringifyProperties} }`, `${this.componentName}Props`)
-    }
+    const stringifyProperties = Object.entries(initialProps)
+      .map(([key, { kind, valueType, value }]) => {
+        if (kind === PropValueKind.Expression) {
+          throw new Error(`Prop ${key} in ${this.componentName} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`);
+        }
+        const stringifyPropVal = valueType === PropValueType.string || valueType === PropValueType.HexColor
+         ? `'${value}'`
+         : value.toString()
+        return `${key} : ${stringifyPropVal}`
+      })
+      .join(',')
+    this.studioSourceFile.updateVariableStatement("initialProps", `{ ${stringifyProperties} }`, `${this.componentName}Props`)
   }
 
+  /**
+   * Update a React component file, which include:
+   * - file imports
+   * - const variable "initialProps"
+   * - component's prop interface `${componentName}Props`
+   * - component's parameter and return statement
+   */
   updateFile({
     componentTree,
     fileMetadata,

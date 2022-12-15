@@ -2,8 +2,10 @@ import fs from "fs";
 import typescript from "typescript";
 import { Project } from "ts-morph";
 import ModuleFile from "../../src/files/ModuleFile";
-import { ComponentStateKind, FileMetadataKind, PropValueKind, PropValueType } from "../../src";
-import { getModulePath } from "../__utils__/getFixturePath";
+import { FileMetadataKind } from "../../src";
+import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
+import { addFilesToProject } from "../__utils__/addFilesToProject";
+import { complexBannerComponent } from "../__fixtures__/componentStates";
 
 jest.mock("uuid");
 
@@ -11,6 +13,9 @@ describe("updateModuleFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    jest.spyOn(ModuleFile.prototype as any, 'getComponentName')
+      .mockImplementation(() => "Panel");
     tsMorphProject = new Project({
       compilerOptions: {
         jsx: typescript.JsxEmit.ReactJSX,
@@ -18,44 +23,19 @@ describe("updateModuleFile", () => {
     });
   });
 
-  it("test", () => {
-    const moduleFile = new ModuleFile(
-      getModulePath("PanelWithModules"),
-      tsMorphProject
-    );
+  it("updates page component based on ModuleFileMetadata's component tree", () => {
+    addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")])
+    const moduleFile = new ModuleFile(getModulePath("updateModuleFile/EmptyModule"), tsMorphProject)
     moduleFile.updateModuleFile({
       kind: FileMetadataKind.Module,
-      propShape: {
-        hello: {
-          type: PropValueType.string,
-          doc: 'hello world!'
-        }
-      },
-      initialProps: {
-        hello: {
-          valueType: PropValueType.string,
-          value: 'welcome!',
-          kind: PropValueKind.Literal
-        },
-        foo: {
-          valueType: PropValueType.string,
-          value: 'barr!',
-          kind: PropValueKind.Literal
-        },
-        bool: {
-          valueType: PropValueType.boolean,
-          value: true,
-          kind: PropValueKind.Literal
-        }
-      },
-      componentTree: [{
-        kind: ComponentStateKind.Fragment,
-        uuid: "mock-uuid-0",
-      }]
+      componentTree: [complexBannerComponent],
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining("PanelWithModules.tsx"),
-      fs.readFileSync(getModulePath("PanelWithModules"), "utf-8")
+      expect.stringContaining("EmptyModule.tsx"),
+      fs.readFileSync(
+        getModulePath("updateModuleFile/ModuleWithAComponent"),
+        "utf-8"
+      )
     );
   });
 });

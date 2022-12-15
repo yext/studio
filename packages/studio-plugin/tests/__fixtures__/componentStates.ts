@@ -11,6 +11,13 @@ export const fragmentComponent: ComponentState = {
   uuid: "mock-uuid-0",
 };
 
+export const complexBannerComponent: ComponentState = {
+  kind: ComponentStateKind.Standard,
+  componentName: "ComplexBanner",
+  props: {},
+  uuid: "mock-uuid-0",
+}
+
 export const componentTree: ComponentState[] = [
   {
     kind: ComponentStateKind.Standard,

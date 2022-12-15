@@ -18,8 +18,8 @@ export default class ModuleFile {
   private reactComponentFileWriter: ReactComponentFileWriter
 
   constructor(filepath: string, project?: Project) {
-    this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFile = new StudioSourceFile(filepath, project);
+    this.componentName = this.getComponentName();
     this.fileMetadataParser = new FileMetadataParser(
       this.componentName,
       this.studioSourceFile
@@ -28,6 +28,10 @@ export default class ModuleFile {
       this.componentName,
       this.studioSourceFile
       );
+  }
+
+  private getComponentName(): string {
+    return path.basename(this.studioSourceFile.getFilepath(), ".tsx");
   }
 
   getModuleMetadata(): ModuleMetadata {

@@ -10,7 +10,6 @@ import {
   ObjectLiteralExpression,
   Identifier,
   ArrayLiteralExpression,
-  InterfaceDeclaration,
 } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -150,12 +149,8 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
-  getInterface(interfaceName: string): InterfaceDeclaration | undefined {
-    return this.sourceFile.getInterface(interfaceName);
-  }
-
   parseInterface(interfaceName: string): ParsedInterface | undefined {
-    const interfaceDeclaration = this.getInterface(interfaceName)
+    const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
     if (!interfaceDeclaration) {
       return undefined;
     }

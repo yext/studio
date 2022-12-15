@@ -138,15 +138,11 @@ export default class StreamConfigWriter {
     );
 
     const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
-    if (streamObjectLiteralExp) {
-      streamObjectLiteralExp.replaceWithText(stringifiedConfig);
-    } else {
-      this.studioSourceFile.addVariableStatement(
-        STREAM_CONFIG_VARIABLE_NAME,
-        stringifiedConfig,
-        STREAM_CONFIG_VARIABLE_TYPE
-      );
-    }
+    this.studioSourceFile.updateVariableStatement(
+      STREAM_CONFIG_VARIABLE_NAME,
+      stringifiedConfig,
+      STREAM_CONFIG_VARIABLE_TYPE
+    );
   }
 
   addStreamImport(): void {
