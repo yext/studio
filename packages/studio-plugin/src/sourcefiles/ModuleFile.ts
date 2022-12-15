@@ -49,6 +49,12 @@ export default class ModuleFile {
     };
   }
 
+  /**
+   * Update module file by mutating the source file based on
+   * the module's updated moduleMetadata.
+   *
+   * @param moduleMetadata - the updated moduleMetadata for module file
+   */
   updateModuleFile(moduleMetadata: ModuleMetadata): void {
     this.reactComponentFileWriter.updateFile({
       componentTree: moduleMetadata.componentTree,

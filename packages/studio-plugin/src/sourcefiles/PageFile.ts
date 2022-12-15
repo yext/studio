@@ -45,8 +45,7 @@ export default class PageFile {
   }
 
   /**
-   * Update page file by mutating the imports and return statement of the page's
-   * React component in the source file based on the page's updated state.
+   * Update page file by mutating the source file based on the page's updated state.
    * Additionally, if updateStreamConfig option is set to true, the "config" variable
    * in the source file will also be mutated to update the stream configuration.
    *
