@@ -1,5 +1,5 @@
-import ComponentFile from "../../src/parsing/ComponentFile";
-import createTsMorphProject from "../../src/parsing/createTsMorphProject";
+import ComponentFile from "../../src/sourcefiles/ComponentFile";
+import { createTsMorphProject } from '../../src/ParsingOrchestrator';
 import { getComponentPath } from "../__utils__/getFixturePath";
 
 describe("getComponentMetadata", () => {

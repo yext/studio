@@ -28,11 +28,14 @@ describe("updateModuleFile", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const moduleFile = new ModuleFile(
       getModulePath("updateModuleFile/EmptyModule"),
+      jest.fn(),
       tsMorphProject
     );
     moduleFile.updateModuleFile({
       kind: FileMetadataKind.Module,
       componentTree: [complexBannerComponent],
+      metadataUUID: "mock-uuid",
+      filepath: "mock-filepath"
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyModule.tsx"),

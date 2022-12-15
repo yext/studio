@@ -4,7 +4,8 @@ import {
   JsxSelfClosingElement,
   SyntaxKind,
 } from "ts-morph";
-import { PropVal, PropValueKind, PropValueType } from "../types/PropValues";
+import { PropVal, PropValueKind, PropValueType } from '../../types';
+
 import StaticParsingHelpers from "./StaticParsingHelpers";
 
 type PrimitivePropValueType =

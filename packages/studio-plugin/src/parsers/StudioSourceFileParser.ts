@@ -11,7 +11,7 @@ import {
 import StaticParsingHelpers, {
   ParsedInterface,
   ParsedObjectLiteral,
-} from "./StaticParsingHelpers";
+} from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
 

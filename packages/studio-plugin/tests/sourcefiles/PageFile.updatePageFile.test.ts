@@ -26,6 +26,7 @@ describe("updatePageFile", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const pageFile = new PageFile(
       getPagePath("updatePageFile/EmptyPage"),
+      jest.fn(),
       tsMorphProject
     );
     pageFile.updatePageFile({
@@ -54,6 +55,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -89,6 +91,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -111,6 +114,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(

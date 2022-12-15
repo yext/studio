@@ -1,5 +1,5 @@
-import createTsMorphProject from "../../src/parsing/createTsMorphProject";
-import SiteSettingsFile from "../../src/parsing/SiteSettingsFile";
+import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import SiteSettingsFile from "../../src/sourcefiles/SiteSettingsFile";
 import { getSiteSettingsPath } from "../__utils__/getFixturePath";
 
 const project = createTsMorphProject();

@@ -1,17 +1,25 @@
 import path from "path";
-import { ComponentMetadata, FileMetadata, PageState } from "../types";
+import { ComponentMetadata, FileMetadata, PageState } from "./types";
 import fs from "fs";
-import ComponentFile from "./ComponentFile";
-import ModuleFile from "./ModuleFile";
-import PageFile from "./PageFile";
-import SiteSettingsFile, { SiteSettings } from "./SiteSettingsFile";
+import ComponentFile from "./sourcefiles/ComponentFile";
+import ModuleFile from "./sourcefiles/ModuleFile";
+import PageFile from "./sourcefiles/PageFile";
+import SiteSettingsFile, { SiteSettings } from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
-import createTsMorphProject from "./createTsMorphProject";
+import typescript from "typescript";
 
 export interface StudioData {
   pageNameToPageState: Record<string, PageState>;
   UUIDToFileMetadata: Record<string, ComponentMetadata>;
   siteSettings?: SiteSettings;
+}
+
+export function createTsMorphProject() {
+  return new Project({
+    compilerOptions: {
+      jsx: typescript.JsxEmit.ReactJSX,
+    },
+  });
 }
 
 /**

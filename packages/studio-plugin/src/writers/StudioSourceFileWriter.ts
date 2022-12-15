@@ -10,7 +10,6 @@ import {
 } from "ts-morph";
 import prettier from "prettier";
 import fs from "fs";
-import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -19,7 +18,7 @@ import { tsMorphProject } from "../tsMorphProject";
 export default class StudioSourceFileWriter {
   private sourceFile: SourceFile
 
-  constructor(filepath: string, project: Project) {
+  constructor(private filepath: string, project: Project) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }

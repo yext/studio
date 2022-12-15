@@ -1,7 +1,7 @@
-import ParsingOrchestrator from "../../src/parsing/ParsingOrchestrator";
+import ParsingOrchestrator from "../src/ParsingOrchestrator";
 import path from "path";
-import getStudioPaths from "../../src/parsing/getStudioPaths";
-import { ComponentStateKind, FileMetadataKind } from "../../src";
+import getStudioPaths from "../src/parsers/getStudioPaths";
+import { ComponentStateKind, FileMetadataKind } from "../src";
 
 describe("aggregates data as expected", () => {
   const studioPaths = getStudioPaths(

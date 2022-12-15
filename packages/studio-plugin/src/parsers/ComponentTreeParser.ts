@@ -6,11 +6,11 @@ import {
   JsxAttributeLike,
 } from "ts-morph";
 import { ComponentState, ComponentStateKind } from "../types/State";
-import StaticParsingHelpers from "./StaticParsingHelpers";
 import { v4 } from "uuid";
 import { FileMetadata, FileMetadataKind, PropValues } from "../types";
-import TypeGuards from "./TypeGuards";
-import StudioSourceFile from "./StudioSourceFile";
+import StudioSourceFileParser from './StudioSourceFileParser';
+import StaticParsingHelpers from './helpers/StaticParsingHelpers';
+import TypeGuards from './helpers/TypeGuards';
 
 export type GetFileMetadata = (
   filepath: string
@@ -18,19 +18,19 @@ export type GetFileMetadata = (
 
 export default class ComponentTreeParser {
   constructor(
-    private studioSourceFile: StudioSourceFile,
+    private studioSourceFileParser: StudioSourceFileParser,
     private getFileMetadata: GetFileMetadata
   ) {}
 
   parseComponentTree(defaultImports: Record<string, string>): ComponentState[] {
     const defaultExport =
-      this.studioSourceFile.getDefaultExportReactComponent();
+      this.studioSourceFileParser.getDefaultExportReactComponent();
     const returnStatement = defaultExport.getFirstDescendantByKind(
       SyntaxKind.ReturnStatement
     );
     if (!returnStatement) {
       throw new Error(
-        `No return statement found for the default export at path: "${this.studioSourceFile.getFilepath()}"`
+        `No return statement found for the default export at path: "${this.studioSourceFileParser.getFilepath()}"`
       );
     }
     const JsxNodeWrapper =
@@ -43,7 +43,7 @@ export default class ComponentTreeParser {
     if (!topLevelJsxNode) {
       throw new Error(
         "Unable to find top-level JSX element or JSX fragment type" +
-          ` in the default export at path: "${this.studioSourceFile.getFilepath()}"`
+          ` in the default export at path: "${this.studioSourceFileParser.getFilepath()}"`
       );
     }
 

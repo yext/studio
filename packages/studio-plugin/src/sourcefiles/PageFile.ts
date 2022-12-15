@@ -1,4 +1,3 @@
-import { getFileMetadata } from "../getFileMetadata";
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
@@ -6,6 +5,7 @@ import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import path from "path";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
+import ComponentTreeParser, { GetFileMetadata } from '../parsers/ComponentTreeParser';
 
 /**
  * Configuration options to the page file's update process
@@ -23,11 +23,13 @@ export default class PageFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private streamConfigWriter: StreamConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
+  private componentTreeParser: ComponentTreeParser;
 
-  constructor(filepath: string, project?: Project) {
+  constructor(filepath: string, getFileMetadata: GetFileMetadata, project: Project) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     const pageComponentName = path.basename(this.studioSourceFileParser.getFilepath(), ".tsx");
     const studioSourceFileWriter = new StudioSourceFileWriter(filepath, project)
+    
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
       this.studioSourceFileParser
@@ -37,17 +39,17 @@ export default class PageFile {
       studioSourceFileWriter,
       this.studioSourceFileParser
     );
+    this.componentTreeParser = new ComponentTreeParser(this.studioSourceFileParser, getFileMetadata);
   }
 
   getPageState(): PageState {
     const absPathDefaultImports =
       this.studioSourceFileParser.getAbsPathDefaultImports();
+    const componentTree = this.componentTreeParser.parseComponentTree(absPathDefaultImports)
+    const cssImports = this.studioSourceFileParser.parseCssImports();
     return {
-      componentTree: this.studioSourceFileParser.parseComponentTree(
-        absPathDefaultImports,
-        getFileMetadata
-      ),
-      cssImports: this.studioSourceFileParser.parseCssImports(),
+      componentTree,
+      cssImports,
     };
   }
 
