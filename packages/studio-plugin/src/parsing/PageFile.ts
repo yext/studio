@@ -8,10 +8,9 @@ import {
   ComponentState,
   ComponentStateKind,
   PageState,
-  FileMetadata,
 } from "../types";
 import StreamConfigOperator from "./StreamConfigOperator";
-import ComponentTreeParser from "./ComponentTreeParser";
+import ComponentTreeParser, { GetFileMetadata } from "./ComponentTreeParser";
 
 /**
  * Configuration options to the page file's update process
@@ -32,7 +31,7 @@ export default class PageFile {
 
   constructor(
     private filepath: string,
-    getFileMetadata: (filepath: string) => FileMetadata,
+    getFileMetadata: GetFileMetadata,
     project: Project
   ) {
     this.studioSourceFile = new StudioSourceFile(filepath, project);

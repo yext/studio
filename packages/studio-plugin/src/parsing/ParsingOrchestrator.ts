@@ -2,7 +2,6 @@ import path from "path";
 import {
   ComponentMetadata,
   FileMetadata,
-  ModuleMetadata,
   PageState,
 } from "../types";
 import fs from "fs";
@@ -11,7 +10,7 @@ import ModuleFile from "./ModuleFile";
 import PageFile from "./PageFile";
 import SiteSettingsFile, { SiteSettings } from "./SiteSettingsFile";
 import { Project } from "ts-morph";
-import typescript from "typescript";
+import createTsMorphProject from './createTsMorphProject';
 
 export interface StudioData {
   pageNameToPageState: Record<string, PageState>;
@@ -22,11 +21,7 @@ export interface StudioData {
 /**
  * The ts-morph Project instance for the entire app.
  */
-const tsMorphProject = new Project({
-  compilerOptions: {
-    jsx: typescript.JsxEmit.ReactJSX,
-  },
-});
+const tsMorphProject: Project = createTsMorphProject()
 
 /**
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.
@@ -43,6 +38,7 @@ export default class ParsingOrchestrator {
       siteSettings: string;
     }
   ) {
+    this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.getFilepathToComponentMetadata();
   }
 
@@ -83,7 +79,7 @@ export default class ParsingOrchestrator {
   }
 
   private getFileMetadata(absPath: string): FileMetadata {
-    if (this.filepathToFileMetadata[absPath]) {
+    if (this.filepathToFileMetadata?.[absPath]) {
       return this.filepathToFileMetadata[absPath];
     }
     if (absPath.startsWith(this.paths.components)) {

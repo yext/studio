@@ -16,6 +16,7 @@ import {
   nestedBannerComponentTree,
   streamConfigMultipleFieldsComponentTree,
 } from "../__fixtures__/componentStates";
+import createTsMorphProject from '../../src/parsing/createTsMorphProject';
 
 jest.mock("uuid");
 
@@ -23,11 +24,7 @@ describe("updatePageFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    tsMorphProject = new Project({
-      compilerOptions: {
-        jsx: typescript.JsxEmit.ReactJSX,
-      },
-    });
+    tsMorphProject = createTsMorphProject();
   });
 
   describe("page return statement", () => {
@@ -36,6 +33,7 @@ describe("updatePageFile", () => {
       new ComponentFile(getComponentPath("NestedBanner"), tsMorphProject);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithAComponent"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile({
@@ -55,6 +53,7 @@ describe("updatePageFile", () => {
       new ComponentFile(getComponentPath("ComplexBanner"), tsMorphProject);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithMultipleComponents"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile({
@@ -87,6 +86,7 @@ describe("updatePageFile", () => {
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -122,6 +122,7 @@ describe("updatePageFile", () => {
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -144,6 +145,7 @@ describe("updatePageFile", () => {
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -180,6 +182,7 @@ describe("updatePageFile", () => {
     it("adds css imports", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile({
@@ -200,6 +203,7 @@ describe("updatePageFile", () => {
       new ComponentFile(getComponentPath("SimpleBanner"), tsMorphProject);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile({
@@ -234,6 +238,7 @@ describe("updatePageFile", () => {
     it("removes unused imports", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithUnusedImports"),
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile({

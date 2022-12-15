@@ -10,45 +10,43 @@ describe("aggregates data as expected", () => {
   const orchestrator = new ParsingOrchestrator(studioPaths);
   const studioData = orchestrator.getStudioData();
 
-  it("getComponentMetadata", () => {
-    expect(studioData.componentMetadata).toEqual([
+  it("UUIDToFileMetadata", () => {
+    const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata)
+    expect(fileMetadataArray).toHaveLength(4)
+    expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        kind: FileMetadataKind.Component,
-        propShape: expect.anything(),
-      }),
+        filepath: expect.stringContaining('components/Card.tsx'),
+        kind: FileMetadataKind.Component
+      })
+    )
+    expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
+        filepath: expect.stringContaining('components/NestedBanner.tsx'),
         kind: FileMetadataKind.Component,
-        propShape: expect.anything(),
         acceptsChildren: true,
-      }),
-    ]);
+      })
+    )
+    expect(fileMetadataArray).toContainEqual(expect.objectContaining({
+      filepath: expect.stringContaining('modules/BannerWithCard.tsx'),
+      kind: FileMetadataKind.Module,
+      componentTree: [
+        expect.objectContaining({ componentName: "NestedBanner" }),
+        expect.objectContaining({ componentName: "Card" }),
+      ]
+    }))
+    expect(fileMetadataArray).toContainEqual(expect.objectContaining({
+      filepath: expect.stringContaining('modules/NestedModule.tsx'),
+      kind: FileMetadataKind.Module,
+      componentTree: [
+        expect.objectContaining({ kind: ComponentStateKind.Fragment }),
+        expect.objectContaining({ componentName: "BannerWithCard" }),
+        expect.objectContaining({ componentName: "BannerWithCard" }),
+      ]
+    }));
   });
 
-  it("getModuleMetadata", () => {
-    expect(studioData.moduleMetadata).toEqual([
-      {
-        kind: FileMetadataKind.Module,
-        componentTree: [
-          expect.objectContaining({ componentName: "NestedBanner" }),
-          expect.objectContaining({ componentName: "Card" }),
-        ],
-        initialProps: expect.anything(),
-        propShape: expect.anything(),
-      },
-      {
-        kind: FileMetadataKind.Module,
-        componentTree: [
-          expect.objectContaining({ kind: ComponentStateKind.Fragment }),
-          expect.objectContaining({ componentName: "BannerWithCard" }),
-          expect.objectContaining({ componentName: "BannerWithCard" }),
-        ],
-        propShape: expect.anything(),
-      },
-    ]);
-  });
-
-  it("getPages", () => {
-    expect(studioData.pages).toEqual({
+  it("pageNameToPageState", () => {
+    expect(studioData.pageNameToPageState).toEqual({
       basicPage: {
         componentTree: [
           expect.objectContaining({
@@ -82,7 +80,7 @@ describe("aggregates data as expected", () => {
     });
   });
 
-  it("getSiteSettings", () => {
+  it("siteSettings", () => {
     expect(studioData.siteSettings).toEqual({
       shape: expect.anything(),
       values: expect.anything(),
@@ -90,7 +88,7 @@ describe("aggregates data as expected", () => {
   });
 });
 
-it("behavior when expected folders except for pages do not exist", () => {
+it("behavior when only the pages folder exists", () => {
   const studioPaths = getStudioPaths("thisFolderDoesNotExist");
   studioPaths.pages = path.resolve(
     __dirname,
