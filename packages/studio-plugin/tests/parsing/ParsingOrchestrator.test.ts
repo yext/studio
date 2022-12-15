@@ -92,7 +92,7 @@ describe("aggregates data as expected", () => {
   });
 });
 
-it("behavior when only the pages folder exists", () => {
+it("throws an error when the page imports components from unexpected folders", () => {
   const studioPaths = getStudioPaths("thisFolderDoesNotExist");
   studioPaths.pages = path.resolve(
     __dirname,
@@ -100,13 +100,9 @@ it("behavior when only the pages folder exists", () => {
   );
 
   const orchestrator = new ParsingOrchestrator(studioPaths);
-  const studioData = orchestrator.getStudioData();
-
-  expect(studioData).toEqual({
-    componentMetadata: [],
-    moduleMetadata: [],
-    pages: expect.anything(),
-  });
+  expect(() => orchestrator.getStudioData()).toThrow(
+    /^Could not get FileMetadata for/
+  );
 });
 
 it("throws when the pages folder does not exist", () => {

@@ -45,10 +45,14 @@ export default class ParsingOrchestrator {
       prev[curr.metadataUUID] = curr;
       return prev;
     }, {});
+
+    const siteSettings = this.getSiteSettings();
+    const pageNameToPageState = this.getPageNameToPageState();
+
     return {
-      pageNameToPageState: this.getPageNameToPageState(),
+      pageNameToPageState,
       UUIDToFileMetadata,
-      siteSettings: this.getSiteSettings(),
+      siteSettings,
     };
   }
 
@@ -92,7 +96,8 @@ export default class ParsingOrchestrator {
     }
     const { modules, components } = this.paths;
     throw new Error(
-      `Unknown filepath ${absPath}, expected ${modules} or ${components}.`
+      `Could not get FileMetadata for ${absPath}, file does not ` +
+        `live inside the expected folders for modules: ${modules} or components ${components}.`
     );
   }
 
