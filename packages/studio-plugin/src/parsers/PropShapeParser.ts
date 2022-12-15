@@ -1,6 +1,6 @@
 import { PropShape } from "../types/PropShape";
-import StudioSourceFile from "./StudioSourceFile";
-import TypeGuards from "./TypeGuards";
+import StudioSourceFile from "../files/StudioSourceFile";
+import TypeGuards from "../parsers/helpers/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 
 /**

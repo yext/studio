@@ -12,7 +12,7 @@ import {
   VariableDeclarationKind,
 } from "ts-morph";
 import prettier from "prettier";
-import { tsMorphProject } from "./StudioSourceFile";
+import { tsMorphProject } from "../files/StudioSourceFile";
 import fs from "fs";
 
 /**

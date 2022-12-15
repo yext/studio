@@ -1,6 +1,6 @@
 import { ArrowFunction, FunctionDeclaration, StructureKind, SyntaxKind } from "ts-morph";
+import StudioSourceFile from "../files/StudioSourceFile";
 import { ComponentState, ComponentStateKind, FileMetadata, PropShape, PropVal, PropValueKind, PropValues, PropValueType } from "../types";
-import StudioSourceFile from "./StudioSourceFile";
 
 /**
  * ReactComponentFileWriter is a class for housing data

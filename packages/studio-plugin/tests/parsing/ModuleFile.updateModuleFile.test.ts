@@ -1,7 +1,7 @@
 import fs from "fs";
 import typescript from "typescript";
 import { Project } from "ts-morph";
-import ModuleFile from "../../src/parsing/ModuleFile";
+import ModuleFile from "../../src/files/ModuleFile";
 import { ComponentStateKind, FileMetadataKind, PropValueKind, PropValueType } from "../../src";
 import { getModulePath } from "../__utils__/getFixturePath";
 

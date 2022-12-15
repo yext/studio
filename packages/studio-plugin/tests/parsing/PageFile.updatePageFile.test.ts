@@ -1,4 +1,4 @@
-import PageFile from "../../src/parsing/PageFile";
+import PageFile from "../../src/files/PageFile";
 import { ComponentStateKind } from "../../src/types/State";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import {
@@ -8,7 +8,7 @@ import {
 } from "../__utils__/getFixturePath";
 import * as uuidUtils from "uuid";
 import fs from "fs";
-import ComponentFile from "../../src/parsing/ComponentFile";
+import ComponentFile from "../../src/files/ComponentFile";
 import typescript from "typescript";
 import { Project } from "ts-morph";
 import {

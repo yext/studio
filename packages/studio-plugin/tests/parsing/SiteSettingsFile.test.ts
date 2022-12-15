@@ -1,4 +1,4 @@
-import SiteSettingsFile from "../../src/parsing/SiteSettingsFile";
+import SiteSettingsFile from "../../src/files/SiteSettingsFile";
 import { getSiteSettingsPath } from "../__utils__/getFixturePath";
 
 it("can parse SiteSettings", () => {

@@ -2,9 +2,9 @@ import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import { v4 } from "uuid";
 import { PAGES_PACKAGE_NAME } from "../constants";
+import StudioSourceFile from "../files/StudioSourceFile";
+import TypeGuards from "../parsers/helpers/TypeGuards";
 import { ComponentState, ComponentStateKind, PropValueKind } from "../types";
-import StudioSourceFile from "./StudioSourceFile";
-import TypeGuards from "./TypeGuards";
 
 /**
  * Describes the path in the streams document to the desired data. Bracket

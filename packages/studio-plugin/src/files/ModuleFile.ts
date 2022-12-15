@@ -3,9 +3,9 @@ import path from "path";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import { getFileMetadata } from "../getFileMetadata";
-import FileMetadataParser from "./FileMetadataParser";
+import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
-import ReactComponentFileWriter from "./ReactComponentFileWriter";
+import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 
 /**
  * ModuleFile is responsible for parsing a single module file, for example

@@ -3,7 +3,7 @@ import path from "path";
 import { ComponentMetadata } from "../types/ComponentMetadata";
 import { SpecialReactProps } from "../types/PropShape";
 import { FileMetadataKind } from "../types/FileMetadata";
-import FileMetadataParser from "./FileMetadataParser";
+import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
 
 /**

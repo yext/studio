@@ -1,5 +1,5 @@
 import { SyntaxKind } from "ts-morph";
-import StudioSourceFile from "../../src/parsing/StudioSourceFile";
+import StudioSourceFile from "../../src/files/StudioSourceFile";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
 

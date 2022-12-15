@@ -4,8 +4,8 @@ import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import {
   PageState,
 } from "../types";
-import StreamConfigWriter from "./StreamConfigWriter";
-import ReactComponentFileWriter from "./ReactComponentFileWriter";
+import StreamConfigWriter from "../writers/StreamConfigWriter";
+import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import path from "path";
 
 /**

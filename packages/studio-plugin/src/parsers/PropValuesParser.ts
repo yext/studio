@@ -3,9 +3,9 @@ import { PropShape } from "../types/PropShape";
 import { PropValueKind, PropValues } from "../types/PropValues";
 import StaticParsingHelpers, {
   ParsedObjectLiteral,
-} from "./StaticParsingHelpers";
-import StudioSourceFile from "./StudioSourceFile";
-import TypeGuards from "./TypeGuards";
+} from "../parsers/helpers/StaticParsingHelpers";
+import StudioSourceFile from "../files/StudioSourceFile";
+import TypeGuards from "../parsers/helpers/TypeGuards";
 
 /**
  * PropValuesParser is a class for parsing object literals in a Studio file into PropValues.

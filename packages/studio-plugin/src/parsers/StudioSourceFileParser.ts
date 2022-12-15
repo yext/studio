@@ -17,7 +17,7 @@ import { ComponentState, ComponentStateKind } from "../types/State";
 import StaticParsingHelpers, {
   ParsedInterface,
   ParsedObjectLiteral,
-} from "./StaticParsingHelpers";
+} from "../parsers/helpers/StaticParsingHelpers";
 import { v4 } from "uuid";
 import path from "path";
 import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";

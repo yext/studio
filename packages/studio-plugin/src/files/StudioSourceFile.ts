@@ -2,8 +2,8 @@ import { Project } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState } from "../types/State";
 import { Mixin } from "ts-mixer";
-import StudioSourceFileWriter from "./StudioSourceFileWriter";
-import StudioSourceFileParser from "./StudioSourceFileParser";
+import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 
 /**
  * The ts-morph Project instance for the entire app.

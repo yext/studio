@@ -1,6 +1,6 @@
 import { PropShape, PropValues } from "../types";
-import PropShapeParser from "./PropShapeParser";
-import PropValuesParser from "./PropValuesParser";
+import PropShapeParser from "../parsers/PropShapeParser";
+import PropValuesParser from "../parsers/PropValuesParser";
 import StudioSourceFile from "./StudioSourceFile";
 
 export interface SiteSettings {
