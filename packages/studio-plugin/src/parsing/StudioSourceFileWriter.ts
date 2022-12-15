@@ -1,11 +1,19 @@
 import {
+  ArrowFunction,
+  FunctionDeclaration,
+  InterfaceDeclaration,
+  ObjectLiteralExpression,
+  ObjectLiteralExpressionPropertyStructures,
+  OptionalKind,
   Project,
+  PropertySignatureStructure,
   SourceFile,
   SyntaxKind,
   VariableDeclarationKind,
 } from "ts-morph";
 import prettier from "prettier";
 import { tsMorphProject } from "./StudioSourceFile";
+import fs from "fs";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -14,7 +22,7 @@ import { tsMorphProject } from "./StudioSourceFile";
 export default class StudioSourceFileWriter {
   protected sourceFile: SourceFile;
 
-  constructor(filepath: string, project: Project = tsMorphProject) {
+  constructor(protected filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
@@ -30,6 +38,27 @@ export default class StudioSourceFileWriter {
     return prettier.format(this.sourceFile.getFullText(), {
       parser: "typescript",
     });
+  }
+
+  writeToFile() {
+    const updatedFileText = this.prettify();
+    fs.writeFileSync(this.filepath, updatedFileText);
+  }
+
+  updateObjectLiteral(
+    objectLiteralExp: ObjectLiteralExpression,
+    properties: ObjectLiteralExpressionPropertyStructures[]
+  ) {
+    objectLiteralExp.getProperties().forEach(prop => prop.remove())
+    objectLiteralExp.addProperties(properties)
+  }
+
+  updateInterface(
+    interfaceDeclaration: InterfaceDeclaration,
+    properties: OptionalKind<PropertySignatureStructure>[]
+  ) {
+    interfaceDeclaration.removeText()
+    interfaceDeclaration.addProperties(properties)
   }
 
   /**
@@ -94,5 +123,29 @@ export default class StudioSourceFileWriter {
       declarationKind: VariableDeclarationKind.Const,
       declarations: [{ name, type, initializer: content }],
     });
+  }
+
+  addInterface(name: string, properties: OptionalKind<PropertySignatureStructure>[]) {
+    const lastImportStatementIndex =
+      this.sourceFile
+        .getLastChildByKind(SyntaxKind.ImportDeclaration)
+        ?.getChildIndex() ?? -1;
+    this.sourceFile.insertInterface(lastImportStatementIndex + 1, {
+      name,
+      properties
+    })
+  }
+
+  updateFunctionParameter(
+    functionNode: FunctionDeclaration | ArrowFunction,
+    props: string[],
+    type: string,
+    index = 0
+  ) {
+      functionNode.getParameters()[index]?.remove()
+      functionNode.insertParameter(index, {
+      name: `{ ${props.join(', ')} }`,
+      type
+    })
   }
 }

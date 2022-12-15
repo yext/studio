@@ -1,4 +1,5 @@
 import { TemplateConfig } from "@yext/pages";
+import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import { v4 } from "uuid";
 import { PAGES_PACKAGE_NAME } from "../constants";
 import { ComponentState, ComponentStateKind, PropValueKind } from "../types";
@@ -31,14 +32,15 @@ const NON_CONFIGURABLE_STREAM_PROPERTIES = [
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
+const STREAM_PAGE_PROPS_TYPE = "TemplateProps";
 
 const TEMPLATE_STRING_EXPRESSION_REGEX = /\${(.*?)}/g;
 
 /**
- * StreamConfigOperator is a class for housing data parsing
- * and updating logic for Stream config in PageFile.
+ * StreamConfigWriter is a class for housing data
+ * updating logic for Stream config in PageFile.
  */
-export default class StreamConfigOperator {
+export default class StreamConfigWriter {
   constructor(private studioSourceFile: StudioSourceFile) {}
 
   isStreamsDataExpression(value: unknown): value is StreamsDataExpression {
@@ -150,7 +152,12 @@ export default class StreamConfigOperator {
   addStreamImport(): void {
     this.studioSourceFile.addFileImport({
       source: PAGES_PACKAGE_NAME,
-      namedImports: [STREAM_CONFIG_VARIABLE_TYPE],
+      namedImports: [STREAM_CONFIG_VARIABLE_TYPE, STREAM_PAGE_PROPS_TYPE],
     });
+    
+  }
+
+  addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
+    this.studioSourceFile.updateFunctionParameter(componentFunction, ['document'], STREAM_PAGE_PROPS_TYPE)
   }
 }

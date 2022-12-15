@@ -1,4 +1,4 @@
-import { TemplateConfig } from "@yext/pages";
+import { TemplateConfig, TemplateProps } from "@yext/pages";
 import SimpleBanner from "../../ComponentFile/SimpleBanner";
 
 export const config: TemplateConfig = {
@@ -10,6 +10,6 @@ export const config: TemplateConfig = {
   },
 };
 
-export default function IndexPage() {
+export default function IndexPage({ document }: TemplateProps) {
   return <SimpleBanner title={document.title} />;
 }

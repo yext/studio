@@ -1,4 +1,5 @@
 import ComponentFile from "./parsing/ComponentFile";
+import ModuleFile from "./parsing/ModuleFile";
 import { FileMetadataKind } from "./types/FileMetadata";
 import { PropShape } from "./types/PropShape";
 
@@ -17,14 +18,20 @@ export function getFileMetadata(filepath?: string): {
   propShape?: PropShape;
 } {
   let propShape: PropShape | undefined = undefined;
-  if (filepath) {
-    const componentFile = new ComponentFile(filepath);
-    propShape = componentFile.getComponentMetadata().propShape;
-  }
-
   const kind = filepath?.includes("/modules/")
     ? FileMetadataKind.Module
     : FileMetadataKind.Component;
+
+  if (filepath) {
+    if (kind === FileMetadataKind.Component) {
+      const componentFile = new ComponentFile(filepath);
+      propShape = componentFile.getComponentMetadata().propShape;
+    }
+    if (kind === FileMetadataKind.Module) {
+      const componentFile = new ModuleFile(filepath);
+      propShape = componentFile.getModuleMetadata().propShape;
+    }
+  }
 
   return {
     kind,

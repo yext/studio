@@ -1,16 +1,12 @@
 import StudioSourceFile from "./StudioSourceFile";
 import { getFileMetadata } from "../getFileMetadata";
-import { Project, SyntaxKind } from "ts-morph";
-import fs from "fs";
+import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import {
-  PropValueKind,
-  PropValues,
-  PropValueType,
-  ComponentState,
-  ComponentStateKind,
   PageState,
 } from "../types";
-import StreamConfigOperator from "./StreamConfigOperator";
+import StreamConfigWriter from "./StreamConfigWriter";
+import ReactComponentFileWriter from "./ReactComponentFileWriter";
+import path from "path";
 
 /**
  * Configuration options to the page file's update process
@@ -26,11 +22,16 @@ interface UpdatePageFileOptions {
  */
 export default class PageFile {
   private studioSourceFile: StudioSourceFile;
-  private streamConfigOperator: StreamConfigOperator;
+  private streamConfigWriter: StreamConfigWriter;
+  private reactComponentFileWriter: ReactComponentFileWriter;
 
-  constructor(private filepath: string, project?: Project) {
+  constructor(filepath: string, project?: Project) {
     this.studioSourceFile = new StudioSourceFile(filepath, project);
-    this.streamConfigOperator = new StreamConfigOperator(this.studioSourceFile);
+    this.streamConfigWriter = new StreamConfigWriter(this.studioSourceFile);
+    this.reactComponentFileWriter = new ReactComponentFileWriter(
+      path.basename(this.studioSourceFile.getFilepath(), ".tsx"),
+      this.studioSourceFile
+    );
   }
 
   getPageState(): PageState {
@@ -43,45 +44,6 @@ export default class PageFile {
       ),
       cssImports: this.studioSourceFile.parseCssImports(),
     };
-  }
-
-  private createProps(props: PropValues): string {
-    let propsString = "";
-    Object.keys(props).forEach((propName) => {
-      const propType = props[propName].valueType;
-      const val = props[propName].value;
-      if (
-        props[propName].kind === PropValueKind.Literal &&
-        (propType === PropValueType.string ||
-          propType === PropValueType.HexColor)
-      ) {
-        propsString += `${propName}='${val}' `;
-      } else {
-        propsString += `${propName}={${val}} `;
-      }
-    });
-    return propsString;
-  }
-
-  private createReturnStatement(componentTree: ComponentState[]): string {
-    const elements = this.studioSourceFile
-      .mapComponentStates<string>(componentTree, (c, children): string => {
-        if (c.kind === ComponentStateKind.Fragment) {
-          return "<>\n" + children.join("\n") + "</>";
-        } else if (children.length === 0) {
-          return `<${c.componentName} ` + this.createProps(c.props) + "/>";
-        } else {
-          return (
-            `<${c.componentName} ` +
-            this.createProps(c.props) +
-            ">\n" +
-            children.join("\n") +
-            `</${c.componentName}>`
-          );
-        }
-      })
-      .join("\n");
-    return `return (${elements})`;
   }
 
   /**
@@ -97,33 +59,20 @@ export default class PageFile {
     updatedPageState: PageState,
     options: UpdatePageFileOptions = {}
   ): void {
-    const defaultExport =
-      this.studioSourceFile.getDefaultExportReactComponent();
-    const pageComponent = defaultExport.isKind(SyntaxKind.VariableDeclaration)
-      ? defaultExport.getFirstDescendantByKindOrThrow(SyntaxKind.ArrowFunction)
-      : defaultExport;
-
-    const returnStatementIndex = pageComponent
-      .getDescendantStatements()
-      .findIndex((n) => n.isKind(SyntaxKind.ReturnStatement));
-    if (returnStatementIndex < 0) {
-      throw new Error(`No return statement found at page: "${this.filepath}"`);
+    const onFileUpdate = (pageComponent: FunctionDeclaration | ArrowFunction) => {
+      if (options.updateStreamConfig) {
+        this.streamConfigWriter.updateStreamConfig(
+          updatedPageState.componentTree
+        );
+        this.streamConfigWriter.addStreamParameter(pageComponent);
+        this.streamConfigWriter.addStreamImport();
+      }
     }
-    const newReturnStatement = this.createReturnStatement(
-      updatedPageState.componentTree
-    );
-    pageComponent.removeStatement(returnStatementIndex);
-    pageComponent.addStatements(newReturnStatement);
 
-    if (options.updateStreamConfig) {
-      this.streamConfigOperator.updateStreamConfig(
-        updatedPageState.componentTree
-      );
-      this.streamConfigOperator.addStreamImport();
-    }
-    this.studioSourceFile.updateFileImports(updatedPageState.cssImports);
-
-    const updatedFileText = this.studioSourceFile.prettify();
-    fs.writeFileSync(this.filepath, updatedFileText);
+    this.reactComponentFileWriter.updateFile({
+      componentTree: updatedPageState.componentTree,
+      cssImports: updatedPageState.cssImports,
+      onFileUpdate
+    })
   }
 }

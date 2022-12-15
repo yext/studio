@@ -5,6 +5,7 @@ import { FileMetadataKind } from "../types/FileMetadata";
 import { getFileMetadata } from "../getFileMetadata";
 import FileMetadataParser from "./FileMetadataParser";
 import { Project } from "ts-morph";
+import ReactComponentFileWriter from "./ReactComponentFileWriter";
 
 /**
  * ModuleFile is responsible for parsing a single module file, for example
@@ -14,6 +15,7 @@ export default class ModuleFile {
   private studioSourceFile: StudioSourceFile;
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
+  private reactComponentFileWriter: ReactComponentFileWriter
 
   constructor(filepath: string, project?: Project) {
     this.componentName = path.basename(filepath, ".tsx");
@@ -22,6 +24,10 @@ export default class ModuleFile {
       this.componentName,
       this.studioSourceFile
     );
+    this.reactComponentFileWriter = new ReactComponentFileWriter(
+      this.componentName,
+      this.studioSourceFile
+      );
   }
 
   getModuleMetadata(): ModuleMetadata {
@@ -37,5 +43,12 @@ export default class ModuleFile {
       componentTree,
       ...this.fileMetadataParser.parse(),
     };
+  }
+
+  updateModuleFile(moduleMetadata: ModuleMetadata): void {
+    this.reactComponentFileWriter.updateFile({
+      componentTree: moduleMetadata.componentTree,
+      fileMetadata: moduleMetadata,
+    })
   }
 }
