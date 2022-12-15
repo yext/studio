@@ -1,3 +1,3 @@
-export const throwIfCalled = jest.fn().mockImplementation(() => {
-  throw new Error("This function should not be called");
-});
+export const throwIfCalled = () => {
+  throw new Error('This function should not be called in tests.')
+}

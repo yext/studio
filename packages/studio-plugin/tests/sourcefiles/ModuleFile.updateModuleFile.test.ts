@@ -29,7 +29,7 @@ describe("updateModuleFile", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const moduleFile = new ModuleFile(
       getModulePath("updateModuleFile/EmptyModule"),
-      throwIfCalled(),
+      throwIfCalled,
       tsMorphProject
     );
     moduleFile.updateModuleFile({

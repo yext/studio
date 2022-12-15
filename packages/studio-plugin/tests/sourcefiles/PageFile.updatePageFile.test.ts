@@ -27,7 +27,7 @@ describe("updatePageFile", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const pageFile = new PageFile(
       getPagePath("updatePageFile/EmptyPage"),
-      throwIfCalled(),
+      throwIfCalled,
       tsMorphProject
     );
     pageFile.updatePageFile({
@@ -56,7 +56,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
-        throwIfCalled(),
+        throwIfCalled,
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -92,7 +92,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
-        throwIfCalled(),
+        throwIfCalled,
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -115,7 +115,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
-        throwIfCalled(),
+        throwIfCalled,
         tsMorphProject
       );
       pageFile.updatePageFile(
