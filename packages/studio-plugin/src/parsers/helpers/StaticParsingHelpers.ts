@@ -15,12 +15,12 @@ import {
   ParenthesizedExpression,
   SyntaxKind,
 } from "ts-morph";
-import { PropValueKind, PropValues } from "../types/PropValues";
-import { PropShape } from "../types/PropShape";
+import { PropValueKind, PropValues } from "../../types/PropValues";
+import { PropShape } from "../../types/PropShape";
 import TypeGuards from "./TypeGuards";
-import { FileMetadataKind } from "../types/FileMetadata";
-import { ComponentStateKind } from "../types/State";
-import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
+import { FileMetadataKind } from "../../types/FileMetadata";
+import { ComponentStateKind } from "../../types/State";
+import { getFileMetadata as getFileMetadataFn } from "../../getFileMetadata";
 import TsMorphHelpers from "./TsMorphHelpers";
 
 export type ParsedInterface = {

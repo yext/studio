@@ -1,26 +1,26 @@
-import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
 import { ComponentMetadata } from "../types/ComponentMetadata";
 import { SpecialReactProps } from "../types/PropShape";
 import { FileMetadataKind } from "../types/FileMetadata";
-import FileMetadataParser from "./FileMetadataParser";
+import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
  * `src/components/Banner.tsx`.
  */
 export default class ComponentFile {
-  private studioSourceFile: StudioSourceFile;
+  private studioSourceFileParser: StudioSourceFileParser;
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
 
   constructor(filepath: string, project?: Project) {
     this.componentName = path.basename(filepath, ".tsx");
-    this.studioSourceFile = new StudioSourceFile(filepath, project);
+    this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.componentName,
-      this.studioSourceFile
+      this.studioSourceFileParser
     );
   }
 

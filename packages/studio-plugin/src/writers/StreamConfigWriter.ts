@@ -1,9 +1,11 @@
 import { TemplateConfig } from "@yext/pages";
+import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import { v4 } from "uuid";
 import { PAGES_PACKAGE_NAME } from "../constants";
+import TypeGuards from "../parsers/helpers/TypeGuards";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import { ComponentState, ComponentStateKind, PropValueKind } from "../types";
-import StudioSourceFile from "./StudioSourceFile";
-import TypeGuards from "./TypeGuards";
+import StudioSourceFileWriter from "./StudioSourceFileWriter";
 
 /**
  * Describes the path in the streams document to the desired data. Bracket
@@ -31,15 +33,19 @@ const NON_CONFIGURABLE_STREAM_PROPERTIES = [
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
+const STREAM_PAGE_PROPS_TYPE = "TemplateProps";
 
 const TEMPLATE_STRING_EXPRESSION_REGEX = /\${(.*?)}/g;
 
 /**
- * StreamConfigOperator is a class for housing data parsing
- * and updating logic for Stream config in PageFile.
+ * StreamConfigWriter is a class for housing data
+ * updating logic for Stream config in PageFile.
  */
-export default class StreamConfigOperator {
-  constructor(private studioSourceFile: StudioSourceFile) {}
+export default class StreamConfigWriter {
+  constructor(
+    private studioSourceFileWriter: StudioSourceFileWriter,
+    private studioSourceFileParser: StudioSourceFileParser
+  ) {}
 
   isStreamsDataExpression(value: unknown): value is StreamsDataExpression {
     return typeof value === "string" && value.startsWith("document.");
@@ -122,12 +128,12 @@ export default class StreamConfigOperator {
    */
   updateStreamConfig(componentTree: ComponentState[]): void {
     const streamObjectLiteralExp =
-      this.studioSourceFile.getExportedObjectExpression(
+      this.studioSourceFileParser.getExportedObjectExpression(
         STREAM_CONFIG_VARIABLE_NAME
       );
     const currentTemplateConfig =
       streamObjectLiteralExp &&
-      this.studioSourceFile.getCompiledObjectLiteral<TemplateConfig>(
+      this.studioSourceFileParser.getCompiledObjectLiteral<TemplateConfig>(
         streamObjectLiteralExp
       );
     const updatedTemplateConfig = this.getUpdatedTemplateConfig(
@@ -136,21 +142,25 @@ export default class StreamConfigOperator {
     );
 
     const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
-    if (streamObjectLiteralExp) {
-      streamObjectLiteralExp.replaceWithText(stringifiedConfig);
-    } else {
-      this.studioSourceFile.addVariableStatement(
-        STREAM_CONFIG_VARIABLE_NAME,
-        stringifiedConfig,
-        STREAM_CONFIG_VARIABLE_TYPE
-      );
-    }
+    this.studioSourceFileWriter.updateVariableStatement(
+      STREAM_CONFIG_VARIABLE_NAME,
+      stringifiedConfig,
+      STREAM_CONFIG_VARIABLE_TYPE
+    );
   }
 
   addStreamImport(): void {
-    this.studioSourceFile.addFileImport({
+    this.studioSourceFileWriter.addFileImport({
       source: PAGES_PACKAGE_NAME,
-      namedImports: [STREAM_CONFIG_VARIABLE_TYPE],
+      namedImports: [STREAM_CONFIG_VARIABLE_TYPE, STREAM_PAGE_PROPS_TYPE],
     });
+  }
+
+  addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
+    this.studioSourceFileWriter.updateFunctionParameter(
+      componentFunction,
+      ["document"],
+      STREAM_PAGE_PROPS_TYPE
+    );
   }
 }

@@ -1,6 +1,6 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape, PropValueType } from "../../lib";
-import StaticParsingHelpers from "../../src/parsing/StaticParsingHelpers";
+import StaticParsingHelpers from "../../src/parsers/helpers/StaticParsingHelpers";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
 

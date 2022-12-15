@@ -3,15 +3,15 @@ import { PropShape } from "../types/PropShape";
 import { PropValueKind, PropValues } from "../types/PropValues";
 import StaticParsingHelpers, {
   ParsedObjectLiteral,
-} from "./StaticParsingHelpers";
-import StudioSourceFile from "./StudioSourceFile";
-import TypeGuards from "./TypeGuards";
+} from "../parsers/helpers/StaticParsingHelpers";
+import TypeGuards from "../parsers/helpers/TypeGuards";
+import StudioSourceFileParser from "./StudioSourceFileParser";
 
 /**
  * PropValuesParser is a class for parsing object literals in a Studio file into PropValues.
  */
 export default class PropValuesParser {
-  constructor(private studioSourceFile: StudioSourceFile) {}
+  constructor(private studioSourceFileParser: StudioSourceFileParser) {}
 
   /**
    * Parses the given exported variable into PropValues.
@@ -33,15 +33,15 @@ export default class PropValuesParser {
 
   private getRawValues(variableName?: string): ParsedObjectLiteral | undefined {
     if (variableName) {
-      return this.studioSourceFile.parseExportedObjectLiteral(variableName);
+      return this.studioSourceFileParser.parseExportedObjectLiteral(variableName);
     }
-    const defaultExport = this.studioSourceFile.getDefaultExport();
+    const defaultExport = this.studioSourceFileParser.getDefaultExport();
     if (!defaultExport) {
       return undefined;
     }
     if (!defaultExport.isKind(SyntaxKind.ObjectLiteralExpression)) {
       throw new Error(
-        `Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFile.getFilepath()}`
+        `Expected an ObjectLiteralExpression as the default export in ${this.studioSourceFileParser.getFilepath()}`
       );
     }
     return StaticParsingHelpers.parseObjectLiteral(defaultExport);

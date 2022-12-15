@@ -1,4 +1,4 @@
 {
   "extends": "../../../tsconfig.json",
-  "include": ["__fixtures__", "__utils__", "parsing"]
+  "include": ["__fixtures__", "__utils__", "parsers", "writers", "sourcefiles"]
 }

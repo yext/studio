@@ -1,4 +1,4 @@
-import ComponentFile from "../../src/parsing/ComponentFile";
+import ComponentFile from "../../src/sourcefiles/ComponentFile";
 import { getComponentPath } from "../__utils__/getFixturePath";
 
 describe("getComponentMetadtata", () => {

@@ -11,38 +11,33 @@ import {
   Identifier,
   ArrayLiteralExpression,
 } from "ts-morph";
-import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import StaticParsingHelpers, {
   ParsedInterface,
   ParsedObjectLiteral,
-} from "./StaticParsingHelpers";
+} from "../parsers/helpers/StaticParsingHelpers";
 import { v4 } from "uuid";
 import path from "path";
 import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 import vm from "vm";
-
-/**
- * The ts-morph Project instance for the entire app.
- */
-export const tsMorphProject = new Project({
-  compilerOptions: {
-    jsx: typescript.JsxEmit.ReactJSX,
-  },
-});
+import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileParser contains shared business logic for
  * parsing source files used by Studio.
  */
 export default class StudioSourceFileParser {
-  protected sourceFile: SourceFile;
+  private sourceFile: SourceFile;
 
-  constructor(protected filepath: string, project: Project = tsMorphProject) {
+  constructor(private filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
     this.sourceFile = project.getSourceFileOrThrow(filepath);
+  }
+
+  getFilepath() {
+    return this.filepath;
   }
 
   parseNamedImports(): Record<string, string[]> {

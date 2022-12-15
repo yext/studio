@@ -1,20 +1,25 @@
 import {
+  ArrowFunction,
+  FunctionDeclaration,
+  OptionalKind,
   Project,
+  PropertySignatureStructure,
   SourceFile,
   SyntaxKind,
   VariableDeclarationKind,
 } from "ts-morph";
 import prettier from "prettier";
-import { tsMorphProject } from "./StudioSourceFile";
+import fs from "fs";
+import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
  * mutating source files used by Studio.
  */
 export default class StudioSourceFileWriter {
-  protected sourceFile: SourceFile;
+  private sourceFile: SourceFile
 
-  constructor(filepath: string, project: Project = tsMorphProject) {
+  constructor(private filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
@@ -30,6 +35,14 @@ export default class StudioSourceFileWriter {
     return prettier.format(this.sourceFile.getFullText(), {
       parser: "typescript",
     });
+  }
+
+  /**
+   * Write content of SourceFile to its corresponding file
+   */
+  writeToFile(): void {
+    const updatedFileText = this.prettify();
+    fs.writeFileSync(this.filepath, updatedFileText);
   }
 
   /**
@@ -78,13 +91,17 @@ export default class StudioSourceFileWriter {
   }
 
   /**
-   * Adds a variable statement at the top of the file,
-   * under the last import statement, if any.
+   * Update the variable statement by removing the existing one, if any, and
+   * construct a new statement node with the provided content. The statement
+   * is placed at the top of the file, under the last import statement, if any.
    *
    * @param name - the variable's name for the left side of the statement
    * @param content - the variable's content for the right side of the statement
+   * @param type - the variable's type
    */
-  addVariableStatement(name: string, content: string, type?: string): void {
+  updateVariableStatement(name: string, content: string, type?: string): void {
+    const variableStatement = this.sourceFile.getVariableStatement(name);
+    variableStatement?.remove();
     const lastImportStatementIndex =
       this.sourceFile
         .getLastChildByKind(SyntaxKind.ImportDeclaration)
@@ -93,6 +110,56 @@ export default class StudioSourceFileWriter {
       isExported: true,
       declarationKind: VariableDeclarationKind.Const,
       declarations: [{ name, type, initializer: content }],
+    });
+  }
+
+  /**
+   * Update the interface by removing the existing one, if any,
+   * and construct a new interface node with the provided properties.
+   * The interface is placed at the top of the file, under the last
+   * import statement, if any.
+   *
+   * @param name - the interface's name
+   * @param properties - the interface's properties
+   */
+  updateInterface(
+    name: string,
+    properties: OptionalKind<PropertySignatureStructure>[]
+  ): void {
+    const interfaceDeclaration = this.sourceFile.getInterface(name);
+    interfaceDeclaration?.remove();
+    const lastImportStatementIndex =
+      this.sourceFile
+        .getLastChildByKind(SyntaxKind.ImportDeclaration)
+        ?.getChildIndex() ?? -1;
+    this.sourceFile.insertInterface(lastImportStatementIndex + 1, {
+      isExported: true,
+      name,
+      properties,
+    });
+  }
+
+  /**
+   * Update the function's parameter by removing the existing parameter
+   * at the specified index, if any, and insert a new parameter with
+   * the provided content in the form of ObjectBindingPattern
+   * (e.g. \{ x, y \}: PropsType).
+   *
+   * @param functionNode - the function node to modify the parameter
+   * @param props - the props to display in the ObjectBindingPattern
+   * @param type - the type of the parameter
+   * @param index - the index of the parameter to update or insert
+   */
+  updateFunctionParameter(
+    functionNode: FunctionDeclaration | ArrowFunction,
+    props: string[],
+    type: string,
+    index = 0
+  ): void {
+    functionNode.getParameters()[index]?.remove();
+    functionNode.insertParameter(index, {
+      name: `{ ${props.join(", ")} }`,
+      type,
     });
   }
 }
