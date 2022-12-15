@@ -20,13 +20,17 @@ import vm from "vm";
  * parsing source files used by Studio.
  */
 export default class StudioSourceFileParser {
-  protected sourceFile: SourceFile;
+  private sourceFile: SourceFile;
 
-  constructor(protected filepath: string, project: Project) {
+  constructor(private filepath: string, project: Project) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
     this.sourceFile = project.getSourceFileOrThrow(filepath);
+  }
+
+  getFilepath() {
+    return this.filepath;
   }
 
   parseNamedImports(): Record<string, string[]> {
