@@ -9,15 +9,15 @@ import {
   VariableDeclarationKind,
 } from "ts-morph";
 import prettier from "prettier";
-import { tsMorphProject } from "../sourcefiles/StudioSourceFile";
 import fs from "fs";
+import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
  * mutating source files used by Studio.
  */
 export default class StudioSourceFileWriter {
-  protected sourceFile: SourceFile;
+  protected sourceFile: SourceFile
 
   constructor(protected filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {

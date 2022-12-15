@@ -13,8 +13,8 @@ describe("updateModuleFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jest
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .spyOn(ModuleFile.prototype as any, "getComponentName")
       .mockImplementation(() => "Panel");
     tsMorphProject = new Project({

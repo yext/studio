@@ -1,13 +1,13 @@
 import { PropShape } from "../types/PropShape";
-import StudioSourceFile from "../sourcefiles/StudioSourceFile";
 import TypeGuards from "../parsers/helpers/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
+import StudioSourceFileParser from "./StudioSourceFileParser";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
  */
 export default class PropShapeParser {
-  constructor(private studioSourceFile: StudioSourceFile) {}
+  constructor(private studioSourceFileParser: StudioSourceFileParser) {}
 
   /**
    * Get shape of the component's props, defined through an interface `${componentName}Props`.
@@ -19,9 +19,9 @@ export default class PropShapeParser {
     interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const propsInterface = this.studioSourceFile.parseInterface(interfaceName);
+    const propsInterface = this.studioSourceFileParser.parseInterface(interfaceName);
     const studioImports =
-      this.studioSourceFile.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
+      this.studioSourceFileParser.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
     if (!propsInterface) {
       return {};
     }

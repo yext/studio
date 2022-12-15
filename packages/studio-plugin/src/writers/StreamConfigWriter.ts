@@ -2,9 +2,10 @@ import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import { v4 } from "uuid";
 import { PAGES_PACKAGE_NAME } from "../constants";
-import StudioSourceFile from "../sourcefiles/StudioSourceFile";
 import TypeGuards from "../parsers/helpers/TypeGuards";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import { ComponentState, ComponentStateKind, PropValueKind } from "../types";
+import StudioSourceFileWriter from "./StudioSourceFileWriter";
 
 /**
  * Describes the path in the streams document to the desired data. Bracket
@@ -41,7 +42,10 @@ const TEMPLATE_STRING_EXPRESSION_REGEX = /\${(.*?)}/g;
  * updating logic for Stream config in PageFile.
  */
 export default class StreamConfigWriter {
-  constructor(private studioSourceFile: StudioSourceFile) {}
+  constructor(
+    private studioSourceFileWriter: StudioSourceFileWriter,
+    private studioSourceFileParser: StudioSourceFileParser
+  ) {}
 
   isStreamsDataExpression(value: unknown): value is StreamsDataExpression {
     return typeof value === "string" && value.startsWith("document.");
@@ -124,12 +128,12 @@ export default class StreamConfigWriter {
    */
   updateStreamConfig(componentTree: ComponentState[]): void {
     const streamObjectLiteralExp =
-      this.studioSourceFile.getExportedObjectExpression(
+      this.studioSourceFileParser.getExportedObjectExpression(
         STREAM_CONFIG_VARIABLE_NAME
       );
     const currentTemplateConfig =
       streamObjectLiteralExp &&
-      this.studioSourceFile.getCompiledObjectLiteral<TemplateConfig>(
+      this.studioSourceFileParser.getCompiledObjectLiteral<TemplateConfig>(
         streamObjectLiteralExp
       );
     const updatedTemplateConfig = this.getUpdatedTemplateConfig(
@@ -138,7 +142,7 @@ export default class StreamConfigWriter {
     );
 
     const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
-    this.studioSourceFile.updateVariableStatement(
+    this.studioSourceFileWriter.updateVariableStatement(
       STREAM_CONFIG_VARIABLE_NAME,
       stringifiedConfig,
       STREAM_CONFIG_VARIABLE_TYPE
@@ -146,14 +150,14 @@ export default class StreamConfigWriter {
   }
 
   addStreamImport(): void {
-    this.studioSourceFile.addFileImport({
+    this.studioSourceFileWriter.addFileImport({
       source: PAGES_PACKAGE_NAME,
       namedImports: [STREAM_CONFIG_VARIABLE_TYPE, STREAM_PAGE_PROPS_TYPE],
     });
   }
 
   addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
-    this.studioSourceFile.updateFunctionParameter(
+    this.studioSourceFileWriter.updateFunctionParameter(
       componentFunction,
       ["document"],
       STREAM_PAGE_PROPS_TYPE

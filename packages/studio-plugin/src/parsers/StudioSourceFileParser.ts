@@ -11,7 +11,6 @@ import {
   Identifier,
   ArrayLiteralExpression,
 } from "ts-morph";
-import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import StaticParsingHelpers, {
   ParsedInterface,
@@ -21,15 +20,7 @@ import { v4 } from "uuid";
 import path from "path";
 import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 import vm from "vm";
-
-/**
- * The ts-morph Project instance for the entire app.
- */
-export const tsMorphProject = new Project({
-  compilerOptions: {
-    jsx: typescript.JsxEmit.ReactJSX,
-  },
-});
+import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -43,6 +34,10 @@ export default class StudioSourceFileParser {
       project.addSourceFileAtPath(filepath);
     }
     this.sourceFile = project.getSourceFileOrThrow(filepath);
+  }
+
+  getFilepath() {
+    return this.filepath;
   }
 
   parseNamedImports(): Record<string, string[]> {

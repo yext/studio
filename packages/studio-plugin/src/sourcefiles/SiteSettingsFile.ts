@@ -1,7 +1,7 @@
 import { PropShape, PropValues } from "../types";
 import PropShapeParser from "../parsers/PropShapeParser";
 import PropValuesParser from "../parsers/PropValuesParser";
-import StudioSourceFile from "./StudioSourceFile";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 
 export interface SiteSettings {
   shape: PropShape;
@@ -9,14 +9,14 @@ export interface SiteSettings {
 }
 
 export default class SiteSettingsFile {
-  private studioSourceFile: StudioSourceFile;
+  private studioSourceFileParser: StudioSourceFileParser;
   private propShapeParser: PropShapeParser;
   private propValuesParser: PropValuesParser;
 
   constructor(filepath: string) {
-    this.studioSourceFile = new StudioSourceFile(filepath);
-    this.propValuesParser = new PropValuesParser(this.studioSourceFile);
-    this.propShapeParser = new PropShapeParser(this.studioSourceFile);
+    this.studioSourceFileParser = new StudioSourceFileParser(filepath);
+    this.propValuesParser = new PropValuesParser(this.studioSourceFileParser);
+    this.propShapeParser = new PropShapeParser(this.studioSourceFileParser);
   }
 
   getSiteSettings(): SiteSettings {

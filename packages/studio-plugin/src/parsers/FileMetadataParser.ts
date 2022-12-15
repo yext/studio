@@ -1,9 +1,9 @@
 import { PropShape } from "../types/PropShape";
 import { PropValues } from "../types/PropValues";
-import StudioSourceFile from "../sourcefiles/StudioSourceFile";
 import PropValuesParser from "./PropValuesParser";
 import PropShapeParser from "./PropShapeParser";
 import { FileMetadata } from "../types";
+import StudioSourceFileParser from "./StudioSourceFileParser";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for
@@ -15,10 +15,10 @@ export default class FileMetadataParser {
 
   constructor(
     private componentName: string,
-    studioSourceFile: StudioSourceFile
+    studioSourceFileParser: StudioSourceFileParser
   ) {
-    this.propValuesParser = new PropValuesParser(studioSourceFile);
-    this.propShapeParser = new PropShapeParser(studioSourceFile);
+    this.propValuesParser = new PropValuesParser(studioSourceFileParser);
+    this.propShapeParser = new PropShapeParser(studioSourceFileParser);
   }
 
   /**

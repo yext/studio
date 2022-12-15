@@ -1,4 +1,3 @@
-import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
@@ -6,38 +5,41 @@ import { getFileMetadata } from "../getFileMetadata";
 import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
 import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
+import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 
 /**
  * ModuleFile is responsible for parsing a single module file, for example
  * `src/modules/Card.tsx`.
  */
 export default class ModuleFile {
-  private studioSourceFile: StudioSourceFile;
+  private studioSourceFileParser: StudioSourceFileParser;
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
   private reactComponentFileWriter: ReactComponentFileWriter;
 
   constructor(filepath: string, project?: Project) {
-    this.studioSourceFile = new StudioSourceFile(filepath, project);
+    this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.componentName = this.getComponentName();
     this.fileMetadataParser = new FileMetadataParser(
       this.componentName,
-      this.studioSourceFile
+      this.studioSourceFileParser
     );
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       this.componentName,
-      this.studioSourceFile
+      new StudioSourceFileWriter(filepath, project),
+      this.studioSourceFileParser,
     );
   }
 
   private getComponentName(): string {
-    return path.basename(this.studioSourceFile.getFilepath(), ".tsx");
+    return path.basename(this.studioSourceFileParser.getFilepath(), ".tsx");
   }
 
   getModuleMetadata(): ModuleMetadata {
     const absPathDefaultImports =
-      this.studioSourceFile.getAbsPathDefaultImports();
-    const componentTree = this.studioSourceFile.parseComponentTree(
+      this.studioSourceFileParser.getAbsPathDefaultImports();
+    const componentTree = this.studioSourceFileParser.parseComponentTree(
       absPathDefaultImports,
       getFileMetadata
     );

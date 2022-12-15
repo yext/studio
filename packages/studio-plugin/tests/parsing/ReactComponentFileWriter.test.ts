@@ -13,7 +13,6 @@ import {
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
 import ReactComponentFileWriter from "../../src/writers/ReactComponentFileWriter";
-import StudioSourceFile from "../../src/sourcefiles/StudioSourceFile";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import {
   FileMetadataKind,
@@ -21,6 +20,8 @@ import {
   PropValueKind,
   PropValueType,
 } from "../../src";
+import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
+import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 
 const propShapeMultiFields: PropShape = {
   complexBannerText: {
@@ -32,6 +33,16 @@ const propShapeMultiFields: PropShape = {
     doc: "some boolean to toggle",
   },
 };
+
+function createReactComponentFileWriter(
+  tsMorphProject: Project,
+  filepath: string,
+  componentName: string
+): ReactComponentFileWriter {
+  const sourceFileWriter = new StudioSourceFileWriter(filepath, tsMorphProject);
+  const sourceFileParser = new StudioSourceFileParser(filepath, tsMorphProject);
+  return new ReactComponentFileWriter(componentName, sourceFileWriter, sourceFileParser)
+}
 
 jest.mock("uuid");
 
@@ -52,9 +63,9 @@ describe("updateFile", () => {
         getComponentPath("ComplexBanner"),
         getComponentPath("NestedBanner"),
       ]);
+
       const filepath = getPagePath("updatePageFile/PageWithAComponent");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("IndexPage", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "IndexPage").updateFile({
         componentTree: nestedBannerComponentTree,
         cssImports: [],
       });
@@ -70,8 +81,7 @@ describe("updateFile", () => {
     it("remove components that are not part of the new component tree", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const filepath = getPagePath("updatePageFile/PageWithMultipleComponents");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("IndexPage", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "IndexPage").updateFile({
         componentTree: [
           {
             kind: ComponentStateKind.Standard,
@@ -95,8 +105,7 @@ describe("updateFile", () => {
   describe("imports", () => {
     it("adds css imports", () => {
       const filepath = getPagePath("updatePageFile/EmptyPage");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("IndexPage", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "IndexPage").updateFile({
         componentTree: [fragmentComponent],
         cssImports: ["../index.css", "./App.css"],
       });
@@ -115,8 +124,7 @@ describe("updateFile", () => {
         getComponentPath("SimpleBanner"),
       ]);
       const filepath = getPagePath("updatePageFile/EmptyPage");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("IndexPage", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "IndexPage").updateFile({
         componentTree: [
           fragmentComponent,
           {
@@ -147,8 +155,7 @@ describe("updateFile", () => {
 
     it("removes unused imports", () => {
       const filepath = getPagePath("updatePageFile/PageWithUnusedImports");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("IndexPage", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "IndexPage").updateFile({
         componentTree: [fragmentComponent],
         cssImports: [],
       });
@@ -162,8 +169,7 @@ describe("updateFile", () => {
   describe("propShape", () => {
     it("adds propShape interface when it does not already exist in file", () => {
       const filepath = getModulePath("updateModuleFile/ModuleWithAComponent");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("Panel", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "Panel").updateFile({
         fileMetadata: {
           kind: FileMetadataKind.Module,
           propShape: {
@@ -187,8 +193,7 @@ describe("updateFile", () => {
 
     it("updates the existing propShape interface in file", () => {
       const filepath = getModulePath("updateModuleFile/ModuleWithPropShape");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("Panel", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "Panel").updateFile({
         fileMetadata: {
           kind: FileMetadataKind.Module,
           propShape: propShapeMultiFields,
@@ -209,8 +214,7 @@ describe("updateFile", () => {
   describe("initialProps", () => {
     it("adds initialProps variable when it does not already exist in file", () => {
       const filepath = getModulePath("updateModuleFile/ModuleWithAComponent");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("Panel", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "Panel").updateFile({
         fileMetadata: {
           kind: FileMetadataKind.Module,
           propShape: {
@@ -241,8 +245,7 @@ describe("updateFile", () => {
 
     it("updates the existing initialProps variable in file", () => {
       const filepath = getModulePath("updateModuleFile/ModuleWithInitialProps");
-      const sourceFile = new StudioSourceFile(filepath, tsMorphProject);
-      new ReactComponentFileWriter("Panel", sourceFile).updateFile({
+      createReactComponentFileWriter(tsMorphProject, filepath, "Panel").updateFile({
         fileMetadata: {
           kind: FileMetadataKind.Module,
           propShape: propShapeMultiFields,

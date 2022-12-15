@@ -1,5 +1,5 @@
 import { ArrowFunction, FunctionDeclaration, SyntaxKind } from "ts-morph";
-import StudioSourceFile from "../sourcefiles/StudioSourceFile";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
@@ -9,6 +9,7 @@ import {
   PropValues,
   PropValueType,
 } from "../types";
+import StudioSourceFileWriter from "./StudioSourceFileWriter";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -17,7 +18,8 @@ import {
 export default class ReactComponentFileWriter {
   constructor(
     private componentName: string,
-    private studioSourceFile: StudioSourceFile
+    private studioSourceFileWriter: StudioSourceFileWriter,
+    private studioSourceFileParser: StudioSourceFileParser
   ) {}
 
   private createProps(props: PropValues): string {
@@ -38,9 +40,43 @@ export default class ReactComponentFileWriter {
     return propsString;
   }
 
+  /**
+   * Performs an Array.prototype.map over the given {@link ComponentState}s in
+   * a level order traversal, starting from the leaf nodes (deepest children)
+   * and working up to root node.
+   *
+   * @param componentStates - the component tree to perform on
+   * @param handler - a function to execute on each component
+   * @param parent - the top-most parent or root node to work up to
+   *
+   * @returns an array of elements returned by the handler function
+   */
+  mapComponentStates<T>(
+    componentStates: ComponentState[],
+    handler: (component: ComponentState, mappedChildren: T[]) => T,
+    parent?: ComponentState
+  ): T[] {
+    const directChildren: ComponentState[] = [];
+    const nonDirectChildren: ComponentState[] = [];
+    componentStates.forEach((component) => {
+      if (component.parentUUID === parent?.uuid) {
+        directChildren.push(component);
+      } else if (component.uuid !== parent?.uuid) {
+        nonDirectChildren.push(component);
+      }
+    });
+    return directChildren.map((component) => {
+      const children = this.mapComponentStates(
+        nonDirectChildren,
+        handler,
+        component
+      );
+      return handler(component, children);
+    });
+  }
+
   private createReturnStatement(componentTree: ComponentState[]): string {
-    const elements = this.studioSourceFile
-      .mapComponentStates<string>(componentTree, (c, children): string => {
+    const elements = this.mapComponentStates<string>(componentTree, (c, children): string => {
         if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
         } else if (children.length === 0) {
@@ -68,13 +104,12 @@ export default class ReactComponentFileWriter {
       .findIndex((n) => n.isKind(SyntaxKind.ReturnStatement));
     if (returnStatementIndex < 0) {
       throw new Error(
-        `No return statement found at page: "${this.studioSourceFile.getFilepath()}"`
+        `No return statement found at page: "${this.studioSourceFileParser.getFilepath()}"`
       );
     }
     const newReturnStatement = this.createReturnStatement(componentTree);
     functionComponent.removeStatement(returnStatementIndex);
     functionComponent.addStatements(newReturnStatement);
-    return this;
   }
 
   updatePropInterface(propShape: PropShape) {
@@ -85,7 +120,7 @@ export default class ReactComponentFileWriter {
       hasQuestionToken: true,
       ...(value.doc && { docs: [value.doc] }),
     }));
-    this.studioSourceFile.updateInterface(interfaceName, properties);
+    this.studioSourceFileWriter.updateInterface(interfaceName, properties);
   }
 
   updateInitialProps(initialProps: PropValues) {
@@ -104,7 +139,7 @@ export default class ReactComponentFileWriter {
         return `${key} : ${stringifyPropVal}`;
       })
       .join(",");
-    this.studioSourceFile.updateVariableStatement(
+    this.studioSourceFileWriter.updateVariableStatement(
       "initialProps",
       `{ ${stringifyProperties} }`,
       `${this.componentName}Props`
@@ -132,7 +167,7 @@ export default class ReactComponentFileWriter {
     ) => void;
   }): void {
     const defaultExport =
-      this.studioSourceFile.getDefaultExportReactComponent();
+      this.studioSourceFileParser.getDefaultExportReactComponent();
     const functionComponent = defaultExport.isKind(
       SyntaxKind.VariableDeclaration
     )
@@ -147,7 +182,7 @@ export default class ReactComponentFileWriter {
       }
       if (propShape) {
         this.updatePropInterface(propShape);
-        this.studioSourceFile.updateFunctionParameter(
+        this.studioSourceFileWriter.updateFunctionParameter(
           functionComponent,
           Object.keys(propShape),
           `${this.componentName}Props`
@@ -155,7 +190,7 @@ export default class ReactComponentFileWriter {
       }
     }
     this.updateReturnStatement(functionComponent, componentTree);
-    this.studioSourceFile.updateFileImports(cssImports);
-    this.studioSourceFile.writeToFile();
+    this.studioSourceFileWriter.updateFileImports(cssImports);
+    this.studioSourceFileWriter.writeToFile();
   }
 }
