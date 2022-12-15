@@ -1,7 +1,9 @@
+import { Project } from 'ts-morph';
 import { PropShape, PropValues } from "../types";
 import PropShapeParser from "./PropShapeParser";
 import PropValuesParser from "./PropValuesParser";
 import StudioSourceFile from "./StudioSourceFile";
+import { GetFileMetadata } from './StudioSourceFileParser';
 
 export interface SiteSettings {
   shape: PropShape;
@@ -13,8 +15,8 @@ export default class SiteSettingsFile {
   private propShapeParser: PropShapeParser;
   private propValuesParser: PropValuesParser;
 
-  constructor(filepath: string) {
-    this.studioSourceFile = new StudioSourceFile(filepath);
+  constructor(filepath: string, getFileMetadata: GetFileMetadata, project: Project) {
+    this.studioSourceFile = new StudioSourceFile(filepath, getFileMetadata, project);
     this.propValuesParser = new PropValuesParser(this.studioSourceFile);
     this.propShapeParser = new PropShapeParser(this.studioSourceFile);
   }

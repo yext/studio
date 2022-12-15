@@ -1,8 +1,7 @@
 import StudioSourceFile from "./StudioSourceFile";
 import path from "path";
 import { ModuleMetadata } from "../types/ModuleMetadata";
-import { FileMetadataKind } from "../types/FileMetadata";
-import { getFileMetadata } from "../getFileMetadata";
+import { FileMetadata, FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "./FileMetadataParser";
 import { Project } from "ts-morph";
 
@@ -15,9 +14,9 @@ export default class ModuleFile {
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string, project?: Project) {
+  constructor(private filepath: string, getFileMetadata: (filepath: string) => FileMetadata, project: Project) {
     this.componentName = path.basename(filepath, ".tsx");
-    this.studioSourceFile = new StudioSourceFile(filepath, project);
+    this.studioSourceFile = new StudioSourceFile(filepath, getFileMetadata, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.componentName,
       this.studioSourceFile
@@ -25,17 +24,14 @@ export default class ModuleFile {
   }
 
   getModuleMetadata(): ModuleMetadata {
-    const absPathDefaultImports =
-      this.studioSourceFile.getAbsPathDefaultImports();
-    const componentTree = this.studioSourceFile.parseComponentTree(
-      absPathDefaultImports,
-      getFileMetadata
-    );
+    const defaultImports = this.studioSourceFile.getAbsPathDefaultImports();
+    const componentTree = this.studioSourceFile.parseComponentTree(defaultImports);
 
     return {
       kind: FileMetadataKind.Module,
       componentTree,
       ...this.fileMetadataParser.parse(),
+      filepath: this.filepath
     };
   }
 }

@@ -1,5 +1,4 @@
 import StudioSourceFile from "./StudioSourceFile";
-import { getFileMetadata } from "../getFileMetadata";
 import { Project, SyntaxKind } from "ts-morph";
 import fs from "fs";
 import {
@@ -9,6 +8,7 @@ import {
   ComponentState,
   ComponentStateKind,
   PageState,
+  FileMetadata,
 } from "../types";
 import StreamConfigOperator from "./StreamConfigOperator";
 
@@ -28,19 +28,15 @@ export default class PageFile {
   private studioSourceFile: StudioSourceFile;
   private streamConfigOperator: StreamConfigOperator;
 
-  constructor(private filepath: string, project?: Project) {
-    this.studioSourceFile = new StudioSourceFile(filepath, project);
+  constructor(private filepath: string, getFileMetadata: (filepath: string) => FileMetadata, project: Project) {
+    this.studioSourceFile = new StudioSourceFile(filepath, getFileMetadata, project);
     this.streamConfigOperator = new StreamConfigOperator(this.studioSourceFile);
   }
 
   getPageState(): PageState {
-    const absPathDefaultImports =
-      this.studioSourceFile.getAbsPathDefaultImports();
+    const defaultImports = this.studioSourceFile.getAbsPathDefaultImports();
     return {
-      componentTree: this.studioSourceFile.parseComponentTree(
-        absPathDefaultImports,
-        getFileMetadata
-      ),
+      componentTree: this.studioSourceFile.parseComponentTree(defaultImports),
       cssImports: this.studioSourceFile.parseCssImports(),
     };
   }

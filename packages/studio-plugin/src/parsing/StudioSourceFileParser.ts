@@ -10,6 +10,7 @@ import {
   ObjectLiteralExpression,
   Identifier,
   ArrayLiteralExpression,
+  JsxAttributeLike,
 } from "ts-morph";
 import typescript from "typescript";
 import { ComponentState, ComponentStateKind } from "../types/State";
@@ -19,17 +20,11 @@ import StaticParsingHelpers, {
 } from "./StaticParsingHelpers";
 import { v4 } from "uuid";
 import path from "path";
-import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 import vm from "vm";
+import { FileMetadata, FileMetadataKind, PropValues } from '../types';
+import TypeGuards from './TypeGuards';
 
-/**
- * The ts-morph Project instance for the entire app.
- */
-export const tsMorphProject = new Project({
-  compilerOptions: {
-    jsx: typescript.JsxEmit.ReactJSX,
-  },
-});
+export type GetFileMetadata = (filepath: string) => FileMetadata
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -38,7 +33,7 @@ export const tsMorphProject = new Project({
 export default class StudioSourceFileParser {
   protected sourceFile: SourceFile;
 
-  constructor(protected filepath: string, project: Project = tsMorphProject) {
+  constructor(protected filepath: string, private getFileMetadata: GetFileMetadata, project: Project) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
@@ -223,10 +218,7 @@ export default class StudioSourceFileParser {
     return defaultExport;
   }
 
-  parseComponentTree(
-    defaultImports: Record<string, string>,
-    getFileMetadata: typeof getFileMetadataFn
-  ): ComponentState[] {
+  parseComponentTree(defaultImports: Record<string, string>): ComponentState[] {
     const defaultExport = this.getDefaultExportReactComponent();
     const returnStatement = defaultExport.getFirstDescendantByKind(
       SyntaxKind.ReturnStatement
@@ -253,25 +245,21 @@ export default class StudioSourceFileParser {
     return StaticParsingHelpers.parseJsxChild(
       topLevelJsxNode,
       (child, parent) =>
-        this.parseComponentState(child, defaultImports, getFileMetadata, parent)
+        this.parseComponentState(child, defaultImports, parent)
     );
   }
 
   parseComponentState(
     component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
-    getFileMetadata: typeof getFileMetadataFn,
-    parent?: ComponentState
+    parent: ComponentState | undefined
   ): ComponentState {
     const commonComponentState = {
       parentUUID: parent?.uuid,
       uuid: v4(),
     };
 
-    if (
-      component.isKind(SyntaxKind.JsxFragment) ||
-      StaticParsingHelpers.isFragmentElement(component)
-    ) {
+    if (!TypeGuards.isNotFragmentElement(component)) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment,
@@ -279,16 +267,62 @@ export default class StudioSourceFileParser {
     }
 
     const componentName = StaticParsingHelpers.parseJsxElementName(component);
+    const parsedElement = this.parseElement(component, componentName, defaultImports);
 
     return {
       ...commonComponentState,
-      ...StaticParsingHelpers.parseElement(
-        component,
-        componentName,
-        defaultImports,
-        getFileMetadata
-      ),
+      ...parsedElement,
       componentName,
+    };
+  }
+
+  private parseElement(component: JsxElement | JsxSelfClosingElement, componentName: string, defaultImports: Record<string, string>): {
+    kind: ComponentStateKind;
+    props: PropValues;
+    metadataUUID?: string;
+  } {
+    const attributes: JsxAttributeLike[] = component.isKind(
+      SyntaxKind.JsxSelfClosingElement
+    )
+      ? component.getAttributes()
+      : component.getOpeningElement().getAttributes();
+
+    const filepath = Object.keys(defaultImports).find(
+      (importIdentifier) => defaultImports[importIdentifier] === componentName
+    );
+    const assumeIsBuiltInElement = filepath === undefined
+    if (assumeIsBuiltInElement) {
+      if (attributes.length > 0) {
+        console.warn(
+          `Props for builtIn element: '${componentName}' are currently not supported.`
+        );
+      }
+      return {
+        kind: ComponentStateKind.BuiltIn,
+        props: {},
+      };
+    }
+
+    const fileMetadataAndUUID = this.getFileMetadata(filepath);
+    const {
+      kind: fileMetadataKind,
+      metadataUUID,
+      propShape,
+    } = fileMetadataAndUUID;
+
+    const componentStateKind =
+      fileMetadataKind === FileMetadataKind.Module
+        ? ComponentStateKind.Module
+        : ComponentStateKind.Standard;
+    const props = StaticParsingHelpers.parseJsxAttributes(
+      attributes,
+      propShape
+    );
+
+    return {
+      kind: componentStateKind,
+      metadataUUID,
+      props,
     };
   }
 }

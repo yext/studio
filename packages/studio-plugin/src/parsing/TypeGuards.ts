@@ -1,4 +1,6 @@
+import { JsxElement, JsxFragment, JsxSelfClosingElement, SyntaxKind } from 'ts-morph';
 import { PropVal, PropValueKind, PropValueType } from "../types/PropValues";
+import StaticParsingHelpers from './StaticParsingHelpers';
 
 type PrimitivePropValueType =
   | PropValueType.number
@@ -53,5 +55,18 @@ export default class TypeGuards {
       value.endsWith("`") &&
       value.length >= 2
     );
+  }
+
+  static isNotFragmentElement(
+    element: JsxElement | JsxSelfClosingElement | JsxFragment
+  ): element is JsxElement | JsxSelfClosingElement {
+    if (element.isKind(SyntaxKind.JsxFragment)) {
+      return false;
+    }
+    if (element.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      return true;
+    }
+    const name = StaticParsingHelpers.parseJsxElementName(element);
+    return !["Fragment", "React.Fragment"].includes(name);
   }
 }
