@@ -1,5 +1,5 @@
 import { ArrowFunction, FunctionDeclaration, SyntaxKind } from "ts-morph";
-import StudioSourceFile from "../files/StudioSourceFile";
+import StudioSourceFile from "../sourcefiles/StudioSourceFile";
 import { ComponentState, ComponentStateKind, FileMetadata, PropShape, PropValueKind, PropValues, PropValueType } from "../types";
 
 /**

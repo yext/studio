@@ -13,7 +13,7 @@ import {
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
 import ReactComponentFileWriter from "../../src/writers/ReactComponentFileWriter";
-import StudioSourceFile from "../../src/files/StudioSourceFile";
+import StudioSourceFile from "../../src/sourcefiles/StudioSourceFile";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { FileMetadataKind, PropShape, PropValueKind, PropValueType } from "../../src";
 

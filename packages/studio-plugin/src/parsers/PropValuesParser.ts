@@ -4,7 +4,7 @@ import { PropValueKind, PropValues } from "../types/PropValues";
 import StaticParsingHelpers, {
   ParsedObjectLiteral,
 } from "../parsers/helpers/StaticParsingHelpers";
-import StudioSourceFile from "../files/StudioSourceFile";
+import StudioSourceFile from "../sourcefiles/StudioSourceFile";
 import TypeGuards from "../parsers/helpers/TypeGuards";
 
 /**

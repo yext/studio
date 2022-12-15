@@ -1,6 +1,6 @@
 import { PropShape } from "../types/PropShape";
 import { PropValues } from "../types/PropValues";
-import StudioSourceFile from "../files/StudioSourceFile";
+import StudioSourceFile from "../sourcefiles/StudioSourceFile";
 import PropValuesParser from "./PropValuesParser";
 import PropShapeParser from "./PropShapeParser";
 import { FileMetadata } from "../types";

@@ -1,5 +1,5 @@
-import ComponentFile from "./files/ComponentFile";
-import ModuleFile from "./files/ModuleFile";
+import ComponentFile from "./sourcefiles/ComponentFile";
+import ModuleFile from "./sourcefiles/ModuleFile";
 import { FileMetadataKind } from "./types/FileMetadata";
 import { PropShape } from "./types/PropShape";
 

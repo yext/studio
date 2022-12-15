@@ -2,7 +2,7 @@ import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import { v4 } from "uuid";
 import { PAGES_PACKAGE_NAME } from "../constants";
-import StudioSourceFile from "../files/StudioSourceFile";
+import StudioSourceFile from "../sourcefiles/StudioSourceFile";
 import TypeGuards from "../parsers/helpers/TypeGuards";
 import { ComponentState, ComponentStateKind, PropValueKind } from "../types";
 

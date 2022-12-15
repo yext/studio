@@ -1,4 +1,4 @@
-import PageFile from "../../src/files/PageFile";
+import PageFile from "../../src/sourcefiles/PageFile";
 import { ComponentStateKind } from "../../src/types/State";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import {

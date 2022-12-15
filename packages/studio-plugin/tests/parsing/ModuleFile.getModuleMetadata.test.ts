@@ -1,4 +1,4 @@
-import ModuleFile from "../../src/files/ModuleFile";
+import ModuleFile from "../../src/sourcefiles/ModuleFile";
 import * as getFileMetadataUtils from "../../src/getFileMetadata";
 import { getModulePath } from "../__utils__/getFixturePath";
 import {
