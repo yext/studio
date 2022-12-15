@@ -1,14 +1,6 @@
 import path from "path";
-import {
-  ComponentMetadata,
-  FileMetadata,
-  ModuleMetadata,
-  PageState,
-  PropShape,
-  PropValues,
-} from "../types";
+import { ComponentMetadata, ModuleMetadata, PageState } from "../types";
 import fs from "fs";
-import { v4 } from "uuid";
 import ComponentFile from "./ComponentFile";
 import ModuleFile from "./ModuleFile";
 import PageFile from "./PageFile";
