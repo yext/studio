@@ -1,4 +1,4 @@
-import create, { UseBoundStore } from "zustand";
+import create from "zustand";
 import { withLenses, lens } from "@dhmk/zustand-lens";
 import { immer } from "zustand/middleware/immer";
 

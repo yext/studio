@@ -5,6 +5,6 @@ import react from "@vitejs/plugin-react";
 export default defineConfig((args: ConfigEnv) => {
   return {
     root: __dirname,
-    plugins: [react(), createStudioPlugin(args)]
-  }
+    plugins: [react(), createStudioPlugin(args)],
+  };
 });

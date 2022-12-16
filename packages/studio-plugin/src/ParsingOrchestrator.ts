@@ -29,7 +29,7 @@ export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
 
   /** The ts-morph Project instance for the entire app. */
-  private project: Project
+  private project: Project;
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -40,7 +40,6 @@ export default class ParsingOrchestrator {
       siteSettings: string;
     }
   ) {
-
     this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
