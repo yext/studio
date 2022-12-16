@@ -5,10 +5,7 @@ import ComponentKindIcon from "./ComponentKindIcon";
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
 
-/**
- * ComponentNode is a single node in {@link ComponentTree}.
- */
-export default function ComponentNode(props: {
+interface ComponentNodeProps {
   /** The ComponentState this node represents in {@link ComponentTree} */
   componentState: ComponentState;
   /** The depth of this node inside ComponentTree */
@@ -19,7 +16,12 @@ export default function ComponentNode(props: {
   onToggle: () => void;
   /** Whether this node has children. */
   hasChild: boolean;
-}) {
+}
+
+/**
+ * ComponentNode is a single node in {@link ComponentTree}.
+ */
+export default function ComponentNode(props: ComponentNodeProps) {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
   const setActiveComponentUUID = useStudioStore(
     (store) => store.pages.setActiveComponentUUID
@@ -27,7 +29,7 @@ export default function ComponentNode(props: {
 
   const text =
     componentState.kind === ComponentStateKind.Fragment
-      ? "Fragmnet"
+      ? "Fragment"
       : componentState.componentName;
 
   const vectorClassName = classNames("cursor-pointer", {
