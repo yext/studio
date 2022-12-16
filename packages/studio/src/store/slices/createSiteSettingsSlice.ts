@@ -1,11 +1,12 @@
+import { initialStudioData } from '../initialStudioData';
 import SiteSettingsSlice from "../models/slices/SiteSettingsSlice";
 import { SliceCreator } from "../models/utils";
 
 const createSiteSettingsSlice: SliceCreator<SiteSettingsSlice> = (
   set
 ) => ({
-  shape: undefined,
-  values: undefined,
+  shape: initialStudioData.siteSettings?.shape,
+  values: initialStudioData.siteSettings?.values,
   setShape: (shape) => set({ shape }),
   setValues: (values) => set({ values }),
 });

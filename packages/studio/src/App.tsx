@@ -1,13 +1,18 @@
 import useStudioStore from "./store/useStudioStore";
-import { ComponentStateKind } from "@yext/studio-plugin";
 
 export default function App() {
-  console.log(ComponentStateKind);
-  const state = useStudioStore((store) => store);
-  console.log("studio store", state);
+  const { activePageName, activePageState } = useStudioStore((store) => {
+    return {
+      activePageName: store.pages.activePageName,
+      activePageState: store.pages.getActivePageState()
+    }
+  });
+
   return (
     <div className="App">
       <h1>Studio Client</h1>
+      <h2>Active Page: {activePageName}</h2>
+      <div>Active PageState: {JSON.stringify(activePageState, null, 2)}</div>
     </div>
   );
 }

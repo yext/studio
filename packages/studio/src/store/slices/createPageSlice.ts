@@ -1,4 +1,5 @@
 import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
+import { initialStudioData } from '../initialStudioData';
 import PageSlice, {
   PageSliceStates,
   PagesRecord,
@@ -6,13 +7,8 @@ import PageSlice, {
 import { SliceCreator } from "../models/utils";
 
 const initialStates: PageSliceStates = {
-  pages: {
-    index: {
-      componentTree: [],
-      cssImports: [],
-    },
-  },
-  activePageName: "index",
+  pages: initialStudioData.pageNameToPageState,
+  activePageName: Object.keys(initialStudioData.pageNameToPageState)[0],
   activeComponentUUID: undefined,
 };
 

@@ -1,6 +1,6 @@
-import { FileMetadataSlice } from "./slices/FileMetadataSlice";
-import { PageSlice } from "./slices/PageSlice";
-import { SiteSettingSlice } from "./slices/SiteSettingSlice";
+import FileMetadataSlice from "./slices/FileMetadataSlice";
+import PageSlice from "./slices/PageSlice";
+import SiteSettingSlice from "./slices/SiteSettingsSlice";
 
 /**
  * The overall shape of the Zustand store as the state manager for Studio.
