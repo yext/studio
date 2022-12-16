@@ -1,5 +1,5 @@
-import { useStudioStore } from "./store/store";
-import { ComponentStateKind } from "@yext/studio-plugin";
+import ComponentTree from './components/ComponentTree';
+import useStudioStore from "./store/useStudioStore";
 
 export default function App() {
   console.log(ComponentStateKind);
@@ -10,6 +10,7 @@ export default function App() {
       <h1>Studio Client</h1>
       <h2>Active Page: {activePageName}</h2>
       <div>Active PageState: {JSON.stringify(activePageState, null, 2)}</div>
+      <ComponentTree/>
     </div>
   );
 }

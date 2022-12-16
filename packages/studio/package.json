@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@dhmk/zustand-lens": "^2.0.5",
+    "@minoru/react-dnd-treeview": "^3.4.0",
     "@vitejs/plugin-react": "^3.0.0",
     "@yext/studio-plugin": "workspace:*",
     "react": "^18.2.0",

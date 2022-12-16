@@ -1,4 +1,4 @@
-import { FileMetadata } from "@yext/studio-plugin";
+import { ComponentMetadata, FileMetadata } from "@yext/studio-plugin";
 
 export interface FileMetadataSliceStates {
   /** Metadata of all components and modules that can be used in Studio. */
@@ -9,6 +9,7 @@ export interface FileMetadataSliceActions {
   setFileMetadata: (uuid: string, fileMetadata: FileMetadata) => void;
   getFileMetadata: (uuid: string) => FileMetadata;
   removeFileMetadata: (uuid: string) => void;
+  getComponentMetadata: (uuid: string) => ComponentMetadata;
 }
 
 /**
