@@ -13,7 +13,7 @@ import {
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { useCallback, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
-import ComponentNode from './ComponentNode';
+import ComponentNode from "./ComponentNode";
 
 const ROOT_ID = "tree-root-uuid";
 const CSS_CLASSES: Readonly<Classes> = {
@@ -43,7 +43,7 @@ export default function ComponentTree() {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
         data: componentState,
-        text: ''
+        text: "",
       };
       if (
         componentState.kind === ComponentStateKind.Fragment ||
@@ -72,7 +72,13 @@ export default function ComponentTree() {
     (tree: NodeModel<ComponentState>[]) => {
       const updatedComponentTree = tree.map((n) => {
         if (!n.data) {
-          throw new Error(`No data passed into NodeModel<ComponentState> for node ${JSON.stringify(n, null, 2)}`);
+          throw new Error(
+            `No data passed into NodeModel<ComponentState> for node ${JSON.stringify(
+              n,
+              null,
+              2
+            )}`
+          );
         }
         const componentState: ComponentState = {
           ...n.data,
@@ -121,11 +127,22 @@ function canDrop(_: NodeModel[], opts: DropOptions) {
   return undefined;
 }
 
-function renderNode(node: NodeModel<ComponentState>, { depth, isOpen, onToggle, hasChild }: RenderParams) {
+function renderNode(
+  node: NodeModel<ComponentState>,
+  { depth, isOpen, onToggle, hasChild }: RenderParams
+) {
   if (!node.data) {
     throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
   }
-  return <ComponentNode componentState={node.data} depth={depth} isOpen={isOpen} onToggle={onToggle} hasChild={hasChild}/>;
+  return (
+    <ComponentNode
+      componentState={node.data}
+      depth={depth}
+      isOpen={isOpen}
+      onToggle={onToggle}
+      hasChild={hasChild}
+    />
+  );
 }
 
 function renderDragPreview(
@@ -133,12 +150,12 @@ function renderDragPreview(
 ) {
   const item: DragItem<unknown> = monitorProps.item;
   return (
-    <div className='p-2 rounded bg-emerald-200'>
+    <div className="p-2 rounded bg-emerald-200">
       <div className="flex">{item.text}</div>
     </div>
   );
 }
 
 function renderPlaceholder() {
-  return <div className='bg-rose-500 absolute w-full h-0.5'></div>;
+  return <div className="bg-rose-500 absolute w-full h-0.5"></div>;
 }
