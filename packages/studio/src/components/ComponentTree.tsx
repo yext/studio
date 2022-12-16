@@ -74,8 +74,8 @@ export default function ComponentTree() {
       const updatedComponentTree = tree.map((n) => {
         if (!n.data) {
           throw new Error(
-            'No data passed into NodeModel<ComponentState> for node ' +
-            JSON.stringify(n, null, 2)
+            "No data passed into NodeModel<ComponentState> for node " +
+              JSON.stringify(n, null, 2)
           );
         }
         const componentState: ComponentState = {
@@ -155,5 +155,10 @@ function renderDragPreview(
 }
 
 function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
-  return <div className="bg-rose-500 absolute w-full h-0.5" style={{ left: `${depth}em` }}></div>;
+  return (
+    <div
+      className="bg-rose-500 absolute w-full h-0.5"
+      style={{ left: `${depth}em` }}
+    ></div>
+  );
 }

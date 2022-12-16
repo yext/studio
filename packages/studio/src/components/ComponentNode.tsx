@@ -22,7 +22,7 @@ export default function ComponentNode(props: {
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
-    "invisible": !hasChild
+    invisible: !hasChild,
   });
 
   return (

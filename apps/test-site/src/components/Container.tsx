@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
+import { ReactNode } from "react";
 
 export interface ContainerProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export default function Container(props: ContainerProps) {
