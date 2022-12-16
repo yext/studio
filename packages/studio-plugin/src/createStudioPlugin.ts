@@ -18,6 +18,10 @@ export default async function createStudioPlugin(
   const studioPaths = getStudioPaths(pathToUserSrc);
   const orchestrator = new ParsingOrchestrator(studioPaths);
   const studioData = orchestrator.getStudioData();
+
+  // We have to use a dynamic import here - if we use a regular import,
+  // Vite will import react-dev-utils in the browser.
+  // This causes an error to be thrown regarding `process` not being defined.
   const { default: openBrowser } = await import("react-dev-utils/openBrowser");
 
   return {

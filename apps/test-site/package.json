@@ -33,8 +33,7 @@
     "build": "craco build",
     "lint": "eslint . && npm run prettier-check",
     "prettier-write": "prettier --write .",
-    "prettier-check": "prettier --check .",
-    "studio": "studio"
+    "prettier-check": "prettier --check ."
   },
   "browserslist": {
     "production": [
