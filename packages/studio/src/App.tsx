@@ -4,8 +4,8 @@ export default function App() {
   const { activePageName, activePageState } = useStudioStore((store) => {
     return {
       activePageName: store.pages.activePageName,
-      activePageState: store.pages.getActivePageState()
-    }
+      activePageState: store.pages.getActivePageState(),
+    };
   });
 
   return (

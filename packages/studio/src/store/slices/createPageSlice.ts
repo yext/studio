@@ -1,5 +1,5 @@
 import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
-import { initialStudioData } from '../initialStudioData';
+import { initialStudioData } from "../initialStudioData";
 import PageSlice, {
   PageSliceStates,
   PagesRecord,
