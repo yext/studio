@@ -1,5 +1,5 @@
 import { FileMetadata } from "@yext/studio-plugin";
-import { initialStudioData } from "../initialStudioData";
+import initialStudioData from "virtual:yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { SliceCreator } from "../models/utils";
 

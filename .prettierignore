@@ -1,0 +1,3 @@
+**/coverage
+**/lib
+packages/studio-plugin/tests/__fixtures__/PageFile/noReturnParenthesesPage.tsx
