@@ -152,7 +152,7 @@ export default class StaticParsingHelpers {
     c: JsxChild,
     handleJsxChild: (
       c: JsxFragment | JsxElement | JsxSelfClosingElement,
-      parent?: T
+      parent: T | undefined
     ) => T,
     parent?: T
   ): T[] {
