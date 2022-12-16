@@ -81,12 +81,11 @@ export default class ComponentTreeParser {
       defaultImports
     );
 
-    const bob = {
+    return {
       ...commonComponentState,
       ...parsedElement,
       componentName,
     };
-    return bob;
   }
 
   private parseElement(

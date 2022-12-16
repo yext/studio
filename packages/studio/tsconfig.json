@@ -3,7 +3,7 @@
   "compilerOptions": {
     "module": "CommonJS",
     "outDir": "lib",
-    "types": ["node", "vite/client", "@yext/studio-plugin/virtual-module"]
+    "types": ["node", "vite/client", "@yext/studio-plugin/virtual-module", "vite-plugin-svgr/client"]
   },
   "include": ["src", "bin"]
 }
