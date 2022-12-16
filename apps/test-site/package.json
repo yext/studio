@@ -19,7 +19,7 @@
     "@typescript-eslint/parser": "^5.16.0",
     "@yext/eslint-config": "^1.0.0",
     "@yext/eslint-plugin-export-star": "^1.0.2",
-    "@yext/studio": "workspace:*",
+    "@yext/studio": "*",
     "eslint": "^8.11.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-react-perf": "^3.3.1",

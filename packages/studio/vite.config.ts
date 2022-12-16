@@ -4,14 +4,9 @@ import react from "@vitejs/plugin-react";
 
 console.log('starto!')
 
-export default defineConfig(async (args: ConfigEnv) => {
-  // const studioPluginModule = await import('@yext/studio-plugin')
-  // console.log(studioPluginModule)
+export default defineConfig((args: ConfigEnv) => {
   return {
     root: __dirname,
-    plugins: [react(), createStudioPlugin(args)],
-    optimizeDeps: {
-      exclude: ['@yext/studio-plugin']
-    }
+    plugins: [react(), createStudioPlugin(args)]
   }
 });

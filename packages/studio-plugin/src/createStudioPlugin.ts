@@ -1,7 +1,7 @@
 import { ConfigEnv, Plugin } from "vite";
-// import ParsingOrchestrator from "./ParsingOrchestrator";
+import ParsingOrchestrator from "./ParsingOrchestrator";
 import path from "path";
-// import getStudioPaths from "./parsers/getStudioPaths";
+import getStudioPaths from "./parsers/getStudioPaths";
 
 /**
  * Handles server-client communication.
@@ -9,19 +9,20 @@ import path from "path";
  * This includes providing a vite virtual module so that server side data can be passed to the front end
  * for the initial load, and messaging using the vite HMR API.
  */
-export default function createStudioPlugin(args: ConfigEnv): Plugin {
+export default async function createStudioPlugin(args: ConfigEnv): Plugin {
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserSrc = path.join(process.cwd(), "src");
-  // const studioPaths = getStudioPaths(pathToUserSrc);
-  // const orchestrator = new ParsingOrchestrator(studioPaths);
-  // const studioData = orchestrator.getStudioData();
-  const studioData = { lol : 123 }
+  const studioPaths = getStudioPaths(pathToUserSrc);
+  const orchestrator = new ParsingOrchestrator(studioPaths);
+  const studioData = orchestrator.getStudioData();
+  const { default: openBrowser } = await import('react-dev-utils/openBrowser')
+
   return {
     name: "yext-studio-vite-plugin",
     buildStart() {
       if (args.mode === "development" && args.command === "serve") {
-        console.log('would open browser!', pathToUserSrc)
+        openBrowser("http://localhost:5173/");
       }
     },
     resolveId(id) {

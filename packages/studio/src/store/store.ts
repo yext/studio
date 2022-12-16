@@ -10,12 +10,12 @@ import { createSiteSettingSlice } from "./slices/siteSettingSlice";
 /**
  * Studio's state manager in form of a hook to access and update states.
  */
-// export const useStudioStore: UseBoundStore<WithImmer<StoreApi<StudioStore>>> = create<StudioStore>()(
-//   immer(
-//     withLenses(() => ({
-//       fileMetadatas: lens(createFileMetadataSlice),
-//       pages: lens(createPageSlice),
-//       siteSettings: lens(createSiteSettingSlice),
-//     }))
-//   )
-// );
+export const useStudioStore = create<StudioStore>()(
+  immer(
+    withLenses(() => ({
+      fileMetadatas: lens(createFileMetadataSlice),
+      pages: lens(createPageSlice),
+      siteSettings: lens(createSiteSettingSlice),
+    }))
+  )
+);
