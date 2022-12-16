@@ -11,6 +11,7 @@ import {
 import prettier from "prettier";
 import fs from "fs";
 import { tsMorphProject } from "../tsMorphProject";
+import { PropValueKind, PropValues, PropValueType } from "../types";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -161,5 +162,36 @@ export default class StudioSourceFileWriter {
       name: `{ ${props.join(", ")} }`,
       type,
     });
+  }
+
+  createPropsStringifyObjectLiteral(props: PropValues): string {
+    const stringifyProperties = Object.entries(props)
+      .map(([propName, { kind, valueType, value }]) => {
+        if (kind === PropValueKind.Expression) {
+          throw new Error(
+            `Prop ${propName} in ${this.filepath} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`
+          );
+        }
+        const propValue =  valueType === PropValueType.string || valueType === PropValueType.HexColor
+          ? `'${value}'`
+          : value.toString();
+        return `${propName}: ${propValue}`;
+      })
+      .join(",");
+    return `{ ${stringifyProperties} }`
+  }
+
+  /**
+   * Update the default export by removing the existing one, if any,
+   * and construct a new default export node with the provided content.
+   * 
+   * @param exportContent - the content to export
+   */
+  updateDefaultExport(exportContent: string): void {
+    this.sourceFile.removeDefaultExport()
+    this.sourceFile.addExportAssignment({
+      isExportEquals: false,
+      expression: exportContent
+    })
   }
 }

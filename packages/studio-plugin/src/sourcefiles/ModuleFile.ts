@@ -9,8 +9,8 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 
 /**
- * ModuleFile is responsible for parsing a single module file, for example
- * `src/modules/Card.tsx`.
+ * ModuleFile is responsible for parsing and updating a single
+ * module file, for example `src/modules/Card.tsx`.
  */
 export default class ModuleFile {
   private studioSourceFileParser: StudioSourceFileParser;
