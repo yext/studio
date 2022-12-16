@@ -19,5 +19,4 @@ const useStudioStore = create<StudioStore>()(
     }))
   )
 );
-
 export default useStudioStore;
