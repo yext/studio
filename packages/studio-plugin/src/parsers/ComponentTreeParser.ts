@@ -7,14 +7,13 @@ import {
 } from "ts-morph";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import { v4 } from "uuid";
-import { FileMetadata, FileMetadataKind, PropValues } from "../types";
+import { FileMetadataKind, PropValues } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "./helpers/TypeGuards";
+import ParsingOrchestrator from "../ParsingOrchestrator";
 
-export type GetFileMetadata = (
-  filepath: string
-) => Omit<FileMetadata, "componentTree">;
+export type GetFileMetadata = ParsingOrchestrator["getFileMetadata"];
 
 export default class ComponentTreeParser {
   constructor(

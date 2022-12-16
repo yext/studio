@@ -33,6 +33,7 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
     metadataUUID: "mock-metadataUUID",
     propShape,
     filepath,
+    componentTree: [],
   };
 };
 
