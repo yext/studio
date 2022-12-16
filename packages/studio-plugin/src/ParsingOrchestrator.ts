@@ -43,7 +43,7 @@ export default class ParsingOrchestrator {
     }
   ) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
-    this.filepathToFileMetadata = this.getFilepathToComponentMetadata();
+    this.filepathToFileMetadata = this.getFilepathToFileMetadata();
   }
 
   getStudioData(): StudioData {
@@ -64,24 +64,22 @@ export default class ParsingOrchestrator {
     };
   }
 
-  private getFilepathToComponentMetadata(): Record<string, FileMetadata> {
+  private getFilepathToFileMetadata(): Record<string, FileMetadata> {
     const mapping: Record<string, FileMetadata> = {};
 
-    if (!fs.existsSync(this.paths.components)) {
-      return {};
-    }
-    fs.readdirSync(this.paths.components, "utf-8").forEach((filename) => {
-      const absPath = path.join(this.paths.components, filename);
-      mapping[absPath] = this.getFileMetadata(absPath);
-    });
 
-    if (!fs.existsSync(this.paths.modules)) {
-      return mapping;
+    const addToMapping = (folderPath: string) => {
+      if (!fs.existsSync(folderPath)) {
+        return
+      }
+      fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
+        const absPath = path.join(folderPath, filename);
+        mapping[absPath] = this.getFileMetadata(absPath);
+      });
     }
-    fs.readdirSync(this.paths.modules, "utf-8").forEach((filename) => {
-      const absPath = path.join(this.paths.modules, filename);
-      mapping[absPath] = this.getFileMetadata(absPath);
-    });
+
+    addToMapping(this.paths.components);
+    addToMapping(this.paths.modules);
 
     return mapping;
   }

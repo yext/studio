@@ -15,7 +15,7 @@ export default class ComponentFile {
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(private filepath: string, project: Project) {
+  constructor(filepath: string, project: Project) {
     this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
@@ -37,7 +37,7 @@ export default class ComponentFile {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
-      filepath: this.filepath,
+      filepath: this.studioSourceFileParser.getFilepath(),
     };
   }
 }
