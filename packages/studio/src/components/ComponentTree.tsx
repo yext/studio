@@ -23,7 +23,10 @@ const TREE_CSS_CLASSES: Readonly<Classes> = {
   listItem: "relative",
 };
 
-export default function ComponentTree() {
+/**
+ * ComponentTree renders the active {@link PageState.componentTree}
+ */
+export default function ComponentTree(): JSX.Element | null {
   const tree: NodeModel<ComponentState>[] | undefined = useTree();
   const handleDrop = useDropHandler();
 

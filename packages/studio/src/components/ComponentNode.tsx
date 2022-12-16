@@ -6,9 +6,9 @@ import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
 
 interface ComponentNodeProps {
-  /** The ComponentState this node represents in {@link ComponentTree} */
+  /** The ComponentState this node represents in {@link ComponentTree}. */
   componentState: ComponentState;
-  /** The depth of this node inside ComponentTree */
+  /** The depth of this node inside ComponentTree.*/
   depth: number;
   /** Whether this node's children are visible, if it has children. */
   isOpen: boolean;
@@ -21,7 +21,7 @@ interface ComponentNodeProps {
 /**
  * ComponentNode is a single node in {@link ComponentTree}.
  */
-export default function ComponentNode(props: ComponentNodeProps) {
+export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
   const setActiveComponentUUID = useStudioStore(
     (store) => store.pages.setActiveComponentUUID
