@@ -19,14 +19,14 @@
     "@typescript-eslint/parser": "^5.16.0",
     "@yext/eslint-config": "^1.0.0",
     "@yext/eslint-plugin-export-star": "^1.0.2",
+    "@yext/studio": "workspace:*",
     "eslint": "^8.11.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-react-perf": "^3.3.1",
     "eslint-plugin-tsdoc": "^0.2.17",
     "prettier": "2.7.1",
-    "@yext/studio": "*",
-    "typescript": "^4.9.3",
-    "test-bin": "*"
+    "typescript": "^4.9.4",
+    "vite": "^4.0.1"
   },
   "scripts": {
     "dev": "npx studio",

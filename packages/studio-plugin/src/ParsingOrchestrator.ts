@@ -23,15 +23,13 @@ export function createTsMorphProject() {
 }
 
 /**
- * The ts-morph Project instance for the entire app.
- */
-const tsMorphProject: Project = createTsMorphProject();
-
-/**
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.
  */
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
+
+  /** The ts-morph Project instance for the entire app. */
+  private project: Project
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -42,6 +40,8 @@ export default class ParsingOrchestrator {
       siteSettings: string;
     }
   ) {
+
+    this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
@@ -88,14 +88,14 @@ export default class ParsingOrchestrator {
       return this.filepathToFileMetadata[absPath];
     }
     if (absPath.startsWith(this.paths.components)) {
-      const componentFile = new ComponentFile(absPath, tsMorphProject);
+      const componentFile = new ComponentFile(absPath, this.project);
       return componentFile.getComponentMetadata();
     }
     if (absPath.startsWith(this.paths.modules)) {
       const moduleFile = new ModuleFile(
         absPath,
         this.getFileMetadata,
-        tsMorphProject
+        this.project
       );
       return moduleFile.getModuleMetadata();
     }
@@ -117,7 +117,7 @@ export default class ParsingOrchestrator {
       const pageFile = new PageFile(
         path.join(this.paths.pages, curr),
         this.getFileMetadata,
-        tsMorphProject
+        this.project
       );
       prev[pageName] = pageFile.getPageState();
       return prev;
@@ -130,7 +130,7 @@ export default class ParsingOrchestrator {
     }
     const siteSettingsFile = new SiteSettingsFile(
       this.paths.siteSettings,
-      tsMorphProject
+      this.project
     );
     return siteSettingsFile.getSiteSettings();
   }

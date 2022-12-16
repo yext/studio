@@ -1,8 +1,7 @@
 import { ConfigEnv, Plugin } from "vite";
-import openBrowser from "react-dev-utils/openBrowser.js";
-import ParsingOrchestrator from "./ParsingOrchestrator";
+// import ParsingOrchestrator from "./ParsingOrchestrator";
 import path from "path";
-import getStudioPaths from "./parsers/getStudioPaths";
+// import getStudioPaths from "./parsers/getStudioPaths";
 
 /**
  * Handles server-client communication.
@@ -14,15 +13,15 @@ export default function createStudioPlugin(args: ConfigEnv): Plugin {
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserSrc = path.join(process.cwd(), "src");
-  const studioPaths = getStudioPaths(pathToUserSrc);
-  const orchestrator = new ParsingOrchestrator(studioPaths);
-  const studioData = orchestrator.getStudioData();
-
+  // const studioPaths = getStudioPaths(pathToUserSrc);
+  // const orchestrator = new ParsingOrchestrator(studioPaths);
+  // const studioData = orchestrator.getStudioData();
+  const studioData = { lol : 123 }
   return {
     name: "yext-studio-vite-plugin",
     buildStart() {
       if (args.mode === "development" && args.command === "serve") {
-        openBrowser("http://localhost:5173/");
+        console.log('would open browser!', pathToUserSrc)
       }
     },
     resolveId(id) {

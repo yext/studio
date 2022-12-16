@@ -1,8 +1,10 @@
-import { useStudioStore } from './store/store';
+// import { useStudioStore } from './store/store';
+import { ComponentStateKind } from '@yext/studio-plugin';
 
 export default function App() {
-  const state = useStudioStore(store => store)
-  console.log(state)
+  console.log(ComponentStateKind)
+  // const state = useStudioStore(store => store)
+  // console.log(state)
   return (
     <div className="App">
       <h1>Studio Client</h1>
