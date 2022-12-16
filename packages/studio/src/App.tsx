@@ -1,4 +1,4 @@
-import { useStudioStore } from "./store/store";
+import useStudioStore from "./store/useStudioStore";
 import { ComponentStateKind } from "@yext/studio-plugin";
 
 export default function App() {

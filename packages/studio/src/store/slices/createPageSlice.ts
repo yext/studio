@@ -1,9 +1,8 @@
 import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
-import {
-  PageSlice,
+import PageSlice, {
   PageSliceStates,
   PagesRecord,
-} from "../models/slices/pageSlice";
+} from "../models/slices/PageSlice";
 import { SliceCreator } from "../models/utils";
 
 const initialStates: PageSliceStates = {
@@ -88,3 +87,5 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     ...activeComponentActions,
   };
 };
+
+export default createPageSlice;

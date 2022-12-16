@@ -29,4 +29,5 @@ interface PageSliceActions {
  * and composed by user through Studio, including the active page and component
  * state on preview.
  */
-export type PageSlice = PageSliceStates & PageSliceActions;
+type PageSlice = PageSliceStates & PageSliceActions;
+export default PageSlice;

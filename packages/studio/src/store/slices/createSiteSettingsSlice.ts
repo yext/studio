@@ -1,7 +1,7 @@
-import { SiteSettingSlice } from "../models/slices/siteSettingSlice";
+import SiteSettingsSlice from "../models/slices/SiteSettingsSlice";
 import { SliceCreator } from "../models/utils";
 
-export const createSiteSettingSlice: SliceCreator<SiteSettingSlice> = (
+const createSiteSettingsSlice: SliceCreator<SiteSettingsSlice> = (
   set
 ) => ({
   shape: undefined,
@@ -9,3 +9,5 @@ export const createSiteSettingSlice: SliceCreator<SiteSettingSlice> = (
   setShape: (shape) => set({ shape }),
   setValues: (values) => set({ values }),
 });
+
+export default createSiteSettingsSlice;
