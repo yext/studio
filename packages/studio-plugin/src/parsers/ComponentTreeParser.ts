@@ -5,7 +5,12 @@ import {
   JsxSelfClosingElement,
   JsxAttributeLike,
 } from "ts-morph";
-import { BuiltInState, ComponentState, ComponentStateKind, StandardOrModuleComponentState } from "../types/State";
+import {
+  BuiltInState,
+  ComponentState,
+  ComponentStateKind,
+  StandardOrModuleComponentState,
+} from "../types/State";
 import { v4 } from "uuid";
 import { FileMetadataKind, PropValues } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
@@ -65,7 +70,7 @@ export default class ComponentTreeParser {
     if (!TypeGuards.isNotFragmentElement(component)) {
       return {
         ...commonComponentState,
-        kind: ComponentStateKind.Fragment
+        kind: ComponentStateKind.Fragment,
       };
     }
 
@@ -88,7 +93,9 @@ export default class ComponentTreeParser {
     component: JsxElement | JsxSelfClosingElement,
     componentName: string,
     defaultImports: Record<string, string>
-  ): Pick<StandardOrModuleComponentState, 'kind' | 'props' | 'metadataUUID'> | Pick<BuiltInState, 'kind' | 'props'> {
+  ):
+    | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
+    | Pick<BuiltInState, "kind" | "props"> {
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
     )

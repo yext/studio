@@ -1,4 +1,4 @@
-import ComponentTree from './components/ComponentTree';
+import ComponentTree from "./components/ComponentTree";
 import useStudioStore from "./store/useStudioStore";
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
       <h1>Studio Client</h1>
       <h2>Active Page: {activePageName}</h2>
       <div>Active PageState: {JSON.stringify(activePageState, null, 2)}</div>
-      <ComponentTree/>
+      <ComponentTree />
     </div>
   );
 }

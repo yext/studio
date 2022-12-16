@@ -19,9 +19,15 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
       delete store.UUIDToFileMetadata[uuid];
     }),
   getComponentMetadata: (uuid) => {
-    const fileMetadata = get().UUIDToFileMetadata[uuid]
+    const fileMetadata = get().UUIDToFileMetadata[uuid];
     if (fileMetadata.kind !== FileMetadataKind.Component) {
-      throw new Error(`Expected a ComponentMetadata for uuidFile ${uuid}, instead received ${JSON.stringify(fileMetadata, null, 2)}.`)
+      throw new Error(
+        `Expected a ComponentMetadata for uuidFile ${uuid}, instead received ${JSON.stringify(
+          fileMetadata,
+          null,
+          2
+        )}.`
+      );
     }
     return fileMetadata;
   },
