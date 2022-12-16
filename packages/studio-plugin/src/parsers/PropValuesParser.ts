@@ -33,7 +33,9 @@ export default class PropValuesParser {
 
   private getRawValues(variableName?: string): ParsedObjectLiteral | undefined {
     if (variableName) {
-      return this.studioSourceFileParser.parseExportedObjectLiteral(variableName);
+      return this.studioSourceFileParser.parseExportedObjectLiteral(
+        variableName
+      );
     }
     const defaultExport = this.studioSourceFileParser.getDefaultExport();
     if (!defaultExport) {

@@ -28,7 +28,7 @@ export default class ModuleFile {
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       this.componentName,
       new StudioSourceFileWriter(filepath, project),
-      this.studioSourceFileParser,
+      this.studioSourceFileParser
     );
   }
 

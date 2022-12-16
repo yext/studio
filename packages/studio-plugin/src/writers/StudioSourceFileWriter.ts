@@ -18,7 +18,7 @@ import { PropValueKind, PropValues, PropValueType } from "../types";
  * mutating source files used by Studio.
  */
 export default class StudioSourceFileWriter {
-  private sourceFile: SourceFile
+  private sourceFile: SourceFile;
 
   constructor(private filepath: string, project: Project = tsMorphProject) {
     if (!project.getSourceFile(filepath)) {
@@ -172,26 +172,28 @@ export default class StudioSourceFileWriter {
             `Prop ${propName} in ${this.filepath} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`
           );
         }
-        const propValue =  valueType === PropValueType.string || valueType === PropValueType.HexColor
-          ? `'${value}'`
-          : value.toString();
+        const propValue =
+          valueType === PropValueType.string ||
+          valueType === PropValueType.HexColor
+            ? `'${value}'`
+            : value.toString();
         return `${propName}: ${propValue}`;
       })
       .join(",");
-    return `{ ${stringifyProperties} }`
+    return `{ ${stringifyProperties} }`;
   }
 
   /**
    * Update the default export by removing the existing one, if any,
    * and construct a new default export node with the provided content.
-   * 
+   *
    * @param exportContent - the content to export
    */
   updateDefaultExport(exportContent: string): void {
-    this.sourceFile.removeDefaultExport()
+    this.sourceFile.removeDefaultExport();
     this.sourceFile.addExportAssignment({
       isExportEquals: false,
-      expression: exportContent
-    })
+      expression: exportContent,
+    });
   }
 }

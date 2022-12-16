@@ -26,12 +26,18 @@ export default class PageFile {
 
   constructor(filepath: string, project?: Project) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
-    const pageComponentName = path.basename(this.studioSourceFileParser.getFilepath(), ".tsx");
-    const studioSourceFileWriter = new StudioSourceFileWriter(filepath, project)
+    const pageComponentName = path.basename(
+      this.studioSourceFileParser.getFilepath(),
+      ".tsx"
+    );
+    const studioSourceFileWriter = new StudioSourceFileWriter(
+      filepath,
+      project
+    );
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
       this.studioSourceFileParser
-      );
+    );
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
       studioSourceFileWriter,

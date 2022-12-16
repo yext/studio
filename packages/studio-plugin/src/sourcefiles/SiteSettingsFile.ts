@@ -17,7 +17,7 @@ export interface SiteSettings {
  */
 export default class SiteSettingsFile {
   private studioSourceFileParser: StudioSourceFileParser;
-  private studioSourceFileWriter: StudioSourceFileWriter
+  private studioSourceFileWriter: StudioSourceFileWriter;
   private propShapeParser: PropShapeParser;
   private propValuesParser: PropValuesParser;
 
@@ -48,8 +48,9 @@ export default class SiteSettingsFile {
    * @param values - the updated site settings' values
    */
   updateSiteSettingValues(values: PropValues) {
-    const exportContent = this.studioSourceFileWriter.createPropsStringifyObjectLiteral(values)
-    this.studioSourceFileWriter.updateDefaultExport(exportContent)
+    const exportContent =
+      this.studioSourceFileWriter.createPropsStringifyObjectLiteral(values);
+    this.studioSourceFileWriter.updateDefaultExport(exportContent);
     this.studioSourceFileWriter.writeToFile();
   }
 }
