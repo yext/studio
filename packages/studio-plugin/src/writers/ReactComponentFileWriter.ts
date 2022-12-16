@@ -126,24 +126,9 @@ export default class ReactComponentFileWriter {
   }
 
   private updateInitialProps(initialProps: PropValues) {
-    const stringifyProperties = Object.entries(initialProps)
-      .map(([key, { kind, valueType, value }]) => {
-        if (kind === PropValueKind.Expression) {
-          throw new Error(
-            `Prop ${key} in ${this.componentName} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`
-          );
-        }
-        const stringifyPropVal =
-          valueType === PropValueType.string ||
-          valueType === PropValueType.HexColor
-            ? `'${value}'`
-            : value.toString();
-        return `${key} : ${stringifyPropVal}`;
-      })
-      .join(",");
     this.studioSourceFileWriter.updateVariableStatement(
       "initialProps",
-      `{ ${stringifyProperties} }`,
+      this.studioSourceFileWriter.createPropsObjectLiteralWriter(initialProps),
       `${this.componentName}Props`
     );
   }

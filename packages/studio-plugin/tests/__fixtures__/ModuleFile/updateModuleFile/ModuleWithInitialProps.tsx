@@ -5,7 +5,9 @@ export interface PanelProps {
   complexBannerText?: string;
 }
 
-export const initialProps: PanelProps = { complexBannerText: "Hello world!" };
+export const initialProps: PanelProps = {
+  complexBannerText: "Hello world!",
+};
 
 export default function Panel({ complexBannerText }: PanelProps) {
   return <ComplexBanner />;

@@ -1,5 +1,4 @@
 import fs from "fs";
-import typescript from "typescript";
 import { Project } from "ts-morph";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
 import { FileMetadataKind } from "../../src";
@@ -7,6 +6,7 @@ import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { complexBannerComponent } from "../__fixtures__/componentStates";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
+import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 
 jest.mock("uuid");
 
@@ -18,11 +18,7 @@ describe("updateModuleFile", () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .spyOn(ModuleFile.prototype as any, "getComponentName")
       .mockImplementation(() => "Panel");
-    tsMorphProject = new Project({
-      compilerOptions: {
-        jsx: typescript.JsxEmit.ReactJSX,
-      },
-    });
+    tsMorphProject = createTsMorphProject();
   });
 
   it("updates page component based on ModuleFileMetadata's component tree", () => {

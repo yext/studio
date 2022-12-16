@@ -5,7 +5,6 @@ import {
   getPagePath,
 } from "../__utils__/getFixturePath";
 import fs from "fs";
-import typescript from "typescript";
 import { Project } from "ts-morph";
 import {
   complexBannerComponent,
@@ -22,6 +21,7 @@ import {
 } from "../../src";
 import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
+import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 
 const propShapeMultiFields: PropShape = {
   complexBannerText: {
@@ -54,11 +54,7 @@ describe("updateFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    tsMorphProject = new Project({
-      compilerOptions: {
-        jsx: typescript.JsxEmit.ReactJSX,
-      },
-    });
+    tsMorphProject = createTsMorphProject();
   });
 
   describe("React component return statement", () => {
