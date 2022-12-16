@@ -1,7 +1,7 @@
 import { ConfigEnv, Plugin } from "vite";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import path from "path";
-import getStudioPaths from './parsers/getStudioPaths';
+import getStudioPaths from "./parsers/getStudioPaths";
 // import getStudioPaths from "./parsers/getStudioPaths";
 
 /**
