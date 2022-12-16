@@ -53,7 +53,7 @@ export default class ComponentTreeParser {
     );
   }
 
-  parseComponentState(
+  private parseComponentState(
     component: JsxFragment | JsxElement | JsxSelfClosingElement,
     defaultImports: Record<string, string>,
     parent: ComponentState | undefined

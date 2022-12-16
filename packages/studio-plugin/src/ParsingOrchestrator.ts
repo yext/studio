@@ -43,7 +43,7 @@ export default class ParsingOrchestrator {
     }
   ) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
-    this.filepathToFileMetadata = this.getFilepathToFileMetadata();
+    this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
 
   getStudioData(): StudioData {
@@ -64,9 +64,8 @@ export default class ParsingOrchestrator {
     };
   }
 
-  private getFilepathToFileMetadata(): Record<string, FileMetadata> {
-    const mapping: Record<string, FileMetadata> = {};
-
+  private setFilepathToFileMetadata(): Record<string, FileMetadata> {
+    this.filepathToFileMetadata = {}
 
     const addToMapping = (folderPath: string) => {
       if (!fs.existsSync(folderPath)) {
@@ -74,18 +73,18 @@ export default class ParsingOrchestrator {
       }
       fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
         const absPath = path.join(folderPath, filename);
-        mapping[absPath] = this.getFileMetadata(absPath);
+        this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
       });
     }
 
     addToMapping(this.paths.components);
     addToMapping(this.paths.modules);
 
-    return mapping;
+    return this.filepathToFileMetadata;
   }
 
   private getFileMetadata(absPath: string): FileMetadata {
-    if (this.filepathToFileMetadata?.[absPath]) {
+    if (this.filepathToFileMetadata[absPath]) {
       return this.filepathToFileMetadata[absPath];
     }
     if (absPath.startsWith(this.paths.components)) {
@@ -103,7 +102,7 @@ export default class ParsingOrchestrator {
     const { modules, components } = this.paths;
     throw new Error(
       `Could not get FileMetadata for ${absPath}, file does not ` +
-        `live inside the expected folders for modules: ${modules} or components ${components}.`
+        `live inside the expected folders for modules: ${modules} or components: ${components}.`
     );
   }
 

@@ -2,7 +2,6 @@ import PageFile from "../../src/sourcefiles/PageFile";
 import { ComponentStateKind } from "../../src/types/State";
 import { PropValueType } from "../../src/types/PropValues";
 import { getPagePath } from "../__utils__/getFixturePath";
-import * as uuidUtils from "uuid";
 import { FileMetadata, FileMetadataKind, PropShape } from "../../src";
 import {
   componentTree,
@@ -10,6 +9,7 @@ import {
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import { mockUUID } from '../__utils__/spies';
 
 jest.mock("uuid");
 
@@ -34,7 +34,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   };
 }
 
-function createPageFile(pageName: string) {
+function createPageFile(pageName: string): PageFile {
   return new PageFile(
     getPagePath(pageName),
     mockGetFileMetadata,
@@ -44,10 +44,7 @@ function createPageFile(pageName: string) {
 
 describe("getPageState", () => {
   beforeEach(() => {
-    let uuidCount = 0;
-    jest.spyOn(uuidUtils, "v4").mockImplementation(() => {
-      return `mock-uuid-${uuidCount++}`;
-    });
+    mockUUID();
   });
 
   it("correctly parses page with top-level React.Fragment", () => {
