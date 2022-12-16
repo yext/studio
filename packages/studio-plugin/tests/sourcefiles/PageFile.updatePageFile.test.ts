@@ -4,11 +4,11 @@ import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 import * as uuidUtils from "uuid";
 import fs from "fs";
-import typescript from "typescript";
 import { Project } from "ts-morph";
 import { streamConfigMultipleFieldsComponentTree } from "../__fixtures__/componentStates";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
+import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 
 jest.mock("uuid");
 
@@ -16,11 +16,7 @@ describe("updatePageFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    tsMorphProject = new Project({
-      compilerOptions: {
-        jsx: typescript.JsxEmit.ReactJSX,
-      },
-    });
+    tsMorphProject = createTsMorphProject();
   });
 
   it("updates page component based on PageState's component tree", () => {

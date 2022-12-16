@@ -18,8 +18,8 @@ interface UpdatePageFileOptions {
 }
 
 /**
- * PageFile is responsible for parsing a single page file, for example
- * `src/templates/index.tsx`.
+ * PageFile is responsible for parsing and updating a single
+ * page file, for example `src/templates/index.tsx`.
  */
 export default class PageFile {
   private studioSourceFileParser: StudioSourceFileParser;
@@ -41,7 +41,6 @@ export default class PageFile {
       filepath,
       project
     );
-
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
       this.studioSourceFileParser

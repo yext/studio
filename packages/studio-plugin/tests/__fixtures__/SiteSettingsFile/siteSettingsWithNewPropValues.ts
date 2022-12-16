@@ -4,6 +4,6 @@ export interface SiteSettings {
 }
 
 export default {
-  mySetting: "just the two of us",
-  isDev: true,
+  mySetting: "the last of us",
+  isDev: false,
 };

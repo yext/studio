@@ -7,9 +7,12 @@ import {
   SourceFile,
   SyntaxKind,
   VariableDeclarationKind,
+  WriterFunction,
+  Writers,
 } from "ts-morph";
 import prettier from "prettier";
 import fs from "fs";
+import { PropValueKind, PropValues, PropValueType } from "../types";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -98,7 +101,11 @@ export default class StudioSourceFileWriter {
    * @param content - the variable's content for the right side of the statement
    * @param type - the variable's type
    */
-  updateVariableStatement(name: string, content: string, type?: string): void {
+  updateVariableStatement(
+    name: string,
+    initializer: string | WriterFunction,
+    type?: string
+  ): void {
     const variableStatement = this.sourceFile.getVariableStatement(name);
     variableStatement?.remove();
     const lastImportStatementIndex =
@@ -108,7 +115,7 @@ export default class StudioSourceFileWriter {
     this.sourceFile.insertVariableStatement(lastImportStatementIndex + 1, {
       isExported: true,
       declarationKind: VariableDeclarationKind.Const,
-      declarations: [{ name, type, initializer: content }],
+      declarations: [{ name, type, initializer }],
     });
   }
 
@@ -159,6 +166,41 @@ export default class StudioSourceFileWriter {
     functionNode.insertParameter(index, {
       name: `{ ${props.join(", ")} }`,
       type,
+    });
+  }
+
+  createPropsObjectLiteralWriter(props: PropValues): WriterFunction {
+    return Writers.object(
+      Object.entries(props).reduce((obj, entry) => {
+        const [propName, { kind, valueType, value }] = entry;
+        if (kind === PropValueKind.Expression) {
+          throw new Error(
+            `PropVal ${propName} in ${this.filepath} is of kind PropValueKind.Expression.` +
+              " PropValueKind.Expression in ObjectLiteralExpression is currently not supported."
+          );
+        }
+        const propValue =
+          valueType === PropValueType.string ||
+          valueType === PropValueType.HexColor
+            ? `'${value}'`
+            : value.toString();
+        obj[propName] = propValue;
+        return obj;
+      }, {})
+    );
+  }
+
+  /**
+   * Update the default export by removing the existing one, if any,
+   * and construct a new default export node with the provided content.
+   *
+   * @param exportContent - the content to export
+   */
+  updateDefaultExport(exportContent: string | WriterFunction): void {
+    this.sourceFile.removeDefaultExport();
+    this.sourceFile.addExportAssignment({
+      isExportEquals: false,
+      expression: exportContent,
     });
   }
 }
