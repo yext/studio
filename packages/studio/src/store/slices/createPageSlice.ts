@@ -45,9 +45,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     getActivePageState: () => {
       const { pages, activePageName } = get();
       if (!activePageName) {
-        console.error(
-          "Tried to getActivePageState when  activePageName was undefined"
-        );
         return;
       }
       return pages[activePageName];

@@ -158,6 +158,52 @@ describe("PageSlice", () => {
     });
   });
 
+  describe("when there is no active page", () => {
+    let consoleErrorSpy;
+    beforeEach(() => {
+      setInitialState({
+        pages: {},
+        activePageName: undefined,
+      });
+      consoleErrorSpy = jest.spyOn(console, "error");
+    });
+
+    it("setActivePageState", () => {
+      useStudioStore.getState().pages.setActivePageState({
+        componentTree: [],
+        cssImports: [],
+      });
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Tried to setActivePageState when activePageName was undefined"
+      );
+    });
+
+    it("getActivePageState", () => {
+      const nonexistantPage = useStudioStore
+        .getState()
+        .pages.getActivePageState();
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+      expect(nonexistantPage).toBeUndefined();
+    });
+
+    it("getActiveComponentState", () => {
+      const nonexistantComponentState = useStudioStore
+        .getState()
+        .pages.getActiveComponentState();
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+      expect(nonexistantComponentState).toBeUndefined();
+    });
+
+    it("setActiveComponentProps", () => {
+      useStudioStore.getState().pages.setActiveComponentProps({});
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Tried to setActiveComponentProps when activePageName was undefined"
+      );
+    });
+  });
+
   describe("active component actions", () => {
     beforeEach(() => {
       setInitialState({
