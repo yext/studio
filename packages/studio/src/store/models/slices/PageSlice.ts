@@ -8,7 +8,7 @@ export interface PageSliceStates {
   /** All constructed pages that can be preview in Studio. */
   pages: PagesRecord;
   /** The name of the current page display in Studio. */
-  activePageName: string;
+  activePageName: string | undefined;
   /** The uuid of the current component display in Studio. */
   activeComponentUUID?: string;
 }
@@ -18,7 +18,7 @@ interface PageSliceActions {
 
   setActivePageName: (pageName: string) => void;
   setActivePageState: (pageState: PageState) => void;
-  getActivePageState: () => PageState;
+  getActivePageState: () => PageState | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentProps: (props: PropValues) => void;
