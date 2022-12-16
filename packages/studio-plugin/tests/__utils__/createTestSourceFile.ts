@@ -1,12 +1,7 @@
-import { Project } from "ts-morph";
-import typescript from "typescript";
+import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 
 export default function createTestSourceFile(code: string) {
-  const p = new Project({
-    compilerOptions: {
-      jsx: typescript.JsxEmit.ReactJSX,
-    },
-  });
+  const p = createTsMorphProject();
   p.createSourceFile("test.tsx", code);
   return {
     sourceFile: p.getSourceFileOrThrow("test.tsx"),
