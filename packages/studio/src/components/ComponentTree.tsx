@@ -24,7 +24,7 @@ const TREE_CSS_CLASSES: Readonly<Classes> = {
 };
 
 export default function ComponentTree() {
-  const tree = useTree();
+  const tree: NodeModel<ComponentState>[] | undefined = useTree();
   const handleDrop = useDropHandler();
 
   if (!tree) {
@@ -102,7 +102,7 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
   );
 }
 
-function useTree() {
+function useTree(): NodeModel<ComponentState>[] | undefined {
   const activePageState = useStudioStore((store) =>
     store.pages.getActivePageState()
   );
@@ -112,7 +112,11 @@ function useTree() {
   );
 
   const tree = useMemo(() => {
-    return activePageState?.componentTree.map((componentState) => {
+    if (!activePageState) {
+      return undefined;
+    }
+
+    return activePageState.componentTree.map((componentState) => {
       const commonData = {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
