@@ -123,26 +123,30 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
         data: componentState,
         text: "",
       };
-      if (
-        componentState.kind === ComponentStateKind.Fragment ||
-        componentState.kind === ComponentStateKind.BuiltIn
-      ) {
-        return {
-          ...commonData,
-          droppable: true,
-        };
-      } else if (componentState.kind === ComponentStateKind.Module) {
-        return {
-          ...commonData,
-          droppable: false,
-        };
-      }
-      const metadata = getComponentMetadata(componentState.metadataUUID);
+      switch (componentState.kind) {
+        case ComponentStateKind.Fragment:
+        case ComponentStateKind.BuiltIn:
+          return {
+            ...commonData,
+            droppable: true,
+          };
+        case ComponentStateKind.Module:
+          return {
+            ...commonData,
+            droppable: false,
+          };
+        case ComponentStateKind.Standard:
+          const metadata = getComponentMetadata(componentState.metadataUUID);
 
-      return {
-        ...commonData,
-        droppable: metadata.acceptsChildren,
-      };
+          return {
+            ...commonData,
+            droppable: metadata.acceptsChildren,
+          };
+        default:
+          throw new Error(
+            `Unhandled ComponentStateKind ${componentState["kind"]}`
+          );
+      }
     });
   }, [activePageState, getComponentMetadata]);
 
