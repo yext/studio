@@ -7,6 +7,7 @@ import {
   getBackendOptions,
   MultiBackend,
   NodeModel,
+  PlaceholderRenderParams,
   RenderParams,
   Tree,
 } from "@minoru/react-dnd-treeview";
@@ -73,11 +74,8 @@ export default function ComponentTree() {
       const updatedComponentTree = tree.map((n) => {
         if (!n.data) {
           throw new Error(
-            `No data passed into NodeModel<ComponentState> for node ${JSON.stringify(
-              n,
-              null,
-              2
-            )}`
+            'No data passed into NodeModel<ComponentState> for node ' +
+            JSON.stringify(n, null, 2)
           );
         }
         const componentState: ComponentState = {
@@ -100,7 +98,7 @@ export default function ComponentTree() {
         tree={tree}
         rootId={ROOT_ID}
         classes={CSS_CLASSES}
-        dropTargetOffset={15}
+        dropTargetOffset={4}
         initialOpen={true}
         sort={false}
         insertDroppableFirst={false}
@@ -156,6 +154,6 @@ function renderDragPreview(
   );
 }
 
-function renderPlaceholder() {
-  return <div className="bg-rose-500 absolute w-full h-0.5"></div>;
+function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
+  return <div className="bg-rose-500 absolute w-full h-0.5" style={{ left: `${depth}em` }}></div>;
 }

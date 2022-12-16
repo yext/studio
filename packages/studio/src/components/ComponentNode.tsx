@@ -14,18 +14,23 @@ export default function ComponentNode(props: {
   hasChild: boolean;
 }) {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
+
   const text =
     "componentName" in componentState
       ? componentState.componentName
       : "Fragment";
+
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
+    "invisible": !hasChild
   });
 
   return (
-    <div className="flex items-center" style={{ marginLeft: `${depth}em` }}>
-      {hasChild && <Vector className={vectorClassName} onClick={onToggle} />}
-      <ComponentKindIcon componentState={componentState} />
+    <div className="flex items-center h-8" style={{ marginLeft: `${depth}em` }}>
+      <Vector className={vectorClassName} onClick={onToggle} />
+      <div className="pl-1.5">
+        <ComponentKindIcon componentState={componentState} />
+      </div>
       <span className="pl-1.5">{text}</span>
     </div>
   );
