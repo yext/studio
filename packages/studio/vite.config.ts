@@ -10,8 +10,5 @@ export default defineConfig(async (args: ConfigEnv) => {
   return {
     root: __dirname,
     plugins: [react(), createStudioPlugin(args)],
-    css: {
-      postcss: __dirname,
-    },
   };
 });
