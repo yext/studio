@@ -1,13 +1,10 @@
-import useStudioStore from "./store/useStudioStore";
+// import { useStudioStore } from './store/store';
+import { ComponentStateKind } from '@yext/studio-plugin';
 
 export default function App() {
-  const { activePageName, activePageState } = useStudioStore((store) => {
-    return {
-      activePageName: store.pages.activePageName,
-      activePageState: store.pages.getActivePageState(),
-    };
-  });
-
+  console.log(ComponentStateKind)
+  // const state = useStudioStore(store => store)
+  // console.log(state)
   return (
     <div className="App bg-sky-400">
       <h1>Studio Client</h1>

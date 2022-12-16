@@ -1,7 +1,7 @@
 import { ConfigEnv, Plugin } from "vite";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import path from "path";
-import getStudioPaths from "./parsers/getStudioPaths";
+// import getStudioPaths from "./parsers/getStudioPaths";
 
 /**
  * Handles server-client communication.
@@ -28,7 +28,7 @@ export default async function createStudioPlugin(
     name: "yext-studio-vite-plugin",
     buildStart() {
       if (args.mode === "development" && args.command === "serve") {
-        openBrowser("http://localhost:5173/");
+        console.log('would open browser!', pathToUserSrc)
       }
     },
     resolveId(id) {
