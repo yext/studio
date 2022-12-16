@@ -114,12 +114,12 @@ export default class ComponentTreeParser {
       };
     }
 
-    const fileMetadataAndUUID = this.getFileMetadata(filepath);
+    const fileMetadata = this.getFileMetadata(filepath);
     const {
       kind: fileMetadataKind,
       metadataUUID,
       propShape,
-    } = fileMetadataAndUUID;
+    } = fileMetadata;
 
     const componentStateKind =
       fileMetadataKind === FileMetadataKind.Module
