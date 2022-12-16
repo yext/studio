@@ -65,17 +65,17 @@ export default class ParsingOrchestrator {
   }
 
   private setFilepathToFileMetadata(): Record<string, FileMetadata> {
-    this.filepathToFileMetadata = {}
+    this.filepathToFileMetadata = {};
 
     const addToMapping = (folderPath: string) => {
       if (!fs.existsSync(folderPath)) {
-        return
+        return;
       }
       fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
         const absPath = path.join(folderPath, filename);
         this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
       });
-    }
+    };
 
     addToMapping(this.paths.components);
     addToMapping(this.paths.modules);

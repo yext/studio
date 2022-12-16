@@ -9,7 +9,7 @@ import {
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
-import { mockUUID } from '../__utils__/spies';
+import { mockUUID } from "../__utils__/spies";
 
 jest.mock("uuid");
 
