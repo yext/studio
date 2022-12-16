@@ -31,15 +31,18 @@ export default function ComponentTree() {
   );
   const setComponentTree = useStudioStore((store) => {
     return (componentTree: ComponentState[]) => {
+      if (!activePageState) {
+        return;
+      }
       store.pages.setActivePageState({
-        ...store.pages.getActivePageState(),
+        ...activePageState,
         componentTree,
       });
     };
   });
 
   const tree = useMemo(() => {
-    return activePageState.componentTree.map((componentState) => {
+    return activePageState?.componentTree.map((componentState) => {
       const commonData = {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
@@ -91,6 +94,10 @@ export default function ComponentTree() {
     },
     [setComponentTree]
   );
+
+  if (!tree) {
+    return null;
+  }
 
   return (
     <DndProvider backend={MultiBackend} options={getBackendOptions()}>
