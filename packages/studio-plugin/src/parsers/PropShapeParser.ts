@@ -19,9 +19,11 @@ export default class PropShapeParser {
     interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const propsInterface = this.studioSourceFileParser.parseInterface(interfaceName);
+    const propsInterface =
+      this.studioSourceFileParser.parseInterface(interfaceName);
     const studioImports =
-      this.studioSourceFileParser.parseNamedImports()[STUDIO_PACKAGE_NAME] ?? [];
+      this.studioSourceFileParser.parseNamedImports()[STUDIO_PACKAGE_NAME] ??
+      [];
     if (!propsInterface) {
       return {};
     }

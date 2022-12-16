@@ -4,23 +4,16 @@ import {
   SyntaxKind,
   VariableDeclaration,
   FunctionDeclaration,
-  JsxElement,
-  JsxFragment,
-  JsxSelfClosingElement,
   ObjectLiteralExpression,
   Identifier,
   ArrayLiteralExpression,
 } from "ts-morph";
-import { ComponentState, ComponentStateKind } from "../types/State";
 import StaticParsingHelpers, {
   ParsedInterface,
   ParsedObjectLiteral,
-} from "../parsers/helpers/StaticParsingHelpers";
-import { v4 } from "uuid";
+} from "./helpers/StaticParsingHelpers";
 import path from "path";
-import { getFileMetadata as getFileMetadataFn } from "../getFileMetadata";
 import vm from "vm";
-import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -29,7 +22,7 @@ import { tsMorphProject } from "../tsMorphProject";
 export default class StudioSourceFileParser {
   private sourceFile: SourceFile;
 
-  constructor(private filepath: string, project: Project = tsMorphProject) {
+  constructor(private filepath: string, project: Project) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
@@ -197,7 +190,7 @@ export default class StudioSourceFileParser {
     const defaultExport = this.getDefaultExport();
     if (!defaultExport) {
       throw new Error(
-        "Error getting default export: No declaration node found."
+        `Error getting default export: No declaration node found in ${this.filepath}.`
       );
     }
     if (
@@ -216,74 +209,5 @@ export default class StudioSourceFileParser {
       );
     }
     return defaultExport;
-  }
-
-  parseComponentTree(
-    defaultImports: Record<string, string>,
-    getFileMetadata: typeof getFileMetadataFn
-  ): ComponentState[] {
-    const defaultExport = this.getDefaultExportReactComponent();
-    const returnStatement = defaultExport.getFirstDescendantByKind(
-      SyntaxKind.ReturnStatement
-    );
-    if (!returnStatement) {
-      throw new Error(
-        `No return statement found for the default export at path: "${this.sourceFile.getFilePath()}"`
-      );
-    }
-    const JsxNodeWrapper =
-      returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression) ??
-      returnStatement;
-    const topLevelJsxNode = JsxNodeWrapper.getChildren().find(
-      (n): n is JsxElement | JsxFragment =>
-        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment)
-    );
-    if (!topLevelJsxNode) {
-      throw new Error(
-        "Unable to find top-level JSX element or JSX fragment type" +
-          ` in the default export at path: "${this.sourceFile.getFilePath()}"`
-      );
-    }
-
-    return StaticParsingHelpers.parseJsxChild(
-      topLevelJsxNode,
-      (child, parent) =>
-        this.parseComponentState(child, defaultImports, getFileMetadata, parent)
-    );
-  }
-
-  parseComponentState(
-    component: JsxFragment | JsxElement | JsxSelfClosingElement,
-    defaultImports: Record<string, string>,
-    getFileMetadata: typeof getFileMetadataFn,
-    parent?: ComponentState
-  ): ComponentState {
-    const commonComponentState = {
-      parentUUID: parent?.uuid,
-      uuid: v4(),
-    };
-
-    if (
-      component.isKind(SyntaxKind.JsxFragment) ||
-      StaticParsingHelpers.isFragmentElement(component)
-    ) {
-      return {
-        ...commonComponentState,
-        kind: ComponentStateKind.Fragment,
-      };
-    }
-
-    const componentName = StaticParsingHelpers.parseJsxElementName(component);
-
-    return {
-      ...commonComponentState,
-      ...StaticParsingHelpers.parseElement(
-        component,
-        componentName,
-        defaultImports,
-        getFileMetadata
-      ),
-      componentName,
-    };
   }
 }

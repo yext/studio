@@ -1,4 +1,11 @@
 {
   "extends": "../../../tsconfig.json",
-  "include": ["__fixtures__", "__utils__", "parsers", "writers", "sourcefiles"]
+  "include": [
+    "__fixtures__",
+    "__utils__",
+    "parsers",
+    "writers",
+    "sourcefiles",
+    "ParsingOrchestrator.test.ts"
+  ]
 }

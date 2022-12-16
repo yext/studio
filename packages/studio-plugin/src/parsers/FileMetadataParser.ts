@@ -3,6 +3,7 @@ import { PropValues } from "../types/PropValues";
 import PropValuesParser from "./PropValuesParser";
 import PropShapeParser from "./PropShapeParser";
 import { FileMetadata } from "../types";
+import { v4 } from "uuid";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 
 /**
@@ -29,12 +30,13 @@ export default class FileMetadataParser {
    */
   parse(
     onProp?: (propName: string) => boolean
-  ): Pick<FileMetadata, "initialProps" | "propShape"> {
+  ): Pick<FileMetadata, "initialProps" | "propShape" | "metadataUUID"> {
     const propShape = this.parsePropShape(onProp);
     const initialProps = this.parseInitialProps(propShape);
     return {
       propShape,
       ...(initialProps && { initialProps }),
+      metadataUUID: v4(),
     };
   }
 

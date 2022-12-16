@@ -76,7 +76,9 @@ export default class ReactComponentFileWriter {
   }
 
   private createReturnStatement(componentTree: ComponentState[]): string {
-    const elements = this.mapComponentStates<string>(componentTree, (c, children): string => {
+    const elements = this.mapComponentStates<string>(
+      componentTree,
+      (c, children): string => {
         if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
         } else if (children.length === 0) {
@@ -90,8 +92,8 @@ export default class ReactComponentFileWriter {
             `</${c.componentName}>`
           );
         }
-      })
-      .join("\n");
+      }
+    ).join("\n");
     return `return (${elements})`;
   }
 

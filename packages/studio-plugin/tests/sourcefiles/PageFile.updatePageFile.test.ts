@@ -8,6 +8,7 @@ import typescript from "typescript";
 import { Project } from "ts-morph";
 import { streamConfigMultipleFieldsComponentTree } from "../__fixtures__/componentStates";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
+import { throwIfCalled } from "../__utils__/throwIfCalled";
 
 jest.mock("uuid");
 
@@ -26,6 +27,7 @@ describe("updatePageFile", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const pageFile = new PageFile(
       getPagePath("updatePageFile/EmptyPage"),
+      throwIfCalled,
       tsMorphProject
     );
     pageFile.updatePageFile({
@@ -54,6 +56,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        throwIfCalled,
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -89,6 +92,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
+        throwIfCalled,
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -111,6 +115,7 @@ describe("updatePageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
+        throwIfCalled,
         tsMorphProject
       );
       pageFile.updatePageFile(

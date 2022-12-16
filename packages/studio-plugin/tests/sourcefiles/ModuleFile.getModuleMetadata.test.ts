@@ -1,5 +1,3 @@
-import ModuleFile from "../../src/sourcefiles/ModuleFile";
-import * as getFileMetadataUtils from "../../src/getFileMetadata";
 import { getModulePath } from "../__utils__/getFixturePath";
 import {
   ComponentStateKind,
@@ -10,42 +8,53 @@ import {
   FileMetadataKind,
 } from "../../src";
 import { mockUUID } from "../__utils__/spies";
+import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
+import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import ModuleFile from "../../src/sourcefiles/ModuleFile";
 
 jest.mock("uuid");
 
+const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
+  let propShape: PropShape = {};
+  if (filepath?.endsWith("Card.tsx")) {
+    propShape = {
+      text: { type: PropValueType.string },
+    };
+  }
+  if (filepath?.endsWith("Tile.tsx")) {
+    propShape = {
+      label: { type: PropValueType.string },
+    };
+  }
+  return {
+    kind: filepath?.includes("components/")
+      ? FileMetadataKind.Component
+      : FileMetadataKind.Module,
+    metadataUUID: "mock-metadataUUID",
+    propShape,
+    filepath,
+    componentTree: [],
+  };
+};
+
 describe("getModuleMetadata", () => {
+  const project = createTsMorphProject();
   beforeEach(() => {
     mockUUID();
-    jest
-      .spyOn(getFileMetadataUtils, "getFileMetadata")
-      .mockImplementation((filepath) => {
-        let propShape: PropShape = {};
-        if (filepath?.endsWith("Card.tsx")) {
-          propShape = {
-            text: { type: PropValueType.string },
-          };
-        }
-        if (filepath?.endsWith("Tile.tsx")) {
-          propShape = {
-            label: { type: PropValueType.string },
-          };
-        }
-        return {
-          kind: filepath?.includes("components/")
-            ? FileMetadataKind.Component
-            : FileMetadataKind.Module,
-          metadataUUID: "mock-metadataUUID",
-          propShape,
-        };
-      });
   });
 
   it("can parse a Module comprised of Component type", () => {
     const pathToModule = getModulePath("PanelWithComponents");
-    const moduleFile = new ModuleFile(pathToModule);
+    const moduleFile = new ModuleFile(
+      pathToModule,
+      mockGetFileMetadata,
+      project
+    );
     const moduleMetadata = moduleFile.getModuleMetadata();
 
     const expectedModuleMetadata: ModuleMetadata = {
+      filepath: expect.stringContaining("ModuleFile/PanelWithComponents.tsx"),
+      metadataUUID: expect.any(String),
       kind: FileMetadataKind.Module,
       propShape: {
         topLevelCardText: {
@@ -103,10 +112,16 @@ describe("getModuleMetadata", () => {
 
   it("can parse a Module comprised of Module type", () => {
     const pathToModule = getModulePath("PanelWithModules");
-    const moduleFile = new ModuleFile(pathToModule);
+    const moduleFile = new ModuleFile(
+      pathToModule,
+      mockGetFileMetadata,
+      project
+    );
     const moduleMetadata = moduleFile.getModuleMetadata();
 
     const expectedModuleMetadata: ModuleMetadata = {
+      filepath: expect.stringContaining("ModuleFile/PanelWithModules.tsx"),
+      metadataUUID: expect.any(String),
       kind: FileMetadataKind.Module,
       propShape: {
         topTileLabel: {
@@ -154,11 +169,19 @@ describe("getModuleMetadata", () => {
 
   it("can parse a Module comprised of Component type and Module type", () => {
     const pathToModule = getModulePath("PanelWithComponentAndModule");
-    const moduleFile = new ModuleFile(pathToModule);
+    const moduleFile = new ModuleFile(
+      pathToModule,
+      mockGetFileMetadata,
+      project
+    );
     const moduleMetadata = moduleFile.getModuleMetadata();
 
     const expectedModuleMetadata: ModuleMetadata = {
       kind: FileMetadataKind.Module,
+      filepath: expect.stringContaining(
+        "ModuleFile/PanelWithComponentAndModule.tsx"
+      ),
+      metadataUUID: expect.any(String),
       propShape: {
         cardText: {
           type: PropValueType.string,

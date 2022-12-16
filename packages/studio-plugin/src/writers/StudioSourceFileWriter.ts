@@ -10,16 +10,15 @@ import {
 } from "ts-morph";
 import prettier from "prettier";
 import fs from "fs";
-import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
  * mutating source files used by Studio.
  */
 export default class StudioSourceFileWriter {
-  private sourceFile: SourceFile
+  private sourceFile: SourceFile;
 
-  constructor(private filepath: string, project: Project = tsMorphProject) {
+  constructor(private filepath: string, project: Project) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
