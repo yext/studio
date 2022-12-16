@@ -128,9 +128,7 @@ export default class ReactComponentFileWriter {
   private updateInitialProps(initialProps: PropValues) {
     this.studioSourceFileWriter.updateVariableStatement(
       "initialProps",
-      this.studioSourceFileWriter.createPropsStringifyObjectLiteral(
-        initialProps
-      ),
+      this.studioSourceFileWriter.createPropsObjectLiteralWriter(initialProps),
       `${this.componentName}Props`
     );
   }

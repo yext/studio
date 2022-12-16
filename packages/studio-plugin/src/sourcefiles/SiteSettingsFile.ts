@@ -49,7 +49,7 @@ export default class SiteSettingsFile {
    */
   updateSiteSettingValues(values: PropValues) {
     const exportContent =
-      this.studioSourceFileWriter.createPropsStringifyObjectLiteral(values);
+      this.studioSourceFileWriter.createPropsObjectLiteralWriter(values);
     this.studioSourceFileWriter.updateDefaultExport(exportContent);
     this.studioSourceFileWriter.writeToFile();
   }

@@ -94,7 +94,8 @@ describe("updateSiteSettingValues", () => {
         },
       })
     ).toThrow(
-      `Prop mySetting in ${filepath} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`
+      `PropVal mySetting in ${filepath} is of kind PropValueKind.Expression.` +
+        " PropValueKind.Expression in ObjectLiteralExpression is currently not supported."
     );
   });
 });

@@ -7,11 +7,13 @@ import {
   SourceFile,
   SyntaxKind,
   VariableDeclarationKind,
+  WriterFunction,
+  Writers,
 } from "ts-morph";
 import prettier from "prettier";
 import fs from "fs";
-import { tsMorphProject } from "../tsMorphProject";
 import { PropValueKind, PropValues, PropValueType } from "../types";
+import { tsMorphProject } from "../tsMorphProject";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -100,7 +102,11 @@ export default class StudioSourceFileWriter {
    * @param content - the variable's content for the right side of the statement
    * @param type - the variable's type
    */
-  updateVariableStatement(name: string, content: string, type?: string): void {
+  updateVariableStatement(
+    name: string,
+    initializer: string | WriterFunction,
+    type?: string
+  ): void {
     const variableStatement = this.sourceFile.getVariableStatement(name);
     variableStatement?.remove();
     const lastImportStatementIndex =
@@ -110,7 +116,7 @@ export default class StudioSourceFileWriter {
     this.sourceFile.insertVariableStatement(lastImportStatementIndex + 1, {
       isExported: true,
       declarationKind: VariableDeclarationKind.Const,
-      declarations: [{ name, type, initializer: content }],
+      declarations: [{ name, type, initializer }],
     });
   }
 
@@ -164,12 +170,14 @@ export default class StudioSourceFileWriter {
     });
   }
 
-  createPropsStringifyObjectLiteral(props: PropValues): string {
-    const stringifyProperties = Object.entries(props)
-      .map(([propName, { kind, valueType, value }]) => {
+  createPropsObjectLiteralWriter(props: PropValues): WriterFunction {
+    return Writers.object(
+      Object.entries(props).reduce((obj, entry) => {
+        const [propName, { kind, valueType, value }] = entry;
         if (kind === PropValueKind.Expression) {
           throw new Error(
-            `Prop ${propName} in ${this.filepath} is of kind PropValueKind.Expression. Expression in initialProps is currently not supported.`
+            `PropVal ${propName} in ${this.filepath} is of kind PropValueKind.Expression.` +
+              " PropValueKind.Expression in ObjectLiteralExpression is currently not supported."
           );
         }
         const propValue =
@@ -177,10 +185,10 @@ export default class StudioSourceFileWriter {
           valueType === PropValueType.HexColor
             ? `'${value}'`
             : value.toString();
-        return `${propName}: ${propValue}`;
-      })
-      .join(",");
-    return `{ ${stringifyProperties} }`;
+        obj[propName] = propValue;
+        return obj;
+      }, {})
+    );
   }
 
   /**
@@ -189,7 +197,7 @@ export default class StudioSourceFileWriter {
    *
    * @param exportContent - the content to export
    */
-  updateDefaultExport(exportContent: string): void {
+  updateDefaultExport(exportContent: string | WriterFunction): void {
     this.sourceFile.removeDefaultExport();
     this.sourceFile.addExportAssignment({
       isExportEquals: false,

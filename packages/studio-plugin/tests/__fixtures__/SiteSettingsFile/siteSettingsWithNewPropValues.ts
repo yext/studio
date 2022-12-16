@@ -3,4 +3,7 @@ export interface SiteSettings {
   isDev: boolean;
 }
 
-export default { mySetting: "the last of us", isDev: false };
+export default {
+  mySetting: "the last of us",
+  isDev: false,
+};
