@@ -25,11 +25,10 @@
     "eslint-plugin-react-perf": "^3.3.1",
     "eslint-plugin-tsdoc": "^0.2.17",
     "prettier": "2.7.1",
-    "typescript": "^4.9.4",
-    "vite": "^4.0.1"
+    "typescript": "^4.9.4"
   },
   "scripts": {
-    "dev": "npx studio",
+    "dev": "studio",
     "start": "craco start",
     "build": "craco build",
     "lint": "eslint . && npm run prettier-check",
