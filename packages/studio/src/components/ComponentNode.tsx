@@ -2,6 +2,8 @@ import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
+import { useCallback } from "react";
+import useStudioStore from "../store/useStudioStore";
 
 /**
  * ComponentNode is a single node in {@link ComponentTree}.
@@ -19,6 +21,9 @@ export default function ComponentNode(props: {
   hasChild: boolean;
 }) {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
+  const setActiveComponentUUID = useStudioStore(
+    (store) => store.pages.setActiveComponentUUID
+  );
 
   const text =
     componentState.kind === ComponentStateKind.Fragment
@@ -30,8 +35,16 @@ export default function ComponentNode(props: {
     invisible: !hasChild,
   });
 
+  const handleClick = useCallback(() => {
+    setActiveComponentUUID(componentState.uuid);
+  }, [componentState.uuid, setActiveComponentUUID]);
+
   return (
-    <div className="flex items-center h-8" style={{ marginLeft: `${depth}em` }}>
+    <div
+      className="flex items-center h-8"
+      style={{ marginLeft: `${depth}em` }}
+      onClick={handleClick}
+    >
       <Vector className={vectorClassName} onClick={onToggle} />
       <div className="pl-1.5">
         <ComponentKindIcon componentState={componentState} />

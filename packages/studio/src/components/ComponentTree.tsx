@@ -175,7 +175,8 @@ function useDropHandler() {
       const updatedComponentTree = tree.map((n) => {
         if (!n.data) {
           throw new Error(
-            "No data passed into NodeModel<ComponentState> for node " +
+            "Unable to handle drag and drop event in ComponentTree: " +
+              "No data passed into NodeModel<ComponentState> for node " +
               JSON.stringify(n, null, 2)
           );
         }
