@@ -1,4 +1,4 @@
-import { UniversalPage } from "./pages/UniversalPage";
+import UniversalPage from "./pages/UniversalPage";
 
 function App() {
   return (

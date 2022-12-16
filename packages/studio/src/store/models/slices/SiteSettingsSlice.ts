@@ -15,4 +15,5 @@ export interface SiteSettingSliceActions {
 /**
  * Maintains the site settings that apply to all pages.
  */
-export type SiteSettingSlice = SiteSettingSliceStates & SiteSettingSliceActions;
+type SiteSettingSlice = SiteSettingSliceStates & SiteSettingSliceActions;
+export default SiteSettingSlice;

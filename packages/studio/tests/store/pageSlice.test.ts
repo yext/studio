@@ -1,4 +1,4 @@
-import { useStudioStore } from "../../src/store/store";
+import useStudioStore from "../../src/store/useStudioStore";
 import {
   ComponentState,
   ComponentStateKind,
@@ -10,7 +10,7 @@ import {
 import {
   PageSliceStates,
   PagesRecord,
-} from "../../src/store/models/slices/pageSlice";
+} from "../../src/store/models/slices/PageSlice";
 
 const fragmentComponent: ComponentState = {
   kind: ComponentStateKind.Fragment,
@@ -155,6 +155,52 @@ describe("PageSlice", () => {
         .getState()
         .pages.getActivePageState();
       expect(activePageState).toEqual(pages["universal"]);
+    });
+  });
+
+  describe("when there is no active page", () => {
+    let consoleErrorSpy;
+    beforeEach(() => {
+      setInitialState({
+        pages: {},
+        activePageName: undefined,
+      });
+      consoleErrorSpy = jest.spyOn(console, "error");
+    });
+
+    it("setActivePageState", () => {
+      useStudioStore.getState().pages.setActivePageState({
+        componentTree: [],
+        cssImports: [],
+      });
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Tried to setActivePageState when activePageName was undefined"
+      );
+    });
+
+    it("getActivePageState", () => {
+      const nonexistantPage = useStudioStore
+        .getState()
+        .pages.getActivePageState();
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+      expect(nonexistantPage).toBeUndefined();
+    });
+
+    it("getActiveComponentState", () => {
+      const nonexistantComponentState = useStudioStore
+        .getState()
+        .pages.getActiveComponentState();
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+      expect(nonexistantComponentState).toBeUndefined();
+    });
+
+    it("setActiveComponentProps", () => {
+      useStudioStore.getState().pages.setActiveComponentProps({});
+      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        "Tried to setActiveComponentProps when activePageName was undefined"
+      );
     });
   });
 

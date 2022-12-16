@@ -1,5 +1,5 @@
-import { useStudioStore } from "../../src/store/store";
-import { SiteSettingSliceStates } from "../../src/store/models/slices/siteSettingSlice";
+import useStudioStore from "../../src/store/useStudioStore";
+import { SiteSettingSliceStates } from "../../src/store/models/slices/SiteSettingsSlice";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 
 const siteSettingsShape: SiteSettingSliceStates["shape"] = {

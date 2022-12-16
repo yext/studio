@@ -1,19 +1,15 @@
 import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
-import {
-  PageSlice,
+import initialStudioData from "virtual:yext-studio";
+import PageSlice, {
   PageSliceStates,
   PagesRecord,
-} from "../models/slices/pageSlice";
+} from "../models/slices/PageSlice";
 import { SliceCreator } from "../models/utils";
 
 const initialStates: PageSliceStates = {
-  pages: {
-    index: {
-      componentTree: [],
-      cssImports: [],
-    },
-  },
-  activePageName: "index",
+  pages: initialStudioData.pageNameToPageState,
+  activePageName:
+    Object.keys(initialStudioData.pageNameToPageState)?.[0] ?? undefined,
   activeComponentUUID: undefined,
 };
 
@@ -31,6 +27,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     setActivePageState: (pageState: PageState) =>
       set((store) => {
+        if (!store.activePageName) {
+          console.error(
+            "Tried to setActivePageState when activePageName was undefined"
+          );
+          return;
+        }
         if (
           !pageState.componentTree.find(
             (component) => component.uuid === store.activeComponentUUID
@@ -40,25 +42,36 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
         store.pages[store.activePageName] = pageState;
       }),
-    getActivePageState: () => get().pages[get().activePageName],
+    getActivePageState: () => {
+      const { pages, activePageName } = get();
+      if (!activePageName) {
+        return;
+      }
+      return pages[activePageName];
+    },
   };
 
   const activeComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) =>
       set({ activeComponentUUID }),
     getActiveComponentState: () => {
-      const activeComponentUUID = get().activeComponentUUID;
-      if (!activeComponentUUID) {
+      const { activeComponentUUID, getActivePageState } = get();
+      const activePageState = getActivePageState();
+      if (!activeComponentUUID || !activePageState) {
         return undefined;
       }
-      return get()
-        .getActivePageState()
-        .componentTree.find(
-          (component) => component.uuid === activeComponentUUID
-        );
+      return activePageState.componentTree.find(
+        (component) => component.uuid === activeComponentUUID
+      );
     },
     setActiveComponentProps: (props: PropValues) =>
       set((store) => {
+        if (!store.activePageName) {
+          console.error(
+            "Tried to setActiveComponentProps when activePageName was undefined"
+          );
+          return;
+        }
         const activeComponent = get().getActiveComponentState();
         if (!activeComponent) {
           console.error(
@@ -88,3 +101,5 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     ...activeComponentActions,
   };
 };
+
+export default createPageSlice;

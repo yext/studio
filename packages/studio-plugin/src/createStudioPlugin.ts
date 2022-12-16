@@ -1,5 +1,7 @@
 import { ConfigEnv, Plugin } from "vite";
-import openBrowser from "react-dev-utils/openBrowser.js";
+import ParsingOrchestrator from "./ParsingOrchestrator";
+import path from "path";
+import getStudioPaths from "./parsers/getStudioPaths";
 
 /**
  * Handles server-client communication.
@@ -7,12 +9,20 @@ import openBrowser from "react-dev-utils/openBrowser.js";
  * This includes providing a vite virtual module so that server side data can be passed to the front end
  * for the initial load, and messaging using the vite HMR API.
  */
-export default function createStudioPlugin(args: ConfigEnv): Plugin {
+export default async function createStudioPlugin(
+  args: ConfigEnv
+): Promise<Plugin> {
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
+  const pathToUserSrc = path.join(process.cwd(), "src");
+  const studioPaths = getStudioPaths(pathToUserSrc);
+  const orchestrator = new ParsingOrchestrator(studioPaths);
+  const studioData = orchestrator.getStudioData();
 
-  // TODO: pass actual data
-  const ctx = "dummy studio data!";
+  // We have to use a dynamic import here - if we use a regular import,
+  // Vite will import react-dev-utils in the browser.
+  // This causes an error to be thrown regarding `process` not being defined.
+  const { default: openBrowser } = await import("react-dev-utils/openBrowser");
 
   return {
     name: "yext-studio-vite-plugin",
@@ -28,7 +38,7 @@ export default function createStudioPlugin(args: ConfigEnv): Plugin {
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        return `export default ${JSON.stringify(ctx)}`;
+        return `export default ${JSON.stringify(studioData)}`;
       }
     },
   };
