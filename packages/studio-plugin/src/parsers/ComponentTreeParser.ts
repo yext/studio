@@ -115,11 +115,7 @@ export default class ComponentTreeParser {
     }
 
     const fileMetadata = this.getFileMetadata(filepath);
-    const {
-      kind: fileMetadataKind,
-      metadataUUID,
-      propShape,
-    } = fileMetadata;
+    const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;
 
     const componentStateKind =
       fileMetadataKind === FileMetadataKind.Module
