@@ -1,8 +1,8 @@
+import { Project } from "ts-morph";
 import { PropShape, PropValues } from "../types";
 import PropShapeParser from "../parsers/PropShapeParser";
 import PropValuesParser from "../parsers/PropValuesParser";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import { Project } from "ts-morph";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 
 export interface SiteSettings {

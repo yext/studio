@@ -18,9 +18,6 @@ import {
 import { PropValueKind, PropValues } from "../../types/PropValues";
 import { PropShape } from "../../types/PropShape";
 import TypeGuards from "./TypeGuards";
-import { FileMetadataKind } from "../../types/FileMetadata";
-import { ComponentStateKind } from "../../types/State";
-import { getFileMetadata as getFileMetadataFn } from "../../getFileMetadata";
 import TsMorphHelpers from "./TsMorphHelpers";
 
 export type ParsedInterface = {
@@ -41,12 +38,6 @@ export type ParsedImport = {
   source: string;
   defaultImport?: string;
   namedImports: string[];
-};
-
-export type ParsedElement = {
-  metadataUUID?: string;
-  props: PropValues;
-  kind: ComponentStateKind;
 };
 
 /**
@@ -161,7 +152,7 @@ export default class StaticParsingHelpers {
     c: JsxChild,
     handleJsxChild: (
       c: JsxFragment | JsxElement | JsxSelfClosingElement,
-      parent?: T
+      parent: T | undefined
     ) => T,
     parent?: T
   ): T[] {
@@ -190,56 +181,6 @@ export default class StaticParsingHelpers {
       .flatMap((child) => this.parseJsxChild(child, handleJsxChild, self))
       .filter((child): child is T => !!child);
     return [self, ...children];
-  }
-
-  static parseElement(
-    component: JsxElement | JsxSelfClosingElement,
-    name: string,
-    defaultImports: Record<string, string>,
-    getFileMetadata: typeof getFileMetadataFn
-  ): ParsedElement {
-    const filepath = Object.keys(defaultImports).find(
-      (importIdentifier) => defaultImports[importIdentifier] === name
-    );
-
-    const {
-      kind: fileMetadataKind,
-      metadataUUID,
-      propShape,
-    } = getFileMetadata(filepath);
-
-    const attributes: JsxAttributeLike[] = component.isKind(
-      SyntaxKind.JsxSelfClosingElement
-    )
-      ? component.getAttributes()
-      : component.getOpeningElement().getAttributes();
-
-    if (!metadataUUID) {
-      if (attributes.length > 0) {
-        console.warn(
-          `Props for builtIn element: '${name}' are currently not supported.`
-        );
-      }
-      return {
-        kind: ComponentStateKind.BuiltIn,
-        props: {},
-      };
-    }
-
-    const componentStateKind =
-      fileMetadataKind === FileMetadataKind.Module
-        ? ComponentStateKind.Module
-        : ComponentStateKind.Standard;
-
-    const props = StaticParsingHelpers.parseJsxAttributes(
-      attributes,
-      propShape
-    );
-    return {
-      kind: componentStateKind,
-      metadataUUID,
-      props,
-    };
   }
 
   static parseJsxAttributes(
@@ -297,16 +238,6 @@ export default class StaticParsingHelpers {
     return element.isKind(SyntaxKind.JsxSelfClosingElement)
       ? element.getTagNameNode().getText()
       : element.getOpeningElement().getTagNameNode().getText();
-  }
-
-  static isFragmentElement(
-    element: JsxElement | JsxSelfClosingElement
-  ): boolean {
-    const name = StaticParsingHelpers.parseJsxElementName(element);
-    return (
-      element.isKind(SyntaxKind.JsxElement) &&
-      ["Fragment", "React.Fragment"].includes(name)
-    );
   }
 
   /**

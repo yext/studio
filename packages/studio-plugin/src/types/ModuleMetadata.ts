@@ -6,6 +6,8 @@ import { PropValues } from "./PropValues";
 export type ModuleMetadata = {
   kind: FileMetadataKind.Module;
   componentTree: ComponentState[];
+  metadataUUID: string;
+  filepath: string;
   initialProps?: PropValues;
   propShape?: PropShape;
 };

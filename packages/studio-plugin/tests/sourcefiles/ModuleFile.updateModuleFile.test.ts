@@ -6,6 +6,7 @@ import { FileMetadataKind } from "../../src";
 import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { complexBannerComponent } from "../__fixtures__/componentStates";
+import { throwIfCalled } from "../__utils__/throwIfCalled";
 
 jest.mock("uuid");
 
@@ -28,11 +29,14 @@ describe("updateModuleFile", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const moduleFile = new ModuleFile(
       getModulePath("updateModuleFile/EmptyModule"),
+      throwIfCalled,
       tsMorphProject
     );
     moduleFile.updateModuleFile({
       kind: FileMetadataKind.Module,
       componentTree: [complexBannerComponent],
+      metadataUUID: "mock-uuid",
+      filepath: "mock-filepath",
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyModule.tsx"),
