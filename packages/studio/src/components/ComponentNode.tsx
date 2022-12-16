@@ -1,24 +1,29 @@
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
-import { ReactComponent as Hexagon } from "../icons/hexagon.svg";
-import { ReactComponent as Box } from "../icons/box.svg";
-import { ReactComponent as Container } from "../icons/container.svg";
 import classNames from "classnames";
-import useStudioStore from "../store/useStudioStore";
+import ComponentKindIcon from "./ComponentKindIcon";
 
+/**
+ * ComponentNode is a single node in {@link ComponentTree}.
+ */
 export default function ComponentNode(props: {
+  /** The ComponentState this node represents in {@link ComponentTree} */
   componentState: ComponentState;
+  /** The depth of this node inside ComponentTree */
   depth: number;
+  /** Whether this node's children are visible, if it has children. */
   isOpen: boolean;
+  /** Toggle callback to open/close the node. */
   onToggle: () => void;
+  /** Whether this node has children. */
   hasChild: boolean;
 }) {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
 
   const text =
-    "componentName" in componentState
-      ? componentState.componentName
-      : "Fragment";
+    componentState.kind === ComponentStateKind.Fragment
+      ? "Fragmnet"
+      : componentState.componentName;
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
@@ -34,28 +39,4 @@ export default function ComponentNode(props: {
       <span className="pl-1.5">{text}</span>
     </div>
   );
-}
-
-function ComponentKindIcon({
-  componentState,
-}: {
-  componentState: ComponentState;
-}) {
-  const getComponentMetadata = useStudioStore(
-    (store) => store.fileMetadatas.getComponentMetadata
-  );
-
-  const { kind } = componentState;
-  if (kind === ComponentStateKind.Module) {
-    return <Hexagon />;
-  }
-  if (kind !== ComponentStateKind.Standard) {
-    return null;
-  }
-
-  const { acceptsChildren } = getComponentMetadata(componentState.metadataUUID);
-  if (acceptsChildren) {
-    return <Container />;
-  }
-  return <Box />;
 }

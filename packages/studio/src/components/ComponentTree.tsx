@@ -17,83 +17,15 @@ import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
 
 const ROOT_ID = "tree-root-uuid";
-const CSS_CLASSES: Readonly<Classes> = {
+const TREE_CSS_CLASSES: Readonly<Classes> = {
   root: "p-4",
   placeholder: "relative",
   listItem: "relative",
 };
+
 export default function ComponentTree() {
-  const activePageState = useStudioStore((store) =>
-    store.pages.getActivePageState()
-  );
-  const getComponentMetadata = useStudioStore(
-    (store) => store.fileMetadatas.getComponentMetadata
-  );
-  const setComponentTree = useStudioStore((store) => {
-    return (componentTree: ComponentState[]) => {
-      if (!activePageState) {
-        return;
-      }
-      store.pages.setActivePageState({
-        ...activePageState,
-        componentTree,
-      });
-    };
-  });
-
-  const tree = useMemo(() => {
-    return activePageState?.componentTree.map((componentState) => {
-      const commonData = {
-        id: componentState.uuid,
-        parent: componentState.parentUUID ?? ROOT_ID,
-        data: componentState,
-        text: "",
-      };
-      if (
-        componentState.kind === ComponentStateKind.Fragment ||
-        componentState.kind === ComponentStateKind.BuiltIn
-      ) {
-        return {
-          ...commonData,
-          droppable: true,
-        };
-      } else if (componentState.kind === ComponentStateKind.Module) {
-        return {
-          ...commonData,
-          droppable: false,
-        };
-      }
-      const metadata = getComponentMetadata(componentState.metadataUUID);
-
-      return {
-        ...commonData,
-        droppable: metadata.acceptsChildren,
-      };
-    });
-  }, [activePageState, getComponentMetadata]);
-
-  const handleDrop = useCallback(
-    (tree: NodeModel<ComponentState>[]) => {
-      const updatedComponentTree = tree.map((n) => {
-        if (!n.data) {
-          throw new Error(
-            "No data passed into NodeModel<ComponentState> for node " +
-              JSON.stringify(n, null, 2)
-          );
-        }
-        const componentState: ComponentState = {
-          ...n.data,
-          parentUUID: n.parent.toString(),
-        };
-        if (componentState.parentUUID === ROOT_ID) {
-          delete componentState.parentUUID;
-        }
-        return componentState;
-      });
-      setComponentTree(updatedComponentTree);
-    },
-    [setComponentTree]
-  );
+  const tree = useTree();
+  const handleDrop = useDropHandler();
 
   if (!tree) {
     return null;
@@ -104,7 +36,7 @@ export default function ComponentTree() {
       <Tree
         tree={tree}
         rootId={ROOT_ID}
-        classes={CSS_CLASSES}
+        classes={TREE_CSS_CLASSES}
         dropTargetOffset={4}
         initialOpen={true}
         sort={false}
@@ -168,4 +100,89 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
       style={{ left: `${depth}em` }}
     ></div>
   );
+}
+
+function useTree() {
+  const activePageState = useStudioStore((store) =>
+    store.pages.getActivePageState()
+  );
+
+  const getComponentMetadata = useStudioStore(
+    (store) => store.fileMetadatas.getComponentMetadata
+  );
+
+  const tree = useMemo(() => {
+    return activePageState?.componentTree.map((componentState) => {
+      const commonData = {
+        id: componentState.uuid,
+        parent: componentState.parentUUID ?? ROOT_ID,
+        data: componentState,
+        text: "",
+      };
+      if (
+        componentState.kind === ComponentStateKind.Fragment ||
+        componentState.kind === ComponentStateKind.BuiltIn
+      ) {
+        return {
+          ...commonData,
+          droppable: true,
+        };
+      } else if (componentState.kind === ComponentStateKind.Module) {
+        return {
+          ...commonData,
+          droppable: false,
+        };
+      }
+      const metadata = getComponentMetadata(componentState.metadataUUID);
+
+      return {
+        ...commonData,
+        droppable: metadata.acceptsChildren,
+      };
+    });
+  }, [activePageState, getComponentMetadata]);
+
+  return tree;
+}
+
+function useDropHandler() {
+  const activePageState = useStudioStore((store) =>
+    store.pages.getActivePageState()
+  );
+
+  const setComponentTree = useStudioStore((store) => {
+    return (componentTree: ComponentState[]) => {
+      if (!activePageState) {
+        return;
+      }
+      store.pages.setActivePageState({
+        ...activePageState,
+        componentTree,
+      });
+    };
+  });
+
+  const handleDrop = useCallback(
+    (tree: NodeModel<ComponentState>[]) => {
+      const updatedComponentTree = tree.map((n) => {
+        if (!n.data) {
+          throw new Error(
+            "No data passed into NodeModel<ComponentState> for node " +
+              JSON.stringify(n, null, 2)
+          );
+        }
+        const componentState: ComponentState = {
+          ...n.data,
+          parentUUID: n.parent.toString(),
+        };
+        if (componentState.parentUUID === ROOT_ID) {
+          delete componentState.parentUUID;
+        }
+        return componentState;
+      });
+      setComponentTree(updatedComponentTree);
+    },
+    [setComponentTree]
+  );
+  return handleDrop;
 }
