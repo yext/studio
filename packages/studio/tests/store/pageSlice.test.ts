@@ -1,4 +1,4 @@
-import { useStudioStore } from "../../src/store/store";
+import useStudioStore from "../../src/store/useStudioStore";
 import {
   ComponentState,
   ComponentStateKind,
@@ -10,7 +10,7 @@ import {
 import {
   PageSliceStates,
   PagesRecord,
-} from "../../src/store/models/slices/pageSlice";
+} from "../../src/store/models/slices/PageSlice";
 
 const fragmentComponent: ComponentState = {
   kind: ComponentStateKind.Fragment,

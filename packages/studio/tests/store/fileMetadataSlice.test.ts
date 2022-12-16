@@ -3,12 +3,14 @@ import {
   FileMetadataKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import { useStudioStore } from "../../src/store/store";
-import { FileMetadataSliceStates } from "../../src/store/models/slices/fileMetadataSlice";
+import useStudioStore from "../../src/store/useStudioStore";
+import { FileMetadataSliceStates } from "../../src/store/models/slices/FileMetadataSlice";
 
 describe("FileMetadataSlice", () => {
   const componentMetadata: ComponentMetadata = {
     kind: FileMetadataKind.Component,
+    metadataUUID: "mock-metadataUUID",
+    filepath: "mock-filepath",
     propShape: {
       myText: {
         type: PropValueType.string,
