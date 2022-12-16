@@ -8,7 +8,8 @@ import { SliceCreator } from "../models/utils";
 
 const initialStates: PageSliceStates = {
   pages: initialStudioData.pageNameToPageState,
-  activePageName: Object.keys(initialStudioData.pageNameToPageState)[0],
+  activePageName:
+    Object.keys(initialStudioData.pageNameToPageState)?.[0] ?? undefined,
   activeComponentUUID: undefined,
 };
 
