@@ -9,6 +9,9 @@ interface PropInputProps<T = string | number | boolean> {
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
+const inputBoxCssClasses =
+  "border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full";
+
 /**
  * Renders the input element of a PropEditor component, that
  * will update the corresponding prop's value for the active
@@ -27,7 +30,7 @@ export default function PropInput({
         <input
           type="number"
           onChange={onChange}
-          className="border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full"
+          className={inputBoxCssClasses}
           value={(propVal ?? 0) as number}
         />
       );
@@ -36,7 +39,7 @@ export default function PropInput({
         <input
           type="text"
           onChange={onChange}
-          className="border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full"
+          className={inputBoxCssClasses}
           value={(propVal ?? "") as string}
         />
       );

@@ -4,10 +4,16 @@ import {
   JsxSelfClosingElement,
   SyntaxKind,
 } from "ts-morph";
-import { ComponentStateKind, PropVal, PropValueKind, PropValueType, StandardOrModuleComponentState } from "../../types";
+import {
+  ComponentState,
+  ComponentStateKind,
+  PropVal,
+  PropValueKind,
+  PropValueType,
+  StandardOrModuleComponentState,
+} from "../../types";
 
 import StaticParsingHelpers from "./StaticParsingHelpers";
-import { ComponentState } from "react";
 
 type PrimitivePropValueType =
   | PropValueType.number

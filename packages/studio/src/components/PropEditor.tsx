@@ -3,21 +3,28 @@ import {
   PropVal,
   PropValueKind,
   PropValueType,
+  TypeGuards,
 } from "@yext/studio-plugin";
-import { TypeGuards } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
-import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import OptionPicker from "./common/OptionPicker";
 import PropInput from "./PropInput";
 
-interface PropEditorProps<T = string | number | boolean> {
+interface PropEditorProps {
   propName: string;
   propMetadata: PropMetadata;
-  initialPropValue?: T;
-  currentPropValue?: T;
+  initialPropValue?: string | number | boolean;
+  currentPropValue?: string | number | boolean;
   currentPropKind?: PropValueKind;
   onPropChange: (propVal: PropVal) => void;
 }
+
+const tooltipStyle = { backgroundColor: "black" };
+const optionPickerCssClasses = {
+  container: "w-1/2 mb-2",
+  option: "p-0.5",
+  selectedOption: "p-0.5",
+};
 
 /**
  * Renders an input editor for a single prop of a component or module.
@@ -52,34 +59,21 @@ export function PropEditor({
       };
       if (!TypeGuards.isValidPropValue(newPropVal)) {
         console.error(
-          "Unable to update component's prop state. Invalid PropVal:",
+          `Unable to update component's prop ${propName}. Invalid PropVal:`,
           newPropVal
         );
         return;
       }
       onPropChange(newPropVal);
     },
-    [onPropChange, propKind, type]
-  );
-
-  const toolTipStyle = useMemo(() => {
-    return { backgroundColor: "black" };
-  }, []);
-
-  const optionPickerCssClasses = useMemo(
-    () => ({
-      container: "w-1/2 mb-2",
-      option: "p-0.5",
-      selectedOption: "p-0.5",
-    }),
-    []
+    [onPropChange, propKind, propName, type]
   );
 
   return (
     <div className="mb-5">
       <OptionPicker
         options={PropValueKind}
-        defaultOption={PropValueKind.Literal}
+        defaultOption={currentPropKind ?? PropValueKind.Literal}
         onSelect={setPropKind}
         customCssClasses={optionPickerCssClasses}
       />
@@ -100,7 +94,7 @@ export function PropEditor({
         </label>
         {doc && (
           <Tooltip
-            style={toolTipStyle}
+            style={tooltipStyle}
             anchorId={propName}
             content={doc}
             place="top"

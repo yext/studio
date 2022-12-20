@@ -1,4 +1,11 @@
-import { PropVal, PropValueType, TypeGuards } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  FileMetadata,
+  PropVal,
+  PropValueType,
+  PropValues,
+  TypeGuards,
+} from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
 import Divider from "./common/Divider";
@@ -32,8 +39,9 @@ export default function ComponentEditor(): JSX.Element | null {
               `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.ReactNode.` +
                 " Studio does not support editing prop of type ReactNode."
             );
+            return false;
           }
-          return propMetadata.type !== PropValueType.ReactNode;
+          return true;
         })
         .map(([propName, propMetadata], index) => {
           const currentPropValue = activeComponentState.props[propName]?.value;
@@ -64,7 +72,11 @@ export default function ComponentEditor(): JSX.Element | null {
   );
 }
 
-function useActiveComponent() {
+function useActiveComponent(): {
+  activeComponentMetadata?: FileMetadata;
+  activeComponentState?: ComponentState;
+  setActiveComponentProps: (props: PropValues) => void;
+} {
   return useStudioStore((store) => {
     const activeComponentState = store.pages.getActiveComponentState();
     const activeComponentMetadata =

@@ -48,7 +48,7 @@ export default function OptionPicker<T>({
           icon={icons?.[index]}
           isSelected={option === selectedOption}
           onClick={onClick}
-          customCssClasses={cssClasses}
+          cssClasses={cssClasses}
         />
       ))}
     </nav>
@@ -66,7 +66,7 @@ interface OptionProps<T> {
   icon?: JSX.Element;
   isSelected: boolean;
   onClick: (option: T) => void;
-  customCssClasses?: OptionCssClasses;
+  cssClasses?: OptionCssClasses;
 }
 
 function Option<T>({
@@ -75,7 +75,7 @@ function Option<T>({
   icon,
   onClick,
   isSelected,
-  customCssClasses,
+  cssClasses,
 }: OptionProps<T>) {
   const onClickCallback = useCallback(() => {
     onClick(option);
@@ -84,9 +84,7 @@ function Option<T>({
     <button
       key={label}
       onClick={onClickCallback}
-      className={
-        isSelected ? customCssClasses?.selectedOption : customCssClasses?.option
-      }
+      className={isSelected ? cssClasses?.selectedOption : cssClasses?.option}
     >
       {icon && <div className="mr-2">{icon}</div>}
       {label}
