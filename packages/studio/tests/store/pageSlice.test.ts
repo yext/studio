@@ -11,6 +11,7 @@ import {
   PageSliceStates,
   PagesRecord,
 } from "../../src/store/models/slices/PageSlice";
+import mockStore from "../__utils__/mockStore";
 
 const fragmentComponent: ComponentState = {
   kind: ComponentStateKind.Fragment,
@@ -165,7 +166,7 @@ describe("PageSlice", () => {
         pages: {},
         activePageName: undefined,
       });
-      consoleErrorSpy = jest.spyOn(console, "error");
+      consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
     });
 
     it("setActivePageState", () => {
@@ -332,10 +333,5 @@ describe("PageSlice", () => {
 });
 
 function setInitialState(initialState: PageSliceStates): void {
-  useStudioStore.setState({
-    pages: {
-      ...useStudioStore.getState().pages,
-      ...initialState,
-    },
-  });
+  mockStore({ pages: initialState });
 }

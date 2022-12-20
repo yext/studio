@@ -1,8 +1,4 @@
-import {
-  PropVal,
-  PropValueType,
-  TypeGuards,
-} from "@yext/studio-plugin";
+import { PropVal, PropValueType, TypeGuards } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
 import Divider from "./common/Divider";
@@ -30,10 +26,15 @@ export default function ComponentEditor(): JSX.Element | null {
   return (
     <div>
       {Object.entries(propShape)
-        .filter(
-          ([_propName, propMetadata]) =>
-            propMetadata.type !== PropValueType.ReactNode
-        )
+        .filter(([propName, propMetadata]) => {
+          if (propMetadata.type === PropValueType.ReactNode) {
+            console.warn(
+              `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.ReactNode.` +
+                " Studio does not support editing prop of type ReactNode."
+            );
+          }
+          return propMetadata.type !== PropValueType.ReactNode;
+        })
         .map(([propName, propMetadata], index) => {
           const currentPropValue = activeComponentState.props[propName]?.value;
           const currentPropKind = activeComponentState.props[propName]?.kind;

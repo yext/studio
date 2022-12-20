@@ -28,7 +28,7 @@ export default function PropInput({
           type="number"
           onChange={onChange}
           className="border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full"
-          value={propVal as number}
+          value={(propVal ?? 0) as number}
         />
       );
     case PropValueType.string:
@@ -37,14 +37,20 @@ export default function PropInput({
           type="text"
           onChange={onChange}
           className="border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full"
-          value={propVal as string}
+          value={(propVal ?? "") as string}
         />
       );
     case PropValueType.boolean:
-      return <Toggle checked={propVal as boolean} onToggle={onChange} />;
+      return (
+        <Toggle checked={(propVal ?? false) as boolean} onToggle={onChange} />
+      );
     case PropValueType.HexColor:
       return (
-        <input type="color" onChange={onChange} value={propVal as string} />
+        <input
+          type="color"
+          onChange={onChange}
+          value={(propVal ?? "") as string}
+        />
       );
     default:
       return <div>Unknown PropValueType {propType}.</div>;

@@ -83,19 +83,9 @@ export function PropEditor({
         onSelect={setPropKind}
         customCssClasses={optionPickerCssClasses}
       />
-      <div className="flex h-10 items-center">
-        <label className="w-1/4" id={propName}>
-          {propName}
-        </label>
-        {doc && (
-          <Tooltip
-            style={toolTipStyle}
-            anchorId={propName}
-            content={doc}
-            place="top"
-          />
-        )}
-        <div className="w-3/4">
+      <div>
+        <label className="flex h-10 items-center" id={propName}>
+          <p className="w-1/4">{propName}</p>
           <PropInput
             {...{
               propType:
@@ -107,7 +97,15 @@ export function PropEditor({
               onChange,
             }}
           />
-        </div>
+        </label>
+        {doc && (
+          <Tooltip
+            style={toolTipStyle}
+            anchorId={propName}
+            content={doc}
+            place="top"
+          />
+        )}
       </div>
     </div>
   );
