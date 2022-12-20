@@ -2,6 +2,7 @@
   "name": "@yext/studio",
   "private": true,
   "version": "0.0.0",
+  "types": "./lib/types.d.ts",
   "bin": {
     "studio": "./lib/bin/studio.js"
   },
@@ -22,6 +23,8 @@
     "classnames": "^2.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-tooltip": "^5.2.0",
+    "tailwind-merge": "^1.8.0",
     "tailwindcss": "^3.2.4",
     "vite": "^4.0.1",
     "vite-plugin-svgr": "^2.4.0",
