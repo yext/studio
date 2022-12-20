@@ -1,9 +1,7 @@
 import {
-  ComponentState,
-  ComponentStateKind,
   PropVal,
   PropValueType,
-  StandardOrModuleComponentState,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
@@ -23,7 +21,7 @@ export default function ComponentEditor(): JSX.Element | null {
   }
   if (
     !activeComponentState ||
-    !isStandardOrModuleComponentState(activeComponentState)
+    !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
   ) {
     return null;
   }
@@ -65,21 +63,12 @@ export default function ComponentEditor(): JSX.Element | null {
   );
 }
 
-function isStandardOrModuleComponentState(
-  componentState: ComponentState
-): componentState is StandardOrModuleComponentState {
-  return (
-    componentState.kind === ComponentStateKind.Module ||
-    componentState.kind === ComponentStateKind.Standard
-  );
-}
-
 function useActiveComponent() {
   return useStudioStore((store) => {
     const activeComponentState = store.pages.getActiveComponentState();
     const activeComponentMetadata =
       activeComponentState &&
-      isStandardOrModuleComponentState(activeComponentState)
+      TypeGuards.isStandardOrModuleComponentState(activeComponentState)
         ? store.fileMetadatas.getFileMetadata(activeComponentState.metadataUUID)
         : undefined;
     return {

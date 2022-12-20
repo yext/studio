@@ -4,9 +4,10 @@ import {
   JsxSelfClosingElement,
   SyntaxKind,
 } from "ts-morph";
-import { PropVal, PropValueKind, PropValueType } from "../../types";
+import { ComponentStateKind, PropVal, PropValueKind, PropValueType, StandardOrModuleComponentState } from "../../types";
 
 import StaticParsingHelpers from "./StaticParsingHelpers";
+import { ComponentState } from "react";
 
 type PrimitivePropValueType =
   | PropValueType.number
@@ -74,5 +75,14 @@ export default class TypeGuards {
     }
     const name = StaticParsingHelpers.parseJsxElementName(element);
     return !["Fragment", "React.Fragment"].includes(name);
+  }
+
+  static isStandardOrModuleComponentState(
+    componentState: ComponentState
+  ): componentState is StandardOrModuleComponentState {
+    return (
+      componentState.kind === ComponentStateKind.Module ||
+      componentState.kind === ComponentStateKind.Standard
+    );
   }
 }
