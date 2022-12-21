@@ -23,8 +23,8 @@ export enum PropValueType {
 }
 
 export enum PropValueKind {
-  Literal = "literal",
-  Expression = "expression",
+  Literal = "Literal",
+  Expression = "Expression",
 }
 
 export type NumberProp = {

@@ -1,10 +1,9 @@
 import { useCallback, useState } from "react";
 import { useComposedCssClasses } from "../../hooks/useComposedCssClasses";
 
-interface OptionPickerProps<T> {
+interface OptionPickerProps<T extends string> {
   defaultOption: T;
-  options: Record<string, T>;
-  icons?: JSX.Element[];
+  options: Record<string, T> | { option: T; icon: JSX.Element }[];
   onSelect: (option: T) => void;
   customCssClasses?: OptionPickerCssClasses;
 }
@@ -20,9 +19,8 @@ const builtInCssClasses: OptionPickerCssClasses = {
     "flex items-center justify-center grow rounded-md p-2 drop-shadow bg-white",
 };
 
-export default function OptionPicker<T>({
+export default function OptionPicker<T extends string>({
   options,
-  icons,
   defaultOption,
   onSelect,
   customCssClasses,
@@ -40,17 +38,21 @@ export default function OptionPicker<T>({
 
   return (
     <nav className={cssClasses.container}>
-      {Object.entries(options).map(([label, option], index) => (
-        <Option
-          key={index}
-          option={option}
-          label={label}
-          icon={icons?.[index]}
-          isSelected={option === selectedOption}
-          onClick={onClick}
-          cssClasses={cssClasses}
-        />
-      ))}
+      {(Array.isArray(options) ? options : Object.values(options))
+        .map((option: T | { option: T; icon: JSX.Element }) =>
+          typeof option === "object" ? option : { option }
+        )
+        .map((option, index: number) => {
+          return (
+            <Option
+              key={index}
+              {...option}
+              isSelected={option.option === selectedOption}
+              onClick={onClick}
+              cssClasses={cssClasses}
+            />
+          );
+        })}
     </nav>
   );
 }
@@ -60,18 +62,16 @@ interface OptionCssClasses {
   selectedOption?: string;
 }
 
-interface OptionProps<T> {
+interface OptionProps<T extends string> {
   option: T;
-  label: string;
   icon?: JSX.Element;
   isSelected: boolean;
   onClick: (option: T) => void;
   cssClasses?: OptionCssClasses;
 }
 
-function Option<T>({
+function Option<T extends string>({
   option,
-  label,
   icon,
   onClick,
   isSelected,
@@ -82,12 +82,12 @@ function Option<T>({
   }, [onClick, option]);
   return (
     <button
-      key={label}
+      key={option}
       onClick={onClickCallback}
       className={isSelected ? cssClasses?.selectedOption : cssClasses?.option}
     >
       {icon && <div className="mr-2">{icon}</div>}
-      {label}
+      {option}
     </button>
   );
 }

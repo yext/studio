@@ -8,7 +8,9 @@ import {
   FileMetadata,
   FileMetadataKind,
   PropShape,
+  PropValueKind,
   PropValueType,
+  PropValues,
   StandardOrModuleComponentState,
 } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -157,24 +159,29 @@ function testStandardOrModuleComponentState(
     fireEvent.input(screen.getByLabelText("bgColor"), {
       target: { value: "#abcdef" },
     });
-    expect(getComponentProps()).toEqual({
+    const expectedComponentProps: PropValues = {
       title: {
-        kind: "literal",
+        kind: PropValueKind.Literal,
         valueType: PropValueType.string,
         value: "test!",
       },
       num: {
-        kind: "literal",
-        valueType: "number",
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.number,
         value: 10,
       },
       bool: {
-        kind: "literal",
-        valueType: "boolean",
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.boolean,
         value: true,
       },
-      bgColor: { kind: "literal", valueType: "HexColor", value: "#abcdef" },
-    });
+      bgColor: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.HexColor,
+        value: "#abcdef",
+      },
+    };
+    expect(getComponentProps()).toEqual(expectedComponentProps);
   });
 }
 
