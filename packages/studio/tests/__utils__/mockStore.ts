@@ -1,13 +1,9 @@
-import FileMetadataSlice from "../../src/store/models/slices/FileMetadataSlice";
-import PageSlice from "../../src/store/models/slices/PageSlice";
-import SiteSettingSlice from "../../src/store/models/slices/SiteSettingsSlice";
+import { StudioStore } from "../../src/store/models/store";
 import useStudioStore from "../../src/store/useStudioStore";
 
-export type MockStudioStore = Partial<{
-  fileMetadatas: Partial<FileMetadataSlice>;
-  pages: Partial<PageSlice>;
-  siteSettings: Partial<SiteSettingSlice>;
-}>;
+export type MockStudioStore = {
+  [P in keyof StudioStore]?: Partial<StudioStore[P]>;
+};
 
 export default function mockStore(state: MockStudioStore) {
   useStudioStore.setState({
