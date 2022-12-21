@@ -10,16 +10,10 @@ enum PanelTab {
   Content = "Content",
 }
 
-const tabsWithIcon = [
-  {
-    option: PanelTab.Properties,
-    icon: <Sliders className="w-4" />,
-  },
-  {
-    option: PanelTab.Content,
-    icon: <Content className="w-7" />,
-  },
-];
+const tabIcons = {
+  [PanelTab.Properties]: <Sliders className="w-4" />,
+  [PanelTab.Content]: <Content className="w-7" />,
+};
 
 /**
  * Renders the right panel of Studio, for editing a module or component.
@@ -30,7 +24,8 @@ export default function EditorPanel(): JSX.Element {
   return (
     <div className="w-1/4 px-4">
       <OptionPicker
-        options={tabsWithIcon}
+        options={PanelTab}
+        icons={tabIcons}
         defaultOption={PanelTab.Properties}
         onSelect={setTab}
       />

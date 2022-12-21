@@ -3,7 +3,8 @@ import { useComposedCssClasses } from "../../hooks/useComposedCssClasses";
 
 interface OptionPickerProps<T extends string> {
   defaultOption: T;
-  options: Record<string, T> | { option: T; icon: JSX.Element }[];
+  options: Record<string, T>;
+  icons?: Record<T, JSX.Element>;
   onSelect: (option: T) => void;
   customCssClasses?: OptionPickerCssClasses;
 }
@@ -21,6 +22,7 @@ const builtInCssClasses: OptionPickerCssClasses = {
 
 export default function OptionPicker<T extends string>({
   options,
+  icons,
   defaultOption,
   onSelect,
   customCssClasses,
@@ -38,21 +40,18 @@ export default function OptionPicker<T extends string>({
 
   return (
     <nav className={cssClasses.container}>
-      {(Array.isArray(options) ? options : Object.values(options))
-        .map((option: T | { option: T; icon: JSX.Element }) =>
-          typeof option === "object" ? option : { option }
-        )
-        .map((option, index: number) => {
-          return (
-            <Option
-              key={index}
-              {...option}
-              isSelected={option.option === selectedOption}
-              onClick={onClick}
-              cssClasses={cssClasses}
-            />
-          );
-        })}
+      {Object.values(options).map((option, index: number) => {
+        return (
+          <Option
+            key={index}
+            option={option}
+            icon={icons?.[option]}
+            isSelected={option === selectedOption}
+            onClick={onClick}
+            cssClasses={cssClasses}
+          />
+        );
+      })}
     </nav>
   );
 }
