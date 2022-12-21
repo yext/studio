@@ -43,5 +43,5 @@ export type BooleanProp = {
 export type HexColor = `#${string}`;
 export type HexColorProp = {
   valueType: PropValueType.HexColor;
-  value: string;
+  value: HexColor;
 };
