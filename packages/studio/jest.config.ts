@@ -6,5 +6,8 @@ const config: Config = {
   collectCoverageFrom: ["src/**"],
   resetMocks: true,
   restoreMocks: true,
+  testEnvironment: "jsdom",
+  transformIgnorePatterns: ["node_modules/(?!react-tooltip/.*)"],
+  setupFilesAfterEnv: ["<rootDir>/tests/__setup__/setup-env.ts"],
 };
 export default config;

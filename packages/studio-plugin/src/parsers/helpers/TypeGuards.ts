@@ -4,7 +4,14 @@ import {
   JsxSelfClosingElement,
   SyntaxKind,
 } from "ts-morph";
-import { PropVal, PropValueKind, PropValueType } from "../../types";
+import {
+  ComponentState,
+  ComponentStateKind,
+  PropVal,
+  PropValueKind,
+  PropValueType,
+  StandardOrModuleComponentState,
+} from "../../types";
 
 import StaticParsingHelpers from "./StaticParsingHelpers";
 
@@ -34,7 +41,7 @@ export default class TypeGuards {
       case PropValueType.number:
         return typeof value === "number";
       case PropValueType.HexColor:
-        return typeof value === "string";
+        return typeof value === "string" && value.startsWith("#");
     }
     return false;
   }
@@ -74,5 +81,14 @@ export default class TypeGuards {
     }
     const name = StaticParsingHelpers.parseJsxElementName(element);
     return !["Fragment", "React.Fragment"].includes(name);
+  }
+
+  static isStandardOrModuleComponentState(
+    componentState: ComponentState
+  ): componentState is StandardOrModuleComponentState {
+    return (
+      componentState.kind === ComponentStateKind.Module ||
+      componentState.kind === ComponentStateKind.Standard
+    );
   }
 }

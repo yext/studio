@@ -2,7 +2,7 @@ import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 
 interface ComponentNodeProps {
@@ -41,10 +41,15 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     setActiveComponentUUID(componentState.uuid);
   }, [componentState.uuid, setActiveComponentUUID]);
 
+  const componentNodeStyle = useMemo(
+    () => ({ marginLeft: `${depth}em` }),
+    [depth]
+  );
+
   return (
     <div
       className="flex items-center h-8"
-      style={{ marginLeft: `${depth}em` }}
+      style={componentNodeStyle}
       onClick={handleClick}
     >
       <Vector className={vectorClassName} onClick={onToggle} />

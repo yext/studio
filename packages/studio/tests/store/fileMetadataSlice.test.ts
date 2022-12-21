@@ -5,6 +5,7 @@ import {
 } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
 import { FileMetadataSliceStates } from "../../src/store/models/slices/FileMetadataSlice";
+import mockStore from "../__utils__/mockStore";
 
 describe("FileMetadataSlice", () => {
   const componentMetadata: ComponentMetadata = {
@@ -55,10 +56,5 @@ describe("FileMetadataSlice", () => {
 });
 
 function setInitialState(initialState: FileMetadataSliceStates): void {
-  useStudioStore.setState({
-    fileMetadatas: {
-      ...useStudioStore.getState().fileMetadatas,
-      ...initialState,
-    },
-  });
+  mockStore({ fileMetadatas: initialState });
 }

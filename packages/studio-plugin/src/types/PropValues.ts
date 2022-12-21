@@ -23,8 +23,8 @@ export enum PropValueType {
 }
 
 export enum PropValueKind {
-  Literal = "literal",
-  Expression = "expression",
+  Literal = "Literal",
+  Expression = "Expression",
 }
 
 export type NumberProp = {
@@ -39,7 +39,9 @@ export type BooleanProp = {
   valueType: PropValueType.boolean;
   value: boolean;
 };
+// Used in component outside Studio to represent a hex color prop in Studio preview.
+export type HexColor = `#${string}`;
 export type HexColorProp = {
   valueType: PropValueType.HexColor;
-  value: string;
+  value: HexColor;
 };

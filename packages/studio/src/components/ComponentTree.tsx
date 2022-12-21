@@ -97,12 +97,16 @@ function renderDragPreview(
 }
 
 function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
-  return (
-    <div
-      className="bg-rose-500 absolute w-full h-0.5"
-      style={{ left: `${depth}em` }}
-    ></div>
-  );
+  const Placeholder = () => {
+    const placeHolderStyle = useMemo(() => ({ left: `${depth}em` }), []);
+    return (
+      <div
+        className="bg-rose-500 absolute w-full h-0.5"
+        style={placeHolderStyle}
+      ></div>
+    );
+  };
+  return <Placeholder />;
 }
 
 function useTree(): NodeModel<ComponentState>[] | undefined {

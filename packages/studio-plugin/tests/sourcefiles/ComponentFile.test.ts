@@ -1,6 +1,12 @@
 import ComponentFile from "../../src/sourcefiles/ComponentFile";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { getComponentPath } from "../__utils__/getFixturePath";
+import {
+  ComponentMetadata,
+  FileMetadataKind,
+  PropValueKind,
+  PropValueType,
+} from "../../src";
 
 describe("getComponentMetadata", () => {
   const project = createTsMorphProject();
@@ -31,35 +37,42 @@ describe("getComponentMetadata", () => {
   it("can parse a more complex Banner with docs, prop types imported from Studio, and initialprops", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
-    expect(componentFile.getComponentMetadata()).toEqual({
+    const expectedComponentMetadata: ComponentMetadata = {
       filepath: expect.stringContaining("ComponentFile/ComplexBanner.tsx"),
       metadataUUID: expect.any(String),
-      kind: "componentMetadata",
+      kind: FileMetadataKind.Component,
       propShape: {
-        title: { type: "string", doc: "jsdoc" },
-        num: { type: "number" },
-        bool: { type: "boolean" },
-        bgColor: { type: "HexColor" },
+        title: { type: PropValueType.string, doc: "jsdoc" },
+        num: { type: PropValueType.number },
+        bool: { type: PropValueType.boolean },
+        bgColor: { type: PropValueType.HexColor },
       },
       initialProps: {
-        bgColor: { kind: "literal", valueType: "HexColor", value: "#abcdef" },
+        bgColor: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.HexColor,
+          value: "#abcdef",
+        },
         bool: {
-          kind: "literal",
-          valueType: "boolean",
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.boolean,
           value: false,
         },
         num: {
-          kind: "literal",
-          valueType: "number",
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.number,
           value: 5,
         },
         title: {
-          kind: "literal",
-          valueType: "string",
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.string,
           value: "initial title",
         },
       },
-    });
+    };
+    expect(componentFile.getComponentMetadata()).toEqual(
+      expectedComponentMetadata
+    );
   });
 
   it("Throws an Error when an import for HexColor is missing", () => {
