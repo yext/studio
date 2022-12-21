@@ -120,7 +120,8 @@ function testStandardOrModuleComponentState(
 ) {
   const componentKindLabel =
     state.kind === ComponentStateKind.Standard ? "component" : "module";
-  it(`renders prop editors for each of the active ${componentKindLabel}'s props`, () => {
+
+  beforeEach(() => {
     mockStoreActiveComponent({
       activeComponent: state,
       activeComponentMetadata: {
@@ -128,6 +129,9 @@ function testStandardOrModuleComponentState(
         propShape,
       },
     });
+  });
+
+  it(`renders prop editors for each of the active ${componentKindLabel}'s props`, () => {
     render(<ComponentEditor />);
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
@@ -136,13 +140,6 @@ function testStandardOrModuleComponentState(
   });
 
   it(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, async () => {
-    mockStoreActiveComponent({
-      activeComponent: state,
-      activeComponentMetadata: {
-        ...metadata,
-        propShape,
-      },
-    });
     render(<ComponentEditor />);
     const getComponentProps = () =>
       (
