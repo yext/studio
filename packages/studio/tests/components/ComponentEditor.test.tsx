@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import ComponentEditor from "../../src/components/ComponentEditor";
-import mockStore from "../__utils__/mockStore";
 import {
   ComponentState,
   ComponentStateKind,
@@ -14,6 +13,7 @@ import {
   StandardOrModuleComponentState,
 } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
+import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -182,28 +182,3 @@ function testStandardOrModuleComponentState(
   });
 }
 
-function mockStoreActiveComponent({
-  activeComponent,
-  activeComponentMetadata,
-}: {
-  activeComponent?: ComponentState;
-  activeComponentMetadata?: FileMetadata;
-}): void {
-  mockStore({
-    pages: {
-      pages: {
-        index: {
-          componentTree: activeComponent ? [activeComponent] : [],
-          cssImports: [],
-        },
-      },
-      ...(activeComponent && { activeComponentUUID: activeComponent.uuid }),
-      activePageName: "index",
-    },
-    fileMetadatas: {
-      UUIDToFileMetadata: activeComponentMetadata && {
-        [activeComponentMetadata.metadataUUID]: activeComponentMetadata,
-      },
-    },
-  });
-}
