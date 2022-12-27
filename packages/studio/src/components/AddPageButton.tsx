@@ -18,6 +18,8 @@ export default function AddPageButton(): JSX.Element {
 
   function handleModalClose() {
     setShowModal(false);
+    setPageName("");
+    setIsValidInput(false);
   }
 
   function handleModalSave() {
