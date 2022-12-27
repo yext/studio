@@ -1,5 +1,5 @@
 import path from "path";
-import { FileMetadata, PageState } from "./types";
+import { FileMetadata, PageState, StudioPaths, StudioData } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -7,7 +7,6 @@ import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile, { SiteSettings } from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
-import { StudioData } from "./types/StudioData";
 
 export function createTsMorphProject() {
   return new Project({
@@ -27,14 +26,7 @@ export default class ParsingOrchestrator {
   private project: Project;
 
   /** All paths are assumed to be absolute. */
-  constructor(
-    private paths: {
-      components: string;
-      pages: string;
-      modules: string;
-      siteSettings: string;
-    }
-  ) {
+  constructor(private paths: StudioPaths) {
     this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
@@ -55,6 +47,7 @@ export default class ParsingOrchestrator {
       pageNameToPageState,
       UUIDToFileMetadata,
       siteSettings,
+      studioPaths: this.paths,
     };
   }
 
@@ -106,16 +99,18 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    return fs.readdirSync(this.paths.pages, "utf-8").reduce((prev, curr) => {
-      const pageName = path.basename(curr, ".tsx");
-      const pageFile = new PageFile(
-        path.join(this.paths.pages, curr),
-        this.getFileMetadata,
-        this.project
-      );
-      prev[pageName] = pageFile.getPageState();
-      return prev;
-    }, {});
+    return fs
+      .readdirSync(this.paths.pages, "utf-8")
+      .reduce((prev, curr) => {
+        const pageName = path.basename(curr, ".tsx");
+        const pageFile = new PageFile(
+          path.join(this.paths.pages, curr),
+          this.getFileMetadata,
+          this.project
+        );
+        prev[pageName] = pageFile.getPageState();
+        return prev;
+      }, {});
   }
 
   private getSiteSettings(): SiteSettings | undefined {

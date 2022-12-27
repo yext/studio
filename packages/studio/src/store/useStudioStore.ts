@@ -6,6 +6,9 @@ import { StudioStore } from "./models/store";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
 import createPageSlice from "./slices/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
+import { enableMapSet } from "immer";
+
+enableMapSet();
 
 /**
  * Studio's state manager in form of a hook to access and update states.

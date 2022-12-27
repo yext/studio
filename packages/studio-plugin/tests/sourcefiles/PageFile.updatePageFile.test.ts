@@ -33,9 +33,11 @@ describe("updatePageFile", () => {
           componentName: "ComplexBanner",
           props: {},
           uuid: "mock-uuid-0",
+          metadataUUID: "mock-metadataUUID",
         },
       ],
       cssImports: [],
+      filepath: "mock-filepath",
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyPage.tsx"),
@@ -69,9 +71,11 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
+              metadataUUID: "mock-metadataUUID",
             },
           ],
           cssImports: [],
+          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -95,6 +99,7 @@ describe("updatePageFile", () => {
         {
           componentTree: streamConfigMultipleFieldsComponentTree,
           cssImports: [],
+          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -128,9 +133,11 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
+              metadataUUID: "mock-metadataUUID",
             },
           ],
           cssImports: [],
+          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );

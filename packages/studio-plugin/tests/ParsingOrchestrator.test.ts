@@ -67,6 +67,7 @@ describe("aggregates data as expected", () => {
           }),
         ],
         cssImports: [],
+        filepath: expect.anything(),
       },
       pageWithModules: {
         componentTree: [
@@ -80,6 +81,7 @@ describe("aggregates data as expected", () => {
           }),
         ],
         cssImports: [],
+        filepath: expect.anything(),
       },
     });
   });

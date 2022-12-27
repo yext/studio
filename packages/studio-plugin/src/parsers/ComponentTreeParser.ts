@@ -12,7 +12,7 @@ import {
   StandardOrModuleComponentState,
 } from "../types/State";
 import { v4 } from "uuid";
-import { FileMetadataKind, PropValues } from "../types";
+import { FileMetadataKind } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "./helpers/TypeGuards";

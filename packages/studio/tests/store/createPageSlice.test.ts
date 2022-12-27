@@ -12,6 +12,16 @@ import {
   PagesRecord,
 } from "../../src/store/models/slices/PageSlice";
 import mockStore from "../__utils__/mockStore";
+import path from "path";
+
+jest.mock("virtual:yext-studio", () => {
+  return {
+    pageNameToPageState: {},
+    studioPaths: {
+      pages: __dirname,
+    },
+  };
+});
 
 const fragmentComponent: ComponentState = {
   kind: ComponentStateKind.Fragment,
@@ -60,25 +70,25 @@ const pages: PagesRecord = {
   universal: {
     componentTree: [searchBarComponent],
     cssImports: ["index.css"],
+    filepath: "mock-filepath",
   },
   vertical: {
     componentTree: [resultsComponent],
     cssImports: [],
+    filepath: "mock-filepath",
   },
+};
+const pendingChanges = {
+  pagesToUpdate: new Set<string>(),
 };
 
 describe("PageSlice", () => {
-  it("updates pages using setPages", () => {
-    useStudioStore.getState().pages.setPages(pages);
-    const actualPages = useStudioStore.getState().pages.pages;
-    expect(actualPages).toEqual(pages);
-  });
-
   describe("active page actions", () => {
     beforeEach(() => {
       setInitialState({
         pages,
         activePageName: "universal",
+        pendingChanges,
       });
     });
 
@@ -86,6 +96,19 @@ describe("PageSlice", () => {
       useStudioStore.getState().pages.setActivePageName("vertical");
       const activePageName = useStudioStore.getState().pages.activePageName;
       expect(activePageName).toEqual("vertical");
+    });
+
+    it("resets activeComponentUUID when setActivePageName is used", () => {
+      setInitialState({
+        pages,
+        activePageName: "universal",
+        activeComponentUUID: "searchbar-uuid",
+        pendingChanges,
+      });
+      useStudioStore.getState().pages.setActivePageName("vertical");
+      const activeComponentUUID =
+        useStudioStore.getState().pages.activeComponentUUID;
+      expect(activeComponentUUID).toBeUndefined();
     });
 
     it("logs an error when using setActivePageName for a page not found in store", () => {
@@ -104,6 +127,7 @@ describe("PageSlice", () => {
       const newActivePageState: PageState = {
         componentTree: [buttonComponent],
         cssImports: ["app.css"],
+        filepath: "mock-filepath",
       };
       useStudioStore.getState().pages.setActivePageState(newActivePageState);
       const actualPages = useStudioStore.getState().pages.pages;
@@ -113,15 +137,29 @@ describe("PageSlice", () => {
       });
     });
 
+    it("updates pagesToUpdate when setActivePageState is used", () => {
+      const newActivePageState: PageState = {
+        componentTree: [buttonComponent],
+        cssImports: ["app.css"],
+        filepath: "mock-filepath",
+      };
+      useStudioStore.getState().pages.setActivePageState(newActivePageState);
+      const pagesToUpdate =
+        useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
+      expect(pagesToUpdate).toEqual(new Set<string>(["universal"]));
+    });
+
     it("resets active component uuid when it's remove from page state using setActivePageState", () => {
       setInitialState({
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
+        pendingChanges,
       });
       const newActivePageState: PageState = {
         componentTree: [buttonComponent],
         cssImports: ["app.css"],
+        filepath: "mock-filepath",
       };
       expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
         "searchbar-uuid"
@@ -137,10 +175,12 @@ describe("PageSlice", () => {
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
+        pendingChanges,
       });
       const newActivePageState: PageState = {
         componentTree: [searchBarComponent, buttonComponent],
         cssImports: ["app.css"],
+        filepath: "mock-filepath",
       };
       expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
         "searchbar-uuid"
@@ -157,6 +197,77 @@ describe("PageSlice", () => {
         .pages.getActivePageState();
       expect(activePageState).toEqual(pages["universal"]);
     });
+
+    describe("addPage", () => {
+      const filepath = path.resolve(__dirname, "./test.tsx");
+
+      it("adds a page to pages", () => {
+        useStudioStore.getState().pages.addPage(filepath);
+        const pagesRecord = useStudioStore.getState().pages.pages;
+        expect(pagesRecord).toEqual({
+          ...pages,
+          test: {
+            componentTree: [],
+            cssImports: [],
+            filepath,
+          },
+        });
+      });
+
+      it("sets active page name to the new page", () => {
+        useStudioStore.getState().pages.addPage(filepath);
+        const activePageName = useStudioStore.getState().pages.activePageName;
+        expect(activePageName).toEqual("test");
+      });
+
+      it("adds the new page name to pagesToUpdate", () => {
+        useStudioStore.getState().pages.addPage(filepath);
+        const pagesToUpdate =
+          useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
+        expect(pagesToUpdate).toEqual(new Set<string>(["test"]));
+      });
+
+      describe("errors", () => {
+        let consoleErrorSpy;
+        beforeEach(() => {
+          consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+        });
+
+        it("gives an error for an empty string filepath", () => {
+          useStudioStore.getState().pages.addPage("");
+          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            "Error adding page: a filepath is required."
+          );
+        });
+
+        it("gives an error for a relative filepath", () => {
+          useStudioStore.getState().pages.addPage("./test.tsx");
+          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            "Error adding page: filepath is invalid: ./test.tsx"
+          );
+        });
+
+        it("gives an error for a filepath outside the allowed path for pages", () => {
+          const filepath = path.join(__dirname, "../test.tsx");
+          useStudioStore.getState().pages.addPage(filepath);
+          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            `Error adding page: filepath is invalid: ${filepath}`
+          );
+        });
+
+        it("gives an error for a filepath with a page name that already exists", () => {
+          const filepath = path.join(__dirname, "./universal.tsx");
+          useStudioStore.getState().pages.addPage(filepath);
+          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+          expect(consoleErrorSpy).toHaveBeenCalledWith(
+            'Error adding page: page name "universal" is already used.'
+          );
+        });
+      });
+    });
   });
 
   describe("when there is no active page", () => {
@@ -165,6 +276,7 @@ describe("PageSlice", () => {
       setInitialState({
         pages: {},
         activePageName: undefined,
+        pendingChanges,
       });
       consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
     });
@@ -173,6 +285,7 @@ describe("PageSlice", () => {
       useStudioStore.getState().pages.setActivePageState({
         componentTree: [],
         cssImports: [],
+        filepath: "mock-filepath",
       });
       expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -212,10 +325,12 @@ describe("PageSlice", () => {
           universal: {
             componentTree: [searchBarComponent, resultsComponent],
             cssImports: [],
+            filepath: "mock-filepath",
           },
         },
         activePageName: "universal",
         activeComponentUUID: "results-uuid",
+        pendingChanges,
       });
     });
 
@@ -244,18 +359,34 @@ describe("PageSlice", () => {
       expect(actualPropValues).toEqual(newPropValues);
     });
 
+    it("updates pagesToUpdate when setActiveComponentProps is used", () => {
+      const newPropValues: PropValues = {
+        clicked: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.boolean,
+          value: true,
+        },
+      };
+      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
+      const pagesToUpdate =
+        useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
+      expect(pagesToUpdate).toEqual(new Set<string>(["universal"]));
+    });
+
     it("logs an error when using setActiveComponentProps if the active component is a fragment", () => {
       const initialPages = {
         universal: {
           pageName: "universal",
           componentTree: [fragmentComponent, searchBarComponent],
           cssImports: [],
+          filepath: "mock-filepath",
         },
       };
       setInitialState({
         pages: initialPages,
         activePageName: "universal",
         activeComponentUUID: fragmentComponent.uuid,
+        pendingChanges,
       });
       const newPropValues: PropValues = {
         clicked: {
@@ -281,12 +412,14 @@ describe("PageSlice", () => {
           pageName: "universal",
           componentTree: [searchBarComponent],
           cssImports: [],
+          filepath: "mock-filepath",
         },
       };
       setInitialState({
         pages: initialPages,
         activePageName: "universal",
         activeComponentUUID: undefined,
+        pendingChanges,
       });
       const newPropValues: PropValues = {
         clicked: {
@@ -319,10 +452,12 @@ describe("PageSlice", () => {
           universal: {
             componentTree: [searchBarComponent],
             cssImports: [],
+            filepath: "mock-filepath",
           },
         },
         activePageName: "universal",
         activeComponentUUID: undefined,
+        pendingChanges,
       });
       const activeComponent = useStudioStore
         .getState()

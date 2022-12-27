@@ -120,6 +120,13 @@ describe("getPageState", () => {
     ]);
   });
 
+  it("correctly gets filepath", () => {
+    const pageFile = createPageFile("shortFragmentSyntaxPage");
+    const result = pageFile.getPageState();
+
+    expect(result.filepath).toEqual(getPagePath("shortFragmentSyntaxPage"));
+  });
+
   describe("throws errors", () => {
     it("throws an error when no return statement is found in the default export", () => {
       const pageFile = createPageFile("noReturnStatementPage");

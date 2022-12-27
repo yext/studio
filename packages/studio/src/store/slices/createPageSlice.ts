@@ -1,9 +1,7 @@
 import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
+import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
-import PageSlice, {
-  PageSliceStates,
-  PagesRecord,
-} from "../models/slices/PageSlice";
+import PageSlice, { PageSliceStates } from "../models/slices/PageSlice";
 import { SliceCreator } from "../models/utils";
 
 const initialStates: PageSliceStates = {
@@ -11,14 +9,16 @@ const initialStates: PageSliceStates = {
   activePageName:
     Object.keys(initialStudioData.pageNameToPageState)?.[0] ?? undefined,
   activeComponentUUID: undefined,
+  pendingChanges: {
+    pagesToUpdate: new Set<string>(),
+  },
 };
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pagesActions = {
-    setPages: (pages: PagesRecord) => set({ pages }),
     setActivePageName: (activePageName: string) => {
       if (get().pages[activePageName]) {
-        set({ activePageName });
+        set({ activePageName, activeComponentUUID: undefined });
       } else {
         console.error(
           `Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`
@@ -41,6 +41,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           store.activeComponentUUID = undefined;
         }
         store.pages[store.activePageName] = pageState;
+        store.pendingChanges.pagesToUpdate.add(store.activePageName);
       }),
     getActivePageState: () => {
       const { pages, activePageName } = get();
@@ -48,6 +49,35 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         return;
       }
       return pages[activePageName];
+    },
+    addPage: (filepath: string) => {
+      if (!filepath) {
+        console.error("Error adding page: a filepath is required.");
+        return false;
+      }
+      const pagesPath = initialStudioData.studioPaths.pages;
+      if (!path.isAbsolute(filepath) || !filepath.includes(pagesPath)) {
+        console.error(`Error adding page: filepath is invalid: ${filepath}`);
+        return false;
+      }
+      const pageName = path.basename(filepath, ".tsx");
+      if (get().pages[pageName]) {
+        console.error(
+          `Error adding page: page name "${pageName}" is already used.`
+        );
+        return false;
+      }
+
+      set((store) => {
+        store.pages[pageName] = {
+          componentTree: [],
+          cssImports: [],
+          filepath,
+        };
+        store.pendingChanges.pagesToUpdate.add(pageName);
+      });
+      get().setActivePageName(pageName);
+      return true;
     },
   };
 
@@ -66,7 +96,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     setActiveComponentProps: (props: PropValues) =>
       set((store) => {
-        if (!store.activePageName) {
+        const activePageName = store.activePageName;
+        if (!activePageName) {
           console.error(
             "Tried to setActiveComponentProps when activePageName was undefined"
           );
@@ -79,7 +110,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           );
           return;
         }
-        const components = store.pages[store.activePageName].componentTree;
+        const components = store.pages[activePageName].componentTree;
         components.forEach((c) => {
           if (c.uuid === activeComponent.uuid) {
             if (c.kind === ComponentStateKind.Fragment) {
@@ -89,6 +120,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
               return;
             } else {
               c.props = props;
+              store.pendingChanges.pagesToUpdate.add(activePageName);
             }
           }
         });
