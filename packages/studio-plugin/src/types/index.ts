@@ -5,4 +5,4 @@ export * from "./ModuleMetadata";
 export * from "./FileMetadata";
 export * from "./State";
 export * from "./StudioData";
-export * from "./StudioPaths";
+export * from "./UserPaths";

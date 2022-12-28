@@ -7,11 +7,12 @@ import classNames from "classnames";
 import { useCallback } from "react";
 
 /**
- * Renders the left panel of Studio, which lists all pages and displays the
- * component tree for the active page. Allows navigation between pages and
- * rearranging of components and modules in the component tree.
+ * Renders the left panel of Studio, which lists all pages, indicates which
+ * page is active, and displays the component tree for that active page. Allows
+ * the user to change which page is active and to rearrange the components and
+ * modules in the component tree of the active page.
  */
-export default function PagesPanel(): JSX.Element {
+export default function ActivePagePanel(): JSX.Element {
   const { pages, setActivePageName, activePageName } = useStudioStore(
     (store) => {
       const { pages, setActivePageName, activePageName } = store.pages;

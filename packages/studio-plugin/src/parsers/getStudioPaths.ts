@@ -1,5 +1,5 @@
 import path from "path";
-import { StudioPaths } from "../types";
+import { UserPaths } from "../types";
 
 /**
  * Given an absolute path to the user's src folder, determine the filepaths Studio will
@@ -7,7 +7,7 @@ import { StudioPaths } from "../types";
  *
  * @param pathToSrc - An absolute path to the src folder
  */
-export default function getStudioPaths(pathToSrc: string): StudioPaths {
+export default function getStudioPaths(pathToSrc: string): UserPaths {
   return {
     pages: path.join(pathToSrc, "pages"),
     modules: path.join(pathToSrc, "modules"),

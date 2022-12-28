@@ -1,5 +1,5 @@
 import EditorPanel from "./components/EditorPanel";
-import PagesPanel from "./components/PagesPanel";
+import ActivePagePanel from "./components/ActivePagePanel";
 import useStudioStore from "./store/useStudioStore";
 
 export default function App() {
@@ -10,7 +10,7 @@ export default function App() {
   return (
     <div className="App">
       <div className="flex flex-row w-screen h-screen">
-        <PagesPanel />
+        <ActivePagePanel />
         <div className="grow w-1/3 bg-gray-300">
           <div>Preview</div>
           <div>activeComponentState: {JSON.stringify(activeComponentState, null, 2)}</div>

@@ -1,16 +1,21 @@
 import Modal from "./common/Modal";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Plus } from "../icons/plus.svg";
-import { ChangeEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 
+/**
+ * Renders a button for adding new pages to the store. When the button is
+ * clicked, a modal is displayed prompting the user for a page name.
+ */
 export default function AddPageButton(): JSX.Element {
   const addPage = useStudioStore((store) => store.pages.addPage);
 
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [pageName, setPageName] = useState<string>("");
-  const [isValidInput, setIsValidInput] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined
+  );
 
   const handleAddPage = useCallback(() => {
     setShowModal(true);
@@ -18,26 +23,25 @@ export default function AddPageButton(): JSX.Element {
 
   const handleModalClose = useCallback(() => {
     setShowModal(false);
-    setPageName("");
-    setIsValidInput(false);
-  }, [setShowModal, setPageName, setIsValidInput]);
+    setErrorMessage(undefined);
+  }, [setShowModal, setErrorMessage]);
 
-  const handleModalSave = useCallback(() => {
-    const pagesPath = initialStudioData.studioPaths.pages;
-    const filepath = path.join(pagesPath, pageName + ".tsx");
-    if (addPage(filepath)) {
-      handleModalClose();
-    } else {
-      setIsValidInput(false);
-    }
-  }, [pageName, addPage, handleModalClose, setIsValidInput]);
-
-  const handleModalInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setPageName(e.target.value);
-      setIsValidInput(e.target.value.length > 0);
+  const handleModalSave = useCallback(
+    (pageName: string) => {
+      const pagesPath = initialStudioData.userPaths.pages;
+      const filepath = path.join(pagesPath, pageName + ".tsx");
+      if (addPage(filepath)) {
+        return true;
+      } else {
+        if (filepath.startsWith(pagesPath)) {
+          setErrorMessage("Page name already used.");
+        } else {
+          setErrorMessage("Page path is invalid.");
+        }
+        return false;
+      }
     },
-    [setPageName, setIsValidInput]
+    [addPage, setErrorMessage]
   );
 
   return (
@@ -47,14 +51,11 @@ export default function AddPageButton(): JSX.Element {
       </button>
       <Modal
         isOpen={showModal}
-        disableSave={!isValidInput}
-        showErrorMessage={!isValidInput && !!pageName}
         title="Add Page"
         description="Give the page a name:"
-        errorMessage="Page name already used."
+        errorMessage={errorMessage}
         onClose={handleModalClose}
         onSave={handleModalSave}
-        onInputChange={handleModalInputChange}
       />
     </>
   );

@@ -12,7 +12,7 @@ import {
 jest.mock("virtual:yext-studio", () => {
   return {
     pageNameToPageState: {},
-    studioPaths: {
+    userPaths: {
       pages: __dirname,
     },
   };
