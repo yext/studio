@@ -4,7 +4,7 @@ import AddPageButton from "./AddPageButton";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Check } from "../icons/check.svg";
 import classNames from "classnames";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 /**
  * Renders the left panel of Studio, which lists all pages, indicates which
@@ -19,7 +19,7 @@ export default function ActivePagePanel(): JSX.Element {
       return { pages, setActivePageName, activePageName };
     }
   );
-  const pageNames = Object.keys(pages);
+  const pageNames = useMemo(() => Object.keys(pages), [pages]);
 
   const renderPageList = useCallback(
     (pageNames: string[]) => {

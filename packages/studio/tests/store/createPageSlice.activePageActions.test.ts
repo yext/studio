@@ -1,6 +1,9 @@
 import useStudioStore from "../../src/store/useStudioStore";
 import { PageState } from "@yext/studio-plugin";
-import { PagesRecord } from "../../src/store/models/slices/PageSlice";
+import {
+  PageSliceStates,
+  PagesRecord,
+} from "../../src/store/models/slices/PageSlice";
 import path from "path";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 import {
@@ -8,15 +11,6 @@ import {
   resultsComponent,
   buttonComponent,
 } from "../__fixtures__/componentStates";
-
-jest.mock("virtual:yext-studio", () => {
-  return {
-    pageNameToPageState: {},
-    userPaths: {
-      pages: __dirname,
-    },
-  };
-});
 
 const pages: PagesRecord = {
   universal: {
@@ -30,7 +24,7 @@ const pages: PagesRecord = {
     filepath: "mock-filepath",
   },
 };
-const pendingChanges = {
+const pendingChanges: PageSliceStates["pendingChanges"] = {
   pagesToUpdate: new Set<string>(),
 };
 
@@ -151,7 +145,7 @@ describe("PageSlice", () => {
     });
 
     describe("addPage", () => {
-      const filepath = path.resolve(__dirname, "./test.tsx");
+      const filepath = path.resolve(__dirname, "../__mocks__", "./test.tsx");
 
       it("adds a page to pages", () => {
         useStudioStore.getState().pages.addPage(filepath);
@@ -202,7 +196,7 @@ describe("PageSlice", () => {
         });
 
         it("gives an error for a filepath outside the allowed path for pages", () => {
-          const filepath = path.join(__dirname, "../test.tsx");
+          const filepath = path.join(__dirname, "../__mocks__", "../test.tsx");
           useStudioStore.getState().pages.addPage(filepath);
           expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
           expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -211,7 +205,11 @@ describe("PageSlice", () => {
         });
 
         it("gives an error for a filepath with a page name that already exists", () => {
-          const filepath = path.join(__dirname, "./universal.tsx");
+          const filepath = path.join(
+            __dirname,
+            "../__mocks__",
+            "./universal.tsx"
+          );
           useStudioStore.getState().pages.addPage(filepath);
           expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
           expect(consoleErrorSpy).toHaveBeenCalledWith(

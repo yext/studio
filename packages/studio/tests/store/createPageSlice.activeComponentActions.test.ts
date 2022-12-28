@@ -11,8 +11,9 @@ import {
   resultsComponent,
   fragmentComponent,
 } from "../__fixtures__/componentStates";
+import { PageSliceStates } from "../../src/store/models/slices/PageSlice";
 
-const pendingChanges = {
+const pendingChanges: PageSliceStates["pendingChanges"] = {
   pagesToUpdate: new Set<string>(),
 };
 
