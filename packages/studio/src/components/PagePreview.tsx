@@ -89,7 +89,7 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
     if (!activeEntityFile) {
       return;
     }
-    const entityFilepath = `${initialStudioData.studioPaths.localData}/${activeEntityFile}`
+    const entityFilepath = `${initialStudioData.userPaths.localData}/${activeEntityFile}`
     import(entityFilepath).then(importedModule => {
       setExpressionSources(prev => ({
         ...prev,

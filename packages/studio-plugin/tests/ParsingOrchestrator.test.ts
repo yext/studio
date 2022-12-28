@@ -1,11 +1,11 @@
 import ParsingOrchestrator from "../src/ParsingOrchestrator";
 import path from "path";
-import getStudioPaths from "../src/parsers/getStudioPaths";
+import getUserPaths from "../src/parsers/getUserPaths";
 import { ComponentStateKind, FileMetadataKind, PageState, StudioConfig, StudioData } from "../src";
 import getStudioConfig from "../src/parsers/getStudioConfig";
 
 const projectRoot = path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
-const studioPaths = getStudioPaths(projectRoot);
+const userPaths = getUserPaths(projectRoot);
 
 const basicPageState: PageState = {
   componentTree: [
@@ -40,7 +40,7 @@ const pageWithModulesState: PageState = {
 }
 
 describe("aggregates data as expected", () => {
-  const orchestrator = new ParsingOrchestrator(studioPaths, {});
+  const orchestrator = new ParsingOrchestrator(userPaths, {});
   let studioData: StudioData;
 
   beforeAll(async () => {
@@ -108,7 +108,7 @@ describe("aggregates data as expected", () => {
     })
 
     it("aggregates pageNameToPageState as expected when isPagesJSRepo is true", async () => {
-      const orchestrator = new ParsingOrchestrator(studioPaths, studioConfig);
+      const orchestrator = new ParsingOrchestrator(userPaths, studioConfig);
       const studioData = await orchestrator.getStudioData()
       expect(studioData.pageNameToPageState).toEqual({
         basicPage: {
@@ -120,30 +120,30 @@ describe("aggregates data as expected", () => {
     });
 
     it("throws an error when isPagesJSRepo is true and localData's mapping.json file doesn't exist", async () => {
-      studioPaths.localData = "thisFolderDoesNotExist"
-      const orchestrator = new ParsingOrchestrator(studioPaths, { isPagesJSRepo: true });
+      userPaths.localData = "thisFolderDoesNotExist"
+      const orchestrator = new ParsingOrchestrator(userPaths, { isPagesJSRepo: true });
       await expect(orchestrator.getStudioData()).rejects.toThrow(/^The localData's mapping.json does not exist/)
     });
   })
 });
 
 it("throws an error when the page imports components from unexpected folders", async () => {
-  const studioPaths = getStudioPaths("thisFolderDoesNotExist");
-  studioPaths.pages = path.resolve(
+  const userPaths = getUserPaths("thisFolderDoesNotExist");
+  userPaths.pages = path.resolve(
     __dirname,
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
 
-  const orchestrator = new ParsingOrchestrator(studioPaths, {});
+  const orchestrator = new ParsingOrchestrator(userPaths, {});
   await expect(orchestrator.getStudioData()).rejects.toThrow(/^Could not get FileMetadata for/)
 });
 
 it("throws when the pages folder does not exist", async () => {
-  const studioPaths = getStudioPaths(
+  const userPaths = getUserPaths(
     path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
   );
-  studioPaths.pages = "thisFolderDoesNotExist";
+  userPaths.pages = "thisFolderDoesNotExist";
 
-  const orchestrator = new ParsingOrchestrator(studioPaths, {});
+  const orchestrator = new ParsingOrchestrator(userPaths, {});
   await expect(orchestrator.getStudioData()).rejects.toThrow(/^The pages directory does not exist/)
 });

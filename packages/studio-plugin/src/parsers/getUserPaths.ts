@@ -1,5 +1,5 @@
 import path from "path";
-import { StudioPaths } from "../types";
+import { UserPaths } from "../types";
 
 /**
  * Given an absolute path to the user's project root folder, determine
@@ -7,7 +7,7 @@ import { StudioPaths } from "../types";
  *
  * @param pathToProjectRoot - An absolute path to the project's root folder.
  */
-export default function getStudioPaths(pathToProjectRoot: string): StudioPaths {
+export default function getUserPaths(pathToProjectRoot: string): UserPaths {
   const pathToSrc = path.join(pathToProjectRoot, "src");
   return {
     pages: path.join(pathToSrc, "pages"),

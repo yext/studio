@@ -2,7 +2,7 @@
  * Absolute paths for files and directories in the user's file system that are
  * relevant for Studio.
  */
-export interface StudioPaths {
+export interface UserPaths {
   /** The absolute path to the directory with the user's components. */
   components: string;
   /** The absolute path to the directory with the user's pages. */

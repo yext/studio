@@ -5,7 +5,7 @@ const mockFilepath = path.join(__dirname, "../tests/__mocks__")
 const mockStudioData: StudioData = {
   pageNameToPageState: {},
   UUIDToFileMetadata: {},
-  studioPaths: {
+  userPaths: {
     components: mockFilepath,
     pages: mockFilepath,
     modules: mockFilepath,

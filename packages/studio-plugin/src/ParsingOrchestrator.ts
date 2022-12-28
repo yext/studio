@@ -1,5 +1,5 @@
 import path from "path";
-import { FileMetadata, PageState, StudioConfig, StudioPaths } from "./types";
+import { FileMetadata, PageState, StudioConfig, UserPaths } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -27,7 +27,7 @@ export default class ParsingOrchestrator {
   private project: Project;
 
   /** All paths are assumed to be absolute. */
-  constructor(private paths: StudioPaths, private studioConfig: StudioConfig) {
+  constructor(private paths: UserPaths, private studioConfig: StudioConfig) {
     this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
@@ -48,7 +48,7 @@ export default class ParsingOrchestrator {
       pageNameToPageState,
       UUIDToFileMetadata,
       siteSettings,
-      studioPaths: this.paths
+      userPaths: this.paths
     };
   }
 
