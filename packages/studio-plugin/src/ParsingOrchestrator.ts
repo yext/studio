@@ -1,5 +1,5 @@
 import path from "path";
-import { FileMetadata, PageState } from "./types";
+import { FileMetadata, PageState, StudioPaths } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -27,20 +27,13 @@ export default class ParsingOrchestrator {
   private project: Project;
 
   /** All paths are assumed to be absolute. */
-  constructor(
-    private paths: {
-      components: string;
-      pages: string;
-      modules: string;
-      siteSettings: string;
-    }
-  ) {
+  constructor(private paths: StudioPaths) {
     this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
 
-  getStudioData(): StudioData {
+  async getStudioData(): Promise<StudioData> {
     const UUIDToFileMetadata = Object.values(
       this.filepathToFileMetadata
     ).reduce((prev, curr) => {
@@ -49,12 +42,13 @@ export default class ParsingOrchestrator {
     }, {});
 
     const siteSettings = this.getSiteSettings();
-    const pageNameToPageState = this.getPageNameToPageState();
+    const pageNameToPageState = await this.getPageNameToPageState();
 
     return {
       pageNameToPageState,
       UUIDToFileMetadata,
       siteSettings,
+      studioPaths: this.paths
     };
   }
 
@@ -100,20 +94,22 @@ export default class ParsingOrchestrator {
     );
   }
 
-  private getPageNameToPageState(): Record<string, PageState> {
+  private async getPageNameToPageState(): Promise<Record<string, PageState>> {
     if (!fs.existsSync(this.paths.pages)) {
       throw new Error(
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
+    const localDataMapping = await import(path.join(this.paths.localData, 'mapping.json')) as Record<string, string[]> | undefined
     return fs.readdirSync(this.paths.pages, "utf-8").reduce((prev, curr) => {
       const pageName = path.basename(curr, ".tsx");
+      const pageEntityFiles = localDataMapping?.[pageName]
       const pageFile = new PageFile(
         path.join(this.paths.pages, curr),
         this.getFileMetadata,
-        this.project
+        this.project,
       );
-      prev[pageName] = pageFile.getPageState();
+      prev[pageName] = pageFile.getPageState(pageEntityFiles);
       return prev;
     }, {});
   }

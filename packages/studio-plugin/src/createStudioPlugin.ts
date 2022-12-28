@@ -1,6 +1,5 @@
 import { ConfigEnv, Plugin } from "vite";
 import ParsingOrchestrator from "./ParsingOrchestrator";
-import path from "path";
 import getStudioPaths from "./parsers/getStudioPaths";
 
 /**
@@ -14,10 +13,10 @@ export default async function createStudioPlugin(
 ): Promise<Plugin> {
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
-  const pathToUserSrc = path.join(process.cwd(), "src");
-  const studioPaths = getStudioPaths(pathToUserSrc);
+  const pathToUserProjectRoot = process.cwd();
+  const studioPaths = getStudioPaths(pathToUserProjectRoot);
   const orchestrator = new ParsingOrchestrator(studioPaths);
-  const studioData = orchestrator.getStudioData();
+  const studioData = await orchestrator.getStudioData();
 
   // We have to use a dynamic import here - if we use a regular import,
   // Vite will import react-dev-utils in the browser.

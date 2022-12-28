@@ -56,7 +56,7 @@ export default class PageFile {
     );
   }
 
-  getPageState(): PageState {
+  getPageState(entityFiles?: string[]): PageState {
     const absPathDefaultImports =
       this.studioSourceFileParser.getAbsPathDefaultImports();
     const componentTree = this.componentTreeParser.parseComponentTree(
@@ -66,6 +66,7 @@ export default class PageFile {
     return {
       componentTree,
       cssImports,
+      entityFiles
     };
   }
 

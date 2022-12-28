@@ -2,4 +2,5 @@ import createStudioPlugin from "./createStudioPlugin";
 
 export default createStudioPlugin;
 export * from "./types";
-export { default as TypeGuards } from "./parsers/helpers/TypeGuards";
+export * from "./utils";
+export { TEMPLATE_STRING_EXPRESSION_REGEX } from "./constants";

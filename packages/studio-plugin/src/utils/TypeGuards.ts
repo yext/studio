@@ -11,9 +11,10 @@ import {
   PropValueKind,
   PropValueType,
   StandardOrModuleComponentState,
-} from "../../types";
+} from "../types";
 
-import StaticParsingHelpers from "./StaticParsingHelpers";
+import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
+import { SiteSettingsExpression, StreamsDataExpression, TemplateStringExpression } from "../types/Expression";
 
 type PrimitivePropValueType =
   | PropValueType.number
@@ -27,7 +28,7 @@ export default class TypeGuards {
   static isValidPropValue(propValue: {
     kind: PropValueKind;
     valueType: PropValueType;
-    value: string | number | boolean;
+    value: unknown;
   }): propValue is PropVal {
     const { kind, valueType, value } = propValue;
     if (kind === PropValueKind.Expression) {
@@ -61,13 +62,21 @@ export default class TypeGuards {
     return propTypes.includes(type as PropValueType);
   }
 
-  static isTemplateString(value: unknown): value is `\`${string}\`` {
+  static isTemplateString(value: unknown): value is TemplateStringExpression {
     return (
       typeof value == "string" &&
       value.startsWith("`") &&
       value.endsWith("`") &&
       value.length >= 2
     );
+  }
+
+  static isStreamsDataExpression(value: unknown): value is StreamsDataExpression {
+    return typeof value === "string" && value.startsWith("document.");
+  }
+
+  static isSiteSettingsExpression(value: unknown): value is SiteSettingsExpression {
+    return typeof value === 'string' && value.startsWith('siteSettings.')
   }
 
   static isNotFragmentElement(
