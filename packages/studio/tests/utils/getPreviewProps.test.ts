@@ -4,16 +4,12 @@ import { getPreviewProps } from "../../src/utils/getPreviewProps";
 
 const siteSettings = {
   apiKey: "dummy-api-key",
-};
-
-const streamDocument = {
-  name: "office space",
-  isYextEmployee: true,
+  locale: "dummy-locale",
+  isDevMode: true,
 };
 
 const expressionSources = {
   siteSettings,
-  document: streamDocument,
 };
 
 it("returns value as is for prop of type Literal", () => {
@@ -53,37 +49,21 @@ it("logs a warning when transformed value type doesn't match from the expected t
       foo: {
         kind: PropValueKind.Expression,
         valueType: PropValueType.number,
-        value: "document.isYextEmployee",
+        value: "siteSettings.isDevMode",
       },
     },
     expressionSources
   );
   expect(transformedProps).toEqual({
-    foo: "document.isYextEmployee",
+    foo: "siteSettings.isDevMode",
   });
   expect(consoleWarnSpy).toHaveBeenCalledWith(
-    `Invalid expression prop value: ${streamDocument.isYextEmployee}. The value extracted from the expression` +
-      ` "document.isYextEmployee" does not match with the expected propType ${PropValueType.number}.`
+    `Invalid expression prop value: ${siteSettings.isDevMode}. The value extracted from the expression` +
+      ` "siteSettings.isDevMode" does not match with the expected propType ${PropValueType.number}.`
   );
 });
 
 describe("expression value handling", () => {
-  it("returns transformed value sourced from stream document", () => {
-    const transformedProps = getPreviewProps(
-      {
-        foo: {
-          kind: PropValueKind.Expression,
-          valueType: PropValueType.string,
-          value: "document.name",
-        },
-      },
-      expressionSources
-    );
-    expect(transformedProps).toEqual({
-      foo: streamDocument.name,
-    });
-  });
-
   it("returns transformed value sourced from site settings", () => {
     const transformedProps = getPreviewProps(
       {
@@ -140,13 +120,13 @@ describe("template string literal value handling", () => {
         foo: {
           kind: PropValueKind.Expression,
           valueType: PropValueType.string,
-          value: "`${document.name}`",
+          value: "`${siteSettings.apiKey}`",
         },
       },
       expressionSources
     );
     expect(transformedProps).toEqual({
-      foo: `${streamDocument.name}`,
+      foo: `${siteSettings.apiKey}`,
     });
   });
 
@@ -156,13 +136,13 @@ describe("template string literal value handling", () => {
         foo: {
           kind: PropValueKind.Expression,
           valueType: PropValueType.string,
-          value: "`1 ${document.name} document.name ${siteSettings.apiKey}`",
+          value: "`1 ${siteSettings.locale} document.name ${siteSettings.apiKey}`",
         },
       },
       expressionSources
     );
     expect(transformedProps).toEqual({
-      foo: `1 ${streamDocument.name} document.name ${siteSettings.apiKey}`,
+      foo: `1 ${siteSettings.locale} document.name ${siteSettings.apiKey}`,
     });
   });
 

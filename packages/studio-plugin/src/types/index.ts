@@ -6,4 +6,3 @@ export * from "./FileMetadata";
 export * from "./State";
 export * from "./StudioData";
 export * from "./UserPaths";
-export * from "./StudioConfig";

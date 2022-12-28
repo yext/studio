@@ -14,6 +14,5 @@ export default function getUserPaths(pathToProjectRoot: string): UserPaths {
     modules: path.join(pathToSrc, "modules"),
     components: path.join(pathToSrc, "components"),
     siteSettings: path.join(pathToSrc, "siteSettings.ts"),
-    localData: path.join(pathToProjectRoot, "localData"),
   };
 }

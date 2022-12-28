@@ -121,8 +121,5 @@ function getExpressionValue(
   if (TypeGuards.isSiteSettingsExpression(expression)) {
     return getValueFromPath(expression, "siteSettings");
   }
-  if (TypeGuards.isStreamsDataExpression(expression)) {
-    return getValueFromPath(expression, "document");
-  }
   return null;
 }

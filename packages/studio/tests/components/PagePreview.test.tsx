@@ -172,22 +172,15 @@ const mockStoreWithPropExpression: MockStudioStore = {
                 value: "siteSettings.apiKey",
                 valueType: PropValueType.string,
               },
-              num: {
-                kind: PropValueKind.Expression,
-                value: "document.employeeCount",
-                valueType: PropValueType.number,
-              },
             },
             uuid: "banner-uuid",
             metadataUUID: "banner-metadata-uuid",
           },
         ],
         cssImports: [],
-        entityFiles: ["entityFile.json"],
       },
     },
     activePageName: "universalPage",
-    activeEntityFile: "entityFile.json",
   },
   fileMetadatas: {
     UUIDToFileMetadata,
@@ -231,7 +224,5 @@ it("render component with transformed props", async () => {
   mockStore(mockStoreWithPropExpression);
   render(<PagePreview />);
   const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
-  const documentExpressionProp = await screen.findByText(/123/);
   expect(siteSettingsExpressionProp).toBeDefined();
-  expect(documentExpressionProp).toBeDefined();
 });

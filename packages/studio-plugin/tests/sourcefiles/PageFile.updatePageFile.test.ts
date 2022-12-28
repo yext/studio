@@ -33,6 +33,7 @@ describe("updatePageFile", () => {
           componentName: "ComplexBanner",
           props: {},
           uuid: "mock-uuid-0",
+          metadataUUID: "complexbanner-metadata",
         },
       ],
       cssImports: [],
@@ -62,6 +63,7 @@ describe("updatePageFile", () => {
               kind: ComponentStateKind.Standard,
               componentName: "SimpleBanner",
               uuid: "mock-uuid-0",
+              metadataUUID: "banner-metadata",
               props: {
                 title: {
                   kind: PropValueKind.Expression,
@@ -121,6 +123,7 @@ describe("updatePageFile", () => {
               kind: ComponentStateKind.Standard,
               componentName: "SimpleBanner",
               uuid: "mock-uuid-0",
+              metadataUUID: "banner-metadata",
               props: {
                 title: {
                   kind: PropValueKind.Expression,

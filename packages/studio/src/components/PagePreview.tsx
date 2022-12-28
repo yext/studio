@@ -18,7 +18,6 @@ import {
 import { ImportType } from "../store/models/utils";
 import { useLayoutEffect } from "react";
 import { getPreviewProps } from "../utils/getPreviewProps";
-import initialStudioData from "virtual:yext-studio";
 import ErrorBoundary from "./common/ErrorBoundary";
 
 /**
@@ -98,9 +97,6 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
   const [expressionSources, setExpressionSources] = useState<
     Record<string, Record<string, unknown>>
   >({});
-  const activeEntityFile = useStudioStore(
-    (store) => store.pages.activeEntityFile
-  );
   const siteSettingValues = useStudioStore(
     (store) => store.siteSettings.values
   );
@@ -117,19 +113,6 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
       siteSettings: siteSettingSource,
     }));
   }, [siteSettingValues]);
-
-  useLayoutEffect(() => {
-    if (!activeEntityFile) {
-      return;
-    }
-    const entityFilepath = `${initialStudioData.userPaths.localData}/${activeEntityFile}`;
-    import(entityFilepath).then((importedModule) => {
-      setExpressionSources((prev) => ({
-        ...prev,
-        document: importedModule["default"] as Record<string, unknown>,
-      }));
-    });
-  }, [activeEntityFile]);
   return expressionSources;
 }
 
