@@ -7,7 +7,7 @@ export type PageState = {
    * An array of names of entity files for this page.
    * e.g. ["locations__7f93c5160594d864417cee454f073ef3.json"]
    */
-  entityFiles?: string[]
+  entityFiles?: string[];
 };
 
 export type ComponentState =

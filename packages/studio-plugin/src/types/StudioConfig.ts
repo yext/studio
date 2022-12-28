@@ -1,4 +1,3 @@
-
 export interface StudioConfig {
-  isPagesJSRepo?: boolean
+  isPagesJSRepo?: boolean;
 }

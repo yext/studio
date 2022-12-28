@@ -1,10 +1,19 @@
 import ParsingOrchestrator from "../src/ParsingOrchestrator";
 import path from "path";
 import getUserPaths from "../src/parsers/getUserPaths";
-import { ComponentStateKind, FileMetadataKind, PageState, StudioConfig, StudioData } from "../src";
+import {
+  ComponentStateKind,
+  FileMetadataKind,
+  PageState,
+  StudioConfig,
+  StudioData,
+} from "../src";
 import getStudioConfig from "../src/parsers/getStudioConfig";
 
-const projectRoot = path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
+const projectRoot = path.resolve(
+  __dirname,
+  "./__fixtures__/ParsingOrchestrator"
+);
 const userPaths = getUserPaths(projectRoot);
 
 const basicPageState: PageState = {
@@ -23,7 +32,7 @@ const basicPageState: PageState = {
     }),
   ],
   cssImports: [],
-}
+};
 
 const pageWithModulesState: PageState = {
   componentTree: [
@@ -37,7 +46,7 @@ const pageWithModulesState: PageState = {
     }),
   ],
   cssImports: [],
-}
+};
 
 describe("aggregates data as expected", () => {
   const orchestrator = new ParsingOrchestrator(userPaths, {});
@@ -46,7 +55,6 @@ describe("aggregates data as expected", () => {
   beforeAll(async () => {
     studioData = await orchestrator.getStudioData();
   });
-  
 
   it("UUIDToFileMetadata", () => {
     const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
@@ -104,27 +112,31 @@ describe("aggregates data as expected", () => {
   describe("isPagesJSRepo", () => {
     let studioConfig: StudioConfig;
     beforeAll(async () => {
-      studioConfig = await getStudioConfig(projectRoot)
-    })
+      studioConfig = await getStudioConfig(projectRoot);
+    });
 
     it("aggregates pageNameToPageState as expected when isPagesJSRepo is true", async () => {
       const orchestrator = new ParsingOrchestrator(userPaths, studioConfig);
-      const studioData = await orchestrator.getStudioData()
+      const studioData = await orchestrator.getStudioData();
       expect(studioData.pageNameToPageState).toEqual({
         basicPage: {
           ...basicPageState,
-          entityFiles: ["basicpage-stream.json"]
+          entityFiles: ["basicpage-stream.json"],
         },
         pageWithModules: pageWithModulesState,
       });
     });
 
     it("throws an error when isPagesJSRepo is true and localData's mapping.json file doesn't exist", async () => {
-      userPaths.localData = "thisFolderDoesNotExist"
-      const orchestrator = new ParsingOrchestrator(userPaths, { isPagesJSRepo: true });
-      await expect(orchestrator.getStudioData()).rejects.toThrow(/^The localData's mapping.json does not exist/)
+      userPaths.localData = "thisFolderDoesNotExist";
+      const orchestrator = new ParsingOrchestrator(userPaths, {
+        isPagesJSRepo: true,
+      });
+      await expect(orchestrator.getStudioData()).rejects.toThrow(
+        /^The localData's mapping.json does not exist/
+      );
     });
-  })
+  });
 });
 
 it("throws an error when the page imports components from unexpected folders", async () => {
@@ -135,7 +147,9 @@ it("throws an error when the page imports components from unexpected folders", a
   );
 
   const orchestrator = new ParsingOrchestrator(userPaths, {});
-  await expect(orchestrator.getStudioData()).rejects.toThrow(/^Could not get FileMetadata for/)
+  await expect(orchestrator.getStudioData()).rejects.toThrow(
+    /^Could not get FileMetadata for/
+  );
 });
 
 it("throws when the pages folder does not exist", async () => {
@@ -145,5 +159,7 @@ it("throws when the pages folder does not exist", async () => {
   userPaths.pages = "thisFolderDoesNotExist";
 
   const orchestrator = new ParsingOrchestrator(userPaths, {});
-  await expect(orchestrator.getStudioData()).rejects.toThrow(/^The pages directory does not exist/)
+  await expect(orchestrator.getStudioData()).rejects.toThrow(
+    /^The pages directory does not exist/
+  );
 });

@@ -66,7 +66,7 @@ export default class PageFile {
     return {
       componentTree,
       cssImports,
-      entityFiles
+      entityFiles,
     };
   }
 

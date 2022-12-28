@@ -14,7 +14,11 @@ import {
 } from "../types";
 
 import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
-import { SiteSettingsExpression, StreamsDataExpression, TemplateStringExpression } from "../types/Expression";
+import {
+  SiteSettingsExpression,
+  StreamsDataExpression,
+  TemplateStringExpression,
+} from "../types/Expression";
 
 type PrimitivePropValueType =
   | PropValueType.number
@@ -71,12 +75,16 @@ export default class TypeGuards {
     );
   }
 
-  static isStreamsDataExpression(value: unknown): value is StreamsDataExpression {
+  static isStreamsDataExpression(
+    value: unknown
+  ): value is StreamsDataExpression {
     return typeof value === "string" && value.startsWith("document.");
   }
 
-  static isSiteSettingsExpression(value: unknown): value is SiteSettingsExpression {
-    return typeof value === 'string' && value.startsWith('siteSettings.')
+  static isSiteSettingsExpression(
+    value: unknown
+  ): value is SiteSettingsExpression {
+    return typeof value === "string" && value.startsWith("siteSettings.");
   }
 
   static isNotFragmentElement(

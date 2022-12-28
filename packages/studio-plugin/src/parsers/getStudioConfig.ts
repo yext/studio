@@ -8,10 +8,12 @@ import path from "path";
  *
  * @param pathToProjectRoot - An absolute path to the project's root folder
  */
-export default async function getStudioConfig(pathToProjectRoot: string): Promise<StudioConfig> {
-  const configFilepath = path.join(pathToProjectRoot, "studioconfig.json")
+export default async function getStudioConfig(
+  pathToProjectRoot: string
+): Promise<StudioConfig> {
+  const configFilepath = path.join(pathToProjectRoot, "studioconfig.json");
   if (!fs.existsSync(configFilepath)) {
     return {};
   }
-  return (await import(configFilepath)).default
+  return (await import(configFilepath)).default;
 }

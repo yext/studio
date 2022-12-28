@@ -48,7 +48,7 @@ export default class ParsingOrchestrator {
       pageNameToPageState,
       UUIDToFileMetadata,
       siteSettings,
-      userPaths: this.paths
+      userPaths: this.paths,
     };
   }
 
@@ -94,17 +94,22 @@ export default class ParsingOrchestrator {
     );
   }
 
-  private async getLocalDataMapping(): Promise<Record<string, string[]> | undefined> {
-    if(!this.studioConfig.isPagesJSRepo) {
+  private async getLocalDataMapping(): Promise<
+    Record<string, string[]> | undefined
+  > {
+    if (!this.studioConfig.isPagesJSRepo) {
       return undefined;
     }
-    const localDataMappingFilepath = path.join(this.paths.localData, 'mapping.json')
-      if (!fs.existsSync(localDataMappingFilepath)) {
-        throw new Error(
-          `The localData's mapping.json does not exist, expected the file to be at "${localDataMappingFilepath}".`
-        );
-      }
-      return await import(localDataMappingFilepath) as Record<string, string[]>  
+    const localDataMappingFilepath = path.join(
+      this.paths.localData,
+      "mapping.json"
+    );
+    if (!fs.existsSync(localDataMappingFilepath)) {
+      throw new Error(
+        `The localData's mapping.json does not exist, expected the file to be at "${localDataMappingFilepath}".`
+      );
+    }
+    return (await import(localDataMappingFilepath)) as Record<string, string[]>;
   }
 
   private async getPageNameToPageState(): Promise<Record<string, PageState>> {
@@ -113,14 +118,14 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    const localDataMapping = await this.getLocalDataMapping()
+    const localDataMapping = await this.getLocalDataMapping();
     return fs.readdirSync(this.paths.pages, "utf-8").reduce((prev, curr) => {
       const pageName = path.basename(curr, ".tsx");
-      const pageEntityFiles = localDataMapping?.[pageName]
+      const pageEntityFiles = localDataMapping?.[pageName];
       const pageFile = new PageFile(
         path.join(this.paths.pages, curr),
         this.getFileMetadata,
-        this.project,
+        this.project
       );
       prev[pageName] = pageFile.getPageState(pageEntityFiles);
       return prev;

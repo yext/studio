@@ -1,4 +1,4 @@
-export type TemplateStringExpression = `\`${string}\``
+export type TemplateStringExpression = `\`${string}\``;
 
 /**
  * Describes the path in the streams document to the desired data. Bracket
@@ -7,4 +7,4 @@ export type TemplateStringExpression = `\`${string}\``
 export type StreamsDataExpression = `document.${string}`;
 
 /** Describes the path in site settings configuration to the desired data.  */
-export type SiteSettingsExpression = `siteSettings.${string}`
+export type SiteSettingsExpression = `siteSettings.${string}`;
