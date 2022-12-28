@@ -19,7 +19,7 @@ export default function Banner(props: BannerProps) {
   return (
     <div style={{ backgroundColor: props.bgColor }}>
       {props.title}
-      {props.bool}
+      {`${props.bool}`}
       {props.num}
     </div>
   );
