@@ -6,11 +6,13 @@ import PageSlice, {
 } from "../models/slices/PageSlice";
 import { SliceCreator } from "../models/utils";
 
+const firstpageEntry = Object.entries(initialStudioData.pageNameToPageState)?.[0]
+
 const initialStates: PageSliceStates = {
   pages: initialStudioData.pageNameToPageState,
-  activePageName:
-    Object.keys(initialStudioData.pageNameToPageState)?.[0] ?? undefined,
+  activePageName: firstpageEntry?.[0],
   activeComponentUUID: undefined,
+  activeEntityFile: firstpageEntry?.[1]?.['entityFiles']?.[0]
 };
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
@@ -50,6 +52,27 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       return pages[activePageName];
     },
   };
+
+  const activeEntityFileActions = {
+    setActiveEntityFile: (activeEntityFile?: string): boolean => {
+      if (!activeEntityFile) {
+        set({ activeEntityFile: undefined });
+        return true;
+      }
+      const activePageName = get().activePageName;
+      if (!activePageName) {
+        console.error(`Error setting active entity file: no active page selected.`)
+        return false;
+      }
+      if (!get().pages[activePageName].entityFiles?.includes(activeEntityFile)) {
+        console.error("Error setting active entity file:"
+        + ` "${activeEntityFile}" is not an entity file for this page.`);
+        return false;
+      }
+      set({ activeEntityFile });
+        return true;
+    }
+  }
 
   const activeComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) =>
@@ -98,6 +121,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   return {
     ...initialStates,
     ...pagesActions,
+    ...activeEntityFileActions,
     ...activeComponentActions,
   };
 };

@@ -1,3 +1,4 @@
+import { FunctionComponent } from "react";
 import { StateCreator } from "zustand";
 
 /**
@@ -5,3 +6,10 @@ import { StateCreator } from "zustand";
  * mutator typings applied to Studio store.
  */
 export type SliceCreator<T> = StateCreator<T, [["zustand/immer", never]]>;
+
+
+/**
+ * Describe the import shape of a Studio's React source file
+ * (e.g. Module, Component, and Page).
+ */
+export type ImportType = FunctionComponent<Record<string, unknown>>

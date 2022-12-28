@@ -6,9 +6,10 @@ import {
   TypeGuards,
 } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
-import { ChangeEvent, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import OptionPicker from "./common/OptionPicker";
 import PropInput from "./PropInput";
+import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 
 interface PropEditorProps {
   propName: string;
@@ -42,18 +43,9 @@ export function PropEditor({
   );
   const { type, doc } = propMetadata;
 
-  const onChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      let value: string | number | boolean = e.target.value;
-      if (propKind === PropValueKind.Literal) {
-        if (type === PropValueType.number) {
-          value = e.target.valueAsNumber;
-        } else if (type === PropValueType.boolean) {
-          value = e.target.checked;
-        }
-      }
+  const onChange = useCallback((value: string | number | boolean, kind?: PropValueKind) => {
       const newPropVal = {
-        kind: propKind,
+        kind: kind ?? propKind,
         valueType: type,
         value,
       };
@@ -69,12 +61,21 @@ export function PropEditor({
     [onPropChange, propKind, propName, type]
   );
 
+  const optionPickerOnSelect = useCallback((option: PropValueKind) => {
+    setPropKind(option);
+    let value = currentPropValue ?? getPropTypeDefaultValue(type)
+    if (option === PropValueKind.Expression) {
+      value = value.toString()
+    }
+    onChange(value, option)
+  }, [currentPropValue, onChange, type])
+
   return (
     <div className="mb-5">
       <OptionPicker
         options={PropValueKind}
         defaultOption={currentPropKind ?? PropValueKind.Literal}
-        onSelect={setPropKind}
+        onSelect={optionPickerOnSelect}
         customCssClasses={optionPickerCssClasses}
       />
       <div>

@@ -63,7 +63,7 @@ describe("trigger onChange from input interaction", () => {
         onPropChange={onPropChange}
       />
     );
-    userEvent.click(screen.getByText("Expression"));
+    await userEvent.click(screen.getByText("Expression"));
     const inputValue = "doc.age";
     await userEvent.type(screen.getByLabelText("age"), inputValue);
     Array.from(inputValue).forEach((char) => {

@@ -53,8 +53,24 @@ describe("FileMetadataSlice", () => {
       useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
     expect(UUIDToFileMetadata).toEqual({});
   });
+
+  it("updates UUIDToImportedComponent using setUUIDToImportedComponent", () => {
+    const newImportedComponents = {
+      universalPage: () => <div>hello world</div>
+    }
+    useStudioStore
+      .getState()
+      .fileMetadatas.setUUIDToImportedComponent(newImportedComponents);
+    const UUIDToImportedComponent =
+      useStudioStore.getState().fileMetadatas.UUIDToImportedComponent;
+    expect(UUIDToImportedComponent).toEqual(newImportedComponents);
+  });
 });
 
-function setInitialState(initialState: FileMetadataSliceStates): void {
-  mockStore({ fileMetadatas: initialState });
+function setInitialState(initialState: Partial<FileMetadataSliceStates>): void {
+  const baseState: FileMetadataSliceStates = {
+    UUIDToFileMetadata: {},
+    UUIDToImportedComponent: {}
+  }
+  mockStore({ fileMetadatas: { ...baseState, ...initialState }});
 }
