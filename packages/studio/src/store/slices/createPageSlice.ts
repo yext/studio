@@ -56,7 +56,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         return false;
       }
       const pagesPath = initialStudioData.studioPaths.pages;
-      if (!path.isAbsolute(filepath) || !filepath.includes(pagesPath)) {
+      if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
         console.error(`Error adding page: filepath is invalid: ${filepath}`);
         return false;
       }

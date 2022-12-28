@@ -4,6 +4,7 @@ import AddPageButton from "./AddPageButton";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Check } from "../icons/check.svg";
 import classNames from "classnames";
+import { useCallback } from "react";
 
 /**
  * Renders the left panel of Studio, which lists all pages and displays the
@@ -12,38 +13,43 @@ import classNames from "classnames";
  */
 export default function PagesPanel(): JSX.Element {
   const { pages, setActivePageName, activePageName } = useStudioStore(
-    (store) => store.pages
+    (store) => {
+      const { pages, setActivePageName, activePageName } = store.pages;
+      return { pages, setActivePageName, activePageName };
+    }
   );
   const pageNames = Object.keys(pages);
 
-  function renderPageList(pageNames: string[]) {
-    return (
-      <div className="flex flex-col items-start pb-2">
-        {pageNames.map((pageName) => {
-          const isActivePage = activePageName === pageName;
-          const pageNameClasses = classNames({
-            "ml-2": isActivePage,
-            "pl-5": !isActivePage,
-          });
-          function handleClick() {
-            setActivePageName(pageName);
-          }
-          return (
-            <div key={pageName} className="flex items-center pb-4 ml-2">
-              {isActivePage && <Check />}
-              <button
-                disabled={isActivePage}
-                onClick={handleClick}
-                className={pageNameClasses}
-              >
-                {pageName}
-              </button>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
+  const renderPageList = useCallback(
+    (pageNames: string[]) => {
+      return (
+        <div className="flex flex-col items-start pb-2">
+          {pageNames.map((pageName) => {
+            const isActivePage = activePageName === pageName;
+            const checkClasses = classNames({
+              invisible: !isActivePage,
+            });
+            function handleClick() {
+              setActivePageName(pageName);
+            }
+            return (
+              <div key={pageName} className="flex items-center pb-4 ml-2">
+                <Check className={checkClasses} />
+                <button
+                  disabled={isActivePage}
+                  onClick={handleClick}
+                  className="ml-2"
+                >
+                  {pageName}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+      );
+    },
+    [activePageName, setActivePageName]
+  );
 
   return (
     <div className="flex flex-col w-1/4 px-4">

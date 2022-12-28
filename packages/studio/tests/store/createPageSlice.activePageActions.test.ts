@@ -1,18 +1,13 @@
 import useStudioStore from "../../src/store/useStudioStore";
-import {
-  ComponentState,
-  ComponentStateKind,
-  PageState,
-  PropValueKind,
-  PropValues,
-  PropValueType,
-} from "@yext/studio-plugin";
-import {
-  PageSliceStates,
-  PagesRecord,
-} from "../../src/store/models/slices/PageSlice";
-import mockStore from "../__utils__/mockStore";
+import { PageState } from "@yext/studio-plugin";
+import { PagesRecord } from "../../src/store/models/slices/PageSlice";
 import path from "path";
+import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
+import {
+  searchBarComponent,
+  resultsComponent,
+  buttonComponent,
+} from "../__fixtures__/componentStates";
 
 jest.mock("virtual:yext-studio", () => {
   return {
@@ -23,49 +18,6 @@ jest.mock("virtual:yext-studio", () => {
   };
 });
 
-const fragmentComponent: ComponentState = {
-  kind: ComponentStateKind.Fragment,
-  uuid: "fragment-uuid",
-};
-const searchBarComponent: ComponentState = {
-  kind: ComponentStateKind.Standard,
-  componentName: "SearchBar",
-  props: {
-    query: {
-      kind: PropValueKind.Literal,
-      valueType: PropValueType.string,
-      value: "what is Yext?",
-    },
-  },
-  uuid: "searchbar-uuid",
-  metadataUUID: "searchbar-metadata-uuid",
-};
-const resultsComponent: ComponentState = {
-  kind: ComponentStateKind.Standard,
-  componentName: "results",
-  props: {
-    limit: {
-      kind: PropValueKind.Literal,
-      valueType: PropValueType.number,
-      value: 10,
-    },
-  },
-  uuid: "results-uuid",
-  metadataUUID: "results-metadata-uuid",
-};
-const buttonComponent: ComponentState = {
-  kind: ComponentStateKind.Standard,
-  componentName: "Button",
-  props: {
-    clicked: {
-      kind: PropValueKind.Literal,
-      valueType: PropValueType.boolean,
-      value: false,
-    },
-  },
-  uuid: "button-uuid",
-  metadataUUID: "button-metadata-uuid",
-};
 const pages: PagesRecord = {
   universal: {
     componentTree: [searchBarComponent],
@@ -85,7 +37,7 @@ const pendingChanges = {
 describe("PageSlice", () => {
   describe("active page actions", () => {
     beforeEach(() => {
-      setInitialState({
+      mockPageSliceStates({
         pages,
         activePageName: "universal",
         pendingChanges,
@@ -99,7 +51,7 @@ describe("PageSlice", () => {
     });
 
     it("resets activeComponentUUID when setActivePageName is used", () => {
-      setInitialState({
+      mockPageSliceStates({
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
@@ -150,7 +102,7 @@ describe("PageSlice", () => {
     });
 
     it("resets active component uuid when it's remove from page state using setActivePageState", () => {
-      setInitialState({
+      mockPageSliceStates({
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
@@ -171,7 +123,7 @@ describe("PageSlice", () => {
     });
 
     it("maintains active component uuid when it's still in page state using setActivePageState", () => {
-      setInitialState({
+      mockPageSliceStates({
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
@@ -273,7 +225,7 @@ describe("PageSlice", () => {
   describe("when there is no active page", () => {
     let consoleErrorSpy;
     beforeEach(() => {
-      setInitialState({
+      mockPageSliceStates({
         pages: {},
         activePageName: undefined,
         pendingChanges,
@@ -317,156 +269,4 @@ describe("PageSlice", () => {
       );
     });
   });
-
-  describe("active component actions", () => {
-    beforeEach(() => {
-      setInitialState({
-        pages: {
-          universal: {
-            componentTree: [searchBarComponent, resultsComponent],
-            cssImports: [],
-            filepath: "mock-filepath",
-          },
-        },
-        activePageName: "universal",
-        activeComponentUUID: "results-uuid",
-        pendingChanges,
-      });
-    });
-
-    it("updates activeComponentUUID using setActiveComponentUUID", () => {
-      useStudioStore.getState().pages.setActiveComponentUUID("searchbar-uuid");
-      const activeComponentUUID =
-        useStudioStore.getState().pages.activeComponentUUID;
-      expect(activeComponentUUID).toEqual("searchbar-uuid");
-    });
-
-    it("updates active component's prop values using setActiveComponentProps", () => {
-      const newPropValues: PropValues = {
-        clicked: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.boolean,
-          value: true,
-        },
-      };
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
-      const componentState =
-        useStudioStore.getState().pages.pages["universal"].componentTree[1];
-      const actualPropValues =
-        componentState.kind === ComponentStateKind.Fragment
-          ? undefined
-          : componentState.props;
-      expect(actualPropValues).toEqual(newPropValues);
-    });
-
-    it("updates pagesToUpdate when setActiveComponentProps is used", () => {
-      const newPropValues: PropValues = {
-        clicked: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.boolean,
-          value: true,
-        },
-      };
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
-      const pagesToUpdate =
-        useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
-      expect(pagesToUpdate).toEqual(new Set<string>(["universal"]));
-    });
-
-    it("logs an error when using setActiveComponentProps if the active component is a fragment", () => {
-      const initialPages = {
-        universal: {
-          pageName: "universal",
-          componentTree: [fragmentComponent, searchBarComponent],
-          cssImports: [],
-          filepath: "mock-filepath",
-        },
-      };
-      setInitialState({
-        pages: initialPages,
-        activePageName: "universal",
-        activeComponentUUID: fragmentComponent.uuid,
-        pendingChanges,
-      });
-      const newPropValues: PropValues = {
-        clicked: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.boolean,
-          value: true,
-        },
-      };
-      const consoleErrorSpy = jest
-        .spyOn(global.console, "error")
-        .mockImplementation();
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
-      const actualPages = useStudioStore.getState().pages.pages;
-      expect(actualPages).toEqual(initialPages);
-      expect(consoleErrorSpy).toBeCalledWith(
-        "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
-      );
-    });
-
-    it("logs an error when using setActiveComponentProps before an active component is selected", () => {
-      const initialPages = {
-        universal: {
-          pageName: "universal",
-          componentTree: [searchBarComponent],
-          cssImports: [],
-          filepath: "mock-filepath",
-        },
-      };
-      setInitialState({
-        pages: initialPages,
-        activePageName: "universal",
-        activeComponentUUID: undefined,
-        pendingChanges,
-      });
-      const newPropValues: PropValues = {
-        clicked: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.boolean,
-          value: true,
-        },
-      };
-      const consoleErrorSpy = jest
-        .spyOn(global.console, "error")
-        .mockImplementation();
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
-      const actualPages = useStudioStore.getState().pages.pages;
-      expect(actualPages).toEqual(initialPages);
-      expect(consoleErrorSpy).toBeCalledWith(
-        "Error in setActiveComponentProps: No active component selected in store."
-      );
-    });
-
-    it("returns active component using getActiveComponentState", () => {
-      const activeComponent = useStudioStore
-        .getState()
-        .pages.getActiveComponentState();
-      expect(activeComponent).toEqual(resultsComponent);
-    });
-
-    it("returns undefined when using getActiveComponentState before an active component is set in store", () => {
-      setInitialState({
-        pages: {
-          universal: {
-            componentTree: [searchBarComponent],
-            cssImports: [],
-            filepath: "mock-filepath",
-          },
-        },
-        activePageName: "universal",
-        activeComponentUUID: undefined,
-        pendingChanges,
-      });
-      const activeComponent = useStudioStore
-        .getState()
-        .pages.getActiveComponentState();
-      expect(activeComponent).toEqual(undefined);
-    });
-  });
 });
-
-function setInitialState(initialState: PageSliceStates): void {
-  mockStore({ pages: initialState });
-}

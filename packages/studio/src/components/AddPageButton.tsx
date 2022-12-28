@@ -1,7 +1,7 @@
 import Modal from "./common/Modal";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Plus } from "../icons/plus.svg";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useCallback, useState } from "react";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 
@@ -12,17 +12,17 @@ export default function AddPageButton(): JSX.Element {
   const [pageName, setPageName] = useState<string>("");
   const [isValidInput, setIsValidInput] = useState<boolean>(false);
 
-  function handleAddPage() {
+  const handleAddPage = useCallback(() => {
     setShowModal(true);
-  }
+  }, [setShowModal]);
 
-  function handleModalClose() {
+  const handleModalClose = useCallback(() => {
     setShowModal(false);
     setPageName("");
     setIsValidInput(false);
-  }
+  }, [setShowModal, setPageName, setIsValidInput]);
 
-  function handleModalSave() {
+  const handleModalSave = useCallback(() => {
     const pagesPath = initialStudioData.studioPaths.pages;
     const filepath = path.join(pagesPath, pageName + ".tsx");
     if (addPage(filepath)) {
@@ -30,16 +30,15 @@ export default function AddPageButton(): JSX.Element {
     } else {
       setIsValidInput(false);
     }
-  }
+  }, [pageName, addPage, handleModalClose, setIsValidInput]);
 
-  function handleModalInputChange(e: ChangeEvent<HTMLInputElement>) {
-    setPageName(e.target.value);
-    if (e.target.value) {
-      setIsValidInput(true);
-    } else {
-      setIsValidInput(false);
-    }
-  }
+  const handleModalInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setPageName(e.target.value);
+      setIsValidInput(e.target.value.length > 0);
+    },
+    [setPageName, setIsValidInput]
+  );
 
   return (
     <>
@@ -52,7 +51,7 @@ export default function AddPageButton(): JSX.Element {
         showErrorMessage={!isValidInput && !!pageName}
         title="Add Page"
         description="Give the page a name:"
-        errorMessage="Invalid page name."
+        errorMessage="Page name already used."
         onClose={handleModalClose}
         onSave={handleModalSave}
         onInputChange={handleModalInputChange}

@@ -99,18 +99,16 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    return fs
-      .readdirSync(this.paths.pages, "utf-8")
-      .reduce((prev, curr) => {
-        const pageName = path.basename(curr, ".tsx");
-        const pageFile = new PageFile(
-          path.join(this.paths.pages, curr),
-          this.getFileMetadata,
-          this.project
-        );
-        prev[pageName] = pageFile.getPageState();
-        return prev;
-      }, {});
+    return fs.readdirSync(this.paths.pages, "utf-8").reduce((prev, curr) => {
+      const pageName = path.basename(curr, ".tsx");
+      const pageFile = new PageFile(
+        path.join(this.paths.pages, curr),
+        this.getFileMetadata,
+        this.project
+      );
+      prev[pageName] = pageFile.getPageState();
+      return prev;
+    }, {});
   }
 
   private getSiteSettings(): SiteSettings | undefined {
