@@ -13,9 +13,8 @@ export default function AddPageButton(): JSX.Element {
   const addPage = useStudioStore((store) => store.pages.addPage);
 
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(
-    undefined
-  );
+  const [errorMessage, setErrorMessage] =
+    useState<string>("Invalid page name.");
 
   const handleAddPage = useCallback(() => {
     setShowModal(true);
@@ -23,8 +22,7 @@ export default function AddPageButton(): JSX.Element {
 
   const handleModalClose = useCallback(() => {
     setShowModal(false);
-    setErrorMessage(undefined);
-  }, [setShowModal, setErrorMessage]);
+  }, [setShowModal]);
 
   const handleModalSave = useCallback(
     (pageName: string) => {

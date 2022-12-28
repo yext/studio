@@ -7,7 +7,7 @@ interface ModalProps {
   isOpen: boolean;
   title: string;
   description: string;
-  errorMessage?: string;
+  errorMessage: string;
   onClose: () => void;
   onSave: (input: string) => boolean;
 }
@@ -57,7 +57,7 @@ export default function Modal({
     [setInputValue, setIsValidInput]
   );
 
-  const showErrorMessage = !isValidInput && inputValue && errorMessage;
+  const showErrorMessage = !isValidInput && inputValue;
   const footerClasses = classNames("mt-2 items-center", {
     "flex justify-between": showErrorMessage,
   });
