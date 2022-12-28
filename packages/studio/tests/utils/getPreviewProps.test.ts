@@ -136,7 +136,8 @@ describe("template string literal value handling", () => {
         foo: {
           kind: PropValueKind.Expression,
           valueType: PropValueType.string,
-          value: "`1 ${siteSettings.locale} document.name ${siteSettings.apiKey}`",
+          value:
+            "`1 ${siteSettings.locale} document.name ${siteSettings.apiKey}`",
         },
       },
       expressionSources
