@@ -26,14 +26,10 @@
         "services"
       ],
       "filter": {
-        "entityTypes": [
-          "location"
-        ]
+        "entityTypes": ["location"]
       },
       "localization": {
-        "locales": [
-          "en"
-        ],
+        "locales": ["en"],
         "primary": false
       }
     }
