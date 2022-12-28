@@ -4,4 +4,4 @@ export interface SiteSettings {
 
 export default {
   apiKey: "mock-api-key",
-} as SiteSettings
+} as SiteSettings;

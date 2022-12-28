@@ -7,7 +7,7 @@ export default function App() {
     <div className="App">
       <div className="flex flex-row w-screen h-screen">
         <ComponentTree />
-        <PagePreview /> 
+        <PagePreview />
         <EditorPanel />
       </div>
     </div>

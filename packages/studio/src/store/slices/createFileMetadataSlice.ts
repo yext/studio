@@ -32,11 +32,13 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     }
     return fileMetadata;
   },
-  setUUIDToImportedComponent: (importedComponents: Record<string, ImportType>) => {
-    set(store => {
+  setUUIDToImportedComponent: (
+    importedComponents: Record<string, ImportType>
+  ) => {
+    set((store) => {
       store.UUIDToImportedComponent = importedComponents;
-    })
-  } 
+    });
+  },
 });
 
 export default createFileMetadataSlice;

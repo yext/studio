@@ -1,7 +1,7 @@
-import { Component, PropsWithChildren } from 'react'
+import { Component, PropsWithChildren } from "react";
 
 interface State {
-  error?: Error
+  error?: Error;
 }
 
 /**
@@ -10,13 +10,13 @@ interface State {
  */
 export default class ErrorBoundary extends Component<PropsWithChildren, State> {
   static getDerivedStateFromError(error: Error) {
-    return { error }
+    return { error };
   }
 
   render() {
     if (this.state?.error) {
-      return <div>{this.state.error.toString()}</div>
+      return <div>{this.state.error.toString()}</div>;
     }
-    return this.props.children
+    return this.props.children;
   }
 }

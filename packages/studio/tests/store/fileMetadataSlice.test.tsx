@@ -56,8 +56,8 @@ describe("FileMetadataSlice", () => {
 
   it("updates UUIDToImportedComponent using setUUIDToImportedComponent", () => {
     const newImportedComponents = {
-      universalPage: () => <div>hello world</div>
-    }
+      universalPage: () => <div>hello world</div>,
+    };
     useStudioStore
       .getState()
       .fileMetadatas.setUUIDToImportedComponent(newImportedComponents);
@@ -70,7 +70,7 @@ describe("FileMetadataSlice", () => {
 function setInitialState(initialState: Partial<FileMetadataSliceStates>): void {
   const baseState: FileMetadataSliceStates = {
     UUIDToFileMetadata: {},
-    UUIDToImportedComponent: {}
-  }
-  mockStore({ fileMetadatas: { ...baseState, ...initialState }});
+    UUIDToImportedComponent: {},
+  };
+  mockStore({ fileMetadatas: { ...baseState, ...initialState } });
 }

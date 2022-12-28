@@ -1,17 +1,21 @@
-import { PropValueType } from "@yext/studio-plugin"
+import { PropValueType } from "@yext/studio-plugin";
 
-export default function getPropTypeDefaultValue(type: PropValueType): string | number | boolean {
+export default function getPropTypeDefaultValue(
+  type: PropValueType
+): string | number | boolean {
   switch (type) {
     case PropValueType.number:
-      return 0
+      return 0;
     case PropValueType.string:
-      return ""
+      return "";
     case PropValueType.boolean:
-      return false
+      return false;
     case PropValueType.HexColor:
-      return "#000000"
+      return "#000000";
     default:
-      console.error(`Unknown PropValueType ${type}. Can't derive a default value based on PropValueType.`)
-      return ""
+      console.error(
+        `Unknown PropValueType ${type}. Can't derive a default value based on PropValueType.`
+      );
+      return "";
   }
 }

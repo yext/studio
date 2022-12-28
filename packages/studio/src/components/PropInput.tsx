@@ -24,17 +24,21 @@ export default function PropInput({
   currentPropValue,
   onChange,
 }: PropInputProps): JSX.Element {
-  const onInputChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    let value: string | number | boolean = e.target.value;
-    if (propType === PropValueType.number) {
-      value = e.target.valueAsNumber;
-    } else if (propType === PropValueType.boolean) {
-      value = e.target.checked;
-    }
-    onChange(value)
-  }, [onChange, propType])
+  const onInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      let value: string | number | boolean = e.target.value;
+      if (propType === PropValueType.number) {
+        value = e.target.valueAsNumber;
+      } else if (propType === PropValueType.boolean) {
+        value = e.target.checked;
+      }
+      onChange(value);
+    },
+    [onChange, propType]
+  );
 
-  const propVal = currentPropValue ?? initialPropValue ?? getPropTypeDefaultValue(propType);
+  const propVal =
+    currentPropValue ?? initialPropValue ?? getPropTypeDefaultValue(propType);
   switch (propType) {
     case PropValueType.number:
       return (
@@ -55,9 +59,7 @@ export default function PropInput({
         />
       );
     case PropValueType.boolean:
-      return (
-        <Toggle checked={propVal as boolean} onToggle={onInputChange} />
-      );
+      return <Toggle checked={propVal as boolean} onToggle={onInputChange} />;
     case PropValueType.HexColor:
       return (
         <input

@@ -43,7 +43,8 @@ export function PropEditor({
   );
   const { type, doc } = propMetadata;
 
-  const onChange = useCallback((value: string | number | boolean, kind?: PropValueKind) => {
+  const onChange = useCallback(
+    (value: string | number | boolean, kind?: PropValueKind) => {
       const newPropVal = {
         kind: kind ?? propKind,
         valueType: type,
@@ -61,14 +62,17 @@ export function PropEditor({
     [onPropChange, propKind, propName, type]
   );
 
-  const optionPickerOnSelect = useCallback((option: PropValueKind) => {
-    setPropKind(option);
-    let value = currentPropValue ?? getPropTypeDefaultValue(type)
-    if (option === PropValueKind.Expression) {
-      value = value.toString()
-    }
-    onChange(value, option)
-  }, [currentPropValue, onChange, type])
+  const optionPickerOnSelect = useCallback(
+    (option: PropValueKind) => {
+      setPropKind(option);
+      let value = currentPropValue ?? getPropTypeDefaultValue(type);
+      if (option === PropValueKind.Expression) {
+        value = value.toString();
+      }
+      onChange(value, option);
+    },
+    [currentPropValue, onChange, type]
+  );
 
   return (
     <div className="mb-5">
