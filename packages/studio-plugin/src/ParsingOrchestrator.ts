@@ -33,7 +33,7 @@ export default class ParsingOrchestrator {
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
 
-  async getStudioData(): Promise<StudioData> {
+  getStudioData(): StudioData {
     const UUIDToFileMetadata = Object.values(
       this.filepathToFileMetadata
     ).reduce((prev, curr) => {
@@ -42,7 +42,7 @@ export default class ParsingOrchestrator {
     }, {});
 
     const siteSettings = this.getSiteSettings();
-    const pageNameToPageState = await this.getPageNameToPageState();
+    const pageNameToPageState = this.getPageNameToPageState();
 
     return {
       pageNameToPageState,
@@ -94,7 +94,7 @@ export default class ParsingOrchestrator {
     );
   }
 
-  private async getPageNameToPageState(): Promise<Record<string, PageState>> {
+  private getPageNameToPageState(): Record<string, PageState> {
     if (!fs.existsSync(this.paths.pages)) {
       throw new Error(
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`

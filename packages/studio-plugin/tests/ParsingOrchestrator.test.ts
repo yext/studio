@@ -48,11 +48,7 @@ const pageWithModulesState: PageState = {
 
 describe("aggregates data as expected", () => {
   const orchestrator = new ParsingOrchestrator(userPaths);
-  let studioData: StudioData;
-
-  beforeAll(async () => {
-    studioData = await orchestrator.getStudioData();
-  });
+  const studioData: StudioData = orchestrator.getStudioData();
 
   it("UUIDToFileMetadata", () => {
     const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
@@ -116,7 +112,7 @@ it("throws an error when the page imports components from unexpected folders", a
   );
 
   const orchestrator = new ParsingOrchestrator(userPaths);
-  await expect(orchestrator.getStudioData()).rejects.toThrow(
+  expect(() => orchestrator.getStudioData()).toThrow(
     /^Could not get FileMetadata for/
   );
 });
@@ -128,7 +124,7 @@ it("throws when the pages folder does not exist", async () => {
   userPaths.pages = "thisFolderDoesNotExist";
 
   const orchestrator = new ParsingOrchestrator(userPaths);
-  await expect(orchestrator.getStudioData()).rejects.toThrow(
+  expect(() => orchestrator.getStudioData()).toThrow(
     /^The pages directory does not exist/
   );
 });

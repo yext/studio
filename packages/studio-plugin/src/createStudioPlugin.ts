@@ -16,7 +16,7 @@ export default async function createStudioPlugin(
   const pathToUserProjectRoot = process.cwd();
   const userPaths = getUserPaths(pathToUserProjectRoot);
   const orchestrator = new ParsingOrchestrator(userPaths);
-  const studioData = await orchestrator.getStudioData();
+  const studioData = orchestrator.getStudioData();
 
   // We have to use a dynamic import here - if we use a regular import,
   // Vite will import react-dev-utils in the browser.
