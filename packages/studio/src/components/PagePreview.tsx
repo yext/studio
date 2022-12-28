@@ -3,6 +3,7 @@ import {
   FunctionComponent,
   createElement,
   useCallback,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -39,51 +40,53 @@ function usePageElements(pageState?: PageState): (JSX.Element | null)[] | null {
     (store) => store.fileMetadatas.UUIDToImportedComponent
   );
   const expressionSources = useExpressionSources();
-  if (!pageState) {
-    return null;
-  }
-  // prevent logging errors on initial render before components are imported
-  if (Object.keys(UUIDToImportedComponent).length === 0) {
-    return null;
-  }
-  return ComponentStateHelpers.mapComponentStates(
-    pageState.componentTree,
-    (c, children) => {
-      let element: ImportType | string;
-      if (c.kind === ComponentStateKind.Fragment) {
-        element = Fragment;
-      } else if (c.kind === ComponentStateKind.BuiltIn) {
-        element = c.componentName;
-      } else {
-        if (!UUIDToImportedComponent[c.metadataUUID]) {
-          console.warn(
-            `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
-          );
-          return null;
-        }
-        element = UUIDToImportedComponent[c.metadataUUID];
-      }
-
-      const previewProps =
-        c.kind === ComponentStateKind.Fragment
-          ? {}
-          : getPreviewProps(c.props, expressionSources);
-      const component = createElement(
-        element,
-        {
-          ...previewProps,
-          key: c.uuid,
-        },
-        ...children
-      );
-
-      return (
-        <ErrorBoundary key={c.uuid}>
-          <div>{component}</div>
-        </ErrorBoundary>
-      );
+  return useMemo(() => {
+    if (!pageState) {
+      return null;
     }
-  );
+    // prevent logging errors on initial render before components are imported
+    if (Object.keys(UUIDToImportedComponent).length === 0) {
+      return null;
+    }
+    return ComponentStateHelpers.mapComponentStates(
+      pageState.componentTree,
+      (c, children) => {
+        let element: ImportType | string;
+        if (c.kind === ComponentStateKind.Fragment) {
+          element = Fragment;
+        } else if (c.kind === ComponentStateKind.BuiltIn) {
+          element = c.componentName;
+        } else {
+          if (!UUIDToImportedComponent[c.metadataUUID]) {
+            console.warn(
+              `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
+            );
+            return null;
+          }
+          element = UUIDToImportedComponent[c.metadataUUID];
+        }
+
+        const previewProps =
+          c.kind === ComponentStateKind.Fragment
+            ? {}
+            : getPreviewProps(c.props, expressionSources);
+        const component = createElement(
+          element,
+          {
+            ...previewProps,
+            key: c.uuid,
+          },
+          ...children
+        );
+
+        return (
+          <ErrorBoundary key={c.uuid}>
+            <div>{component}</div>
+          </ErrorBoundary>
+        );
+      }
+    );
+  }, [UUIDToImportedComponent, expressionSources, pageState]);
 }
 
 /**
