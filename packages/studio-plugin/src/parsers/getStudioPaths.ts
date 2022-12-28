@@ -2,8 +2,8 @@ import path from "path";
 import { StudioPaths } from "../types";
 
 /**
- * Given an absolute path to the user's src folder, determine the filepaths Studio will
- * use for parsing files.
+ * Given an absolute path to the user's project root folder, determine
+ * the filepaths Studio will use for parsing files.
  *
  * @param pathToProjectRoot - An absolute path to the project's root folder
  */

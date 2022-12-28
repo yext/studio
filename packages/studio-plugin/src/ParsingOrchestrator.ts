@@ -1,5 +1,5 @@
 import path from "path";
-import { FileMetadata, PageState, StudioPaths } from "./types";
+import { FileMetadata, PageState, StudioConfig, StudioPaths } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -27,7 +27,7 @@ export default class ParsingOrchestrator {
   private project: Project;
 
   /** All paths are assumed to be absolute. */
-  constructor(private paths: StudioPaths) {
+  constructor(private paths: StudioPaths, private studioConfig: StudioConfig) {
     this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
@@ -94,13 +94,26 @@ export default class ParsingOrchestrator {
     );
   }
 
+  private async getLocalDataMapping(): Promise<Record<string, string[]> | undefined> {
+    if(!this.studioConfig.isPagesJSRepo) {
+      return undefined;
+    }
+    const localDataMappingFilepath = path.join(this.paths.localData, 'mapping.json')
+      if (!fs.existsSync(localDataMappingFilepath)) {
+        throw new Error(
+          `The localData's mapping.json does not exist, expected the file to be at "${localDataMappingFilepath}".`
+        );
+      }
+      return await import(localDataMappingFilepath) as Record<string, string[]>  
+  }
+
   private async getPageNameToPageState(): Promise<Record<string, PageState>> {
     if (!fs.existsSync(this.paths.pages)) {
       throw new Error(
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    const localDataMapping = await import(path.join(this.paths.localData, 'mapping.json')) as Record<string, string[]> | undefined
+    const localDataMapping = await this.getLocalDataMapping()
     return fs.readdirSync(this.paths.pages, "utf-8").reduce((prev, curr) => {
       const pageName = path.basename(curr, ".tsx");
       const pageEntityFiles = localDataMapping?.[pageName]

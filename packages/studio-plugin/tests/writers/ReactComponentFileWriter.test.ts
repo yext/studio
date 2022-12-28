@@ -96,6 +96,7 @@ describe("updateFile", () => {
             componentName: "ComplexBanner",
             props: {},
             uuid: "mock-uuid-0",
+            metadataUUID: 'mock-metadata-uuid'
           },
         ],
         cssImports: [],
@@ -149,6 +150,7 @@ describe("updateFile", () => {
             props: {},
             uuid: "mock-uuid-1",
             parentUUID: "mock-uuid-0",
+            metadataUUID: 'mock-standard-metadata-uuid'
           },
           {
             kind: ComponentStateKind.Module,
@@ -156,6 +158,7 @@ describe("updateFile", () => {
             props: {},
             uuid: "mock-uuid-2",
             parentUUID: "mock-uuid-0",
+            metadataUUID: 'mock-module-metadata-uuid'
           },
         ],
         cssImports: [],
@@ -203,6 +206,8 @@ describe("updateFile", () => {
             },
           },
           componentTree: [complexBannerComponent],
+          filepath: "some/file/path",
+          metadataUUID: 'mock-metadata-uuid'
         },
         componentTree: [complexBannerComponent],
       });
@@ -226,6 +231,8 @@ describe("updateFile", () => {
           kind: FileMetadataKind.Module,
           propShape: propShapeMultiFields,
           componentTree: [complexBannerComponent],
+          filepath: "some/file/path",
+          metadataUUID: 'mock-metadata-uuid'
         },
         componentTree: [complexBannerComponent],
       });
@@ -263,6 +270,8 @@ describe("updateFile", () => {
             },
           },
           componentTree: [complexBannerComponent],
+          filepath: "some/file/path",
+          metadataUUID: 'mock-metadata-uuid'
         },
         componentTree: [complexBannerComponent],
       });
@@ -298,6 +307,8 @@ describe("updateFile", () => {
             },
           },
           componentTree: [complexBannerComponent],
+          filepath: "some/file/path",
+          metadataUUID: 'mock-metadata-uuid'
         },
         componentTree: [complexBannerComponent],
       });
