@@ -181,4 +181,3 @@ function testStandardOrModuleComponentState(
     expect(getComponentProps()).toEqual(expectedComponentProps);
   });
 }
-

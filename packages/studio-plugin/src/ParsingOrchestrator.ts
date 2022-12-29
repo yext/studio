@@ -1,5 +1,5 @@
 import path from "path";
-import { FileMetadata, PageState } from "./types";
+import { FileMetadata, PageState, UserPaths, StudioData } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -7,7 +7,6 @@ import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile, { SiteSettings } from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
-import { StudioData } from "./types/StudioData";
 
 export function createTsMorphProject() {
   return new Project({
@@ -27,14 +26,7 @@ export default class ParsingOrchestrator {
   private project: Project;
 
   /** All paths are assumed to be absolute. */
-  constructor(
-    private paths: {
-      components: string;
-      pages: string;
-      modules: string;
-      siteSettings: string;
-    }
-  ) {
+  constructor(private paths: UserPaths) {
     this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
@@ -55,6 +47,7 @@ export default class ParsingOrchestrator {
       pageNameToPageState,
       UUIDToFileMetadata,
       siteSettings,
+      userPaths: this.paths,
     };
   }
 
