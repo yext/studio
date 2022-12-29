@@ -5,7 +5,6 @@ import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
-  initialPropValue?: T;
   currentPropValue?: T;
   onChange: (value: T) => void;
 }
@@ -20,7 +19,6 @@ const inputBoxCssClasses =
  */
 export default function PropInput({
   propType,
-  initialPropValue,
   currentPropValue,
   onChange,
 }: PropInputProps): JSX.Element {
@@ -37,8 +35,7 @@ export default function PropInput({
     [onChange, propType]
   );
 
-  const propVal =
-    currentPropValue ?? initialPropValue ?? getPropTypeDefaultValue(propType);
+  const propVal = currentPropValue ?? getPropTypeDefaultValue(propType);
   switch (propType) {
     case PropValueType.number:
       return (

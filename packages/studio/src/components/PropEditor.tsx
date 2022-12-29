@@ -14,7 +14,6 @@ import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 interface PropEditorProps {
   propName: string;
   propMetadata: PropMetadata;
-  initialPropValue?: string | number | boolean;
   currentPropValue?: string | number | boolean;
   currentPropKind?: PropValueKind;
   onPropChange: (propVal: PropVal) => void;
@@ -33,7 +32,6 @@ const optionPickerCssClasses = {
 export function PropEditor({
   propName,
   propMetadata,
-  initialPropValue,
   currentPropValue,
   currentPropKind,
   onPropChange,
@@ -91,7 +89,6 @@ export function PropEditor({
                 propKind === PropValueKind.Expression
                   ? PropValueType.string
                   : type,
-              initialPropValue,
               currentPropValue,
               onChange,
             }}

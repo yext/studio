@@ -28,11 +28,10 @@ export default function ComponentEditor(): JSX.Element | null {
   ) {
     return null;
   }
-  const { propShape, initialProps } = activeComponentMetadata;
 
   return (
     <div>
-      {Object.entries(propShape)
+      {Object.entries(activeComponentMetadata.propShape)
         .filter(([propName, propMetadata]) => {
           if (propMetadata.type === PropValueType.ReactNode) {
             console.warn(
@@ -46,7 +45,6 @@ export default function ComponentEditor(): JSX.Element | null {
         .map(([propName, propMetadata], index) => {
           const currentPropValue = activeComponentState.props[propName]?.value;
           const currentPropKind = activeComponentState.props[propName]?.kind;
-          const initialPropValue = initialProps?.[propName]?.value;
           const onPropChange = (newPropVal: PropVal) => {
             setActiveComponentProps({
               ...activeComponentState?.props,
@@ -59,7 +57,6 @@ export default function ComponentEditor(): JSX.Element | null {
               {...{
                 propName,
                 propMetadata,
-                initialPropValue,
                 currentPropValue,
                 currentPropKind,
                 onPropChange,
