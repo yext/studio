@@ -5,4 +5,3 @@ import { StateCreator } from "zustand";
  * mutator typings applied to Studio store.
  */
 export type SliceCreator<T> = StateCreator<T, [["zustand/immer", never]]>;
-

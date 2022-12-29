@@ -21,13 +21,15 @@ import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 
 interface PagePreviewProps {
-  pageState: PageState
+  pageState: PageState;
 }
 
 /**
  * Renders the provided page's component tree.
  */
-export default function PagePreview({ pageState }: PagePreviewProps): JSX.Element {
+export default function PagePreview({
+  pageState,
+}: PagePreviewProps): JSX.Element {
   useImportedComponents(pageState);
   const elements = usePageElements(pageState);
   return <>{elements}</>;
