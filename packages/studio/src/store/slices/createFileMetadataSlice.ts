@@ -35,9 +35,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   },
   setUUIDToImportedComponent: (
     importedComponents: Record<string, ImportType>
-  ) => {
-    set({ UUIDToImportedComponent: importedComponents });
-  },
+  ) => set({ UUIDToImportedComponent: importedComponents }),
 });
 
 export default createFileMetadataSlice;
