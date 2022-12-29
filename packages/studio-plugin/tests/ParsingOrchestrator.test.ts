@@ -29,6 +29,7 @@ const basicPageState: PageState = {
       kind: ComponentStateKind.Standard,
     }),
   ],
+  filepath: expect.anything(),
   cssImports: [],
 };
 
@@ -43,6 +44,7 @@ const pageWithModulesState: PageState = {
       kind: ComponentStateKind.Module,
     }),
   ],
+  filepath: expect.anything(),
   cssImports: [],
 };
 

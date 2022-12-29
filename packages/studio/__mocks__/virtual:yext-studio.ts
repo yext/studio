@@ -10,7 +10,6 @@ const mockStudioData: StudioData = {
     pages: mockFilepath,
     modules: mockFilepath,
     siteSettings: mockFilepath,
-    localData: mockFilepath,
   },
 };
 export default mockStudioData;

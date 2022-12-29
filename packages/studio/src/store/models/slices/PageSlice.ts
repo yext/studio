@@ -11,14 +11,24 @@ export interface PageSliceStates {
   activePageName: string | undefined;
   /** The uuid of the current component display in Studio. */
   activeComponentUUID?: string;
+  /**
+   * The part of state that tracks which pages have been interacted with from
+   * the UI and have changes pending on commit.
+   */
+  pendingChanges: {
+    /**
+     * The names of pages (new or existing) that need to be updated in the
+     * user's file system.
+     */
+    pagesToUpdate: Set<string>;
+  };
 }
 
 interface PageSliceActions {
-  setPages: (state: PagesRecord) => void;
-
   setActivePageName: (pageName: string) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState | undefined;
+  addPage: (filepath: string) => boolean;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentProps: (props: PropValues) => void;

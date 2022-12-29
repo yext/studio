@@ -63,9 +63,11 @@ export default class PageFile {
       absPathDefaultImports
     );
     const cssImports = this.studioSourceFileParser.parseCssImports();
+    const filepath = this.studioSourceFileParser.getFilepath();
     return {
       componentTree,
       cssImports,
+      filepath,
     };
   }
 

@@ -14,6 +14,7 @@ export default function mockStoreActiveComponent({
         index: {
           componentTree: activeComponent ? [activeComponent] : [],
           cssImports: [],
+          filepath: "mock-filepath",
         },
       },
       ...(activeComponent && { activeComponentUUID: activeComponent.uuid }),

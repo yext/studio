@@ -33,10 +33,11 @@ describe("updatePageFile", () => {
           componentName: "ComplexBanner",
           props: {},
           uuid: "mock-uuid-0",
-          metadataUUID: "complexbanner-metadata",
+          metadataUUID: "mock-metadataUUID",
         },
       ],
       cssImports: [],
+      filepath: "mock-filepath",
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyPage.tsx"),
@@ -63,7 +64,6 @@ describe("updatePageFile", () => {
               kind: ComponentStateKind.Standard,
               componentName: "SimpleBanner",
               uuid: "mock-uuid-0",
-              metadataUUID: "banner-metadata",
               props: {
                 title: {
                   kind: PropValueKind.Expression,
@@ -71,9 +71,11 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
+              metadataUUID: "mock-metadataUUID",
             },
           ],
           cssImports: [],
+          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -97,6 +99,7 @@ describe("updatePageFile", () => {
         {
           componentTree: streamConfigMultipleFieldsComponentTree,
           cssImports: [],
+          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -123,7 +126,6 @@ describe("updatePageFile", () => {
               kind: ComponentStateKind.Standard,
               componentName: "SimpleBanner",
               uuid: "mock-uuid-0",
-              metadataUUID: "banner-metadata",
               props: {
                 title: {
                   kind: PropValueKind.Expression,
@@ -131,9 +133,11 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
+              metadataUUID: "mock-metadataUUID",
             },
           ],
           cssImports: [],
+          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );

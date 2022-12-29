@@ -3,6 +3,7 @@ import { PropValues } from "./PropValues";
 export type PageState = {
   componentTree: ComponentState[];
   cssImports: string[];
+  filepath: string;
 };
 
 export type ComponentState =
