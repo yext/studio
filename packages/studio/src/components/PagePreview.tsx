@@ -3,6 +3,7 @@ import {
   FunctionComponent,
   createElement,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -129,11 +130,24 @@ function useImportedComponents(pageState: PageState) {
   const setUUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.setUUIDToImportedComponent
   );
-
-  // Use ref instead of to avoid triggering rerender (infinite loop) in useCallback/useLayoutEffect logic
-  const UUIDToImportedComponentRef = useRef<Record<string, ImportType>>(
-    useStudioStore((store) => store.fileMetadatas.UUIDToImportedComponent)
+  const UUIDToImportedComponent = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToImportedComponent
   );
+
+  // Use ref instead of to avoid triggering rerender (infinite loop)  when UUIDToImportedComponent
+  // is updated within this hook.
+  const UUIDToImportedComponentRef = useRef<Record<string, ImportType>>(
+    UUIDToImportedComponent
+  );
+
+  // Trigger force update only when UUIDToImportedComponent is updated outside of this hook
+  const [forceUpdateDep, forceUpdate] = useState(true);
+  useEffect(() => {
+    if (UUIDToImportedComponent !== UUIDToImportedComponentRef.current) {
+      UUIDToImportedComponentRef.current = UUIDToImportedComponent;
+      forceUpdate(!forceUpdateDep);
+    }
+  }, [UUIDToImportedComponent, forceUpdateDep]);
 
   const importComponent = useCallback(
     async (
@@ -158,7 +172,8 @@ function useImportedComponents(pageState: PageState) {
         newImportedComponents[metadataUUID] = functionComponent;
       }
     },
-    [UUIDToFileMetadata]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [UUIDToFileMetadata, forceUpdateDep]
   );
 
   useLayoutEffect(() => {
@@ -175,7 +190,7 @@ function useImportedComponents(pageState: PageState) {
       UUIDToImportedComponentRef.current = newState;
       setUUIDToImportedComponent(newState);
     });
-  }, [importComponent, pageState, setUUIDToImportedComponent]);
+  }, [importComponent, pageState, setUUIDToImportedComponent, forceUpdateDep]);
 }
 
 function getFunctionComponent(
