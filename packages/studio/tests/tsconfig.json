@@ -1,4 +1,4 @@
 {
   "extends": "../../../tsconfig.json",
-  "include": ["components", "store", "__utils__", "__mocks__"]
+  "include": ["components", "store", "hooks", "__utils__", "__mocks__"]
 }

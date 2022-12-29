@@ -1,25 +1,15 @@
-import {
-  Fragment,
-  FunctionComponent,
-  createElement,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { Fragment, createElement, useMemo, useState } from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
-  ComponentState,
   ComponentTreeHelpers,
   ComponentStateKind,
   PageState,
-  TypeGuards,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
 import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
+import useImportedComponents from "../hooks/useImportedComponents";
 
 interface PagePreviewProps {
   pageState: PageState;
@@ -117,92 +107,4 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
     }));
   }, [siteSettingValues]);
   return expressionSources;
-}
-
-/**
- * Load all functional component methods correspond to the components
- * and modules use in the provided page state's component tree.
- */
-function useImportedComponents(pageState: PageState) {
-  const UUIDToFileMetadata = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToFileMetadata
-  );
-  const setUUIDToImportedComponent = useStudioStore(
-    (store) => store.fileMetadatas.setUUIDToImportedComponent
-  );
-  const UUIDToImportedComponent = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToImportedComponent
-  );
-
-  // Use ref instead of to avoid triggering rerender (infinite loop)  when UUIDToImportedComponent
-  // is updated within this hook.
-  const UUIDToImportedComponentRef = useRef<Record<string, ImportType>>(
-    UUIDToImportedComponent
-  );
-
-  // Trigger force update only when UUIDToImportedComponent is updated outside of this hook
-  const [forceUpdateDep, forceUpdate] = useState(true);
-  useEffect(() => {
-    if (UUIDToImportedComponent !== UUIDToImportedComponentRef.current) {
-      UUIDToImportedComponentRef.current = UUIDToImportedComponent;
-      forceUpdate(!forceUpdateDep);
-    }
-  }, [UUIDToImportedComponent, forceUpdateDep]);
-
-  const importComponent = useCallback(
-    async (
-      c: ComponentState,
-      newImportedComponents: Record<string, ImportType>
-    ) => {
-      if (!TypeGuards.isStandardOrModuleComponentState(c)) {
-        return null;
-      }
-      const { metadataUUID, componentName } = c;
-      // Avoid re-importing components
-      if (metadataUUID in UUIDToImportedComponentRef) {
-        return null;
-      }
-      const filepath = UUIDToFileMetadata[metadataUUID].filepath;
-      const importedModule = await import(filepath);
-      const functionComponent = getFunctionComponent(
-        importedModule,
-        componentName
-      );
-      if (functionComponent) {
-        newImportedComponents[metadataUUID] = functionComponent;
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [UUIDToFileMetadata, forceUpdateDep]
-  );
-
-  useLayoutEffect(() => {
-    const newLoadedComponents: Record<string, ImportType> = {};
-    Promise.all([
-      ...pageState.componentTree.map((c) =>
-        importComponent(c, newLoadedComponents)
-      ),
-    ]).then(() => {
-      const newState = {
-        ...UUIDToImportedComponentRef.current,
-        ...newLoadedComponents,
-      };
-      UUIDToImportedComponentRef.current = newState;
-      setUUIDToImportedComponent(newState);
-    });
-  }, [importComponent, pageState, setUUIDToImportedComponent, forceUpdateDep]);
-}
-
-function getFunctionComponent(
-  module: Record<string, unknown>,
-  name: string
-): ImportType | null {
-  if (typeof module[name] === "function") {
-    return module[name] as FunctionComponent;
-  } else if (typeof module["default"] === "function") {
-    return module["default"] as FunctionComponent;
-  } else {
-    console.error(`${name} is not a valid functional component.`);
-    return null;
-  }
 }
