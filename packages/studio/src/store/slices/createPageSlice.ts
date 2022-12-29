@@ -6,13 +6,13 @@ import PageSlice, {
 } from "../models/slices/PageSlice";
 import { SliceCreator } from "../models/utils";
 
-const firstpageEntry = Object.entries(
+const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
 )?.[0];
 
 const initialStates: PageSliceStates = {
   pages: initialStudioData.pageNameToPageState,
-  activePageName: firstpageEntry?.[0],
+  activePageName: firstPageEntry?.[0],
   activeComponentUUID: undefined,
 };
 

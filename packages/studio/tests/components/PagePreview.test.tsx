@@ -5,6 +5,7 @@ import {
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
+  PageState,
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
@@ -198,7 +199,8 @@ const mockStoreWithPropExpression: MockStudioStore = {
 
 it("renders active page's component tree with nested Component(s)", async () => {
   mockStore(mockStoreNestedComponentState);
-  render(<PagePreview />);
+  const pageState = mockStoreNestedComponentState.pages?.pages?.['universalPage'] as PageState
+  render(<PagePreview pageState={pageState}/>);
   const container1 = await screen.findByText(/Container 1/);
   const container2 = await within(container1).findByText(/Container 2/);
   const banner1 = await within(container1).findByText(/Banner 1/);
@@ -211,7 +213,8 @@ it("renders active page's component tree with nested Component(s)", async () => 
 
 it("renders active page's component tree with Module component type", async () => {
   mockStore(mockStoreModuleState);
-  render(<PagePreview />);
+  const pageState = mockStoreModuleState.pages?.pages?.['universalPage'] as PageState
+  render(<PagePreview pageState={pageState}/>);
   const panel = await screen.findByText(/This is Panel module/);
   const button = await within(panel).findByText(/This is button/);
   const banner = await within(panel).findByText(/This is Banner/);
@@ -222,7 +225,8 @@ it("renders active page's component tree with Module component type", async () =
 
 it("render component with transformed props", async () => {
   mockStore(mockStoreWithPropExpression);
-  render(<PagePreview />);
+  const pageState = mockStoreWithPropExpression.pages?.pages?.['universalPage'] as PageState
+  render(<PagePreview pageState={pageState}/>);
   const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
   expect(siteSettingsExpressionProp).toBeDefined();
 });

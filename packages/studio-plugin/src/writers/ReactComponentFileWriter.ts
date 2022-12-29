@@ -10,7 +10,7 @@ import {
   PropValueType,
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
-import ComponentStateHelpers from "../utils/ComponentStateHelpers";
+import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -42,7 +42,7 @@ export default class ReactComponentFileWriter {
   }
 
   private createReturnStatement(componentTree: ComponentState[]): string {
-    const elements = ComponentStateHelpers.mapComponentStates<string>(
+    const elements = ComponentTreeHelpers.mapComponentTree<string>(
       componentTree,
       (c, children): string => {
         if (c.kind === ComponentStateKind.Fragment) {

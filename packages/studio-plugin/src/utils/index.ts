@@ -1,2 +1,2 @@
 export { default as TypeGuards } from "./TypeGuards";
-export { default as ComponentStateHelpers } from "./ComponentStateHelpers";
+export { default as ComponentTreeHelpers } from "./ComponentTreeHelpers";

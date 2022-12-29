@@ -10,44 +10,44 @@ import {
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentState,
-  ComponentStateHelpers,
+  ComponentTreeHelpers,
   ComponentStateKind,
   PageState,
   TypeGuards,
 } from "@yext/studio-plugin";
-import { ImportType } from "../store/models/utils";
+import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
 import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 
+interface PagePreviewProps {
+  pageState: PageState
+}
+
 /**
- * Renders the active page using its component tree.
+ * Renders the provided page's component tree.
  */
-export default function PagePreview(): JSX.Element {
-  const pageState = useStudioStore((s) => s.pages.getActivePageState());
+export default function PagePreview({ pageState }: PagePreviewProps): JSX.Element {
   useImportedComponents(pageState);
   const elements = usePageElements(pageState);
-  return <div className="grow w-1/3 bg-gray-300">{elements}</div>;
+  return <>{elements}</>;
 }
 
 /**
  * Renders the page's component tree with props, where expressions
  * in prop values are replace with actual values.
  */
-function usePageElements(pageState?: PageState): (JSX.Element | null)[] | null {
+function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
   const UUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
   );
   const expressionSources = useExpressionSources();
   return useMemo(() => {
-    if (!pageState) {
-      return null;
-    }
     // prevent logging errors on initial render before components are imported
     if (Object.keys(UUIDToImportedComponent).length === 0) {
       return null;
     }
-    return ComponentStateHelpers.mapComponentStates(
+    return ComponentTreeHelpers.mapComponentTree(
       pageState.componentTree,
       (c, children) => {
         let element: ImportType | string;
@@ -101,7 +101,7 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
     (store) => store.siteSettings.values
   );
   useLayoutEffect(() => {
-    const siteSettingSource = Object.entries(siteSettingValues ?? {}).reduce(
+    const siteSettingsSource = Object.entries(siteSettingValues ?? {}).reduce(
       (map, [propName, proVal]) => {
         map[propName] = proVal.value;
         return map;
@@ -110,7 +110,7 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
     );
     setExpressionSources((prev) => ({
       ...prev,
-      siteSettings: siteSettingSource,
+      siteSettings: siteSettingsSource,
     }));
   }, [siteSettingValues]);
   return expressionSources;
@@ -120,7 +120,7 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
  * Load all functional component methods correspond to the components
  * and modules use in the provided page state's component tree.
  */
-function useImportedComponents(pageState?: PageState) {
+function useImportedComponents(pageState: PageState) {
   const UUIDToFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.UUIDToFileMetadata
   );
@@ -128,7 +128,7 @@ function useImportedComponents(pageState?: PageState) {
     (store) => store.fileMetadatas.setUUIDToImportedComponent
   );
 
-  // Use ref instead of to avoid triggering rerender (infinite loop) in useCallback/useEffect logic
+  // Use ref instead of to avoid triggering rerender (infinite loop) in useCallback/useLayoutEffect logic
   const UUIDToImportedComponentRef = useRef<Record<string, ImportType>>(
     useStudioStore((store) => store.fileMetadatas.UUIDToImportedComponent)
   );
@@ -160,9 +160,6 @@ function useImportedComponents(pageState?: PageState) {
   );
 
   useLayoutEffect(() => {
-    if (!pageState) {
-      return;
-    }
     const newLoadedComponents: Record<string, ImportType> = {};
     Promise.all([
       ...pageState.componentTree.map((c) =>

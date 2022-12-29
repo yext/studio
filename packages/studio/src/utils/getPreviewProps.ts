@@ -22,11 +22,10 @@ export function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(props).forEach((propName) => {
-    const prop = props[propName];
-    if (prop.value === null || prop.value === undefined) {
+    const { kind, value, valueType } = props[propName];
+    if (value === null || value === undefined) {
       return;
     }
-    const { kind, value, valueType } = prop;
     if (kind === PropValueKind.Expression) {
       if (TypeGuards.isTemplateString(value)) {
         transformedProps[propName] = getTemplateStringValue(

@@ -1,7 +1,8 @@
 import { FileMetadata, FileMetadataKind } from "@yext/studio-plugin";
 import initialStudioData from "virtual:yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
-import { ImportType, SliceCreator } from "../models/utils";
+import { SliceCreator } from "../models/utils";
+import { ImportType } from "../models/ImportType";
 
 const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   set,
@@ -35,9 +36,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   setUUIDToImportedComponent: (
     importedComponents: Record<string, ImportType>
   ) => {
-    set((store) => {
-      store.UUIDToImportedComponent = importedComponents;
-    });
+    set({ UUIDToImportedComponent: importedComponents });
   },
 });
 

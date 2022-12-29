@@ -1,5 +1,5 @@
 import { ComponentMetadata, FileMetadata } from "@yext/studio-plugin";
-import { ImportType } from "../utils";
+import { ImportType } from "../ImportType";
 
 export interface FileMetadataSliceStates {
   /** Metadata of all components and modules that can be used in Studio. */
