@@ -8,7 +8,7 @@ interface ModalProps {
   title: string;
   description: string;
   errorMessage: string;
-  onClose: () => void;
+  handleClose: () => void;
   onSave: (input: string) => boolean;
 }
 
@@ -28,7 +28,7 @@ export default function Modal({
   title,
   description,
   errorMessage,
-  onClose,
+  handleClose: handleModalClose,
   onSave,
 }: ModalProps) {
   const [isValidInput, setIsValidInput] = useState<boolean>(false);
@@ -37,8 +37,8 @@ export default function Modal({
   const handleClose = useCallback(() => {
     setInputValue("");
     setIsValidInput(false);
-    onClose();
-  }, [onClose, setInputValue, setIsValidInput]);
+    handleModalClose();
+  }, [handleModalClose, setInputValue, setIsValidInput]);
 
   const handleSave = useCallback(() => {
     if (onSave(inputValue)) {

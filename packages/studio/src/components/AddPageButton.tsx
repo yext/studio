@@ -52,7 +52,7 @@ export default function AddPageButton(): JSX.Element {
         title="Add Page"
         description="Give the page a name:"
         errorMessage={errorMessage}
-        onClose={handleModalClose}
+        handleClose={handleModalClose}
         onSave={handleModalSave}
       />
     </>
