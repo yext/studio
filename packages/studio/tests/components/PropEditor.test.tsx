@@ -3,56 +3,6 @@ import { PropEditor } from "../../src/components/PropEditor";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 
-describe("renders initial prop value", () => {
-  it("renders string prop with initial value", () => {
-    render(
-      <PropEditor
-        propName="title"
-        propMetadata={{ type: PropValueType.string }}
-        initialPropValue="initial title"
-        onPropChange={jest.fn()}
-      />
-    );
-    expect(screen.getByLabelText("title")).toHaveValue("initial title");
-  });
-
-  it("renders number prop with initial value", () => {
-    render(
-      <PropEditor
-        propName="age"
-        propMetadata={{ type: PropValueType.number }}
-        initialPropValue={20}
-        onPropChange={jest.fn()}
-      />
-    );
-    expect(screen.getByLabelText("age")).toHaveValue(20);
-  });
-
-  it("renders booleab prop with initial value", () => {
-    render(
-      <PropEditor
-        propName="is Yext Employee?"
-        propMetadata={{ type: PropValueType.boolean }}
-        initialPropValue={true}
-        onPropChange={jest.fn()}
-      />
-    );
-    expect(screen.getByLabelText("is Yext Employee?")).toBeChecked();
-  });
-
-  it("renders HexColor prop with initial value", () => {
-    render(
-      <PropEditor
-        propName="background color"
-        propMetadata={{ type: PropValueType.HexColor }}
-        initialPropValue="#123456"
-        onPropChange={jest.fn()}
-      />
-    );
-    expect(screen.getByLabelText("background color")).toHaveValue("#123456");
-  });
-});
-
 describe("trigger onChange from input interaction", () => {
   it('constructs expression PropVal type when click "Expression" button', async () => {
     const onPropChange = jest.fn();
