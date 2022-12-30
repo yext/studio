@@ -1,4 +1,3 @@
-import { ChangeEvent, useCallback, useState } from "react";
 import ReactModal from "react-modal";
 import { ReactComponent as X } from "../../icons/x.svg";
 import classNames from "classnames";
@@ -6,10 +5,12 @@ import classNames from "classnames";
 interface ModalProps {
   isOpen: boolean;
   title: string;
-  description: string;
-  errorMessage: string;
+  body: JSX.Element;
+  errorMessage?: string;
   handleClose: () => void;
-  onSave: (input: string) => boolean;
+  handleConfirm: () => void;
+  isConfirmButtonDisabled?: boolean;
+  confirmButtonText?: string;
 }
 
 const customReactModalStyles = {
@@ -26,44 +27,20 @@ const customReactModalStyles = {
 export default function Modal({
   isOpen,
   title,
-  description,
+  body,
   errorMessage,
-  handleClose: handleModalClose,
-  onSave,
+  handleClose,
+  handleConfirm,
+  isConfirmButtonDisabled,
+  confirmButtonText = "Ok"
 }: ModalProps) {
-  const [isValidInput, setIsValidInput] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
 
-  const handleClose = useCallback(() => {
-    setInputValue("");
-    setIsValidInput(false);
-    handleModalClose();
-  }, [handleModalClose, setInputValue, setIsValidInput]);
-
-  const handleSave = useCallback(() => {
-    if (onSave(inputValue)) {
-      handleClose();
-    } else {
-      setIsValidInput(false);
-    }
-  }, [inputValue, onSave, handleClose]);
-
-  const handleInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value.trim();
-      setInputValue(value);
-      setIsValidInput(value.length > 0);
-    },
-    [setInputValue, setIsValidInput]
-  );
-
-  const showErrorMessage = !isValidInput && inputValue;
   const footerClasses = classNames("mt-2 items-center", {
-    "flex justify-between": showErrorMessage,
+    "flex justify-between": errorMessage,
   });
-  const saveButtonClasses = classNames("ml-2 py-1 px-3 text-white rounded-md", {
-    "bg-gray-400": !isValidInput,
-    "bg-blue-600": isValidInput,
+  const confirmButtonClasses = classNames("ml-2 py-1 px-3 text-white rounded-md", {
+    "bg-gray-400": isConfirmButtonDisabled,
+    "bg-blue-600": !isConfirmButtonDisabled,
   });
 
   return (
@@ -82,15 +59,9 @@ export default function Modal({
           <X />
         </button>
       </div>
-      <div>{description}</div>
-      <input
-        type="text"
-        className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
-        value={inputValue}
-        onChange={handleInputChange}
-      />
+      {body}
       <div className={footerClasses}>
-        {showErrorMessage && (
+        {errorMessage && (
           <div className="flex justify-start text-red-600">{errorMessage}</div>
         )}
         <div className="flex justify-end">
@@ -98,11 +69,11 @@ export default function Modal({
             Cancel
           </button>
           <button
-            className={saveButtonClasses}
-            disabled={!isValidInput}
-            onClick={handleSave}
+            className={confirmButtonClasses}
+            disabled={isConfirmButtonDisabled}
+            onClick={handleConfirm}
           >
-            Save
+            {confirmButtonText}
           </button>
         </div>
       </div>

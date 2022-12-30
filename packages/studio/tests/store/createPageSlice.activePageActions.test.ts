@@ -1,10 +1,8 @@
 import useStudioStore from "../../src/store/useStudioStore";
 import { PageState } from "@yext/studio-plugin";
 import {
-  PageSliceStates,
   PagesRecord,
 } from "../../src/store/models/slices/PageSlice";
-import path from "path";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 import {
   searchBarComponent,
@@ -24,9 +22,6 @@ const pages: PagesRecord = {
     filepath: "mock-filepath",
   },
 };
-const pendingChanges: PageSliceStates["pendingChanges"] = {
-  pagesToUpdate: new Set<string>(),
-};
 
 describe("PageSlice", () => {
   describe("active page actions", () => {
@@ -34,7 +29,6 @@ describe("PageSlice", () => {
       mockPageSliceStates({
         pages,
         activePageName: "universal",
-        pendingChanges,
       });
     });
 
@@ -49,7 +43,6 @@ describe("PageSlice", () => {
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
-        pendingChanges,
       });
       useStudioStore.getState().pages.setActivePageName("vertical");
       const activeComponentUUID =
@@ -100,7 +93,6 @@ describe("PageSlice", () => {
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
-        pendingChanges,
       });
       const newActivePageState: PageState = {
         componentTree: [buttonComponent],
@@ -121,7 +113,6 @@ describe("PageSlice", () => {
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
-        pendingChanges,
       });
       const newActivePageState: PageState = {
         componentTree: [searchBarComponent, buttonComponent],
@@ -143,90 +134,14 @@ describe("PageSlice", () => {
         .pages.getActivePageState();
       expect(activePageState).toEqual(pages["universal"]);
     });
-
-    describe("addPage", () => {
-      const filepath = path.resolve(__dirname, "../__mocks__", "./test.tsx");
-
-      it("adds a page to pages", () => {
-        useStudioStore.getState().pages.addPage(filepath);
-        const pagesRecord = useStudioStore.getState().pages.pages;
-        expect(pagesRecord).toEqual({
-          ...pages,
-          test: {
-            componentTree: [],
-            cssImports: [],
-            filepath,
-          },
-        });
-      });
-
-      it("sets active page name to the new page", () => {
-        useStudioStore.getState().pages.addPage(filepath);
-        const activePageName = useStudioStore.getState().pages.activePageName;
-        expect(activePageName).toEqual("test");
-      });
-
-      it("adds the new page name to pagesToUpdate", () => {
-        useStudioStore.getState().pages.addPage(filepath);
-        const pagesToUpdate =
-          useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
-        expect(pagesToUpdate).toEqual(new Set<string>(["test"]));
-      });
-
-      describe("errors", () => {
-        let consoleErrorSpy;
-        beforeEach(() => {
-          consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-        });
-
-        it("gives an error for an empty string filepath", () => {
-          useStudioStore.getState().pages.addPage("");
-          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-          expect(consoleErrorSpy).toHaveBeenCalledWith(
-            "Error adding page: a filepath is required."
-          );
-        });
-
-        it("gives an error for a relative filepath", () => {
-          useStudioStore.getState().pages.addPage("./test.tsx");
-          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-          expect(consoleErrorSpy).toHaveBeenCalledWith(
-            "Error adding page: filepath is invalid: ./test.tsx"
-          );
-        });
-
-        it("gives an error for a filepath outside the allowed path for pages", () => {
-          const filepath = path.join(__dirname, "../__mocks__", "../test.tsx");
-          useStudioStore.getState().pages.addPage(filepath);
-          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-          expect(consoleErrorSpy).toHaveBeenCalledWith(
-            `Error adding page: filepath is invalid: ${filepath}`
-          );
-        });
-
-        it("gives an error for a filepath with a page name that already exists", () => {
-          const filepath = path.join(
-            __dirname,
-            "../__mocks__",
-            "./universal.tsx"
-          );
-          useStudioStore.getState().pages.addPage(filepath);
-          expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-          expect(consoleErrorSpy).toHaveBeenCalledWith(
-            'Error adding page: page name "universal" is already used.'
-          );
-        });
-      });
-    });
   });
 
   describe("when there is no active page", () => {
-    let consoleErrorSpy;
+    let consoleErrorSpy: jest.SpyInstance;
     beforeEach(() => {
       mockPageSliceStates({
         pages: {},
         activePageName: undefined,
-        pendingChanges,
       });
       consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
     });

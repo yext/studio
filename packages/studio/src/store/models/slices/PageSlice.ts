@@ -16,6 +16,8 @@ export interface PageSliceStates {
    * the UI and have changes pending on commit.
    */
   pendingChanges: {
+    /** The names of pages that need to be removed from the user's file system. */
+    pagesToRemove: Set<string>;
     /**
      * The names of pages (new or existing) that need to be updated in the
      * user's file system.
@@ -25,10 +27,11 @@ export interface PageSliceStates {
 }
 
 interface PageSliceActions {
-  setActivePageName: (pageName: string) => void;
+  setActivePageName: (pageName: string | undefined) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState | undefined;
   addPage: (filepath: string) => boolean;
+  removePage: (filepath: string) => void;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentProps: (props: PropValues) => void;
