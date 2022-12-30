@@ -22,11 +22,11 @@ export default function ActionsBar(): JSX.Element {
   const disableRedo = futureStates.length === 0;
   const undoClasses = classNames("w-4", {
     "text-gray-400": disableUndo,
-    "text-gray-600": !disableUndo,
+    "text-gray-700": !disableUndo,
   });
   const redoClasses = classNames("w-4 mx-4 scale-x-[-1]", {
     "text-gray-400": disableRedo,
-    "text-gray-600": !disableRedo,
+    "text-gray-700": !disableRedo,
   });
 
   return (
