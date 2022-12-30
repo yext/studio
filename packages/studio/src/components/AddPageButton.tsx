@@ -44,7 +44,7 @@ export default function AddPageButton(): JSX.Element {
 
   return (
     <>
-      <button onClick={handleAddPage}>
+      <button onClick={handleAddPage} aria-label="Add Page">
         <Plus />
       </button>
       <Modal
