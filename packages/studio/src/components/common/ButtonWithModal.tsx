@@ -29,9 +29,7 @@ export default function ButtonWithModal({
 
   return (
     <>
-      <button onClick={handleButtonClick}>
-        {buttonIcon}
-      </button>
+      <button onClick={handleButtonClick}>{buttonIcon}</button>
       {renderModal(showModal, handleModalClose)}
     </>
   );

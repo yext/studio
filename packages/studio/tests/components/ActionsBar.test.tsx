@@ -12,6 +12,7 @@ jest.mock("../../src/icons/undo.svg", () => {
 
 describe("Undo/redo", () => {
   beforeEach(() => {
+    jest.useFakeTimers();
     mockStore({
       pages: {
         pages: {
@@ -25,16 +26,19 @@ describe("Undo/redo", () => {
         activeComponentUUID: undefined,
       },
     });
+    jest.advanceTimersByTime(500);
     mockStore({
       pages: {
         activePageName: "universal",
       },
     });
+    jest.advanceTimersByTime(500);
     mockStore({
       pages: {
         activeComponentUUID: "searchbar-uuid",
       },
     });
+    jest.useRealTimers();
   });
 
   it("undoes last state update when undo is clicked", async () => {
