@@ -11,7 +11,7 @@ export default function getPropTypeDefaultValue(
     case PropValueType.boolean:
       return false;
     case PropValueType.HexColor:
-      return "#000000";
+      return "#FFFFFF";
     default:
       console.error(
         `Unknown PropValueType ${type}. Can't derive a default value based on PropValueType.`

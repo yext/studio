@@ -1,5 +1,5 @@
 import { PropValueType } from "@yext/studio-plugin";
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 
@@ -35,7 +35,13 @@ export default function PropInput({
     [onChange, propType]
   );
 
+  useLayoutEffect(() => {
+    if (currentPropValue === undefined) {
+      onChange(getPropTypeDefaultValue(propType))
+    }
+  })
   const propVal = currentPropValue ?? getPropTypeDefaultValue(propType);
+
   switch (propType) {
     case PropValueType.number:
       return (
