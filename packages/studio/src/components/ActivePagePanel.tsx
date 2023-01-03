@@ -5,6 +5,7 @@ import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Check } from "../icons/check.svg";
 import classNames from "classnames";
 import { useCallback, useMemo } from "react";
+import RemovePageButton from "./RemovePageButton";
 
 /**
  * Renders the left panel of Studio, which lists all pages, indicates which
@@ -24,25 +25,28 @@ export default function ActivePagePanel(): JSX.Element {
   const renderPageList = useCallback(
     (pageNames: string[]) => {
       return (
-        <div className="flex flex-col items-start pb-2">
+        <div className="flex flex-col pb-2 items-stretch">
           {pageNames.map((pageName) => {
             const isActivePage = activePageName === pageName;
             const checkClasses = classNames({
               invisible: !isActivePage,
             });
-            function handleClick() {
+            function handleSelectPage() {
               setActivePageName(pageName);
             }
             return (
-              <div key={pageName} className="flex items-center pb-4 ml-2">
-                <Check className={checkClasses} />
-                <button
-                  disabled={isActivePage}
-                  onClick={handleClick}
-                  className="ml-2"
-                >
-                  {pageName}
-                </button>
+              <div key={pageName} className="flex justify-between pb-4 ml-2">
+                <div className="flex items-center">
+                  <Check className={checkClasses} />
+                  <button
+                    disabled={isActivePage}
+                    onClick={handleSelectPage}
+                    className="ml-2"
+                  >
+                    {pageName}
+                  </button>
+                </div>
+                <RemovePageButton pageName={pageName} />
               </div>
             );
           })}
