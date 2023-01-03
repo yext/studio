@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 
 interface RemovePageButtonProps {
+  /** The name of the page to be removed. */
   pageName: string
 }
 

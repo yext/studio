@@ -94,9 +94,22 @@ describe("addPage", () => {
 });
 
 describe("removePage", () => {
-  it("adds a page to pages", () => {
+  it("removes a page from pages and update pending changes", () => {
+    mockPageSliceStates({
+      pages,
+      activePageName: "universal",
+      pendingChanges: {
+        pagesToUpdate: new Set(['universal']),
+        pagesToRemove: new Set(),
+      }
+    });
     useStudioStore.getState().pages.removePage("universal");
     const pagesRecord = useStudioStore.getState().pages.pages;
-    expect(pagesRecord).toEqual({});
+    expect(pagesRecord).toEqual({})
+    const pendingChanges = useStudioStore.getState().pages.pendingChanges;
+    expect(pendingChanges).toEqual({
+      pagesToUpdate: new Set(),
+      pagesToRemove: new Set(['universal']),
+    });
   });
 });

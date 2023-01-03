@@ -31,7 +31,7 @@ export default function ActivePagePanel(): JSX.Element {
             const checkClasses = classNames({
               invisible: !isActivePage,
             });
-            function onSelectPage() {
+            function handleSelectPage() {
               setActivePageName(pageName);
             }
             return (
@@ -40,7 +40,7 @@ export default function ActivePagePanel(): JSX.Element {
                   <Check className={checkClasses} />
                   <button
                     disabled={isActivePage}
-                    onClick={onSelectPage}
+                    onClick={handleSelectPage}
                     className="ml-2"
                   >
                     {pageName}
