@@ -1,4 +1,5 @@
-import Modal from "./common/Modal";
+import InputModal from "./common/InputModal";
+import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Plus } from "../icons/plus.svg";
 import { useCallback, useState } from "react";
@@ -11,18 +12,8 @@ import initialStudioData from "virtual:yext-studio";
  */
 export default function AddPageButton(): JSX.Element {
   const addPage = useStudioStore((store) => store.pages.addPage);
-
-  const [showModal, setShowModal] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] =
     useState<string>("Invalid page name.");
-
-  const handleAddPage = useCallback(() => {
-    setShowModal(true);
-  }, [setShowModal]);
-
-  const handleModalClose = useCallback(() => {
-    setShowModal(false);
-  }, [setShowModal]);
 
   const handleModalSave = useCallback(
     (pageName: string) => {
@@ -42,19 +33,27 @@ export default function AddPageButton(): JSX.Element {
     [addPage, setErrorMessage]
   );
 
+  const renderModal: renderModalFunction = useCallback(
+    (isOpen, handleClose) => {
+      return (
+        <InputModal
+          isOpen={isOpen}
+          title="Add Page"
+          description="Give the page a name:"
+          errorMessage={errorMessage}
+          handleClose={handleClose}
+          handleSave={handleModalSave}
+        />
+      );
+    },
+    [errorMessage, handleModalSave]
+  );
+
   return (
-    <>
-      <button onClick={handleAddPage} aria-label="Add Page">
-        <Plus />
-      </button>
-      <Modal
-        isOpen={showModal}
-        title="Add Page"
-        description="Give the page a name:"
-        errorMessage={errorMessage}
-        handleClose={handleModalClose}
-        onSave={handleModalSave}
-      />
-    </>
+    <ButtonWithModal
+      buttonIcon={<Plus />}
+      renderModal={renderModal}
+      aria-label="Add Page"
+    />
   );
 }
