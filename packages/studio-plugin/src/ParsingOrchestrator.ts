@@ -102,16 +102,17 @@ export default class ParsingOrchestrator {
   private async getLocalDataMapping(): Promise<
     Record<string, string[]> | undefined
   > {
+    const streamMappingFile = "mapping.json"
     const localDataMappingFilepath = path.join(
       this.paths.localData,
-      "mapping.json"
+      streamMappingFile
     );
     if (!fs.existsSync(localDataMappingFilepath)) {
       throw new Error(
-        `The localData's mapping.json does not exist, expected the file to be at "${localDataMappingFilepath}".`
+        `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
       );
     }
-    return (await import(localDataMappingFilepath)) as Record<string, string[]>;
+    return import(localDataMappingFilepath);
   }
 
   private async getPageNameToPageState(): Promise<Record<string, PageState>> {
