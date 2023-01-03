@@ -1,0 +1,37 @@
+{
+  "features": [
+    {
+      "name": "UniversalPage",
+      "streamId": "my-stream-id",
+      "templateType": "JS",
+      "entityPageSet": {
+        "plugin": {}
+      }
+    }
+  ],
+  "streams": [
+    {
+      "$id": "my-stream-id",
+      "fields": [
+        "id",
+        "uid",
+        "meta",
+        "name",
+        "address",
+        "mainPhone",
+        "description",
+        "hours",
+        "slug",
+        "geocodedCoordinate",
+        "services"
+      ],
+      "filter": {
+        "entityTypes": ["location"]
+      },
+      "localization": {
+        "locales": ["en"],
+        "primary": false
+      }
+    }
+  ]
+}

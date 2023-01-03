@@ -11,6 +11,7 @@ const firstPageEntry = Object.entries(
 const initialStates: PageSliceStates = {
   pages: initialStudioData.pageNameToPageState,
   activePageName: firstPageEntry?.[0],
+  activeEntityFile: firstPageEntry?.[1]?.["entityFiles"]?.[0],
   activeComponentUUID: undefined,
   pendingChanges: {
     pagesToUpdate: new Set<string>(),
@@ -130,10 +131,38 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }),
   };
 
+  const activeEntityFileActions = {
+    setActiveEntityFile: (activeEntityFile?: string): boolean => {
+      if (!activeEntityFile) {
+        set({ activeEntityFile: undefined });
+        return true;
+      }
+      const activePageName = get().activePageName;
+      if (!activePageName) {
+        console.error(
+          `Error setting active entity file: no active page selected.`
+        );
+        return false;
+      }
+      if (
+        !get().pages[activePageName].entityFiles?.includes(activeEntityFile)
+      ) {
+        console.error(
+          "Error setting active entity file:" +
+            ` "${activeEntityFile}" is not an entity file for this page.`
+        );
+        return false;
+      }
+      set({ activeEntityFile });
+      return true;
+    },
+  };
+
   return {
     ...initialStates,
     ...pagesActions,
     ...activeComponentActions,
+    ...activeEntityFileActions,
   };
 };
 

@@ -11,6 +11,8 @@ export interface PageSliceStates {
   activePageName: string | undefined;
   /** The uuid of the current component display in Studio. */
   activeComponentUUID?: string;
+  /** The entity file whose data is seeding the active preview page. */
+  activeEntityFile?: string;
   /**
    * The part of state that tracks which pages have been interacted with from
    * the UI and have changes pending on commit.
@@ -33,6 +35,7 @@ interface PageSliceActions {
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentProps: (props: PropValues) => void;
   getActiveComponentState: () => ComponentState | undefined;
+  setActiveEntityFile: (activeEntityFile?: string) => boolean;
 }
 
 /**

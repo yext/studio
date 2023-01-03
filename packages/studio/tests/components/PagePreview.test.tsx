@@ -15,6 +15,12 @@ const UUIDToFileMetadata: Record<string, FileMetadata> = {
   "banner-metadata-uuid": {
     kind: FileMetadataKind.Component,
     metadataUUID: "banner-metadata-uuid",
+    propShape: {
+      title: { type: PropValueType.string },
+      num: { type: PropValueType.number },
+      bool: { type: PropValueType.boolean },
+      bgColor: { type: PropValueType.HexColor },
+    },
     filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
   },
 };
@@ -80,10 +86,12 @@ const mockStoreNestedComponentState: MockStudioStore = {
           },
         ],
         filepath: "mock/file/path",
+        entityFiles: ["entityFile.json"],
         cssImports: [],
       },
     },
     activePageName: "universalPage",
+    activeEntityFile: "entityFile.json",
   },
   fileMetadatas: {
     UUIDToFileMetadata: {
@@ -91,6 +99,9 @@ const mockStoreNestedComponentState: MockStudioStore = {
       "container-metadata-uuid": {
         kind: FileMetadataKind.Component,
         metadataUUID: "container-metadata-uuid",
+        propShape: {
+          text: { type: PropValueType.string },
+        },
         filepath: path.resolve(__dirname, "../__mocks__/Container.tsx"),
       },
     },
@@ -128,6 +139,9 @@ const mockStoreModuleState: MockStudioStore = {
       "panel-metadata-uuid": {
         kind: FileMetadataKind.Module,
         metadataUUID: "panel-metadata-uuid",
+        propShape: {
+          text: { type: PropValueType.string },
+        },
         filepath: path.resolve(__dirname, "../__mocks__/Panel.tsx"),
         componentTree: [
           {
@@ -175,16 +189,23 @@ const mockStoreWithPropExpression: MockStudioStore = {
                 value: "siteSettings.apiKey",
                 valueType: PropValueType.string,
               },
+              num: {
+                kind: PropValueKind.Expression,
+                value: "document.employeeCount",
+                valueType: PropValueType.number,
+              },
             },
             uuid: "banner-uuid",
             metadataUUID: "banner-metadata-uuid",
           },
         ],
         cssImports: [],
+        entityFiles: ["entityFile.json"],
         filepath: "mock/file/path",
       },
     },
     activePageName: "universalPage",
+    activeEntityFile: "entityFile.json",
   },
   fileMetadatas: {
     UUIDToFileMetadata,
@@ -231,6 +252,8 @@ it("render component with transformed props", async () => {
   render(<PagePreview pageState={getPageState(mockStoreWithPropExpression)} />);
   const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
   expect(siteSettingsExpressionProp).toBeDefined();
+  const documentExpressionProp = await screen.findByText(/123/);
+  expect(documentExpressionProp).toBeDefined();
 });
 
 function getPageState(
