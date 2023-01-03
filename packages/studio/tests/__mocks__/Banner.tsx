@@ -1,4 +1,5 @@
 import { HexColor } from "@yext/studio";
+import siteSettings from "./siteSettings";
 
 export interface BannerProps {
   /** banner's title */
@@ -12,7 +13,7 @@ export const initialProps: BannerProps = {
   bgColor: "#abcdef",
   num: 5,
   bool: true,
-  title: "initial title",
+  title: siteSettings.apiKey,
 };
 
 export default function Banner(props: BannerProps) {

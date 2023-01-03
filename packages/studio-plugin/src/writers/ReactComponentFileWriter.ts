@@ -10,6 +10,7 @@ import {
   PropValueType,
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
+import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -40,43 +41,8 @@ export default class ReactComponentFileWriter {
     return propsString;
   }
 
-  /**
-   * Performs an Array.prototype.map over the given {@link ComponentState}s in
-   * a level order traversal, starting from the leaf nodes (deepest children)
-   * and working up to root node.
-   *
-   * @param componentStates - the component tree to perform on
-   * @param handler - a function to execute on each component
-   * @param parent - the top-most parent or root node to work up to
-   *
-   * @returns an array of elements returned by the handler function
-   */
-  private mapComponentStates<T>(
-    componentStates: ComponentState[],
-    handler: (component: ComponentState, mappedChildren: T[]) => T,
-    parent?: ComponentState
-  ): T[] {
-    const directChildren: ComponentState[] = [];
-    const nonDirectChildren: ComponentState[] = [];
-    componentStates.forEach((component) => {
-      if (component.parentUUID === parent?.uuid) {
-        directChildren.push(component);
-      } else if (component.uuid !== parent?.uuid) {
-        nonDirectChildren.push(component);
-      }
-    });
-    return directChildren.map((component) => {
-      const children = this.mapComponentStates(
-        nonDirectChildren,
-        handler,
-        component
-      );
-      return handler(component, children);
-    });
-  }
-
   private createReturnStatement(componentTree: ComponentState[]): string {
-    const elements = this.mapComponentStates<string>(
+    const elements = ComponentTreeHelpers.mapComponentTree<string>(
       componentTree,
       (c, children): string => {
         if (c.kind === ComponentStateKind.Fragment) {

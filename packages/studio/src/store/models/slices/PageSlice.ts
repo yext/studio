@@ -34,6 +34,7 @@ interface PageSliceActions {
   setActiveComponentProps: (props: PropValues) => void;
   getActiveComponentState: () => ComponentState | undefined;
 }
+
 /**
  * Maintains information about pages and components parsed by Studio plugin
  * and composed by user through Studio, including the active page and component

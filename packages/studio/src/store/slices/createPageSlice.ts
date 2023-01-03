@@ -4,10 +4,13 @@ import initialStudioData from "virtual:yext-studio";
 import PageSlice, { PageSliceStates } from "../models/slices/PageSlice";
 import { SliceCreator } from "../models/utils";
 
+const firstPageEntry = Object.entries(
+  initialStudioData.pageNameToPageState
+)?.[0];
+
 const initialStates: PageSliceStates = {
   pages: initialStudioData.pageNameToPageState,
-  activePageName:
-    Object.keys(initialStudioData.pageNameToPageState)?.[0] ?? undefined,
+  activePageName: firstPageEntry?.[0],
   activeComponentUUID: undefined,
   pendingChanges: {
     pagesToUpdate: new Set<string>(),

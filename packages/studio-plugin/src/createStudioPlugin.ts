@@ -1,7 +1,6 @@
 import { ConfigEnv, Plugin } from "vite";
 import ParsingOrchestrator from "./ParsingOrchestrator";
-import path from "path";
-import getStudioPaths from "./parsers/getStudioPaths";
+import getUserPaths from "./parsers/getUserPaths";
 
 /**
  * Handles server-client communication.
@@ -14,9 +13,9 @@ export default async function createStudioPlugin(
 ): Promise<Plugin> {
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
-  const pathToUserSrc = path.join(process.cwd(), "src");
-  const studioPaths = getStudioPaths(pathToUserSrc);
-  const orchestrator = new ParsingOrchestrator(studioPaths);
+  const pathToUserProjectRoot = process.cwd();
+  const userPaths = getUserPaths(pathToUserProjectRoot);
+  const orchestrator = new ParsingOrchestrator(userPaths);
   const studioData = orchestrator.getStudioData();
 
   // We have to use a dynamic import here - if we use a regular import,
