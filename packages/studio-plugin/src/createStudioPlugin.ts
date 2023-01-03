@@ -16,7 +16,7 @@ export default async function createStudioPlugin(
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserProjectRoot = process.cwd();
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
-  const userPaths = getUserPaths(pathToUserProjectRoot);
+  const userPaths = getUserPaths(pathToUserProjectRoot, studioConfig.repoPaths);
   const orchestrator = new ParsingOrchestrator(userPaths, studioConfig);
   const studioData = await orchestrator.getStudioData();
 

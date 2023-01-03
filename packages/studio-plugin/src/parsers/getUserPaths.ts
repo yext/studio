@@ -6,8 +6,12 @@ import { UserPaths } from "../types";
  * the filepaths Studio will use for parsing files.
  *
  * @param pathToProjectRoot - An absolute path to the project's root folder.
+ * @param userPathsConfig - user paths specified in studio config file
  */
-export default function getUserPaths(pathToProjectRoot: string): UserPaths {
+export default function getUserPaths(
+  pathToProjectRoot: string,
+  userPathsConfig?: Partial<UserPaths>
+): UserPaths {
   const pathToSrc = path.join(pathToProjectRoot, "src");
   return {
     pages: path.join(pathToSrc, "pages"),
@@ -15,5 +19,6 @@ export default function getUserPaths(pathToProjectRoot: string): UserPaths {
     components: path.join(pathToSrc, "components"),
     siteSettings: path.join(pathToSrc, "siteSettings.ts"),
     localData: path.join(pathToProjectRoot, "localData"),
+    ...userPathsConfig
   };
 }
