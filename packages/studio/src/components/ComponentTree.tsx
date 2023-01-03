@@ -115,7 +115,7 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
     if (!activePageState) {
       return undefined;
     }
-    return activePageState.componentTree
+    return activePageState.componentTree;
   });
 
   const getComponentMetadata = useStudioStore(

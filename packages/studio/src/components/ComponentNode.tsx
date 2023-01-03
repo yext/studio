@@ -52,7 +52,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     if (!isOpen && !hasChild) {
       onToggle();
     }
-  }, [isOpen, hasChild, onToggle])
+  }, [isOpen, hasChild, onToggle]);
 
   return (
     <div
