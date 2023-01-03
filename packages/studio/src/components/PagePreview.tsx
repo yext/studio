@@ -34,7 +34,6 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
   const UUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
   );
-  console.log("uuid to imported component", UUIDToImportedComponent);
   const expressionSources = useExpressionSources();
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported

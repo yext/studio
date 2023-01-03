@@ -68,6 +68,7 @@ function Menu() {
         {Object.keys(ComponentType).map((componentType) => {
           return (
             <ComponentTypeButton
+              key={componentType}
               activeType={activeType}
               componentType={componentType}
               setType={setType}
@@ -93,7 +94,7 @@ function Menu() {
             }
           })
           .map((metadata) => {
-            return <Options metadata={metadata} />;
+            return <Options metadata={metadata} key={metadata.metadataUUID} />;
           })}
       </div>
     </div>
@@ -117,7 +118,7 @@ function ComponentTypeButton(props: {
     setType(ComponentType[componentType]);
   }, [componentType, setType]);
   return (
-    <div className={className} key={componentType} onClick={handleClick}>
+    <div className={className} onClick={handleClick}>
       <span className="mr-2 pt-0.5">{componentTypeToIcon[componentType]}</span>
       <span>{componentType}</span>
     </div>
@@ -147,7 +148,7 @@ function Options(props: { metadata: FileMetadata }) {
             ? ComponentStateKind.Module
             : ComponentStateKind.Standard,
         componentName,
-        props: {},
+        props: metadata.initialProps ?? {},
         uuid: v4(),
         metadataUUID: metadata.metadataUUID,
         parentUUID: rootElement?.uuid,
@@ -166,11 +167,7 @@ function Options(props: { metadata: FileMetadata }) {
   }, [addComponent, metadata, componentName]);
 
   return (
-    <div
-      className="px-6 py-1 cursor-pointer"
-      onClick={handleClick}
-      key={metadata.metadataUUID}
-    >
+    <div className="px-6 py-1 cursor-pointer" onClick={handleClick}>
       {componentName}
     </div>
   );
