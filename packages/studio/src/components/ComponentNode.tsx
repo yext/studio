@@ -2,7 +2,7 @@ import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useEffect } from "react";
 import useStudioStore from "../store/useStudioStore";
 
 interface ComponentNodeProps {
@@ -46,9 +46,17 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     [depth]
   );
 
+  // This addresses an issue with @minoru/react-dnd-treeview where sometimes new nodes do not
+  // start off as open despite initialOpen being set to true in the Tree component.
+  useEffect(() => {
+    if (!isOpen && !hasChild) {
+      onToggle();
+    }
+  }, [isOpen, hasChild, onToggle])
+
   return (
     <div
-      className="flex items-center h-8"
+      className="flex items-center h-8 cursor-pointer"
       style={componentNodeStyle}
       onClick={handleClick}
     >

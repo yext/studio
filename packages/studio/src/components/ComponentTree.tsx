@@ -110,20 +110,20 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
 }
 
 function useTree(): NodeModel<ComponentState>[] | undefined {
-  const activePageState = useStudioStore((store) =>
-    store.pages.getActivePageState()
-  );
+  const componentTree = useStudioStore((store) => {
+    const activePageState = store.pages.getActivePageState();
+    if (!activePageState) {
+      return undefined;
+    }
+    return activePageState.componentTree
+  });
 
   const getComponentMetadata = useStudioStore(
     (store) => store.fileMetadatas.getComponentMetadata
   );
 
   const tree = useMemo(() => {
-    if (!activePageState) {
-      return undefined;
-    }
-
-    return activePageState.componentTree.map((componentState) => {
+    return componentTree?.map((componentState) => {
       const commonData = {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
@@ -155,7 +155,7 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
           );
       }
     });
-  }, [activePageState, getComponentMetadata]);
+  }, [componentTree, getComponentMetadata]);
 
   return tree;
 }

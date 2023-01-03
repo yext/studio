@@ -6,11 +6,8 @@ import ContainerWithButtons from "../modules/ContainerWithButtons";
 export default function UniversalPage() {
   return (
     <div>
-      <Banner/>
       <Container>
-        <Button />
       </Container>
-      <ContainerWithButtons />
     </div>
   );
 }
