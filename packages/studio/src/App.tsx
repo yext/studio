@@ -1,12 +1,11 @@
 import EditorPanel from "./components/EditorPanel";
+import PagePreview from "./components/PagePreview";
 import ActivePagePanel from "./components/ActivePagePanel";
 import useStudioStore from "./store/useStudioStore";
 import ActionsBar from "./components/ActionsBar";
 
 export default function App() {
-  const activeComponentState = useStudioStore((store) =>
-    store.pages.getActiveComponentState()
-  );
+  const pageState = useStudioStore((store) => store.pages.getActivePageState());
 
   return (
     <div className="App">
@@ -15,8 +14,7 @@ export default function App() {
         <div className="flex flex-row grow">
           <ActivePagePanel />
           <div className="grow w-1/3 bg-gray-300">
-            <div>Preview</div>
-            <div>activeComponentState: {JSON.stringify(activeComponentState, null, 2)}</div>
+            {pageState && <PagePreview pageState={pageState} />}
           </div>
           <EditorPanel />
         </div>

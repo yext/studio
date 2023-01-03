@@ -50,6 +50,7 @@ describe("AddPageButton", () => {
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "universal");
     const saveButton = screen.getByText<HTMLButtonElement>("Save");
+    jest.spyOn(console, "error").mockImplementation();
     await userEvent.click(saveButton);
     expect(screen.getByText("Page name already used.")).toBeDefined();
   });
@@ -61,6 +62,7 @@ describe("AddPageButton", () => {
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "../test");
     const saveButton = screen.getByText<HTMLButtonElement>("Save");
+    jest.spyOn(console, "error").mockImplementation();
     await userEvent.click(saveButton);
     expect(screen.getByText("Page path is invalid.")).toBeDefined();
   });

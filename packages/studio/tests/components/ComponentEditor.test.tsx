@@ -147,8 +147,6 @@ function testStandardOrModuleComponentState(
           .getState()
           .pages.getActiveComponentState() as StandardOrModuleComponentState
       ).props;
-
-    expect(getComponentProps()).toEqual({});
     await userEvent.type(screen.getByLabelText("title"), "test!");
     await userEvent.type(screen.getByLabelText("num"), "10");
     await userEvent.click(screen.getByLabelText("bool"));

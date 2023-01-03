@@ -7,8 +7,8 @@
     "studio": "./lib/bin/studio.js"
   },
   "scripts": {
-    "dev": "npx tsc --watch --preserveWatchOutput",
-    "build": "rm -rf lib && tsc",
+    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
+    "build": "rm -rf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json",
     "preview": "vite preview",
     "lint": "eslint . && npm run prettier-check",
     "prettier-write": "prettier --write .",
@@ -21,6 +21,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "@yext/studio-plugin": "*",
     "classnames": "^2.3.2",
+    "lodash": "^4.17.21",
     "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -42,6 +43,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^14.4.3",
     "@types/jest": "^29.2.4",
+    "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.15",
     "@types/path-browserify": "^1.0.0",
     "@types/react": "^18.0.26",
