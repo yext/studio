@@ -16,6 +16,7 @@ export const complexBannerComponent: ComponentState = {
   componentName: "ComplexBanner",
   props: {},
   uuid: "mock-uuid-0",
+  metadataUUID: "complexbanner-metadata",
 };
 
 export const componentTree: ComponentState[] = [
@@ -104,6 +105,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-1",
+    metadataUUID: "banner-metadata",
     props: {
       title: {
         kind: PropValueKind.Expression,
@@ -117,6 +119,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-2",
+    metadataUUID: "banner-metadata",
     props: {
       title: {
         kind: PropValueKind.Expression,
@@ -130,6 +133,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-3",
+    metadataUUID: "banner-metadata",
     props: {
       title: {
         kind: PropValueKind.Expression,
@@ -143,6 +147,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     componentName: "SimpleBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-4",
+    metadataUUID: "banner-metadata",
     props: {
       title: {
         kind: PropValueKind.Literal,

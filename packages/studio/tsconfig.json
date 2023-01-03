@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "ESNext",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -15,11 +15,10 @@
     "target": "ESNext",
     "outDir": "lib",
     "types": [
-      "node",
       "vite/client",
       "@yext/studio-plugin/virtual-module",
       "vite-plugin-svgr/client"
     ]
   },
-  "include": ["src", "bin", "types.ts"]
+  "include": ["src", "types.ts"]
 }

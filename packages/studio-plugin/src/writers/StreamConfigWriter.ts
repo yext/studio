@@ -1,18 +1,16 @@
 import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import { v4 } from "uuid";
-import { PAGES_PACKAGE_NAME } from "../constants";
-import TypeGuards from "../parsers/helpers/TypeGuards";
+import {
+  PAGES_PACKAGE_NAME,
+  TEMPLATE_STRING_EXPRESSION_REGEX,
+} from "../constants";
+import TypeGuards from "../utils/TypeGuards";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import { PropValueKind } from "../types/PropValues";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
-
-/**
- * Describes the path in the streams document to the desired data. Bracket
- * notation for property access is not supported, except for indexing an array.
- */
-export type StreamsDataExpression = `document.${string}`;
+import { StreamsDataExpression } from "../types/Expression";
 
 /**
  * These are stream properties that will throw an error if specified within
@@ -36,8 +34,6 @@ const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
 const STREAM_PAGE_PROPS_TYPE = "TemplateProps";
 
-const TEMPLATE_STRING_EXPRESSION_REGEX = /\${(.*?)}/g;
-
 /**
  * StreamConfigWriter is a class for housing data
  * updating logic for Stream config in PageFile.
@@ -47,10 +43,6 @@ export default class StreamConfigWriter {
     private studioSourceFileWriter: StudioSourceFileWriter,
     private studioSourceFileParser: StudioSourceFileParser
   ) {}
-
-  isStreamsDataExpression(value: unknown): value is StreamsDataExpression {
-    return typeof value === "string" && value.startsWith("document.");
-  }
 
   /**
    * Extracts stream's data expressions used in the provided component tree,
@@ -74,11 +66,11 @@ export default class StreamConfigWriter {
         }
         if (TypeGuards.isTemplateString(value)) {
           [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)].forEach((m) => {
-            if (this.isStreamsDataExpression(m[1])) {
+            if (TypeGuards.isStreamsDataExpression(m[1])) {
               streamDataExpressions.add(m[1]);
             }
           });
-        } else if (this.isStreamsDataExpression(value)) {
+        } else if (TypeGuards.isStreamsDataExpression(value)) {
           streamDataExpressions.add(value);
         }
       });

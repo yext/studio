@@ -17,7 +17,7 @@ import {
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../../types/PropValues";
 import { PropShape } from "../../types/PropShape";
-import TypeGuards from "./TypeGuards";
+import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 
 export type ParsedInterface = {

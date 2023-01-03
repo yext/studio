@@ -15,7 +15,7 @@ import { v4 } from "uuid";
 import { FileMetadataKind } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
-import TypeGuards from "./helpers/TypeGuards";
+import TypeGuards from "../utils/TypeGuards";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 
 export type GetFileMetadata = ParsingOrchestrator["getFileMetadata"];
@@ -118,16 +118,17 @@ export default class ComponentTreeParser {
     }
 
     const fileMetadata = this.getFileMetadata(filepath);
-    const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;
+    const {
+      kind: fileMetadataKind,
+      metadataUUID,
+      propShape,
+    } = fileMetadata;
 
     const componentStateKind =
       fileMetadataKind === FileMetadataKind.Module
         ? ComponentStateKind.Module
         : ComponentStateKind.Standard;
-    const props = StaticParsingHelpers.parseJsxAttributes(
-      attributes,
-      propShape
-    );
+    const props = StaticParsingHelpers.parseJsxAttributes(attributes, propShape);
 
     return {
       kind: componentStateKind,

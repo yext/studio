@@ -1,14 +1,56 @@
 import ParsingOrchestrator from "../src/ParsingOrchestrator";
 import path from "path";
-import getStudioPaths from "../src/parsers/getStudioPaths";
-import { ComponentStateKind, FileMetadataKind } from "../src";
+import getUserPaths from "../src/parsers/getUserPaths";
+import {
+  ComponentStateKind,
+  FileMetadataKind,
+  PageState,
+  StudioData,
+} from "../src";
+
+const projectRoot = path.resolve(
+  __dirname,
+  "./__fixtures__/ParsingOrchestrator"
+);
+const userPaths = getUserPaths(projectRoot);
+
+const basicPageState: PageState = {
+  componentTree: [
+    expect.objectContaining({
+      componentName: "div",
+      kind: ComponentStateKind.BuiltIn,
+    }),
+    expect.objectContaining({
+      componentName: "Card",
+      kind: ComponentStateKind.Standard,
+    }),
+    expect.objectContaining({
+      componentName: "Card",
+      kind: ComponentStateKind.Standard,
+    }),
+  ],
+  filepath: expect.anything(),
+  cssImports: [],
+};
+
+const pageWithModulesState: PageState = {
+  componentTree: [
+    expect.objectContaining({
+      componentName: "NestedBanner",
+      kind: ComponentStateKind.Standard,
+    }),
+    expect.objectContaining({
+      componentName: "NestedModule",
+      kind: ComponentStateKind.Module,
+    }),
+  ],
+  filepath: expect.anything(),
+  cssImports: [],
+};
 
 describe("aggregates data as expected", () => {
-  const studioPaths = getStudioPaths(
-    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
-  );
-  const orchestrator = new ParsingOrchestrator(studioPaths);
-  const studioData = orchestrator.getStudioData();
+  const orchestrator = new ParsingOrchestrator(userPaths);
+  const studioData: StudioData = orchestrator.getStudioData();
 
   it("UUIDToFileMetadata", () => {
     const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
@@ -51,38 +93,8 @@ describe("aggregates data as expected", () => {
 
   it("pageNameToPageState", () => {
     expect(studioData.pageNameToPageState).toEqual({
-      basicPage: {
-        componentTree: [
-          expect.objectContaining({
-            componentName: "div",
-            kind: ComponentStateKind.BuiltIn,
-          }),
-          expect.objectContaining({
-            componentName: "Card",
-            kind: ComponentStateKind.Standard,
-          }),
-          expect.objectContaining({
-            componentName: "Card",
-            kind: ComponentStateKind.Standard,
-          }),
-        ],
-        cssImports: [],
-        filepath: expect.anything(),
-      },
-      pageWithModules: {
-        componentTree: [
-          expect.objectContaining({
-            componentName: "NestedBanner",
-            kind: ComponentStateKind.Standard,
-          }),
-          expect.objectContaining({
-            componentName: "NestedModule",
-            kind: ComponentStateKind.Module,
-          }),
-        ],
-        cssImports: [],
-        filepath: expect.anything(),
-      },
+      basicPage: basicPageState,
+      pageWithModules: pageWithModulesState,
     });
   });
 
@@ -94,26 +106,26 @@ describe("aggregates data as expected", () => {
   });
 });
 
-it("throws an error when the page imports components from unexpected folders", () => {
-  const studioPaths = getStudioPaths("thisFolderDoesNotExist");
-  studioPaths.pages = path.resolve(
+it("throws an error when the page imports components from unexpected folders", async () => {
+  const userPaths = getUserPaths("thisFolderDoesNotExist");
+  userPaths.pages = path.resolve(
     __dirname,
-    "./__fixtures__/ParsingOrchestrator/pages"
+    "./__fixtures__/ParsingOrchestrator/src/pages"
   );
 
-  const orchestrator = new ParsingOrchestrator(studioPaths);
+  const orchestrator = new ParsingOrchestrator(userPaths);
   expect(() => orchestrator.getStudioData()).toThrow(
     /^Could not get FileMetadata for/
   );
 });
 
-it("throws when the pages folder does not exist", () => {
-  const studioPaths = getStudioPaths(
+it("throws when the pages folder does not exist", async () => {
+  const userPaths = getUserPaths(
     path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
   );
-  studioPaths.pages = "thisFolderDoesNotExist";
+  userPaths.pages = "thisFolderDoesNotExist";
 
-  const orchestrator = new ParsingOrchestrator(studioPaths);
+  const orchestrator = new ParsingOrchestrator(userPaths);
   expect(() => orchestrator.getStudioData()).toThrow(
     /^The pages directory does not exist/
   );

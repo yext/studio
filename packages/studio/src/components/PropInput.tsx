@@ -1,12 +1,12 @@
 import { PropValueType } from "@yext/studio-plugin";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
+import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
-  initialPropValue?: T;
   currentPropValue?: T;
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: T) => void;
 }
 
 const inputBoxCssClasses =
@@ -19,40 +19,56 @@ const inputBoxCssClasses =
  */
 export default function PropInput({
   propType,
-  initialPropValue,
   currentPropValue,
   onChange,
 }: PropInputProps): JSX.Element {
-  const propVal = currentPropValue ?? initialPropValue;
+  const onInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      let value: string | number | boolean = e.target.value;
+      if (propType === PropValueType.number) {
+        value = e.target.valueAsNumber;
+      } else if (propType === PropValueType.boolean) {
+        value = e.target.checked;
+      }
+      onChange(value);
+    },
+    [onChange, propType]
+  );
+
+  useLayoutEffect(() => {
+    if (currentPropValue === undefined) {
+      onChange(getPropTypeDefaultValue(propType))
+    }
+  })
+  const propVal = currentPropValue ?? getPropTypeDefaultValue(propType);
+
   switch (propType) {
     case PropValueType.number:
       return (
         <input
           type="number"
-          onChange={onChange}
+          onChange={onInputChange}
           className={inputBoxCssClasses}
-          value={(propVal ?? 0) as number}
+          value={propVal as number}
         />
       );
     case PropValueType.string:
       return (
         <input
           type="text"
-          onChange={onChange}
+          onChange={onInputChange}
           className={inputBoxCssClasses}
-          value={(propVal ?? "") as string}
+          value={propVal as string}
         />
       );
     case PropValueType.boolean:
-      return (
-        <Toggle checked={(propVal ?? false) as boolean} onToggle={onChange} />
-      );
+      return <Toggle checked={propVal as boolean} onToggle={onInputChange} />;
     case PropValueType.HexColor:
       return (
         <input
           type="color"
-          onChange={onChange}
-          value={(propVal ?? "") as string}
+          onChange={onInputChange}
+          value={propVal as string}
         />
       );
     default:
