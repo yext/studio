@@ -2,12 +2,15 @@ import { ReactElement, useCallback, useState } from "react";
 import Modal from "./Modal";
 import InputModal from "./InputModal";
 
-type ModalType = typeof Modal | typeof InputModal
-export type renderModalFunction = (isOpen: boolean, handleClose: () => void) => ReactElement<Parameters<ModalType>, ModalType>
+type ModalType = typeof Modal | typeof InputModal;
+export type renderModalFunction = (
+  isOpen: boolean,
+  handleClose: () => void
+) => ReactElement<Parameters<ModalType>, ModalType>;
 
 interface ButtonWithModalProps {
-  buttonIcon: JSX.Element,
-  renderModal: renderModalFunction
+  buttonIcon: JSX.Element;
+  renderModal: renderModalFunction;
 }
 
 export default function ButtonWithModal({

@@ -32,16 +32,18 @@ export default function Modal({
   handleClose,
   handleConfirm,
   isConfirmButtonDisabled,
-  confirmButtonText = "Ok"
+  confirmButtonText = "Ok",
 }: ModalProps) {
-
   const footerClasses = classNames("mt-2 items-center", {
     "flex justify-between": errorMessage,
   });
-  const confirmButtonClasses = classNames("ml-2 py-1 px-3 text-white rounded-md", {
-    "bg-gray-400": isConfirmButtonDisabled,
-    "bg-blue-600": !isConfirmButtonDisabled,
-  });
+  const confirmButtonClasses = classNames(
+    "ml-2 py-1 px-3 text-white rounded-md",
+    {
+      "bg-gray-400": isConfirmButtonDisabled,
+      "bg-blue-600": !isConfirmButtonDisabled,
+    }
+  );
 
   return (
     <ReactModal

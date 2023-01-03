@@ -27,10 +27,7 @@ beforeEach(() => {
 });
 
 it("closes the modal when a page name is successfully added", async () => {
-  const addPageSpy = jest.spyOn(
-    useStudioStore.getState().pages,
-    "addPage"
-  );
+  const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
   render(<AddPageButton />);
   const addPageButton = screen.getByRole("button");
   await userEvent.click(addPageButton);

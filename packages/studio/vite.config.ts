@@ -8,8 +8,8 @@ export default defineConfig(async (args: ConfigEnv): Promise<UserConfig> => {
     root: __dirname,
     build: {
       rollupOptions: {
-        input: ["index.html", "src/store/useStudioStore.ts"]
-      }
+        input: ["index.html", "src/store/useStudioStore.ts"],
+      },
     },
     plugins: [react(), createStudioPlugin(args), svgr() as PluginOption],
     css: {

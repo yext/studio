@@ -1,8 +1,6 @@
 import useStudioStore from "../../src/store/useStudioStore";
 import { PageState } from "@yext/studio-plugin";
-import {
-  PagesRecord,
-} from "../../src/store/models/slices/PageSlice";
+import { PagesRecord } from "../../src/store/models/slices/PageSlice";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 import {
   searchBarComponent,

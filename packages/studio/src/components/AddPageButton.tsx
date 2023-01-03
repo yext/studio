@@ -33,21 +33,21 @@ export default function AddPageButton(): JSX.Element {
     [addPage, setErrorMessage]
   );
 
-  const renderModal: renderModalFunction = useCallback((isOpen, handleClose) => {
-    return <InputModal
-        isOpen={isOpen}
-        title="Add Page"
-        description="Give the page a name:"
-        errorMessage={errorMessage}
-        handleClose={handleClose}
-        handleSave={handleModalSave}
-      />
-  }, [errorMessage, handleModalSave])
-
-  return (
-    <ButtonWithModal
-      buttonIcon={<Plus />}
-      renderModal={renderModal}
-      />
+  const renderModal: renderModalFunction = useCallback(
+    (isOpen, handleClose) => {
+      return (
+        <InputModal
+          isOpen={isOpen}
+          title="Add Page"
+          description="Give the page a name:"
+          errorMessage={errorMessage}
+          handleClose={handleClose}
+          handleSave={handleModalSave}
+        />
+      );
+    },
+    [errorMessage, handleModalSave]
   );
+
+  return <ButtonWithModal buttonIcon={<Plus />} renderModal={renderModal} />;
 }

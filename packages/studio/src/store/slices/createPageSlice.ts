@@ -56,8 +56,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         pagesToUpdate.delete(pageName);
         pagesToRemove.add(pageName);
       });
-    } 
-  }
+    },
+  };
 
   const activePageActions = {
     setActivePageName: (activePageName: string | undefined) => {
@@ -93,7 +93,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         return;
       }
       return pages[activePageName];
-    }
+    },
   };
 
   const activeComponentActions = {

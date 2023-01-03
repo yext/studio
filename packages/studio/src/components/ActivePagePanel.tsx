@@ -46,7 +46,7 @@ export default function ActivePagePanel(): JSX.Element {
                     {pageName}
                   </button>
                 </div>
-                <RemovePageButton pageName={pageName}/>
+                <RemovePageButton pageName={pageName} />
               </div>
             );
           })}

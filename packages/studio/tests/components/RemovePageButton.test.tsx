@@ -30,10 +30,10 @@ it("removes selected page from store and closes the modal after confirmation", a
   render(<RemovePageButton pageName="universal" />);
   const removePageButton = screen.getByRole("button");
   await userEvent.click(removePageButton);
-  expect(useStudioStore.getState().pages.pages['universal']).toBeDefined()
+  expect(useStudioStore.getState().pages.pages["universal"]).toBeDefined();
   const deleteButton = screen.getByRole("button", { name: "Delete" });
   await userEvent.click(deleteButton);
   expect(removePageSpy).toBeCalledWith("universal");
-  await waitFor(() => expect(screen.queryByText("Delete")).toBeNull())
-  expect(useStudioStore.getState().pages.pages['universal']).toBeUndefined()
+  await waitFor(() => expect(screen.queryByText("Delete")).toBeNull());
+  expect(useStudioStore.getState().pages.pages["universal"]).toBeUndefined();
 });

@@ -1,5 +1,5 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
-import Modal from "./Modal"
+import Modal from "./Modal";
 
 interface InputModalProps {
   isOpen: boolean;
@@ -45,14 +45,18 @@ export default function InputModal({
   );
 
   const modalBodyContent = useMemo(() => {
-    return <><div>{description}</div>
-    <input
-      type="text"
-      className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
-      value={inputValue}
-      onChange={handleInputChange}
-    /></>
-  }, [description, handleInputChange, inputValue])
+    return (
+      <>
+        <div>{description}</div>
+        <input
+          type="text"
+          className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
+          value={inputValue}
+          onChange={handleInputChange}
+        />
+      </>
+    );
+  }, [description, handleInputChange, inputValue]);
 
   return (
     <Modal
