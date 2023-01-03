@@ -63,10 +63,13 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
           element = UUIDToImportedComponent[c.metadataUUID];
         }
 
-        const previewProps =
-          TypeGuards.isStandardOrModuleComponentState(c)
-            ? getPreviewProps(c.props, UUIDToFileMetadata[c.metadataUUID].propShape ?? {}, expressionSources)
-            : {};
+        const previewProps = TypeGuards.isStandardOrModuleComponentState(c)
+          ? getPreviewProps(
+              c.props,
+              UUIDToFileMetadata[c.metadataUUID].propShape ?? {},
+              expressionSources
+            )
+          : {};
         const component = createElement(
           element,
           {
@@ -83,7 +86,12 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
         );
       }
     );
-  }, [UUIDToFileMetadata, UUIDToImportedComponent, expressionSources, pageState.componentTree]);
+  }, [
+    UUIDToFileMetadata,
+    UUIDToImportedComponent,
+    expressionSources,
+    pageState.componentTree,
+  ]);
 }
 
 /**

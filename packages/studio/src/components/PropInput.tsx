@@ -37,9 +37,9 @@ export default function PropInput({
 
   useLayoutEffect(() => {
     if (currentPropValue === undefined) {
-      onChange(getPropTypeDefaultValue(propType))
+      onChange(getPropTypeDefaultValue(propType));
     }
-  })
+  });
   const propVal = currentPropValue ?? getPropTypeDefaultValue(propType);
 
   switch (propType) {

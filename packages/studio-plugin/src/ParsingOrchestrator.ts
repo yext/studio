@@ -1,5 +1,11 @@
 import path from "path";
-import { FileMetadata, PageState, UserPaths, StudioData, StudioConfig } from "./types";
+import {
+  FileMetadata,
+  PageState,
+  UserPaths,
+  StudioData,
+  StudioConfig,
+} from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -114,7 +120,7 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    let localDataMapping: Record<string, string[]> | undefined = undefined
+    let localDataMapping: Record<string, string[]> | undefined = undefined;
     if (this.studioConfig.isPagesJSRepo) {
       localDataMapping = await this.getLocalDataMapping();
     }

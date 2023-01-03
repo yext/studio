@@ -21,7 +21,7 @@ const propShape: PropShape = {
   foo: {
     type: PropValueType.string,
   },
-}
+};
 
 it("returns value as is for prop of type Literal", () => {
   const transformedProps = getPreviewProps(
@@ -62,22 +62,20 @@ it("returns value as is for prop of type Literal", () => {
   });
 });
 
-
 it("uses default value for props with unspecified/undefined value", () => {
   const transformedProps = getPreviewProps(
     {},
     {
       bgColor: {
-        type: PropValueType.HexColor
-      }
+        type: PropValueType.HexColor,
+      },
     },
     expressionSources
   );
   expect(transformedProps).toEqual({
     bgColor: "#FFFFFF",
   });
-})
-
+});
 
 it("logs a warning when transformed value type doesn't match from the expected type", () => {
   const consoleWarnSpy = jest

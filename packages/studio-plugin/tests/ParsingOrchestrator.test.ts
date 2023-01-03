@@ -112,7 +112,7 @@ describe("aggregates data as expected", () => {
 
   describe("isPagesJSRepo", () => {
     const studioConfig: StudioConfig = {
-      isPagesJSRepo: true
+      isPagesJSRepo: true,
     };
 
     it("aggregates pageNameToPageState as expected when isPagesJSRepo is true", async () => {

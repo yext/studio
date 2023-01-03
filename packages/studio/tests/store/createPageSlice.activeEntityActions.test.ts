@@ -1,10 +1,6 @@
 import useStudioStore from "../../src/store/useStudioStore";
-import {
-  PageSliceStates,
-} from "../../src/store/models/slices/PageSlice";
-import {
-  searchBarComponent,
-} from "../__fixtures__/componentStates";
+import { PageSliceStates } from "../../src/store/models/slices/PageSlice";
+import { searchBarComponent } from "../__fixtures__/componentStates";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 
 describe("active entity file actions", () => {
@@ -20,13 +16,13 @@ describe("active entity file actions", () => {
     activePageName: "universal",
     activeEntityFile: undefined,
     pendingChanges: {
-      pagesToUpdate: new Set()
-    }
+      pagesToUpdate: new Set(),
+    },
   };
 
   beforeEach(() => {
     mockPageSliceStates(initialState);
-  })
+  });
 
   it("updates activeEntityFile using setActiveEntityFile", () => {
     let actionStatus = useStudioStore
