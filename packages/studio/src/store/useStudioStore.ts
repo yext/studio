@@ -14,13 +14,11 @@ import { getUserUpdatableStore } from "./utils";
 enableMapSet();
 
 /**
- * Middleware used for the Studio store, specifically immer and Zundo.
+ * Middlewares used for the Studio store, specifically immer and Zundo.
  */
-function storeMiddleware(
+function storeMiddlewares(
   storeCreator: StateCreator<StudioStore>
-): ReturnType<
-  typeof temporal<StudioStore, [], [["zustand/immer", never]], StudioStore>
-> {
+): ReturnType<typeof temporal<StudioStore, [], [["zustand/immer", never]]>> {
   return temporal(immer(storeCreator), {
     equality: (currStore, pastStore) =>
       isEqual(
@@ -35,7 +33,7 @@ function storeMiddleware(
  * Studio's state manager in form of a hook to access and update states.
  */
 const useStudioStore = create<StudioStore>()(
-  storeMiddleware(
+  storeMiddlewares(
     withLenses(() => ({
       fileMetadatas: lens(createFileMetadataSlice),
       pages: lens(createPageSlice),
