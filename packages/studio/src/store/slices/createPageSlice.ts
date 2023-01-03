@@ -13,14 +13,58 @@ const initialStates: PageSliceStates = {
   activePageName: firstPageEntry?.[0],
   activeComponentUUID: undefined,
   pendingChanges: {
+    pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
   },
 };
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
-  const pagesActions = {
-    setActivePageName: (activePageName: string) => {
-      if (get().pages[activePageName]) {
+  const pageActions = {
+    addPage: (filepath: string) => {
+      if (!filepath) {
+        console.error("Error adding page: a filepath is required.");
+        return false;
+      }
+      const pagesPath = initialStudioData.userPaths.pages;
+      if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
+        console.error(`Error adding page: filepath is invalid: ${filepath}`);
+        return false;
+      }
+      const pageName = path.basename(filepath, ".tsx");
+      if (get().pages[pageName]) {
+        console.error(
+          `Error adding page: page name "${pageName}" is already used.`
+        );
+        return false;
+      }
+
+      set((store) => {
+        store.pages[pageName] = {
+          componentTree: [],
+          cssImports: [],
+          filepath,
+        };
+        store.pendingChanges.pagesToUpdate.add(pageName);
+      });
+      get().setActivePageName(pageName);
+      return true;
+    },
+    removePage: (pageName: string) => {
+      set((store) => {
+        delete store.pages[pageName];
+        if (pageName === store.activePageName) {
+          get().setActivePageName(undefined);
+        }
+        const { pagesToRemove, pagesToUpdate } = store.pendingChanges;
+        pagesToUpdate.delete(pageName);
+        pagesToRemove.add(pageName);
+      });
+    },
+  };
+
+  const activePageActions = {
+    setActivePageName: (activePageName: string | undefined) => {
+      if (activePageName === undefined || get().pages[activePageName]) {
         set({ activePageName, activeComponentUUID: undefined });
       } else {
         console.error(
@@ -52,35 +96,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         return;
       }
       return pages[activePageName];
-    },
-    addPage: (filepath: string) => {
-      if (!filepath) {
-        console.error("Error adding page: a filepath is required.");
-        return false;
-      }
-      const pagesPath = initialStudioData.userPaths.pages;
-      if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
-        console.error(`Error adding page: filepath is invalid: ${filepath}`);
-        return false;
-      }
-      const pageName = path.basename(filepath, ".tsx");
-      if (get().pages[pageName]) {
-        console.error(
-          `Error adding page: page name "${pageName}" is already used.`
-        );
-        return false;
-      }
-
-      set((store) => {
-        store.pages[pageName] = {
-          componentTree: [],
-          cssImports: [],
-          filepath,
-        };
-        store.pendingChanges.pagesToUpdate.add(pageName);
-      });
-      get().setActivePageName(pageName);
-      return true;
     },
   };
 
@@ -132,7 +147,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
   return {
     ...initialStates,
-    ...pagesActions,
+    ...pageActions,
+    ...activePageActions,
     ...activeComponentActions,
   };
 };

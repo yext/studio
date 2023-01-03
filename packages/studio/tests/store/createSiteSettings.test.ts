@@ -16,16 +16,14 @@ const siteSettingsValue: SiteSettingSliceStates["values"] = {
   },
 };
 
-describe("SiteSettingSlice", () => {
-  it("updates siteSettings' shape using setShape", () => {
-    useStudioStore.getState().siteSettings.setShape(siteSettingsShape);
-    const actualMetadata = useStudioStore.getState().siteSettings.shape;
-    expect(actualMetadata).toEqual(siteSettingsShape);
-  });
+it("updates siteSettings' shape using setShape", () => {
+  useStudioStore.getState().siteSettings.setShape(siteSettingsShape);
+  const actualMetadata = useStudioStore.getState().siteSettings.shape;
+  expect(actualMetadata).toEqual(siteSettingsShape);
+});
 
-  it("updates siteSettings' state values using setState", () => {
-    useStudioStore.getState().siteSettings.setValues(siteSettingsValue);
-    const actualValue = useStudioStore.getState().siteSettings.values;
-    expect(actualValue).toEqual(siteSettingsValue);
-  });
+it("updates siteSettings' state values using setState", () => {
+  useStudioStore.getState().siteSettings.setValues(siteSettingsValue);
+  const actualValue = useStudioStore.getState().siteSettings.values;
+  expect(actualValue).toEqual(siteSettingsValue);
 });

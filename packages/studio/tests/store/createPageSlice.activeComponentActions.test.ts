@@ -11,11 +11,6 @@ import {
   resultsComponent,
   fragmentComponent,
 } from "../__fixtures__/componentStates";
-import { PageSliceStates } from "../../src/store/models/slices/PageSlice";
-
-const pendingChanges: PageSliceStates["pendingChanges"] = {
-  pagesToUpdate: new Set<string>(),
-};
 
 describe("PageSlice", () => {
   describe("active component actions", () => {
@@ -30,7 +25,6 @@ describe("PageSlice", () => {
         },
         activePageName: "universal",
         activeComponentUUID: "results-uuid",
-        pendingChanges,
       });
     });
 
@@ -86,7 +80,6 @@ describe("PageSlice", () => {
         pages: initialPages,
         activePageName: "universal",
         activeComponentUUID: fragmentComponent.uuid,
-        pendingChanges,
       });
       const newPropValues: PropValues = {
         clicked: {
@@ -119,7 +112,6 @@ describe("PageSlice", () => {
         pages: initialPages,
         activePageName: "universal",
         activeComponentUUID: undefined,
-        pendingChanges,
       });
       const newPropValues: PropValues = {
         clicked: {
@@ -157,7 +149,6 @@ describe("PageSlice", () => {
         },
         activePageName: "universal",
         activeComponentUUID: undefined,
-        pendingChanges,
       });
       const activeComponent = useStudioStore
         .getState()
