@@ -4,7 +4,7 @@ import { searchBarComponent } from "../__fixtures__/componentStates";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 
 describe("active entity file actions", () => {
-  const initialState: PageSliceStates = {
+  const initialState: Partial<PageSliceStates> = {
     pages: {
       universal: {
         componentTree: [searchBarComponent],
@@ -15,9 +15,6 @@ describe("active entity file actions", () => {
     },
     activePageName: "universal",
     activeEntityFile: undefined,
-    pendingChanges: {
-      pagesToUpdate: new Set(),
-    },
   };
 
   beforeEach(() => {
