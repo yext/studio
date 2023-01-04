@@ -33,9 +33,7 @@ export default class ComponentTreeParser {
       SyntaxKind.ReturnStatement
     );
     if (!returnStatement) {
-      throw new Error(
-        `No return statement found for the default export at path: "${this.studioSourceFileParser.getFilepath()}"`
-      );
+      return [];
     }
     const JsxNodeWrapper =
       returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression) ??

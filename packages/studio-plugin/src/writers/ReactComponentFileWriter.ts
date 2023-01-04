@@ -1,4 +1,4 @@
-import { ArrowFunction, FunctionDeclaration, SyntaxKind } from "ts-morph";
+import { ArrowFunction, FunctionDeclaration, SyntaxKind, VariableDeclaration, WriterFunction, Writers } from "ts-morph";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
@@ -23,6 +23,12 @@ export default class ReactComponentFileWriter {
     private studioSourceFileParser: StudioSourceFileParser
   ) {}
 
+  private createComponentFunction(): FunctionDeclaration {
+    const functionDeclaration = this.studioSourceFileWriter.createDefaultFunction(this.componentName)
+    functionDeclaration.addStatements([Writers.returnStatement("<></>")])
+    return functionDeclaration
+  }
+
   private createProps(props: PropValues): string {
     let propsString = "";
     Object.keys(props).forEach((propName) => {
@@ -41,7 +47,7 @@ export default class ReactComponentFileWriter {
     return propsString;
   }
 
-  private createReturnStatement(componentTree: ComponentState[]): string {
+  private createReturnStatement(componentTree: ComponentState[]): WriterFunction {
     const elements = ComponentTreeHelpers.mapComponentTree<string>(
       componentTree,
       (c, children): string => {
@@ -60,7 +66,7 @@ export default class ReactComponentFileWriter {
         }
       }
     ).join("\n");
-    return `return (${elements})`;
+    return Writers.returnStatement(elements);
   }
 
   private updateReturnStatement(
@@ -70,14 +76,13 @@ export default class ReactComponentFileWriter {
     const returnStatementIndex = functionComponent
       .getDescendantStatements()
       .findIndex((n) => n.isKind(SyntaxKind.ReturnStatement));
-    if (returnStatementIndex < 0) {
-      throw new Error(
-        `No return statement found at page: "${this.studioSourceFileParser.getFilepath()}"`
-      );
+    if (returnStatementIndex >= 0) {
+      functionComponent.removeStatement(returnStatementIndex);
     }
-    const newReturnStatement = this.createReturnStatement(componentTree);
-    functionComponent.removeStatement(returnStatementIndex);
-    functionComponent.addStatements(newReturnStatement);
+    if (componentTree.length > 0) {
+      const newReturnStatement = this.createReturnStatement(componentTree);
+      functionComponent.addStatements(newReturnStatement);
+    }
   }
 
   private updatePropInterface(propShape: PropShape) {
@@ -119,8 +124,16 @@ export default class ReactComponentFileWriter {
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
   }): void {
-    const defaultExport =
-      this.studioSourceFileParser.getDefaultExportReactComponent();
+    let defaultExport: VariableDeclaration | FunctionDeclaration;
+    try {
+      defaultExport = this.studioSourceFileParser.getDefaultExportReactComponent();
+    } catch(e: unknown) {
+      if(/^Error getting default export: No declaration node found/.test((e as Error).message)) {
+        defaultExport = this.createComponentFunction()
+      } else {
+        throw e
+      }
+    }
     const functionComponent = defaultExport.isKind(
       SyntaxKind.VariableDeclaration
     )

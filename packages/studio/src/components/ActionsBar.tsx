@@ -2,6 +2,7 @@ import useTemporalStore from "../store/useTemporalStore";
 import { ReactComponent as Undo } from "../icons/undo.svg";
 import { useCallback } from "react";
 import classNames from "classnames";
+import CommitChangesButton from "./CommitChangesButton";
 
 /**
  * Renders the top bar of Studio, which includes buttons for performing undo
@@ -30,7 +31,7 @@ export default function ActionsBar(): JSX.Element {
   });
 
   return (
-    <div className="flex bg-gray-100 py-3 justify-end">
+    <div className="flex bg-gray-100 py-3 px-4 justify-end">
       <button
         className={undoClasses}
         onClick={handleUndo}
@@ -48,6 +49,7 @@ export default function ActionsBar(): JSX.Element {
         {/* TODO: replace icon if UX has a different one in mind */}
         <Undo />
       </button>
+      <CommitChangesButton />
     </div>
   );
 }

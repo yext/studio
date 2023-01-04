@@ -21,6 +21,14 @@ const initialStates: PageSliceStates = {
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pageActions = {
+    resetPendingChanges: () => {
+      set((store) => {
+        store.pendingChanges = {
+          pagesToRemove: new Set<string>(),
+          pagesToUpdate: new Set<string>(),
+        }
+      })
+    },
     addPage: (filepath: string) => {
       if (!filepath) {
         console.error("Error adding page: a filepath is required.");

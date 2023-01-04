@@ -1,6 +1,9 @@
 import { ConfigEnv, Plugin } from "vite";
-import ParsingOrchestrator from "./ParsingOrchestrator";
 import getStudioConfig from "./parsers/getStudioConfig";
+import ParsingOrchestrator, { createTsMorphProject } from "./ParsingOrchestrator";
+import configureStudioServer from "./configureStudioServer";
+import FileSystemManager from "./FileSystemManager";
+import { FileSystemWriter } from "./writers/FileSystemWriter";
 
 /**
  * Handles server-client communication.
@@ -15,11 +18,18 @@ export default async function createStudioPlugin(
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserProjectRoot = process.cwd();
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
-  const orchestrator = new ParsingOrchestrator(
-    studioConfig.paths,
-    studioConfig.isPagesJSRepo
-  );
+
+  /** The ts-morph Project instance for the entire app. */
+  const tsMorphProject = createTsMorphProject();
+
+  const orchestrator = new ParsingOrchestrator(tsMorphProject, studioConfig.paths, studioConfig.isPagesJSRepo);
   const studioData = await orchestrator.getStudioData();
+
+  const fileSystemManager = new FileSystemManager(
+    tsMorphProject,
+    studioConfig.paths,
+    new FileSystemWriter(orchestrator, studioConfig.isPagesJSRepo)
+  )
 
   // We have to use a dynamic import here - if we use a regular import,
   // Vite will import react-dev-utils in the browser.
@@ -43,5 +53,8 @@ export default async function createStudioPlugin(
         return `export default ${JSON.stringify(studioData)}`;
       }
     },
+    configureServer: (server) => {
+      configureStudioServer(server, fileSystemManager)
+    }
   };
 }

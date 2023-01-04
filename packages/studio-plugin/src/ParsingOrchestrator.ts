@@ -1,5 +1,5 @@
 import path from "path";
-import { FileMetadata, PageState, UserPaths, StudioData } from "./types";
+import { FileMetadata, UserPaths, StudioData, PageState } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -21,15 +21,33 @@ export function createTsMorphProject() {
  */
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
-
-  /** The ts-morph Project instance for the entire app. */
-  private project: Project;
+  private pageNameToPageFile: Record<string, PageFile> = {};
+  private localDataMapping?: Record<string, string[]>
 
   /** All paths are assumed to be absolute. */
-  constructor(private paths: UserPaths, private isPagesJSRepo?: boolean) {
-    this.project = createTsMorphProject();
+  constructor(private project: Project, private paths: UserPaths, private isPagesJSRepo?: boolean) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
+  }
+
+  async getPageFile(pageName: string): Promise<PageFile> {
+    const pageFile = this.pageNameToPageFile[pageName]
+    if (pageFile) {
+      return pageFile
+    }
+    let localDataMapping: Record<string, string[]> | undefined = this.localDataMapping;
+    if (!localDataMapping && this.isPagesJSRepo) {
+      localDataMapping = await this.getLocalDataMapping();
+    }
+    const pageEntityFiles = localDataMapping?.[pageName];
+    const newPageFile = new PageFile(
+      path.join(this.paths.pages, pageName + ".tsx"),
+      this.getFileMetadata,
+      this.project,
+      pageEntityFiles
+    );
+    this.pageNameToPageFile[pageName] = newPageFile;
+    return newPageFile;
   }
 
   async getStudioData(): Promise<StudioData> {
@@ -41,7 +59,7 @@ export default class ParsingOrchestrator {
     }, {});
 
     const siteSettings = this.getSiteSettings();
-    const pageNameToPageState = await this.getPageNameToPageState();
+    const pageNameToPageState = await this.getPageNameToPageState()
 
     return {
       pageNameToPageState,
@@ -96,6 +114,9 @@ export default class ParsingOrchestrator {
   private async getLocalDataMapping(): Promise<
     Record<string, string[]> | undefined
   > {
+    if (this.localDataMapping) {
+      return this.localDataMapping
+    }
     const streamMappingFile = "mapping.json";
     const localDataMappingFilepath = path.join(
       this.paths.localData,
@@ -106,7 +127,9 @@ export default class ParsingOrchestrator {
         `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
       );
     }
-    return import(localDataMappingFilepath);
+    const mapping = await import(localDataMappingFilepath);
+    this.localDataMapping = mapping;
+    return mapping;
   }
 
   private async getPageNameToPageState(): Promise<Record<string, PageState>> {
@@ -115,22 +138,14 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    let localDataMapping: Record<string, string[]> | undefined = undefined;
-    if (this.isPagesJSRepo) {
-      localDataMapping = await this.getLocalDataMapping();
+    const files = fs.readdirSync(this.paths.pages, "utf-8")
+    const pageNameToPageState: Record<string, PageState> = {}
+    for (const file of files) {
+      const pageName = path.basename(file, ".tsx");
+      const pageFile = await this.getPageFile(pageName)
+      pageNameToPageState[pageName] = pageFile.getPageState()
     }
-    return fs.readdirSync(this.paths.pages, "utf-8").reduce((prev, curr) => {
-      const pageName = path.basename(curr, ".tsx");
-      const pageEntityFiles = localDataMapping?.[pageName];
-      const pageFile = new PageFile(
-        path.join(this.paths.pages, curr),
-        this.getFileMetadata,
-        this.project,
-        pageEntityFiles
-      );
-      prev[pageName] = pageFile.getPageState();
-      return prev;
-    }, {});
+    return pageNameToPageState;
   }
 
   private getSiteSettings(): SiteSettings | undefined {

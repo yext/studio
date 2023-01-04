@@ -11,4 +11,5 @@ export interface StudioStore {
   fileMetadatas: FileMetadataSlice;
   pages: PageSlice;
   siteSettings: SiteSettingSlice;
+  commitChanges: () => void
 }

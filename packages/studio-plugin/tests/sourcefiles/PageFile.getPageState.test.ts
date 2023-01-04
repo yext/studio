@@ -128,14 +128,6 @@ describe("getPageState", () => {
   });
 
   describe("throws errors", () => {
-    it("throws an error when no return statement is found in the default export", () => {
-      const pageFile = createPageFile("noReturnStatementPage");
-
-      expect(() => pageFile.getPageState()).toThrowError(
-        /^No return statement found for the default export at path: /
-      );
-    });
-
     it("throws an error when the return statement has no top-level Jsx node", () => {
       const pageFile = createPageFile("noTopLevelJsxPage");
 
