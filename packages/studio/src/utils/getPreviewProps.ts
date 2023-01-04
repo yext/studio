@@ -4,8 +4,10 @@ import {
   TypeGuards,
   TEMPLATE_STRING_EXPRESSION_REGEX,
   PropValues,
+  PropShape,
 } from "@yext/studio-plugin";
 import lodashGet from "lodash/get";
+import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 
 /**
  * Transform props' values based on PropValueKind. If a prop's value is of
@@ -13,19 +15,24 @@ import lodashGet from "lodash/get";
  * derived from the expression source.
  *
  * @param props - the props to transform.
+ * @param propShape - the shape of the component's props
  * @param expressionSources - a map of expression source to its field names and values.
  * @returns - a map of prop's name to its transformed value.
  */
 export function getPreviewProps(
   props: PropValues,
+  propShape: PropShape,
   expressionSources: Record<string, Record<string, unknown>>
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
-  Object.keys(props).forEach((propName) => {
-    const { kind, value, valueType } = props[propName];
-    if (value === null || value === undefined) {
+  Object.keys(propShape).forEach((propName) => {
+    if (!props[propName]) {
+      transformedProps[propName] = getPropTypeDefaultValue(
+        propShape[propName].type
+      );
       return;
     }
+    const { kind, value, valueType } = props[propName];
     if (kind === PropValueKind.Expression) {
       if (TypeGuards.isTemplateString(value)) {
         transformedProps[propName] = getTemplateStringValue(
@@ -119,6 +126,9 @@ function getExpressionValue(
 
   if (TypeGuards.isSiteSettingsExpression(expression)) {
     return getValueFromPath(expression, "siteSettings");
+  }
+  if (TypeGuards.isStreamsDataExpression(expression)) {
+    return getValueFromPath(expression, "document");
   }
   return null;
 }

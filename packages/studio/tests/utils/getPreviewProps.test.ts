@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import { PropValueKind, PropValueType } from "@yext/studio-plugin";
+import { PropShape, PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { getPreviewProps } from "../../src/utils/getPreviewProps";
 
 const siteSettings = {
@@ -8,8 +8,19 @@ const siteSettings = {
   isDevMode: true,
 };
 
+const streamDocument = {
+  name: "office space",
+};
+
 const expressionSources = {
   siteSettings,
+  document: streamDocument,
+};
+
+const propShape: PropShape = {
+  foo: {
+    type: PropValueType.string,
+  },
 };
 
 it("returns value as is for prop of type Literal", () => {
@@ -31,12 +42,38 @@ it("returns value as is for prop of type Literal", () => {
         value: "siteSettings.apiKey",
       },
     },
+    {
+      foo: {
+        type: PropValueType.string,
+      },
+      bar: {
+        type: PropValueType.string,
+      },
+      buzz: {
+        type: PropValueType.string,
+      },
+    },
     expressionSources
   );
   expect(transformedProps).toEqual({
     foo: "hello world",
     bar: "${document.name}",
     buzz: "siteSettings.apiKey",
+  });
+});
+
+it("uses default value for props with unspecified/undefined value", () => {
+  const transformedProps = getPreviewProps(
+    {},
+    {
+      bgColor: {
+        type: PropValueType.HexColor,
+      },
+    },
+    expressionSources
+  );
+  expect(transformedProps).toEqual({
+    bgColor: "#FFFFFF",
   });
 });
 
@@ -52,6 +89,7 @@ it("logs a warning when transformed value type doesn't match from the expected t
         value: "siteSettings.isDevMode",
       },
     },
+    propShape,
     expressionSources
   );
   expect(transformedProps).toEqual({
@@ -64,6 +102,23 @@ it("logs a warning when transformed value type doesn't match from the expected t
 });
 
 describe("expression value handling", () => {
+  it("returns transformed value sourced from stream document", () => {
+    const transformedProps = getPreviewProps(
+      {
+        foo: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "document.name",
+        },
+      },
+      propShape,
+      expressionSources
+    );
+    expect(transformedProps).toEqual({
+      foo: streamDocument.name,
+    });
+  });
+
   it("returns transformed value sourced from site settings", () => {
     const transformedProps = getPreviewProps(
       {
@@ -73,6 +128,7 @@ describe("expression value handling", () => {
           value: "siteSettings.apiKey",
         },
       },
+      propShape,
       expressionSources
     );
     expect(transformedProps).toEqual({
@@ -89,6 +145,7 @@ describe("expression value handling", () => {
           value: "unknownSource.city",
         },
       },
+      propShape,
       expressionSources
     );
     expect(transformedProps).toEqual({
@@ -107,6 +164,7 @@ describe("template string literal value handling", () => {
           value: "`hello world`",
         },
       },
+      propShape,
       expressionSources
     );
     expect(transformedProps).toEqual({
@@ -123,6 +181,7 @@ describe("template string literal value handling", () => {
           value: "`${siteSettings.apiKey}`",
         },
       },
+      propShape,
       expressionSources
     );
     expect(transformedProps).toEqual({
@@ -140,6 +199,7 @@ describe("template string literal value handling", () => {
             "`1 ${siteSettings.locale} document.name ${siteSettings.apiKey}`",
         },
       },
+      propShape,
       expressionSources
     );
     expect(transformedProps).toEqual({
@@ -156,6 +216,7 @@ describe("template string literal value handling", () => {
           value: "`1 ${unknownSource.city} 2`",
         },
       },
+      propShape,
       expressionSources
     );
     expect(transformedProps).toEqual({

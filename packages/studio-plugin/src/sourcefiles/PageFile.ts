@@ -30,7 +30,8 @@ export default class PageFile {
   constructor(
     filepath: string,
     getFileMetadata: GetFileMetadata,
-    project: Project
+    project: Project,
+    private entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     const pageComponentName = path.basename(
@@ -68,6 +69,7 @@ export default class PageFile {
       componentTree,
       cssImports,
       filepath,
+      entityFiles: this.entityFiles,
     };
   }
 

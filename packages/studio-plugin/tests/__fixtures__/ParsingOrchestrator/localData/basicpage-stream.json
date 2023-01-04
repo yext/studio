@@ -1,0 +1,23 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "basicPage",
+    "streamId": "my-stream-id",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Chicago",
+    "countryCode": "US",
+    "line1": "500 West Madison St.",
+    "line2": "Suite 2810",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Illinois",
+    "postalCode": "60661",
+    "region": "IL"
+  },
+  "businessId": 3350634,
+  "id": "1659277149695818196",
+  "name": "Office Space 2"
+}

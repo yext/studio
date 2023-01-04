@@ -49,8 +49,12 @@ const pageWithModulesState: PageState = {
 };
 
 describe("aggregates data as expected", () => {
-  const orchestrator = new ParsingOrchestrator(userPaths);
-  const studioData: StudioData = orchestrator.getStudioData();
+  const orchestrator = new ParsingOrchestrator(userPaths, false);
+  let studioData: StudioData;
+
+  beforeAll(async () => {
+    studioData = await orchestrator.getStudioData();
+  });
 
   it("UUIDToFileMetadata", () => {
     const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
@@ -104,6 +108,28 @@ describe("aggregates data as expected", () => {
       values: expect.anything(),
     });
   });
+
+  describe("isPagesJSRepo", () => {
+    it("aggregates pageNameToPageState as expected when isPagesJSRepo is true", async () => {
+      const orchestrator = new ParsingOrchestrator(userPaths, true);
+      const studioData = await orchestrator.getStudioData();
+      expect(studioData.pageNameToPageState).toEqual({
+        basicPage: {
+          ...basicPageState,
+          entityFiles: ["basicpage-stream.json"],
+        },
+        pageWithModules: pageWithModulesState,
+      });
+    });
+
+    it("throws an error when isPagesJSRepo is true and localData's mapping.json file doesn't exist", async () => {
+      userPaths.localData = "thisFolderDoesNotExist";
+      const orchestrator = new ParsingOrchestrator(userPaths, true);
+      await expect(orchestrator.getStudioData()).rejects.toThrow(
+        /^The localData's mapping.json does not exist/
+      );
+    });
+  });
 });
 
 it("throws an error when the page imports components from unexpected folders", async () => {
@@ -113,8 +139,8 @@ it("throws an error when the page imports components from unexpected folders", a
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
 
-  const orchestrator = new ParsingOrchestrator(userPaths);
-  expect(() => orchestrator.getStudioData()).toThrow(
+  const orchestrator = new ParsingOrchestrator(userPaths, false);
+  await expect(orchestrator.getStudioData()).rejects.toThrow(
     /^Could not get FileMetadata for/
   );
 });
@@ -125,8 +151,8 @@ it("throws when the pages folder does not exist", async () => {
   );
   userPaths.pages = "thisFolderDoesNotExist";
 
-  const orchestrator = new ParsingOrchestrator(userPaths);
-  expect(() => orchestrator.getStudioData()).toThrow(
+  const orchestrator = new ParsingOrchestrator(userPaths, false);
+  await expect(orchestrator.getStudioData()).rejects.toThrow(
     /^The pages directory does not exist/
   );
 });

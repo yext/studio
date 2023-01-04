@@ -31,3 +31,6 @@ yarn-error.log*
 **/lib
 **/dist
 **/build
+
+#pagesJS
+apps/**/localData
