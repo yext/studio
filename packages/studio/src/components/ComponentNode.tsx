@@ -56,12 +56,12 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   return (
     <div
-      className="flex items-center h-8 cursor-pointer"
+      className="flex pl-2 items-center h-8 cursor-pointer hover:bg-gray-100"
       style={componentNodeStyle}
       onClick={handleClick}
     >
       <Vector className={vectorClassName} onClick={onToggle} />
-      <div className="pl-1.5">
+      <div className="pl-2">
         <ComponentKindIcon componentState={componentState} />
       </div>
       <span className="pl-1.5">{text}</span>

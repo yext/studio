@@ -2,6 +2,7 @@ import useTemporalStore from "../store/useTemporalStore";
 import { ReactComponent as Undo } from "../icons/undo.svg";
 import { useCallback } from "react";
 import classNames from "classnames";
+import AddElementButton from "./AddElementButton";
 
 /**
  * Renders the top bar of Studio, which includes buttons for performing undo
@@ -20,7 +21,7 @@ export default function ActionsBar(): JSX.Element {
 
   const disableUndo = pastStates.length === 0;
   const disableRedo = futureStates.length === 0;
-  const undoClasses = classNames("w-4", {
+  const undoClasses = classNames("w-4 ml-auto", {
     "text-gray-400": disableUndo,
     "text-gray-800": !disableUndo,
   });
@@ -30,7 +31,10 @@ export default function ActionsBar(): JSX.Element {
   });
 
   return (
-    <div className="flex bg-gray-100 py-3 justify-end">
+    <div className="flex bg-gray-100 py-3">
+      <div className="">
+        <AddElementButton />
+      </div>
       <button
         className={undoClasses}
         onClick={handleUndo}
