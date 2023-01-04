@@ -13,7 +13,7 @@ import classNames from "classnames";
 import useStudioStore from "../store/useStudioStore";
 import { v4 } from "uuid";
 
-export default function AddComponentButton() {
+export default function AddElementButton() {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
