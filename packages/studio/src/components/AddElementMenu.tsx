@@ -92,17 +92,19 @@ function ElementTypeButton(props: {
   );
 }
 
-function Options(props: { metadata: FileMetadata }) {
-  const { metadata } = props;
+function Options({ metadata }: { metadata: FileMetadata }) {
   const componentName = metadata.filepath
     .split("/")
     .at(-1)
     ?.split(".tsx")
     .at(0);
+  const [getActivePageState, setActivePageState] = useStudioStore((store) => {
+    return [store.pages.getActivePageState, store.pages.setActivePageState];
+  });
 
-  const addComponent = useStudioStore((store) => {
-    return (metadata: FileMetadata, componentName: string) => {
-      const activePageState = store.pages.getActivePageState();
+  const addComponent = useCallback(
+    (metadata: FileMetadata, componentName: string) => {
+      const activePageState = getActivePageState();
       if (!activePageState) {
         throw new Error("Tried to add component without active page state.");
       }
@@ -120,12 +122,13 @@ function Options(props: { metadata: FileMetadata }) {
         metadataUUID: metadata.metadataUUID,
         parentUUID: rootElement?.uuid,
       };
-      store.pages.setActivePageState({
+      setActivePageState({
         ...activePageState,
         componentTree: [...activePageState.componentTree, componentState],
       });
-    };
-  });
+    },
+    [getActivePageState, setActivePageState]
+  );
   const handleClick = useCallback(() => {
     if (!componentName) {
       throw new Error("Invalid component filepath: " + metadata.filepath);

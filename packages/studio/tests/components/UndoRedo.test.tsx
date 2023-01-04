@@ -1,14 +1,10 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import ActionsBar from "../../src/components/ActionsBar";
+import UndoRedo from "../../src/components/UndoRedo";
 import useStudioStore from "../../src/store/useStudioStore";
 import useTemporalStore from "../../src/store/useTemporalStore";
 import { searchBarComponent } from "../__fixtures__/componentStates";
 import mockStore from "../__utils__/mockStore";
-
-jest.mock("../../src/icons/undo.svg", () => {
-  return { ReactComponent: "svg" };
-});
 
 describe("Undo/redo", () => {
   beforeEach(() => {
@@ -42,7 +38,7 @@ describe("Undo/redo", () => {
   });
 
   it("undoes last state update when undo is clicked", async () => {
-    render(<ActionsBar />);
+    render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
     );
@@ -53,7 +49,7 @@ describe("Undo/redo", () => {
   it("redoes single state update when redo is clicked", async () => {
     useTemporalStore().undo();
     useTemporalStore().undo();
-    render(<ActionsBar />);
+    render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activePageName).toBeUndefined();
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
     await userEvent.click(screen.getByLabelText("Redo"));
