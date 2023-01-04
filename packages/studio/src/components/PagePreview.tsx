@@ -1,15 +1,23 @@
-import { Fragment, createElement, useMemo, useState } from "react";
+import {
+  ComponentState,
+  Fragment,
+  createElement,
+  useMemo,
+  useState,
+} from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentTreeHelpers,
   ComponentStateKind,
   PageState,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
 import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
+import initialStudioData from "virtual:yext-studio";
 
 interface PagePreviewProps {
   pageState: PageState;
@@ -22,7 +30,7 @@ export default function PagePreview({
   pageState,
 }: PagePreviewProps): JSX.Element {
   useImportedComponents(pageState);
-  const elements = usePageElements(pageState);
+  const elements = usePageElements(pageState.componentTree);
   return <>{elements}</>;
 }
 
@@ -30,9 +38,14 @@ export default function PagePreview({
  * Renders the page's component tree with props, where expressions
  * in prop values are replace with actual values.
  */
-function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
+function usePageElements(
+  componentTree: ComponentState[]
+): (JSX.Element | null)[] | null {
   const UUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
+  );
+  const UUIDToFileMetadata = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToFileMetadata
   );
   const expressionSources = useExpressionSources();
   return useMemo(() => {
@@ -41,7 +54,7 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
       return null;
     }
     return ComponentTreeHelpers.mapComponentTree(
-      pageState.componentTree,
+      componentTree,
       (c, children) => {
         let element: ImportType | string;
         if (c.kind === ComponentStateKind.Fragment) {
@@ -58,10 +71,13 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
           element = UUIDToImportedComponent[c.metadataUUID];
         }
 
-        const previewProps =
-          c.kind === ComponentStateKind.Fragment
-            ? {}
-            : getPreviewProps(c.props, expressionSources);
+        const previewProps = TypeGuards.isStandardOrModuleComponentState(c)
+          ? getPreviewProps(
+              c.props,
+              UUIDToFileMetadata[c.metadataUUID].propShape ?? {},
+              expressionSources
+            )
+          : {};
         const component = createElement(
           element,
           {
@@ -78,7 +94,12 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
         );
       }
     );
-  }, [UUIDToImportedComponent, expressionSources, pageState]);
+  }, [
+    UUIDToFileMetadata,
+    UUIDToImportedComponent,
+    expressionSources,
+    componentTree,
+  ]);
 }
 
 /**
@@ -93,6 +114,10 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
   const siteSettingValues = useStudioStore(
     (store) => store.siteSettings.values
   );
+  const activeEntityFile = useStudioStore(
+    (store) => store.pages.activeEntityFile
+  );
+
   useLayoutEffect(() => {
     const siteSettingsSource = Object.entries(siteSettingValues ?? {}).reduce(
       (map, [propName, proVal]) => {
@@ -106,5 +131,19 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
       siteSettings: siteSettingsSource,
     }));
   }, [siteSettingValues]);
+
+  useLayoutEffect(() => {
+    if (!activeEntityFile) {
+      return;
+    }
+    const entityFilepath = `${initialStudioData.userPaths.localData}/${activeEntityFile}`;
+    import(entityFilepath).then((importedModule) => {
+      setExpressionSources((prev) => ({
+        ...prev,
+        document: importedModule["default"] as Record<string, unknown>,
+      }));
+    });
+  }, [activeEntityFile]);
+
   return expressionSources;
 }
