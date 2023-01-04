@@ -1,4 +1,10 @@
-import { Fragment, createElement, useMemo, useState } from "react";
+import {
+  ComponentState,
+  Fragment,
+  createElement,
+  useMemo,
+  useState,
+} from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentTreeHelpers,
@@ -24,7 +30,7 @@ export default function PagePreview({
   pageState,
 }: PagePreviewProps): JSX.Element {
   useImportedComponents(pageState);
-  const elements = usePageElements(pageState);
+  const elements = usePageElements(pageState.componentTree);
   return <>{elements}</>;
 }
 
@@ -32,9 +38,9 @@ export default function PagePreview({
  * Renders the page's component tree with props, where expressions
  * in prop values are replace with actual values.
  */
-function usePageElements({
-  componentTree,
-}: PageState): (JSX.Element | null)[] | null {
+function usePageElements(
+  componentTree: ComponentState[]
+): (JSX.Element | null)[] | null {
   const UUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
   );
