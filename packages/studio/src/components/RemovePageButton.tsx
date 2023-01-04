@@ -38,5 +38,11 @@ export default function RemovePageButton({
     [pageName, removePage]
   );
 
-  return <ButtonWithModal buttonIcon={<X />} renderModal={renderModal} />;
+  return (
+    <ButtonWithModal
+      buttonIcon={<X />}
+      renderModal={renderModal}
+      aria-label="Remove Page"
+    />
+  );
 }

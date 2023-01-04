@@ -11,12 +11,20 @@ const actualCreate = jest.requireActual("zustand");
 // a variable to hold reset functions for all stores declared in the app
 const storeResetFns = new Set<() => void>();
 
-// when creating a store, we get its initial state, create a reset function and add it in the set
-const create = () => (createState: unknown) => {
-  const store = actualCreate(createState);
-  const initialState = store.getState();
-  storeResetFns.add(() => store.setState(initialState, true));
-  return store;
+// when creating a store, we add a reset function for it in the set
+const create = (temporalStore?: any) => {
+  if (temporalStore) {
+    const { clear } = temporalStore.getState();
+    storeResetFns.add(clear);
+    return temporalStore.getState;
+  } else {
+    return (createState: unknown) => {
+      const store = actualCreate(createState);
+      const initialState = store.getState();
+      storeResetFns.add(() => store.setState(initialState, true));
+      return store;
+    };
+  }
 };
 
 // Reset all stores after each test run

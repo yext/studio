@@ -57,7 +57,7 @@ export default function Modal({
     >
       <div className="flex justify-between items-center font-bold mb-4">
         {title}
-        <button onClick={handleClose}>
+        <button onClick={handleClose} aria-label="Close Modal">
           <X />
         </button>
       </div>
