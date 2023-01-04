@@ -1,7 +1,18 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentStateKind,
+  FileMetadataKind,
+} from "@yext/studio-plugin";
 import AddElementMenu from "../../src/components/AddElementMenu";
 import mockStore from "../__utils__/mockStore";
+
+const rootComponent: ComponentState = {
+  kind: ComponentStateKind.BuiltIn,
+  componentName: "div",
+  uuid: "mock-div",
+  props: {},
+};
 
 let setActivePageState;
 beforeEach(() => {
@@ -10,14 +21,7 @@ beforeEach(() => {
     pages: {
       getActivePageState: () => {
         return {
-          componentTree: [
-            {
-              kind: ComponentStateKind.BuiltIn,
-              componentName: "div",
-              uuid: "mock-div",
-              props: {},
-            },
-          ],
+          componentTree: [rootComponent],
           filepath: "",
           cssImports: [],
         };
@@ -55,19 +59,14 @@ it("renders Components on load", () => {
   expect(screen.queryByText("Mock-Module")).toBeNull();
 });
 
-it("can add components to the tree", () => {
+it("can add a component to the tree", () => {
   render(<AddElementMenu />);
   expect(setActivePageState).toHaveBeenCalledTimes(0);
   fireEvent.click(screen.getByText("Mock-Component"));
   expect(setActivePageState).toHaveBeenCalledTimes(1);
   expect(setActivePageState).toHaveBeenCalledWith({
     componentTree: [
-      {
-        componentName: "div",
-        kind: ComponentStateKind.BuiltIn,
-        props: {},
-        uuid: "mock-div",
-      },
+      rootComponent,
       {
         componentName: "Mock-Component",
         kind: ComponentStateKind.Standard,
@@ -90,10 +89,56 @@ it("can switch to Containers", () => {
   expect(screen.queryByText("Mock-Module")).toBeNull();
 });
 
+it("can add a container to the tree", () => {
+  render(<AddElementMenu />);
+  fireEvent.click(screen.getByText("Containers"));
+  expect(setActivePageState).toHaveBeenCalledTimes(0);
+  fireEvent.click(screen.getByText("Mock-Container"));
+  expect(setActivePageState).toHaveBeenCalledTimes(1);
+  expect(setActivePageState).toHaveBeenCalledWith({
+    componentTree: [
+      rootComponent,
+      {
+        componentName: "Mock-Container",
+        kind: ComponentStateKind.Standard,
+        metadataUUID: "cont",
+        parentUUID: "mock-div",
+        props: {},
+        uuid: expect.any(String),
+      },
+    ],
+    cssImports: [],
+    filepath: "",
+  });
+});
+
 it("can switch to Modules", () => {
   render(<AddElementMenu />);
   fireEvent.click(screen.getByText("Modules"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.queryByText("Mock-Container")).toBeNull();
   expect(screen.getByText("Mock-Module")).toBeDefined();
+});
+
+it("can add a module to the tree", () => {
+  render(<AddElementMenu />);
+  fireEvent.click(screen.getByText("Modules"));
+  expect(setActivePageState).toHaveBeenCalledTimes(0);
+  fireEvent.click(screen.getByText("Mock-Module"));
+  expect(setActivePageState).toHaveBeenCalledTimes(1);
+  expect(setActivePageState).toHaveBeenCalledWith({
+    componentTree: [
+      rootComponent,
+      {
+        componentName: "Mock-Module",
+        kind: ComponentStateKind.Module,
+        metadataUUID: "modu",
+        parentUUID: "mock-div",
+        props: {},
+        uuid: expect.any(String),
+      },
+    ],
+    cssImports: [],
+    filepath: "",
+  });
 });
