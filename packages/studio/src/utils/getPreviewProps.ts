@@ -26,7 +26,7 @@ export function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
-    if (!props[propName] && propShape[propName]) {
+    if (!props[propName]) {
       transformedProps[propName] = getPropTypeDefaultValue(
         propShape[propName].type
       );

@@ -159,17 +159,15 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         );
         return false;
       }
-      if (
-        !get().pages[activePageName].entityFiles?.includes(activeEntityFile)
-      ) {
-        console.error(
-          "Error setting active entity file:" +
-            ` "${activeEntityFile}" is not an entity file for this page.`
-        );
-        return false;
+      if (get().pages[activePageName].entityFiles?.includes(activeEntityFile)) {
+        set({ activeEntityFile });
+        return true;
       }
-      set({ activeEntityFile });
-      return true;
+      console.error(
+        "Error setting active entity file:" +
+          ` "${activeEntityFile}" is not an entity file for this page.`
+      );
+      return false;
     },
   };
 

@@ -1,11 +1,5 @@
 import path from "path";
-import {
-  FileMetadata,
-  PageState,
-  UserPaths,
-  StudioData,
-  StudioConfig,
-} from "./types";
+import { FileMetadata, PageState, UserPaths, StudioData } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -32,7 +26,7 @@ export default class ParsingOrchestrator {
   private project: Project;
 
   /** All paths are assumed to be absolute. */
-  constructor(private paths: UserPaths, private studioConfig: StudioConfig) {
+  constructor(private paths: UserPaths, private isPagesJSRepo?: boolean) {
     this.project = createTsMorphProject();
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
@@ -102,7 +96,7 @@ export default class ParsingOrchestrator {
   private async getLocalDataMapping(): Promise<
     Record<string, string[]> | undefined
   > {
-    const streamMappingFile = "mapping.json"
+    const streamMappingFile = "mapping.json";
     const localDataMappingFilepath = path.join(
       this.paths.localData,
       streamMappingFile
@@ -122,7 +116,7 @@ export default class ParsingOrchestrator {
       );
     }
     let localDataMapping: Record<string, string[]> | undefined = undefined;
-    if (this.studioConfig.isPagesJSRepo) {
+    if (this.isPagesJSRepo) {
       localDataMapping = await this.getLocalDataMapping();
     }
     return fs.readdirSync(this.paths.pages, "utf-8").reduce((prev, curr) => {

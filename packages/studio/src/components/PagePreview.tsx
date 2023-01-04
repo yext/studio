@@ -32,7 +32,9 @@ export default function PagePreview({
  * Renders the page's component tree with props, where expressions
  * in prop values are replace with actual values.
  */
-function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
+function usePageElements({
+  componentTree,
+}: PageState): (JSX.Element | null)[] | null {
   const UUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
   );
@@ -46,7 +48,7 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
       return null;
     }
     return ComponentTreeHelpers.mapComponentTree(
-      pageState.componentTree,
+      componentTree,
       (c, children) => {
         let element: ImportType | string;
         if (c.kind === ComponentStateKind.Fragment) {
@@ -90,7 +92,7 @@ function usePageElements(pageState: PageState): (JSX.Element | null)[] | null {
     UUIDToFileMetadata,
     UUIDToImportedComponent,
     expressionSources,
-    pageState.componentTree,
+    componentTree,
   ]);
 }
 

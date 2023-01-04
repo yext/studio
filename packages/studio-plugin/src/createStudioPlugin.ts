@@ -1,6 +1,5 @@
 import { ConfigEnv, Plugin } from "vite";
 import ParsingOrchestrator from "./ParsingOrchestrator";
-import getUserPaths from "./parsers/getUserPaths";
 import getStudioConfig from "./parsers/getStudioConfig";
 
 /**
@@ -16,8 +15,10 @@ export default async function createStudioPlugin(
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserProjectRoot = process.cwd();
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
-  const userPaths = getUserPaths(pathToUserProjectRoot, studioConfig.repoPaths);
-  const orchestrator = new ParsingOrchestrator(userPaths, studioConfig);
+  const orchestrator = new ParsingOrchestrator(
+    studioConfig.paths,
+    studioConfig.isPagesJSRepo
+  );
   const studioData = await orchestrator.getStudioData();
 
   // We have to use a dynamic import here - if we use a regular import,
