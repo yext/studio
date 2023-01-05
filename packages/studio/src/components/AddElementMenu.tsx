@@ -10,6 +10,7 @@ import { useCallback, useState } from "react";
 import classNames from "classnames";
 import { v4 } from "uuid";
 import useStudioStore from "../store/useStudioStore";
+import path from "path-browserify";
 
 enum ElementType {
   Components = "Components",
@@ -93,11 +94,7 @@ function ElementTypeButton(props: {
 }
 
 function Options({ metadata }: { metadata: FileMetadata }) {
-  const componentName = metadata.filepath
-    .split("/")
-    .at(-1)
-    ?.split(".tsx")
-    .at(0);
+  const componentName = path.basename(metadata.filepath, '.tsx');
   const [getActivePageState, setActivePageState] = useStudioStore((store) => {
     return [
       store.pages.getActivePageState,
