@@ -13,6 +13,7 @@ jobs:
         node-version: 18
     - run: npm ci
     - run: npm run build
+    - uses: browser-actions/setup-chrome@latest
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
