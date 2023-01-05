@@ -44,7 +44,7 @@ export default function AddElementMenu(): JSX.Element {
           );
         })}
       </div>
-      <div className="py-1">
+      <div className="flex flex-col items-start py-1">
         {Object.values(UUIDToFileMetadata)
           .filter((metadata) => {
             if (activeType === ElementType.Components) {
@@ -62,7 +62,7 @@ export default function AddElementMenu(): JSX.Element {
             }
           })
           .map((metadata) => {
-            return <Options metadata={metadata} key={metadata.metadataUUID} />;
+            return <Option metadata={metadata} key={metadata.metadataUUID} />;
           })}
       </div>
     </div>
@@ -93,8 +93,8 @@ function ElementTypeButton(props: {
   );
 }
 
-function Options({ metadata }: { metadata: FileMetadata }) {
-  const componentName = path.basename(metadata.filepath, ".tsx");
+function Option({ metadata }: { metadata: FileMetadata }) {
+  const componentName = path.basename(metadata.filepath, '.tsx');
   const [getActivePageState, setActivePageState] = useStudioStore((store) => {
     return [store.pages.getActivePageState, store.pages.setActivePageState];
   });
@@ -127,8 +127,8 @@ function Options({ metadata }: { metadata: FileMetadata }) {
   }, [addElement, componentName]);
 
   return (
-    <div className="px-6 py-1 cursor-pointer" onClick={handleClick}>
+    <button className="px-6 py-1 cursor-pointer" onClick={handleClick} aria-label={`Add ${componentName} Element`}>
       {componentName}
-    </div>
+    </button>
   );
 }
