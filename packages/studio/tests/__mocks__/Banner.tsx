@@ -1,4 +1,5 @@
 import { HexColor } from "@yext/studio";
+import { useMemo } from "react";
 import siteSettings from "./siteSettings";
 
 export interface BannerProps {
@@ -17,8 +18,13 @@ export const initialProps: BannerProps = {
 };
 
 export default function Banner(props: BannerProps) {
+  const style = useMemo(
+    () => ({ backgroundColor: props.bgColor }),
+    [props.bgColor]
+  );
+
   return (
-    <div style={{ backgroundColor: props.bgColor }}>
+    <div style={style}>
       {props.title}
       {`${props.bool}`}
       {props.num}

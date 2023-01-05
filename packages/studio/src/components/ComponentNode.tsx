@@ -13,7 +13,7 @@ interface ComponentNodeProps {
   /** Whether this node's children are visible, if it has children. */
   isOpen: boolean;
   /** Toggle callback to open/close the node. */
-  onToggle: () => void;
+  onToggle: (nodeId: string, newOpenValue: boolean) => void;
   /** Whether this node has children. */
   hasChild: boolean;
 }
@@ -46,14 +46,18 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     [depth]
   );
 
+  const handleToggle = useCallback(() => {
+    onToggle(componentState.uuid, !isOpen);
+  }, [componentState.uuid, isOpen, onToggle]);
+
   return (
     <div
-      className="flex items-center h-8"
+      className="flex pl-2 items-center h-8 cursor-pointer hover:bg-gray-100"
       style={componentNodeStyle}
       onClick={handleClick}
     >
-      <Vector className={vectorClassName} onClick={onToggle} />
-      <div className="pl-1.5">
+      <Vector className={vectorClassName} onClick={handleToggle} />
+      <div className="pl-2">
         <ComponentKindIcon componentState={componentState} />
       </div>
       <span className="pl-1.5">{text}</span>
