@@ -14,7 +14,7 @@ export default class FileSystemManager {
     private writer: FileSystemWriter
   ) {}
 
-  removeFile(filepath: string) {
+  private removeFile(filepath: string) {
     if (fs.existsSync(filepath)) {
       const sourceFile = this.project.getSourceFile(filepath)
       if (sourceFile) {
