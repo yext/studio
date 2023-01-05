@@ -97,9 +97,6 @@ export default function ComponentTree(): JSX.Element | null {
 
 function canDrop(_: NodeModel[], opts: DropOptions) {
   const { dragSource, dropTargetId, dropTarget } = opts;
-  if (dropTargetId === ROOT_ID) {
-    return false;
-  }
   if (dropTarget !== undefined && !dropTarget.droppable) {
     return false;
   }
