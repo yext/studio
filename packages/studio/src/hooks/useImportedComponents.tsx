@@ -44,7 +44,7 @@ export default function useImportedComponents(pageState: PageState) {
         return null;
       }
       const filepath = UUIDToFileMetadata[metadataUUID].filepath;
-      const importedModule = await import(/* @vite-ignore */ filepath);
+      const importedModule = await import(filepath);
       const functionComponent = getFunctionComponent(
         importedModule,
         componentName

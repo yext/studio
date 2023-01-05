@@ -30,7 +30,7 @@ export default async function getStudioConfig(
     return defaultConfig;
   }
 
-  const studioConfig = (await import(/* @vite-ignore */ configFilepath))
+  const studioConfig = (await import(configFilepath))
     .default;
   return lodashMerge(defaultConfig, studioConfig);
 }
