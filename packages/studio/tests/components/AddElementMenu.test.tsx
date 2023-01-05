@@ -6,6 +6,7 @@ import {
   FileMetadataKind,
 } from "@yext/studio-plugin";
 import AddElementMenu from "../../src/components/AddElementMenu";
+import mockActivePage from "../__utils__/mockActivePage";
 import mockStore from "../__utils__/mockStore";
 
 const rootComponent: ComponentState = {
@@ -18,16 +19,13 @@ const rootComponent: ComponentState = {
 let setActivePageState;
 beforeEach(() => {
   setActivePageState = jest.fn();
+  mockActivePage({
+    componentTree: [rootComponent],
+    filepath: "",
+    cssImports: [],
+  });
   mockStore({
     pages: {
-      pages: {
-        testpage: {
-          componentTree: [rootComponent],
-          filepath: "",
-          cssImports: [],
-        },
-      },
-      activePageName: "testpage",
       setActivePageState,
     },
     fileMetadatas: {

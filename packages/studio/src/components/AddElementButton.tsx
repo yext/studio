@@ -9,7 +9,7 @@ import classNames from "classnames";
  * AddElementButton is a button that when clicked, renders a dropdown menu for
  * adding elements to the page.
  */
-export default function AddElementButton(): JSX.Element {
+export default function AddElementButton(): JSX.Element | null {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
