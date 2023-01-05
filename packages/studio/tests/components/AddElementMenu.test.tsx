@@ -1,9 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {
-  ComponentStateKind,
-  FileMetadataKind,
-} from "@yext/studio-plugin";
+import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
 import AddElementMenu from "../../src/components/AddElementMenu";
 import mockActivePage from "../__utils__/mockActivePage";
 import mockStore from "../__utils__/mockStore";

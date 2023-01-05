@@ -5,5 +5,5 @@ export default function sendMessage<T extends MessageID>(
   payload: StudioEventMap[T]
 ) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  import.meta.hot?.send(messageId, payload as any)
+  import.meta.hot?.send(messageId, payload as any);
 }

@@ -1,4 +1,11 @@
-import { ArrowFunction, FunctionDeclaration, SyntaxKind, VariableDeclaration, WriterFunction, Writers } from "ts-morph";
+import {
+  ArrowFunction,
+  FunctionDeclaration,
+  SyntaxKind,
+  VariableDeclaration,
+  WriterFunction,
+  Writers,
+} from "ts-morph";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
@@ -24,9 +31,10 @@ export default class ReactComponentFileWriter {
   ) {}
 
   private createComponentFunction(): FunctionDeclaration {
-    const functionDeclaration = this.studioSourceFileWriter.createDefaultFunction(this.componentName)
-    functionDeclaration.addStatements([Writers.returnStatement("<></>")])
-    return functionDeclaration
+    const functionDeclaration =
+      this.studioSourceFileWriter.createDefaultFunction(this.componentName);
+    functionDeclaration.addStatements([Writers.returnStatement("<></>")]);
+    return functionDeclaration;
   }
 
   private createProps(props: PropValues): string {
@@ -47,7 +55,9 @@ export default class ReactComponentFileWriter {
     return propsString;
   }
 
-  private createReturnStatement(componentTree: ComponentState[]): WriterFunction {
+  private createReturnStatement(
+    componentTree: ComponentState[]
+  ): WriterFunction {
     const elements = ComponentTreeHelpers.mapComponentTree<string>(
       componentTree,
       (c, children): string => {
@@ -126,12 +136,17 @@ export default class ReactComponentFileWriter {
   }): void {
     let defaultExport: VariableDeclaration | FunctionDeclaration;
     try {
-      defaultExport = this.studioSourceFileParser.getDefaultExportReactComponent();
-    } catch(e: unknown) {
-      if(/^Error getting default export: No declaration node found/.test((e as Error).message)) {
-        defaultExport = this.createComponentFunction()
+      defaultExport =
+        this.studioSourceFileParser.getDefaultExportReactComponent();
+    } catch (e: unknown) {
+      if (
+        /^Error getting default export: No declaration node found/.test(
+          (e as Error).message
+        )
+      ) {
+        defaultExport = this.createComponentFunction();
       } else {
-        throw e
+        throw e;
       }
     }
     const functionComponent = defaultExport.isKind(

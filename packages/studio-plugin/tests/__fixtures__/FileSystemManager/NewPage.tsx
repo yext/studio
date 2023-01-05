@@ -1,2 +1,1 @@
-export default function NewPage() {
-}
+export default function NewPage() {}

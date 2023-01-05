@@ -1,15 +1,15 @@
-import { ViteDevServer, WebSocketCustomListener, WebSocketClient } from 'vite'
-import { MessageID, ResponseEventMap, StudioEventMap } from './types'
-import FileSystemManager from './FileSystemManager'
+import { ViteDevServer, WebSocketCustomListener, WebSocketClient } from "vite";
+import { MessageID, ResponseEventMap, StudioEventMap } from "./types";
+import FileSystemManager from "./FileSystemManager";
 
 export default function configureStudioServer(
   server: ViteDevServer,
   fileSystemManager: FileSystemManager
-  ) {
-  registerListener(server, MessageID.StudioCommitChanges, async data => {
-    await fileSystemManager.updateFileSystem(data)
-    return 'Changes saved successfully.'
-  })
+) {
+  registerListener(server, MessageID.StudioCommitChanges, async (data) => {
+    await fileSystemManager.updateFileSystem(data);
+    return "Changes saved successfully.";
+  });
 }
 
 /**
@@ -21,22 +21,25 @@ function registerListener<T extends MessageID>(
   messageId: T,
   listener: (data: StudioEventMap[T]) => string | Promise<string>
 ) {
-  const handleRes: WebSocketCustomListener<StudioEventMap[T]> = async (data, client) => {
+  const handleRes: WebSocketCustomListener<StudioEventMap[T]> = async (
+    data,
+    client
+  ) => {
     try {
-      const msg = await listener(data)
-      sendClientMessage(client, messageId, { type: 'success', msg })
+      const msg = await listener(data);
+      sendClientMessage(client, messageId, { type: "success", msg });
     } catch (error: unknown) {
       let msg = `Error occurred for event ${messageId}`;
       if (typeof error === "string") {
-        msg = error.toString()
+        msg = error.toString();
       } else if (error instanceof Error) {
-        msg = error.message
+        msg = error.message;
       }
-      console.error(error)
-      sendClientMessage(client, messageId, { type: 'error', msg })
+      console.error(error);
+      sendClientMessage(client, messageId, { type: "error", msg });
     }
-  }
-  server.ws.on(messageId, handleRes)
+  };
+  server.ws.on(messageId, handleRes);
 }
 
 function sendClientMessage<T extends MessageID>(
@@ -44,5 +47,5 @@ function sendClientMessage<T extends MessageID>(
   messageId: T,
   payload: ResponseEventMap[T]
 ) {
-  client.send(messageId, payload)
+  client.send(messageId, payload);
 }

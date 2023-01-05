@@ -26,8 +26,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         store.pendingChanges = {
           pagesToRemove: new Set<string>(),
           pagesToUpdate: new Set<string>(),
-        }
-      })
+        };
+      });
     },
     addPage: (filepath: string) => {
       if (!filepath) {

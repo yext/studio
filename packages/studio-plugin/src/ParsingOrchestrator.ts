@@ -22,20 +22,25 @@ export function createTsMorphProject() {
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
   private pageNameToPageFile: Record<string, PageFile> = {};
-  private localDataMapping?: Record<string, string[]>
+  private localDataMapping?: Record<string, string[]>;
 
   /** All paths are assumed to be absolute. */
-  constructor(private project: Project, private paths: UserPaths, private isPagesJSRepo?: boolean) {
+  constructor(
+    private project: Project,
+    private paths: UserPaths,
+    private isPagesJSRepo?: boolean
+  ) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
 
   async getPageFile(pageName: string): Promise<PageFile> {
-    const pageFile = this.pageNameToPageFile[pageName]
+    const pageFile = this.pageNameToPageFile[pageName];
     if (pageFile) {
-      return pageFile
+      return pageFile;
     }
-    let localDataMapping: Record<string, string[]> | undefined = this.localDataMapping;
+    let localDataMapping: Record<string, string[]> | undefined =
+      this.localDataMapping;
     if (!localDataMapping && this.isPagesJSRepo) {
       localDataMapping = await this.getLocalDataMapping();
     }
@@ -59,7 +64,7 @@ export default class ParsingOrchestrator {
     }, {});
 
     const siteSettings = this.getSiteSettings();
-    const pageNameToPageState = await this.getPageNameToPageState()
+    const pageNameToPageState = await this.getPageNameToPageState();
 
     return {
       pageNameToPageState,
@@ -115,7 +120,7 @@ export default class ParsingOrchestrator {
     Record<string, string[]> | undefined
   > {
     if (this.localDataMapping) {
-      return this.localDataMapping
+      return this.localDataMapping;
     }
     const streamMappingFile = "mapping.json";
     const localDataMappingFilepath = path.join(
@@ -138,12 +143,12 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    const files = fs.readdirSync(this.paths.pages, "utf-8")
-    const pageNameToPageState: Record<string, PageState> = {}
+    const files = fs.readdirSync(this.paths.pages, "utf-8");
+    const pageNameToPageState: Record<string, PageState> = {};
     for (const file of files) {
       const pageName = path.basename(file, ".tsx");
-      const pageFile = await this.getPageFile(pageName)
-      pageNameToPageState[pageName] = pageFile.getPageState()
+      const pageFile = await this.getPageFile(pageName);
+      pageNameToPageState[pageName] = pageFile.getPageState();
     }
     return pageNameToPageState;
   }

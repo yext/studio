@@ -39,12 +39,14 @@ it("gives an error if the page name is already used", async () => {
   await userEvent.type(textbox, "universal");
   const saveButton = screen.getByRole("button", { name: "Save" });
   const consoleErrorSpy = jest
-        .spyOn(global.console, "error")
-        .mockImplementation();
+    .spyOn(global.console, "error")
+    .mockImplementation();
   await userEvent.click(saveButton);
   expect(screen.getByText("Page name already used.")).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1)
-  expect(consoleErrorSpy).toBeCalledWith("Error adding page: page name \"universal\" is already used.")
+  expect(consoleErrorSpy).toBeCalledTimes(1);
+  expect(consoleErrorSpy).toBeCalledWith(
+    'Error adding page: page name "universal" is already used.'
+  );
 });
 
 it("gives an error if the page path is invalid", async () => {
@@ -55,10 +57,12 @@ it("gives an error if the page path is invalid", async () => {
   await userEvent.type(textbox, "../test");
   const saveButton = screen.getByRole("button", { name: "Save" });
   const consoleErrorSpy = jest
-        .spyOn(global.console, "error")
-        .mockImplementation();
+    .spyOn(global.console, "error")
+    .mockImplementation();
   await userEvent.click(saveButton);
   expect(screen.getByText("Page path is invalid.")).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1)
-  expect(consoleErrorSpy).toBeCalledWith(expect.stringContaining("Error adding page: filepath is invalid"))
+  expect(consoleErrorSpy).toBeCalledTimes(1);
+  expect(consoleErrorSpy).toBeCalledWith(
+    expect.stringContaining("Error adding page: filepath is invalid")
+  );
 });

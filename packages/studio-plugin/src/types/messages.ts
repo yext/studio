@@ -1,23 +1,24 @@
-import { StudioData } from './StudioData'
+import { StudioData } from "./StudioData";
 
 export enum MessageID {
-  StudioCommitChanges = 'studio:commitChanges',
+  StudioCommitChanges = "studio:commitChanges",
 }
 
-export interface CommitChangesEventPayload extends Pick<StudioData, 'pageNameToPageState'> {
+export interface CommitChangesEventPayload
+  extends Pick<StudioData, "pageNameToPageState"> {
   pendingChanges: {
-    pagesToRemove: string[],
-    pagesToUpdate: string[],
-  }
+    pagesToRemove: string[];
+    pagesToUpdate: string[];
+  };
 }
 
 export type StudioEventMap = {
-  [MessageID.StudioCommitChanges]: CommitChangesEventPayload
-}
+  [MessageID.StudioCommitChanges]: CommitChangesEventPayload;
+};
 
 export type ResponseEventMap = {
   [key in MessageID]: {
-    type: 'success' | 'error',
-    msg: string
-  }
-}
+    type: "success" | "error";
+    msg: string;
+  };
+};

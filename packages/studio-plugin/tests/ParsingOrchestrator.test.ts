@@ -1,4 +1,6 @@
-import ParsingOrchestrator, { createTsMorphProject } from "../src/ParsingOrchestrator";
+import ParsingOrchestrator, {
+  createTsMorphProject,
+} from "../src/ParsingOrchestrator";
 import path from "path";
 import getUserPaths from "../src/parsers/getUserPaths";
 import {
@@ -51,7 +53,11 @@ const pageWithModulesState: PageState = {
 
 describe("aggregates data as expected", () => {
   const tsMorphProject: Project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, false);
+  const orchestrator = new ParsingOrchestrator(
+    tsMorphProject,
+    userPaths,
+    false
+  );
   let studioData: StudioData;
 
   beforeAll(async () => {
@@ -113,7 +119,11 @@ describe("aggregates data as expected", () => {
 
   describe("isPagesJSRepo", () => {
     it("aggregates pageNameToPageState as expected when isPagesJSRepo is true", async () => {
-      const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, true);
+      const orchestrator = new ParsingOrchestrator(
+        tsMorphProject,
+        userPaths,
+        true
+      );
       const studioData = await orchestrator.getStudioData();
       expect(studioData.pageNameToPageState).toEqual({
         basicPage: {
@@ -126,7 +136,11 @@ describe("aggregates data as expected", () => {
 
     it("throws an error when isPagesJSRepo is true and localData's mapping.json file doesn't exist", async () => {
       userPaths.localData = "thisFolderDoesNotExist";
-      const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, true);
+      const orchestrator = new ParsingOrchestrator(
+        tsMorphProject,
+        userPaths,
+        true
+      );
       await expect(orchestrator.getStudioData()).rejects.toThrow(
         /^The localData's mapping.json does not exist/
       );
@@ -141,7 +155,11 @@ it("throws an error when the page imports components from unexpected folders", a
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
   const tsMorphProject: Project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, false);
+  const orchestrator = new ParsingOrchestrator(
+    tsMorphProject,
+    userPaths,
+    false
+  );
   await expect(orchestrator.getStudioData()).rejects.toThrow(
     /^Could not get FileMetadata for/
   );
@@ -154,7 +172,11 @@ it("throws when the pages folder does not exist", async () => {
   userPaths.pages = "thisFolderDoesNotExist";
 
   const tsMorphProject: Project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, false);
+  const orchestrator = new ParsingOrchestrator(
+    tsMorphProject,
+    userPaths,
+    false
+  );
   await expect(orchestrator.getStudioData()).rejects.toThrow(
     /^The pages directory does not exist/
   );

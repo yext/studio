@@ -6,6 +6,6 @@
     "parsers",
     "writers",
     "sourcefiles",
-    "*.test.ts",
+    "*.test.ts"
   ]
 }

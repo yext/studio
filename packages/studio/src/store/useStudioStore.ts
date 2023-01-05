@@ -39,27 +39,27 @@ const useStudioStore = create<StudioStore>()(
   storeMiddlewares(
     withLenses((_set, get) => {
       registerMessageListener(MessageID.StudioCommitChanges, (payload) => {
-        if (payload.type === 'success') {
-          get().pages.resetPendingChanges()
+        if (payload.type === "success") {
+          get().pages.resetPendingChanges();
         }
-      })
-      return ({
+      });
+      return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
         commitChanges: () => {
-          const { pages, pendingChanges } = get().pages
-          const { pagesToRemove, pagesToUpdate } = pendingChanges
+          const { pages, pendingChanges } = get().pages;
+          const { pagesToRemove, pagesToUpdate } = pendingChanges;
           // Serialize pendingChanges (uses type Set) to send to server side.
           sendMessage(MessageID.StudioCommitChanges, {
             pageNameToPageState: pages,
             pendingChanges: {
               pagesToRemove: [...pagesToRemove.keys()],
-              pagesToUpdate: [...pagesToUpdate.keys()]
-            }
-          })
-        }
-      })
+              pagesToUpdate: [...pagesToUpdate.keys()],
+            },
+          });
+        },
+      };
     })
   )
 );

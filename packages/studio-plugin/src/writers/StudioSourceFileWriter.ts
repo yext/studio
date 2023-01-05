@@ -172,8 +172,8 @@ export default class StudioSourceFileWriter {
   createDefaultFunction(name: string): FunctionDeclaration {
     return this.sourceFile.addFunction({
       name,
-      isDefaultExport: true
-    })
+      isDefaultExport: true,
+    });
   }
 
   createPropsObjectLiteralWriter(props: PropValues): WriterFunction {
