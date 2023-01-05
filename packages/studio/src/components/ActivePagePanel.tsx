@@ -35,7 +35,7 @@ export default function ActivePagePanel(): JSX.Element {
               setActivePageName(pageName);
             }
             return (
-              <div key={pageName} className="flex justify-between pb-4 ml-2">
+              <div key={pageName} className="flex justify-between pb-4 px-2">
                 <div className="flex items-center">
                   <Check className={checkClasses} />
                   <button
@@ -58,7 +58,7 @@ export default function ActivePagePanel(): JSX.Element {
 
   return (
     <div className="flex flex-col w-1/4 px-4">
-      <div className="flex flex-row font-bold py-4 justify-between items-center">
+      <div className="flex flex-row font-bold py-4 pr-2 justify-between items-center">
         Pages
         <AddPageButton />
       </div>

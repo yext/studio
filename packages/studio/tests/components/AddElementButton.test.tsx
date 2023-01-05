@@ -1,6 +1,5 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import mockStore from "../__utils__/mockStore";
 import AddElementButton from "../../src/components/AddElementButton";
 import mockActivePage from "../__utils__/mockActivePage";
 
