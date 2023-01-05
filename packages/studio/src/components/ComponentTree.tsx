@@ -12,7 +12,7 @@ import {
   Tree,
 } from "@minoru/react-dnd-treeview";
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
 
@@ -28,7 +28,48 @@ const TREE_CSS_CLASSES: Readonly<Classes> = {
  */
 export default function ComponentTree(): JSX.Element | null {
   const tree: NodeModel<ComponentState>[] | undefined = useTree();
+  const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
+  const initialOpen = useMemo(() => {
+    return (
+      tree?.reduce((prev, curr) => {
+        if (!(curr.id in openIds) || openIds[curr.id]) {
+          prev.push(curr.id);
+        }
+        return prev;
+      }, [] as (string | number)[]) ?? []
+    );
+  }, [openIds, tree]);
+
   const handleDrop = useDropHandler();
+
+  const onToggle = useCallback(
+    (nodeId: string, newOpenValue: boolean) => {
+      setOpenIds({
+        ...openIds,
+        [nodeId]: newOpenValue,
+      });
+    },
+    [openIds, setOpenIds]
+  );
+
+  const renderNodeCallback = useCallback(
+    (node: NodeModel<ComponentState>, renderParams: RenderParams) => {
+      const { depth, isOpen, hasChild } = renderParams;
+      if (!node.data) {
+        throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
+      }
+      return (
+        <ComponentNode
+          componentState={node.data}
+          depth={depth}
+          isOpen={isOpen}
+          onToggle={onToggle}
+          hasChild={hasChild}
+        />
+      );
+    },
+    [onToggle]
+  );
 
   if (!tree) {
     return null;
@@ -41,12 +82,12 @@ export default function ComponentTree(): JSX.Element | null {
         rootId={ROOT_ID}
         classes={TREE_CSS_CLASSES}
         dropTargetOffset={4}
-        initialOpen={true}
+        initialOpen={initialOpen}
         sort={false}
         insertDroppableFirst={false}
         onDrop={handleDrop}
         canDrop={canDrop}
-        render={renderNode}
+        render={renderNodeCallback}
         dragPreviewRender={renderDragPreview}
         placeholderRender={renderPlaceholder}
       />
@@ -65,24 +106,6 @@ function canDrop(_: NodeModel[], opts: DropOptions) {
   // For this drag and drop library, returning undefined has different behavior than returning false.
   // It means to use the default behavior.
   return undefined;
-}
-
-function renderNode(
-  node: NodeModel<ComponentState>,
-  { depth, isOpen, onToggle, hasChild }: RenderParams
-) {
-  if (!node.data) {
-    throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
-  }
-  return (
-    <ComponentNode
-      componentState={node.data}
-      depth={depth}
-      isOpen={isOpen}
-      onToggle={onToggle}
-      hasChild={hasChild}
-    />
-  );
 }
 
 function renderDragPreview(
@@ -110,20 +133,17 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
 }
 
 function useTree(): NodeModel<ComponentState>[] | undefined {
-  const activePageState = useStudioStore((store) =>
-    store.pages.getActivePageState()
-  );
+  const componentTree = useStudioStore((store) => {
+    const activePageState = store.pages.getActivePageState();
+    return activePageState?.componentTree;
+  });
 
   const getComponentMetadata = useStudioStore(
     (store) => store.fileMetadatas.getComponentMetadata
   );
 
   const tree = useMemo(() => {
-    if (!activePageState) {
-      return undefined;
-    }
-
-    return activePageState.componentTree.map((componentState) => {
+    return componentTree?.map((componentState) => {
       const commonData = {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
@@ -155,7 +175,7 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
           );
       }
     });
-  }, [activePageState, getComponentMetadata]);
+  }, [componentTree, getComponentMetadata]);
 
   return tree;
 }

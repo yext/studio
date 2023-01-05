@@ -4,14 +4,6 @@ import AddPageButton from "../../src/components/AddPageButton";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 
-jest.mock("../../src/icons/plus.svg", () => {
-  return { ReactComponent: "svg" };
-});
-
-jest.mock("../../src/icons/x.svg", () => {
-  return { ReactComponent: "svg" };
-});
-
 beforeEach(() => {
   mockStore({
     pages: {

@@ -4,10 +4,6 @@ import RemovePageButton from "../../src/components/RemovePageButton";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 
-jest.mock("../../src/icons/x.svg", () => {
-  return { ReactComponent: "svg" };
-});
-
 beforeEach(() => {
   mockStore({
     pages: {

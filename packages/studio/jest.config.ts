@@ -9,5 +9,9 @@ const config: Config = {
   testEnvironment: "jsdom",
   transformIgnorePatterns: ["node_modules/(?!react-tooltip/.*)"],
   setupFilesAfterEnv: ["<rootDir>/tests/__setup__/setup-env.ts"],
+  transform: {
+    "\\.[jt]sx?$": "babel-jest",
+    "\\.svg$": "<rootDir>/tests/__setup__/svgTransformer.js",
+  },
 };
 export default config;
