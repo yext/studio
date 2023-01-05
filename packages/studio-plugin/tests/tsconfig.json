@@ -6,6 +6,6 @@
     "parsers",
     "writers",
     "sourcefiles",
-    "ParsingOrchestrator.test.ts"
+    "*.test.ts",
   ]
 }

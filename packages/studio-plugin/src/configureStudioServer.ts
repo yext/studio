@@ -6,8 +6,8 @@ export default function configureStudioServer(
   server: ViteDevServer,
   fileSystemManager: FileSystemManager
   ) {
-  registerListener(server, MessageID.StudioCommitChanges, data => {
-    fileSystemManager.updateFileSystem(data)
+  registerListener(server, MessageID.StudioCommitChanges, async data => {
+    await fileSystemManager.updateFileSystem(data)
     return 'Changes saved successfully.'
   })
 }
@@ -19,11 +19,11 @@ export default function configureStudioServer(
 function registerListener<T extends MessageID>(
   server: ViteDevServer,
   messageId: T,
-  listener: (data: StudioEventMap[T]) => string
+  listener: (data: StudioEventMap[T]) => string | Promise<string>
 ) {
-  const handleRes: WebSocketCustomListener<StudioEventMap[T]> = (data, client) => {
+  const handleRes: WebSocketCustomListener<StudioEventMap[T]> = async (data, client) => {
     try {
-      const msg = listener(data)
+      const msg = await listener(data)
       sendClientMessage(client, messageId, { type: 'success', msg })
     } catch (error: unknown) {
       let msg = `Error occurred for event ${messageId}`;

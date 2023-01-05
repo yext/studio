@@ -24,18 +24,18 @@ export default class FileSystemManager {
     }
   }
 
-  updateFileSystem({ pageNameToPageState, pendingChanges }: CommitChangesEventPayload): void {
+  async updateFileSystem({ pageNameToPageState, pendingChanges }: CommitChangesEventPayload): Promise<void> {
     pendingChanges.pagesToRemove.forEach(pageToRemove => {
       const filepath = path.join(this.paths.pages, pageToRemove) + ".tsx"
       this.removeFile(filepath)
     })
-    pendingChanges.pagesToUpdate.forEach(pageToUpdate => {
+    await Promise.all(pendingChanges.pagesToUpdate.map(async (pageToUpdate) => {
       const filepath = pageNameToPageState[pageToUpdate]?.filepath
       if (!fs.existsSync(filepath)) {
         fs.openSync(filepath, 'w');
       }
-      this.writer.writeToPageFile(pageToUpdate, pageNameToPageState[pageToUpdate])
-    })
+      await this.writer.writeToPageFile(pageToUpdate, pageNameToPageState[pageToUpdate])
+    }));
   }
  }
  
