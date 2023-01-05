@@ -56,7 +56,9 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       style={componentNodeStyle}
       onClick={handleClick}
     >
-      <Vector className={vectorClassName} onClick={handleToggle} />
+      {depth !== 0 && (
+        <Vector className={vectorClassName} onClick={handleToggle} />
+      )}
       <div className="pl-2">
         <ComponentKindIcon componentState={componentState} />
       </div>
