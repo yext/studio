@@ -135,10 +135,7 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
 function useTree(): NodeModel<ComponentState>[] | undefined {
   const componentTree = useStudioStore((store) => {
     const activePageState = store.pages.getActivePageState();
-    if (!activePageState) {
-      return undefined;
-    }
-    return activePageState.componentTree;
+    return activePageState?.componentTree;
   });
 
   const getComponentMetadata = useStudioStore(

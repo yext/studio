@@ -94,13 +94,9 @@ function ElementTypeButton(props: {
 }
 
 function Options({ metadata }: { metadata: FileMetadata }) {
-  const componentName = path.basename(metadata.filepath, '.tsx');
+  const componentName = path.basename(metadata.filepath, ".tsx");
   const [getActivePageState, setActivePageState] = useStudioStore((store) => {
-    return [
-      store.pages.getActivePageState,
-      store.pages.setActivePageState,
-      store.fileMetadatas.getFileMetadata,
-    ];
+    return [store.pages.getActivePageState, store.pages.setActivePageState];
   });
 
   const addElement = useCallback(
@@ -127,9 +123,6 @@ function Options({ metadata }: { metadata: FileMetadata }) {
     [getActivePageState, setActivePageState, metadata]
   );
   const handleClick = useCallback(() => {
-    if (!componentName) {
-      throw new Error("Invalid component filepath: " + metadata.filepath);
-    }
     addElement(componentName);
   }, [addElement, componentName]);
 
