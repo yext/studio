@@ -1,7 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import {
-  ComponentState,
   ComponentStateKind,
   FileMetadataKind,
 } from "@yext/studio-plugin";
@@ -9,18 +8,11 @@ import AddElementMenu from "../../src/components/AddElementMenu";
 import mockActivePage from "../__utils__/mockActivePage";
 import mockStore from "../__utils__/mockStore";
 
-const rootComponent: ComponentState = {
-  kind: ComponentStateKind.BuiltIn,
-  componentName: "div",
-  uuid: "mock-div",
-  props: {},
-};
-
 let setActivePageState;
 beforeEach(() => {
   setActivePageState = jest.fn();
   mockActivePage({
-    componentTree: [rootComponent],
+    componentTree: [],
     filepath: "",
     cssImports: [],
   });
@@ -66,12 +58,10 @@ it("can add a component to the tree", async () => {
   expect(setActivePageState).toHaveBeenCalledTimes(1);
   expect(setActivePageState).toHaveBeenCalledWith({
     componentTree: [
-      rootComponent,
       {
         componentName: "Mock-Component",
         kind: ComponentStateKind.Standard,
         metadataUUID: "comp",
-        parentUUID: "mock-div",
         props: {},
         uuid: expect.any(String),
       },
@@ -97,12 +87,10 @@ it("can add a container to the tree", async () => {
   expect(setActivePageState).toHaveBeenCalledTimes(1);
   expect(setActivePageState).toHaveBeenCalledWith({
     componentTree: [
-      rootComponent,
       {
         componentName: "Mock-Container",
         kind: ComponentStateKind.Standard,
         metadataUUID: "cont",
-        parentUUID: "mock-div",
         props: {},
         uuid: expect.any(String),
       },
@@ -128,12 +116,10 @@ it("can add a module to the tree", async () => {
   expect(setActivePageState).toHaveBeenCalledTimes(1);
   expect(setActivePageState).toHaveBeenCalledWith({
     componentTree: [
-      rootComponent,
       {
         componentName: "Mock-Module",
         kind: ComponentStateKind.Module,
         metadataUUID: "modu",
-        parentUUID: "mock-div",
         props: {},
         uuid: expect.any(String),
       },

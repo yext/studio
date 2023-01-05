@@ -98,36 +98,19 @@ function Options({ metadata }: { metadata: FileMetadata }) {
     .at(-1)
     ?.split(".tsx")
     .at(0);
-  const [getActivePageState, setActivePageState, getFileMetadata] =
-    useStudioStore((store) => {
-      return [
-        store.pages.getActivePageState,
-        store.pages.setActivePageState,
-        store.fileMetadatas.getFileMetadata,
-      ];
-    });
+  const [getActivePageState, setActivePageState] = useStudioStore((store) => {
+    return [
+      store.pages.getActivePageState,
+      store.pages.setActivePageState,
+      store.fileMetadatas.getFileMetadata,
+    ];
+  });
 
   const addElement = useCallback(
     (componentName: string) => {
       const activePageState = getActivePageState();
       if (!activePageState) {
         throw new Error("Tried to add component without active page state.");
-      }
-      const rootElement = activePageState.componentTree.find(
-        (c) => !c.parentUUID
-      );
-      if (rootElement && "metadataUUID" in rootElement) {
-        const rootMetadata = getFileMetadata(rootElement.metadataUUID);
-        if (
-          rootMetadata.kind === FileMetadataKind.Module ||
-          !rootMetadata.acceptsChildren
-        ) {
-          console.error(
-            "Unable to add element to the current root element.",
-            "The root element does not accept children."
-          );
-          return;
-        }
       }
       const componentState = {
         kind:
@@ -138,7 +121,6 @@ function Options({ metadata }: { metadata: FileMetadata }) {
         props: metadata.initialProps ?? {},
         uuid: v4(),
         metadataUUID: metadata.metadataUUID,
-        parentUUID: rootElement?.uuid,
       };
       setActivePageState({
         ...activePageState,

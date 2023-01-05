@@ -30,14 +30,14 @@ export default function ComponentTree(): JSX.Element | null {
   const tree: NodeModel<ComponentState>[] | undefined = useTree();
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
   const initialOpen = useMemo(() => {
-    const initialOpen: (string | number)[] =
+    return (
       tree?.reduce((prev, curr) => {
         if (!(curr.id in openIds) || openIds[curr.id]) {
           prev.push(curr.id);
         }
         return prev;
-      }, [] as (string | number)[]) ?? [];
-    return initialOpen;
+      }, [] as (string | number)[]) ?? []
+    );
   }, [openIds, tree]);
 
   const handleDrop = useDropHandler();
