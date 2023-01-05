@@ -9,7 +9,7 @@ import classNames from "classnames";
  * AddElementButton is a button that when clicked, renders a dropdown menu for
  * adding elements to the page.
  */
-export default function AddElementButton() {
+export default function AddElementButton(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -34,7 +34,11 @@ export default function AddElementButton() {
 
   return (
     <div className="relative inline-block" ref={containerRef}>
-      <button className={className} onClick={handleClick}>
+      <button
+        className={className}
+        onClick={handleClick}
+        aria-label="Open Add Element Menu"
+      >
         <AddIcon />
       </button>
       {isOpen && <AddElementMenu />}

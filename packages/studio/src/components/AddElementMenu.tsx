@@ -23,7 +23,7 @@ const elementTypeToIcon = {
   Modules: <Hexagon />,
 } as const;
 
-export default function AddElementMenu() {
+export default function AddElementMenu(): JSX.Element {
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
   const UUIDToFileMetadata = useStudioStore((store) => {
     return store.fileMetadatas.UUIDToFileMetadata;
@@ -36,8 +36,8 @@ export default function AddElementMenu() {
           return (
             <ElementTypeButton
               key={elementType}
-              activeType={activeType}
               elementType={elementType}
+              isActiveType={elementType === activeType}
               setType={setType}
             />
           );
@@ -69,16 +69,16 @@ export default function AddElementMenu() {
 }
 
 function ElementTypeButton(props: {
-  activeType: ElementType;
+  isActiveType: boolean;
   elementType: string;
   setType: (type: ElementType) => void;
 }) {
-  const { activeType, elementType, setType } = props;
+  const { isActiveType, elementType, setType } = props;
   const className = classNames(
     "px-2 py-2 mx-2 flex items-center cursor-pointer border-b-2",
     {
-      "border-blue-600": activeType === elementType,
-      "border-transparent": activeType !== elementType,
+      "border-blue-600": isActiveType,
+      "border-transparent": !isActiveType,
     }
   );
   const handleClick = useCallback(() => {
@@ -98,12 +98,17 @@ function Options({ metadata }: { metadata: FileMetadata }) {
     .at(-1)
     ?.split(".tsx")
     .at(0);
-  const [getActivePageState, setActivePageState] = useStudioStore((store) => {
-    return [store.pages.getActivePageState, store.pages.setActivePageState];
-  });
+  const [getActivePageState, setActivePageState, getFileMetadata] =
+    useStudioStore((store) => {
+      return [
+        store.pages.getActivePageState,
+        store.pages.setActivePageState,
+        store.fileMetadatas.getFileMetadata,
+      ];
+    });
 
-  const addComponent = useCallback(
-    (metadata: FileMetadata, componentName: string) => {
+  const addElement = useCallback(
+    (componentName: string) => {
       const activePageState = getActivePageState();
       if (!activePageState) {
         throw new Error("Tried to add component without active page state.");
@@ -111,6 +116,19 @@ function Options({ metadata }: { metadata: FileMetadata }) {
       const rootElement = activePageState.componentTree.find(
         (c) => !c.parentUUID
       );
+      if (rootElement && "metadataUUID" in rootElement) {
+        const rootMetadata = getFileMetadata(rootElement.metadataUUID);
+        if (
+          rootMetadata.kind === FileMetadataKind.Module ||
+          !rootMetadata.acceptsChildren
+        ) {
+          console.error(
+            "Unable to add element to the current root element.",
+            "The root element does not accept children."
+          );
+          return;
+        }
+      }
       const componentState = {
         kind:
           metadata.kind === FileMetadataKind.Module
@@ -127,14 +145,14 @@ function Options({ metadata }: { metadata: FileMetadata }) {
         componentTree: [...activePageState.componentTree, componentState],
       });
     },
-    [getActivePageState, setActivePageState]
+    [getActivePageState, setActivePageState, metadata]
   );
   const handleClick = useCallback(() => {
     if (!componentName) {
       throw new Error("Invalid component filepath: " + metadata.filepath);
     }
-    addComponent(metadata, componentName);
-  }, [addComponent, metadata, componentName]);
+    addElement(componentName);
+  }, [addElement, componentName]);
 
   return (
     <div className="px-6 py-1 cursor-pointer" onClick={handleClick}>

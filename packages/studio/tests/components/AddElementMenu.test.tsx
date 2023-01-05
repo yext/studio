@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   ComponentState,
   ComponentStateKind,
@@ -19,13 +20,14 @@ beforeEach(() => {
   setActivePageState = jest.fn();
   mockStore({
     pages: {
-      getActivePageState: () => {
-        return {
+      pages: {
+        testpage: {
           componentTree: [rootComponent],
           filepath: "",
           cssImports: [],
-        };
+        },
       },
+      activePageName: "testpage",
       setActivePageState,
     },
     fileMetadatas: {
@@ -59,10 +61,10 @@ it("renders Components on load", () => {
   expect(screen.queryByText("Mock-Module")).toBeNull();
 });
 
-it("can add a component to the tree", () => {
+it("can add a component to the tree", async () => {
   render(<AddElementMenu />);
   expect(setActivePageState).toHaveBeenCalledTimes(0);
-  fireEvent.click(screen.getByText("Mock-Component"));
+  await userEvent.click(screen.getByText("Mock-Component"));
   expect(setActivePageState).toHaveBeenCalledTimes(1);
   expect(setActivePageState).toHaveBeenCalledWith({
     componentTree: [
@@ -81,19 +83,19 @@ it("can add a component to the tree", () => {
   });
 });
 
-it("can switch to Containers", () => {
+it("can switch to Containers", async () => {
   render(<AddElementMenu />);
-  fireEvent.click(screen.getByText("Containers"));
+  await userEvent.click(screen.getByText("Containers"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.getByText("Mock-Container")).toBeDefined();
   expect(screen.queryByText("Mock-Module")).toBeNull();
 });
 
-it("can add a container to the tree", () => {
+it("can add a container to the tree", async () => {
   render(<AddElementMenu />);
-  fireEvent.click(screen.getByText("Containers"));
+  await userEvent.click(screen.getByText("Containers"));
   expect(setActivePageState).toHaveBeenCalledTimes(0);
-  fireEvent.click(screen.getByText("Mock-Container"));
+  await userEvent.click(screen.getByText("Mock-Container"));
   expect(setActivePageState).toHaveBeenCalledTimes(1);
   expect(setActivePageState).toHaveBeenCalledWith({
     componentTree: [
@@ -112,19 +114,19 @@ it("can add a container to the tree", () => {
   });
 });
 
-it("can switch to Modules", () => {
+it("can switch to Modules", async () => {
   render(<AddElementMenu />);
-  fireEvent.click(screen.getByText("Modules"));
+  await userEvent.click(screen.getByText("Modules"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.queryByText("Mock-Container")).toBeNull();
   expect(screen.getByText("Mock-Module")).toBeDefined();
 });
 
-it("can add a module to the tree", () => {
+it("can add a module to the tree", async () => {
   render(<AddElementMenu />);
-  fireEvent.click(screen.getByText("Modules"));
+  await userEvent.click(screen.getByText("Modules"));
   expect(setActivePageState).toHaveBeenCalledTimes(0);
-  fireEvent.click(screen.getByText("Mock-Module"));
+  await userEvent.click(screen.getByText("Mock-Module"));
   expect(setActivePageState).toHaveBeenCalledTimes(1);
   expect(setActivePageState).toHaveBeenCalledWith({
     componentTree: [

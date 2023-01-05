@@ -2,7 +2,7 @@ import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo, useEffect } from "react";
+import { useCallback, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 
 interface ComponentNodeProps {
@@ -13,7 +13,7 @@ interface ComponentNodeProps {
   /** Whether this node's children are visible, if it has children. */
   isOpen: boolean;
   /** Toggle callback to open/close the node. */
-  onToggle: () => void;
+  onToggle: (nodeId: string, newOpenValue: boolean) => void;
   /** Whether this node has children. */
   hasChild: boolean;
 }
@@ -46,13 +46,9 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     [depth]
   );
 
-  // This addresses an issue with @minoru/react-dnd-treeview where sometimes new nodes do not
-  // start off as open despite initialOpen being set to true in the Tree component.
-  useEffect(() => {
-    if (!isOpen && !hasChild) {
-      onToggle();
-    }
-  }, [isOpen, hasChild, onToggle]);
+  const handleToggle = useCallback(() => {
+    onToggle(componentState.uuid, !isOpen);
+  }, [componentState.uuid, isOpen, onToggle]);
 
   return (
     <div
@@ -60,7 +56,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       style={componentNodeStyle}
       onClick={handleClick}
     >
-      <Vector className={vectorClassName} onClick={onToggle} />
+      <Vector className={vectorClassName} onClick={handleToggle} />
       <div className="pl-2">
         <ComponentKindIcon componentState={componentState} />
       </div>

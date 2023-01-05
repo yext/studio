@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import mockStore from "../__utils__/mockStore";
 import AddElementButton from "../../src/components/AddElementButton";
 
@@ -35,7 +36,7 @@ it("does not render when there is no active page state", () => {
   expect(screen.queryByRole("button")).toBeNull();
 });
 
-it("clicking the button opens the menu", () => {
+it("clicking the button opens the menu", async () => {
   mockStore({
     pages: {
       getActivePageState: () => {
@@ -49,7 +50,7 @@ it("clicking the button opens the menu", () => {
   });
 
   render(<AddElementButton />);
-  fireEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByRole("button"));
   expect(screen.getByText("Components")).toBeDefined();
   expect(screen.getByText("Containers")).toBeDefined();
   expect(screen.getByText("Modules")).toBeDefined();
