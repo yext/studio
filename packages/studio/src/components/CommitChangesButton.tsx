@@ -8,8 +8,8 @@ import classNames from "classnames"
  * Renders a button for committing changes to user's files.
  */
 export default function CommitChangesButton() {
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
   const { pagesToRemove, pagesToUpdate } = useStudioStore(store => store.pages.pendingChanges)
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false)
   const commitChangesAction = useStudioStore(store => store.commitChanges)
 
   useEffect(() => {
@@ -17,9 +17,10 @@ export default function CommitChangesButton() {
   }, [pagesToRemove.size, pagesToUpdate.size])
 
 
-  useMessageListener(MessageID.StudioCommitChanges, () => {
+  const listenerCallback = useCallback(() => {
     setIsButtonDisabled(false)
-  })
+  }, [])
+  useMessageListener(MessageID.StudioCommitChanges, listenerCallback)
 
   const handleClickSave = useCallback(() => {
     commitChangesAction()
