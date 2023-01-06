@@ -1,11 +1,12 @@
-import { CommitChangesEventPayload, UserPaths } from "./types";
+import { PageState, UserPaths } from "./types";
 import fs from "fs";
 import path from "path";
 import { Project } from "ts-morph";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 
 /**
- * Handles file removal and content modification in user's repo.
+ * Handles file removal and content update in user's repo
+ * based on updated state from Studio's client side.
  */
 export default class FileSystemManager {
   constructor(
@@ -14,7 +15,11 @@ export default class FileSystemManager {
     private writer: FileSystemWriter
   ) {}
 
-  private removeFile(filepath: string) {
+  getUserPaths() {
+    return this.paths;
+  }
+
+  removeFile(filepath: string) {
     if (fs.existsSync(filepath)) {
       const sourceFile = this.project.getSourceFile(filepath);
       if (sourceFile) {
@@ -24,25 +29,17 @@ export default class FileSystemManager {
     }
   }
 
-  async updateFileSystem({
-    pageNameToPageState,
-    pendingChanges,
-  }: CommitChangesEventPayload): Promise<void> {
-    pendingChanges.pagesToRemove.forEach((pageToRemove) => {
-      const filepath = path.join(this.paths.pages, pageToRemove) + ".tsx";
-      this.removeFile(filepath);
-    });
-    await Promise.all(
-      pendingChanges.pagesToUpdate.map(async (pageToUpdate) => {
-        const filepath = pageNameToPageState[pageToUpdate]?.filepath;
-        if (!fs.existsSync(filepath)) {
-          fs.openSync(filepath, "w");
-        }
-        await this.writer.writeToPageFile(
-          pageToUpdate,
-          pageNameToPageState[pageToUpdate]
-        );
-      })
-    );
+  async updateFile(filepath: string, data: PageState) {
+    if (filepath.startsWith(this.paths.pages)) {
+      if (!fs.existsSync(filepath)) {
+        fs.openSync(filepath, "w");
+      }
+      return this.writer.writeToPageFile(
+        path.basename(filepath, ".tsx"),
+        data
+      );
+    } else {
+      throw new Error(`Cannot update file: filepath "${filepath}" is not within the paths recognized by Studio.`)
+    }
   }
 }
