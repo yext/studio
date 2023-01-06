@@ -94,7 +94,7 @@ function ElementTypeButton(props: {
 }
 
 function Option({ metadata }: { metadata: FileMetadata }) {
-  const componentName = path.basename(metadata.filepath, '.tsx');
+  const componentName = path.basename(metadata.filepath, ".tsx");
   const [getActivePageState, setActivePageState] = useStudioStore((store) => {
     return [store.pages.getActivePageState, store.pages.setActivePageState];
   });
@@ -127,7 +127,11 @@ function Option({ metadata }: { metadata: FileMetadata }) {
   }, [addElement, componentName]);
 
   return (
-    <button className="px-6 py-1 cursor-pointer" onClick={handleClick} aria-label={`Add ${componentName} Element`}>
+    <button
+      className="px-6 py-1 cursor-pointer"
+      onClick={handleClick}
+      aria-label={`Add ${componentName} Element`}
+    >
       {componentName}
     </button>
   );
