@@ -13,10 +13,9 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-      - name: Run Playwright tests
-        run: cd e2e-tests && npm run playwright
+      - run: npx playwright install --with-deps
+      - run: cd apps/test-site && npm run dev
+      - run: cd e2e-tests && npm run playwright
       - uses: actions/upload-artifact@v3
         with:
           name: playwright-report
