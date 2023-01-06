@@ -14,7 +14,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - run: npx playwright install --with-deps
-      - run: cd apps/test-site && npm run dev
+      - run: npm i
       - run: cd e2e-tests && npm run playwright
       - uses: actions/upload-artifact@v3
         with:
