@@ -113,7 +113,7 @@ function renderDragPreview(
 ) {
   const item: DragItem<unknown> = monitorProps.item;
   return (
-    <div className="p-2 rounded bg-emerald-200">
+    <div className="p-2 rounded bg-emerald-200 w-fit">
       <div className="flex">{item.text}</div>
     </div>
   );
@@ -124,7 +124,7 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
     const placeHolderStyle = useMemo(() => ({ left: `${depth}em` }), []);
     return (
       <div
-        className="bg-rose-500 absolute w-full h-0.5"
+        className="bg-rose-500 absolute w-full h-0.5 z-10"
         style={placeHolderStyle}
       ></div>
     );
@@ -148,7 +148,9 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
         data: componentState,
-        text: "",
+        text: componentState.kind === ComponentStateKind.Fragment
+          ? "Fragment"
+          : componentState.componentName
       };
       switch (componentState.kind) {
         case ComponentStateKind.Fragment:
