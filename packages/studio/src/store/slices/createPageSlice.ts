@@ -82,7 +82,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           return;
         }
         if (
-          !pageState.componentTree.find(
+          !pageState.componentTree.some(
             (component) => component.uuid === store.activeComponentUUID
           )
         ) {

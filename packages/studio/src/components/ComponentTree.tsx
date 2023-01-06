@@ -18,7 +18,7 @@ import ComponentNode from "./ComponentNode";
 
 const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
-  root: "p-4",
+  root: "py-2",
   placeholder: "relative",
   listItem: "relative",
 };
