@@ -1,7 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useStudioStore from "../store/useStudioStore";
-import { MessageID } from "@yext/studio-plugin";
-import useMessageListener from "../hooks/useMessageListener";
 import classNames from "classnames";
 
 /**
@@ -13,15 +11,11 @@ export default function CommitChangesButton() {
   );
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const commitChangesAction = useStudioStore((store) => store.commitChanges);
+  const havePendingChanges = pagesToRemove.size > 0 || pagesToUpdate.size > 0;
 
   useEffect(() => {
-    setIsButtonDisabled(pagesToRemove.size === 0 && pagesToUpdate.size === 0);
-  }, [pagesToRemove.size, pagesToUpdate.size]);
-
-  const listenerCallback = useCallback(() => {
-    setIsButtonDisabled(false);
-  }, []);
-  useMessageListener(MessageID.StudioCommitChanges, listenerCallback);
+    setIsButtonDisabled(!havePendingChanges);
+  }, [havePendingChanges]);
 
   const handleClickSave = useCallback(() => {
     commitChangesAction();
