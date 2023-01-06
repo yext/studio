@@ -46,7 +46,7 @@ export default async function createStudioPlugin(
     name: "yext-studio-vite-plugin",
     buildStart() {
       if (args.mode === "development" && args.command === "serve") {
-        // openBrowser("http://localhost:5173/");
+        openBrowser("http://localhost:5173/");
       }
     },
     resolveId(id) {
