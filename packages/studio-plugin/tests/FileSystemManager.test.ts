@@ -21,7 +21,7 @@ const pageState: PageState = {
   ],
   cssImports: [],
   filepath: "some/file/path",
-}
+};
 
 const projectRoot = path.resolve(__dirname, "./__fixtures__/FileSystemManager");
 const tsMorphProject: Project = createTsMorphProject();
@@ -36,10 +36,12 @@ const fileManager = new FileSystemManager(
 );
 
 it("throw errors if the filepath to update is not a valid user path", async () => {
-  await expect(fileManager.updateFile("/invalid/pages/NewPage.tsx", pageState)).rejects.toThrow(
+  await expect(
+    fileManager.updateFile("/invalid/pages/NewPage.tsx", pageState)
+  ).rejects.toThrow(
     `Cannot update file: filepath "/invalid/pages/NewPage.tsx" is not within the paths recognized by Studio.`
   );
-})
+});
 
 it("updates user page file based on new state", async () => {
   jest.spyOn(fs, "existsSync").mockImplementation(() => true);
@@ -59,7 +61,10 @@ it("updates user page file based on new state", async () => {
       },
     }));
 
-  await fileManager.updateFile(path.join(paths.pages, "NewPage.tsx"), pageState);
+  await fileManager.updateFile(
+    path.join(paths.pages, "NewPage.tsx"),
+    pageState
+  );
 
   expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
     expect.stringContaining("NewPage.tsx"),

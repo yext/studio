@@ -6,5 +6,5 @@ export default function configureStudioServer(
   server: ViteDevServer,
   fileSystemManager: FileSystemManager
 ) {
-  registerCommitChangesListener(server, fileSystemManager)
+  registerCommitChangesListener(server, fileSystemManager);
 }

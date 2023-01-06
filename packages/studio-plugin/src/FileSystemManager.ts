@@ -34,12 +34,11 @@ export default class FileSystemManager {
       if (!fs.existsSync(filepath)) {
         fs.openSync(filepath, "w");
       }
-      return this.writer.writeToPageFile(
-        path.basename(filepath, ".tsx"),
-        data
-      );
+      return this.writer.writeToPageFile(path.basename(filepath, ".tsx"), data);
     } else {
-      throw new Error(`Cannot update file: filepath "${filepath}" is not within the paths recognized by Studio.`)
+      throw new Error(
+        `Cannot update file: filepath "${filepath}" is not within the paths recognized by Studio.`
+      );
     }
   }
 }
