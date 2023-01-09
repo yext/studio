@@ -15,7 +15,7 @@ import {
   ParenthesizedExpression,
   SyntaxKind,
   TypeNode,
-  PropertySignature
+  PropertySignature,
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../../types/PropValues";
 import { PropShape } from "../../types/PropShape";
@@ -23,29 +23,33 @@ import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 
 export enum ParsedInterfaceKind {
-  Simple = 'simple',
-  Nested = 'nested'
+  Simple = "simple",
+  Nested = "nested",
 }
 
 export type ParsedInterface = {
-  [key: string]: {
-    kind: ParsedInterfaceKind.Simple,
-    type: string;
-    doc?: string;
-  } | {
-    kind: ParsedInterfaceKind.Nested,
-    type: ParsedInterface
-  };
+  [key: string]:
+    | {
+        kind: ParsedInterfaceKind.Simple;
+        type: string;
+        doc?: string;
+      }
+    | {
+        kind: ParsedInterfaceKind.Nested;
+        type: ParsedInterface;
+      };
 };
 
 export type ParsedObjectLiteral = {
-  [key: string]: {
-    value: string | number | boolean;
-    isExpression?: true;
-  } | {
-    value: ParsedObjectLiteral,
-    isExpression?: false;
-  };
+  [key: string]:
+    | {
+        value: string | number | boolean;
+        isExpression?: true;
+      }
+    | {
+        value: ParsedObjectLiteral;
+        isExpression?: false;
+      };
 };
 
 export type ParsedImport = {
@@ -140,7 +144,7 @@ export default class StaticParsingHelpers {
   }
 
   private static getPropertySignatureName(p: PropertySignature): string {
-    return p.getSymbolOrThrow().getEscapedName()
+    return p.getSymbolOrThrow().getEscapedName();
   }
 
   private static parsePropertySignatures(
@@ -151,9 +155,11 @@ export default class StaticParsingHelpers {
     const handleNestedType = (typeNode: TypeNode, p: PropertySignature) => {
       parsedInterface[this.getPropertySignatureName(p)] = {
         kind: ParsedInterfaceKind.Nested,
-        type: this.parsePropertySignatures(typeNode.getChildrenOfKind(SyntaxKind.PropertySignature))
+        type: this.parsePropertySignatures(
+          typeNode.getChildrenOfKind(SyntaxKind.PropertySignature)
+        ),
       };
-    }
+    };
 
     const handleSimplePropertySignature = (p: PropertySignature) => {
       const { name: propName, type, docs } = p.getStructure();
@@ -175,10 +181,10 @@ export default class StaticParsingHelpers {
         type,
         ...(jsdoc && { doc: jsdoc }),
       };
-    }
+    };
 
     propertySignatures.forEach((p) => {
-      const typeNode = p.getTypeNode()
+      const typeNode = p.getTypeNode();
       if (typeNode?.isKind(SyntaxKind.TypeLiteral)) {
         handleNestedType(typeNode, p);
       } else {

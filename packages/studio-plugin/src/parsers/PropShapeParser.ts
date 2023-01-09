@@ -2,8 +2,11 @@ import { PropMetadata, PropShape } from "../types/PropShape";
 import TypeGuards from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
-import { ParsedInterface, ParsedInterfaceKind } from './helpers/StaticParsingHelpers';
-import { PropValueType } from '../types';
+import {
+  ParsedInterface,
+  ParsedInterfaceKind,
+} from "./helpers/StaticParsingHelpers";
+import { PropValueType } from "../types";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
@@ -32,24 +35,32 @@ export default class PropShapeParser {
     if (!parsedInterface) {
       return {};
     }
-    return this.transformParsedInterface(parsedInterface, interfaceName, onProp)
+    return this.transformParsedInterface(
+      parsedInterface,
+      interfaceName,
+      onProp
+    );
   }
 
   private transformParsedInterface(
-    parsedInterface: ParsedInterface, 
+    parsedInterface: ParsedInterface,
     interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
     const propShape: PropShape = {};
     Object.keys(parsedInterface).forEach((propName) => {
-      const prop = parsedInterface[propName]
+      const prop = parsedInterface[propName];
       if (prop.kind !== ParsedInterfaceKind.Simple) {
-        const nestedShape = this.transformParsedInterface(prop.type, interfaceName, onProp)
+        const nestedShape = this.transformParsedInterface(
+          prop.type,
+          interfaceName,
+          onProp
+        );
         const propMetadata: PropMetadata = {
           type: PropValueType.Object,
-          shape: nestedShape
-        }
-        propShape[propName] = propMetadata
+          shape: nestedShape,
+        };
+        propShape[propName] = propMetadata;
         return;
       }
       const { type, doc } = prop;
@@ -62,14 +73,17 @@ export default class PropShapeParser {
           `Unrecognized type ${type} in interface ${interfaceName}`
         );
       }
-      if (!TypeGuards.isPrimitiveProp(type) && !this.studioImports.includes(type)) {
+      if (
+        !TypeGuards.isPrimitiveProp(type) &&
+        !this.studioImports.includes(type)
+      ) {
         throw new Error(
           `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
         );
       }
       propShape[propName] = {
         type,
-        ...(doc && { doc })
+        ...(doc && { doc }),
       };
     });
     return propShape;

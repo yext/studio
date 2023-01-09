@@ -41,9 +41,9 @@ export type BooleanProp = {
   value: boolean;
 };
 export type ObjectProp = {
-  valueType: PropValueType.Object,
-  value: PropValues
-}
+  valueType: PropValueType.Object;
+  value: PropValues;
+};
 // Used in component outside Studio to represent a hex color prop in Studio preview.
 export type HexColor = `#${string}`;
 export type HexColorProp = {

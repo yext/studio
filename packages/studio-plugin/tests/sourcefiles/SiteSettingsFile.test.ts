@@ -52,9 +52,9 @@ describe("getSiteSettings", () => {
 
   it("can parse nested SiteSettings", () => {
     const siteSettingsFile = new SiteSettingsFile(
-      getSiteSettingsPath('nestedSiteSettings.ts'),
+      getSiteSettingsPath("nestedSiteSettings.ts"),
       tsMorphProject
-    );    
+    );
 
     expect(siteSettingsFile.getSiteSettings()).toEqual({
       shape: {
@@ -62,10 +62,10 @@ describe("getSiteSettings", () => {
           type: PropValueType.Object,
           shape: {
             "Primary Theme": {
-              type: PropValueType.HexColor
-            }
-          }
-        }
+              type: PropValueType.HexColor,
+            },
+          },
+        },
       },
       values: {
         "Global Color Style": {
@@ -73,12 +73,12 @@ describe("getSiteSettings", () => {
           kind: PropValueKind.Literal,
           value: {
             "Primary Theme": {
-              value: "#CBAEAE"
-            }
-          }
-        }
-      }
-    })
+              value: "#CBAEAE",
+            },
+          },
+        },
+      },
+    });
   });
 });
 

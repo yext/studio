@@ -1,13 +1,13 @@
-import { HexColor } from '@yext/studio';
+import { HexColor } from "@yext/studio";
 
 export interface SiteSettings {
   "Global Color Style": {
-    "Primary Theme": HexColor
-  }
-};
+    "Primary Theme": HexColor;
+  };
+}
 
 export default {
   "Global Color Style": {
-    "Primary Theme": "#CBAEAE"
-  }
+    "Primary Theme": "#CBAEAE",
+  },
 };

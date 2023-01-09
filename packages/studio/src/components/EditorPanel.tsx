@@ -5,7 +5,7 @@ import Divider from "./common/Divider";
 import { ReactComponent as Sliders } from "../icons/sliders.svg";
 import { ReactComponent as Content } from "../icons/content.svg";
 import { ReactComponent as Globe } from "../icons/globe.svg";
-import SiteSettingsEditor from './SiteSettingsEditor';
+import SiteSettingsEditor from "./SiteSettingsEditor";
 
 enum PanelTab {
   Properties = "Properties",
@@ -16,7 +16,7 @@ enum PanelTab {
 const tabIcons = {
   [PanelTab.Properties]: <Sliders className="w-4" />,
   [PanelTab.Content]: <Content className="w-7" />,
-  [PanelTab.SiteSettings]: <Globe className="w-4" />
+  [PanelTab.SiteSettings]: <Globe className="w-4" />,
 };
 
 /**
@@ -46,6 +46,6 @@ function renderTab(tab: PanelTab) {
     case PanelTab.Content:
       return <div>TODO: Implement me!</div>;
     case PanelTab.SiteSettings:
-      return <SiteSettingsEditor />
+      return <SiteSettingsEditor />;
   }
 }
