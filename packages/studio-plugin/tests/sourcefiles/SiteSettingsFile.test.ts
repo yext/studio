@@ -49,6 +49,37 @@ describe("getSiteSettings", () => {
       "No default export found for site settings"
     );
   });
+
+  it("can parse nested SiteSettings", () => {
+    const siteSettingsFile = new SiteSettingsFile(
+      getSiteSettingsPath('nestedSiteSettings.ts'),
+      tsMorphProject
+    );    
+
+    expect(siteSettingsFile.getSiteSettings()).toEqual({
+      shape: {
+        "Global Color Style": {
+          type: PropValueType.Object,
+          shape: {
+            "Primary Theme": {
+              type: PropValueType.HexColor
+            }
+          }
+        }
+      },
+      values: {
+        "Global Color Style": {
+          valueType: PropValueType.Object,
+          kind: PropValueKind.Literal,
+          value: {
+            "Primary Theme": {
+              value: "#CBAEAE"
+            }
+          }
+        }
+      }
+    })
+  });
 });
 
 describe("updateSiteSettingValues", () => {

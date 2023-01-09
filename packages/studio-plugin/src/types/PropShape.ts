@@ -14,6 +14,10 @@ export enum SpecialReactProps {
 }
 
 export type PropMetadata = {
-  type: PropValueType;
+  type: Exclude<PropValueType, PropValueType.Object>;
   doc?: string;
+} | {
+  type: PropValueType.Object,
+  doc?: undefined,
+  shape: PropShape
 };

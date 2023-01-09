@@ -14,16 +14,27 @@ import {
   ObjectLiteralExpression,
   ParenthesizedExpression,
   SyntaxKind,
+  TypeNode,
+  PropertySignature
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../../types/PropValues";
 import { PropShape } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 
+export enum ParsedInterfaceKind {
+  Simple = 'simple',
+  Nested = 'nested'
+}
+
 export type ParsedInterface = {
   [key: string]: {
+    kind: ParsedInterfaceKind.Simple,
     type: string;
     doc?: string;
+  } | {
+    kind: ParsedInterfaceKind.Nested,
+    type: ParsedInterface
   };
 };
 
@@ -31,6 +42,9 @@ export type ParsedObjectLiteral = {
   [key: string]: {
     value: string | number | boolean;
     isExpression?: true;
+  } | {
+    value: ParsedObjectLiteral,
+    isExpression?: false;
   };
 };
 
@@ -45,7 +59,7 @@ export type ParsedImport = {
  * files within Studio.
  */
 export default class StaticParsingHelpers {
-  static parseInitializer(
+  private static parseInitializer(
     initializer: Expression
   ): ParsedObjectLiteral[string] {
     if (initializer.isKind(SyntaxKind.StringLiteral)) {
@@ -67,6 +81,8 @@ export default class StaticParsingHelpers {
       expression.isKind(SyntaxKind.TrueKeyword)
     ) {
       return { value: expression.getLiteralValue() };
+    } else if (expression.isKind(SyntaxKind.ObjectLiteralExpression)) {
+      return { value: this.parseObjectLiteral(expression) };
     } else {
       throw new Error(
         `Unrecognized prop value ${initializer.getFullText()} ` +
@@ -85,7 +101,7 @@ export default class StaticParsingHelpers {
           `Unrecognized node type: ${p.getKindName()} in object literal ${p.getFullText()}`
         );
       }
-      const key = p.getName();
+      const key = this.getPropertySignatureName(p);
       const value = StaticParsingHelpers.parseInitializer(
         p.getInitializerOrThrow()
       );
@@ -120,30 +136,54 @@ export default class StaticParsingHelpers {
   static parseInterfaceDeclaration(
     interfaceDeclaration: InterfaceDeclaration
   ): ParsedInterface {
-    const properties = interfaceDeclaration.getStructure().properties;
-    if (!properties) {
-      return {};
-    }
+    return this.parsePropertySignatures(interfaceDeclaration.getProperties());
+  }
+
+  private static getPropertySignatureName(p: PropertySignature): string {
+    return p.getSymbolOrThrow().getEscapedName()
+  }
+
+  private static parsePropertySignatures(
+    propertySignatures: PropertySignature[]
+  ): ParsedInterface {
     const parsedInterface: ParsedInterface = {};
-    properties.forEach((p) => {
-      const { name: propName, type } = p;
+
+    const handleNestedType = (typeNode: TypeNode, p: PropertySignature) => {
+      parsedInterface[this.getPropertySignatureName(p)] = {
+        kind: ParsedInterfaceKind.Nested,
+        type: this.parsePropertySignatures(typeNode.getChildrenOfKind(SyntaxKind.PropertySignature))
+      };
+    }
+
+    const handleSimplePropertySignature = (p: PropertySignature) => {
+      const { name: propName, type, docs } = p.getStructure();
       if (typeof type !== "string") {
         console.error(
           "Unable to parse prop:",
           propName,
-          "in props interface:",
-          interfaceDeclaration.getFullText()
+          "in PropertySignature:",
+          p.getFullText()
         );
         return;
       }
 
-      const jsdoc = p.docs
+      const jsdoc = docs
         ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
         .join("\n");
-      parsedInterface[p.name] = {
+      parsedInterface[this.getPropertySignatureName(p)] = {
+        kind: ParsedInterfaceKind.Simple,
         type,
         ...(jsdoc && { doc: jsdoc }),
       };
+    }
+
+    propertySignatures.forEach((p) => {
+      const typeNode = p.getTypeNode()
+      if (typeNode?.isKind(SyntaxKind.TypeLiteral)) {
+        handleNestedType(typeNode, p);
+      } else {
+        handleSimplePropertySignature(p);
+      }
     });
     return parsedInterface;
   }

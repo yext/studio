@@ -6,7 +6,7 @@ export type PropVal = LiteralProp | ExpressionProp;
 
 export type LiteralProp = {
   kind: PropValueKind.Literal;
-} & (NumberProp | StringProp | BooleanProp | HexColorProp);
+} & (NumberProp | StringProp | BooleanProp | HexColorProp | ObjectProp);
 
 export type ExpressionProp = {
   kind: PropValueKind.Expression;
@@ -19,6 +19,7 @@ export enum PropValueType {
   string = "string",
   boolean = "boolean",
   ReactNode = "ReactNode",
+  Object = "Object",
   HexColor = "HexColor",
 }
 
@@ -39,6 +40,10 @@ export type BooleanProp = {
   valueType: PropValueType.boolean;
   value: boolean;
 };
+export type ObjectProp = {
+  valueType: PropValueType.Object,
+  value: PropValues
+}
 // Used in component outside Studio to represent a hex color prop in Studio preview.
 export type HexColor = `#${string}`;
 export type HexColorProp = {

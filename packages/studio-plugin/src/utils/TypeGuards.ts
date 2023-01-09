@@ -47,6 +47,8 @@ export default class TypeGuards {
         return typeof value === "number";
       case PropValueType.HexColor:
         return typeof value === "string" && value.startsWith("#");
+      case PropValueType.Object:
+        return typeof value === "object" && !Array.isArray(value) && value !== null;
     }
     return false;
   }
