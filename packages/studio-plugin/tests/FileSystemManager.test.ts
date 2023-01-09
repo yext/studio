@@ -35,6 +35,18 @@ const fileManager = new FileSystemManager(
   new FileSystemWriter(orchestrator, false)
 );
 
+const bannerFilepath = path.join(paths.components, "Banner.tsx");
+jest
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  .spyOn(ParsingOrchestrator.prototype as any, "setFilepathToFileMetadata")
+  .mockImplementation(() => ({
+    [bannerFilepath]: {
+      kind: FileMetadataKind.Component,
+      metadataUUID: "mock-metadata-uuid",
+      filepath: bannerFilepath,
+    },
+  }));
+
 it("throw errors if the filepath to update is not a valid user path", async () => {
   await expect(
     fileManager.updateFile("/invalid/pages/NewPage.tsx", pageState)
@@ -49,23 +61,30 @@ it("updates user page file based on new state", async () => {
     .spyOn(fs, "writeFileSync")
     .mockImplementation();
 
-  const bannerFilepath = path.join(paths.components, "Banner.tsx");
-  jest
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .spyOn(ParsingOrchestrator.prototype as any, "setFilepathToFileMetadata")
-    .mockImplementation(() => ({
-      [bannerFilepath]: {
-        kind: FileMetadataKind.Component,
-        metadataUUID: "mock-metadata-uuid",
-        filepath: bannerFilepath,
-      },
-    }));
-
   await fileManager.updateFile(
     path.join(paths.pages, "NewPage.tsx"),
     pageState
   );
 
+  expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
+    expect.stringContaining("NewPage.tsx"),
+    fs.readFileSync(path.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
+  );
+});
+
+it("creates a new page file and add a page component based on new state", async () => {
+  jest.spyOn(fs, "existsSync").mockImplementation(() => false);
+  const fsOpenSyncSpy = jest
+    .spyOn(fs, "openSync")
+    .mockImplementationOnce(jest.fn());
+  const fsWriteFileSyncSpy = jest
+    .spyOn(fs, "writeFileSync")
+    .mockImplementation();
+
+  const pageFilepath = path.join(paths.pages, "NewPage.tsx");
+  await fileManager.updateFile(pageFilepath, pageState);
+
+  expect(fsOpenSyncSpy).toHaveBeenCalledWith(pageFilepath, "w");
   expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
     expect.stringContaining("NewPage.tsx"),
     fs.readFileSync(path.join(paths.pages, "UpdatedPage.tsx"), "utf-8")

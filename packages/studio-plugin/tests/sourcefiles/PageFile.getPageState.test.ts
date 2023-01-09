@@ -127,6 +127,12 @@ describe("getPageState", () => {
     expect(result.filepath).toEqual(getPagePath("shortFragmentSyntaxPage"));
   });
 
+  it("returns empty component tree when parses a page without return statement", () => {
+    const pageFile = createPageFile("noReturnStatementPage");
+    const result = pageFile.getPageState();
+    expect(result.componentTree).toEqual([]);
+  });
+
   describe("throws errors", () => {
     it("throws an error when the return statement has no top-level Jsx node", () => {
       const pageFile = createPageFile("noTopLevelJsxPage");

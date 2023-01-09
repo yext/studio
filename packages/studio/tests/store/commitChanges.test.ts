@@ -37,7 +37,7 @@ it("sends pending changes to server to update files", () => {
   });
 });
 
-it("resets pending changes on successful response from server after committing changes", async () => {
+it("resets pending changes on successful response from server after committing changes", () => {
   useStudioStore.getState().commitChanges();
   expect(useStudioStore.getState().pages.pendingChanges).toEqual({
     pagesToRemove: new Set(),

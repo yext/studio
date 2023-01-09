@@ -144,13 +144,14 @@ export default class ParsingOrchestrator {
       );
     }
     const files = fs.readdirSync(this.paths.pages, "utf-8");
-    const pageNameToPageState: Record<string, PageState> = {};
-    for (const file of files) {
-      const pageName = path.basename(file, ".tsx");
-      const pageFile = await this.getPageFile(pageName);
-      pageNameToPageState[pageName] = pageFile.getPageState();
-    }
-    return pageNameToPageState;
+    const arrayOfPageNameToStateEntries: [string, PageState][] = await Promise.all(
+      files.map(async (file) => {
+        const pageName = path.basename(file, ".tsx");
+        const pageFile = await this.getPageFile(pageName);
+        return [pageName, pageFile.getPageState()];
+      })
+    );
+    return Object.fromEntries(arrayOfPageNameToStateEntries);
   }
 
   private getSiteSettings(): SiteSettings | undefined {

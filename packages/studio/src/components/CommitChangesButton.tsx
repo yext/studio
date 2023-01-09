@@ -11,11 +11,11 @@ export default function CommitChangesButton() {
   );
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const commitChangesAction = useStudioStore((store) => store.commitChanges);
-  const havePendingChanges = pagesToRemove.size > 0 || pagesToUpdate.size > 0;
+  const hasPendingChanges = pagesToRemove.size > 0 || pagesToUpdate.size > 0;
 
   useEffect(() => {
-    setIsButtonDisabled(!havePendingChanges);
-  }, [havePendingChanges]);
+    setIsButtonDisabled(!hasPendingChanges);
+  }, [hasPendingChanges]);
 
   const handleClickSave = useCallback(() => {
     commitChangesAction();
