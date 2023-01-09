@@ -4,6 +4,7 @@ import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
 import { useCallback, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
+import RemoveElementButton from "./RemoveElementButton";
 
 interface ComponentNodeProps {
   /** The ComponentState this node represents in {@link ComponentTree}. */
@@ -52,15 +53,17 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   return (
     <div
-      className="flex pl-2 items-center h-8 cursor-pointer hover:bg-gray-100"
+      className="flex px-2 items-center justify-between h-8 cursor-pointer hover:bg-gray-100"
       style={componentNodeStyle}
-      onClick={handleClick}
     >
-      <Vector className={vectorClassName} onClick={handleToggle} />
-      <div className="pl-2">
-        <ComponentKindIcon componentState={componentState} />
+      <div className="flex grow items-center" onClick={handleClick}>
+        <Vector className={vectorClassName} onClick={handleToggle} />
+        <div className="pl-2">
+          <ComponentKindIcon componentState={componentState} />
+        </div>
+        <span className="pl-1.5">{text}</span>
       </div>
-      <span className="pl-1.5">{text}</span>
+      <RemoveElementButton elementUUID={componentState.uuid} />
     </div>
   );
 }
