@@ -20,7 +20,7 @@ enableMapSet();
  * Middlewares used for the Studio store, specifically immer and Zundo.
  */
 function storeMiddlewares(
-  storeCreator: StateCreator<StudioStore>
+  storeCreator: StateCreator<StudioStore, [["zustand/immer", never]]>
 ): ReturnType<typeof temporal<StudioStore, [], [["zustand/immer", never]]>> {
   return temporal(immer(storeCreator), {
     equality: (currStore, pastStore) =>
@@ -37,28 +37,35 @@ function storeMiddlewares(
  */
 const useStudioStore = create<StudioStore>()(
   storeMiddlewares(
-    withLenses((_set, get) => {
+    withLenses((set, get) => {
       registerMessageListener(MessageID.StudioCommitChanges, (payload) => {
         if (payload.type === "success") {
-          get().pages.resetPendingChanges();
+          set((s) => {
+            s.pages.pendingChanges = {
+              pagesToRemove: new Set<string>(),
+              pagesToUpdate: new Set<string>(),
+            };
+          });
         }
       });
+      const commitChanges = () => {
+        const { pages, pendingChanges } = get().pages;
+        const { pagesToRemove, pagesToUpdate } = pendingChanges;
+        // Serialize pendingChanges (uses type Set) to send to server side.
+        sendMessage(MessageID.StudioCommitChanges, {
+          pageNameToPageState: pages,
+          pendingChanges: {
+            pagesToRemove: [...pagesToRemove.keys()],
+            pagesToUpdate: [...pagesToUpdate.keys()],
+          },
+        });
+      };
+
       return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
-        commitChanges: () => {
-          const { pages, pendingChanges } = get().pages;
-          const { pagesToRemove, pagesToUpdate } = pendingChanges;
-          // Serialize pendingChanges (uses type Set) to send to server side.
-          sendMessage(MessageID.StudioCommitChanges, {
-            pageNameToPageState: pages,
-            pendingChanges: {
-              pagesToRemove: [...pagesToRemove.keys()],
-              pagesToUpdate: [...pagesToUpdate.keys()],
-            },
-          });
-        },
+        commitChanges,
       };
     })
   )
