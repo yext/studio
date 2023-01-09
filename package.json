@@ -4,13 +4,15 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "e2e-tests"
   ],
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "lint": "turbo run lint",
-    "test": "turbo run test --parallel"
+    "test": "turbo run test --parallel",
+    "playwright": "npm run playwright -w=e2e-tests"
   },
   "devDependencies": {
     "turbo": "^1.6.3",
