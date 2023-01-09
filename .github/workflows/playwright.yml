@@ -17,7 +17,6 @@ jobs:
       - run: npm i
       - name: Run Playwright
         run: npm run playwright
-        working-directory: ./e2e-tests
       - uses: actions/upload-artifact@v3
         with:
           name: playwright-report

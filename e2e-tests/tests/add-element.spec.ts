@@ -4,7 +4,7 @@ test("can add a container component", async ({ page }) => {
   await page.goto("./");
 
   const previews = page.getByText("I'm a container:");
-  await expect.poll(() => previews.count).toBe(1);
+  await expect.poll(() => previews.count()).toBe(1);
 
   await page
     .getByRole("button", {
@@ -21,5 +21,5 @@ test("can add a container component", async ({ page }) => {
     })
     .click();
 
-  await expect.poll(() => previews.count).toBe(2);
+  await expect.poll(() => previews.count()).toBe(2);
 });
