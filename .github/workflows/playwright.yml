@@ -15,7 +15,9 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps
       - run: npm i
-      - run: cd e2e-tests && npm run playwright
+      - name: Run Playwright
+        run: npm run playwright
+        working-directory: ./e2e-tests
       - uses: actions/upload-artifact@v3
         with:
           name: playwright-report
