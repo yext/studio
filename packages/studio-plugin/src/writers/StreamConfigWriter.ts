@@ -101,7 +101,7 @@ export default class StreamConfigWriter {
     return {
       ...currentTemplateConfig,
       stream: {
-        $id: "studio-stream-id_" + v4(),
+        $id: "studio-stream-id",
         filter: {},
         localization: {
           locales: ["en"],

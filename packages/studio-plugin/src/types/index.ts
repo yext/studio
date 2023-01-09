@@ -7,3 +7,4 @@ export * from "./State";
 export * from "./StudioData";
 export * from "./UserPaths";
 export * from "./StudioConfig";
+export * from "./messages";

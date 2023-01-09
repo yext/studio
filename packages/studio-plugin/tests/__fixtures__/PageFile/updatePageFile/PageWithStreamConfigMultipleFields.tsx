@@ -3,7 +3,7 @@ import SimpleBanner from "../../ComponentFile/SimpleBanner";
 
 export const config: TemplateConfig = {
   stream: {
-    $id: "studio-stream-id_mock-uuid-value",
+    $id: "studio-stream-id",
     filter: {},
     localization: { locales: ["en"], primary: false },
     fields: ["title", "stringLiteral", "arrayIndex"],

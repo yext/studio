@@ -31,5 +31,5 @@ export default async function getStudioConfig(
   }
 
   const studioConfig = (await import(configFilepath)).default;
-  return lodashMerge(defaultConfig, studioConfig);
+  return lodashMerge({}, defaultConfig, studioConfig);
 }

@@ -29,11 +29,12 @@ export interface PageSliceStates {
 }
 
 interface PageSliceActions {
+  addPage: (filepath: string) => boolean;
+  removePage: (filepath: string) => void;
+
   setActivePageName: (pageName: string | undefined) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState | undefined;
-  addPage: (filepath: string) => boolean;
-  removePage: (filepath: string) => void;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentProps: (props: PropValues) => void;

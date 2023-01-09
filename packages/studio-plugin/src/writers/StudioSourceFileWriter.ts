@@ -169,6 +169,13 @@ export default class StudioSourceFileWriter {
     });
   }
 
+  createDefaultFunction(name: string): FunctionDeclaration {
+    return this.sourceFile.addFunction({
+      name,
+      isDefaultExport: true,
+    });
+  }
+
   createPropsObjectLiteralWriter(props: PropValues): WriterFunction {
     return Writers.object(
       Object.entries(props).reduce((obj, entry) => {
