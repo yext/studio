@@ -1,6 +1,11 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../types/PropShape";
-import { PropValueKind, PropValues } from "../types/PropValues";
+import {
+  PropVal,
+  PropValueKind,
+  PropValues,
+  PropValueType,
+} from "../types/PropValues";
 import StaticParsingHelpers, {
   ParsedObjectLiteral,
 } from "../parsers/helpers/StaticParsingHelpers";
@@ -54,16 +59,40 @@ export default class PropValuesParser {
     propShape: PropShape
   ): PropValues {
     const propValues: PropValues = {};
-    Object.keys(rawValues).forEach((propName) => {
-      const { value, isExpression } = rawValues[propName];
-      if (isExpression) {
-        throw new Error(`Expressions are not supported within object literal.`);
+
+    const getPropValue = (propName: string) => {
+      const { value } = rawValues[propName];
+      if (typeof value === "object") {
+        const childShape = propShape[propName];
+        if (childShape.type !== PropValueType.Object) {
+          throw new Error(
+            `Expected PropValueType.Object for ${propName} in ${JSON.stringify(
+              propShape,
+              null,
+              2
+            )}`
+          );
+        }
+        return {
+          valueType: PropValueType.Object,
+          kind: PropValueKind.Literal,
+          value: this.parseRawValues(value, childShape.shape),
+        };
       }
-      const propValue = {
+
+      return {
         valueType: propShape[propName].type,
         kind: PropValueKind.Literal,
         value,
       };
+    };
+
+    Object.keys(rawValues).forEach((propName) => {
+      const { isExpression } = rawValues[propName];
+      if (isExpression) {
+        throw new Error(`Expressions are not supported within object literal.`);
+      }
+      const propValue = getPropValue(propName);
       if (!TypeGuards.isValidPropValue(propValue)) {
         throw new Error(
           "Invalid prop value: " + JSON.stringify(propValue, null, 2)

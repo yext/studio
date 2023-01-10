@@ -73,6 +73,8 @@ describe("getSiteSettings", () => {
           kind: PropValueKind.Literal,
           value: {
             "Primary Theme": {
+              valueType: PropValueType.HexColor,
+              kind: PropValueKind.Literal,
               value: "#CBAEAE",
             },
           },
