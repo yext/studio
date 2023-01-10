@@ -70,11 +70,7 @@ export default function ComponentEditor(): JSX.Element | null {
           } = activeComponentState.props[propName] ?? {};
 
           if (valueType === PropValueType.Object) {
-            console.error(
-              "Found nested prop",
-              propName,
-              "Objects are not supported as props yet"
-            );
+            // Nested props are not editable through the UI but can still be displayed.
             return null;
           }
 

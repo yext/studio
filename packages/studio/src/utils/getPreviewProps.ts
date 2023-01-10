@@ -27,6 +27,10 @@ export function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
+    if (!props[propName] && propShape[propName].type === PropValueType.Object) {
+      return undefined;
+    }
+
     if (!props[propName]) {
       transformedProps[propName] = getPropTypeDefaultValue(
         propShape[propName].type
@@ -45,6 +49,8 @@ export function getPreviewProps(
         transformedProps[propName] =
           getExpressionValue(value, valueType, expressionSources) ?? value;
       }
+    } else if (valueType === PropValueType.Object) {
+      transformedProps[propName] = transformPropValuesToRaw(value);
     } else {
       transformedProps[propName] = value;
     }

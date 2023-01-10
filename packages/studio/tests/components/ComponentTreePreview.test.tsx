@@ -21,6 +21,14 @@ const UUIDToFileMetadata: Record<string, FileMetadata> = {
       num: { type: PropValueType.number },
       bool: { type: PropValueType.boolean },
       bgColor: { type: PropValueType.HexColor },
+      nestedProp: {
+        type: PropValueType.Object,
+        shape: {
+          egg: {
+            type: PropValueType.string
+          }
+        }
+      }
     },
     filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
   },
@@ -347,6 +355,48 @@ it("can render component using nested siteSettings expression", async () => {
   render(<ComponentTreePreview componentTree={getPageState(mockState).componentTree} />);
   const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
   expect(siteSettingsExpressionProp).toBeDefined();
+});
+
+it("can render component using nested siteSettings expression", async () => {
+  const mockState: MockStudioStore = {
+    pages: {
+      pages: {
+        universalPage: {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "Banner",
+              props: {
+                nestedProp: {
+                  kind: PropValueKind.Literal,
+                  value: {
+                    egg: {
+                      kind: PropValueKind.Literal,
+                      valueType: PropValueType.string,
+                      value: 'eggyweggy'
+                    }
+                  },
+                  valueType: PropValueType.Object,
+                },
+              },
+              uuid: "banner-uuid",
+              metadataUUID: "banner-metadata-uuid",
+            },
+          ],
+          cssImports: [],
+          filepath: "mock/file/path",
+        },
+      },
+      activePageName: "universalPage",
+    },
+    fileMetadatas: {
+      UUIDToFileMetadata,
+    },
+  };
+  mockStore(mockState);
+  render(<ComponentTreePreview componentTree={getPageState(mockState).componentTree} />);
+  const nestedPropUsage = await screen.findByText(/eggyweggy/);
+  expect(nestedPropUsage).toBeDefined();
 });
 
 function getPageState(

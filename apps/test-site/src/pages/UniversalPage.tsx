@@ -11,6 +11,7 @@ export default function UniversalPage() {
         <Button />
       </Container>
       <ContainerWithButtons />
+      <Banner nestedProp={{ egg: 'eggyweggy' }}/>
     </div>
   );
 }
