@@ -297,6 +297,58 @@ it("renders component tree with an updated Module component with props", async (
   expect(await screen.findByRole("button")).toBeDefined();
 });
 
+it("can render component using nested siteSettings expression", async () => {
+  const mockState: MockStudioStore = {
+    pages: {
+      pages: {
+        universalPage: {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "Banner",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: 'siteSettings.["Global Colors"].primary',
+                  valueType: PropValueType.HexColor,
+                },
+              },
+              uuid: "banner-uuid",
+              metadataUUID: "banner-metadata-uuid",
+            },
+          ],
+          cssImports: [],
+          entityFiles: ["entityFile.json"],
+          filepath: "mock/file/path",
+        },
+      },
+      activePageName: "universalPage",
+    },
+    fileMetadatas: {
+      UUIDToFileMetadata,
+    },
+    siteSettings: {
+      values: {
+        "Global Colors": {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            primary: {
+              kind: PropValueKind.Literal,
+              valueType: PropValueType.HexColor,
+              value: "#AABBCC",
+            },
+          },
+        },
+      },
+    },
+  };
+  mockStore(mockState);
+  render(<PagePreview pageState={getPageState(mockState)} />);
+  const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
+  expect(siteSettingsExpressionProp).toBeDefined();
+});
+
 function getPageState(
   store: MockStudioStore,
   pageName = "universalPage"

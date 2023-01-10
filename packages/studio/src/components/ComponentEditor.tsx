@@ -9,6 +9,7 @@ import {
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
 import Divider from "./common/Divider";
+import { useCallback } from "react";
 
 /**
  * Renders prop editors for the active component selected by the user.
@@ -19,9 +20,28 @@ export default function ComponentEditor(): JSX.Element | null {
     activeComponentState,
     setActiveComponentProps,
   } = useActiveComponent();
+
+  const updateProps = useCallback(
+    (propName: string, newPropVal: PropVal) => {
+      if (
+        !activeComponentState ||
+        !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
+      ) {
+        return null;
+      }
+
+      setActiveComponentProps({
+        ...activeComponentState.props,
+        [propName]: newPropVal,
+      });
+    },
+    [setActiveComponentProps, activeComponentState]
+  );
+
   if (!activeComponentMetadata?.propShape) {
     return null;
   }
+
   if (
     !activeComponentState ||
     !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
@@ -43,23 +63,30 @@ export default function ComponentEditor(): JSX.Element | null {
           return true;
         })
         .map(([propName, propMetadata], index) => {
-          const currentPropValue = activeComponentState.props[propName]?.value;
-          const currentPropKind = activeComponentState.props[propName]?.kind;
-          const onPropChange = (newPropVal: PropVal) => {
-            setActiveComponentProps({
-              ...activeComponentState?.props,
-              [propName]: newPropVal,
-            });
-          };
+          const {
+            value: currentPropValue,
+            kind: currentPropKind,
+            valueType,
+          } = activeComponentState.props[propName] ?? {};
+
+          if (valueType === PropValueType.Object) {
+            console.error(
+              "Found nested prop",
+              propName,
+              "Objects are not supported as props yet"
+            );
+            return null;
+          }
+
           return (
             <PropEditor
               key={index}
+              onPropChange={updateProps}
               {...{
                 propName,
                 propMetadata,
                 currentPropValue,
                 currentPropKind,
-                onPropChange,
               }}
             />
           );

@@ -8,6 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import lodashGet from "lodash/get";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
+import transformPropValuesToRaw from "./transformNestedPropValues";
 
 /**
  * Transform props' values based on PropValueKind. If a prop's value is of
@@ -98,7 +99,7 @@ function getExpressionValue(
   expression: string,
   propType: PropValueType,
   expressionSources: Record<string, Record<string, unknown>>
-): string | number | boolean | null {
+): string | number | boolean | null | Record<string, unknown> {
   function getValueFromPath(path: string, parentPath: string) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {
@@ -115,6 +116,12 @@ function getExpressionValue(
       value: newPropValue,
     };
     if (TypeGuards.isValidPropValue(propVal)) {
+      if (
+        propVal.valueType === PropValueType.Object &&
+        propVal.kind === PropValueKind.Literal
+      ) {
+        return transformPropValuesToRaw(propVal.value);
+      }
       return propVal.value;
     } else {
       console.warn(

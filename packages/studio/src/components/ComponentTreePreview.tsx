@@ -19,6 +19,7 @@ import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import initialStudioData from "virtual:yext-studio";
+import transformPropValuesToRaw from "../utils/transformNestedPropValues";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
@@ -137,13 +138,9 @@ function useExpressionSources(
   );
 
   useLayoutEffect(() => {
-    const siteSettingsSource = Object.entries(siteSettingValues ?? {}).reduce(
-      (map, [propName, proVal]) => {
-        map[propName] = proVal.value;
-        return map;
-      },
-      {}
-    );
+    const siteSettingsSource = siteSettingValues
+      ? transformPropValuesToRaw(siteSettingValues)
+      : {};
     setExpressionSources((prev) => ({
       ...prev,
       siteSettings: siteSettingsSource,

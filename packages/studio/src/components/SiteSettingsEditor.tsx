@@ -1,3 +1,6 @@
+import useStudioStore from "../store/useStudioStore";
+
 export default function SiteSettingsEditor() {
-  return <div>site settings</div>;
+  const siteSettings = useStudioStore((store) => store.siteSettings.values);
+  return <div>{JSON.stringify(siteSettings, null, 2)}</div>;
 }
