@@ -24,8 +24,13 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const setActiveComponentUUID = useStudioStore(
-    (store) => store.pages.setActiveComponentUUID
+  const [activeComponentUUID, setActiveComponentUUID] = useStudioStore(
+    (store) => {
+      return [
+        store.pages.activeComponentUUID,
+        store.pages.setActiveComponentUUID,
+      ];
+    }
   );
 
   const text =
@@ -47,15 +52,20 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     [depth]
   );
 
+  const componentNodeClasses = classNames(
+    "flex px-2 items-center justify-between h-8 cursor-pointer",
+    {
+      "bg-blue-100": activeComponentUUID === componentState.uuid,
+      "hover:bg-gray-100": activeComponentUUID !== componentState.uuid,
+    }
+  );
+
   const handleToggle = useCallback(() => {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
   return (
-    <div
-      className="flex px-2 items-center justify-between h-8 cursor-pointer hover:bg-gray-100"
-      style={componentNodeStyle}
-    >
+    <div className={componentNodeClasses} style={componentNodeStyle}>
       <div className="flex grow items-center" onClick={handleClick}>
         <Vector className={vectorClassName} onClick={handleToggle} />
         <div className="pl-2">

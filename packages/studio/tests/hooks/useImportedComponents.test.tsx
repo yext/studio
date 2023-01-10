@@ -50,7 +50,7 @@ const pageState: PageState = {
 
 it("loads functional components based on provided page state", async () => {
   mockStore(mockStoreState);
-  renderHook(() => useImportedComponents(pageState));
+  renderHook(() => useImportedComponents(pageState.componentTree));
   await waitFor(() => {
     expect(
       useStudioStore.getState().fileMetadatas.UUIDToImportedComponent

@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback, useRef } from "react";
 import useStudioStore from "../store/useStudioStore";
-import { ComponentState, PageState, TypeGuards } from "@yext/studio-plugin";
+import { ComponentState, TypeGuards } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
 
@@ -8,16 +8,18 @@ import { useLayoutEffect } from "react";
  * Load all functional component methods correspond to the components
  * and modules use in the provided page state's component tree.
  */
-export default function useImportedComponents(pageState: PageState) {
-  const UUIDToFileMetadata = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToFileMetadata
-  );
-  const setUUIDToImportedComponent = useStudioStore(
-    (store) => store.fileMetadatas.setUUIDToImportedComponent
-  );
-  const UUIDToImportedComponent = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToImportedComponent
-  );
+export default function useImportedComponents(componentTree: ComponentState[]) {
+  const [
+    UUIDToFileMetadata,
+    setUUIDToImportedComponent,
+    UUIDToImportedComponent,
+    modulesToUpdate,
+  ] = useStudioStore((store) => [
+    store.fileMetadatas.UUIDToFileMetadata,
+    store.fileMetadatas.setUUIDToImportedComponent,
+    store.fileMetadatas.UUIDToImportedComponent,
+    store.fileMetadatas.pendingChanges.modulesToUpdate,
+  ]);
 
   // Use ref instead of to avoid triggering rerender (infinite loop)
   // when UUIDToImportedComponent is updated within this hook.
@@ -39,6 +41,9 @@ export default function useImportedComponents(pageState: PageState) {
         return null;
       }
       const { metadataUUID, componentName } = c;
+      if (modulesToUpdate.has(metadataUUID)) {
+        return null;
+      }
       // Avoid re-importing components
       if (metadataUUID in UUIDToImportedComponentRef) {
         return null;
@@ -53,15 +58,13 @@ export default function useImportedComponents(pageState: PageState) {
         newImportedComponents[metadataUUID] = functionComponent;
       }
     },
-    [UUIDToFileMetadata]
+    [UUIDToFileMetadata, modulesToUpdate]
   );
 
   useLayoutEffect(() => {
     const newLoadedComponents: Record<string, ImportType> = {};
     Promise.all([
-      ...pageState.componentTree.map((c) =>
-        importComponent(c, newLoadedComponents)
-      ),
+      ...componentTree.map((c) => importComponent(c, newLoadedComponents)),
     ]).then(() => {
       const newState = {
         ...UUIDToImportedComponentRef.current,
@@ -70,7 +73,7 @@ export default function useImportedComponents(pageState: PageState) {
       UUIDToImportedComponentRef.current = newState;
       setUUIDToImportedComponent(newState);
     });
-  }, [importComponent, pageState, setUUIDToImportedComponent]);
+  }, [importComponent, componentTree, setUUIDToImportedComponent]);
 }
 
 function getFunctionComponent(

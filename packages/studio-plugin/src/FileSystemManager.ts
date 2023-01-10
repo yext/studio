@@ -1,4 +1,4 @@
-import { PageState, UserPaths } from "./types";
+import { ModuleMetadata, PageState, UserPaths } from "./types";
 import fs from "fs";
 import path from "path";
 import { Project } from "ts-morph";
@@ -15,7 +15,7 @@ export default class FileSystemManager {
     private writer: FileSystemWriter
   ) {}
 
-  getUserPaths() {
+  getUserPaths(): UserPaths {
     return this.paths;
   }
 
@@ -29,15 +29,33 @@ export default class FileSystemManager {
     }
   }
 
-  async updateFile(filepath: string, data: PageState) {
+  async updatePageFile(filepath: string, pageState: PageState): Promise<void> {
     if (filepath.startsWith(this.paths.pages)) {
       if (!fs.existsSync(filepath)) {
         fs.openSync(filepath, "w");
       }
-      return this.writer.writeToPageFile(path.basename(filepath, ".tsx"), data);
+      return this.writer.writeToPageFile(
+        path.basename(filepath, ".tsx"),
+        pageState
+      );
     } else {
       throw new Error(
-        `Cannot update file: filepath "${filepath}" is not within the paths recognized by Studio.`
+        `Cannot update page file: filepath "${filepath}" is not within the` +
+          ` expected path for pages "${this.paths.pages}".`
+      );
+    }
+  }
+
+  updateModuleFile(filepath: string, moduleMetadata: ModuleMetadata) {
+    if (filepath.startsWith(this.paths.modules)) {
+      if (!fs.existsSync(filepath)) {
+        fs.openSync(filepath, "w");
+      }
+      return this.writer.writeToModuleFile(filepath, moduleMetadata);
+    } else {
+      throw new Error(
+        `Cannot update module file: filepath "${filepath}" is not within the` +
+          ` expected path for modules "${this.paths.modules}".`
       );
     }
   }

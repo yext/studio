@@ -2,6 +2,7 @@ import AddElementButton from "./AddElementButton";
 import UndoRedo from "./UndoRedo";
 import { ReactComponent as YextSeal } from "../icons/yextseal.svg";
 import CommitChangesButton from "./CommitChangesButton";
+import CreateModuleButton from "./CreateModuleButton";
 
 /**
  * Renders the top bar of Studio, which includes buttons for performing undo
@@ -14,6 +15,7 @@ export default function ActionsBar(): JSX.Element {
       <div className="ml-4 mt-2">
         <AddElementButton />
       </div>
+      <CreateModuleButton />
       <div className="ml-auto flex">
         <UndoRedo />
       </div>

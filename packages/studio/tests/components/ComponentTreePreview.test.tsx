@@ -1,10 +1,11 @@
 import { render, screen, within } from "@testing-library/react";
-import PagePreview from "../../src/components/PagePreview";
+import ComponentTreePreview from "../../src/components/ComponentTreePreview";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
 import {
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
+  ModuleMetadata,
   PageState,
   PropValueKind,
   PropValueType,
@@ -108,6 +109,42 @@ const mockStoreNestedComponentState: MockStudioStore = {
   },
 };
 
+const moduleMetadata: ModuleMetadata = {
+  kind: FileMetadataKind.Module,
+  metadataUUID: "panel-metadata-uuid",
+  propShape: {
+    text: { type: PropValueType.string },
+  },
+  filepath: path.resolve(__dirname, "../__mocks__/Panel.tsx"),
+  componentTree: [
+    {
+      kind: ComponentStateKind.Fragment,
+      uuid: "fragment-uuid",
+    },
+    {
+      kind: ComponentStateKind.Standard,
+      componentName: "Banner",
+      uuid: "internal-banner-uuid",
+      props: {
+        title: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "props.text",
+        },
+      },
+      metadataUUID: "banner-metadata-uuid",
+      parentUUID: "fragment-uuid",
+    },
+    {
+      kind: ComponentStateKind.BuiltIn,
+      componentName: "button",
+      props: {},
+      uuid: "button-uuid",
+      parentUUID: "fragment-uuid",
+    },
+  ],
+};
+
 const mockStoreModuleState: MockStudioStore = {
   pages: {
     pages: {
@@ -136,41 +173,7 @@ const mockStoreModuleState: MockStudioStore = {
   fileMetadatas: {
     UUIDToFileMetadata: {
       ...UUIDToFileMetadata,
-      "panel-metadata-uuid": {
-        kind: FileMetadataKind.Module,
-        metadataUUID: "panel-metadata-uuid",
-        propShape: {
-          text: { type: PropValueType.string },
-        },
-        filepath: path.resolve(__dirname, "../__mocks__/Panel.tsx"),
-        componentTree: [
-          {
-            kind: ComponentStateKind.Fragment,
-            uuid: "fragment-uuid",
-          },
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Banner",
-            uuid: "internal-banner-uuid",
-            props: {
-              title: {
-                kind: PropValueKind.Expression,
-                valueType: PropValueType.string,
-                value: "props.text",
-              },
-            },
-            metadataUUID: "banner-metadata-uuid",
-            parentUUID: "fragment-uuid",
-          },
-          {
-            kind: ComponentStateKind.BuiltIn,
-            componentName: "button",
-            props: {},
-            uuid: "button-uuid",
-            parentUUID: "fragment-uuid",
-          },
-        ],
-      },
+      "panel-metadata-uuid": moduleMetadata,
     },
   },
 };
@@ -221,10 +224,16 @@ const mockStoreWithPropExpression: MockStudioStore = {
   },
 };
 
-it("renders active page's component tree with nested Component(s)", async () => {
+beforeEach(() => {
+  jest.spyOn(console, "warn").mockImplementation();
+});
+
+it("renders component tree with nested Component(s)", async () => {
   mockStore(mockStoreNestedComponentState);
   render(
-    <PagePreview pageState={getPageState(mockStoreNestedComponentState)} />
+    <ComponentTreePreview
+      componentTree={getPageState(mockStoreNestedComponentState).componentTree}
+    />
   );
   const container1 = await screen.findByText(/Container 1/);
   const container2 = await within(container1).findByText(/Container 2/);
@@ -236,9 +245,13 @@ it("renders active page's component tree with nested Component(s)", async () => 
   expect(banner2).toBeDefined();
 });
 
-it("renders active page's component tree with Module component type", async () => {
+it("renders component tree with Module component type", async () => {
   mockStore(mockStoreModuleState);
-  render(<PagePreview pageState={getPageState(mockStoreModuleState)} />);
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockStoreModuleState).componentTree}
+    />
+  );
   const panel = await screen.findByText(/This is Panel module/);
   const button = await within(panel).findByText(/This is button/);
   const banner = await within(panel).findByText(/This is Banner/);
@@ -247,13 +260,41 @@ it("renders active page's component tree with Module component type", async () =
   expect(banner).toBeDefined();
 });
 
-it("render component with transformed props", async () => {
+it("renders component with transformed props", async () => {
   mockStore(mockStoreWithPropExpression);
-  render(<PagePreview pageState={getPageState(mockStoreWithPropExpression)} />);
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockStoreWithPropExpression).componentTree}
+    />
+  );
   const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
   expect(siteSettingsExpressionProp).toBeDefined();
   const documentExpressionProp = await screen.findByText(/123/);
   expect(documentExpressionProp).toBeDefined();
+});
+
+it("renders component tree with an updated Module component with props", async () => {
+  mockStore({
+    ...mockStoreModuleState,
+    fileMetadatas: {
+      ...mockStoreModuleState.fileMetadatas,
+      pendingChanges: {
+        modulesToUpdate: new Set(["panel-metadata-uuid"]),
+      },
+      UUIDToImportedComponent: {
+        test: () => {
+          return null;
+        },
+      },
+    },
+  });
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockStoreModuleState).componentTree}
+    />
+  );
+  expect(await screen.findByText(/This is Panel module/)).toBeDefined();
+  expect(await screen.findByRole("button")).toBeDefined();
 });
 
 function getPageState(

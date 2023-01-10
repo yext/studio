@@ -51,7 +51,7 @@ export default function AddPageButton(): JSX.Element {
 
   return (
     <ButtonWithModal
-      buttonIcon={<Plus />}
+      buttonContent={<Plus />}
       renderModal={renderModal}
       aria-label="Add Page"
     />
