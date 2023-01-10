@@ -12,4 +12,5 @@ export interface StudioStore {
   pages: PageSlice;
   siteSettings: SiteSettingSlice;
   commitChanges: () => void;
+  createModule: (filepath: string) => boolean;
 }

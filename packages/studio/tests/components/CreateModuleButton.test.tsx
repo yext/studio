@@ -79,8 +79,15 @@ it("gives an error if the module name is already used", async () => {
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "test");
   const saveButton = screen.getByRole("button", { name: "Save" });
+  const consoleErrorSpy = jest
+    .spyOn(global.console, "error")
+    .mockImplementation();
   await userEvent.click(saveButton);
   expect(screen.getByText("Module name already used.")).toBeDefined();
+  expect(consoleErrorSpy).toBeCalledTimes(1);
+  expect(consoleErrorSpy).toBeCalledWith(
+    'Error creating module: module name "test" is already used.'
+  );
 });
 
 it("gives an error if the module path is invalid", async () => {
@@ -89,69 +96,27 @@ it("gives an error if the module path is invalid", async () => {
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "../test");
   const saveButton = screen.getByRole("button", { name: "Save" });
+  const consoleErrorSpy = jest
+    .spyOn(global.console, "error")
+    .mockImplementation();
   await userEvent.click(saveButton);
   expect(screen.getByText("Module path is invalid.")).toBeDefined();
+  expect(consoleErrorSpy).toBeCalledTimes(1);
+  expect(consoleErrorSpy).toBeCalledWith(
+    expect.stringContaining("Error creating module: filepath is invalid")
+  );
 });
 
-it("adds a module to file metadata mapping and updates component tree", async () => {
-  const setFileMetadataSpy = jest.spyOn(
-    useStudioStore.getState().fileMetadatas,
-    "setFileMetadata"
-  );
+it("closes the modal when a module is successfully created", async () => {
+  const createModuleSpy = jest.spyOn(useStudioStore.getState(), "createModule");
   render(<CreateModuleButton />);
   await userEvent.click(screen.getByRole("button"));
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "module");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  expect(setFileMetadataSpy).toBeCalledWith(
-    expect.stringMatching(/\/module.tsx$/),
-    {
-      kind: FileMetadataKind.Module,
-      componentTree: [
-        {
-          ...searchBarComponent,
-          uuid: "mock-uuid-1",
-        },
-        {
-          kind: ComponentStateKind.Module,
-          uuid: "mock-uuid-2",
-          parentUUID: "mock-uuid-1",
-          componentName: "module",
-          props: {},
-          metadataUUID: "mock-metadata",
-        },
-      ],
-      filepath: expect.stringMatching(/\/module.tsx$/),
-      metadataUUID: expect.stringMatching(/\/module.tsx$/),
-    }
-  );
-  const moduleComponentState = {
-    kind: ComponentStateKind.Module,
-    uuid: expect.anything(),
-    parentUUID: "mock-uuid-0",
-    componentName: "module",
-    metadataUUID: expect.stringMatching(/\/module.tsx$/),
-    props: {},
-  };
-  expect(useStudioStore.getState().pages.getActivePageState()).toEqual({
-    componentTree: [
-      {
-        kind: ComponentStateKind.Fragment,
-        uuid: "mock-uuid-0",
-      },
-      moduleComponentState,
-      {
-        ...searchBarComponent,
-        uuid: "mock-uuid-3",
-        parentUUID: "mock-uuid-0",
-      },
-    ],
-    cssImports: [],
-    filepath: "mock-filepath",
-  });
-  expect(useStudioStore.getState().pages.getActiveComponentState()).toEqual(
-    moduleComponentState
+  expect(createModuleSpy).toBeCalledWith(
+    expect.stringMatching(/\/module.tsx$/)
   );
   expect(screen.queryByText("Save")).toBeNull();
 });

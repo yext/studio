@@ -13,6 +13,7 @@ import { getUserUpdatableStore } from "./utils";
 import sendMessage from "../messaging/sendMessage";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
+import getCreateModuleAction from "./createModuleAction";
 
 enableMapSet();
 
@@ -74,6 +75,7 @@ const useStudioStore = create<StudioStore>()(
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
         commitChanges,
+        createModule: getCreateModuleAction(get),
       };
     })
   )
