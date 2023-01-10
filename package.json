@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "build": "turbo run build",
+    "build:studio-plugin": "cd packages/studio-plugin/ && npm run build && cd ../.. && npm i",
     "dev": "turbo run dev --parallel",
     "autofix": "npx prettier --write . && npx eslint --fix .",
     "test": "turbo run test --parallel",

@@ -20,7 +20,8 @@
     "test": "jest",
     "lint": "eslint . && npm run prettier-check",
     "prettier-write": "prettier --write .",
-    "prettier-check": "prettier --check ."
+    "prettier-check": "prettier --check .",
+    "postinstall": "cp -R $INIT_CWD/packages/sample-component $INIT_CWD/apps/test-site/node_modules/@yext"
   },
   "dependencies": {
     "react": "^18.2.0",

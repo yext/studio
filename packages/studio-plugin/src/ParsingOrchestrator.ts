@@ -9,6 +9,7 @@ import {
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
+import PluginComponentFile from "./sourcefiles/PluginComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
 import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
@@ -138,8 +139,8 @@ export default class ParsingOrchestrator {
       return moduleFile.getModuleMetadata();
     }
     if (absPath.includes("node_modules")) {
-      const componentFile = new ComponentFile(absPath, this.project);
-      return componentFile.getComponentMetadata();
+      const pluginComponentFile = new PluginComponentFile(absPath, this.project);
+      return pluginComponentFile.getComponentMetadata();
     }
     const { modules, components } = this.paths;
     throw new Error(
