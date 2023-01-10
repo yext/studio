@@ -24,6 +24,7 @@ export default async function getStudioConfig(
   const defaultConfig: RequiredStudioConfig = {
     isPagesJSRepo: false,
     paths: getUserPaths(pathToProjectRoot),
+    plugins: [],
   };
   const configFilepath = path.join(pathToProjectRoot, "studio.config.ts");
   if (!fs.existsSync(configFilepath)) {

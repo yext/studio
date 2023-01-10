@@ -40,4 +40,8 @@ export default class ComponentFile {
       filepath: this.studioSourceFileParser.getFilepath(),
     };
   }
+
+  setComponentName(name: string) {
+    this.componentName = name;
+  }
 }

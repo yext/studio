@@ -64,10 +64,16 @@ export default class StudioSourceFileParser {
     const defaultImports = this.parseDefaultImports();
     return Object.entries(defaultImports).reduce(
       (imports, [importIdentifier, importName]) => {
-        if (path.isAbsolute(importIdentifier)) {
+        const isNodeModuleImport = !importIdentifier.startsWith('.');
+        if (isNodeModuleImport) {
+          const nodeModuleFilepath =
+            path.join(process.cwd(), "node_modules", importIdentifier) + ".tsx";
+          imports[nodeModuleFilepath] = importName;
+        }
+        else if (path.isAbsolute(importIdentifier)) {
           imports[importIdentifier] = importName;
         } else {
-          const absoluteFilepath =
+          const absoluteFilepath = 
             path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
           imports[absoluteFilepath] = importName;
         }

@@ -37,7 +37,8 @@ export default class ParsingOrchestrator {
   constructor(
     private project: Project,
     private paths: UserPaths,
-    private isPagesJSRepo?: boolean
+    private isPagesJSRepo?: boolean,
+    private plugins?: string[],
   ) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
@@ -100,7 +101,7 @@ export default class ParsingOrchestrator {
   private setFilepathToFileMetadata(): Record<string, FileMetadata> {
     this.filepathToFileMetadata = {};
 
-    const addToMapping = (folderPath: string) => {
+    const addDirectoryToMapping = (folderPath: string) => {
       if (!fs.existsSync(folderPath)) {
         return;
       }
@@ -110,8 +111,16 @@ export default class ParsingOrchestrator {
       });
     };
 
-    addToMapping(this.paths.components);
-    addToMapping(this.paths.modules);
+    const addFileToMapping = (filePath: string) => {
+      if (!fs.existsSync(filePath)) {
+        throw new Error(`File not found at: ${filePath}`);
+      }
+      this.filepathToFileMetadata[filePath] = this.getFileMetadata(filePath);
+    }
+
+    addDirectoryToMapping(this.paths.components);
+    addDirectoryToMapping(this.paths.modules);
+    this.plugins?.forEach((source) => addFileToMapping(source));
 
     return this.filepathToFileMetadata;
   }
@@ -127,6 +136,10 @@ export default class ParsingOrchestrator {
     if (absPath.startsWith(this.paths.modules)) {
       const moduleFile = this.getModuleFile(absPath);
       return moduleFile.getModuleMetadata();
+    }
+    if (absPath.includes("node_modules")) {
+      const componentFile = new ComponentFile(absPath, this.project);
+      return componentFile.getComponentMetadata();
     }
     const { modules, components } = this.paths;
     throw new Error(

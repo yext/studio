@@ -21,6 +21,7 @@
     "@yext/eslint-plugin-export-star": "^1.0.2",
     "@yext/pages": "^1.0.0-beta.15",
     "@yext/studio": "*",
+    "@yext/sample-component": "*",
     "eslint": "^8.11.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-react-perf": "^3.3.1",
