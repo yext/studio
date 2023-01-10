@@ -144,7 +144,9 @@ export default class StaticParsingHelpers {
     return this.parsePropertySignatures(interfaceDeclaration.getProperties());
   }
 
-  private static getEscapedName(p: PropertySignature | PropertyAssignment): string {
+  private static getEscapedName(
+    p: PropertySignature | PropertyAssignment
+  ): string {
     return p.getSymbolOrThrow().getEscapedName();
   }
 
