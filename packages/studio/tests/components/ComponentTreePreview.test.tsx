@@ -344,7 +344,7 @@ it("can render component using nested siteSettings expression", async () => {
     },
   };
   mockStore(mockState);
-  render(<PagePreview pageState={getPageState(mockState)} />);
+  render(<ComponentTreePreview componentTree={getPageState(mockState).componentTree} />);
   const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
   expect(siteSettingsExpressionProp).toBeDefined();
 });
