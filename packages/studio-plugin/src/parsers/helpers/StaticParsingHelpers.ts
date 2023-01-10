@@ -16,6 +16,7 @@ import {
   SyntaxKind,
   TypeNode,
   PropertySignature,
+  PropertyAssignment,
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../../types/PropValues";
 import { PropShape } from "../../types/PropShape";
@@ -105,7 +106,7 @@ export default class StaticParsingHelpers {
           `Unrecognized node type: ${p.getKindName()} in object literal ${p.getFullText()}`
         );
       }
-      const key = p.getSymbolOrThrow().getEscapedName();
+      const key = this.getEscapedName(p);
       const value = StaticParsingHelpers.parseInitializer(
         p.getInitializerOrThrow()
       );
@@ -143,7 +144,7 @@ export default class StaticParsingHelpers {
     return this.parsePropertySignatures(interfaceDeclaration.getProperties());
   }
 
-  private static getPropertySignatureName(p: PropertySignature): string {
+  private static getEscapedName(p: PropertySignature | PropertyAssignment): string {
     return p.getSymbolOrThrow().getEscapedName();
   }
 
@@ -153,7 +154,7 @@ export default class StaticParsingHelpers {
     const parsedInterface: ParsedInterface = {};
 
     const handleNestedType = (typeNode: TypeNode, p: PropertySignature) => {
-      parsedInterface[this.getPropertySignatureName(p)] = {
+      parsedInterface[this.getEscapedName(p)] = {
         kind: ParsedInterfaceKind.Nested,
         type: this.parsePropertySignatures(
           typeNode.getChildrenOfKind(SyntaxKind.PropertySignature)
@@ -176,7 +177,7 @@ export default class StaticParsingHelpers {
       const jsdoc = docs
         ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
         .join("\n");
-      parsedInterface[this.getPropertySignatureName(p)] = {
+      parsedInterface[this.getEscapedName(p)] = {
         kind: ParsedInterfaceKind.Simple,
         type,
         ...(jsdoc && { doc: jsdoc }),
