@@ -105,7 +105,7 @@ export default class StaticParsingHelpers {
           `Unrecognized node type: ${p.getKindName()} in object literal ${p.getFullText()}`
         );
       }
-      const key = this.getPropertySignatureName(p);
+      const key = p.getSymbolOrThrow().getEscapedName();
       const value = StaticParsingHelpers.parseInitializer(
         p.getInitializerOrThrow()
       );
