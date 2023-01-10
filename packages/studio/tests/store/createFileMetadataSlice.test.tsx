@@ -1,6 +1,7 @@
 import {
   ComponentMetadata,
   FileMetadataKind,
+  ModuleMetadata,
   PropValueType,
 } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -18,6 +19,13 @@ const componentMetadata: ComponentMetadata = {
     },
   },
 };
+const moduleMetadata: ModuleMetadata = {
+  kind: FileMetadataKind.Module,
+  metadataUUID: "mock-metadataUUID",
+  filepath: "mock-filepath",
+  componentTree: [],
+};
+
 it("updates UUIDToFileMetadata using setFileMetadata", () => {
   useStudioStore
     .getState()
@@ -27,6 +35,18 @@ it("updates UUIDToFileMetadata using setFileMetadata", () => {
   expect(UUIDToFileMetadata).toEqual({
     "some-uuid": componentMetadata,
   });
+  const modulesToUpdate =
+    useStudioStore.getState().fileMetadatas.pendingChanges.modulesToUpdate;
+  expect(modulesToUpdate).toEqual(new Set<string>());
+});
+
+it("updates modulesToUpdate when using setFileMetadata", () => {
+  useStudioStore
+    .getState()
+    .fileMetadatas.setFileMetadata("some-uuid", moduleMetadata);
+  const modulesToUpdate =
+    useStudioStore.getState().fileMetadatas.pendingChanges.modulesToUpdate;
+  expect(modulesToUpdate).toEqual(new Set<string>(["some-uuid"]));
 });
 
 it("returns a FileMetadata using getFileMetadata", () => {
@@ -69,6 +89,9 @@ function setInitialState(initialState: Partial<FileMetadataSliceStates>): void {
   const baseState: FileMetadataSliceStates = {
     UUIDToFileMetadata: {},
     UUIDToImportedComponent: {},
+    pendingChanges: {
+      modulesToUpdate: new Set<string>(),
+    },
   };
   mockStore({ fileMetadatas: { ...baseState, ...initialState } });
 }

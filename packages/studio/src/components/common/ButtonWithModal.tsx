@@ -9,13 +9,15 @@ export type renderModalFunction = (
 ) => ReactElement<Parameters<ModalType>, ModalType>;
 
 interface ButtonWithModalProps {
-  buttonIcon: JSX.Element;
+  buttonContent: JSX.Element | string;
   renderModal: renderModalFunction;
+  buttonClassName?: string;
 }
 
 export default function ButtonWithModal({
-  buttonIcon,
+  buttonContent,
   renderModal,
+  buttonClassName,
 }: ButtonWithModalProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -29,7 +31,9 @@ export default function ButtonWithModal({
 
   return (
     <>
-      <button onClick={handleButtonClick}>{buttonIcon}</button>
+      <button onClick={handleButtonClick} className={buttonClassName}>
+        {buttonContent}
+      </button>
       {renderModal(showModal, handleModalClose)}
     </>
   );

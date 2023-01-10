@@ -130,5 +130,8 @@ function getExpressionValue(
   if (TypeGuards.isStreamsDataExpression(expression)) {
     return getValueFromPath(expression, "document");
   }
+  if (expression.startsWith("props.")) {
+    return getValueFromPath(expression, "props");
+  }
   return null;
 }

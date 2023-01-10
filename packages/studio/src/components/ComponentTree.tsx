@@ -148,9 +148,10 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
         data: componentState,
-        text: componentState.kind === ComponentStateKind.Fragment
-          ? "Fragment"
-          : componentState.componentName
+        text:
+          componentState.kind === ComponentStateKind.Fragment
+            ? "Fragment"
+            : componentState.componentName,
       };
       switch (componentState.kind) {
         case ComponentStateKind.Fragment:

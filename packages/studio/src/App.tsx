@@ -1,5 +1,5 @@
 import EditorPanel from "./components/EditorPanel";
-import PagePreview from "./components/PagePreview";
+import ComponentTreePreview from "./components/ComponentTreePreview";
 import ActivePagePanel from "./components/ActivePagePanel";
 import useStudioStore from "./store/useStudioStore";
 import ActionsBar from "./components/ActionsBar";
@@ -16,7 +16,9 @@ export default function App() {
         <div className="flex flex-row grow">
           <ActivePagePanel />
           <div className="grow w-1/3 bg-gray-300">
-            {pageState && <PagePreview pageState={pageState} />}
+            {pageState && (
+              <ComponentTreePreview componentTree={pageState.componentTree} />
+            )}
           </div>
           <EditorPanel />
         </div>

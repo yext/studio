@@ -1,6 +1,5 @@
 import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
-import { v4 } from "uuid";
 import {
   PAGES_PACKAGE_NAME,
   TEMPLATE_STRING_EXPRESSION_REGEX,

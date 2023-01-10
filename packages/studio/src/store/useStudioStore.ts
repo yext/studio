@@ -13,6 +13,7 @@ import { getUserUpdatableStore } from "./utils";
 import sendMessage from "../messaging/sendMessage";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
+import getCreateModuleAction from "./createModuleAction";
 
 enableMapSet();
 
@@ -45,18 +46,26 @@ const useStudioStore = create<StudioStore>()(
               pagesToRemove: new Set<string>(),
               pagesToUpdate: new Set<string>(),
             };
+            s.fileMetadatas.pendingChanges = {
+              modulesToUpdate: new Set<string>(),
+            };
           });
         }
       });
       const commitChanges = () => {
-        const { pages, pendingChanges } = get().pages;
-        const { pagesToRemove, pagesToUpdate } = pendingChanges;
+        const { pages, pendingChanges: pendingPageChanges } = get().pages;
+        const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
+        const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
+          get().fileMetadatas;
+        const { modulesToUpdate } = pendingModuleChanges;
         // Serialize pendingChanges (uses type Set) to send to server side.
         sendMessage(MessageID.StudioCommitChanges, {
           pageNameToPageState: pages,
+          UUIDToFileMetadata,
           pendingChanges: {
             pagesToRemove: [...pagesToRemove.keys()],
             pagesToUpdate: [...pagesToUpdate.keys()],
+            modulesToUpdate: [...modulesToUpdate.keys()],
           },
         });
       };
@@ -66,6 +75,7 @@ const useStudioStore = create<StudioStore>()(
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
         commitChanges,
+        createModule: getCreateModuleAction(get),
       };
     })
   )

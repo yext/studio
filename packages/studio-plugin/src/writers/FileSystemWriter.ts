@@ -1,5 +1,5 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
-import { PageState } from "../types";
+import { ModuleMetadata, PageState } from "../types";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -22,5 +22,16 @@ export class FileSystemWriter {
     pageFile.updatePageFile(pageState, {
       updateStreamConfig: this.isPagesJSRepo,
     });
+  }
+
+  /**
+   * Update the module file's content based on provided module metadata.
+   *
+   * @param filepath - path of the module file to update
+   * @param moduleMetadata - the updated metadata for the module file
+   */
+  writeToModuleFile(filepath: string, moduleMetadata: ModuleMetadata): void {
+    const moduleFile = this.orchestrator.getModuleFile(filepath);
+    moduleFile.updateModuleFile(moduleMetadata);
   }
 }

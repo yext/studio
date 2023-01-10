@@ -9,9 +9,15 @@ export default function CommitChangesButton() {
   const { pagesToRemove, pagesToUpdate } = useStudioStore(
     (store) => store.pages.pendingChanges
   );
+  const { modulesToUpdate } = useStudioStore(
+    (store) => store.fileMetadatas.pendingChanges
+  );
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const commitChangesAction = useStudioStore((store) => store.commitChanges);
-  const hasPendingChanges = pagesToRemove.size > 0 || pagesToUpdate.size > 0;
+  const hasPendingChanges =
+    pagesToRemove.size > 0 ||
+    pagesToUpdate.size > 0 ||
+    modulesToUpdate.size > 0;
 
   useEffect(() => {
     setIsButtonDisabled(!hasPendingChanges);

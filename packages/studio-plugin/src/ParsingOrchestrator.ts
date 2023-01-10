@@ -21,6 +21,7 @@ export function createTsMorphProject() {
  */
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
+  private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private localDataMapping?: Record<string, string[]>;
 
@@ -53,6 +54,20 @@ export default class ParsingOrchestrator {
     );
     this.pageNameToPageFile[pageName] = newPageFile;
     return newPageFile;
+  }
+
+  getModuleFile(filepath: string): ModuleFile {
+    const moduleFile = this.filepathToModuleFile[filepath];
+    if (moduleFile) {
+      return moduleFile;
+    }
+    const newModuleFile = new ModuleFile(
+      filepath,
+      this.getFileMetadata,
+      this.project
+    );
+    this.filepathToModuleFile[filepath] = newModuleFile;
+    return newModuleFile;
   }
 
   async getStudioData(): Promise<StudioData> {
@@ -102,11 +117,7 @@ export default class ParsingOrchestrator {
       return componentFile.getComponentMetadata();
     }
     if (absPath.startsWith(this.paths.modules)) {
-      const moduleFile = new ModuleFile(
-        absPath,
-        this.getFileMetadata,
-        this.project
-      );
+      const moduleFile = this.getModuleFile(absPath);
       return moduleFile.getModuleMetadata();
     }
     const { modules, components } = this.paths;

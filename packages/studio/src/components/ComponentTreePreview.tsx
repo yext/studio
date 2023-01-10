@@ -9,8 +9,9 @@ import useStudioStore from "../store/useStudioStore";
 import {
   ComponentTreeHelpers,
   ComponentStateKind,
-  PageState,
   TypeGuards,
+  FileMetadataKind,
+  PropValues,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
@@ -19,35 +20,38 @@ import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import initialStudioData from "virtual:yext-studio";
 
-interface PagePreviewProps {
-  pageState: PageState;
+interface ComponentTreePreviewProps {
+  componentTree: ComponentState[];
+  props?: PropValues;
 }
 
 /**
- * Renders the provided page's component tree.
+ * Renders the provided component tree.
  */
-export default function PagePreview({
-  pageState,
-}: PagePreviewProps): JSX.Element {
-  useImportedComponents(pageState);
-  const elements = usePageElements(pageState.componentTree);
+export default function ComponentTreePreview({
+  componentTree,
+  props,
+}: ComponentTreePreviewProps): JSX.Element {
+  useImportedComponents(componentTree);
+  const elements = useComponentTreeElements(componentTree, props);
   return <>{elements}</>;
 }
 
 /**
- * Renders the page's component tree with props, where expressions
+ * Renders the component tree with props, where expressions
  * in prop values are replace with actual values.
  */
-function usePageElements(
-  componentTree: ComponentState[]
+function useComponentTreeElements(
+  componentTree: ComponentState[],
+  props?: PropValues
 ): (JSX.Element | null)[] | null {
-  const UUIDToImportedComponent = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToImportedComponent
-  );
-  const UUIDToFileMetadata = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToFileMetadata
-  );
-  const expressionSources = useExpressionSources();
+  const [UUIDToImportedComponent, UUIDToFileMetadata, modulesToUpdate] =
+    useStudioStore((store) => [
+      store.fileMetadatas.UUIDToImportedComponent,
+      store.fileMetadatas.UUIDToFileMetadata,
+      store.fileMetadatas.pendingChanges.modulesToUpdate,
+    ]);
+  const expressionSources = useExpressionSources(props);
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
     if (Object.keys(UUIDToImportedComponent).length === 0) {
@@ -62,6 +66,21 @@ function usePageElements(
         } else if (c.kind === ComponentStateKind.BuiltIn) {
           element = c.componentName;
         } else {
+          const metadata = UUIDToFileMetadata[c.metadataUUID];
+          if (
+            metadata &&
+            metadata.kind === FileMetadataKind.Module &&
+            modulesToUpdate.has(metadata.metadataUUID)
+          ) {
+            return (
+              <ErrorBoundary key={c.uuid}>
+                <ComponentTreePreview
+                  componentTree={metadata.componentTree}
+                  props={c.props}
+                />
+              </ErrorBoundary>
+            );
+          }
           if (!UUIDToImportedComponent[c.metadataUUID]) {
             console.warn(
               `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
@@ -87,11 +106,7 @@ function usePageElements(
           ...children
         );
 
-        return (
-          <ErrorBoundary key={c.uuid}>
-            <div>{component}</div>
-          </ErrorBoundary>
-        );
+        return <ErrorBoundary key={c.uuid}>{component}</ErrorBoundary>;
       }
     );
   }, [
@@ -99,15 +114,18 @@ function usePageElements(
     UUIDToImportedComponent,
     expressionSources,
     componentTree,
+    modulesToUpdate,
   ]);
 }
 
 /**
  * Dynamically load files that serve as expression sources for the
  * expressions in prop's value. Currently, Studio only support expression
- * value sourced from site settings file or a Stream document.
+ * value sourced from props, site settings file, or a Stream document.
  */
-function useExpressionSources(): Record<string, Record<string, unknown>> {
+function useExpressionSources(
+  props?: PropValues
+): Record<string, Record<string, unknown>> {
   const [expressionSources, setExpressionSources] = useState<
     Record<string, Record<string, unknown>>
   >({});
@@ -144,6 +162,20 @@ function useExpressionSources(): Record<string, Record<string, unknown>> {
       }));
     });
   }, [activeEntityFile]);
+
+  useLayoutEffect(() => {
+    const propsSource = Object.entries(props ?? {}).reduce(
+      (map, [propName, proVal]) => {
+        map[propName] = proVal.value;
+        return map;
+      },
+      {}
+    );
+    setExpressionSources((prev) => ({
+      ...prev,
+      props: propsSource,
+    }));
+  }, [props]);
 
   return expressionSources;
 }

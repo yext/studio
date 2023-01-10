@@ -5,10 +5,11 @@ export enum MessageID {
 }
 
 export interface CommitChangesEventPayload
-  extends Pick<StudioData, "pageNameToPageState"> {
+  extends Pick<StudioData, "pageNameToPageState" | "UUIDToFileMetadata"> {
   pendingChanges: {
     pagesToRemove: string[];
     pagesToUpdate: string[];
+    modulesToUpdate: string[];
   };
 }
 

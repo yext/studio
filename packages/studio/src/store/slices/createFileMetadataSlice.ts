@@ -10,9 +10,15 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
 ) => ({
   UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
   UUIDToImportedComponent: {},
+  pendingChanges: {
+    modulesToUpdate: new Set<string>(),
+  },
   setFileMetadata: (uuid: string, metadata: FileMetadata) =>
     set((store) => {
       store.UUIDToFileMetadata[uuid] = metadata;
+      if (metadata.kind === FileMetadataKind.Module) {
+        store.pendingChanges.modulesToUpdate.add(uuid);
+      }
     }),
   getFileMetadata: (uuid: string) => get().UUIDToFileMetadata[uuid],
   //TODO: add logic here to ensure this component is made by admin and can be deleted.
