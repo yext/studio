@@ -17,7 +17,7 @@ describe("trigger onChange from input interaction", () => {
     const inputValue = "doc.age";
     await userEvent.type(screen.getByLabelText("age"), inputValue);
     Array.from(inputValue).forEach((char) => {
-      expect(onPropChange).toBeCalledWith({
+      expect(onPropChange).toBeCalledWith("age", {
         kind: PropValueKind.Expression,
         valueType: PropValueType.number,
         value: char,
@@ -35,7 +35,7 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     await userEvent.type(screen.getByLabelText("title"), "y");
-    expect(onPropChange).toBeCalledWith({
+    expect(onPropChange).toBeCalledWith("title", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.string,
       value: "y",
@@ -52,7 +52,7 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     await userEvent.type(screen.getByLabelText("age"), "4");
-    expect(onPropChange).toBeCalledWith({
+    expect(onPropChange).toBeCalledWith("age", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.number,
       value: 4,
@@ -69,7 +69,7 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     await userEvent.click(screen.getByLabelText("is Yext employee?"));
-    expect(onPropChange).toBeCalledWith({
+    expect(onPropChange).toBeCalledWith("is Yext employee?", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.boolean,
       value: true,
@@ -89,7 +89,7 @@ describe("trigger onChange from input interaction", () => {
     fireEvent.input(screen.getByLabelText("background color"), {
       target: { value: "#abcdef" },
     });
-    expect(onPropChange).toBeCalledWith({
+    expect(onPropChange).toBeCalledWith("background color", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.HexColor,
       value: "#abcdef",

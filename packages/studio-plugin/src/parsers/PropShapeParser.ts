@@ -1,13 +1,24 @@
-import { PropShape } from "../types/PropShape";
+import { PropMetadata, PropShape } from "../types/PropShape";
 import TypeGuards from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
+import {
+  ParsedInterface,
+  ParsedInterfaceKind,
+} from "./helpers/StaticParsingHelpers";
+import { PropValueType } from "../types";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
  */
 export default class PropShapeParser {
-  constructor(private studioSourceFileParser: StudioSourceFileParser) {}
+  private studioImports: string[];
+
+  constructor(private studioSourceFileParser: StudioSourceFileParser) {
+    this.studioImports =
+      this.studioSourceFileParser.parseNamedImports()[STUDIO_PACKAGE_NAME] ??
+      [];
+  }
 
   /**
    * Get shape of the component's props, defined through an interface `${componentName}Props`.
@@ -19,35 +30,61 @@ export default class PropShapeParser {
     interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const propsInterface =
+    const parsedInterface =
       this.studioSourceFileParser.parseInterface(interfaceName);
-    const studioImports =
-      this.studioSourceFileParser.parseNamedImports()[STUDIO_PACKAGE_NAME] ??
-      [];
-    if (!propsInterface) {
+    if (!parsedInterface) {
       return {};
     }
+    return this.transformParsedInterface(
+      parsedInterface,
+      interfaceName,
+      onProp
+    );
+  }
+
+  private transformParsedInterface(
+    parsedInterface: ParsedInterface,
+    interfaceName: string,
+    onProp?: (propName: string) => boolean
+  ): PropShape {
     const propShape: PropShape = {};
-    Object.keys(propsInterface).forEach((propName) => {
-      const { type, doc } = propsInterface[propName];
+    Object.keys(parsedInterface).forEach((propName) => {
+      const prop = parsedInterface[propName];
+      if (prop.kind !== ParsedInterfaceKind.Simple) {
+        const nestedShape = this.transformParsedInterface(
+          prop.type,
+          interfaceName,
+          onProp
+        );
+        const propMetadata: PropMetadata = {
+          type: PropValueType.Object,
+          shape: nestedShape,
+        };
+        propShape[propName] = propMetadata;
+        return;
+      }
+      const { type, doc } = prop;
       if (onProp && !onProp(propName)) {
         return;
       }
 
-      if (!TypeGuards.isPropValueType(type)) {
+      if (!TypeGuards.isPropValueType(type) || type === PropValueType.Object) {
         throw new Error(
           `Unrecognized type ${type} in interface ${interfaceName}`
         );
       }
-      if (!TypeGuards.isPrimitiveProp(type) && !studioImports.includes(type)) {
+      if (
+        !TypeGuards.isPrimitiveProp(type) &&
+        !this.studioImports.includes(type)
+      ) {
         throw new Error(
           `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
         );
       }
-      propShape[propName] = { type };
-      if (doc) {
-        propShape[propName].doc = doc;
-      }
+      propShape[propName] = {
+        type,
+        ...(doc && { doc }),
+      };
     });
     return propShape;
   }

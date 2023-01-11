@@ -16,7 +16,7 @@ interface PropEditorProps {
   propMetadata: PropMetadata;
   currentPropValue?: string | number | boolean;
   currentPropKind?: PropValueKind;
-  onPropChange: (propVal: PropVal) => void;
+  onPropChange: (propName: string, propVal: PropVal) => void;
 }
 
 const tooltipStyle = { backgroundColor: "black" };
@@ -55,7 +55,7 @@ export function PropEditor({
         );
         return;
       }
-      onPropChange(newPropVal);
+      onPropChange(propName, newPropVal);
     },
     [onPropChange, propKind, propName, type]
   );

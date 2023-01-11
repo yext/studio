@@ -111,6 +111,49 @@ describe("updateFile", () => {
       );
     });
 
+    it("can write object props", () => {
+      addFilesToProject(tsMorphProject, [
+        getComponentPath("BannerUsingObject"),
+      ]);
+
+      const filepath = getPagePath("updatePageFile/PageWithObjectProp");
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "IndexPage"
+      ).updateFile({
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "BannerUsingObject",
+            props: {
+              objProp: {
+                kind: PropValueKind.Literal,
+                valueType: PropValueType.Object,
+                value: {
+                  title: {
+                    kind: PropValueKind.Literal,
+                    valueType: PropValueType.string,
+                    value: "-objProp.title-",
+                  },
+                },
+              },
+            },
+            uuid: "mock-uuid-0",
+            metadataUUID: getComponentPath("BannerUsingObject"),
+          },
+        ],
+        cssImports: [],
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithObjectProp.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithObjectProp"),
+          "utf-8"
+        )
+      );
+    });
+
     it("remove components that are not part of the new component tree", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const filepath = getPagePath("updatePageFile/PageWithNestedComponents");

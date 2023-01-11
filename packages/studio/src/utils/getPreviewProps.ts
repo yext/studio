@@ -8,6 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import lodashGet from "lodash/get";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
+import { transformPropValuesToRaw } from "@yext/studio-plugin";
 
 /**
  * Transform props' values based on PropValueKind. If a prop's value is of
@@ -26,6 +27,10 @@ export function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
+    if (!props[propName] && propShape[propName].type === PropValueType.Object) {
+      return undefined;
+    }
+
     if (!props[propName]) {
       transformedProps[propName] = getPropTypeDefaultValue(
         propShape[propName].type
@@ -44,6 +49,8 @@ export function getPreviewProps(
         transformedProps[propName] =
           getExpressionValue(value, valueType, expressionSources) ?? value;
       }
+    } else if (valueType === PropValueType.Object) {
+      transformedProps[propName] = transformPropValuesToRaw(value);
     } else {
       transformedProps[propName] = value;
     }
@@ -98,7 +105,7 @@ function getExpressionValue(
   expression: string,
   propType: PropValueType,
   expressionSources: Record<string, Record<string, unknown>>
-): string | number | boolean | null {
+): string | number | boolean | null | Record<string, unknown> {
   function getValueFromPath(path: string, parentPath: string) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {
@@ -115,6 +122,9 @@ function getExpressionValue(
       value: newPropValue,
     };
     if (TypeGuards.isValidPropValue(propVal)) {
+      if (propVal.valueType === PropValueType.Object) {
+        return transformPropValuesToRaw(propVal.value);
+      }
       return propVal.value;
     } else {
       console.warn(

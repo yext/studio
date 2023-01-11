@@ -8,6 +8,9 @@ export interface BannerProps {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
+  nestedProp?: {
+    egg?: string;
+  };
 }
 
 export const initialProps: BannerProps = {
@@ -28,6 +31,7 @@ export default function Banner(props: BannerProps) {
       {props.title}
       {`${props.bool}`}
       {props.num}
+      {props?.nestedProp?.egg}
     </div>
   );
 }

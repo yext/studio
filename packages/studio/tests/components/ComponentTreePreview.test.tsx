@@ -21,6 +21,14 @@ const UUIDToFileMetadata: Record<string, FileMetadata> = {
       num: { type: PropValueType.number },
       bool: { type: PropValueType.boolean },
       bgColor: { type: PropValueType.HexColor },
+      nestedProp: {
+        type: PropValueType.Object,
+        shape: {
+          egg: {
+            type: PropValueType.string,
+          },
+        },
+      },
     },
     filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
   },
@@ -295,6 +303,108 @@ it("renders component tree with an updated Module component with props", async (
   );
   expect(await screen.findByText(/This is Panel module/)).toBeDefined();
   expect(await screen.findByRole("button")).toBeDefined();
+});
+
+it("can render component using nested siteSettings expression", async () => {
+  const mockState: MockStudioStore = {
+    pages: {
+      pages: {
+        universalPage: {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "Banner",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: 'siteSettings.["Global Colors"].primary',
+                  valueType: PropValueType.HexColor,
+                },
+              },
+              uuid: "banner-uuid",
+              metadataUUID: "banner-metadata-uuid",
+            },
+          ],
+          cssImports: [],
+          entityFiles: ["entityFile.json"],
+          filepath: "mock/file/path",
+        },
+      },
+      activePageName: "universalPage",
+    },
+    fileMetadatas: {
+      UUIDToFileMetadata,
+    },
+    siteSettings: {
+      values: {
+        "Global Colors": {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            primary: {
+              kind: PropValueKind.Literal,
+              valueType: PropValueType.HexColor,
+              value: "#AABBCC",
+            },
+          },
+        },
+      },
+    },
+  };
+  mockStore(mockState);
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockState).componentTree}
+    />
+  );
+  const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
+  expect(siteSettingsExpressionProp).toBeDefined();
+});
+
+it("can render component using prop of PropValueType.Object", async () => {
+  const mockState: MockStudioStore = {
+    pages: {
+      pages: {
+        universalPage: {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "Banner",
+              props: {
+                nestedProp: {
+                  kind: PropValueKind.Literal,
+                  value: {
+                    egg: {
+                      kind: PropValueKind.Literal,
+                      valueType: PropValueType.string,
+                      value: "eggyweggy",
+                    },
+                  },
+                  valueType: PropValueType.Object,
+                },
+              },
+              uuid: "banner-uuid",
+              metadataUUID: "banner-metadata-uuid",
+            },
+          ],
+          cssImports: [],
+          filepath: "mock/file/path",
+        },
+      },
+      activePageName: "universalPage",
+    },
+    fileMetadatas: {
+      UUIDToFileMetadata,
+    },
+  };
+  mockStore(mockState);
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockState).componentTree}
+    />
+  );
+  const nestedPropUsage = await screen.findByText(/eggyweggy/);
+  expect(nestedPropUsage).toBeDefined();
 });
 
 function getPageState(

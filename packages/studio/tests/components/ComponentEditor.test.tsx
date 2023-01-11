@@ -59,6 +59,52 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
   );
 });
 
+it("does not render a prop editor for component's prop of type Object", () => {
+  mockStoreActiveComponent({
+    activeComponent: {
+      kind: ComponentStateKind.Standard,
+      componentName: "Banner",
+      props: {
+        objProp: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            title: {
+              kind: PropValueKind.Literal,
+              valueType: PropValueType.string,
+              value: "-objProp.title-",
+            },
+          },
+        },
+      },
+      uuid: "banner-uuid",
+      metadataUUID: "banner-metadata-uuid",
+    },
+    activeComponentMetadata: {
+      ...activeComponentMetadata,
+      propShape: {
+        objProp: {
+          type: PropValueType.Object,
+          shape: {
+            title: {
+              type: PropValueType.string,
+            },
+          },
+        },
+      },
+    },
+  });
+  const consoleWarnSpy = jest
+    .spyOn(global.console, "warn")
+    .mockImplementation();
+  render(<ComponentEditor />);
+  expect(screen.queryByText("objProp")).toBeNull();
+  expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+  expect(consoleWarnSpy).toHaveBeenCalledWith(
+    "Found objProp in component Banner with PropValueType.Object. Studio does not support editing nested props."
+  );
+});
+
 it("does not render prop editor(s) for fragment component", () => {
   mockStoreActiveComponent({
     activeComponent: {
