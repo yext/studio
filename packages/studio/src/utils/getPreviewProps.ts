@@ -122,9 +122,7 @@ function getExpressionValue(
       value: newPropValue,
     };
     if (TypeGuards.isValidPropValue(propVal)) {
-      if (
-        propVal.valueType === PropValueType.Object
-      ) {
+      if (propVal.valueType === PropValueType.Object) {
         return transformPropValuesToRaw(propVal.value);
       }
       return propVal.value;
