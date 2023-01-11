@@ -19,7 +19,7 @@ import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import initialStudioData from "virtual:yext-studio";
-import transformPropValuesToRaw from "../utils/transformNestedPropValues";
+import { transformPropValuesToRaw } from "@yext/studio-plugin";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];

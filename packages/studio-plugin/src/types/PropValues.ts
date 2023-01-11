@@ -2,15 +2,15 @@ export type PropValues = {
   [propName: string]: PropVal;
 };
 
-export type PropVal = LiteralProp | ExpressionProp;
+export type PropVal = LiteralProp | ExpressionProp | ObjectProp;
 
 export type LiteralProp = {
   kind: PropValueKind.Literal;
-} & (NumberProp | StringProp | BooleanProp | HexColorProp | ObjectProp);
+} & (NumberProp | StringProp | BooleanProp | HexColorProp);
 
 export type ExpressionProp = {
   kind: PropValueKind.Expression;
-  valueType: PropValueType;
+  valueType: Exclude<PropValueType, PropValueType.Object>;
   value: string;
 };
 
@@ -41,6 +41,7 @@ export type BooleanProp = {
   value: boolean;
 };
 export type ObjectProp = {
+  kind: PropValueKind.Literal;
   valueType: PropValueType.Object;
   value: PropValues;
 };
