@@ -15,6 +15,9 @@ const shape: PropShape = {
       primary: {
         type: PropValueType.HexColor,
       },
+      secondary: {
+        type: PropValueType.HexColor
+      }
     },
   },
   experienceKey: {
@@ -30,6 +33,11 @@ const values: PropValues = {
         kind: PropValueKind.Literal,
         valueType: PropValueType.HexColor,
         value: "#AABBCC",
+      },
+      secondary: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.HexColor,
+        value: "#FFEEFF",
       },
     },
   },
@@ -50,6 +58,7 @@ it("can render nested site settings", () => {
   render(<SiteSettingsEditor />);
   expect(screen.getByText("Global Colors")).toBeDefined();
   expect(screen.getByText("primary")).toBeDefined();
+  expect(screen.getByText("secondary")).toBeDefined();
   expect(screen.getByText("experienceKey")).toBeDefined();
 });
 
@@ -79,6 +88,11 @@ it("can edit site settings", () => {
           value: "#abcdef",
           valueType: PropValueType.HexColor,
         },
+        secondary: {
+          kind: PropValueKind.Literal,
+          value: "#FFEEFF",
+          valueType: PropValueType.HexColor
+        }
       },
     },
   });

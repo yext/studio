@@ -37,11 +37,10 @@ function EditorGroup(props: {
   const { values, shape, updateValues, parentPropName } = props;
   const childEditorGroups = Object.entries(shape).map(
     ([propName, propMetadata]) => {
-      const { kind, valueType, value } = values[propName];
+      const { valueType, value } = values[propName];
       if (
         valueType !== PropValueType.Object ||
-        propMetadata.type !== PropValueType.Object ||
-        kind !== PropValueKind.Literal
+        propMetadata.type !== PropValueType.Object
       ) {
         return null;
       }
@@ -49,7 +48,7 @@ function EditorGroup(props: {
       return (
         <ChildEditorGroup
           propName={propName}
-          value={value}
+          values={value}
           shape={propMetadata.shape}
           updateValues={updateValues}
           key={propName}
@@ -103,10 +102,10 @@ function EditorGroup(props: {
 function ChildEditorGroup(props: {
   propName: string;
   shape: PropShape;
-  value: PropValues;
+  values: PropValues;
   updateValues: (newValues: PropValues) => void;
 }) {
-  const { propName, shape, value, updateValues } = props;
+  const { propName, shape, values, updateValues } = props;
 
   const handleUpdate = useCallback(
     (newValues: PropValues) => {
@@ -114,17 +113,20 @@ function ChildEditorGroup(props: {
         [propName]: {
           kind: PropValueKind.Literal,
           valueType: PropValueType.Object,
-          value: newValues,
+          value: {
+            ...values,
+            ...newValues,
+          },
         },
       });
     },
-    [propName]
+    [propName, values]
   );
 
   return (
     <EditorGroup
       key={propName}
-      values={value}
+      values={values}
       shape={shape}
       updateValues={handleUpdate}
       parentPropName={propName}
