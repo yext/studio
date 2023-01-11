@@ -3,7 +3,6 @@ import {
   FileMetadata,
   PropVal,
   PropValueType,
-  PropValues,
   TypeGuards,
   PropMetadata,
   NestedPropMetadata,

@@ -120,7 +120,7 @@ function ChildEditorGroup(props: {
         },
       });
     },
-    [propName, values]
+    [propName, values, updateValues]
   );
 
   return (
@@ -150,7 +150,7 @@ function PropInputWrapper(props: {
         value: val,
       } as PropVal,
     });
-  }, []);
+  }, [propName, updateValues, valueType]);
 
   return (
     <label className="flex h-10 items-center" id={propName} key={propName}>
