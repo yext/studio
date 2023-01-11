@@ -58,7 +58,36 @@ describe("updateFile", () => {
   });
 
   describe("React component return statement", () => {
-    it("adds new sibling and children components", () => {
+    it("adds top-level sibling component", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const filepath = getPagePath("updatePageFile/PageWithAComponent");
+      const commonComplexBannerState = {
+        kind: ComponentStateKind.Standard,
+        componentName: "ComplexBanner",
+        props: {},
+        metadataUUID: "mock-metadata-uuid",
+      };
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "IndexPage"
+      ).updateFile({
+        componentTree: [
+          { ...commonComplexBannerState, uuid: "mock-uuid-0" },
+          { ...commonComplexBannerState, uuid: "mock-uuid-1" },
+        ],
+        cssImports: [],
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithAComponent.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithSiblingComponents"),
+          "utf-8"
+        )
+      );
+    });
+
+    it("nests component with new sibling and children components", () => {
       addFilesToProject(tsMorphProject, [
         getComponentPath("ComplexBanner"),
         getComponentPath("NestedBanner"),
@@ -76,7 +105,7 @@ describe("updateFile", () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithAComponent.tsx"),
         fs.readFileSync(
-          getPagePath("updatePageFile/PageWithMultipleComponents"),
+          getPagePath("updatePageFile/PageWithNestedComponents"),
           "utf-8"
         )
       );
@@ -84,7 +113,7 @@ describe("updateFile", () => {
 
     it("remove components that are not part of the new component tree", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const filepath = getPagePath("updatePageFile/PageWithMultipleComponents");
+      const filepath = getPagePath("updatePageFile/PageWithNestedComponents");
       createReactComponentFileWriter(
         tsMorphProject,
         filepath,
@@ -102,7 +131,7 @@ describe("updateFile", () => {
         cssImports: [],
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithMultipleComponents.tsx"),
+        expect.stringContaining("PageWithNestedComponents.tsx"),
         fs.readFileSync(
           getPagePath("updatePageFile/PageWithAComponent"),
           "utf-8"
