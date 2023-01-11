@@ -25,10 +25,10 @@ const UUIDToFileMetadata: Record<string, FileMetadata> = {
         type: PropValueType.Object,
         shape: {
           egg: {
-            type: PropValueType.string
-          }
-        }
-      }
+            type: PropValueType.string,
+          },
+        },
+      },
     },
     filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
   },
@@ -352,7 +352,11 @@ it("can render component using nested siteSettings expression", async () => {
     },
   };
   mockStore(mockState);
-  render(<ComponentTreePreview componentTree={getPageState(mockState).componentTree} />);
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockState).componentTree}
+    />
+  );
   const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
   expect(siteSettingsExpressionProp).toBeDefined();
 });
@@ -373,8 +377,8 @@ it("can render component using nested siteSettings expression", async () => {
                     egg: {
                       kind: PropValueKind.Literal,
                       valueType: PropValueType.string,
-                      value: 'eggyweggy'
-                    }
+                      value: "eggyweggy",
+                    },
                   },
                   valueType: PropValueType.Object,
                 },
@@ -394,7 +398,11 @@ it("can render component using nested siteSettings expression", async () => {
     },
   };
   mockStore(mockState);
-  render(<ComponentTreePreview componentTree={getPageState(mockState).componentTree} />);
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockState).componentTree}
+    />
+  );
   const nestedPropUsage = await screen.findByText(/eggyweggy/);
   expect(nestedPropUsage).toBeDefined();
 });

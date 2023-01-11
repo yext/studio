@@ -7,6 +7,8 @@ import {
   TypeGuards,
   PropMetadata,
   NestedPropMetadata,
+  StandardOrModuleComponentState,
+  PropShape,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
@@ -23,23 +25,6 @@ export default function ComponentEditor(): JSX.Element | null {
     setActiveComponentProps,
   } = useActiveComponent();
 
-  const updateProps = useCallback(
-    (propName: string, newPropVal: PropVal) => {
-      if (
-        !activeComponentState ||
-        !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
-      ) {
-        return null;
-      }
-
-      setActiveComponentProps({
-        ...activeComponentState.props,
-        [propName]: newPropVal,
-      });
-    },
-    [setActiveComponentProps, activeComponentState]
-  );
-
   if (!activeComponentMetadata?.propShape) {
     return null;
   }
@@ -53,55 +38,79 @@ export default function ComponentEditor(): JSX.Element | null {
 
   return (
     <div>
-      
+      <PropEditors
+        activeComponentState={activeComponentState}
+        setActiveComponentProps={setActiveComponentProps}
+        propShape={activeComponentMetadata.propShape}
+      />
       <Divider />
     </div>
   );
 }
 
-function PropEditors() {
-  {Object.entries(activeComponentMetadata.propShape)
-    .filter((entry): entry is [string, Exclude<PropMetadata, NestedPropMetadata>] => {
-      const [propName, propMetadata] = entry;
-      if (propMetadata.type === PropValueType.ReactNode) {
-        console.warn(
-          `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.ReactNode.` +
-            " Studio does not support editing prop of type ReactNode."
-        );
-        return false;
-      }
+function PropEditors(props: {
+  setActiveComponentProps: (props: PropValues) => void;
+  activeComponentState: StandardOrModuleComponentState;
+  propShape: PropShape;
+}) {
+  const { setActiveComponentProps, activeComponentState, propShape } = props;
+  const updateProps = useCallback(
+    (propName: string, newPropVal: PropVal) => {
+      setActiveComponentProps({
+        ...activeComponentState.props,
+        [propName]: newPropVal,
+      });
+    },
+    [setActiveComponentProps, activeComponentState]
+  );
+  return (
+    <>
+      {Object.entries(propShape)
+        .filter(
+          (
+            entry
+          ): entry is [string, Exclude<PropMetadata, NestedPropMetadata>] => {
+            const [propName, propMetadata] = entry;
+            if (propMetadata.type === PropValueType.ReactNode) {
+              console.warn(
+                `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.ReactNode.` +
+                  " Studio does not support editing prop of type ReactNode."
+              );
+              return false;
+            }
 
-      if (propMetadata.type === PropValueType.Object) {
-        console.warn(
-          `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.Object.` +
-            " Studio does not support editing prop of nested props."
-        );
-        return false;
-      }
+            if (propMetadata.type === PropValueType.Object) {
+              console.warn(
+                `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.Object.` +
+                  " Studio does not support editing prop of nested props."
+              );
+              return false;
+            }
 
-      return true;
-    })
-    .map(([propName, propMetadata], index) => {
-      const currentPropValue = activeComponentState.props[propName]?.value as string | number | boolean;
-      const currentPropKind = activeComponentState.props[propName]?.kind;
+            return true;
+          }
+        )
+        .map(([propName, propMetadata], index) => {
+          const currentPropValue = activeComponentState.props[propName]
+            ?.value as string | number | boolean;
+          const currentPropKind = activeComponentState.props[propName]?.kind;
 
-      return (
-        <PropEditor
-          key={index}
-          onPropChange={updateProps}
-          {...{
-            propName,
-            propMetadata,
-            currentPropValue,
-            currentPropKind,
-          }}
-        />
-      );
-    })}
-
+          return (
+            <PropEditor
+              key={index}
+              onPropChange={updateProps}
+              {...{
+                propName,
+                propMetadata,
+                currentPropValue,
+                currentPropKind,
+              }}
+            />
+          );
+        })}
+    </>
+  );
 }
-
-
 
 function useActiveComponent(): {
   activeComponentMetadata?: FileMetadata;

@@ -7,8 +7,8 @@ export interface BannerProps {
   bool?: boolean;
   bgColor?: HexColor;
   nestedProp?: {
-    egg?: string
-  }
+    egg?: string;
+  };
 }
 
 export const initialProps: BannerProps = {
