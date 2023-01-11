@@ -361,7 +361,7 @@ it("can render component using nested siteSettings expression", async () => {
   expect(siteSettingsExpressionProp).toBeDefined();
 });
 
-it("can render component using nested siteSettings expression", async () => {
+it("can render component using prop of PropValueType.Object", async () => {
   const mockState: MockStudioStore = {
     pages: {
       pages: {
