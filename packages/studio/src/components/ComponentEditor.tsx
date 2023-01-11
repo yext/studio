@@ -5,6 +5,8 @@ import {
   PropValueType,
   PropValues,
   TypeGuards,
+  PropMetadata,
+  NestedPropMetadata,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
@@ -51,46 +53,55 @@ export default function ComponentEditor(): JSX.Element | null {
 
   return (
     <div>
-      {Object.entries(activeComponentMetadata.propShape)
-        .filter(([propName, propMetadata]) => {
-          if (propMetadata.type === PropValueType.ReactNode) {
-            console.warn(
-              `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.ReactNode.` +
-                " Studio does not support editing prop of type ReactNode."
-            );
-            return false;
-          }
-          return true;
-        })
-        .map(([propName, propMetadata], index) => {
-          const {
-            value: currentPropValue,
-            kind: currentPropKind,
-            valueType,
-          } = activeComponentState.props[propName] ?? {};
-
-          if (valueType === PropValueType.Object) {
-            // Nested props are not editable through the UI but can still be displayed.
-            return null;
-          }
-
-          return (
-            <PropEditor
-              key={index}
-              onPropChange={updateProps}
-              {...{
-                propName,
-                propMetadata,
-                currentPropValue,
-                currentPropKind,
-              }}
-            />
-          );
-        })}
+      
       <Divider />
     </div>
   );
 }
+
+function PropEditors() {
+  {Object.entries(activeComponentMetadata.propShape)
+    .filter((entry): entry is [string, Exclude<PropMetadata, NestedPropMetadata>] => {
+      const [propName, propMetadata] = entry;
+      if (propMetadata.type === PropValueType.ReactNode) {
+        console.warn(
+          `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.ReactNode.` +
+            " Studio does not support editing prop of type ReactNode."
+        );
+        return false;
+      }
+
+      if (propMetadata.type === PropValueType.Object) {
+        console.warn(
+          `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.Object.` +
+            " Studio does not support editing prop of nested props."
+        );
+        return false;
+      }
+
+      return true;
+    })
+    .map(([propName, propMetadata], index) => {
+      const currentPropValue = activeComponentState.props[propName]?.value as string | number | boolean;
+      const currentPropKind = activeComponentState.props[propName]?.kind;
+
+      return (
+        <PropEditor
+          key={index}
+          onPropChange={updateProps}
+          {...{
+            propName,
+            propMetadata,
+            currentPropValue,
+            currentPropKind,
+          }}
+        />
+      );
+    })}
+
+}
+
+
 
 function useActiveComponent(): {
   activeComponentMetadata?: FileMetadata;

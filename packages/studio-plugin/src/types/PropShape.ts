@@ -13,13 +13,14 @@ export enum SpecialReactProps {
   Children = "children",
 }
 
-export type PropMetadata =
-  | {
-      type: Exclude<PropValueType, PropValueType.Object>;
-      doc?: string;
-    }
-  | {
-      type: PropValueType.Object;
-      doc?: undefined;
-      shape: PropShape;
-    };
+export type PropMetadata = NestedPropMetadata | {
+  type: Exclude<PropValueType, PropValueType.Object>;
+  doc?: string;
+};
+
+export type NestedPropMetadata = {
+  type: PropValueType.Object;
+  doc?: undefined;
+  shape: PropShape;
+};
+   
