@@ -1,3 +1,4 @@
+import { PropValues } from './PropValues';
 import { StudioData } from "./StudioData";
 
 export enum MessageID {
@@ -10,7 +11,10 @@ export interface CommitChangesEventPayload
     pagesToRemove: string[];
     pagesToUpdate: string[];
     modulesToUpdate: string[];
-  };
+  },
+  siteSettings?: {
+    values: PropValues
+  }
 }
 
 export type StudioEventMap = {

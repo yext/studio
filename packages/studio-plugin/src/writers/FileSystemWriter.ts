@@ -1,5 +1,5 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
-import { ModuleMetadata, PageState } from "../types";
+import { ModuleMetadata, PageState, PropValues } from "../types";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -33,5 +33,9 @@ export class FileSystemWriter {
   writeToModuleFile(filepath: string, moduleMetadata: ModuleMetadata): void {
     const moduleFile = this.orchestrator.getModuleFile(filepath);
     moduleFile.updateModuleFile(moduleMetadata);
+  }
+
+  writeToSiteSettings(siteSettingsValues: PropValues): void {
+    this.orchestrator.updateSiteSettings(siteSettingsValues);
   }
 }

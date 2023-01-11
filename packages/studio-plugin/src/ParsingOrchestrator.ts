@@ -1,16 +1,10 @@
 import path from "path";
-import {
-  FileMetadata,
-  UserPaths,
-  StudioData,
-  PageState,
-  SiteSettings,
-} from "./types";
+import { FileMetadata, UserPaths, StudioData, PageState, PropValues } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
 import PageFile from "./sourcefiles/PageFile";
-import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
+import SiteSettingsFile, { SiteSettings } from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 
@@ -30,6 +24,7 @@ export default class ParsingOrchestrator {
   private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private localDataMapping?: Record<string, string[]>;
+  private siteSettingsFile?: SiteSettingsFile;
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -176,10 +171,20 @@ export default class ParsingOrchestrator {
     if (!fs.existsSync(this.paths.siteSettings)) {
       return;
     }
-    const siteSettingsFile = new SiteSettingsFile(
-      this.paths.siteSettings,
-      this.project
-    );
-    return siteSettingsFile.getSiteSettings();
+    return this.getSiteSettingsFile().getSiteSettings();
+  }
+
+  private getSiteSettingsFile() {
+    if (!this.siteSettingsFile) {
+      this.siteSettingsFile = new SiteSettingsFile(
+        this.paths.siteSettings,
+        this.project
+      );
+    }
+    return this.siteSettingsFile;
+  }
+
+  updateSiteSettings(siteSettingsValues: PropValues): void {
+    this.getSiteSettingsFile().updateSiteSettingValues(siteSettingsValues);
   }
 }

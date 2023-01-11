@@ -58,6 +58,7 @@ const useStudioStore = create<StudioStore>()(
         const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
           get().fileMetadatas;
         const { modulesToUpdate } = pendingModuleChanges;
+        const { values } = get().siteSettings;
         // Serialize pendingChanges (uses type Set) to send to server side.
         sendMessage(MessageID.StudioCommitChanges, {
           pageNameToPageState: pages,
@@ -67,6 +68,7 @@ const useStudioStore = create<StudioStore>()(
             pagesToUpdate: [...pagesToUpdate.keys()],
             modulesToUpdate: [...modulesToUpdate.keys()],
           },
+          ...(values && { siteSettings: { values }})
         });
       };
 
