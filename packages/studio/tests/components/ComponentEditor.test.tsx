@@ -101,7 +101,7 @@ it("does not render a prop editor for component's prop of type Object", () => {
   expect(screen.queryByText("objProp")).toBeNull();
   expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
   expect(consoleWarnSpy).toHaveBeenCalledWith(
-    "Found objProp in component Banner with PropValueType.Object. Studio does not support editing prop of nested props."
+    "Found objProp in component Banner with PropValueType.Object. Studio does not support editing nested props."
   );
 });
 

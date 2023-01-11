@@ -19,11 +19,8 @@ import { useCallback } from "react";
  * Renders prop editors for the active component selected by the user.
  */
 export default function ComponentEditor(): JSX.Element | null {
-  const {
-    activeComponentMetadata,
-    activeComponentState,
-    setActiveComponentProps,
-  } = useActiveComponent();
+  const { activeComponentMetadata, activeComponentState } =
+    useActiveComponent();
 
   if (!activeComponentMetadata?.propShape) {
     return null;
@@ -40,7 +37,6 @@ export default function ComponentEditor(): JSX.Element | null {
     <div>
       <PropEditors
         activeComponentState={activeComponentState}
-        setActiveComponentProps={setActiveComponentProps}
         propShape={activeComponentMetadata.propShape}
       />
       <Divider />
@@ -49,11 +45,14 @@ export default function ComponentEditor(): JSX.Element | null {
 }
 
 function PropEditors(props: {
-  setActiveComponentProps: (props: PropValues) => void;
   activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
 }) {
-  const { setActiveComponentProps, activeComponentState, propShape } = props;
+  const setActiveComponentProps = useStudioStore(
+    (store) => store.pages.setActiveComponentProps
+  );
+  const { activeComponentState, propShape } = props;
+
   const updateProps = useCallback(
     (propName: string, newPropVal: PropVal) => {
       setActiveComponentProps({
@@ -82,7 +81,7 @@ function PropEditors(props: {
             if (propMetadata.type === PropValueType.Object) {
               console.warn(
                 `Found ${propName} in component ${activeComponentState.componentName} with PropValueType.Object.` +
-                  " Studio does not support editing prop of nested props."
+                  " Studio does not support editing nested props."
               );
               return false;
             }
@@ -115,7 +114,6 @@ function PropEditors(props: {
 function useActiveComponent(): {
   activeComponentMetadata?: FileMetadata;
   activeComponentState?: ComponentState;
-  setActiveComponentProps: (props: PropValues) => void;
 } {
   return useStudioStore((store) => {
     const activeComponentState = store.pages.getActiveComponentState();
@@ -127,7 +125,6 @@ function useActiveComponent(): {
     return {
       activeComponentMetadata,
       activeComponentState,
-      setActiveComponentProps: store.pages.setActiveComponentProps,
     };
   });
 }

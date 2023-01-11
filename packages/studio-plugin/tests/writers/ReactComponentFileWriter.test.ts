@@ -91,7 +91,7 @@ describe("updateFile", () => {
       createReactComponentFileWriter(
         tsMorphProject,
         filepath,
-        "PageWithObjectProp"
+        "IndexPage"
       ).updateFile({
         componentTree: [
           {
