@@ -39,7 +39,8 @@ export default function PropInput({
     if (currentPropValue === undefined) {
       onChange(getPropTypeDefaultValue(propType));
     }
-  });
+  }, [currentPropValue, onChange, propType]);
+
   const propVal = currentPropValue ?? getPropTypeDefaultValue(propType);
 
   switch (propType) {
