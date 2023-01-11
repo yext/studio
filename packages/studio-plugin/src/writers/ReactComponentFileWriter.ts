@@ -75,8 +75,11 @@ export default class ReactComponentFileWriter {
           );
         }
       }
-    ).join("\n");
-    return Writers.returnStatement(elements);
+    );
+    const joinedElements = elements.join("\n");
+    const wrappedElements =
+      elements.length > 1 ? `<>${joinedElements}</>` : joinedElements;
+    return Writers.returnStatement(wrappedElements);
   }
 
   private updateReturnStatement(
