@@ -94,7 +94,10 @@ function ElementTypeButton(props: {
 }
 
 function Option({ metadata }: { metadata: FileMetadata }) {
-  const componentName = path.basename(metadata.filepath, ".tsx");
+  const derivedComponentName = path.basename(metadata.filepath, ".tsx");
+  const componentName = metadata.kind === FileMetadataKind.Component
+    ? metadata.prettyName || derivedComponentName
+    : derivedComponentName;
   const [getActivePageState, setActivePageState] = useStudioStore((store) => {
     return [store.pages.getActivePageState, store.pages.setActivePageState];
   });
@@ -114,6 +117,9 @@ function Option({ metadata }: { metadata: FileMetadata }) {
         props: metadata.initialProps ?? {},
         uuid: v4(),
         metadataUUID: metadata.metadataUUID,
+        prettyName: metadata.kind === FileMetadataKind.Component
+          ? metadata.prettyName
+          : componentName,
       };
       setActivePageState({
         ...activePageState,

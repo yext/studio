@@ -17,7 +17,6 @@
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
     "build": "rm -rf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json",
-    "test": "jest",
     "lint": "eslint . && npm run prettier-check",
     "prettier-write": "prettier --write .",
     "prettier-check": "prettier --check .",

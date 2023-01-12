@@ -1,7 +1,6 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "jsx": "react",
     "module": "CommonJS",
     "outDir": "lib/cjs",
     "types": ["node"]

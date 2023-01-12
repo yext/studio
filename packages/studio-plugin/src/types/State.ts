@@ -36,6 +36,8 @@ export type StandardOrModuleComponentState = {
   metadataUUID: string;
   /** The UUID of the parent component in the tree, if one exists. */
   parentUUID?: string;
+  /** A secondary name of the component, for cosmetic purposes. */
+  prettyName?: string;
 };
 
 type FragmentState = {

@@ -10,7 +10,7 @@ export default function UniversalPage() {
       <Banner />
       <Container>
         <Button />
-        <AceComponent text="Tristan" />
+        <AceComponent text="there" />
       </Container>
       <ContainerWithButtons />
       <Banner nestedProp={{ egg: "eggyweggy" }} />

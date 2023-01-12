@@ -5,6 +5,7 @@ import { FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
+import getNpmPackageName from "../parsers/getNpmPackageName";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -33,15 +34,14 @@ export default class ComponentFile {
       return propName !== SpecialReactProps.Children;
     };
 
+    const filepath = this.studioSourceFileParser.getFilepath();
+
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
-      filepath: this.studioSourceFileParser.getFilepath(),
+      filepath,
+      prettyName: getNpmPackageName(filepath) + this.componentName,
     };
-  }
-
-  setComponentName(name: string) {
-    this.componentName = name;
   }
 }

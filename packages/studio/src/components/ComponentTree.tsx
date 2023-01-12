@@ -168,8 +168,13 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
         case ComponentStateKind.Standard:
           const metadata = getComponentMetadata(componentState.metadataUUID);
 
+          if (metadata.prettyName) {
+            componentState.prettyName = metadata.prettyName;
+          }
+
           return {
             ...commonData,
+            data: componentState,
             droppable: metadata.acceptsChildren,
           };
         default:
