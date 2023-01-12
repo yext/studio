@@ -73,7 +73,7 @@ export default class StudioSourceFileParser {
         else if (path.isAbsolute(importIdentifier)) {
           imports[importIdentifier] = importName;
         } else {
-          const absoluteFilepath = 
+          const absoluteFilepath =
             path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
           imports[absoluteFilepath] = importName;
         }
