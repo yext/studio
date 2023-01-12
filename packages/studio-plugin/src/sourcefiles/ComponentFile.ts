@@ -35,13 +35,14 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
+    const packageName = getNpmPackageName(filepath);
 
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
       filepath,
-      prettyName: getNpmPackageName(filepath) + this.componentName,
+      prettyName: (packageName && packageName + "/") + this.componentName,
     };
   }
 }

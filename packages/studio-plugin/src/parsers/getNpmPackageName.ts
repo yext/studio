@@ -6,7 +6,7 @@ export default function getNpmPackageName(filepath: string): string {
     const packageName = nodeModulesPath.startsWith("@")
       ? [directories[0], directories[1]].join("/")
       : directories[0];
-    return packageName + "/";
+    return packageName;
   }
 
   return "";

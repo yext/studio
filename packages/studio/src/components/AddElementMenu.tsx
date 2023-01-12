@@ -94,10 +94,10 @@ function ElementTypeButton(props: {
 }
 
 function Option({ metadata }: { metadata: FileMetadata }) {
-  const derivedComponentName = path.basename(metadata.filepath, ".tsx");
-  const componentName = metadata.kind === FileMetadataKind.Component
-    ? metadata.prettyName || derivedComponentName
-    : derivedComponentName;
+  const componentName = path.basename(metadata.filepath, ".tsx");
+  const prettyName = metadata.kind === FileMetadataKind.Component
+    ? metadata.prettyName || componentName
+    : componentName;
   const [getActivePageState, setActivePageState] = useStudioStore((store) => {
     return [store.pages.getActivePageState, store.pages.setActivePageState];
   });
@@ -119,7 +119,7 @@ function Option({ metadata }: { metadata: FileMetadata }) {
         metadataUUID: metadata.metadataUUID,
         prettyName: metadata.kind === FileMetadataKind.Component
           ? metadata.prettyName
-          : componentName,
+          : undefined,
       };
       setActivePageState({
         ...activePageState,
@@ -138,7 +138,7 @@ function Option({ metadata }: { metadata: FileMetadata }) {
       onClick={handleClick}
       aria-label={`Add ${componentName} Element`}
     >
-      {componentName}
+      {prettyName}
     </button>
   );
 }
