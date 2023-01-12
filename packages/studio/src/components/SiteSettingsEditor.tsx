@@ -28,15 +28,15 @@ export default function SiteSettingsEditor(): JSX.Element {
   );
 
   return (
-    <EditorGroup values={values} shape={shape} updateValues={updateValues} />
+    <RecursiveEditorGroup values={values} shape={shape} updateValues={updateValues} />
   );
 }
 
 /**
- * EditorGroup renders a particular PropValues and PropShape within SiteSettingsEditor.
+ * RecursiveEditorGroup renders a particular PropValues and PropShape within SiteSettingsEditor.
  * It handles nested SiteSettings by recursively calling itself via ChildEditorGroup.
  */
-function EditorGroup(props: {
+function RecursiveEditorGroup(props: {
   values: PropValues;
   shape: PropShape;
   updateValues: (newValues: PropValues) => void;
@@ -108,7 +108,7 @@ function EditorGroup(props: {
 }
 
 /**
- * ChildEditorGroup is a wrapper around EditorGroup.
+ * ChildEditorGroup is a wrapper around RecursiveEditorGroup.
  * This component is necessary so that handleUpdate can be
  * defined via useCallback.
  */
@@ -137,7 +137,7 @@ function ChildEditorGroup(props: {
   );
 
   return (
-    <EditorGroup
+    <RecursiveEditorGroup
       key={propName}
       values={values}
       shape={shape}
