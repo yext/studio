@@ -9,7 +9,11 @@ import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
 
-export default function SiteSettingsEditor() {
+/**
+ * SiteSettingsEditor renders an editor for SiteSettings.
+ * It supports nested SiteSettings.
+ */
+export default function SiteSettingsEditor(): JSX.Element {
   const [shape, values, setValues] = useStudioStore((store) => [
     store.siteSettings.shape ?? {},
     store.siteSettings.values ?? {},
@@ -28,6 +32,10 @@ export default function SiteSettingsEditor() {
   );
 }
 
+/**
+ * EditorGroup renders a particular PropValues and PropShape within SiteSettingsEditor.
+ * It handles nested SiteSettings by recursively calling itself via ChildEditorGroup.
+ */
 function EditorGroup(props: {
   values: PropValues;
   shape: PropShape;
@@ -99,6 +107,11 @@ function EditorGroup(props: {
   );
 }
 
+/**
+ * ChildEditorGroup is a wrapper around EditorGroup.
+ * This component is necessary so that handleUpdate can be
+ * defined via useCallback.
+ */
 function ChildEditorGroup(props: {
   propName: string;
   shape: PropShape;
@@ -133,7 +146,11 @@ function ChildEditorGroup(props: {
     />
   );
 }
-
+/**
+ * PropInputWrapper is a wrapper around PropInput.
+ * This component is necessary so that handleUpdate can be
+ * defined via useCallback.
+ */
 function PropInputWrapper(props: {
   propName: string;
   value: string | number | boolean;
