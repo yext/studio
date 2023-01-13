@@ -1,5 +1,5 @@
-import { PropMetadata } from './PropShape';
-import { LiteralProp, ObjectProp, PropValues } from './PropValues';
+import { PropMetadata } from "./PropShape";
+import { LiteralProp, ObjectProp, PropValues } from "./PropValues";
 
 export interface SiteSettings {
   shape: SiteSettingsShape;
@@ -8,8 +8,8 @@ export interface SiteSettings {
 
 export type SiteSettingsShape = {
   [key: string]: PropMetadata;
-}
+};
 
 export type SiteSettingsValues = {
   [propName: string]: LiteralProp<SiteSettingsValues>;
-}
+};

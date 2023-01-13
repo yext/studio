@@ -1,4 +1,4 @@
-import { PropValueKind, PropValues, PropValueType } from '../types';
+import { PropValueKind, PropValues, PropValueType } from "../types";
 
 /**
  * Given a PropValues object, parse the object into its raw values.

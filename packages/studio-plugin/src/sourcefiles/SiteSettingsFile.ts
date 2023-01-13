@@ -4,8 +4,8 @@ import PropShapeParser from "../parsers/PropShapeParser";
 import PropValuesParser from "../parsers/PropValuesParser";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
-import { SiteSettings } from '../types/SiteSettings';
-import { TypeGuards } from '../utils';
+import { SiteSettings } from "../types/SiteSettings";
+import { TypeGuards } from "../utils";
 
 /**
  * SiteSettingsFile is responsible for parsing and updating
@@ -33,7 +33,13 @@ export default class SiteSettingsFile {
       throw new Error("No default export found for site settings");
     }
     if (!TypeGuards.isSiteSettingsValues(values)) {
-      throw new Error(`Improperly formatted SiteSettingsValues ${JSON.stringify(values, null, 2)}`)
+      throw new Error(
+        `Improperly formatted SiteSettingsValues ${JSON.stringify(
+          values,
+          null,
+          2
+        )}`
+      );
     }
     return {
       shape: siteSettingsShape,

@@ -16,8 +16,8 @@ const shape: PropShape = {
         type: PropValueType.HexColor,
       },
       secondary: {
-        type: PropValueType.HexColor
-      }
+        type: PropValueType.HexColor,
+      },
     },
   },
   experienceKey: {
@@ -91,8 +91,8 @@ it("can edit site settings", () => {
         secondary: {
           kind: PropValueKind.Literal,
           value: "#FFEEFF",
-          valueType: PropValueType.HexColor
-        }
+          valueType: PropValueType.HexColor,
+        },
       },
     },
   });

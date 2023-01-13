@@ -13,7 +13,7 @@ import {
   PropValueType,
   SiteSettingsValues,
   StandardOrModuleComponentState,
-  ObjectProp
+  ObjectProp,
 } from "../types";
 
 import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
@@ -116,13 +116,18 @@ export default class TypeGuards {
     );
   }
 
-  static isSiteSettingsValues(propValues: PropValues): propValues is SiteSettingsValues {
+  static isSiteSettingsValues(
+    propValues: PropValues
+  ): propValues is SiteSettingsValues {
     for (const val of Object.values(propValues)) {
       if (val.kind === PropValueKind.Expression) {
-        return false
+        return false;
       }
-      if (val.valueType === PropValueType.Object && !TypeGuards.isSiteSettingsValues(val.value)) {
-        return false
+      if (
+        val.valueType === PropValueType.Object &&
+        !TypeGuards.isSiteSettingsValues(val.value)
+      ) {
+        return false;
       }
     }
     return true;
