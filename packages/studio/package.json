@@ -7,7 +7,7 @@
     "studio": "./lib/bin/studio.js"
   },
   "scripts": {
-    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json >/dev/null",
+    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
     "build": "rm -rf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json && chmod 755 lib/bin/studio.js",
     "preview": "vite preview",
     "lint": "eslint . && npm run prettier-check",

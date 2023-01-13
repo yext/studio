@@ -5,10 +5,10 @@ import {
   SiteSettingsShape,
   ObjectProp,
   NestedPropMetadata,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import React, { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
-import createLiteralProp from '../utils/createLiteralProp';
 import PropInput from "./PropInput";
 
 /**
@@ -72,7 +72,7 @@ function renderSiteSettings(
   updateValues: (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => void
 ) {
   const sortedShape = Object.entries(siteSettingsShape).sort(([_, firstMetadata]) => {
-    return firstMetadata.type === PropValueType.Object ? 1 : 0;
+    return firstMetadata.type === PropValueType.Object ? -1 : 1;
   });
 
   return sortedShape.map(([propName, propMetadata], index) => {
@@ -83,6 +83,7 @@ function renderSiteSettings(
 
     const shouldRenderDivider = index < sortedShape.length - 1;
     return <React.Fragment key={propName}>
+      <div className="font-bold px-2 pb-2">{propName}</div>
       <RecursiveEditorGroup
         propName={propName}
         propVal={propVal}
@@ -103,7 +104,14 @@ function SimplePropInput(props: {
 }) {
   const { propVal, updateValues, propName } = props;
   const handleUpdate = useCallback((rawValue: SimpleProp["value"]) => {
-    const updatedValue = createLiteralProp<SiteSettingsValues>(rawValue);
+    const updatedValue = {
+      ...propVal,
+      value: rawValue
+    };
+    if (!TypeGuards.isValidPropValue(updatedValue)) {
+      console.error("Invalid PropVal when updating SiteSettings:", updatedValue);
+      return null;
+    }
     updateValues(propName, updatedValue);
   },
   [propName, updateValues]);
