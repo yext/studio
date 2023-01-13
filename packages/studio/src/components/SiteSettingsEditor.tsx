@@ -152,7 +152,7 @@ function SimplePropInput(props: {
       }
       updateValues(propName, updatedValue);
     },
-    [propName, updateValues]
+    [propName, updateValues, propVal]
   );
 
   return (

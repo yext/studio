@@ -13,7 +13,6 @@ import {
   PropValueType,
   SiteSettingsValues,
   StandardOrModuleComponentState,
-  ObjectProp,
 } from "../types";
 
 import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";

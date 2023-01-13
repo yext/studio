@@ -1,9 +1,4 @@
-import {
-  PropShape,
-  PropValues,
-  SiteSettingsShape,
-  SiteSettingsValues,
-} from "@yext/studio-plugin";
+import { SiteSettingsShape, SiteSettingsValues } from "@yext/studio-plugin";
 
 export interface SiteSettingSliceStates {
   /** Metadata outlining site settings' interface properties. */
