@@ -1,12 +1,14 @@
 import {
-  PropVal,
   PropValueType,
-  PropValues,
-  PropValueKind,
-  PropShape,
+  SiteSettingsValues,
+  LiteralProp,
+  SiteSettingsShape,
+  ObjectProp,
+  NestedPropMetadata,
 } from "@yext/studio-plugin";
-import { useCallback } from "react";
+import React, { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
+import createLiteralProp from '../utils/createLiteralProp';
 import PropInput from "./PropInput";
 
 /**
@@ -14,168 +16,105 @@ import PropInput from "./PropInput";
  * It supports nested SiteSettings.
  */
 export default function SiteSettingsEditor(): JSX.Element {
-  const [shape, values, setValues] = useStudioStore((store) => [
+  const [siteSettingsShape, siteSettingsValues, setValues] = useStudioStore((store) => [
     store.siteSettings.shape ?? {},
     store.siteSettings.values ?? {},
     store.siteSettings.setValues,
   ]);
 
   const updateValues = useCallback(
-    (newValues: PropValues) => {
-      setValues({ ...values, ...newValues });
+    (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
+      setValues({ ...siteSettingsValues, [propName]: updatedProp });
     },
-    [values, setValues]
+    [siteSettingsValues, setValues]
   );
-
-  return (
-    <RecursiveEditorGroup values={values} shape={shape} updateValues={updateValues} />
-  );
-}
-
-/**
- * RecursiveEditorGroup renders a particular PropValues and PropShape within SiteSettingsEditor.
- * It handles nested SiteSettings by recursively calling itself via ChildEditorGroup.
- */
-function RecursiveEditorGroup(props: {
-  values: PropValues;
-  shape: PropShape;
-  updateValues: (newValues: PropValues) => void;
-  parentPropName?: string;
-}) {
-  const { values, shape, updateValues, parentPropName } = props;
-  const childEditorGroups = Object.entries(shape).map(
-    ([propName, propMetadata]) => {
-      const { valueType, value } = values[propName];
-      if (
-        valueType !== PropValueType.Object ||
-        propMetadata.type !== PropValueType.Object
-      ) {
-        return null;
-      }
-
-      return (
-        <ChildEditorGroup
-          propName={propName}
-          values={value}
-          shape={propMetadata.shape}
-          updateValues={updateValues}
-          key={propName}
-        />
-      );
-    }
-  );
-
-  const propInputs = Object.entries(shape).map(([propName, propMetadata]) => {
-    const { kind, valueType, value } = values[propName];
-
-    if (
-      valueType === PropValueType.Object ||
-      propMetadata.type === PropValueType.Object ||
-      kind !== PropValueKind.Literal
-    ) {
-      return null;
-    }
-
-    return (
-      <PropInputWrapper
-        propName={propName}
-        value={value}
-        valueType={valueType}
-        updateValues={updateValues}
-        key={propName}
-      />
-    );
-  });
 
   return (
     <div>
-      {parentPropName && (
-        <div className="font-bold px-2 pb-2">{parentPropName}</div>
-      )}
-      {[...childEditorGroups, ...propInputs]
-        .filter((jsx) => !!jsx)
-        .reduce((prev, curr, index) => {
-          if (prev.length > 0) {
-            prev.push(
-              <hr className="bg-gray-300 h-0.5 rounded-md my-4" key={index} />
-            );
-          }
-          prev.push(curr);
-          return prev;
-        }, [] as (JSX.Element | null)[])}
+      {renderSiteSettings(siteSettingsShape, siteSettingsValues, updateValues)}
     </div>
   );
 }
 
 /**
- * ChildEditorGroup is a wrapper around RecursiveEditorGroup.
- * This component is necessary so that handleUpdate can be
- * defined via useCallback.
+ * RecursiveEditorGroup renders a particular SiteSettingsValues and SiteSettingsShape within SiteSettingsEditor.
+ * It handles nested SiteSettings by recursively calling itself via ChildEditorGroup.
  */
-function ChildEditorGroup(props: {
+function RecursiveEditorGroup(props: {
+  propVal: ObjectProp<SiteSettingsValues>;
+  propMetadata: NestedPropMetadata;
+  updateValues: (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => void;
   propName: string;
-  shape: PropShape;
-  values: PropValues;
-  updateValues: (newValues: PropValues) => void;
 }) {
-  const { propName, shape, values, updateValues } = props;
+  const { propMetadata, updateValues, propName, propVal } = props;
 
-  const handleUpdate = useCallback(
-    (newValues: PropValues) => {
-      updateValues({
-        [propName]: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.Object,
-          value: {
-            ...values,
-            ...newValues,
-          },
-        },
+  const updateChildValues = useCallback(
+    (childPropName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
+      updateValues(propName, {
+        ...propVal,
+        value: {
+          ...propVal.value,
+          [childPropName]: updatedProp
+        }
       });
     },
-    [propName, values, updateValues]
+    [updateValues, propName, propVal]
   );
 
   return (
-    <RecursiveEditorGroup
-      key={propName}
-      values={values}
-      shape={shape}
-      updateValues={handleUpdate}
-      parentPropName={propName}
-    />
+    <>{renderSiteSettings(propMetadata.shape, propVal.value, updateChildValues)}</>
   );
 }
-/**
- * PropInputWrapper is a wrapper around PropInput.
- * This component is necessary so that handleUpdate can be
- * defined via useCallback.
- */
-function PropInputWrapper(props: {
-  propName: string;
-  value: string | number | boolean;
-  valueType: PropValueType;
-  updateValues: (newValues: PropValues) => void;
-}) {
-  const { propName, updateValues, valueType, value } = props;
 
-  const handleChange = useCallback((val: string | number | boolean) => {
-    updateValues({
-      [propName]: {
-        kind: PropValueKind.Literal,
-        valueType: valueType,
-        value: val,
-      } as PropVal,
-    });
-  }, [propName, updateValues, valueType]);
+function renderSiteSettings(
+  siteSettingsShape: SiteSettingsShape,
+  siteSettingsValues: SiteSettingsValues,
+  updateValues: (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => void
+) {
+  const sortedShape = Object.entries(siteSettingsShape).sort(([_, firstMetadata]) => {
+    return firstMetadata.type === PropValueType.Object ? 1 : 0;
+  });
+
+  return sortedShape.map(([propName, propMetadata], index) => {
+    const propVal = siteSettingsValues[propName];
+    if (propVal.valueType !== PropValueType.Object) {
+      return <SimplePropInput key={propName} propName={propName} propVal={propVal} updateValues={updateValues}/>
+    }
+
+    const shouldRenderDivider = index < sortedShape.length - 1;
+    return <React.Fragment key={propName}>
+      <RecursiveEditorGroup
+        propName={propName}
+        propVal={propVal}
+        propMetadata={propMetadata as NestedPropMetadata}
+        updateValues={updateValues}
+      />
+      {shouldRenderDivider && <hr className="bg-gray-300 h-0.5 rounded-md my-4" />}
+    </React.Fragment>
+  })
+}
+
+type SimpleProp = Exclude<LiteralProp<SiteSettingsValues>, ObjectProp<SiteSettingsValues>>
+
+function SimplePropInput(props: {
+  propVal: SimpleProp;
+  updateValues: (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => void;
+  propName: string;
+}) {
+  const { propVal, updateValues, propName } = props;
+  const handleUpdate = useCallback((rawValue: SimpleProp["value"]) => {
+    const updatedValue = createLiteralProp<SiteSettingsValues>(rawValue);
+    updateValues(propName, updatedValue);
+  },
+  [propName, updateValues]);
 
   return (
     <label className="flex h-10 items-center" id={propName} key={propName}>
       <span className="px-2">{propName}</span>
       <PropInput
-        propType={valueType}
-        currentPropValue={value}
-        onChange={handleChange}
+        propType={propVal.valueType}
+        currentPropValue={propVal.value}
+        onChange={handleUpdate}
       />
     </label>
   );

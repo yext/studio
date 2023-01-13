@@ -1,10 +1,10 @@
 import path from "path";
-import { FileMetadata, UserPaths, StudioData, PageState } from "./types";
+import { FileMetadata, UserPaths, StudioData, PageState, SiteSettings } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
 import PageFile from "./sourcefiles/PageFile";
-import SiteSettingsFile, { SiteSettings } from "./sourcefiles/SiteSettingsFile";
+import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 

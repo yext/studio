@@ -8,3 +8,4 @@ export * from "./StudioData";
 export * from "./UserPaths";
 export * from "./StudioConfig";
 export * from "./messages";
+export * from "./SiteSettings";

@@ -15,7 +15,7 @@
     }
   },
   "scripts": {
-    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.esm.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
+    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.esm.json & tsc --watch --preserveWatchOutput -p tsconfig.json >/dev/null",
     "build": "rm -rf lib && tsc -p tsconfig.esm.json && tsc -p tsconfig.json",
     "test": "jest",
     "lint": "eslint . && npm run prettier-check",
