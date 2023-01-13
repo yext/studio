@@ -123,10 +123,10 @@ export default class TypeGuards {
       if (val.kind === PropValueKind.Expression) {
         return false;
       }
-      if (
+      const isInvalidObject =
         val.valueType === PropValueType.Object &&
-        !TypeGuards.isSiteSettingsValues(val.value)
-      ) {
+        !TypeGuards.isSiteSettingsValues(val.value);
+      if (isInvalidObject) {
         return false;
       }
     }

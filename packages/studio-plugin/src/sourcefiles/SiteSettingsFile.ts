@@ -33,12 +33,9 @@ export default class SiteSettingsFile {
       throw new Error("No default export found for site settings");
     }
     if (!TypeGuards.isSiteSettingsValues(values)) {
+      const stringifiedValues = JSON.stringify(values, null, 2);
       throw new Error(
-        `Improperly formatted SiteSettingsValues ${JSON.stringify(
-          values,
-          null,
-          2
-        )}`
+        `Improperly formatted SiteSettingsValues ${stringifiedValues}`
       );
     }
     return {
