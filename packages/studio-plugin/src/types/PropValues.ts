@@ -4,11 +4,9 @@ export type PropValues = {
 
 export type PropVal = LiteralProp | ExpressionProp;
 
-export type LiteralProp<T = PropValues> =
-  | ({
-      kind: PropValueKind.Literal;
-    } & (NumberProp | StringProp | BooleanProp | HexColorProp))
-  | ObjectProp<T>;
+export type LiteralProp<T = PropValues> = {
+  kind: PropValueKind.Literal;
+} & (NumberProp | StringProp | BooleanProp | HexColorProp | ObjectProp<T>);
 
 export type ExpressionProp = {
   kind: PropValueKind.Expression;
