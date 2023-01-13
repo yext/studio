@@ -12,8 +12,7 @@ import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
 
 /**
- * SiteSettingsEditor renders an editor for SiteSettings.
- * It supports nested SiteSettings.
+ * SiteSettingsEditor renders an editor for SiteSettings, and supports nested SiteSettings.
  */
 export default function SiteSettingsEditor(): JSX.Element {
   const [siteSettingsShape, siteSettingsValues, setValues] = useStudioStore(
@@ -39,40 +38,11 @@ export default function SiteSettingsEditor(): JSX.Element {
 }
 
 /**
- * RecursiveEditorGroup renders a particular SiteSettingsValues and SiteSettingsShape within SiteSettingsEditor.
- * It handles nested SiteSettings by recursively calling itself via ChildEditorGroup.
+ * Renders the given SiteSettingsShape and SiteSettingsValues.
+ *
+ * Sorts the SiteSettingsShape so that site settings values that are
+ * objects are rendered first.
  */
-function RecursiveEditorGroup(props: {
-  propVal: ObjectProp<SiteSettingsValues>;
-  propMetadata: NestedPropMetadata;
-  updateValues: (
-    propName: string,
-    updatedProp: LiteralProp<SiteSettingsValues>
-  ) => void;
-  propName: string;
-}) {
-  const { propMetadata, updateValues, propName, propVal } = props;
-
-  const updateChildValues = useCallback(
-    (childPropName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
-      updateValues(propName, {
-        ...propVal,
-        value: {
-          ...propVal.value,
-          [childPropName]: updatedProp,
-        },
-      });
-    },
-    [updateValues, propName, propVal]
-  );
-
-  return (
-    <>
-      {renderSiteSettings(propMetadata.shape, propVal.value, updateChildValues)}
-    </>
-  );
-}
-
 function renderSiteSettings(
   siteSettingsShape: SiteSettingsShape,
   siteSettingsValues: SiteSettingsValues,
@@ -104,7 +74,7 @@ function renderSiteSettings(
     return (
       <React.Fragment key={propName}>
         <div className="font-bold px-2 pb-2">{propName}</div>
-        <RecursiveEditorGroup
+        <RecursiveGroup
           propName={propName}
           propVal={propVal}
           propMetadata={propMetadata as NestedPropMetadata}
@@ -116,6 +86,41 @@ function renderSiteSettings(
       </React.Fragment>
     );
   });
+}
+
+/**
+ * RecursiveGroup renders a sub-grouping of SiteSettings.
+ * It handles nested SiteSettings by recursively calling itself via renderSiteSettings.
+ */
+function RecursiveGroup(props: {
+  propVal: ObjectProp<SiteSettingsValues>;
+  propMetadata: NestedPropMetadata;
+  updateValues: (
+    propName: string,
+    updatedProp: LiteralProp<SiteSettingsValues>
+  ) => void;
+  propName: string;
+}) {
+  const { propMetadata, updateValues, propName, propVal } = props;
+
+  const updateChildValues = useCallback(
+    (childPropName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
+      updateValues(propName, {
+        ...propVal,
+        value: {
+          ...propVal.value,
+          [childPropName]: updatedProp,
+        },
+      });
+    },
+    [updateValues, propName, propVal]
+  );
+
+  return (
+    <>
+      {renderSiteSettings(propMetadata.shape, propVal.value, updateChildValues)}
+    </>
+  );
 }
 
 type SimpleProp = Exclude<
