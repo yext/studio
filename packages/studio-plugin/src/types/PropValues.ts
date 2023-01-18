@@ -2,11 +2,11 @@ export type PropValues = {
   [propName: string]: PropVal;
 };
 
-export type PropVal = LiteralProp | ExpressionProp | ObjectProp;
+export type PropVal = LiteralProp | ExpressionProp;
 
-export type LiteralProp = {
+export type LiteralProp<T = PropValues> = {
   kind: PropValueKind.Literal;
-} & (NumberProp | StringProp | BooleanProp | HexColorProp);
+} & (NumberProp | StringProp | BooleanProp | HexColorProp | ObjectProp<T>);
 
 export type ExpressionProp = {
   kind: PropValueKind.Expression;
@@ -40,10 +40,10 @@ export type BooleanProp = {
   valueType: PropValueType.boolean;
   value: boolean;
 };
-export type ObjectProp = {
+export type ObjectProp<T> = {
   kind: PropValueKind.Literal;
   valueType: PropValueType.Object;
-  value: PropValues;
+  value: T;
 };
 // Used in component outside Studio to represent a hex color prop in Studio preview.
 export type HexColor = `#${string}`;

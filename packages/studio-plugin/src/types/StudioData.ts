@@ -1,5 +1,5 @@
-import { SiteSettings } from "../sourcefiles/SiteSettingsFile";
 import { FileMetadata } from "./FileMetadata";
+import { SiteSettings } from "./SiteSettings";
 import { PageState } from "./State";
 import { UserPaths } from "./UserPaths";
 

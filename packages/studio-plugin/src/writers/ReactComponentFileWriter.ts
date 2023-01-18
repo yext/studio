@@ -18,7 +18,7 @@ import {
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
-import { transformPropValuesToRaw } from '../utils';
+import { transformPropValuesToRaw } from "../utils";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -41,11 +41,7 @@ export default class ReactComponentFileWriter {
   private createProps(props: PropValues): string {
     let propsString = "";
     Object.keys(props).forEach((propName) => {
-      const {
-        kind,
-        valueType: propType,
-        value
-      } = props[propName];
+      const { kind, valueType: propType, value } = props[propName];
 
       if (
         kind === PropValueKind.Literal &&
@@ -54,7 +50,9 @@ export default class ReactComponentFileWriter {
       ) {
         propsString += `${propName}='${value}' `;
       } else if (propType === PropValueType.Object) {
-        propsString += `${propName}={${JSON.stringify(transformPropValuesToRaw(value))}}`;
+        propsString += `${propName}={${JSON.stringify(
+          transformPropValuesToRaw(value)
+        )}}`;
       } else {
         propsString += `${propName}={${value}} `;
       }

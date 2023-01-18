@@ -4,11 +4,8 @@ import PropShapeParser from "../parsers/PropShapeParser";
 import PropValuesParser from "../parsers/PropValuesParser";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
-
-export interface SiteSettings {
-  shape: PropShape;
-  values: PropValues;
-}
+import { SiteSettings } from "../types/SiteSettings";
+import { TypeGuards } from "../utils";
 
 /**
  * SiteSettingsFile is responsible for parsing and updating
@@ -34,6 +31,12 @@ export default class SiteSettingsFile {
     const values = this.propValuesParser.parsePropValues(siteSettingsShape);
     if (!values) {
       throw new Error("No default export found for site settings");
+    }
+    if (!TypeGuards.isSiteSettingsValues(values)) {
+      const stringifiedValues = JSON.stringify(values, null, 2);
+      throw new Error(
+        `Improperly formatted SiteSettingsValues ${stringifiedValues}`
+      );
     }
     return {
       shape: siteSettingsShape,

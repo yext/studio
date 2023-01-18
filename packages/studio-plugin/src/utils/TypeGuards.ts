@@ -9,7 +9,9 @@ import {
   ComponentStateKind,
   PropVal,
   PropValueKind,
+  PropValues,
   PropValueType,
+  SiteSettingsValues,
   StandardOrModuleComponentState,
 } from "../types";
 
@@ -111,5 +113,22 @@ export default class TypeGuards {
       componentState.kind === ComponentStateKind.Module ||
       componentState.kind === ComponentStateKind.Standard
     );
+  }
+
+  static isSiteSettingsValues(
+    propValues: PropValues
+  ): propValues is SiteSettingsValues {
+    for (const val of Object.values(propValues)) {
+      if (val.kind === PropValueKind.Expression) {
+        return false;
+      }
+      const isInvalidObject =
+        val.valueType === PropValueType.Object &&
+        !TypeGuards.isSiteSettingsValues(val.value);
+      if (isInvalidObject) {
+        return false;
+      }
+    }
+    return true;
   }
 }

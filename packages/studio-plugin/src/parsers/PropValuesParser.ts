@@ -1,11 +1,6 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../types/PropShape";
-import {
-  PropVal,
-  PropValueKind,
-  PropValues,
-  PropValueType,
-} from "../types/PropValues";
+import { PropValueKind, PropValues, PropValueType } from "../types/PropValues";
 import StaticParsingHelpers, {
   ParsedObjectLiteral,
 } from "../parsers/helpers/StaticParsingHelpers";
