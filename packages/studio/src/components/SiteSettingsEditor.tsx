@@ -12,7 +12,8 @@ import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
 
 /**
- * SiteSettingsEditor renders an editor for SiteSettings, and supports nested SiteSettings.
+ * SiteSettingsEditor renders an editor for SiteSettings.
+ * It supports SiteSettings that contain nested objects.
  */
 export default function SiteSettingsEditor(): JSX.Element {
   const [siteSettingsShape, siteSettingsValues, setValues] = useStudioStore(
