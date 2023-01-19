@@ -188,10 +188,6 @@ export default class ParsingOrchestrator {
     return this.siteSettingsFile.getSiteSettings();
   }
 
-  private getSiteSettingsFile() {
-    return this.siteSettingsFile;
-  }
-
   /**
    * Updates the user's site settings file.
    * Assumes that this.siteSettingsFile already exists.

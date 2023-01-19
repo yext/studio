@@ -195,6 +195,9 @@ export default class StudioSourceFileWriter {
     );
   }
 
+  /**
+   * Returns the prop value when writing a props object literal.
+   */
   private getPropValueWriter({
     valueType,
     value,
