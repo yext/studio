@@ -37,7 +37,7 @@ export default function registerCommitChangesListener(
           );
         })
       );
-      if (siteSettings) {
+      if (siteSettings?.values) {
         fileManager.updateSiteSettings(siteSettings.values);
       }
 
