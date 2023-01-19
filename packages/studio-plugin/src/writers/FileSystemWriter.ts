@@ -1,5 +1,9 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
-import { ModuleMetadata, PageState, PropValues, SiteSettingsValues } from "../types";
+import {
+  ModuleMetadata,
+  PageState,
+  SiteSettingsValues,
+} from "../types";
 
 /**
  * FileSystemWriter is a class for housing content modification logic

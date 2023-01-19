@@ -14,7 +14,7 @@ import sendMessage from "../messaging/sendMessage";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
-import createPreviousCommitSlice from './slices/createPreviousCommitSlice';
+import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
 
 enableMapSet();
 
@@ -75,8 +75,8 @@ const useStudioStore = create<StudioStore>()(
         set((s) => {
           const previousCommitState = cloneDeep({
             siteSettings: {
-              values: get().siteSettings.values
-            }
+              values: get().siteSettings.values,
+            },
           });
           s.previousCommit = previousCommitState;
         });
@@ -88,7 +88,7 @@ const useStudioStore = create<StudioStore>()(
         siteSettings: lens(createSiteSettingSlice),
         commitChanges,
         createModule: getCreateModuleAction(get),
-        previousCommit: lens(createPreviousCommitSlice)
+        previousCommit: lens(createPreviousCommitSlice),
       };
     })
   )

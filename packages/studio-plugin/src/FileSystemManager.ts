@@ -1,4 +1,10 @@
-import { ModuleMetadata, PageState, PropValues, SiteSettingsValues, UserPaths } from "./types";
+import {
+  ModuleMetadata,
+  PageState,
+  PropValues,
+  SiteSettingsValues,
+  UserPaths,
+} from "./types";
 import fs from "fs";
 import path from "path";
 import { Project } from "ts-morph";
