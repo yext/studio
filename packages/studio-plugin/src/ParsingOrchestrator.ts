@@ -4,6 +4,7 @@ import {
   UserPaths,
   StudioData,
   PageState,
+  SiteSettingsValues,
   SiteSettings,
 } from "./types";
 import fs from "fs";
@@ -30,6 +31,7 @@ export default class ParsingOrchestrator {
   private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private localDataMapping?: Record<string, string[]>;
+  private siteSettingsFile?: SiteSettingsFile;
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -176,10 +178,21 @@ export default class ParsingOrchestrator {
     if (!fs.existsSync(this.paths.siteSettings)) {
       return;
     }
-    const siteSettingsFile = new SiteSettingsFile(
-      this.paths.siteSettings,
-      this.project
-    );
-    return siteSettingsFile.getSiteSettings();
+
+    if (!this.siteSettingsFile) {
+      this.siteSettingsFile = new SiteSettingsFile(
+        this.paths.siteSettings,
+        this.project
+      );
+    }
+    return this.siteSettingsFile.getSiteSettings();
+  }
+
+  /**
+   * Updates the user's site settings file.
+   * Assumes that this.siteSettingsFile already exists.
+   */
+  updateSiteSettings(siteSettingsValues: SiteSettingsValues): void {
+    this.siteSettingsFile?.updateSiteSettingValues(siteSettingsValues);
   }
 }

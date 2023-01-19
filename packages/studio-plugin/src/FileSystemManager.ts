@@ -1,4 +1,9 @@
-import { ModuleMetadata, PageState, UserPaths } from "./types";
+import {
+  ModuleMetadata,
+  PageState,
+  SiteSettingsValues,
+  UserPaths,
+} from "./types";
 import fs from "fs";
 import path from "path";
 import { Project } from "ts-morph";
@@ -31,9 +36,7 @@ export default class FileSystemManager {
 
   async updatePageFile(filepath: string, pageState: PageState): Promise<void> {
     if (filepath.startsWith(this.paths.pages)) {
-      if (!fs.existsSync(filepath)) {
-        fs.openSync(filepath, "w");
-      }
+      FileSystemManager.openFile(filepath);
       return this.writer.writeToPageFile(
         path.basename(filepath, ".tsx"),
         pageState
@@ -48,15 +51,23 @@ export default class FileSystemManager {
 
   updateModuleFile(filepath: string, moduleMetadata: ModuleMetadata) {
     if (filepath.startsWith(this.paths.modules)) {
-      if (!fs.existsSync(filepath)) {
-        fs.openSync(filepath, "w");
-      }
+      FileSystemManager.openFile(filepath);
       return this.writer.writeToModuleFile(filepath, moduleMetadata);
     } else {
       throw new Error(
         `Cannot update module file: filepath "${filepath}" is not within the` +
           ` expected path for modules "${this.paths.modules}".`
       );
+    }
+  }
+
+  updateSiteSettings(siteSettingsValues: SiteSettingsValues) {
+    this.writer.writeToSiteSettings(siteSettingsValues);
+  }
+
+  private static openFile(filepath: string) {
+    if (!fs.existsSync(filepath)) {
+      fs.openSync(filepath, "w");
     }
   }
 }

@@ -1,3 +1,4 @@
+import { SiteSettingsValues } from "./SiteSettings";
 import { StudioData } from "./StudioData";
 
 export enum MessageID {
@@ -10,6 +11,9 @@ export interface CommitChangesEventPayload
     pagesToRemove: string[];
     pagesToUpdate: string[];
     modulesToUpdate: string[];
+  };
+  siteSettings: {
+    values?: SiteSettingsValues;
   };
 }
 

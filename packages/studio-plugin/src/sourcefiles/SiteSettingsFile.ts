@@ -1,10 +1,10 @@
 import { Project } from "ts-morph";
-import { PropShape, PropValues } from "../types";
+import { PropShape } from "../types";
 import PropShapeParser from "../parsers/PropShapeParser";
 import PropValuesParser from "../parsers/PropValuesParser";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
-import { SiteSettings } from "../types/SiteSettings";
+import { SiteSettings, SiteSettingsValues } from "../types/SiteSettings";
 import { TypeGuards } from "../utils";
 
 /**
@@ -50,7 +50,7 @@ export default class SiteSettingsFile {
    *
    * @param values - the updated site settings' values
    */
-  updateSiteSettingValues(values: PropValues) {
+  updateSiteSettingValues(values: SiteSettingsValues) {
     const exportContent =
       this.studioSourceFileWriter.createPropsObjectLiteralWriter(values);
     this.studioSourceFileWriter.updateDefaultExport(exportContent);

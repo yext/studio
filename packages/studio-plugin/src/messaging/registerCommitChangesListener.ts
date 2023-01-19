@@ -11,7 +11,12 @@ export default function registerCommitChangesListener(
   registerListener(
     server,
     MessageID.StudioCommitChanges,
-    async ({ pageNameToPageState, pendingChanges, UUIDToFileMetadata }) => {
+    async ({
+      pageNameToPageState,
+      pendingChanges,
+      UUIDToFileMetadata,
+      siteSettings,
+    }) => {
       pendingChanges.pagesToRemove.forEach((pageToRemove) => {
         const filepath =
           path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
@@ -32,6 +37,10 @@ export default function registerCommitChangesListener(
           );
         })
       );
+      if (siteSettings?.values) {
+        fileManager.updateSiteSettings(siteSettings.values);
+      }
+
       return "Changes saved successfully.";
     }
   );

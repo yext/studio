@@ -12,7 +12,7 @@ import {
 } from "ts-morph";
 import prettier from "prettier";
 import fs from "fs";
-import { PropValueKind, PropValues, PropValueType } from "../types";
+import { PropVal, PropValueKind, PropValues, PropValueType } from "../types";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -179,22 +179,38 @@ export default class StudioSourceFileWriter {
   createPropsObjectLiteralWriter(props: PropValues): WriterFunction {
     return Writers.object(
       Object.entries(props).reduce((obj, entry) => {
-        const [propName, { kind, valueType, value }] = entry;
-        if (kind === PropValueKind.Expression) {
+        const [propName, propVal] = entry;
+        if (propVal.kind === PropValueKind.Expression) {
           throw new Error(
             `PropVal ${propName} in ${this.filepath} is of kind PropValueKind.Expression.` +
               " PropValueKind.Expression in ObjectLiteralExpression is currently not supported."
           );
         }
-        const propValue =
-          valueType === PropValueType.string ||
-          valueType === PropValueType.HexColor
-            ? `'${value}'`
-            : value.toString();
-        obj[propName] = propValue;
+        // Writers.object does not automatically wrap keys in quotes that need it.
+        // Our linting step will remove unnecessary quotes if desired.
+        const propNameWithQuotes = `"${propName}"`;
+        obj[propNameWithQuotes] = this.getPropValueWriter(propVal);
         return obj;
       }, {})
     );
+  }
+
+  /**
+   * Returns the prop value when writing a props object literal.
+   */
+  private getPropValueWriter({
+    valueType,
+    value,
+  }: PropVal): WriterFunction | string {
+    switch (valueType) {
+      case PropValueType.string:
+      case PropValueType.HexColor:
+        return `'${value}'`;
+      case PropValueType.Object:
+        return this.createPropsObjectLiteralWriter(value);
+      default:
+        return value.toString();
+    }
   }
 
   /**
