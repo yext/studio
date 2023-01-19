@@ -11,7 +11,12 @@ export default function registerCommitChangesListener(
   registerListener(
     server,
     MessageID.StudioCommitChanges,
-    async ({ pageNameToPageState, pendingChanges, UUIDToFileMetadata, siteSettings }) => {
+    async ({
+      pageNameToPageState,
+      pendingChanges,
+      UUIDToFileMetadata,
+      siteSettings,
+    }) => {
       pendingChanges.pagesToRemove.forEach((pageToRemove) => {
         const filepath =
           path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";

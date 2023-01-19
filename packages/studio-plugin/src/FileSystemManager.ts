@@ -1,4 +1,4 @@
-import { ModuleMetadata, PageState, PropValues, UserPaths } from "./types";
+import { ModuleMetadata, PageState, PropValues, SiteSettingsValues, UserPaths } from "./types";
 import fs from "fs";
 import path from "path";
 import { Project } from "ts-morph";
@@ -56,7 +56,7 @@ export default class FileSystemManager {
     }
   }
 
-  updateSiteSettings(siteSettingsValues: PropValues) {
+  updateSiteSettings(siteSettingsValues: SiteSettingsValues) {
     this.writer.writeToSiteSettings(siteSettingsValues);
   }
 

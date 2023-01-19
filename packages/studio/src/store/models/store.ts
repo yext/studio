@@ -1,5 +1,7 @@
+import { SiteSettingsValues } from '@yext/studio-plugin';
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
+import PreviousCommitSlice from './slices/PreviousCommitSlice';
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
 
 /**
@@ -13,4 +15,5 @@ export interface StudioStore {
   siteSettings: SiteSettingSlice;
   commitChanges: () => void;
   createModule: (filepath: string) => boolean;
+  previousCommit: PreviousCommitSlice
 }

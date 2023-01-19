@@ -1,5 +1,12 @@
 import path from "path";
-import { FileMetadata, UserPaths, StudioData, PageState, PropValues } from "./types";
+import {
+  FileMetadata,
+  UserPaths,
+  StudioData,
+  PageState,
+  PropValues,
+  SiteSettingsValues,
+} from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
 import ModuleFile from "./sourcefiles/ModuleFile";
@@ -184,7 +191,7 @@ export default class ParsingOrchestrator {
     return this.siteSettingsFile;
   }
 
-  updateSiteSettings(siteSettingsValues: PropValues): void {
+  updateSiteSettings(siteSettingsValues: SiteSettingsValues): void {
     this.getSiteSettingsFile().updateSiteSettingValues(siteSettingsValues);
   }
 }

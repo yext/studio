@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import useStudioStore from "../store/useStudioStore";
 import classNames from "classnames";
+import { isEqual } from 'lodash';
 
 /**
  * Renders a button for committing changes to user's files.
@@ -12,12 +13,22 @@ export default function CommitChangesButton() {
   const { modulesToUpdate } = useStudioStore(
     (store) => store.fileMetadatas.pendingChanges
   );
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const previousCommit = useStudioStore(
+    (store) => store.previousCommit
+  );
+  const siteSettingsValues = useStudioStore(
+    (store) => store.siteSettings.values
+  );
   const commitChangesAction = useStudioStore((store) => store.commitChanges);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+  const siteSettingsHaveChanged = previousCommit && !isEqual(previousCommit?.siteSettings?.values, siteSettingsValues);
+  console.log(siteSettingsHaveChanged, previousCommit, previousCommit?.siteSettings?.values, siteSettingsValues)
   const hasPendingChanges =
     pagesToRemove.size > 0 ||
     pagesToUpdate.size > 0 ||
-    modulesToUpdate.size > 0;
+    modulesToUpdate.size > 0 ||
+    siteSettingsHaveChanged;
 
   useEffect(() => {
     setIsButtonDisabled(!hasPendingChanges);

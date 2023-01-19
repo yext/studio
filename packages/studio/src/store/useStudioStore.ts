@@ -3,7 +3,7 @@ import { withLenses, lens } from "@dhmk/zustand-lens";
 import { immer } from "zustand/middleware/immer";
 import { enableMapSet } from "immer";
 import { temporal } from "zundo";
-import { throttle, isEqual } from "lodash";
+import { throttle, isEqual, cloneDeep } from "lodash";
 
 import { StudioStore } from "./models/store";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
@@ -14,6 +14,7 @@ import sendMessage from "../messaging/sendMessage";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
+import createPreviousCommitSlice from './slices/createPreviousCommitSlice';
 
 enableMapSet();
 
@@ -68,7 +69,16 @@ const useStudioStore = create<StudioStore>()(
             pagesToUpdate: [...pagesToUpdate.keys()],
             modulesToUpdate: [...modulesToUpdate.keys()],
           },
-          ...(values && { siteSettings: { values }})
+          siteSettings: { values },
+        });
+        // Update the previousCommit state.
+        set((s) => {
+          const previousCommitState = cloneDeep({
+            siteSettings: {
+              values: get().siteSettings.values
+            }
+          });
+          s.previousCommit = previousCommitState;
         });
       };
 
@@ -78,6 +88,7 @@ const useStudioStore = create<StudioStore>()(
         siteSettings: lens(createSiteSettingSlice),
         commitChanges,
         createModule: getCreateModuleAction(get),
+        previousCommit: lens(createPreviousCommitSlice)
       };
     })
   )
