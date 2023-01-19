@@ -4,7 +4,6 @@ import {
   UserPaths,
   StudioData,
   PageState,
-  PropValues,
   SiteSettingsValues,
   SiteSettings,
 } from "./types";

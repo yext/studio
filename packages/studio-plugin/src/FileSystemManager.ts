@@ -1,7 +1,6 @@
 import {
   ModuleMetadata,
   PageState,
-  PropValues,
   SiteSettingsValues,
   UserPaths,
 } from "./types";

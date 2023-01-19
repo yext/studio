@@ -51,6 +51,9 @@ it("sends pending changes to server to update files", () => {
       pagesToUpdate: ["UpdateMe"],
       modulesToUpdate: ["module-uuid"],
     },
+    siteSettings: {
+      values: undefined,
+    },
   });
 });
 

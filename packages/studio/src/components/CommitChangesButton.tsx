@@ -20,13 +20,8 @@ export default function CommitChangesButton() {
   const commitChangesAction = useStudioStore((store) => store.commitChanges);
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  const siteSettingsHaveChanged =
-    previousCommit &&
-    !isEqual(previousCommit?.siteSettings?.values, siteSettingsValues);
-  console.log(
-    siteSettingsHaveChanged,
-    previousCommit,
-    previousCommit?.siteSettings?.values,
+  const siteSettingsHaveChanged = !isEqual(
+    previousCommit.siteSettings.values,
     siteSettingsValues
   );
   const hasPendingChanges =

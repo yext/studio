@@ -111,20 +111,30 @@ describe("updateSiteSettingValues", () => {
     );
   });
 
-  it("errors out if site settings new value contains expression type", () => {
-    const filepath = getSiteSettingsPath();
-    const siteSettingsFile = new SiteSettingsFile(filepath, tsMorphProject);
-    expect(() =>
-      siteSettingsFile.updateSiteSettingValues({
-        mySetting: {
-          valueType: PropValueType.string,
-          kind: PropValueKind.Expression,
-          value: "someExpression.field",
+  it("can update site settings with nested objects", () => {
+    const siteSettingsFile = new SiteSettingsFile(
+      getSiteSettingsPath("nestedSiteSettings.ts"),
+      tsMorphProject
+    );
+    siteSettingsFile.updateSiteSettingValues({
+      "Global Color Style": {
+        valueType: PropValueType.Object,
+        kind: PropValueKind.Literal,
+        value: {
+          "Primary Theme": {
+            valueType: PropValueType.HexColor,
+            kind: PropValueKind.Literal,
+            value: "#AABBCC",
+          },
         },
-      })
-    ).toThrow(
-      `PropVal mySetting in ${filepath} is of kind PropValueKind.Expression.` +
-        " PropValueKind.Expression in ObjectLiteralExpression is currently not supported."
+      },
+    });
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect.stringContaining("nestedSiteSettings.ts"),
+      fs.readFileSync(
+        getSiteSettingsPath("updatedNestedSiteSettings.ts"),
+        "utf-8"
+      )
     );
   });
 });
