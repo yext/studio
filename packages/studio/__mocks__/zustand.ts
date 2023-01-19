@@ -11,7 +11,7 @@ import { MessageIdToListeners } from "../tests/__setup__/setup-env";
 const actualCreate = jest.requireActual("zustand");
 
 // track message listeners registered on store creation
-export const storeRegisteredListeners: MessageIdToListeners = {};
+export const storeRegisteredListeners: MessageIdToListeners = {}
 
 // a variable to hold reset functions for all stores declared in the app
 const storeResetFns = new Set<() => void>();
