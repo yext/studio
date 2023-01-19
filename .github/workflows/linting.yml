@@ -3,7 +3,7 @@ name: Run Linting with Automated Fixing
 on: [push, pull_request]
 
 jobs:
-  update-docs:
+  auto-lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
