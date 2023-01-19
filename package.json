@@ -10,7 +10,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "autolint": "npx prettier --write . && npx eslint --fix .",
+    "autofix": "npx prettier --write . && npx eslint --fix .",
     "test": "turbo run test --parallel",
     "playwright": "npm run playwright -w=e2e-tests"
   },

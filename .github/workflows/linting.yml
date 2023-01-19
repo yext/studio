@@ -3,7 +3,7 @@ name: Run Linting with Automated Fixing
 on: pull_request
 
 jobs:
-  auto-lint:
+  auto-fix:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: 18.x
       - run: npm ci
-      - run: npm run autolint
+      - run: npm run autofix
       - name: Automated Linting
         uses: EndBug/add-and-commit@v9
         with:
