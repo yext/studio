@@ -178,20 +178,25 @@ export default class ParsingOrchestrator {
     if (!fs.existsSync(this.paths.siteSettings)) {
       return;
     }
-    return this.getSiteSettingsFile().getSiteSettings();
-  }
 
-  private getSiteSettingsFile() {
     if (!this.siteSettingsFile) {
       this.siteSettingsFile = new SiteSettingsFile(
         this.paths.siteSettings,
         this.project
       );
     }
+    return this.siteSettingsFile.getSiteSettings();
+  }
+
+  private getSiteSettingsFile() {
     return this.siteSettingsFile;
   }
 
+  /**
+   * Updates the user's site settings file.
+   * Assumes that this.siteSettingsFile already exists.
+   */
   updateSiteSettings(siteSettingsValues: SiteSettingsValues): void {
-    this.getSiteSettingsFile().updateSiteSettingValues(siteSettingsValues);
+    this.siteSettingsFile?.updateSiteSettingValues(siteSettingsValues);
   }
 }

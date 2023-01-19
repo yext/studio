@@ -34,7 +34,6 @@ export default class StudioSourceFileWriter {
    * @returns the formatted content
    */
   prettify(): string {
-    console.log("prettifying", this.sourceFile.getFullText());
     return prettier.format(this.sourceFile.getFullText(), {
       parser: "typescript",
     });
@@ -178,18 +177,6 @@ export default class StudioSourceFileWriter {
   }
 
   createPropsObjectLiteralWriter(props: PropValues): WriterFunction {
-    const getPropValueWriter = ({ valueType, value }: PropVal) => {
-      if (
-        valueType === PropValueType.string ||
-        valueType === PropValueType.HexColor
-      ) {
-        return `'${value}'`;
-      } else if (valueType === PropValueType.Object) {
-        return this.createPropsObjectLiteralWriter(value);
-      } else {
-        return value.toString();
-      }
-    };
     return Writers.object(
       Object.entries(props).reduce((obj, entry) => {
         const [propName, propVal] = entry;
@@ -202,10 +189,25 @@ export default class StudioSourceFileWriter {
         // Writers.object does not automatically wrap keys in quotes that need it.
         // Our linting step will remove unnecessary quotes if desired.
         const propNameWithQuotes = `"${propName}"`;
-        obj[propNameWithQuotes] = getPropValueWriter(propVal);
+        obj[propNameWithQuotes] = this.getPropValueWriter(propVal);
         return obj;
       }, {})
     );
+  }
+
+  private getPropValueWriter({
+    valueType,
+    value,
+  }: PropVal): WriterFunction | string {
+    switch (valueType) {
+      case PropValueType.string:
+      case PropValueType.HexColor:
+        return `'${value}'`;
+      case PropValueType.Object:
+        return this.createPropsObjectLiteralWriter(value);
+      default:
+        return value.toString();
+    }
   }
 
   /**
