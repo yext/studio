@@ -62,7 +62,7 @@ export default class PageFile {
   async getPageState(): Promise<PageState> {
     const absPathDefaultImports = {
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-      ...(await this.studioSourceFileParser.getAbsPathNamedNpmImports())
+      ...(await this.studioSourceFileParser.getAbsPathNamedNpmImports()),
     };
     const componentTree = this.componentTreeParser.parseComponentTree(
       absPathDefaultImports

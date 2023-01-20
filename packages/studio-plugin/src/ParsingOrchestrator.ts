@@ -91,6 +91,7 @@ export default class ParsingOrchestrator {
     const newModuleFile = new ModuleFile(
       filepath,
       this.getFileMetadata,
+      this.getFileMetadataByUUID,
       this.project
     );
     this.filepathToModuleFile[filepath] = newModuleFile;

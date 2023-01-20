@@ -81,15 +81,14 @@ export default class StudioSourceFileParser {
   async getAbsPathNamedNpmImports(): Promise<Record<string, string>> {
     const namedImports = this.parseNamedImports();
     return Object.entries(namedImports).reduce(
-      (imports, [importIdentifier, importNames]) => {
+      async (imports, [importIdentifier, importNames]) => {
         if (this.isNamedNpmImport(importIdentifier, importNames)) {
           const plugin = new ResolvePlugin(importIdentifier);
-          importNames.forEach((importName) => {
+          importNames.forEach(async (importName) => {
             plugin.getPathToComponent(importName)
               .then((path) => imports[path] = importName);
           });
         }
-
         return imports;
       },
       {}
