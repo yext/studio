@@ -17,6 +17,7 @@ export const storeRegisteredListeners: MessageIdToListeners = {};
 const storeResetFns = new Set<() => void>();
 
 // when creating a store, we add a reset function for it in the set
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const create = (temporalStore?: any) => {
   if (temporalStore) {
     const { clear } = temporalStore.getState();

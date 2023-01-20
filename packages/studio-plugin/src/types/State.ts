@@ -49,6 +49,7 @@ export type BuiltInState = {
   componentName: string;
   uuid: string;
   /** We currently do not support props on built in elements. */
+  // eslint-disable-next-line @typescript-eslint/ban-types
   props: {};
   parentUUID?: string;
 };

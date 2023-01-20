@@ -32,10 +32,7 @@
     "dev": "studio",
     "localData": "yext pages generate-test-data",
     "start": "craco start",
-    "build": "craco build",
-    "lint": "eslint . && npm run prettier-check",
-    "prettier-write": "prettier --write .",
-    "prettier-check": "prettier --check ."
+    "build": "craco build"
   },
   "browserslist": {
     "production": [
