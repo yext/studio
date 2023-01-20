@@ -9,8 +9,17 @@ import { streamConfigMultipleFieldsComponentTree } from "../__fixtures__/compone
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import { FileMetadata, FileMetadataKind } from "../../src";
 
 jest.mock("uuid");
+
+function mockGetFileMetadataByUUID(): FileMetadata {
+  return {
+    kind: FileMetadataKind.Component,
+    filepath: "mock-filepath",
+    metadataUUID: "mock-metadata-uuid",
+  };
+}
 
 describe("updatePageFile", () => {
   let tsMorphProject: Project;
@@ -24,6 +33,7 @@ describe("updatePageFile", () => {
     const pageFile = new PageFile(
       getPagePath("updatePageFile/EmptyPage"),
       throwIfCalled,
+      mockGetFileMetadataByUUID,
       tsMorphProject
     );
     pageFile.updatePageFile({
@@ -33,7 +43,7 @@ describe("updatePageFile", () => {
           componentName: "ComplexBanner",
           props: {},
           uuid: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
         },
       ],
       cssImports: [],
@@ -45,6 +55,8 @@ describe("updatePageFile", () => {
     );
   });
 
+  // TODO add a named import c/p
+
   describe("stream config", () => {
     beforeEach(() => {
       jest.spyOn(uuidUtils, "v4").mockReturnValue("mock-uuid-value");
@@ -55,6 +67,7 @@ describe("updatePageFile", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
         throwIfCalled,
+        mockGetFileMetadataByUUID,
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -71,7 +84,7 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
-              metadataUUID: "mock-metadataUUID",
+              metadataUUID: "mock-metadata-uuid",
             },
           ],
           cssImports: [],
@@ -93,6 +106,7 @@ describe("updatePageFile", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
         throwIfCalled,
+        mockGetFileMetadataByUUID,
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -117,6 +131,7 @@ describe("updatePageFile", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
         throwIfCalled,
+        mockGetFileMetadataByUUID,
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -133,7 +148,7 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
-              metadataUUID: "mock-metadataUUID",
+              metadataUUID: "mock-metadata-uuid",
             },
           ],
           cssImports: [],

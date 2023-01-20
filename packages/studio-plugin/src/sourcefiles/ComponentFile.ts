@@ -5,7 +5,6 @@ import { FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import getNpmPackageName from "../parsers/getNpmPackageName";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -16,7 +15,7 @@ export default class ComponentFile {
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string, project: Project) {
+  constructor(filepath: string, project: Project, private pluginName?: string) {
     this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
@@ -35,14 +34,13 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-    const packageName = getNpmPackageName(filepath);
 
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
       filepath,
-      prettyName: (packageName && packageName + "/") + this.componentName,
+      pluginName: this.pluginName,
     };
   }
 }

@@ -1,4 +1,4 @@
-import { PluginDeclaration } from "./Plugin";
+import { PluginConfig } from "./Plugin";
 import { UserPaths } from "./UserPaths";
 
 /**
@@ -23,5 +23,5 @@ export interface StudioConfig {
    * \}
    */
   paths?: Partial<UserPaths>;
-  plugins?: PluginDeclaration[];
+  plugins?: PluginConfig[];
 }

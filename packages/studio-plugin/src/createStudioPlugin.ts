@@ -6,7 +6,6 @@ import ParsingOrchestrator, {
 import configureStudioServer from "./configureStudioServer";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
-import getPluginPaths from "./parsers/getPluginPaths";
 
 /**
  * Handles server-client communication.
@@ -24,13 +23,11 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
-
-  const pluginPaths = getPluginPaths(studioConfig.plugins);
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig.paths,
-    studioConfig.isPagesJSRepo,
-    pluginPaths
+    studioConfig.plugins,
+    studioConfig.isPagesJSRepo
   );
   const studioData = await orchestrator.getStudioData();
 

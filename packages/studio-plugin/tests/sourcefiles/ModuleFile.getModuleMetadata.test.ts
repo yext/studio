@@ -11,6 +11,7 @@ import { mockUUID } from "../__utils__/spies";
 import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
+import { GetFileMetadataByUUID } from "../../src/writers/ReactComponentFileWriter";
 
 jest.mock("uuid");
 
@@ -30,9 +31,19 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
     kind: filepath?.includes("components/")
       ? FileMetadataKind.Component
       : FileMetadataKind.Module,
-    metadataUUID: "mock-metadataUUID",
+    metadataUUID: "mock-metadata-uuid",
     propShape,
     filepath,
+    componentTree: [],
+  };
+};
+
+const mockGetFileMetadataByUUID: GetFileMetadataByUUID = (componentName: string) => {
+  return {
+    kind: FileMetadataKind.Component,
+    metadataUUID: "mock-metadata-uuid",
+    propShape: {},
+    filepath: `path/to/node_modules/@yext/sample-component/src/components/${componentName}`,
     componentTree: [],
   };
 };
@@ -48,6 +59,7 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
+      mockGetFileMetadataByUUID,
       project
     );
     const moduleMetadata = moduleFile.getModuleMetadata();
@@ -74,7 +86,7 @@ describe("getModuleMetadata", () => {
           kind: ComponentStateKind.Standard,
           uuid: "mock-uuid-0",
           parentUUID: undefined,
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
           props: {
             text: {
               kind: PropValueKind.Expression,
@@ -88,7 +100,7 @@ describe("getModuleMetadata", () => {
           kind: ComponentStateKind.Standard,
           uuid: "mock-uuid-1",
           parentUUID: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
           props: {},
         },
         {
@@ -96,7 +108,7 @@ describe("getModuleMetadata", () => {
           kind: ComponentStateKind.Standard,
           uuid: "mock-uuid-2",
           parentUUID: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
           props: {
             text: {
               kind: PropValueKind.Literal,
@@ -115,6 +127,7 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
+      mockGetFileMetadataByUUID,
       project
     );
     const moduleMetadata = moduleFile.getModuleMetadata();
@@ -139,7 +152,7 @@ describe("getModuleMetadata", () => {
           kind: ComponentStateKind.Module,
           uuid: "mock-uuid-1",
           parentUUID: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
           props: {
             label: {
               kind: PropValueKind.Expression,
@@ -153,7 +166,7 @@ describe("getModuleMetadata", () => {
           kind: ComponentStateKind.Module,
           uuid: "mock-uuid-2",
           parentUUID: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
           props: {
             label: {
               kind: PropValueKind.Literal,
@@ -172,6 +185,7 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
+      mockGetFileMetadataByUUID,
       project
     );
     const moduleMetadata = moduleFile.getModuleMetadata();
@@ -198,7 +212,7 @@ describe("getModuleMetadata", () => {
           kind: ComponentStateKind.Standard,
           uuid: "mock-uuid-1",
           parentUUID: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
           props: {
             text: {
               kind: PropValueKind.Expression,
@@ -212,7 +226,7 @@ describe("getModuleMetadata", () => {
           kind: ComponentStateKind.Module,
           uuid: "mock-uuid-2",
           parentUUID: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
           props: {
             label: {
               kind: PropValueKind.Literal,

@@ -1,4 +1,10 @@
-export type PluginDeclaration = {
+export type PluginConfig = {
   name: string;
-  components: string[];
+  components: Record<string, string>;
 }
+
+export type PluginRef = {
+  filepath: string;
+  componentName: string;
+  moduleName: string;
+};

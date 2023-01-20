@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { SamplePluginDeclaration } = require("@yext/sample-component");
+const SamplePluginConfig = require("@yext/sample-component").default;
 
 module.exports = {
   isPagesJSRepo: false,
-  plugins: [SamplePluginDeclaration],
+  plugins: [SamplePluginConfig],
 };

@@ -15,7 +15,6 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("SimpleBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(componentFile.getComponentMetadata()).toEqual({
-      prettyName: "SimpleBanner",
       filepath: expect.stringContaining("ComponentFile/SimpleBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
@@ -27,7 +26,6 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("NestedBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(componentFile.getComponentMetadata()).toEqual({
-      prettyName: "NestedBanner",
       filepath: expect.stringContaining("ComponentFile/NestedBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
@@ -40,7 +38,6 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     const expectedComponentMetadata: ComponentMetadata = {
-      prettyName: "ComplexBanner",
       filepath: expect.stringContaining("ComponentFile/ComplexBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Component,

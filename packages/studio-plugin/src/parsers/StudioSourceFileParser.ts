@@ -14,6 +14,7 @@ import StaticParsingHelpers, {
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
+import { ResolvePlugin } from "../utils";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -64,13 +65,7 @@ export default class StudioSourceFileParser {
     const defaultImports = this.parseDefaultImports();
     return Object.entries(defaultImports).reduce(
       (imports, [importIdentifier, importName]) => {
-        const isNodeModuleImport = !importIdentifier.startsWith('.');
-        if (isNodeModuleImport) {
-          const nodeModuleFilepath =
-            path.join(process.cwd(), "node_modules", importIdentifier) + ".tsx";
-          imports[nodeModuleFilepath] = importName;
-        }
-        else if (path.isAbsolute(importIdentifier)) {
+        if (path.isAbsolute(importIdentifier)) {
           imports[importIdentifier] = importName;
         } else {
           const absoluteFilepath =
@@ -81,6 +76,30 @@ export default class StudioSourceFileParser {
       },
       {}
     );
+  }
+
+  async getAbsPathNamedNpmImports(): Promise<Record<string, string>> {
+    const namedImports = this.parseNamedImports();
+    return Object.entries(namedImports).reduce(
+      (imports, [importIdentifier, importNames]) => {
+        if (this.isNamedNpmImport(importIdentifier, importNames)) {
+          const plugin = new ResolvePlugin(importIdentifier);
+          importNames.forEach((importName) => {
+            plugin.getPathToComponent(importName)
+              .then((path) => imports[path] = importName);
+          });
+        }
+
+        return imports;
+      },
+      {}
+    )
+  }
+
+  isNamedNpmImport(importIdentifier: string, importName: string | string[]): boolean {
+    const isNamed = Array.isArray(importName) && importName.length > 0;
+    const isNpm = !path.isAbsolute(importIdentifier) && !importIdentifier.startsWith(".");
+    return isNamed && isNpm;
   }
 
   parseCssImports(): string[] {

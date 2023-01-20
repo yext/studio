@@ -10,6 +10,7 @@ import {
   StudioData,
 } from "../src";
 import { Project } from "ts-morph";
+import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
 
 const projectRoot = path.resolve(
   __dirname,
@@ -56,6 +57,7 @@ describe("aggregates data as expected", () => {
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     userPaths,
+    [],
     false
   );
   let studioData: StudioData;
@@ -122,6 +124,7 @@ describe("aggregates data as expected", () => {
       const orchestrator = new ParsingOrchestrator(
         tsMorphProject,
         userPaths,
+        [],
         true
       );
       const studioData = await orchestrator.getStudioData();
@@ -139,6 +142,7 @@ describe("aggregates data as expected", () => {
       const orchestrator = new ParsingOrchestrator(
         tsMorphProject,
         userPaths,
+        [],
         true
       );
       await expect(orchestrator.getStudioData()).rejects.toThrow(
@@ -158,6 +162,7 @@ it("throws an error when the page imports components from unexpected folders", a
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     userPaths,
+    [],
     false
   );
   await expect(orchestrator.getStudioData()).rejects.toThrow(
@@ -175,9 +180,20 @@ it("throws when the pages folder does not exist", async () => {
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     userPaths,
+    [],
     false
   );
   await expect(orchestrator.getStudioData()).rejects.toThrow(
     /^The pages directory does not exist/
   );
 });
+
+// describe("ParsingOrchestrator.getPluginRefs()", () => {
+//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+//   const getPluginRefsSpy = (ParsingOrchestrator as any).getPluginRefs;
+
+//   it("correctly generates PluginRefs from an array of PluginConfigs", () => {
+    
+//     expect(getPluginRefsSpy([PluginConfig])).toBe({});
+//   })
+// });

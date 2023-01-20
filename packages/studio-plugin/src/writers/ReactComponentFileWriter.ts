@@ -19,6 +19,10 @@ import {
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { transformPropValuesToRaw } from "../utils";
+import ParsingOrchestrator from "../ParsingOrchestrator";
+import { TypeGuards } from "../utils";
+
+export type GetFileMetadataByUUID = ParsingOrchestrator["getFileMetadataByUUID"];
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -28,7 +32,8 @@ export default class ReactComponentFileWriter {
   constructor(
     private componentName: string,
     private studioSourceFileWriter: StudioSourceFileWriter,
-    private studioSourceFileParser: StudioSourceFileParser
+    private studioSourceFileParser: StudioSourceFileParser,
+    private getFileMetadataByUUID: GetFileMetadataByUUID
   ) {}
 
   private createComponentFunction(): FunctionDeclaration {
@@ -178,8 +183,32 @@ export default class ReactComponentFileWriter {
         );
       }
     }
+
     this.updateReturnStatement(functionComponent, componentTree);
-    this.studioSourceFileWriter.updateFileImports(cssImports);
+    const namedImports = this.filterNamedImportsByPlugin(componentTree);
+    this.studioSourceFileWriter.updateFileImports(namedImports, cssImports);
     this.studioSourceFileWriter.writeToFile();
+  }
+
+  /**
+   * Identify and sort components of named imports by their node module.
+   * It is assumed that named imports are from plugins, installed via npm.
+   */
+  filterNamedImportsByPlugin(componentTree: ComponentState[]): Record<string, string[]> {
+    const namedImports: Record<string, string[]> = {};
+
+    componentTree.filter(TypeGuards.isStandardOrModuleComponentState)
+      .forEach((node) => {
+        const metadata = this.getFileMetadataByUUID(node.metadataUUID);
+        if (metadata && "pluginName" in metadata && metadata.pluginName) {
+          if (namedImports.hasOwnProperty(metadata.pluginName)) {
+            namedImports[metadata.pluginName].push(node.componentName);
+          } else {
+            namedImports[metadata.pluginName] = [node.componentName];
+          }
+        }
+      });
+
+    return namedImports;
   }
 }

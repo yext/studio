@@ -38,10 +38,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       return "Fragment";
     }
 
-    if (componentState.kind === ComponentStateKind.Standard && componentState.prettyName) {
-      return componentState.prettyName;
-    }
-
     return componentState.componentName;
   }
 

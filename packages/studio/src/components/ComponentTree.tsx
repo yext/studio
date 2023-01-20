@@ -170,10 +170,6 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 
           return {
             ...commonData,
-            data: {
-              ...componentState,
-              prettyName: metadata.prettyName,
-            },
             droppable: metadata.acceptsChildren,
           };
         default:

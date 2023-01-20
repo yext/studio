@@ -20,7 +20,6 @@ beforeEach(() => {
     fileMetadatas: {
       UUIDToFileMetadata: {
         "uuid-component": {
-          prettyName: "Mock-Component",
           kind: FileMetadataKind.Component,
           metadataUUID: "comp",
           filepath: "blah/Mock-Component.tsx",
@@ -58,7 +57,6 @@ it("can add a component to the tree", async () => {
     componentTree: [
       {
         componentName: "Mock-Component",
-        prettyName: "Mock-Component",
         kind: ComponentStateKind.Standard,
         metadataUUID: "comp",
         props: {},

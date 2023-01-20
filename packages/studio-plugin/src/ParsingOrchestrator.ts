@@ -6,6 +6,8 @@ import {
   PageState,
   SiteSettingsValues,
   SiteSettings,
+  PluginConfig,
+  PluginRef,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -14,6 +16,7 @@ import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
+import { ResolvePlugin } from "./utils";
 
 export function createTsMorphProject() {
   return new Project({
@@ -32,16 +35,30 @@ export default class ParsingOrchestrator {
   private pageNameToPageFile: Record<string, PageFile> = {};
   private localDataMapping?: Record<string, string[]>;
   private siteSettingsFile?: SiteSettingsFile;
+  private pluginReferences: PluginRef[];
 
   /** All paths are assumed to be absolute. */
   constructor(
     private project: Project,
     private paths: UserPaths,
+    plugins: PluginConfig[],
     private isPagesJSRepo?: boolean,
-    private plugins?: string[],
   ) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
+    this.getFileMetadataByUUID = this.getFileMetadataByUUID.bind(this);
+    this.pluginReferences = this.getPluginRefs(plugins);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
+  }
+
+  private getPluginRefs(plugins: PluginConfig[] = []): PluginRef[] {
+    return plugins.flatMap((plugin: PluginConfig) => {
+      const npmModule = new ResolvePlugin(plugin.name);
+      return Object.entries(plugin.components).map(([componentName, filepath]) => ({
+        filepath: path.join(npmModule.getPathToModule(), filepath),
+        moduleName: plugin.name,
+        componentName,
+      }));
+    });
   }
 
   async getPageFile(pageName: string): Promise<PageFile> {
@@ -58,6 +75,7 @@ export default class ParsingOrchestrator {
     const newPageFile = new PageFile(
       path.join(this.paths.pages, pageName + ".tsx"),
       this.getFileMetadata,
+      this.getFileMetadataByUUID,
       this.project,
       pageEntityFiles
     );
@@ -120,7 +138,7 @@ export default class ParsingOrchestrator {
 
     addDirectoryToMapping(this.paths.components);
     addDirectoryToMapping(this.paths.modules);
-    this.plugins?.forEach((source) => addFileToMapping(source));
+    this.pluginReferences.forEach((pluginReference) => addFileToMapping(pluginReference.filepath));
 
     return this.filepathToFileMetadata;
   }
@@ -137,15 +155,27 @@ export default class ParsingOrchestrator {
       const moduleFile = this.getModuleFile(absPath);
       return moduleFile.getModuleMetadata();
     }
-    if (absPath.includes("node_modules")) {
-      const componentFile = new ComponentFile(absPath, this.project);
+    const pluginRef = this.pluginReferences.find((ref) => ref.filepath === absPath);
+    if (pluginRef) {
+      const componentFile = new ComponentFile(absPath, this.project, pluginRef.moduleName);
       return componentFile.getComponentMetadata();
     }
     const { modules, components } = this.paths;
     throw new Error(
       `Could not get FileMetadata for ${absPath}, file does not ` +
-        `live inside the expected folders for modules: ${modules} or components: ${components}.`
+        `live inside the expected folders for modules: ${modules}, ${components}, or a plugin.`
     );
+  }
+
+  private getFileMetadataByUUID(metadataUUID: string): FileMetadata | undefined {
+    const fileMetadata = Object.values(this.filepathToFileMetadata)
+      .find((fileMetadata) => fileMetadata.metadataUUID === metadataUUID);
+
+    if (!fileMetadata) {
+      return;
+    }
+
+    return fileMetadata;
   }
 
   private async getLocalDataMapping(): Promise<
@@ -181,7 +211,7 @@ export default class ParsingOrchestrator {
         files.map(async (file) => {
           const pageName = path.basename(file, ".tsx");
           const pageFile = await this.getPageFile(pageName);
-          return [pageName, pageFile.getPageState()];
+          return [pageName, await pageFile.getPageState()];
         })
       );
     return Object.fromEntries(arrayOfPageNameToStateEntries);

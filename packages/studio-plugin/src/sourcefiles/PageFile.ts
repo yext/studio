@@ -1,7 +1,7 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
-import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
+import ReactComponentFileWriter, { GetFileMetadataByUUID } from "../writers/ReactComponentFileWriter";
 import path from "path";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
@@ -30,6 +30,7 @@ export default class PageFile {
   constructor(
     filepath: string,
     getFileMetadata: GetFileMetadata,
+    getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
     private entityFiles?: string[]
   ) {
@@ -49,7 +50,8 @@ export default class PageFile {
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
       studioSourceFileWriter,
-      this.studioSourceFileParser
+      this.studioSourceFileParser,
+      getFileMetadataByUUID
     );
     this.componentTreeParser = new ComponentTreeParser(
       this.studioSourceFileParser,
@@ -57,9 +59,11 @@ export default class PageFile {
     );
   }
 
-  getPageState(): PageState {
-    const absPathDefaultImports =
-      this.studioSourceFileParser.getAbsPathDefaultImports();
+  async getPageState(): Promise<PageState> {
+    const absPathDefaultImports = {
+      ...this.studioSourceFileParser.getAbsPathDefaultImports(),
+      ...(await this.studioSourceFileParser.getAbsPathNamedNpmImports())
+    };
     const componentTree = this.componentTreeParser.parseComponentTree(
       absPathDefaultImports
     );
