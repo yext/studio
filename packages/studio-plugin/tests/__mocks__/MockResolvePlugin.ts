@@ -13,19 +13,18 @@ export default class MockResolvePlugin extends ResolvePlugin {
     resolvedModule: typescript.ResolvedModuleFull;
     root: string;
   } {
-    console.log(`mock: resolveModuleName(${moduleName}, ${root})`);
     return {
       resolvedModule: {
         resolvedFileName: "tests/__fixtures__/PluginConfig/SampleComponent.tsx",
         extension: Extension.Jsx,
         isExternalLibraryImport: true,
         packageId: {
-          name: "@yext/sample-component",
+          name: moduleName,
           subModuleName: "SampleComponent.tsx",
           version: "0.0.0",
         },
       },
-      root: process.cwd(),
+      root,
     };
   }
 }
