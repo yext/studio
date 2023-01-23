@@ -19,6 +19,10 @@ export default function DeleteModuleButton({
   const moduleName = path.basename(metadata.filepath, ".tsx");
   const deleteModule = useStudioStore((store) => store.deleteModule);
 
+  const handleDelete = useCallback(() => {
+    deleteModule(metadata);
+  }, [metadata, deleteModule])
+
   const modalBody = useMemo(() => {
     return (
       <div className="flex flex-col text-sm py-2 px-1">
@@ -34,9 +38,6 @@ export default function DeleteModuleButton({
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      function handleConfirm() {
-        deleteModule(metadata);
-      }
       return (
         <Modal
           isOpen={isOpen}
@@ -44,12 +45,12 @@ export default function DeleteModuleButton({
           body={modalBody}
           confirmButtonText="Delete"
           handleClose={handleClose}
-          handleConfirm={handleConfirm}
+          handleConfirm={handleDelete}
           confirmButtonEnabledColor="bg-rose-700"
         />
       );
     },
-    [deleteModule, metadata, modalBody]
+    [handleDelete, modalBody]
   );
 
   const anchorId = `delete-module-${moduleName}`;

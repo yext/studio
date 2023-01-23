@@ -6,6 +6,7 @@ import {
   ModuleMetadata,
 } from "@yext/studio-plugin";
 import { v4 } from "uuid";
+import { PagesRecord } from './models/slices/PageSlice';
 
 /**
  * getDeleteModuleAction is a factory method for the deleteModule action.
@@ -14,20 +15,16 @@ export default function getDeleteModuleAction(
   get: () => StudioStore
 ): StudioStore["deleteModule"] {
   return (metadata: ModuleMetadata) => {
-    const store = get();
-    store.pages.setActiveComponentUUID(undefined);
-    const activePageState = store.pages.getActivePageState();
-    if (activePageState) {
-      const updatedComponentTree = detachModuleInstances(
-        metadata,
-        activePageState.componentTree
-      );
-      store.pages.setActivePageState({
-        ...activePageState,
-        componentTree: updatedComponentTree,
-      });
-    }
-    store.fileMetadatas.removeFileMetadata(metadata.metadataUUID);
+    const pagesSlice = get().pages;
+
+    pagesSlice.setActiveComponentUUID(undefined);
+    const updatedPages: PagesRecord = Object.keys(pagesSlice.pages).reduce((allPages, pageName) => {
+      allPages[pageName] = detachModuleInstances(metadata, pagesSlice.pages[pageName].componentTree);
+      return allPages;
+    }, {});
+    pagesSlice.setPagesRecord(updatedPages);
+
+    get().fileMetadatas.removeFileMetadata(metadata.metadataUUID);
   };
 }
 

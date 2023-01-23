@@ -40,7 +40,7 @@ export default function registerCommitChangesListener(
       if (siteSettings?.values) {
         fileManager.updateSiteSettings(siteSettings.values);
       }
-      fileManager.deleteRemovedFileMetadatas(UUIDToFileMetadata);
+      fileManager.syncFileMetadata(UUIDToFileMetadata);
 
       return "Changes saved successfully.";
     }

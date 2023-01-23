@@ -1,7 +1,7 @@
 import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
-import PageSlice, { PageSliceStates } from "../models/slices/PageSlice";
+import PageSlice, { PageSliceStates, PagesRecord } from "../models/slices/PageSlice";
 import { SliceCreator } from "../models/utils";
 
 const firstPageEntry = Object.entries(
@@ -61,6 +61,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         pagesToRemove.add(pageName);
       });
     },
+    setPagesRecord: (pagesRecord: PagesRecord) => {
+      set((store) => store.pages = pagesRecord);
+    }
   };
 
   const activePageActions = {
