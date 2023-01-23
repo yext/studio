@@ -12,12 +12,14 @@ interface ButtonWithModalProps {
   buttonContent: JSX.Element | string;
   renderModal: renderModalFunction;
   buttonClassName?: string;
+  ariaLabel?: string;
 }
 
 export default function ButtonWithModal({
   buttonContent,
   renderModal,
   buttonClassName,
+  ariaLabel,
 }: ButtonWithModalProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -31,7 +33,11 @@ export default function ButtonWithModal({
 
   return (
     <>
-      <button onClick={handleButtonClick} className={buttonClassName}>
+      <button
+        onClick={handleButtonClick}
+        className={buttonClassName}
+        aria-label={ariaLabel}
+      >
         {buttonContent}
       </button>
       {renderModal(showModal, handleModalClose)}

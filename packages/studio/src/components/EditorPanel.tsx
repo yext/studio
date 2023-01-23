@@ -6,6 +6,9 @@ import { ReactComponent as Sliders } from "../icons/sliders.svg";
 import { ReactComponent as Content } from "../icons/content.svg";
 import { ReactComponent as Globe } from "../icons/globe.svg";
 import SiteSettingsEditor from "./SiteSettingsEditor";
+import useActiveComponent from "../hooks/useActiveComponent";
+import { FileMetadataKind } from "@yext/studio-plugin";
+import ModuleActions from "./ModuleActions";
 
 enum PanelTab {
   Properties = "Properties",

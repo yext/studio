@@ -49,6 +49,7 @@ const useStudioStore = create<StudioStore>()(
             };
             s.fileMetadatas.pendingChanges = {
               modulesToUpdate: new Set<string>(),
+              modulesToRemove: new Set<string>(),
             };
           });
         }
@@ -58,7 +59,7 @@ const useStudioStore = create<StudioStore>()(
         const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
         const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
           get().fileMetadatas;
-        const { modulesToUpdate } = pendingModuleChanges;
+        const { modulesToUpdate, modulesToRemove } = pendingModuleChanges;
         const { values } = get().siteSettings;
         // Serialize pendingChanges (uses type Set) to send to server side.
         sendMessage(MessageID.StudioCommitChanges, {
@@ -68,6 +69,7 @@ const useStudioStore = create<StudioStore>()(
             pagesToRemove: [...pagesToRemove.keys()],
             pagesToUpdate: [...pagesToUpdate.keys()],
             modulesToUpdate: [...modulesToUpdate.keys()],
+            modulesToRemove: [...modulesToRemove.keys()],
           },
           siteSettings: { values },
         });

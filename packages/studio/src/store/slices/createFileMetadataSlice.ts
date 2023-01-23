@@ -12,6 +12,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   UUIDToImportedComponent: {},
   pendingChanges: {
     modulesToUpdate: new Set<string>(),
+    modulesToRemove: new Set<string>(),
   },
   setFileMetadata: (uuid: string, metadata: FileMetadata) =>
     set((store) => {
@@ -21,10 +22,18 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
       }
     }),
   getFileMetadata: (uuid: string) => get().UUIDToFileMetadata[uuid],
-  //TODO: add logic here to ensure this component is made by admin and can be deleted.
   removeFileMetadata: (uuid: string) =>
     set((store) => {
-      delete store.UUIDToFileMetadata[uuid];
+      const metadata = store.UUIDToFileMetadata[uuid];
+      if (metadata.kind === FileMetadataKind.Module) {
+        store.pendingChanges.modulesToRemove.add(uuid);
+        delete store.UUIDToFileMetadata[uuid];
+      } else {
+        console.error(
+          "removeFileMetadata is only allowed for modules, not:",
+          metadata.kind
+        );
+      }
     }),
   getComponentMetadata: (uuid) => {
     const fileMetadata = get().getFileMetadata(uuid);

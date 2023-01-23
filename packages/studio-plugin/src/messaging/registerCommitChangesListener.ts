@@ -22,10 +22,16 @@ export default function registerCommitChangesListener(
           path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
         fileManager.removeFile(filepath);
       });
-      pendingChanges.modulesToUpdate.forEach((moduleToUpdate) => {
-        const metadata = UUIDToFileMetadata[moduleToUpdate];
+      pendingChanges.modulesToUpdate.forEach((moduleUUID) => {
+        const metadata = UUIDToFileMetadata[moduleUUID];
         if (metadata.kind === FileMetadataKind.Module) {
           fileManager.updateModuleFile(metadata.filepath, metadata);
+        }
+      });
+      pendingChanges.modulesToRemove.forEach((moduleUUID) => {
+        const metadata = UUIDToFileMetadata[moduleUUID];
+        if (metadata.kind === FileMetadataKind.Module) {
+          fileManager.removeFile(metadata.filepath);
         }
       });
       await Promise.all(

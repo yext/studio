@@ -24,11 +24,11 @@ const elementTypeToIcon = {
   Modules: <Hexagon />,
 } as const;
 
+/**
+ * A menu for adding elements to the page.
+ */
 export default function AddElementMenu(): JSX.Element {
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
-  const UUIDToFileMetadata = useStudioStore((store) => {
-    return store.fileMetadatas.UUIDToFileMetadata;
-  });
 
   return (
     <div className="absolute z-10 rounded bg-white text-sm text-gray-700 shadow-lg">
@@ -44,27 +44,47 @@ export default function AddElementMenu(): JSX.Element {
           );
         })}
       </div>
-      <div className="flex flex-col items-start py-1">
-        {Object.values(UUIDToFileMetadata)
-          .filter((metadata) => {
-            if (activeType === ElementType.Components) {
-              return (
-                metadata.kind === FileMetadataKind.Component &&
-                !metadata.acceptsChildren
-              );
-            } else if (activeType === ElementType.Containers) {
-              return (
-                metadata.kind === FileMetadataKind.Component &&
-                metadata.acceptsChildren
-              );
-            } else {
-              return metadata.kind === FileMetadataKind.Module;
-            }
-          })
-          .map((metadata) => {
-            return <Option metadata={metadata} key={metadata.metadataUUID} />;
-          })}
+      <ElementsList activeType={activeType} />
+    </div>
+  );
+}
+
+function ElementsList({ activeType }: { activeType: ElementType }) {
+  const UUIDToFileMetadata = useStudioStore((store) => {
+    return store.fileMetadatas.UUIDToFileMetadata;
+  });
+
+  const addableElements = Object.values(UUIDToFileMetadata).filter(
+    (metadata) => {
+      if (activeType === ElementType.Components) {
+        return (
+          metadata.kind === FileMetadataKind.Component &&
+          !metadata.acceptsChildren
+        );
+      } else if (activeType === ElementType.Containers) {
+        return (
+          metadata.kind === FileMetadataKind.Component &&
+          metadata.acceptsChildren
+        );
+      } else {
+        return metadata.kind === FileMetadataKind.Module;
+      }
+    }
+  );
+
+  if (addableElements.length === 0) {
+    return (
+      <div className="flex flex-col items-start py-3 pl-6 opacity-50">
+        Nothing to see here!
       </div>
+    );
+  }
+
+  return (
+    <div className="flex flex-col items-start py-1">
+      {addableElements.map((metadata) => {
+        return <Option metadata={metadata} key={metadata.metadataUUID} />;
+      })}
     </div>
   );
 }
@@ -128,7 +148,7 @@ function Option({ metadata }: { metadata: FileMetadata }) {
 
   return (
     <button
-      className="px-6 py-1 cursor-pointer"
+      className="px-6 py-1 cursor-pointer hover:opacity-75"
       onClick={handleClick}
       aria-label={`Add ${componentName} Element`}
     >

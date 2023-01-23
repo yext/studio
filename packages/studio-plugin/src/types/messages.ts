@@ -11,6 +11,7 @@ export interface CommitChangesEventPayload
     pagesToRemove: string[];
     pagesToUpdate: string[];
     modulesToUpdate: string[];
+    modulesToRemove: string[];
   };
   siteSettings: {
     values?: SiteSettingsValues;
