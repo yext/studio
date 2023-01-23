@@ -20,22 +20,52 @@ export default class ComponentTreeHelpers {
     handler: (component: ComponentState, mappedChildren: T[]) => T,
     parent?: ComponentState
   ): T[] {
-    const directChildren: ComponentState[] = [];
-    const nonDirectChildren: ComponentState[] = [];
-    componentTree.forEach((component) => {
-      if (component.parentUUID === parent?.uuid) {
-        directChildren.push(component);
-      } else if (component.uuid !== parent?.uuid) {
-        nonDirectChildren.push(component);
-      }
-    });
+    const { directChildren, otherDescendants } = ComponentTreeHelpers.separateDescendants(componentTree, parent);
     return directChildren.map((component) => {
       const children = this.mapComponentTree(
-        nonDirectChildren,
+        otherDescendants,
         handler,
         component
       );
       return handler(component, children);
     });
+  }
+
+  /**
+   * Similar to mapComponentTree but guarantees that parent nodes are
+   * called before leaf nodes.
+   *
+   * @param componentTree - the component tree to perform on
+   * @param handler - a function to execute on each component
+   *
+   * @returns an array of elements returned by the handler function
+   */
+  static mapComponentTreeParentsFirst<T>(
+    componentTree: ComponentState[],
+    handler: (component: ComponentState, parentValue?: T) => T,
+    parent?: ComponentState,
+    parentValue?: T
+  ): T[] {
+    const { directChildren, otherDescendants } = ComponentTreeHelpers.separateDescendants(componentTree, parent);
+    return directChildren.flatMap((component) => {
+      const mappedValue = handler(component, parentValue);
+      return [mappedValue, ...ComponentTreeHelpers.mapComponentTreeParentsFirst(otherDescendants, handler, component, mappedValue)];
+    });
+  }
+
+  private static separateDescendants(
+    componentTree: ComponentState[],
+    parent?: ComponentState
+  ) {
+    const directChildren: ComponentState[] = [];
+    const otherDescendants: ComponentState[] = [];
+    componentTree.forEach((component) => {
+      if (component.parentUUID === parent?.uuid) {
+        directChildren.push(component);
+      } else {
+        otherDescendants.push(component);
+      }
+    });
+    return { directChildren, otherDescendants }
   }
 }

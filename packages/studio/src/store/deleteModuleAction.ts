@@ -1,5 +1,7 @@
 import { StudioStore } from "./models/store";
-import { ComponentStateKind, ModuleMetadata } from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind, ComponentTreeHelpers, ModuleMetadata } from "@yext/studio-plugin";
+import { cloneDeep } from 'lodash';
+import { v4 } from 'uuid';
 
 export default function getDeleteModuleAction(
   get: () => StudioStore
@@ -10,11 +12,20 @@ export default function getDeleteModuleAction(
     const activePageState = store.pages.getActivePageState();
     if (activePageState) {
       const updatedComponentTree =
-        activePageState?.componentTree.filter((c) => {
-          if (c.kind !== ComponentStateKind.Module) {
-            return true;
+        activePageState?.componentTree.flatMap((componentStateToDetach) => {
+          const isModule = componentStateToDetach.kind === ComponentStateKind.Module
+          if (!isModule || componentStateToDetach.metadataUUID !== metadata.metadataUUID) {
+            return componentStateToDetach;
           }
-          return c.metadataUUID !== metadata.metadataUUID;
+          const detachedTree = ComponentTreeHelpers.mapComponentTreeParentsFirst<ComponentState>(
+            cloneDeep(metadata.componentTree), (child, parentValue) => {
+            return {
+              ...child,
+              uuid: v4(),
+              parentUUID: parentValue?.uuid ?? componentStateToDetach.parentUUID
+            };
+          })
+          return detachedTree;
         }) ?? [];
       store.pages.setActivePageState({
         ...activePageState,
