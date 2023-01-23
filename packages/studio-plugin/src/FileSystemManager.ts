@@ -9,7 +9,7 @@ import fs from "fs";
 import path from "path";
 import { Project } from "ts-morph";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
-import ParsingOrchestrator from './ParsingOrchestrator';
+import ParsingOrchestrator from "./ParsingOrchestrator";
 
 /**
  * Handles file removal and content update in user's repo
@@ -72,9 +72,12 @@ export default class FileSystemManager {
    * Deletes all files corresponding to FileMetadata that exist in the previous UUIDToFileMetadata
    * but not the updated UUIDToFileMetadata (i.e. FileMetadata that have been removed).
    */
-  async deleteRemovedFileMetadatas(updatedUUIDToFileMetadata: Record<string, FileMetadata>) {
-    const UUIDToFileMetadata = await this.parsingOrchestrator.getUUIDToFileMetadata();
-    Object.keys(UUIDToFileMetadata).forEach(moduleUUID => {
+  async deleteRemovedFileMetadatas(
+    updatedUUIDToFileMetadata: Record<string, FileMetadata>
+  ) {
+    const UUIDToFileMetadata =
+      await this.parsingOrchestrator.getUUIDToFileMetadata();
+    Object.keys(UUIDToFileMetadata).forEach((moduleUUID) => {
       if (!updatedUUIDToFileMetadata.hasOwnProperty(moduleUUID)) {
         this.removeFile(UUIDToFileMetadata[moduleUUID].filepath);
       }

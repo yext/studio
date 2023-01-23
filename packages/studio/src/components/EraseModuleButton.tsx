@@ -1,7 +1,7 @@
 import { ReactComponent as EraseIcon } from "../icons/erasemodule.svg";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import { useCallback, useMemo } from "react";
-import { ComponentStateKind, ModuleMetadata } from "@yext/studio-plugin";
+import { ModuleMetadata } from "@yext/studio-plugin";
 import Modal from "./common/Modal";
 import path from "path-browserify";
 import useStudioStore from "../store/useStudioStore";
@@ -16,7 +16,7 @@ export default function EraseModuleButton({
   metadata: ModuleMetadata;
 }) {
   const moduleName = path.basename(metadata.filepath, ".tsx");
-  const eraseModule = useStudioStore(store => store.eraseModule);
+  const eraseModule = useStudioStore((store) => store.eraseModule);
 
   const modalBody = useMemo(() => {
     return (
@@ -35,7 +35,7 @@ export default function EraseModuleButton({
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       function handleConfirm() {
-        eraseModule(metadata)
+        eraseModule(metadata);
       }
       return (
         <Modal

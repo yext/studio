@@ -15,7 +15,7 @@ import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
-import getEraseModuleAction from './eraseModuleAction';
+import getEraseModuleAction from "./eraseModuleAction";
 
 enableMapSet();
 
@@ -68,7 +68,7 @@ const useStudioStore = create<StudioStore>()(
           pendingChanges: {
             pagesToRemove: [...pagesToRemove.keys()],
             pagesToUpdate: [...pagesToUpdate.keys()],
-            modulesToUpdate: [...modulesToUpdate.keys()]
+            modulesToUpdate: [...modulesToUpdate.keys()],
           },
           siteSettings: { values },
         });
@@ -77,7 +77,7 @@ const useStudioStore = create<StudioStore>()(
           const previousCommitState = cloneDeep({
             siteSettings: {
               values: get().siteSettings.values,
-            }
+            },
           });
           s.previousCommit = previousCommitState;
         });

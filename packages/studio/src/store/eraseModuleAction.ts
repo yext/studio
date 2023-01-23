@@ -1,8 +1,5 @@
 import { StudioStore } from "./models/store";
-import {
-  ComponentStateKind,
-  ModuleMetadata,
-} from "@yext/studio-plugin";
+import { ComponentStateKind, ModuleMetadata } from "@yext/studio-plugin";
 
 export default function getEraseModuleAction(
   get: () => StudioStore

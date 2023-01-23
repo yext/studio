@@ -1,4 +1,4 @@
-import { ModuleMetadata } from '@yext/studio-plugin';
+import { ModuleMetadata } from "@yext/studio-plugin";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousCommitSlice from "./slices/PreviousCommitSlice";
