@@ -1,12 +1,12 @@
-import React from "react";
+import { Fragment } from "react";
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 
 export default function IndexPage() {
   return (
-    <React.Fragment>
+    <Fragment>
       <ComplexBanner title="first!" num={1} />
       <ComplexBanner />
       <ComplexBanner title="three" num={3} bool={false} />
-    </React.Fragment>
+    </Fragment>
   );
 }

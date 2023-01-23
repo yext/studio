@@ -79,6 +79,7 @@ export default class ParsingOrchestrator {
       this.getFileMetadata,
       this.getFileMetadataByUUID,
       this.project,
+      this.pluginReferences,
       pageEntityFiles
     );
     this.pageNameToPageFile[pageName] = newPageFile;

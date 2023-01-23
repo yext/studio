@@ -1,5 +1,5 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
-import { PageState } from "../types";
+import { PageState, PluginRef } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
 import ReactComponentFileWriter, {
   GetFileMetadataByUUID,
@@ -34,6 +34,7 @@ export default class PageFile {
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
+    private pluginRefs?: PluginRef[],
     private entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
@@ -62,12 +63,15 @@ export default class PageFile {
   }
 
   async getPageState(): Promise<PageState> {
-    const absPathDefaultImports = {
+    const absPathToComponentName = {
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-      ...(await this.studioSourceFileParser.getAbsPathNamedNpmImports()),
+      ...this.pluginRefs?.reduce((pathToPluginName, ref) => {
+          pathToPluginName[ref.filepath] = ref.componentName;
+          return pathToPluginName;
+        }, {}),
     };
     const componentTree = this.componentTreeParser.parseComponentTree(
-      absPathDefaultImports
+      absPathToComponentName
     );
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();

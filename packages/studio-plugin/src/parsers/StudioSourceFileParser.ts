@@ -14,7 +14,6 @@ import StaticParsingHelpers, {
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
-import { ResolvePlugin } from "../utils";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -71,24 +70,6 @@ export default class StudioSourceFileParser {
           const absoluteFilepath =
             path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
           imports[absoluteFilepath] = importName;
-        }
-        return imports;
-      },
-      {}
-    );
-  }
-
-  async getAbsPathNamedNpmImports(): Promise<Record<string, string>> {
-    const namedImports = this.parseNamedImports();
-    return Object.entries(namedImports).reduce(
-      async (imports, [importIdentifier, importNames]) => {
-        if (this.isNamedNpmImport(importIdentifier, importNames)) {
-          const plugin = new ResolvePlugin(importIdentifier);
-          importNames.forEach(async (importName) => {
-            plugin
-              .getPathToComponent(importName)
-              .then((path) => (imports[path] = importName));
-          });
         }
         return imports;
       },

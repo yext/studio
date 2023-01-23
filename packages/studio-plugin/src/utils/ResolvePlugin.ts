@@ -13,16 +13,17 @@ export default class ResolvePlugin {
   private moduleName: string;
   resolvedModule: typescript.ResolvedModuleFull;
   root: string;
+  private config?: PluginConfig;
 
   constructor(moduleName: string) {
     this.moduleName = moduleName;
-    const { resolvedModule, root } = this.resolveModuleName(moduleName);
+    const { resolvedModule, root } = this.resolveModuleName();
     this.resolvedModule = resolvedModule;
     this.root = root;
   }
 
   resolveModuleName(
-    moduleName: string,
+    moduleName: string = this.moduleName,
     root = process.cwd()
   ): {
     resolvedModule: typescript.ResolvedModuleFull;
@@ -63,28 +64,5 @@ export default class ResolvePlugin {
     const stripSubModuleNameFromPath =
       this.resolvedModule.resolvedFileName.replace(subModule, "");
     return path.join(this.root, stripSubModuleNameFromPath);
-  }
-
-  getPathToConfig(): string {
-    return path.join(this.root, this.resolvedModule.resolvedFileName);
-  }
-
-  async getPathToComponent(name: string): Promise<string> {
-    const pathToComponent = await this.getConfig().then(
-      (config) => config.components[name]
-    );
-
-    if (!pathToComponent) {
-      throw new Error(
-        `No component named ${name} found in "${this.moduleName}".`
-      );
-    }
-    return path.join(this.getPathToModule(), pathToComponent);
-  }
-
-  async getConfig(): Promise<PluginConfig> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const pluginFile = await import(this.getPathToConfig());
-    return pluginFile.default;
   }
 }
