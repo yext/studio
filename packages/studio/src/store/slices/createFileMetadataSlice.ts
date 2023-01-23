@@ -26,7 +26,6 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     set((store) => {
       const metadata = store.UUIDToFileMetadata[uuid];
       if (metadata.kind === FileMetadataKind.Module) {
-        store.pendingChanges.modulesToRemove.add(uuid);
         delete store.UUIDToFileMetadata[uuid];
       } else {
         console.error(
