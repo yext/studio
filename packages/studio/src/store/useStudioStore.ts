@@ -15,7 +15,7 @@ import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
-import getEraseModuleAction from "./eraseModuleAction";
+import getDeleteModuleAction from "./deleteModuleAction";
 
 enableMapSet();
 
@@ -89,7 +89,7 @@ const useStudioStore = create<StudioStore>()(
         siteSettings: lens(createSiteSettingSlice),
         commitChanges,
         createModule: getCreateModuleAction(get),
-        eraseModule: getEraseModuleAction(get),
+        deleteModule: getDeleteModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
       };
     })

@@ -15,6 +15,6 @@ export interface StudioStore {
   siteSettings: SiteSettingSlice;
   commitChanges: () => void;
   createModule: (filepath: string) => boolean;
-  eraseModule: (metadata: ModuleMetadata) => void;
+  deleteModule: (metadata: ModuleMetadata) => void;
   previousCommit: PreviousCommitSlice;
 }

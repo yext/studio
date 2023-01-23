@@ -1,9 +1,9 @@
 import { StudioStore } from "./models/store";
 import { ComponentStateKind, ModuleMetadata } from "@yext/studio-plugin";
 
-export default function getEraseModuleAction(
+export default function getDeleteModuleAction(
   get: () => StudioStore
-): StudioStore["eraseModule"] {
+): StudioStore["deleteModule"] {
   return (metadata: ModuleMetadata) => {
     const store = get();
     store.pages.setActiveComponentUUID(undefined);

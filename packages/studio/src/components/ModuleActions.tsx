@@ -1,5 +1,5 @@
 import { ModuleMetadata } from "@yext/studio-plugin";
-import EraseModuleButton from "./EraseModuleButton";
+import DeleteModuleButton from "./DeleteModuleButton";
 
 export default function ModuleActions({
   metadata,
@@ -10,7 +10,7 @@ export default function ModuleActions({
     <div className="flex px-2 mb-6">
       <span className="font-medium">Module Actions</span>
       <div className="flex grow justify-evenly">
-        <EraseModuleButton metadata={metadata} />
+        <DeleteModuleButton metadata={metadata} />
       </div>
     </div>
   );
