@@ -6,10 +6,13 @@ export default class MockResolvePlugin extends ResolvePlugin {
     super(moduleName);
   }
 
-  resolveModuleName(moduleName: string, root = process.cwd()): {
-    resolvedModule: typescript.ResolvedModuleFull,
-    root: string,
-   } {
+  resolveModuleName(
+    moduleName: string,
+    root = process.cwd()
+  ): {
+    resolvedModule: typescript.ResolvedModuleFull;
+    root: string;
+  } {
     console.log(`mock: resolveModuleName(${moduleName}, ${root})`);
     return {
       resolvedModule: {
@@ -19,8 +22,8 @@ export default class MockResolvePlugin extends ResolvePlugin {
         packageId: {
           name: "@yext/sample-component",
           subModuleName: "SampleComponent.tsx",
-          version: "0.0.0"
-        }
+          version: "0.0.0",
+        },
       },
       root: process.cwd(),
     };

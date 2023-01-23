@@ -85,19 +85,24 @@ export default class StudioSourceFileParser {
         if (this.isNamedNpmImport(importIdentifier, importNames)) {
           const plugin = new ResolvePlugin(importIdentifier);
           importNames.forEach(async (importName) => {
-            plugin.getPathToComponent(importName)
-              .then((path) => imports[path] = importName);
+            plugin
+              .getPathToComponent(importName)
+              .then((path) => (imports[path] = importName));
           });
         }
         return imports;
       },
       {}
-    )
+    );
   }
 
-  isNamedNpmImport(importIdentifier: string, importName: string | string[]): boolean {
+  isNamedNpmImport(
+    importIdentifier: string,
+    importName: string | string[]
+  ): boolean {
     const isNamed = Array.isArray(importName) && importName.length > 0;
-    const isNpm = !path.isAbsolute(importIdentifier) && !importIdentifier.startsWith(".");
+    const isNpm =
+      !path.isAbsolute(importIdentifier) && !importIdentifier.startsWith(".");
     return isNamed && isNpm;
   }
 

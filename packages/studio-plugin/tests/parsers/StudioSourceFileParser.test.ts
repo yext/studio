@@ -111,7 +111,10 @@ describe("isNamedNpmImport", () => {
       "test.tsx",
       project
     );
-    const isNamedNpmImport = studioSourceFileParser.isNamedNpmImport("@yext/sample-component", ["SampleComponent"]);
+    const isNamedNpmImport = studioSourceFileParser.isNamedNpmImport(
+      "@yext/sample-component",
+      ["SampleComponent"]
+    );
     expect(isNamedNpmImport).toBe(true);
   });
   describe("throws errors", () => {
@@ -123,7 +126,10 @@ describe("isNamedNpmImport", () => {
         "test.tsx",
         project
       );
-      const isNamedNpmImport = studioSourceFileParser.isNamedNpmImport("@yext/sample-component", "SampleComponent");
+      const isNamedNpmImport = studioSourceFileParser.isNamedNpmImport(
+        "@yext/sample-component",
+        "SampleComponent"
+      );
       expect(isNamedNpmImport).toBe(false);
     });
     it("throws an error when trying to import named imports from a relative path", () => {
@@ -134,7 +140,10 @@ describe("isNamedNpmImport", () => {
         "test.tsx",
         project
       );
-      const isNamedNpmImport = studioSourceFileParser.isNamedNpmImport("../src/components", ["SampleComponent"]);
+      const isNamedNpmImport = studioSourceFileParser.isNamedNpmImport(
+        "../src/components",
+        ["SampleComponent"]
+      );
       expect(isNamedNpmImport).toBe(false);
     });
   });

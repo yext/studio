@@ -99,12 +99,13 @@ export default class ComponentTreeParser {
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
 
-    const filepath = Object.keys(defaultImports).find(
-      (importIdentifier) => {
-        const compareComponent = defaultImports[importIdentifier];
-        return compareComponent === componentName || componentName.startsWith(`${compareComponent}.`);
-      }
-    );
+    const filepath = Object.keys(defaultImports).find((importIdentifier) => {
+      const compareComponent = defaultImports[importIdentifier];
+      return (
+        compareComponent === componentName ||
+        componentName.startsWith(`${compareComponent}.`)
+      );
+    });
     const assumeIsBuiltInElement = filepath === undefined;
     if (assumeIsBuiltInElement) {
       if (attributes.length > 0) {

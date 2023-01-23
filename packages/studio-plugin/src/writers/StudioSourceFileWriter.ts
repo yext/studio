@@ -54,12 +54,14 @@ export default class StudioSourceFileWriter {
    *
    * @param cssImports - css file paths to add as import declarations to the file
    */
-  updateFileImports(namedImports: Record<string, string[]>, cssImports?: string[]) {
-    const structures = Object.keys(namedImports)
-      .map((moduleSpecifier) => ({
-        moduleSpecifier,
-        namedImports: namedImports[moduleSpecifier],
-      }));
+  updateFileImports(
+    namedImports: Record<string, string[]>,
+    cssImports?: string[]
+  ) {
+    const structures = Object.keys(namedImports).map((moduleSpecifier) => ({
+      moduleSpecifier,
+      namedImports: namedImports[moduleSpecifier],
+    }));
     this.sourceFile.addImportDeclarations(structures);
     this.sourceFile.fixMissingImports();
     cssImports?.forEach((importSource) => {

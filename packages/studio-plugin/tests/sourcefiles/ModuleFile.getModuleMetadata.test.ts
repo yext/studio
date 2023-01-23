@@ -38,7 +38,9 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
   };
 };
 
-const mockGetFileMetadataByUUID: GetFileMetadataByUUID = (componentName: string) => {
+const mockGetFileMetadataByUUID: GetFileMetadataByUUID = (
+  componentName: string
+) => {
   return {
     kind: FileMetadataKind.Component,
     metadataUUID: "mock-metadata-uuid",

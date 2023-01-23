@@ -14,14 +14,20 @@ describe("ResolvePlugin", () => {
   it("gets the absolute path to the entry file of the plugin", () => {
     const plugin = new MockResolvePlugin("@yext/sample-component");
     expect(plugin.getPathToConfig()).toBe(
-      path.join(process.cwd(), "tests/__fixtures__/PluginConfig/SampleComponent.tsx")
+      path.join(
+        process.cwd(),
+        "tests/__fixtures__/PluginConfig/SampleComponent.tsx"
+      )
     );
   });
 
   it("gets the absolute path to a specific component in the plugin", async () => {
     const plugin = new MockResolvePlugin("@yext/sample-component");
     expect(await plugin.getPathToComponent("AceComponent")).toBe(
-      path.join(process.cwd(), "tests/__fixtures__/PluginConfig/src/components/AceComponent.tsx")
+      path.join(
+        process.cwd(),
+        "tests/__fixtures__/PluginConfig/src/components/AceComponent.tsx"
+      )
     );
   });
 

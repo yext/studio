@@ -11,7 +11,9 @@ import {
   fragmentComponent,
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
-import ReactComponentFileWriter, { GetFileMetadataByUUID } from "../../src/writers/ReactComponentFileWriter";
+import ReactComponentFileWriter, {
+  GetFileMetadataByUUID,
+} from "../../src/writers/ReactComponentFileWriter";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import {
   FileMetadataKind,

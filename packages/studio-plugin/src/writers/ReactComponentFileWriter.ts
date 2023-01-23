@@ -22,7 +22,8 @@ import { transformPropValuesToRaw } from "../utils";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import { TypeGuards } from "../utils";
 
-export type GetFileMetadataByUUID = ParsingOrchestrator["getFileMetadataByUUID"];
+export type GetFileMetadataByUUID =
+  ParsingOrchestrator["getFileMetadataByUUID"];
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -194,10 +195,13 @@ export default class ReactComponentFileWriter {
    * Identify and sort components of named imports by their node module.
    * It is assumed that named imports are from plugins, installed via npm.
    */
-  filterNamedImportsByPlugin(componentTree: ComponentState[]): Record<string, string[]> {
+  filterNamedImportsByPlugin(
+    componentTree: ComponentState[]
+  ): Record<string, string[]> {
     const namedImports: Record<string, string[]> = {};
 
-    componentTree.filter(TypeGuards.isStandardOrModuleComponentState)
+    componentTree
+      .filter(TypeGuards.isStandardOrModuleComponentState)
       .forEach((node) => {
         const metadata = this.getFileMetadataByUUID(node.metadataUUID);
         if (metadata && "pluginName" in metadata && metadata.pluginName) {

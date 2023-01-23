@@ -39,7 +39,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     }
 
     return componentState.componentName;
-  }
+  };
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,

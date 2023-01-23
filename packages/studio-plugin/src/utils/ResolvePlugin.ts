@@ -21,10 +21,13 @@ export default class ResolvePlugin {
     this.root = root;
   }
 
-  resolveModuleName(moduleName: string, root = process.cwd()): {
-    resolvedModule: typescript.ResolvedModuleFull,
-    root: string,
-   } {
+  resolveModuleName(
+    moduleName: string,
+    root = process.cwd()
+  ): {
+    resolvedModule: typescript.ResolvedModuleFull;
+    root: string;
+  } {
     const customModuleResolutionHost: ModuleResolutionHost = {
       fileExists(fileName) {
         return fs.existsSync(path.join(root, fileName));
@@ -32,9 +35,14 @@ export default class ResolvePlugin {
       readFile(fileName) {
         return fs.readFileSync(path.join(root, fileName), "utf-8");
       },
-    }
+    };
 
-    const { resolvedModule } = resolveModuleName(moduleName, "", {}, customModuleResolutionHost);
+    const { resolvedModule } = resolveModuleName(
+      moduleName,
+      "",
+      {},
+      customModuleResolutionHost
+    );
 
     if (!resolvedModule) {
       const parent = path.normalize(path.join(root, ".."));
@@ -52,8 +60,9 @@ export default class ResolvePlugin {
 
   getPathToModule(): string {
     const subModule = this.resolvedModule.packageId?.subModuleName || "";
-    const stripSubModuleNameFromPath = this.resolvedModule.resolvedFileName.replace(subModule, "");
-    return path.join(this.root, stripSubModuleNameFromPath); 
+    const stripSubModuleNameFromPath =
+      this.resolvedModule.resolvedFileName.replace(subModule, "");
+    return path.join(this.root, stripSubModuleNameFromPath);
   }
 
   getPathToConfig(): string {
@@ -61,11 +70,14 @@ export default class ResolvePlugin {
   }
 
   async getPathToComponent(name: string): Promise<string> {
-    const pathToComponent = await this.getConfig()
-      .then((config) => config.components[name]);
+    const pathToComponent = await this.getConfig().then(
+      (config) => config.components[name]
+    );
 
     if (!pathToComponent) {
-      throw new Error(`No component named ${name} found in "${this.moduleName}".`);
+      throw new Error(
+        `No component named ${name} found in "${this.moduleName}".`
+      );
     }
     return path.join(this.getPathToModule(), pathToComponent);
   }

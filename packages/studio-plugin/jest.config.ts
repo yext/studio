@@ -6,9 +6,7 @@ const config: Config = {
   verbose: true,
   collectCoverage: true,
   collectCoverageFrom: ["src/**", "!src/types/**"],
-  transformIgnorePatterns: [
-    `/node_modules/(?!${esModules})`
-  ],
+  transformIgnorePatterns: [`/node_modules/(?!${esModules})`],
   resetMocks: true,
   restoreMocks: true,
 };

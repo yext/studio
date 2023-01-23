@@ -42,7 +42,7 @@ export default class ParsingOrchestrator {
     private project: Project,
     private paths: UserPaths,
     plugins: PluginConfig[],
-    private isPagesJSRepo?: boolean,
+    private isPagesJSRepo?: boolean
   ) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.getFileMetadataByUUID = this.getFileMetadataByUUID.bind(this);
@@ -53,11 +53,13 @@ export default class ParsingOrchestrator {
   private getPluginRefs(plugins: PluginConfig[] = []): PluginRef[] {
     return plugins.flatMap((plugin: PluginConfig) => {
       const npmModule = new ResolvePlugin(plugin.name);
-      return Object.entries(plugin.components).map(([componentName, filepath]) => ({
-        filepath: path.join(npmModule.getPathToModule(), filepath),
-        moduleName: plugin.name,
-        componentName,
-      }));
+      return Object.entries(plugin.components).map(
+        ([componentName, filepath]) => ({
+          filepath: path.join(npmModule.getPathToModule(), filepath),
+          moduleName: plugin.name,
+          componentName,
+        })
+      );
     });
   }
 
@@ -135,11 +137,13 @@ export default class ParsingOrchestrator {
         throw new Error(`File not found at: ${filePath}`);
       }
       this.filepathToFileMetadata[filePath] = this.getFileMetadata(filePath);
-    }
+    };
 
     addDirectoryToMapping(this.paths.components);
     addDirectoryToMapping(this.paths.modules);
-    this.pluginReferences.forEach((pluginReference) => addFileToMapping(pluginReference.filepath));
+    this.pluginReferences.forEach((pluginReference) =>
+      addFileToMapping(pluginReference.filepath)
+    );
 
     return this.filepathToFileMetadata;
   }
@@ -156,9 +160,15 @@ export default class ParsingOrchestrator {
       const moduleFile = this.getModuleFile(absPath);
       return moduleFile.getModuleMetadata();
     }
-    const pluginRef = this.pluginReferences.find((ref) => ref.filepath === absPath);
+    const pluginRef = this.pluginReferences.find(
+      (ref) => ref.filepath === absPath
+    );
     if (pluginRef) {
-      const componentFile = new ComponentFile(absPath, this.project, pluginRef.moduleName);
+      const componentFile = new ComponentFile(
+        absPath,
+        this.project,
+        pluginRef.moduleName
+      );
       return componentFile.getComponentMetadata();
     }
     const { modules, components } = this.paths;
@@ -168,9 +178,12 @@ export default class ParsingOrchestrator {
     );
   }
 
-  private getFileMetadataByUUID(metadataUUID: string): FileMetadata | undefined {
-    const fileMetadata = Object.values(this.filepathToFileMetadata)
-      .find((fileMetadata) => fileMetadata.metadataUUID === metadataUUID);
+  private getFileMetadataByUUID(
+    metadataUUID: string
+  ): FileMetadata | undefined {
+    const fileMetadata = Object.values(this.filepathToFileMetadata).find(
+      (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
+    );
 
     if (!fileMetadata) {
       return;

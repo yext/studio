@@ -1,7 +1,9 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
-import ReactComponentFileWriter, { GetFileMetadataByUUID } from "../writers/ReactComponentFileWriter";
+import ReactComponentFileWriter, {
+  GetFileMetadataByUUID,
+} from "../writers/ReactComponentFileWriter";
 import path from "path";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";

@@ -3,7 +3,9 @@ import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
-import ReactComponentFileWriter, { GetFileMetadataByUUID } from "../writers/ReactComponentFileWriter";
+import ReactComponentFileWriter, {
+  GetFileMetadataByUUID,
+} from "../writers/ReactComponentFileWriter";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 import ComponentTreeParser, {
