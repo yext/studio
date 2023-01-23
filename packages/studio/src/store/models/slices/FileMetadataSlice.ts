@@ -12,8 +12,6 @@ export interface FileMetadataSliceStates {
      * user's file system.
      */
     modulesToUpdate: Set<string>;
-    /** The UUIDs of modules that need to be removed from the user's file system. */
-    modulesToRemove: Set<string>;
   };
 }
 

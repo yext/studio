@@ -50,7 +50,6 @@ const useStudioStore = create<StudioStore>()(
             };
             s.fileMetadatas.pendingChanges = {
               modulesToUpdate: new Set<string>(),
-              modulesToRemove: new Set<string>(),
             };
           });
         }
@@ -60,7 +59,7 @@ const useStudioStore = create<StudioStore>()(
         const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
         const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
           get().fileMetadatas;
-        const { modulesToUpdate, modulesToRemove } = pendingModuleChanges;
+        const { modulesToUpdate } = pendingModuleChanges;
         const { values } = get().siteSettings;
         // Serialize pendingChanges (uses type Set) to send to server side.
         sendMessage(MessageID.StudioCommitChanges, {
@@ -69,8 +68,7 @@ const useStudioStore = create<StudioStore>()(
           pendingChanges: {
             pagesToRemove: [...pagesToRemove.keys()],
             pagesToUpdate: [...pagesToUpdate.keys()],
-            modulesToUpdate: [...modulesToUpdate.keys()],
-            modulesToRemove: [...modulesToRemove.keys()],
+            modulesToUpdate: [...modulesToUpdate.keys()]
           },
           siteSettings: { values },
         });
@@ -79,7 +77,7 @@ const useStudioStore = create<StudioStore>()(
           const previousCommitState = cloneDeep({
             siteSettings: {
               values: get().siteSettings.values,
-            },
+            }
           });
           s.previousCommit = previousCommitState;
         });

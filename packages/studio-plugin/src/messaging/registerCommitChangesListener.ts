@@ -28,13 +28,6 @@ export default function registerCommitChangesListener(
           fileManager.updateModuleFile(metadata.filepath, metadata);
         }
       });
-      console.log(pendingChanges, UUIDToFileMetadata);
-      pendingChanges.modulesToRemove.forEach((moduleUUID) => {
-        const metadata = UUIDToFileMetadata[moduleUUID];
-        if (metadata.kind === FileMetadataKind.Module) {
-          fileManager.removeFile(metadata.filepath);
-        }
-      });
       await Promise.all(
         pendingChanges.pagesToUpdate.map(async (pageToUpdate) => {
           const filepath = pageNameToPageState[pageToUpdate]?.filepath;
@@ -47,6 +40,7 @@ export default function registerCommitChangesListener(
       if (siteSettings?.values) {
         fileManager.updateSiteSettings(siteSettings.values);
       }
+      fileManager.deleteRemovedFileMetadatas(UUIDToFileMetadata);
 
       return "Changes saved successfully.";
     }
