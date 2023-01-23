@@ -11,8 +11,8 @@ const { resolveModuleName } = typescript;
  */
 export default class ResolvePlugin {
   private moduleName: string;
-  private resolvedModule: typescript.ResolvedModuleFull;
-  private root: string;
+  resolvedModule: typescript.ResolvedModuleFull;
+  root: string;
 
   constructor(moduleName: string) {
     this.moduleName = moduleName;

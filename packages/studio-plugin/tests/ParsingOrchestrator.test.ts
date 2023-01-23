@@ -152,6 +152,44 @@ describe("aggregates data as expected", () => {
   });
 });
 
+describe("includes plugins in aggregate data as expected", () => {
+  const tsMorphProject: Project = createTsMorphProject();
+  const orchestrator = new ParsingOrchestrator(
+    tsMorphProject,
+    userPaths,
+    [PluginConfig],
+    false
+  );
+  let studioData: StudioData;
+
+  beforeAll(async () => {
+    studioData = await orchestrator.getStudioData();
+  });
+
+  it("properly installs @yext/sample-component plugin.", () => {
+    const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
+    expect(fileMetadataArray).toHaveLength(7);
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("components/AceComponent.tsx"),
+        kind: FileMetadataKind.Component,
+      })
+    );
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("components/BevComponent.tsx"),
+        kind: FileMetadataKind.Component,
+      })
+    );
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("components/ChazComponent.tsx"),
+        kind: FileMetadataKind.Component,
+      })
+    );
+  });
+});
+
 it("throws an error when the page imports components from unexpected folders", async () => {
   const userPaths = getUserPaths("thisFolderDoesNotExist");
   userPaths.pages = path.resolve(
@@ -187,13 +225,3 @@ it("throws when the pages folder does not exist", async () => {
     /^The pages directory does not exist/
   );
 });
-
-// describe("ParsingOrchestrator.getPluginRefs()", () => {
-//   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-//   const getPluginRefsSpy = (ParsingOrchestrator as any).getPluginRefs;
-
-//   it("correctly generates PluginRefs from an array of PluginConfigs", () => {
-    
-//     expect(getPluginRefsSpy([PluginConfig])).toBe({});
-//   })
-// });
