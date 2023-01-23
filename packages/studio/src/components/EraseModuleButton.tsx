@@ -16,18 +16,7 @@ export default function EraseModuleButton({
   metadata: ModuleMetadata;
 }) {
   const moduleName = path.basename(metadata.filepath, ".tsx");
-  const removeFileMetadata = useStudioStore(
-    (store) => store.fileMetadatas.removeFileMetadata
-  );
-  const setActiveComponentUUID = useStudioStore(
-    (store) => store.pages.setActiveComponentUUID
-  );
-  const setActivePageState = useStudioStore(
-    (store) => store.pages.setActivePageState
-  );
-  const getActivePageState = useStudioStore(
-    (store) => store.pages.getActivePageState
-  );
+  const eraseModule = useStudioStore(store => store.eraseModule);
 
   const modalBody = useMemo(() => {
     return (
@@ -46,22 +35,7 @@ export default function EraseModuleButton({
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       function handleConfirm() {
-        setActiveComponentUUID(undefined);
-        const activePageState = getActivePageState();
-        if (activePageState) {
-          const updatedComponentTree =
-            activePageState?.componentTree.filter((c) => {
-              if (c.kind !== ComponentStateKind.Module) {
-                return true;
-              }
-              return c.metadataUUID !== metadata.metadataUUID;
-            }) ?? [];
-          setActivePageState({
-            ...activePageState,
-            componentTree: updatedComponentTree,
-          });
-        }
-        removeFileMetadata(metadata.metadataUUID);
+        eraseModule(metadata)
       }
       return (
         <Modal
@@ -74,15 +48,7 @@ export default function EraseModuleButton({
         />
       );
     },
-    [
-      moduleName,
-      setActiveComponentUUID,
-      getActivePageState,
-      removeFileMetadata,
-      metadata.metadataUUID,
-      setActivePageState,
-      modalBody,
-    ]
+    [eraseModule, metadata, modalBody, moduleName]
   );
 
   return (

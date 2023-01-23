@@ -1,3 +1,4 @@
+import { ModuleMetadata } from '@yext/studio-plugin';
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousCommitSlice from "./slices/PreviousCommitSlice";
@@ -14,5 +15,6 @@ export interface StudioStore {
   siteSettings: SiteSettingSlice;
   commitChanges: () => void;
   createModule: (filepath: string) => boolean;
+  eraseModule: (metadata: ModuleMetadata) => void;
   previousCommit: PreviousCommitSlice;
 }

@@ -28,6 +28,7 @@ export default function registerCommitChangesListener(
           fileManager.updateModuleFile(metadata.filepath, metadata);
         }
       });
+      console.log(pendingChanges, UUIDToFileMetadata);
       pendingChanges.modulesToRemove.forEach((moduleUUID) => {
         const metadata = UUIDToFileMetadata[moduleUUID];
         if (metadata.kind === FileMetadataKind.Module) {
