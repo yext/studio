@@ -34,7 +34,7 @@ export default function Modal({
   handleConfirm,
   isConfirmButtonDisabled,
   confirmButtonText = "Ok",
-  confirmButtonEnabledColor
+  confirmButtonEnabledColor,
 }: ModalProps) {
   const footerClasses = classNames("mt-2 items-center", {
     "flex justify-between": errorMessage,

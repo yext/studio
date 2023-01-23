@@ -72,7 +72,9 @@ it("errors when removeFileMetadata is called on a non-module", () => {
   useStudioStore.getState().fileMetadatas.removeFileMetadata("uuid-1");
   expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
   expect(consoleErrorSpy).toHaveBeenCalledWith(
-    'removeFileMetadata is only allowed for modules, not:', FileMetadataKind.Component)
+    "removeFileMetadata is only allowed for modules, not:",
+    FileMetadataKind.Component
+  );
 
   const UUIDToFileMetadata =
     useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;

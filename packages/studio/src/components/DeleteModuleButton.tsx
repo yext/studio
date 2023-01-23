@@ -5,7 +5,7 @@ import { ModuleMetadata } from "@yext/studio-plugin";
 import Modal from "./common/Modal";
 import path from "path-browserify";
 import useStudioStore from "../store/useStudioStore";
-import { Tooltip } from 'react-tooltip';
+import { Tooltip } from "react-tooltip";
 
 /**
  * Whcn clicked, deletes a module. When changes are saved to file
@@ -22,13 +22,12 @@ export default function DeleteModuleButton({
   const modalBody = useMemo(() => {
     return (
       <div className="flex flex-col text-sm py-2 px-1">
-        <div className='mb-2'>
-          Deleting this module will remove its status as a module, removing it from the Insert panel, and detach all other instances of it across your site.
-          This will not delete the items themselves.
+        <div className="mb-2">
+          Deleting this module will remove its status as a module, removing it
+          from the Insert panel, and detach all other instances of it across
+          your site. This will not delete the items themselves.
         </div>
-        <div>
-          Press 'Delete' to confirm this."
-        </div>
+        <div>Press 'Delete' to confirm this."</div>
       </div>
     );
   }, []);
@@ -52,16 +51,18 @@ export default function DeleteModuleButton({
     },
     [deleteModule, metadata, modalBody]
   );
-  
+
   const anchorId = `delete-module-${moduleName}`;
   return (
     <>
       <ButtonWithModal
         ariaLabel={`Delete Module ${moduleName}`}
         renderModal={renderModal}
-        buttonContent={<DeleteModuleIcon className="hover:opacity-50" id={anchorId}/>}
+        buttonContent={
+          <DeleteModuleIcon className="hover:opacity-50" id={anchorId} />
+        }
       />
-      <Tooltip anchorId={anchorId} content='Delete'/>
+      <Tooltip anchorId={anchorId} content="Delete" />
     </>
   );
 }

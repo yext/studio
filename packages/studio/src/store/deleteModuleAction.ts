@@ -1,7 +1,12 @@
 import { StudioStore } from "./models/store";
-import { ComponentState, ComponentStateKind, ComponentTreeHelpers, ModuleMetadata } from "@yext/studio-plugin";
-import { cloneDeep } from 'lodash';
-import { v4 } from 'uuid';
+import {
+  ComponentState,
+  ComponentStateKind,
+  ComponentTreeHelpers,
+  ModuleMetadata,
+} from "@yext/studio-plugin";
+import { cloneDeep } from "lodash";
+import { v4 } from "uuid";
 
 export default function getDeleteModuleAction(
   get: () => StudioStore
@@ -13,18 +18,26 @@ export default function getDeleteModuleAction(
     if (activePageState) {
       const updatedComponentTree =
         activePageState?.componentTree.flatMap((componentStateToDetach) => {
-          const isModule = componentStateToDetach.kind === ComponentStateKind.Module
-          if (!isModule || componentStateToDetach.metadataUUID !== metadata.metadataUUID) {
+          const isModule =
+            componentStateToDetach.kind === ComponentStateKind.Module;
+          if (
+            !isModule ||
+            componentStateToDetach.metadataUUID !== metadata.metadataUUID
+          ) {
             return componentStateToDetach;
           }
-          const detachedTree = ComponentTreeHelpers.mapComponentTreeParentsFirst<ComponentState>(
-            cloneDeep(metadata.componentTree), (child, parentValue) => {
-            return {
-              ...child,
-              uuid: v4(),
-              parentUUID: parentValue?.uuid ?? componentStateToDetach.parentUUID
-            };
-          })
+          const detachedTree =
+            ComponentTreeHelpers.mapComponentTreeParentsFirst<ComponentState>(
+              cloneDeep(metadata.componentTree),
+              (child, parentValue) => {
+                return {
+                  ...child,
+                  uuid: v4(),
+                  parentUUID:
+                    parentValue?.uuid ?? componentStateToDetach.parentUUID,
+                };
+              }
+            );
           return detachedTree;
         }) ?? [];
       store.pages.setActivePageState({

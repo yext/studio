@@ -20,7 +20,8 @@ export default class ComponentTreeHelpers {
     handler: (component: ComponentState, mappedChildren: T[]) => T,
     parent?: ComponentState
   ): T[] {
-    const { directChildren, otherDescendants } = ComponentTreeHelpers.separateDescendants(componentTree, parent);
+    const { directChildren, otherDescendants } =
+      ComponentTreeHelpers.separateDescendants(componentTree, parent);
     return directChildren.map((component) => {
       const children = this.mapComponentTree(
         otherDescendants,
@@ -46,10 +47,19 @@ export default class ComponentTreeHelpers {
     parent?: ComponentState,
     parentValue?: T
   ): T[] {
-    const { directChildren, otherDescendants } = ComponentTreeHelpers.separateDescendants(componentTree, parent);
+    const { directChildren, otherDescendants } =
+      ComponentTreeHelpers.separateDescendants(componentTree, parent);
     return directChildren.flatMap((component) => {
       const mappedValue = handler(component, parentValue);
-      return [mappedValue, ...ComponentTreeHelpers.mapComponentTreeParentsFirst(otherDescendants, handler, component, mappedValue)];
+      return [
+        mappedValue,
+        ...ComponentTreeHelpers.mapComponentTreeParentsFirst(
+          otherDescendants,
+          handler,
+          component,
+          mappedValue
+        ),
+      ];
     });
   }
 
@@ -66,6 +76,6 @@ export default class ComponentTreeHelpers {
         otherDescendants.push(component);
       }
     });
-    return { directChildren, otherDescendants }
+    return { directChildren, otherDescendants };
   }
 }
