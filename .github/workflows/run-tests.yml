@@ -6,7 +6,7 @@ jobs:
   unit_tests:
     uses: yext/slapshot-reusable-workflows/.github/workflows/run_tests.yml@v1
     with:
-      node_matrix: '["18.x", "19.x"]'
+      node_matrix: '["16.x", "18.x", "19.x"]'
       build_script: "npm run build -w=packages/studio-plugin"
 
   test_build:
