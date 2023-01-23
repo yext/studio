@@ -5,7 +5,6 @@ import {
   ComponentTreeHelpers,
   ModuleMetadata,
 } from "@yext/studio-plugin";
-import { cloneDeep } from "lodash";
 import { v4 } from "uuid";
 
 export default function getDeleteModuleAction(
@@ -28,7 +27,7 @@ export default function getDeleteModuleAction(
           }
           const detachedTree =
             ComponentTreeHelpers.mapComponentTreeParentsFirst<ComponentState>(
-              cloneDeep(metadata.componentTree),
+              metadata.componentTree,
               (child, parentValue) => {
                 return {
                   ...child,
