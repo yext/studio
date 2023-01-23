@@ -66,9 +66,9 @@ export default class PageFile {
     const absPathToComponentName = {
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
       ...this.pluginRefs?.reduce((pathToPluginName, ref) => {
-          pathToPluginName[ref.filepath] = ref.componentName;
-          return pathToPluginName;
-        }, {}),
+        pathToPluginName[ref.filepath] = ref.componentName;
+        return pathToPluginName;
+      }, {}),
     };
     const componentTree = this.componentTreeParser.parseComponentTree(
       absPathToComponentName
