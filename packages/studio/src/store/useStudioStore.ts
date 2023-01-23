@@ -7,7 +7,7 @@ import { throttle, isEqual, cloneDeep } from "lodash";
 
 import { StudioStore } from "./models/store";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
-import createPageSlice from "./slices/createPageSlice";
+import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
 import { getUserUpdatableStore } from "./utils";
 import sendMessage from "../messaging/sendMessage";
@@ -15,7 +15,6 @@ import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
-import getDeleteModuleAction from "./deleteModuleAction";
 
 enableMapSet();
 
@@ -89,7 +88,6 @@ const useStudioStore = create<StudioStore>()(
         siteSettings: lens(createSiteSettingSlice),
         commitChanges,
         createModule: getCreateModuleAction(get),
-        deleteModule: getDeleteModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
       };
     })

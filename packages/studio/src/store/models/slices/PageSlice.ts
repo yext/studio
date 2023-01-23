@@ -1,4 +1,9 @@
-import { ComponentState, PageState, PropValues } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ModuleMetadata,
+  PageState,
+  PropValues,
+} from "@yext/studio-plugin";
 
 export interface PagesRecord {
   [pageName: string]: PageState;
@@ -41,6 +46,8 @@ interface PageSliceActions {
   setActiveComponentProps: (props: PropValues) => void;
   getActiveComponentState: () => ComponentState | undefined;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
+
+  detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }
 
 /**

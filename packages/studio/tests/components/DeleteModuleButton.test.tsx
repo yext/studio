@@ -1,28 +1,75 @@
-import { fireEvent, render, screen } from '@testing-library/react';
-import { FileMetadataKind, ModuleMetadata } from '@yext/studio-plugin';
-import DeleteModuleButton from '../../src/components/DeleteModuleButton';
-import mockStore from '../__utils__/mockStore';
+import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  ComponentStateKind,
+  FileMetadataKind,
+  ModuleMetadata,
+} from "@yext/studio-plugin";
+import DeleteModuleButton from "../../src/components/DeleteModuleButton";
+import useStudioStore from "../../src/store/useStudioStore";
+import mockStore from "../__utils__/mockStore";
 
-it('can open modal and call deleteModule with correct ModuleMetadata', async () => {
-  const deleteModule = jest.fn()
-  mockStore({ deleteModule })
+it("can open modal and delete modules", async () => {
+  const basicPageState = {
+    componentTree: [
+      {
+        kind: ComponentStateKind.Module,
+        componentName: "Star",
+        props: {},
+        uuid: "first-comp-state",
+        metadataUUID: "star-metadata-uuid",
+      },
+    ],
+    cssImports: [],
+    filepath: "unused",
+  };
 
-  const testMetadata: ModuleMetadata = {
+  const testModuleMetadata: ModuleMetadata = {
     kind: FileMetadataKind.Module,
-    componentTree: [],
-    metadataUUID: 'mock-uuid-123',
-    filepath: '/a/b/c/Star.tsx'
-  }
-  render(<DeleteModuleButton metadata={testMetadata}/>);
-  const openModalButton = await screen.findByRole('button', {
-    name: 'Delete Module Star'
+    metadataUUID: "star-metadata-uuid",
+    componentTree: [
+      {
+        kind: ComponentStateKind.Standard,
+        componentName: "Banner",
+        props: {},
+        uuid: "will-be-replaced",
+        metadataUUID: "banner-metadata-uuid",
+      },
+    ],
+    filepath: "unused/Star.tsx",
+  };
+
+  mockStore({
+    pages: {
+      activeComponentUUID: "will be unset after",
+      pages: {
+        firstPage: basicPageState,
+      },
+    },
+    fileMetadatas: {
+      UUIDToFileMetadata: {
+        "star-metadata-uuid": testModuleMetadata,
+      },
+    },
+  });
+
+  render(<DeleteModuleButton metadata={testModuleMetadata} />);
+  const openModalButton = await screen.findByRole("button", {
+    name: "Delete Module Star",
   });
   fireEvent.click(openModalButton);
-  const deleteModuleConfirmation = await screen.findByRole('button', {
-    name: 'Delete'
+  const deleteModuleConfirmation = await screen.findByRole("button", {
+    name: "Delete",
   });
-  expect(deleteModule).toHaveBeenCalledTimes(0);
   fireEvent.click(deleteModuleConfirmation);
-  expect(deleteModule).toHaveBeenCalledTimes(1);
-  expect(deleteModule).toHaveBeenCalledWith(testMetadata)
+  expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+  expect(useStudioStore.getState().pages.pages).toEqual({
+    firstPage: expect.objectContaining({
+      componentTree: [
+        expect.objectContaining({ kind: ComponentStateKind.Standard }),
+      ],
+    }),
+  });
+  expect(useStudioStore.getState().fileMetadatas.UUIDToFileMetadata).toEqual(
+    {}
+  );
 });

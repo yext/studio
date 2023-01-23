@@ -1,4 +1,4 @@
-import { StudioStore } from "./models/store";
+import PageSlice, { PagesRecord } from "../../models/slices/PageSlice";
 import {
   ComponentState,
   ComponentStateKind,
@@ -6,25 +6,30 @@ import {
   ModuleMetadata,
 } from "@yext/studio-plugin";
 import { v4 } from "uuid";
-import { PagesRecord } from './models/slices/PageSlice';
 
 /**
- * getDeleteModuleAction is a factory method for the deleteModule action.
+ * Creates an action that loops through all pages, and detaches all instances of the given module.
  */
-export default function getDeleteModuleAction(
-  get: () => StudioStore
-): StudioStore["deleteModule"] {
+export default function createDetachAllModuleInstances(get: () => PageSlice) {
   return (metadata: ModuleMetadata) => {
-    const pagesSlice = get().pages;
-
+    const pagesSlice = get();
     pagesSlice.setActiveComponentUUID(undefined);
-    const updatedPages: PagesRecord = Object.keys(pagesSlice.pages).reduce((allPages, pageName) => {
-      allPages[pageName] = detachModuleInstances(metadata, pagesSlice.pages[pageName].componentTree);
-      return allPages;
-    }, {});
+    const updatedPages: PagesRecord = Object.keys(pagesSlice.pages).reduce(
+      (allPages, pageName) => {
+        const originalPage = pagesSlice.pages[pageName];
+        const updatedComponentTree = detachModuleInstances(
+          metadata,
+          originalPage.componentTree
+        );
+        allPages[pageName] = {
+          ...originalPage,
+          componentTree: updatedComponentTree,
+        };
+        return allPages;
+      },
+      {} as PagesRecord
+    );
     pagesSlice.setPagesRecord(updatedPages);
-
-    get().fileMetadatas.removeFileMetadata(metadata.metadataUUID);
   };
 }
 

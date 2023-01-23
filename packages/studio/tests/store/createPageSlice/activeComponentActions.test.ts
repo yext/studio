@@ -1,16 +1,16 @@
-import useStudioStore from "../../src/store/useStudioStore";
+import useStudioStore from "../../../src/store/useStudioStore";
 import {
   ComponentStateKind,
   PropValueKind,
   PropValues,
   PropValueType,
 } from "@yext/studio-plugin";
-import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
+import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import {
   searchBarComponent,
   resultsComponent,
   fragmentComponent,
-} from "../__fixtures__/componentStates";
+} from "../../__fixtures__/componentStates";
 
 describe("PageSlice", () => {
   describe("active component actions", () => {

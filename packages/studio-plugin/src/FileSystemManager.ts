@@ -72,11 +72,8 @@ export default class FileSystemManager {
    * Deletes all files corresponding to FileMetadata that exist in the previous UUIDToFileMetadata
    * but not the updated UUIDToFileMetadata (i.e. FileMetadata that have been removed).
    */
-  syncFileMetadata(
-    updatedUUIDToFileMetadata: Record<string, FileMetadata>
-  ) {
-    const UUIDToFileMetadata =
-      this.parsingOrchestrator.getUUIDToFileMetadata();
+  syncFileMetadata(updatedUUIDToFileMetadata: Record<string, FileMetadata>) {
+    const UUIDToFileMetadata = this.parsingOrchestrator.getUUIDToFileMetadata();
     Object.keys(UUIDToFileMetadata).forEach((moduleUUID) => {
       if (!updatedUUIDToFileMetadata.hasOwnProperty(moduleUUID)) {
         this.removeFile(UUIDToFileMetadata[moduleUUID].filepath);

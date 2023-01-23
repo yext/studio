@@ -17,11 +17,26 @@ export default function DeleteModuleButton({
   metadata: ModuleMetadata;
 }) {
   const moduleName = path.basename(metadata.filepath, ".tsx");
-  const deleteModule = useStudioStore((store) => store.deleteModule);
+  const detachAllModuleInstances = useStudioStore(
+    (store) => store.pages.detachAllModuleInstances
+  );
+  const setActiveComponentUUID = useStudioStore(
+    (store) => store.pages.setActiveComponentUUID
+  );
+  const removeFileMetadata = useStudioStore(
+    (store) => store.fileMetadatas.removeFileMetadata
+  );
 
   const handleDelete = useCallback(() => {
-    deleteModule(metadata);
-  }, [metadata, deleteModule])
+    setActiveComponentUUID(undefined);
+    detachAllModuleInstances(metadata);
+    removeFileMetadata(metadata.metadataUUID);
+  }, [
+    setActiveComponentUUID,
+    detachAllModuleInstances,
+    metadata,
+    removeFileMetadata,
+  ]);
 
   const modalBody = useMemo(() => {
     return (
