@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, useMemo } from "react";
 import { Tooltip } from "react-tooltip";
 
 import { v4 } from "uuid";
@@ -8,7 +8,7 @@ export default function ActionIconWrapper(
     tooltip: string;
   }>
 ) {
-  const anchorId = v4();
+  const anchorId = useMemo(() => v4(), []);
   return (
     <div className="hover:bg-slate-200 rounded p-1" id={anchorId}>
       {props.children}
