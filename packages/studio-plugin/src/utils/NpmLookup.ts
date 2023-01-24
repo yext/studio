@@ -1,22 +1,19 @@
 import fs from "fs";
 import path from "path";
 import typescript, { ModuleResolutionHost } from "typescript";
-import { PluginConfig } from "../types";
 
 // "typescript" is a CommonJS module, which may not support all module.exports as named exports
 const { resolveModuleName } = typescript;
 
 /**
- * ResolvePlugin is a class for traversing plugin configuration and files
+ * NpmLookup is a class for retrieving information on an installed node module
  */
-export default class ResolvePlugin {
-  private resolvedModule: typescript.ResolvedModuleFull;
-  private root: string;
+export default class NpmLookup {
+  private entryPath: string;
 
   constructor(private moduleName: string) {
     const { resolvedModule, root } = this.resolveModuleName();
-    this.resolvedModule = resolvedModule;
-    this.root = root;
+    this.entryPath = this.setEntryPath(resolvedModule, root);
   }
 
   private resolveModuleName(root = process.cwd()): {
@@ -53,10 +50,17 @@ export default class ResolvePlugin {
     };
   }
 
-  getPathToModule(): string {
-    const subModule = this.resolvedModule.packageId?.subModuleName || "";
+  private setEntryPath(
+    resolvedModule: typescript.ResolvedModuleFull,
+    root: string
+  ): string {
+    const subModule = resolvedModule.packageId?.subModuleName || "";
     const stripSubModuleNameFromPath =
-      this.resolvedModule.resolvedFileName.replace(subModule, "");
-    return path.join(this.root, stripSubModuleNameFromPath);
+      resolvedModule.resolvedFileName.replace(subModule, "");
+    return path.join(root, stripSubModuleNameFromPath);
+  }
+
+  getEntryPath(): string {
+    return this.entryPath;
   }
 }

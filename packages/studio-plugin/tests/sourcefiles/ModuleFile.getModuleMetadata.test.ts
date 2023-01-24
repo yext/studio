@@ -11,7 +11,6 @@ import { mockUUID } from "../__utils__/spies";
 import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
-import { GetFileMetadataByUUID } from "../../src/writers/ReactComponentFileWriter";
 
 jest.mock("uuid");
 
@@ -22,7 +21,7 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
       text: { type: PropValueType.string },
     };
   }
-  if (filepath?.endsWith("Tile.tsx")) {
+  else if (filepath?.endsWith("Tile.tsx")) {
     propShape = {
       label: { type: PropValueType.string },
     };
@@ -38,18 +37,6 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
   };
 };
 
-const mockGetFileMetadataByUUID: GetFileMetadataByUUID = (
-  componentName: string
-) => {
-  return {
-    kind: FileMetadataKind.Component,
-    metadataUUID: "mock-metadata-uuid",
-    propShape: {},
-    filepath: `path/to/node_modules/@yext/sample-component/src/components/${componentName}`,
-    componentTree: [],
-  };
-};
-
 describe("getModuleMetadata", () => {
   const project = createTsMorphProject();
   beforeEach(() => {
@@ -61,7 +48,7 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
-      mockGetFileMetadataByUUID,
+      jest.fn(),
       project
     );
     const moduleMetadata = moduleFile.getModuleMetadata();
@@ -129,7 +116,7 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
-      mockGetFileMetadataByUUID,
+      jest.fn(),
       project
     );
     const moduleMetadata = moduleFile.getModuleMetadata();
@@ -187,7 +174,7 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
-      mockGetFileMetadataByUUID,
+      jest.fn(),
       project
     );
     const moduleMetadata = moduleFile.getModuleMetadata();

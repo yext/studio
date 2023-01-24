@@ -34,13 +34,11 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   };
 }
 
-const mockGetFileMetadataByUUID = mockGetFileMetadata;
-
 function createPageFile(pageName: string): PageFile {
   return new PageFile(
     getPagePath(pageName),
     mockGetFileMetadata,
-    mockGetFileMetadataByUUID,
+    jest.fn(),
     createTsMorphProject()
   );
 }

@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Project } from "ts-morph";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
-import { FileMetadata, FileMetadataKind } from "../../src";
+import { FileMetadataKind } from "../../src";
 import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { complexBannerComponent } from "../__fixtures__/componentStates";
@@ -9,14 +9,6 @@ import { throwIfCalled } from "../__utils__/throwIfCalled";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 
 jest.mock("uuid");
-
-function mockGetFileMetadataByUUID(): FileMetadata {
-  return {
-    kind: FileMetadataKind.Component,
-    filepath: "mock-filepath",
-    metadataUUID: "mock-metadata-uuid",
-  };
-}
 
 describe("updateModuleFile", () => {
   let tsMorphProject: Project;
@@ -34,7 +26,7 @@ describe("updateModuleFile", () => {
     const moduleFile = new ModuleFile(
       getModulePath("updateModuleFile/EmptyModule"),
       throwIfCalled,
-      mockGetFileMetadataByUUID,
+      jest.fn(),
       tsMorphProject
     );
     moduleFile.updateModuleFile({

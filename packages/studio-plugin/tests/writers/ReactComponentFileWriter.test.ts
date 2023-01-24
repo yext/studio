@@ -11,9 +11,7 @@ import {
   fragmentComponent,
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
-import ReactComponentFileWriter, {
-  GetFileMetadataByUUID,
-} from "../../src/writers/ReactComponentFileWriter";
+import ReactComponentFileWriter from "../../src/writers/ReactComponentFileWriter";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import {
   FileMetadataKind,
@@ -36,29 +34,6 @@ const propShapeMultiFields: PropShape = {
   },
 };
 
-const mockGetFileMetadataByUUID: GetFileMetadataByUUID = (filepath: string) => {
-  let propShape: PropShape = {};
-  if (filepath?.endsWith("Card.tsx")) {
-    propShape = {
-      text: { type: PropValueType.string },
-    };
-  }
-  if (filepath?.endsWith("Tile.tsx")) {
-    propShape = {
-      label: { type: PropValueType.string },
-    };
-  }
-  return {
-    kind: filepath?.includes("components/")
-      ? FileMetadataKind.Component
-      : FileMetadataKind.Module,
-    metadataUUID: "mock-metadata-uuid",
-    propShape,
-    filepath,
-    componentTree: [],
-  };
-};
-
 function createReactComponentFileWriter(
   tsMorphProject: Project,
   filepath: string,
@@ -70,7 +45,7 @@ function createReactComponentFileWriter(
     componentName,
     sourceFileWriter,
     sourceFileParser,
-    mockGetFileMetadataByUUID
+    jest.fn()
   );
 }
 

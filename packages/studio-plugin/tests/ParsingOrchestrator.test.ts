@@ -19,9 +19,9 @@ const mockGetPathToModuleResponse = path.join(
 const mockGetPathToModule = jest
   .fn()
   .mockReturnValue(mockGetPathToModuleResponse);
-jest.mock("../src/utils/ResolvePlugin", () => {
+jest.mock("../src/utils/NpmLookup", () => {
   return jest.fn().mockImplementation(() => {
-    return { getPathToModule: mockGetPathToModule };
+    return { getEntryPath: mockGetPathToModule };
   });
 });
 

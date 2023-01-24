@@ -1,7 +1,7 @@
 import typescript, { Extension } from "typescript";
-import { ResolvePlugin } from "../../src";
+import { NpmLookup } from "../../src";
 
-export default class MockResolvePlugin extends ResolvePlugin {
+export default class MockNpmLookup extends NpmLookup {
   constructor(moduleName: string) {
     super(moduleName);
   }

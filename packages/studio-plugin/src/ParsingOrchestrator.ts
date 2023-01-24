@@ -16,7 +16,7 @@ import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
-import { ResolvePlugin } from "./utils";
+import { NpmLookup } from "./utils";
 
 export function createTsMorphProject() {
   return new Project({
@@ -52,10 +52,10 @@ export default class ParsingOrchestrator {
 
   private getPluginRefs(plugins: PluginConfig[] = []): PluginRef[] {
     return plugins.flatMap((plugin: PluginConfig) => {
-      const npmModule = new ResolvePlugin(plugin.name);
+      const npmModule = new NpmLookup(plugin.name);
       return Object.entries(plugin.components).map(
         ([componentName, filepath]) => ({
-          filepath: path.join(npmModule.getPathToModule(), filepath),
+          filepath: path.join(npmModule.getEntryPath(), filepath),
           moduleName: plugin.name,
           componentName,
         })
