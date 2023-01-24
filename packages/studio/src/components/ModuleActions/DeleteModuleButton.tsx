@@ -1,11 +1,13 @@
 import { ReactComponent as DeleteModuleIcon } from "../icons/deletemodule.svg";
-import ButtonWithModal, { renderModalFunction } from "../common/ButtonWithModal";
+import ButtonWithModal, {
+  renderModalFunction,
+} from "../common/ButtonWithModal";
 import { useCallback, useMemo } from "react";
 import { ComponentStateKind, ModuleMetadata } from "@yext/studio-plugin";
 import Modal from "../common/Modal";
 import path from "path-browserify";
 import useStudioStore from "../../store/useStudioStore";
-import ActionIconWrapper from './ActionIconWrapper';
+import ActionIconWrapper from "./ActionIconWrapper";
 
 /**
  * When clicked, stages a module for deletion.
@@ -92,12 +94,11 @@ export default function DeleteModuleButton({
         ariaLabel={`Delete Module ${moduleName}`}
         renderModal={renderModal}
         buttonContent={
-          <ActionIconWrapper tooltip='Delete'>
+          <ActionIconWrapper tooltip="Delete">
             <DeleteModuleIcon />
           </ActionIconWrapper>
         }
       />
-
     </>
   );
 }
