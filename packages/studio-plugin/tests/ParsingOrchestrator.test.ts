@@ -21,7 +21,7 @@ const mockGetPathToModule = jest
   .mockReturnValue(mockGetPathToModuleResponse);
 jest.mock("../src/utils/NpmLookup", () => {
   return jest.fn().mockImplementation(() => {
-    return { getEntryPath: mockGetPathToModule };
+    return { getRootPath: mockGetPathToModule };
   });
 });
 

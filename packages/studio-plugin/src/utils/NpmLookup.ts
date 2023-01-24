@@ -9,11 +9,11 @@ const { resolveModuleName } = typescript;
  * NpmLookup is a class for retrieving information on an installed node module
  */
 export default class NpmLookup {
-  private entryPath: string;
+  private rootPath: string;
 
   constructor(private moduleName: string) {
     const { resolvedModule, root } = this.resolveModuleName();
-    this.entryPath = this.setEntryPath(resolvedModule, root);
+    this.rootPath = this.setRootPath(resolvedModule, root);
   }
 
   private resolveModuleName(root = process.cwd()): {
@@ -50,7 +50,7 @@ export default class NpmLookup {
     };
   }
 
-  private setEntryPath(
+  private setRootPath(
     resolvedModule: typescript.ResolvedModuleFull,
     root: string
   ): string {
@@ -62,7 +62,7 @@ export default class NpmLookup {
     return path.join(root, stripSubModuleNameFromPath);
   }
 
-  getEntryPath(): string {
-    return this.entryPath;
+  getRootPath(): string {
+    return this.rootPath;
   }
 }

@@ -55,7 +55,7 @@ export default class ParsingOrchestrator {
       const npmModule = new NpmLookup(plugin.name);
       return Object.entries(plugin.components).map(
         ([componentName, filepath]) => ({
-          filepath: path.join(npmModule.getEntryPath(), filepath),
+          filepath: path.join(npmModule.getRootPath(), filepath),
           moduleName: plugin.name,
           componentName,
         })
