@@ -226,7 +226,7 @@ export default class ParsingOrchestrator {
         files.map(async (file) => {
           const pageName = path.basename(file, ".tsx");
           const pageFile = await this.getPageFile(pageName);
-          return [pageName, await pageFile.getPageState()];
+          return [pageName, pageFile.getPageState()];
         })
       );
     return Object.fromEntries(arrayOfPageNameToStateEntries);

@@ -50,33 +50,33 @@ describe("getPageState", () => {
     mockUUID();
   });
 
-  it("correctly parses page with top-level React.Fragment", async () => {
+  it("correctly parses page with top-level React.Fragment", () => {
     const pageFile = createPageFile("reactFragmentPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
-  it("correctly parses page with top-level Fragment", async () => {
+  it("correctly parses page with top-level Fragment", () => {
     const pageFile = createPageFile("fragmentPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
-  it("correctly parses page with top-level Fragment in short syntax", async () => {
+  it("correctly parses page with top-level Fragment in short syntax", () => {
     const pageFile = createPageFile("shortFragmentSyntaxPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
   });
 
-  it("correctly parses page with top-level div component and logs warning", async () => {
+  it("correctly parses page with top-level div component and logs warning", () => {
     const consoleWarnSpy = jest
       .spyOn(global.console, "warn")
       .mockImplementation();
     const pageFile = createPageFile("divPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([
       {
@@ -93,16 +93,16 @@ describe("getPageState", () => {
     );
   });
 
-  it("correctly parses page with nested banner components", async () => {
+  it("correctly parses page with nested banner components", () => {
     const pageFile = createPageFile("nestedBannerPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual(nestedBannerComponentTree);
   });
 
-  it("correctly parses page with variable statement and no parentheses around return statement", async () => {
+  it("correctly parses page with variable statement and no parentheses around return statement", () => {
     const pageFile = createPageFile("noReturnParenthesesPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.componentTree).toEqual([
       fragmentComponent,
@@ -113,9 +113,9 @@ describe("getPageState", () => {
     ]);
   });
 
-  it("correctly parses CSS imports", async () => {
+  it("correctly parses CSS imports", () => {
     const pageFile = createPageFile("shortFragmentSyntaxPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.cssImports).toEqual([
       "./index.css",
@@ -123,72 +123,72 @@ describe("getPageState", () => {
     ]);
   });
 
-  it("correctly gets filepath", async () => {
+  it("correctly gets filepath", () => {
     const pageFile = createPageFile("shortFragmentSyntaxPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
 
     expect(result.filepath).toEqual(getPagePath("shortFragmentSyntaxPage"));
   });
 
-  it("returns empty component tree when parses a page without return statement", async () => {
+  it("returns empty component tree when parses a page without return statement", () => {
     const pageFile = createPageFile("noReturnStatementPage");
-    const result = await pageFile.getPageState();
+    const result = pageFile.getPageState();
     expect(result.componentTree).toEqual([]);
   });
 
   describe("throws errors", () => {
-    it("throws an error when the return statement has no top-level Jsx node", async () => {
+    it("throws an error when the return statement has no top-level Jsx node", () => {
       const pageFile = createPageFile("noTopLevelJsxPage");
 
-      await expect(pageFile.getPageState()).rejects.toThrowError(
+      expect(() => pageFile.getPageState()).toThrowError(
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
     });
 
-    it("throws an error when a JsxSpreadAttribute is found on the page", async () => {
+    it("throws an error when a JsxSpreadAttribute is found on the page", () => {
       const pageFile = createPageFile("jsxSpreadAttributePage");
 
-      await expect(pageFile.getPageState()).rejects.toThrowError(
+      expect(() => pageFile.getPageState()).toThrowError(
         "Error parsing `{...props}`: JsxSpreadAttribute is not currently supported."
       );
     });
 
-    it("throws an error when JsxText is found on the page", async () => {
+    it("throws an error when JsxText is found on the page", () => {
       const pageFile = createPageFile("jsxTextPage");
 
-      await expect(pageFile.getPageState()).rejects.toThrowError(
+      expect(() => pageFile.getPageState()).toThrowError(
         'Found JsxText with content "\n      Text\n      ". JsxText is not currently supported.'
       );
     });
 
-    it("throws an error when a JsxExpression is found on the page", async () => {
+    it("throws an error when a JsxExpression is found on the page", () => {
       const pageFile = createPageFile("jsxExpressionPage");
 
-      await expect(pageFile.getPageState()).rejects.toThrowError(
+      expect(() => pageFile.getPageState()).toThrowError(
         'Jsx nodes of kind "JsxExpression" are not supported for direct use in page files.'
       );
     });
 
-    it("throws an error when a JsxExpression is found on the page", async () => {
+    it("throws an error when a JsxExpression is found on the page", () => {
       const pageFile = createPageFile("jsxExpressionPage");
 
-      await expect(pageFile.getPageState()).rejects.toThrowError(
+      expect(() => pageFile.getPageState()).toThrowError(
         'Jsx nodes of kind "JsxExpression" are not supported for direct use in page files.'
       );
     });
 
-    it("throws when an ObjectLiteralExpression is returned by the page", async () => {
+    it("throws when an ObjectLiteralExpression is returned by the page", () => {
       const pageFile = createPageFile("returnsObject");
 
-      await expect(pageFile.getPageState()).rejects.toThrowError(
+      expect(() => pageFile.getPageState()).toThrowError(
         /^Unable to find top-level JSX element or JSX fragment/
       );
     });
 
-    it("throws when an ArrayLiteralExpression is returned by the page", async () => {
+    it("throws when an ArrayLiteralExpression is returned by the page", () => {
       const pageFile = createPageFile("returnsArray");
 
-      await expect(pageFile.getPageState()).rejects.toThrowError(
+      expect(() => pageFile.getPageState()).toThrowError(
         /^Unable to find top-level JSX element or JSX fragment/
       );
     });

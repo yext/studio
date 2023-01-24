@@ -62,7 +62,7 @@ export default class PageFile {
     );
   }
 
-  async getPageState(): Promise<PageState> {
+  getPageState(): PageState {
     const absPathToComponentName = {
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
       ...this.pluginRefs?.reduce((pathToPluginName, ref) => {
