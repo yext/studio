@@ -1,5 +1,5 @@
 import { ModuleMetadata } from "@yext/studio-plugin";
-import DeleteModuleButton from "./DeleteModuleButton";
+import DeleteModuleButton from "./ModuleActions/DeleteModuleButton";
 
 /**
  * Displays a list of available actions for manipulating a Module when

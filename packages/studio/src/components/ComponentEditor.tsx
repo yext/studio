@@ -13,7 +13,7 @@ import { PropEditor } from "./PropEditor";
 import Divider from "./common/Divider";
 import { useCallback } from "react";
 import useActiveComponent from "../hooks/useActiveComponent";
-import ModuleActions from "./ModuleActions";
+import ModuleActions from "./ModuleActions/ModuleActions";
 
 /**
  * Renders prop editors for the active component selected by the user.
