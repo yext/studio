@@ -186,8 +186,12 @@ export default class ReactComponentFileWriter {
     }
 
     this.updateReturnStatement(functionComponent, componentTree);
-    const pluginNameToComponentNames = this.getPluginNameToComponentNames(componentTree);
-    this.studioSourceFileWriter.updateFileImports(pluginNameToComponentNames, cssImports);
+    const pluginNameToComponentNames =
+      this.getPluginNameToComponentNames(componentTree);
+    this.studioSourceFileWriter.updateFileImports(
+      pluginNameToComponentNames,
+      cssImports
+    );
     this.studioSourceFileWriter.writeToFile();
   }
 
@@ -206,9 +210,13 @@ export default class ReactComponentFileWriter {
         const metadata = this.getFileMetadataByUUID(node.metadataUUID);
         if (metadata && "pluginName" in metadata && metadata.pluginName) {
           if (pluginNameToComponentNames.hasOwnProperty(metadata.pluginName)) {
-            pluginNameToComponentNames[metadata.pluginName].push(node.componentName);
+            pluginNameToComponentNames[metadata.pluginName].push(
+              node.componentName
+            );
           } else {
-            pluginNameToComponentNames[metadata.pluginName] = [node.componentName];
+            pluginNameToComponentNames[metadata.pluginName] = [
+              node.componentName,
+            ];
           }
         }
       });
