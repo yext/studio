@@ -39,7 +39,7 @@ function ElementTypeSwitcher(props: {
             key={elementType}
             elementType={elementType}
             isActiveType={elementType === activeType}
-            setType={setType}
+            handleClick={setType}
           />
         );
       })}
@@ -56,9 +56,9 @@ const elementTypeToIcon = {
 function ElementTypeButton(props: {
   isActiveType: boolean;
   elementType: string;
-  setType: (type: ElementType) => void;
+  handleClick: (type: ElementType) => void;
 }) {
-  const { isActiveType, elementType, setType } = props;
+  const { isActiveType, elementType, handleClick } = props;
   const className = classNames(
     "px-2 py-2 mx-2 flex items-center cursor-pointer border-b-2",
     {
@@ -66,11 +66,11 @@ function ElementTypeButton(props: {
       "border-transparent": !isActiveType,
     }
   );
-  const handleClick = useCallback(() => {
-    setType(ElementType[elementType]);
-  }, [elementType, setType]);
+  const onClick = useCallback(() => {
+    handleClick(ElementType[elementType]);
+  }, [elementType, handleClick]);
   return (
-    <div className={className} onClick={handleClick}>
+    <div className={className} onClick={onClick}>
       <span className="mr-2 pt-0.5">{elementTypeToIcon[elementType]}</span>
       <span>{elementType}</span>
     </div>
