@@ -1,8 +1,8 @@
 import ParsingOrchestrator, {
   createTsMorphProject,
 } from "../src/ParsingOrchestrator";
-import path from "path";
 import getUserPaths from "../src/parsers/getUserPaths";
+import path from "path";
 import {
   ComponentStateKind,
   FileMetadataKind,
@@ -11,6 +11,14 @@ import {
 } from "../src";
 import { Project } from "ts-morph";
 import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
+
+const mockGetPathToModuleResponse = path.join(process.cwd(), "tests/__fixtures__/PluginConfig");
+const mockGetPathToModule = jest.fn().mockReturnValue(mockGetPathToModuleResponse)
+jest.mock("../src/utils/ResolvePlugin", () => {
+  return jest.fn().mockImplementation(() => {
+    return { getPathToModule: mockGetPathToModule };
+  });
+});
 
 const projectRoot = path.resolve(
   __dirname,
