@@ -4,9 +4,9 @@ import {
   FileMetadataKind,
   ModuleMetadata,
 } from "@yext/studio-plugin";
-import DeleteModuleButton from "../../src/components/DeleteModuleButton";
-import useStudioStore from "../../src/store/useStudioStore";
-import mockStore from "../__utils__/mockStore";
+import DeleteModuleButton from "../../../src/components/ModuleActions/DeleteModuleButton";
+import useStudioStore from "../../../src/store/useStudioStore";
+import mockStore from "../../__utils__/mockStore";
 
 it("can open modal and delete modules", async () => {
   const basicPageState = {
