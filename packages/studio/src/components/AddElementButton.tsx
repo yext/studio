@@ -2,7 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { ReactComponent as AddIcon } from "../icons/addcomponent.svg";
 import useRootClose from "@restart/ui/useRootClose";
 import useStudioStore from "../store/useStudioStore";
-import AddElementMenu from "./AddElementMenu";
+import AddElementMenu from "./AddElementMenu/AddElementMenu";
 import classNames from "classnames";
 
 /**

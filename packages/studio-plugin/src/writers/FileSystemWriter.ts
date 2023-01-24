@@ -1,5 +1,7 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import { ModuleMetadata, PageState, SiteSettingsValues } from "../types";
+import fs from "fs";
+import { Project } from "ts-morph";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -8,7 +10,8 @@ import { ModuleMetadata, PageState, SiteSettingsValues } from "../types";
 export class FileSystemWriter {
   constructor(
     private orchestrator: ParsingOrchestrator,
-    private isPagesJSRepo: boolean
+    private isPagesJSRepo: boolean,
+    private project: Project
   ) {}
 
   /**
@@ -37,5 +40,28 @@ export class FileSystemWriter {
 
   writeToSiteSettings(siteSettingsValues: SiteSettingsValues): void {
     this.orchestrator.updateSiteSettings(siteSettingsValues);
+  }
+
+  /**
+   * Deletes all files corresponding to FileMetadata that exist in the previous UUIDToFileMetadata
+   * but not the updated UUIDToFileMetadata (i.e. FileMetadata that have been removed).
+   */
+  syncFileMetadata(updatedUUIDToFileMetadata: Record<string, FileMetadata>) {
+    const UUIDToFileMetadata = this.orchestrator.getUUIDToFileMetadata();
+    Object.keys(UUIDToFileMetadata).forEach((moduleUUID) => {
+      if (!updatedUUIDToFileMetadata.hasOwnProperty(moduleUUID)) {
+        this.removeFile(UUIDToFileMetadata[moduleUUID].filepath);
+      }
+    });
+  }
+
+  removeFile(filepath: string) {
+    if (fs.existsSync(filepath)) {
+      const sourceFile = this.project.getSourceFile(filepath);
+      if (sourceFile) {
+        this.project.removeSourceFile(sourceFile);
+      }
+      fs.rmSync(filepath);
+    }
   }
 }

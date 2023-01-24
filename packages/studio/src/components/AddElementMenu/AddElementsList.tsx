@@ -1,58 +1,22 @@
-import { ReactComponent as Hexagon } from "../icons/hexagon.svg";
-import { ReactComponent as Box } from "../icons/box.svg";
-import { ReactComponent as Container } from "../icons/container.svg";
 import {
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
 } from "@yext/studio-plugin";
-import { useCallback, useState } from "react";
-import classNames from "classnames";
+import { useCallback } from "react";
 import { v4 } from "uuid";
-import useStudioStore from "../store/useStudioStore";
+import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
-
-enum ElementType {
-  Components = "Components",
-  Containers = "Containers",
-  Modules = "Modules",
-}
-
-const elementTypeToIcon = {
-  Components: <Box />,
-  Containers: <Container />,
-  Modules: <Hexagon />,
-} as const;
-
-/**
- * A menu for adding elements to the page.
- */
-export default function AddElementMenu(): JSX.Element {
-  const [activeType, setType] = useState<ElementType>(ElementType.Components);
-
-  return (
-    <div className="absolute z-10 rounded bg-white text-sm text-gray-700 shadow-lg">
-      <div className="flex px-4 pt-2 border-b">
-        {Object.keys(ElementType).map((elementType) => {
-          return (
-            <ElementTypeButton
-              key={elementType}
-              elementType={elementType}
-              isActiveType={elementType === activeType}
-              setType={setType}
-            />
-          );
-        })}
-      </div>
-      <ElementsList activeType={activeType} />
-    </div>
-  );
-}
+import { ElementType } from "./AddElementMenu";
 
 /**
  * The list of available, addable elements for the current activeType.
  */
-function ElementsList({ activeType }: { activeType: ElementType }) {
+export default function AddElementsList({
+  activeType,
+}: {
+  activeType: ElementType;
+}) {
   const UUIDToFileMetadata = useStudioStore((store) => {
     return store.fileMetadatas.UUIDToFileMetadata;
   });
@@ -88,30 +52,6 @@ function ElementsList({ activeType }: { activeType: ElementType }) {
       {addableElements.map((metadata) => {
         return <Option metadata={metadata} key={metadata.metadataUUID} />;
       })}
-    </div>
-  );
-}
-
-function ElementTypeButton(props: {
-  isActiveType: boolean;
-  elementType: string;
-  setType: (type: ElementType) => void;
-}) {
-  const { isActiveType, elementType, setType } = props;
-  const className = classNames(
-    "px-2 py-2 mx-2 flex items-center cursor-pointer border-b-2",
-    {
-      "border-blue-600": isActiveType,
-      "border-transparent": !isActiveType,
-    }
-  );
-  const handleClick = useCallback(() => {
-    setType(ElementType[elementType]);
-  }, [elementType, setType]);
-  return (
-    <div className={className} onClick={handleClick}>
-      <span className="mr-2 pt-0.5">{elementTypeToIcon[elementType]}</span>
-      <span>{elementType}</span>
     </div>
   );
 }

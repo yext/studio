@@ -20,14 +20,10 @@ export default class ComponentTreeHelpers {
     handler: (component: ComponentState, mappedChildren: T[]) => T,
     parent?: ComponentState
   ): T[] {
-    const { directChildren, otherDescendants } =
+    const { directChildren, otherNodes } =
       ComponentTreeHelpers.separateDescendants(componentTree, parent);
     return directChildren.map((component) => {
-      const children = this.mapComponentTree(
-        otherDescendants,
-        handler,
-        component
-      );
+      const children = this.mapComponentTree(otherNodes, handler, component);
       return handler(component, children);
     });
   }
@@ -47,14 +43,14 @@ export default class ComponentTreeHelpers {
     parent?: ComponentState,
     parentValue?: T
   ): T[] {
-    const { directChildren, otherDescendants } =
+    const { directChildren, otherNodes } =
       ComponentTreeHelpers.separateDescendants(componentTree, parent);
     return directChildren.flatMap((component) => {
       const mappedValue = handler(component, parentValue);
       return [
         mappedValue,
         ...ComponentTreeHelpers.mapComponentTreeParentsFirst(
-          otherDescendants,
+          otherNodes,
           handler,
           component,
           mappedValue
@@ -68,14 +64,14 @@ export default class ComponentTreeHelpers {
     parent?: ComponentState
   ) {
     const directChildren: ComponentState[] = [];
-    const otherDescendants: ComponentState[] = [];
+    const otherNodes: ComponentState[] = [];
     componentTree.forEach((component) => {
       if (component.parentUUID === parent?.uuid) {
         directChildren.push(component);
       } else {
-        otherDescendants.push(component);
+        otherNodes.push(component);
       }
     });
-    return { directChildren, otherDescendants };
+    return { directChildren, otherNodes };
   }
 }

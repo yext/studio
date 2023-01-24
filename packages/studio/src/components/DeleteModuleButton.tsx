@@ -8,8 +8,8 @@ import useStudioStore from "../store/useStudioStore";
 import { Tooltip } from "react-tooltip";
 
 /**
- * Whcn clicked, deletes a module. When changes are saved to file
- * this will delete the module file.
+ * When clicked, stages a module for deletion.
+ * When the changes are committed, the module file will itself be deleted
  */
 export default function DeleteModuleButton({
   metadata,
@@ -60,7 +60,7 @@ export default function DeleteModuleButton({
         <div className="mb-4">
           Deleting this module will remove its status as a module, removing it
           from the Insert panel, and detach all other instances of it across
-          your site. This will not delete the items themselves.
+          your site. This will not delete the page elements themselves.
           {moduleUsages.length > 0 && "This module is found on:"}
         </div>
         {moduleUsages.length > 0 && renderModuleUsages(moduleUsages)}
