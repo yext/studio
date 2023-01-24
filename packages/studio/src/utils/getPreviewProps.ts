@@ -5,10 +5,10 @@ import {
   TEMPLATE_STRING_EXPRESSION_REGEX,
   PropValues,
   PropShape,
+  transformPropValuesToRaw,
 } from "@yext/studio-plugin";
 import lodashGet from "lodash/get";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
-import { transformPropValuesToRaw } from "@yext/studio-plugin";
 
 /**
  * Transform props' values based on PropValueKind. If a prop's value is of

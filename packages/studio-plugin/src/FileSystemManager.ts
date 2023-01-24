@@ -1,4 +1,5 @@
 import {
+  FileMetadata,
   ModuleMetadata,
   PageState,
   SiteSettingsValues,
@@ -14,6 +15,10 @@ import { FileSystemWriter } from "./writers/FileSystemWriter";
  */
 export default class FileSystemManager {
   constructor(private paths: UserPaths, private writer: FileSystemWriter) {}
+
+  removeFile(filepath: string) {
+    this.writer.removeFile(filepath);
+  }
 
   getUserPaths(): UserPaths {
     return this.paths;
@@ -48,6 +53,10 @@ export default class FileSystemManager {
 
   updateSiteSettings(siteSettingsValues: SiteSettingsValues) {
     this.writer.writeToSiteSettings(siteSettingsValues);
+  }
+
+  syncFileMetadata(UUIDToFileMetadata: Record<string, FileMetadata>) {
+    this.writer.syncFileMetadata(UUIDToFileMetadata);
   }
 
   private static openFile(filepath: string) {

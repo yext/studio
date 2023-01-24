@@ -1,5 +1,10 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
-import { ModuleMetadata, PageState, SiteSettingsValues } from "../types";
+import {
+  FileMetadata,
+  ModuleMetadata,
+  PageState,
+  SiteSettingsValues,
+} from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
 
