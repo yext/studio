@@ -55,8 +55,10 @@ export default class NpmLookup {
     root: string
   ): string {
     const subModule = resolvedModule.packageId?.subModuleName || "";
-    const stripSubModuleNameFromPath =
-      resolvedModule.resolvedFileName.replace(subModule, "");
+    const stripSubModuleNameFromPath = resolvedModule.resolvedFileName.replace(
+      subModule,
+      ""
+    );
     return path.join(root, stripSubModuleNameFromPath);
   }
 
