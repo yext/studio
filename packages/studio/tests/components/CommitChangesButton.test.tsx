@@ -32,6 +32,9 @@ it("enables the button when there are pending SiteSettingsValues changes", async
       siteSettings: {
         values: undefined,
       },
+      fileMetadatas: {
+        UUIDToFileMetadata: {},
+      },
     },
     siteSettings: {
       values: {
@@ -41,6 +44,9 @@ it("enables the button when there are pending SiteSettingsValues changes", async
           kind: PropValueKind.Literal,
         },
       },
+    },
+    fileMetadatas: {
+      UUIDToFileMetadata: {},
     },
   });
   render(<CommitChangesButton />);
@@ -60,6 +66,9 @@ it("disables the button when there are no pending SiteSettingsValues changes", a
           },
         },
       },
+      fileMetadatas: {
+        UUIDToFileMetadata: {},
+      },
     },
     siteSettings: {
       values: {
@@ -69,6 +78,9 @@ it("disables the button when there are no pending SiteSettingsValues changes", a
           kind: PropValueKind.Literal,
         },
       },
+    },
+    fileMetadatas: {
+      UUIDToFileMetadata: {},
     },
   });
   render(<CommitChangesButton />);

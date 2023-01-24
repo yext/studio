@@ -6,11 +6,15 @@ import {
   ModuleMetadata,
 } from "@yext/studio-plugin";
 import { v4 } from "uuid";
+import { isEqual } from "lodash";
 
 /**
  * Creates an action that loops through all pages, and detaches all instances of the given module.
  */
-export default function createDetachAllModuleInstances(get: () => PageSlice) {
+export default function createDetachAllModuleInstances(
+  get: () => PageSlice,
+  set: (callback: (nextState: PageSlice) => void) => void
+) {
   return (metadata: ModuleMetadata) => {
     const pagesSlice = get();
     pagesSlice.setActiveComponentUUID(undefined);
@@ -21,6 +25,11 @@ export default function createDetachAllModuleInstances(get: () => PageSlice) {
           metadata,
           originalPage.componentTree
         );
+        if (!isEqual(originalPage.componentTree, updatedComponentTree)) {
+          set((pagesSlice) => {
+            pagesSlice.pendingChanges.pagesToUpdate.add(pageName);
+          });
+        }
         allPages[pageName] = {
           ...originalPage,
           componentTree: updatedComponentTree,

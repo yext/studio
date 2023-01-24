@@ -13,6 +13,9 @@ export default function CommitChangesButton() {
   const { modulesToUpdate } = useStudioStore(
     (store) => store.fileMetadatas.pendingChanges
   );
+  const UUIDToFileMetadata = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToFileMetadata
+  );
   const previousCommit = useStudioStore((store) => store.previousCommit);
   const siteSettingsValues = useStudioStore(
     (store) => store.siteSettings.values
@@ -24,11 +27,16 @@ export default function CommitChangesButton() {
     previousCommit.siteSettings.values,
     siteSettingsValues
   );
+  const hasFileMetadataChanges = !isEqual(
+    previousCommit.fileMetadatas.UUIDToFileMetadata,
+    UUIDToFileMetadata
+  );
   const hasPendingChanges =
     pagesToRemove.size > 0 ||
     pagesToUpdate.size > 0 ||
     modulesToUpdate.size > 0 ||
-    siteSettingsHaveChanged;
+    siteSettingsHaveChanged ||
+    hasFileMetadataChanges;
 
   useEffect(() => {
     setIsButtonDisabled(!hasPendingChanges);

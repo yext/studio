@@ -77,6 +77,9 @@ const useStudioStore = create<StudioStore>()(
             siteSettings: {
               values: get().siteSettings.values,
             },
+            fileMetadatas: {
+              UUIDToFileMetadata: UUIDToFileMetadata,
+            },
           });
           s.previousCommit = previousCommitState;
         });

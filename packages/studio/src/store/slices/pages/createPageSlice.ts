@@ -186,7 +186,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     ...activePageActions,
     ...activeComponentActions,
     ...activeEntityFileActions,
-    detachAllModuleInstances: createDetachAllModuleInstances(get),
+    detachAllModuleInstances: createDetachAllModuleInstances(get, set),
   };
 };
 
