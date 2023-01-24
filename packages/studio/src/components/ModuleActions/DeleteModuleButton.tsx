@@ -1,4 +1,4 @@
-import { ReactComponent as DeleteModuleIcon } from "../icons/deletemodule.svg";
+import { ReactComponent as DeleteModuleIcon } from "../../icons/deletemodule.svg";
 import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";
