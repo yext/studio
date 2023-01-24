@@ -81,6 +81,7 @@ it("adds module metadata to UUIDToFileMetadata", () => {
       ],
       filepath,
       metadataUUID: filepath,
+      propShape: {},
     },
   });
 });

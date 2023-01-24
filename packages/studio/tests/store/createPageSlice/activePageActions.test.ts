@@ -1,12 +1,12 @@
-import useStudioStore from "../../src/store/useStudioStore";
+import useStudioStore from "../../../src/store/useStudioStore";
 import { PageState } from "@yext/studio-plugin";
-import { PagesRecord } from "../../src/store/models/slices/PageSlice";
-import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
+import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
+import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import {
   searchBarComponent,
   resultsComponent,
   buttonComponent,
-} from "../__fixtures__/componentStates";
+} from "../../__fixtures__/componentStates";
 
 const pages: PagesRecord = {
   universal: {

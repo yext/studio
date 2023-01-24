@@ -1,7 +1,7 @@
-import useStudioStore from "../../src/store/useStudioStore";
+import useStudioStore from "../../../src/store/useStudioStore";
 import path from "path";
-import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
-import { PagesRecord } from "../../src/store/models/slices/PageSlice";
+import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
+import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 
 const pages: PagesRecord = {
   universal: {
@@ -19,7 +19,7 @@ beforeEach(() => {
 });
 
 describe("addPage", () => {
-  const filepath = path.resolve(__dirname, "../__mocks__", "./test.tsx");
+  const filepath = path.resolve(__dirname, "../../__mocks__", "./test.tsx");
 
   it("adds a page to pages", () => {
     useStudioStore.getState().pages.addPage(filepath);
@@ -70,7 +70,7 @@ describe("addPage", () => {
     });
 
     it("gives an error for a filepath outside the allowed path for pages", () => {
-      const filepath = path.join(__dirname, "../__mocks__", "../test.tsx");
+      const filepath = path.join(__dirname, "../../__mocks__", "../test.tsx");
       useStudioStore.getState().pages.addPage(filepath);
       expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
@@ -79,7 +79,11 @@ describe("addPage", () => {
     });
 
     it("gives an error for a filepath with a page name that already exists", () => {
-      const filepath = path.join(__dirname, "../__mocks__", "./universal.tsx");
+      const filepath = path.join(
+        __dirname,
+        "../../__mocks__",
+        "./universal.tsx"
+      );
       useStudioStore.getState().pages.addPage(filepath);
       expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
       expect(consoleErrorSpy).toHaveBeenCalledWith(

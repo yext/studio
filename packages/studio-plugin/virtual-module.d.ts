@@ -1,5 +1,5 @@
 declare module "virtual:yext-studio" {
-  import { StudioData } from "./src/types";
+  import { StudioData } from "@yext/studio-plugin";
   const context: StudioData;
   export default context;
 }

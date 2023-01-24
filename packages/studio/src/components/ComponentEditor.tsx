@@ -1,6 +1,4 @@
 import {
-  ComponentState,
-  FileMetadata,
   PropVal,
   PropValueType,
   TypeGuards,
@@ -8,11 +6,14 @@ import {
   NestedPropMetadata,
   StandardOrModuleComponentState,
   PropShape,
+  FileMetadataKind,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
 import Divider from "./common/Divider";
 import { useCallback } from "react";
+import useActiveComponent from "../hooks/useActiveComponent";
+import ModuleActions from "./ModuleActions/ModuleActions";
 
 /**
  * Renders prop editors for the active component selected by the user.
@@ -34,6 +35,9 @@ export default function ComponentEditor(): JSX.Element | null {
 
   return (
     <div>
+      {activeComponentMetadata?.kind === FileMetadataKind.Module && (
+        <ModuleActions metadata={activeComponentMetadata} />
+      )}
       <PropEditors
         activeComponentState={activeComponentState}
         propShape={activeComponentMetadata.propShape}
@@ -108,22 +112,4 @@ function PropEditors(props: {
         })}
     </>
   );
-}
-
-function useActiveComponent(): {
-  activeComponentMetadata?: FileMetadata;
-  activeComponentState?: ComponentState;
-} {
-  return useStudioStore((store) => {
-    const activeComponentState = store.pages.getActiveComponentState();
-    const activeComponentMetadata =
-      activeComponentState &&
-      TypeGuards.isStandardOrModuleComponentState(activeComponentState)
-        ? store.fileMetadatas.getFileMetadata(activeComponentState.metadataUUID)
-        : undefined;
-    return {
-      activeComponentMetadata,
-      activeComponentState,
-    };
-  });
 }

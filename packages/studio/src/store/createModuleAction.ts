@@ -63,6 +63,7 @@ export default function getCreateModuleAction(
       ],
       metadataUUID,
       filepath,
+      propShape: {},
     });
     const moduleComponentUUID = v4();
     const updatedPageComponentTree = differenceWith(

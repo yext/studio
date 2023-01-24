@@ -7,7 +7,7 @@ import { throttle, isEqual, cloneDeep } from "lodash";
 
 import { StudioStore } from "./models/store";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
-import createPageSlice from "./slices/createPageSlice";
+import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
 import { getUserUpdatableStore } from "./utils";
 import sendMessage from "../messaging/sendMessage";
@@ -76,6 +76,9 @@ const useStudioStore = create<StudioStore>()(
           const previousCommitState = cloneDeep({
             siteSettings: {
               values: get().siteSettings.values,
+            },
+            fileMetadatas: {
+              UUIDToFileMetadata: UUIDToFileMetadata,
             },
           });
           s.previousCommit = previousCommitState;
