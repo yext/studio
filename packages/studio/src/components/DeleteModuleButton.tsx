@@ -1,7 +1,7 @@
 import { ReactComponent as DeleteModuleIcon } from "../icons/deletemodule.svg";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import { useCallback, useMemo } from "react";
-import { ModuleMetadata } from "@yext/studio-plugin";
+import { ComponentStateKind, ModuleMetadata } from "@yext/studio-plugin";
 import Modal from "./common/Modal";
 import path from "path-browserify";
 import useStudioStore from "../store/useStudioStore";
@@ -26,6 +26,22 @@ export default function DeleteModuleButton({
   const removeFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.removeFileMetadata
   );
+  const pagesRecord = useStudioStore((store) => store.pages.pages);
+  const moduleUsages = Object.keys(pagesRecord).reduce(
+    (usageList, pageName) => {
+      const usageCount = pagesRecord[pageName].componentTree.filter(
+        (c) =>
+          c.kind === ComponentStateKind.Module &&
+          c.metadataUUID === metadata.metadataUUID
+      ).length;
+      usageList.push({
+        pageName,
+        usageCount,
+      });
+      return usageList;
+    },
+    [] as { pageName: string; usageCount: number }[]
+  );
 
   const handleDelete = useCallback(() => {
     setActiveComponentUUID(undefined);
@@ -41,15 +57,17 @@ export default function DeleteModuleButton({
   const modalBody = useMemo(() => {
     return (
       <div className="flex flex-col text-sm py-2 px-1">
-        <div className="mb-2">
+        <div className="mb-4">
           Deleting this module will remove its status as a module, removing it
           from the Insert panel, and detach all other instances of it across
           your site. This will not delete the items themselves.
+          {moduleUsages.length > 0 && "This module is found on:"}
         </div>
+        {moduleUsages.length > 0 && renderModuleUsages(moduleUsages)}
         <div>Press 'Delete' to confirm this."</div>
       </div>
     );
-  }, []);
+  }, [moduleUsages]);
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
@@ -80,5 +98,33 @@ export default function DeleteModuleButton({
       />
       <Tooltip anchorId={anchorId} content="Delete" />
     </>
+  );
+}
+
+function renderModuleUsages(
+  moduleUsages: { pageName: string; usageCount: number }[]
+) {
+  const usages = moduleUsages.filter(({ usageCount }) => usageCount > 0);
+  if (usages.length === 0) {
+    return null;
+  }
+
+  const usageCountText = (usageCount: number) => {
+    if (usageCount > 1) {
+      return `${usageCount} instances`;
+    }
+    return `1 instance`;
+  };
+
+  return (
+    <ul className="mb-4 list-disc ml-5">
+      {usages.map(({ pageName, usageCount }) => {
+        return (
+          <li key={pageName}>
+            {pageName}: {usageCountText(usageCount)}
+          </li>
+        );
+      })}
+    </ul>
   );
 }
