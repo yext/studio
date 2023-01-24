@@ -1,6 +1,7 @@
 import {
   ArrowFunction,
   FunctionDeclaration,
+  ImportDeclarationStructure,
   OptionalKind,
   Project,
   PropertySignatureStructure,
@@ -58,10 +59,11 @@ export default class StudioSourceFileWriter {
     namedImports: Record<string, string[]>,
     cssImports?: string[]
   ) {
-    const structures = Object.keys(namedImports).map((moduleSpecifier) => ({
-      moduleSpecifier,
-      namedImports: namedImports[moduleSpecifier],
-    }));
+    const structures: OptionalKind<ImportDeclarationStructure>[] =
+      Object.keys(namedImports).map((moduleSpecifier) => ({
+        moduleSpecifier,
+        namedImports: namedImports[moduleSpecifier],
+      }));
     this.sourceFile.addImportDeclarations(structures);
     this.sourceFile.fixMissingImports();
     cssImports?.forEach((importSource) => {

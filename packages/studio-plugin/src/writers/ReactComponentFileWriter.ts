@@ -186,33 +186,33 @@ export default class ReactComponentFileWriter {
     }
 
     this.updateReturnStatement(functionComponent, componentTree);
-    const namedImports = this.filterNamedImportsByPlugin(componentTree);
-    this.studioSourceFileWriter.updateFileImports(namedImports, cssImports);
+    const pluginNameToComponentNames = this.getPluginNameToComponentNames(componentTree);
+    this.studioSourceFileWriter.updateFileImports(pluginNameToComponentNames, cssImports);
     this.studioSourceFileWriter.writeToFile();
   }
 
   /**
    * Identify and sort components of named imports by their node module.
-   * It is assumed that named imports are from plugins, installed via npm.
+   * It is assumed that any component with a `pluginName` is a plugin.
    */
-  filterNamedImportsByPlugin(
+  getPluginNameToComponentNames(
     componentTree: ComponentState[]
   ): Record<string, string[]> {
-    const namedImports: Record<string, string[]> = {};
+    const pluginNameToComponentNames: Record<string, string[]> = {};
 
     componentTree
       .filter(TypeGuards.isStandardOrModuleComponentState)
       .forEach((node) => {
         const metadata = this.getFileMetadataByUUID(node.metadataUUID);
         if (metadata && "pluginName" in metadata && metadata.pluginName) {
-          if (namedImports.hasOwnProperty(metadata.pluginName)) {
-            namedImports[metadata.pluginName].push(node.componentName);
+          if (pluginNameToComponentNames.hasOwnProperty(metadata.pluginName)) {
+            pluginNameToComponentNames[metadata.pluginName].push(node.componentName);
           } else {
-            namedImports[metadata.pluginName] = [node.componentName];
+            pluginNameToComponentNames[metadata.pluginName] = [node.componentName];
           }
         }
       });
 
-    return namedImports;
+    return pluginNameToComponentNames;
   }
 }
