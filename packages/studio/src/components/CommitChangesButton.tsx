@@ -31,6 +31,7 @@ export default function CommitChangesButton() {
     previousCommit.fileMetadatas.UUIDToFileMetadata,
     UUIDToFileMetadata
   );
+  // TODO(SLAP-2556) Refactor pendingChanges to use PreviousCommitSlice
   const hasPendingChanges =
     pagesToRemove.size > 0 ||
     pagesToUpdate.size > 0 ||
