@@ -10,22 +10,16 @@ const { resolveModuleName } = typescript;
  * ResolvePlugin is a class for traversing plugin configuration and files
  */
 export default class ResolvePlugin {
-  private moduleName: string;
-  resolvedModule: typescript.ResolvedModuleFull;
-  root: string;
-  private config?: PluginConfig;
+  private resolvedModule: typescript.ResolvedModuleFull;
+  private root: string;
 
-  constructor(moduleName: string) {
-    this.moduleName = moduleName;
+  constructor(private moduleName: string) {
     const { resolvedModule, root } = this.resolveModuleName();
     this.resolvedModule = resolvedModule;
     this.root = root;
   }
 
-  resolveModuleName(
-    moduleName: string = this.moduleName,
-    root = process.cwd()
-  ): {
+  private resolveModuleName(root = process.cwd()): {
     resolvedModule: typescript.ResolvedModuleFull;
     root: string;
   } {
@@ -39,7 +33,7 @@ export default class ResolvePlugin {
     };
 
     const { resolvedModule } = resolveModuleName(
-      moduleName,
+      this.moduleName,
       "",
       {},
       customModuleResolutionHost
@@ -48,9 +42,9 @@ export default class ResolvePlugin {
     if (!resolvedModule) {
       const parent = path.normalize(path.join(root, ".."));
       if (root === parent) {
-        throw Error(`The npm package "${moduleName}" was not found.`);
+        throw Error(`The npm package "${this.moduleName}" was not found.`);
       }
-      return this.resolveModuleName(moduleName, parent);
+      return this.resolveModuleName(parent);
     }
 
     return {

@@ -77,16 +77,6 @@ export default class StudioSourceFileParser {
     );
   }
 
-  isNamedNpmImport(
-    importIdentifier: string,
-    importName: string | string[]
-  ): boolean {
-    const isNamed = Array.isArray(importName) && importName.length > 0;
-    const isNpm =
-      !path.isAbsolute(importIdentifier) && !importIdentifier.startsWith(".");
-    return isNamed && isNpm;
-  }
-
   parseCssImports(): string[] {
     const cssImports: string[] = [];
 
