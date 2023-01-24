@@ -12,8 +12,13 @@ import {
 import { Project } from "ts-morph";
 import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
 
-const mockGetPathToModuleResponse = path.join(process.cwd(), "tests/__fixtures__/PluginConfig");
-const mockGetPathToModule = jest.fn().mockReturnValue(mockGetPathToModuleResponse)
+const mockGetPathToModuleResponse = path.join(
+  process.cwd(),
+  "tests/__fixtures__/PluginConfig"
+);
+const mockGetPathToModule = jest
+  .fn()
+  .mockReturnValue(mockGetPathToModuleResponse);
 jest.mock("../src/utils/ResolvePlugin", () => {
   return jest.fn().mockImplementation(() => {
     return { getPathToModule: mockGetPathToModule };
