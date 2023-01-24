@@ -1,6 +1,10 @@
 import { ModuleMetadata } from "@yext/studio-plugin";
 import DeleteModuleButton from "./DeleteModuleButton";
 
+/**
+ * Displays a list of available actions for manipulating a Module when
+ * it is the current active component.
+ */
 export default function ModuleActions({
   metadata,
 }: {

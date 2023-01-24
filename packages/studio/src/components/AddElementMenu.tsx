@@ -49,6 +49,9 @@ export default function AddElementMenu(): JSX.Element {
   );
 }
 
+/**
+ * The list of available, addable elements for the current activeType.
+ */
 function ElementsList({ activeType }: { activeType: ElementType }) {
   const UUIDToFileMetadata = useStudioStore((store) => {
     return store.fileMetadatas.UUIDToFileMetadata;
