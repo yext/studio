@@ -5,6 +5,7 @@ import {
   PageState,
   PropValues,
 } from "@yext/studio-plugin";
+import { isEqual } from 'lodash';
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import PageSlice, {
@@ -82,7 +83,11 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       componentTree: ComponentState[]
     ) => {
       set((store) => {
+        const originalComponentTree = store.pages[pageName].componentTree
         store.pages[pageName].componentTree = componentTree;
+        if (!isEqual(originalComponentTree, componentTree)) {
+          store.pendingChanges.pagesToUpdate.add(pageName);
+        }
       });
     },
   };
@@ -212,7 +217,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     ...activePageActions,
     ...activeComponentActions,
     ...activeEntityFileActions,
-    detachAllModuleInstances: createDetachAllModuleInstances(get, set),
+    detachAllModuleInstances: createDetachAllModuleInstances(get),
   };
 };
 

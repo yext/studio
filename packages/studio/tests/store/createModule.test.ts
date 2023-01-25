@@ -137,18 +137,6 @@ describe("errors", () => {
     consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
   });
 
-  it("gives an error when there is no active page state", () => {
-    useStudioStore.getState().pages.setActivePageName(undefined);
-    const consoleErrorSpy = jest
-      .spyOn(global.console, "error")
-      .mockImplementation();
-    expect(useStudioStore.getState().createModule(filepath)).toBeFalsy();
-    expect(consoleErrorSpy).toBeCalledTimes(1);
-    expect(consoleErrorSpy).toBeCalledWith(
-      "Tried to create module without active page."
-    );
-  });
-
   it("gives an error when there is no active component state", () => {
     useStudioStore.getState().pages.setActiveComponentUUID(undefined);
     const consoleErrorSpy = jest

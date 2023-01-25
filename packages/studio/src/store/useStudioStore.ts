@@ -67,7 +67,7 @@ const useStudioStore = create<StudioStore>()(
           UUIDToFileMetadata,
           pendingChanges: {
             pagesToRemove: [...pagesToRemove.keys()],
-            pagesToUpdate: [...pagesToUpdate.keys()],
+            pagesToUpdate: [...pagesToUpdate],
             modulesToUpdate: [...modulesToUpdate.keys()],
           },
           siteSettings: { values },
@@ -119,7 +119,7 @@ const useStudioStore = create<StudioStore>()(
         previousCommit: lens(createPreviousCommitSlice),
         addComponent,
         removeComponent,
-        ...createActiveComponentActions(get),
+        ...createActiveComponentActions(get)
       };
     })
   )
