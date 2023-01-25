@@ -54,12 +54,12 @@ export default class NpmLookup {
     resolvedModule: typescript.ResolvedModuleFull,
     root: string
   ): string {
-    const subModule = resolvedModule.packageId?.subModuleName || "";
-    const stripSubModuleNameFromPath = resolvedModule.resolvedFileName.replace(
-      subModule,
+    const pathToEntry = resolvedModule.packageId?.subModuleName || "";
+    const stripPathToEntryNameFromPath = resolvedModule.resolvedFileName.replace(
+      pathToEntry,
       ""
     );
-    return path.join(root, stripSubModuleNameFromPath);
+    return path.join(root, stripPathToEntryNameFromPath);
   }
 
   getRootPath(): string {

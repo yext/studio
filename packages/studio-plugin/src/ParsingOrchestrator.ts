@@ -7,7 +7,6 @@ import {
   SiteSettingsValues,
   SiteSettings,
   PluginConfig,
-  PluginRef,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -184,6 +183,7 @@ export default class ParsingOrchestrator {
   private getFileMetadataByUUID(
     metadataUUID: string
   ): FileMetadata | undefined {
+    console.log(this.filepathToFileMetadata, metadataUUID);
     const fileMetadata = Object.values(this.filepathToFileMetadata).find(
       (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
     );

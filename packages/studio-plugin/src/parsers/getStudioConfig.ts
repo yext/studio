@@ -9,7 +9,9 @@ type RecursiveRequired<T> = {
     ? RecursiveRequired<T[P]>
     : Required<T[P]>;
 };
-type RequiredStudioConfig = RecursiveRequired<StudioConfig>;
+type RequiredStudioConfig = RecursiveRequired<Omit<StudioConfig, "plugins"> & {
+  plugins: PluginConfig[];
+}>;
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's
