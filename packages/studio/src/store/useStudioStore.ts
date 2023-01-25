@@ -110,6 +110,9 @@ const useStudioStore = create<StudioStore>()(
         } else if (activePageName) {
           get().pages.removeComponentFromPage(activePageName, componentUUID);
         }
+        if (get().pages.activeComponentUUID === componentUUID) {
+          get().pages.setActiveComponentUUID(undefined);
+        }
       };
 
       return {

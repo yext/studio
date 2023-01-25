@@ -24,6 +24,9 @@ export default function mockStore(state: MockStudioStore) {
       ...useStudioStore.getState().pages,
       ...state.pages,
     },
-    previousCommit: useStudioStore.getState(),
+    previousCommit: {
+      ...useStudioStore.getState(),
+      ...state.previousCommit
+    }
   });
 }

@@ -27,7 +27,7 @@ export default function createActiveComponentActions(
         store.pages;
       if (!activeComponentUUID) {
         console.error(
-          "Error in setActiveComponentProps: No active component selected in store."
+          "Error in updateActiveComponentProps: No active component in store."
         );
         return;
       }

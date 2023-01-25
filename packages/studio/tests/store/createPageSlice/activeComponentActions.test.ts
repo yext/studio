@@ -35,7 +35,7 @@ describe("PageSlice", () => {
       expect(activeComponentUUID).toEqual("searchbar-uuid");
     });
 
-    it("updates active component's prop values using setActiveComponentProps", () => {
+    it("updates active component's prop values using updateActiveComponentProps", () => {
       const newPropValues: PropValues = {
         clicked: {
           kind: PropValueKind.Literal,
@@ -43,7 +43,7 @@ describe("PageSlice", () => {
           value: true,
         },
       };
-      useStudioStore.getState().setActiveComponentProps(newPropValues);
+      useStudioStore.getState().updateActiveComponentProps(newPropValues);
       const componentState =
         useStudioStore.getState().pages.pages["universal"].componentTree[1];
       const actualPropValues =
@@ -61,13 +61,13 @@ describe("PageSlice", () => {
           value: true,
         },
       };
-      useStudioStore.getState().setActiveComponentProps(newPropValues);
+      useStudioStore.getState().updateActiveComponentProps(newPropValues);
       const pagesToUpdate =
         useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
       expect(pagesToUpdate).toEqual(new Set<string>(["universal"]));
     });
 
-    it("logs an error when using setActiveComponentProps if the active component is a fragment", () => {
+    it("logs an error when using setComponentProps if the component is a fragment", () => {
       const initialPages = {
         universal: {
           pageName: "universal",
@@ -91,11 +91,11 @@ describe("PageSlice", () => {
       const consoleErrorSpy = jest
         .spyOn(global.console, "error")
         .mockImplementation();
-      useStudioStore.getState().setActiveComponentProps(newPropValues);
+      useStudioStore.getState().pages.setComponentProps('universal', 'fragment-uuid', newPropValues);
       const actualPages = useStudioStore.getState().pages.pages;
       expect(actualPages).toEqual(initialPages);
       expect(consoleErrorSpy).toBeCalledWith(
-        "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
+        "Error in setComponentProps: The active component is a fragment and does not accept props."
       );
     });
 
@@ -123,18 +123,18 @@ describe("PageSlice", () => {
       const consoleErrorSpy = jest
         .spyOn(global.console, "error")
         .mockImplementation();
-      useStudioStore.getState().setActiveComponentProps(newPropValues);
+      useStudioStore.getState().updateActiveComponentProps(newPropValues);
       const actualPages = useStudioStore.getState().pages.pages;
       expect(actualPages).toEqual(initialPages);
       expect(consoleErrorSpy).toBeCalledWith(
-        "Error in setActiveComponentProps: No active component selected in store."
+        "Error in updateActiveComponentProps: No active component in store."
       );
     });
 
     it("returns active component using getActiveComponentState", () => {
       const activeComponent = useStudioStore
         .getState()
-        .pages.getActiveComponentState();
+        .getActiveComponentState();
       expect(activeComponent).toEqual(resultsComponent);
     });
 
@@ -152,7 +152,7 @@ describe("PageSlice", () => {
       });
       const activeComponent = useStudioStore
         .getState()
-        .pages.getActiveComponentState();
+        .getActiveComponentState();
       expect(activeComponent).toEqual(undefined);
     });
   });

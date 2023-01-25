@@ -45,6 +45,14 @@ function useHasChanges() {
     UUIDToFileMetadata
   );
 
+  console.log(
+    pagesToRemove.size > 0,
+    pagesToUpdate.size > 0,
+    modulesToUpdate.size > 0,
+    siteSettingsHaveChanged,
+    hasFileMetadataChanges)
+  console.log(previousCommit.siteSettings.values, siteSettingsValues)
+
   return (
     pagesToRemove.size > 0 ||
     pagesToUpdate.size > 0 ||

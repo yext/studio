@@ -167,16 +167,16 @@ describe("PageSlice", () => {
     it("getActiveComponentState", () => {
       const nonexistantComponentState = useStudioStore
         .getState()
-        .pages.getActiveComponentState();
+        .getActiveComponentState();
       expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
       expect(nonexistantComponentState).toBeUndefined();
     });
 
-    it("setActiveComponentProps", () => {
-      useStudioStore.getState().setActiveComponentProps({});
+    it("updateActiveComponentProps", () => {
+      useStudioStore.getState().updateActiveComponentProps({});
       expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Tried to setActiveComponentProps when activePageName was undefined"
+        "Error in updateActiveComponentProps: No active component in store."
       );
     });
   });

@@ -143,7 +143,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       const componentTree = store.pages[pageName].componentTree;
       store.setComponentTreeInPage(
         pageName,
-        componentTree.filter((c) => c.uuid === componentUUID)
+        componentTree.filter((c) => c.uuid !== componentUUID)
       );
     },
   };
@@ -177,7 +177,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
         if (matchingComponent.kind === ComponentStateKind.Fragment) {
           console.error(
-            "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
+            "Error in setComponentProps: The active component is a fragment and does not accept props."
           );
           return;
         }
