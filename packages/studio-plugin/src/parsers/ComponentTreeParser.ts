@@ -99,9 +99,10 @@ export default class ComponentTreeParser {
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
 
-    const filepath = Object.keys(defaultImports).find(
-      (importIdentifier) => defaultImports[importIdentifier] === componentName
-    );
+    const filepath = Object.keys(defaultImports).find((importIdentifier) => {
+      const compareComponent = defaultImports[importIdentifier];
+      return compareComponent === componentName;
+    });
     const assumeIsBuiltInElement = filepath === undefined;
     if (assumeIsBuiltInElement) {
       if (attributes.length > 0) {

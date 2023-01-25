@@ -10,7 +10,7 @@ import mockStore from "../__utils__/mockStore";
 
 const componentMetadata: ComponentMetadata = {
   kind: FileMetadataKind.Component,
-  metadataUUID: "mock-metadataUUID",
+  metadataUUID: "mock-metadata-uuid",
   filepath: "mock-filepath",
   propShape: {
     myText: {

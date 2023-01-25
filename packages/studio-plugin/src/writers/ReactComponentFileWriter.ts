@@ -19,6 +19,11 @@ import {
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { transformPropValuesToRaw } from "../utils";
+import ParsingOrchestrator from "../ParsingOrchestrator";
+import { TypeGuards } from "../utils";
+
+export type GetFileMetadataByUUID =
+  ParsingOrchestrator["getFileMetadataByUUID"];
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -28,7 +33,8 @@ export default class ReactComponentFileWriter {
   constructor(
     private componentName: string,
     private studioSourceFileWriter: StudioSourceFileWriter,
-    private studioSourceFileParser: StudioSourceFileParser
+    private studioSourceFileParser: StudioSourceFileParser,
+    private getFileMetadataByUUID: GetFileMetadataByUUID
   ) {}
 
   private createComponentFunction(): FunctionDeclaration {
@@ -178,8 +184,43 @@ export default class ReactComponentFileWriter {
         );
       }
     }
+
     this.updateReturnStatement(functionComponent, componentTree);
-    this.studioSourceFileWriter.updateFileImports(cssImports);
+    const pluginNameToComponentNames =
+      this.getPluginNameToComponentNames(componentTree);
+    this.studioSourceFileWriter.updateFileImports(
+      pluginNameToComponentNames,
+      cssImports
+    );
     this.studioSourceFileWriter.writeToFile();
+  }
+
+  /**
+   * Identify and sort components of named imports by their node module.
+   * It is assumed that any component with a `pluginName` is a plugin.
+   */
+  getPluginNameToComponentNames(
+    componentTree: ComponentState[]
+  ): Record<string, string[]> {
+    const pluginNameToComponentNames: Record<string, string[]> = {};
+
+    componentTree
+      .filter(TypeGuards.isStandardOrModuleComponentState)
+      .forEach((node) => {
+        const metadata = this.getFileMetadataByUUID(node.metadataUUID);
+        if (metadata && "pluginName" in metadata && metadata.pluginName) {
+          if (pluginNameToComponentNames.hasOwnProperty(metadata.pluginName)) {
+            pluginNameToComponentNames[metadata.pluginName].push(
+              node.componentName
+            );
+          } else {
+            pluginNameToComponentNames[metadata.pluginName] = [
+              node.componentName,
+            ];
+          }
+        }
+      });
+
+    return pluginNameToComponentNames;
   }
 }

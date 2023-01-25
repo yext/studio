@@ -24,6 +24,7 @@ describe("updatePageFile", () => {
     const pageFile = new PageFile(
       getPagePath("updatePageFile/EmptyPage"),
       throwIfCalled,
+      jest.fn(),
       tsMorphProject
     );
     pageFile.updatePageFile({
@@ -33,7 +34,7 @@ describe("updatePageFile", () => {
           componentName: "ComplexBanner",
           props: {},
           uuid: "mock-uuid-0",
-          metadataUUID: "mock-metadataUUID",
+          metadataUUID: "mock-metadata-uuid",
         },
       ],
       cssImports: [],
@@ -55,6 +56,7 @@ describe("updatePageFile", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
         throwIfCalled,
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -71,7 +73,7 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
-              metadataUUID: "mock-metadataUUID",
+              metadataUUID: "mock-metadata-uuid",
             },
           ],
           cssImports: [],
@@ -93,6 +95,7 @@ describe("updatePageFile", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
         throwIfCalled,
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -117,6 +120,7 @@ describe("updatePageFile", () => {
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
         throwIfCalled,
+        jest.fn(),
         tsMorphProject
       );
       pageFile.updatePageFile(
@@ -133,7 +137,7 @@ describe("updatePageFile", () => {
                   valueType: PropValueType.string,
                 },
               },
-              metadataUUID: "mock-metadataUUID",
+              metadataUUID: "mock-metadata-uuid",
             },
           ],
           cssImports: [],

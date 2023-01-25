@@ -23,10 +23,10 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
-
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig.paths,
+    studioConfig.plugins,
     studioConfig.isPagesJSRepo
   );
   const studioData = await orchestrator.getStudioData();

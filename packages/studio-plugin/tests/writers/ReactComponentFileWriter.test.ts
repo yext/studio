@@ -44,7 +44,8 @@ function createReactComponentFileWriter(
   return new ReactComponentFileWriter(
     componentName,
     sourceFileWriter,
-    sourceFileParser
+    sourceFileParser,
+    jest.fn()
   );
 }
 

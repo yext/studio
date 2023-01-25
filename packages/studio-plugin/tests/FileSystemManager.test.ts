@@ -51,7 +51,7 @@ const paths = getUserPaths(projectRoot);
 paths.pages = path.join(projectRoot, "pages");
 paths.modules = path.join(projectRoot, "modules");
 
-const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, false);
+const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, [], false);
 const fileManager = new FileSystemManager(
   paths,
   new FileSystemWriter(orchestrator, false, tsMorphProject)
