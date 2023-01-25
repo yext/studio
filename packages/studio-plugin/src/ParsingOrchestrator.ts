@@ -25,6 +25,11 @@ export function createTsMorphProject() {
   });
 }
 
+export type PluginComponentData = {
+  componentName: string;
+  moduleName: string;
+}
+
 /**
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.
  */
@@ -34,7 +39,7 @@ export default class ParsingOrchestrator {
   private pageNameToPageFile: Record<string, PageFile> = {};
   private localDataMapping?: Record<string, string[]>;
   private siteSettingsFile?: SiteSettingsFile;
-  private pluginReferences: Record<string, { componentName: string, moduleName: string }>;
+  private pluginReferences: Record<string, PluginComponentData>;
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -49,7 +54,7 @@ export default class ParsingOrchestrator {
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
 
-  private getFilepathToPluginNames(plugins: PluginConfig[] = []): Record<string, { componentName: string, moduleName: string }> {
+  private getFilepathToPluginNames(plugins: PluginConfig[] = []): Record<string, PluginComponentData> {
     const filepathToPluginNames = {};
 
     plugins.forEach((plugin: PluginConfig) => {

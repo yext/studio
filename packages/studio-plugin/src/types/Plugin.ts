@@ -3,8 +3,3 @@ export type PluginConfig = {
   components: Record<string, string>;
   default: never;
 };
-
-export type PluginName = {
-  componentName: string;
-  moduleName: string;
-};

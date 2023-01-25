@@ -1,5 +1,5 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
-import { PageState, PluginName } from "../types";
+import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
 import ReactComponentFileWriter, {
   GetFileMetadataByUUID,
@@ -10,6 +10,7 @@ import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
+import { PluginComponentData } from "../ParsingOrchestrator";
 
 /**
  * Configuration options to the page file's update process
@@ -35,7 +36,7 @@ export default class PageFile {
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
-    filepathToPluginNames: Record<string, PluginName> = {},
+    filepathToPluginNames: Record<string, PluginComponentData> = {},
     private entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
