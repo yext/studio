@@ -47,16 +47,12 @@ it("returns user studio config merge with multiple plugin import methods", async
     plugins: [
       {
         name: "@yext/sample-component",
-        components: [
-          "src/components/AceComponent.tsx"
-        ],
+        components: ["src/components/AceComponent.tsx"],
       },
       {
         name: "@yext/sample-component-2",
-        components: [
-          "src/components/BevComponent.tsx"
-        ],
-      }
+        components: ["src/components/BevComponent.tsx"],
+      },
     ],
   });
 });

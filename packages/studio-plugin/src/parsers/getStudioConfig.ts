@@ -9,9 +9,11 @@ type RecursiveRequired<T> = {
     ? RecursiveRequired<T[P]>
     : Required<T[P]>;
 };
-type RequiredStudioConfig = RecursiveRequired<Omit<StudioConfig, "plugins"> & {
-  plugins: PluginConfig[];
-}>;
+type RequiredStudioConfig = RecursiveRequired<
+  Omit<StudioConfig, "plugins"> & {
+    plugins: PluginConfig[];
+  }
+>;
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's
@@ -34,13 +36,15 @@ export default async function getStudioConfig(
   }
 
   const studioConfig = (await import(configFilepath)).default as StudioConfig;
-  studioConfig.plugins = studioConfig.plugins && handleDefaultImports(studioConfig.plugins);
+  studioConfig.plugins =
+    studioConfig.plugins && handleDefaultImports(studioConfig.plugins);
   return lodashMerge({}, defaultConfig, studioConfig);
 }
 
-function handleDefaultImports(pluginImports: (PluginConfig | { default: PluginConfig })[]): PluginConfig[] {
+function handleDefaultImports(
+  pluginImports: (PluginConfig | { default: PluginConfig })[]
+): PluginConfig[] {
   return pluginImports.map(function (pluginImport) {
-
     if ("default" in pluginImport) {
       return pluginImport.default as PluginConfig;
     }

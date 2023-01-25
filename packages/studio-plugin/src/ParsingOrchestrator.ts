@@ -28,7 +28,7 @@ export function createTsMorphProject() {
 export type PluginComponentData = {
   componentName: string;
   moduleName: string;
-}
+};
 
 /**
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.
@@ -54,7 +54,9 @@ export default class ParsingOrchestrator {
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
 
-  private getFilepathToPluginNames(plugins: PluginConfig[] = []): Record<string, PluginComponentData> {
+  private getFilepathToPluginNames(
+    plugins: PluginConfig[] = []
+  ): Record<string, PluginComponentData> {
     const filepathToPluginNames = {};
 
     plugins.forEach((plugin: PluginConfig) => {

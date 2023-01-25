@@ -6,17 +6,13 @@ module.exports = {
   plugins: [
     {
       name: "@yext/sample-component",
-      components: [
-        "src/components/AceComponent.tsx"
-      ],
+      components: ["src/components/AceComponent.tsx"],
     },
     {
       default: {
         name: "@yext/sample-component-2",
-        components: [
-          "src/components/BevComponent.tsx"
-        ],
-      }
-    }
-  ]
+        components: ["src/components/BevComponent.tsx"],
+      },
+    },
+  ],
 };

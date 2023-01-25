@@ -62,8 +62,11 @@ export default class PageFile {
       this.studioSourceFileParser,
       getFileMetadata
     );
-    this.pluginFilepathToComponentName = Object.keys(filepathToPluginNames).reduce((filepathToComponent, filepath) => {
-      filepathToComponent[filepath] = filepathToPluginNames[filepath].componentName;
+    this.pluginFilepathToComponentName = Object.keys(
+      filepathToPluginNames
+    ).reduce((filepathToComponent, filepath) => {
+      filepathToComponent[filepath] =
+        filepathToPluginNames[filepath].componentName;
       return filepathToComponent;
     }, {});
   }
