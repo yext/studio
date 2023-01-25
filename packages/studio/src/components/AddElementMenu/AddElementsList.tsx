@@ -8,7 +8,6 @@ import { v4 } from "uuid";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
-import classNames from 'classnames';
 
 /**
  * The list of available, addable elements for the current activeType.
@@ -59,7 +58,9 @@ export default function AddElementsList({
 
 function Option({ metadata }: { metadata: FileMetadata }) {
   const componentName = path.basename(metadata.filepath, ".tsx");
-  const activeModuleState = useStudioStore(store => store.pages.activeModuleState);
+  const activeModuleState = useStudioStore(
+    (store) => store.pages.activeModuleState
+  );
   const addComponent = useStudioStore((store) => {
     return store.addComponent;
   });
@@ -85,7 +86,8 @@ function Option({ metadata }: { metadata: FileMetadata }) {
   }, [addElement, componentName]);
 
   // Prevent users from adding infinite looping modules.
-  const isSameAsActiveModule = activeModuleState?.metadataUUID === metadata.metadataUUID;
+  const isSameAsActiveModule =
+    activeModuleState?.metadataUUID === metadata.metadataUUID;
   return (
     <button
       className="px-6 py-1 cursor-pointer hover:opacity-75 disabled:opacity-25"

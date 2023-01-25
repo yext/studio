@@ -30,11 +30,27 @@ export interface FileMetadataSliceActions {
   setUUIDToImportedComponent: (
     importedComponents: Record<string, ImportType>
   ) => void;
-  setComponentTreeInModule: (metadataUUID: string, componentTree: ComponentState[]) => void;
-  updateComponentPropsInsideModule: (metadataUUID: string, componentUUID: string, props: PropValues) => void;
-  getComponentStateInsideModule: (metadataUUID: string, componentUUID: string) => ComponentState;
-  addComponentToModule: (metadataUUID: string, componentState: ComponentState) => void;
-  removeComponentFromModule: (metadataUUID: string, componentUUID: string) => void;
+  setComponentTreeInModule: (
+    metadataUUID: string,
+    componentTree: ComponentState[]
+  ) => void;
+  updateComponentPropsInsideModule: (
+    metadataUUID: string,
+    componentUUID: string,
+    props: PropValues
+  ) => void;
+  getComponentStateInsideModule: (
+    metadataUUID: string,
+    componentUUID: string
+  ) => ComponentState;
+  addComponentToModule: (
+    metadataUUID: string,
+    componentState: ComponentState
+  ) => void;
+  removeComponentFromModule: (
+    metadataUUID: string,
+    componentUUID: string
+  ) => void;
 }
 
 /**

@@ -1,4 +1,12 @@
-import { ComponentMetadata, ComponentState, ComponentStateKind, FileMetadata, FileMetadataKind, ModuleMetadata, PropValues } from "@yext/studio-plugin";
+import {
+  ComponentMetadata,
+  ComponentState,
+  ComponentStateKind,
+  FileMetadata,
+  FileMetadataKind,
+  ModuleMetadata,
+  PropValues,
+} from "@yext/studio-plugin";
 import initialStudioData from "virtual:yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { SliceCreator } from "../models/utils";
@@ -47,25 +55,39 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   setUUIDToImportedComponent: (
     importedComponents: Record<string, ImportType>
   ) => set({ UUIDToImportedComponent: importedComponents }),
-  setComponentTreeInModule(metadataUUID: string, componentTree: ComponentState[]) {
-    set(store => {
-      const fileMetadata = store.UUIDToFileMetadata[metadataUUID]
+  setComponentTreeInModule(
+    metadataUUID: string,
+    componentTree: ComponentState[]
+  ) {
+    set((store) => {
+      const fileMetadata = store.UUIDToFileMetadata[metadataUUID];
       assertIsModuleMetadata(fileMetadata);
       fileMetadata.componentTree = componentTree;
-    })
+    });
   },
-  updateComponentPropsInsideModule(metadataUUID: string, componentUUID: string, props: PropValues) {
-    set(store => {
-      const fileMetadata = store.UUIDToFileMetadata[metadataUUID]
+  updateComponentPropsInsideModule(
+    metadataUUID: string,
+    componentUUID: string,
+    props: PropValues
+  ) {
+    set((store) => {
+      const fileMetadata = store.UUIDToFileMetadata[metadataUUID];
       assertIsModuleMetadata(fileMetadata);
-      const componentState = fileMetadata.componentTree.find(c => c.uuid === componentUUID);
+      const componentState = fileMetadata.componentTree.find(
+        (c) => c.uuid === componentUUID
+      );
       if (!componentState) {
         throw new Error(`Could not find componentState ${componentUUID}.`);
-      } else if (componentState.kind === ComponentStateKind.BuiltIn || componentState.kind === ComponentStateKind.Fragment) {
-        throw new Error('Cannot update props for BuiltIn or Fragment components.');
+      } else if (
+        componentState.kind === ComponentStateKind.BuiltIn ||
+        componentState.kind === ComponentStateKind.Fragment
+      ) {
+        throw new Error(
+          "Cannot update props for BuiltIn or Fragment components."
+        );
       }
       componentState.props = props;
-    })
+    });
   },
   getComponentStateInsideModule(metadataUUID: string, componentUUID: string) {
     const fileMetadata = get().UUIDToFileMetadata[metadataUUID];
@@ -73,19 +95,27 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     return fileMetadata.componentTree[componentUUID];
   },
   addComponentToModule(metadataUUID: string, componentState: ComponentState) {
-    const metadata = get().UUIDToFileMetadata[metadataUUID]
+    const metadata = get().UUIDToFileMetadata[metadataUUID];
     assertIsModuleMetadata(metadata);
-    get().setComponentTreeInModule(metadataUUID, [...metadata.componentTree, componentState]);
+    get().setComponentTreeInModule(metadataUUID, [
+      ...metadata.componentTree,
+      componentState,
+    ]);
   },
   removeComponentFromModule(metadataUUID, componentUUID) {
     const store = get();
     const metadata = store.UUIDToFileMetadata[metadataUUID];
     assertIsModuleMetadata(metadata);
-    store.setComponentTreeInModule(metadataUUID, metadata.componentTree.filter(c => c.uuid === componentUUID));
+    store.setComponentTreeInModule(
+      metadataUUID,
+      metadata.componentTree.filter((c) => c.uuid === componentUUID)
+    );
   },
 });
 
-function assertIsModuleMetadata(fileMetadata: FileMetadata): asserts fileMetadata is ModuleMetadata {
+function assertIsModuleMetadata(
+  fileMetadata: FileMetadata
+): asserts fileMetadata is ModuleMetadata {
   if (fileMetadata.kind !== FileMetadataKind.Module) {
     throw new Error(
       `Expected a ModuleMetadata, instead received ${JSON.stringify(
@@ -97,7 +127,9 @@ function assertIsModuleMetadata(fileMetadata: FileMetadata): asserts fileMetadat
   }
 }
 
-function assertIsComponentMetadata(fileMetadata: FileMetadata): asserts fileMetadata is ComponentMetadata {
+function assertIsComponentMetadata(
+  fileMetadata: FileMetadata
+): asserts fileMetadata is ComponentMetadata {
   if (fileMetadata.kind !== FileMetadataKind.Component) {
     throw new Error(
       `Expected a ComponentMetadata, instead received ${JSON.stringify(

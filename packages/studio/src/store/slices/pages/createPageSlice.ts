@@ -1,4 +1,10 @@
-import { ComponentState, ComponentStateKind, FileMetadata, FileMetadataKind, ModuleState, PageState, PropValues } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentStateKind,
+  ModuleState,
+  PageState,
+  PropValues,
+} from "@yext/studio-plugin";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import PageSlice, {
@@ -7,7 +13,6 @@ import PageSlice, {
 } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
-import { v4 } from 'uuid';
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
@@ -72,11 +77,14 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         store.pages = pagesRecord;
       });
     },
-    setComponentTreeInPage: (pageName: string, componentTree: ComponentState[]) => {
+    setComponentTreeInPage: (
+      pageName: string,
+      componentTree: ComponentState[]
+    ) => {
       set((store) => {
-        store.pages[pageName].componentTree = componentTree
-      })
-    }
+        store.pages[pageName].componentTree = componentTree;
+      });
+    },
   };
 
   const activePageActions = {
@@ -121,18 +129,21 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     addComponentToPage(pageName: string, componentState: ComponentState) {
       const tree = get().pages[pageName].componentTree;
-      get().setComponentTreeInPage(pageName, [...tree, componentState])
+      get().setComponentTreeInPage(pageName, [...tree, componentState]);
     },
     removeComponentFromPage(pageName: string, componentUUID: string) {
       const store = get();
       const componentTree = store.pages[pageName].componentTree;
-      store.setComponentTreeInPage(pageName, componentTree.filter(c => c.uuid === componentUUID))
-    }
+      store.setComponentTreeInPage(
+        pageName,
+        componentTree.filter((c) => c.uuid === componentUUID)
+      );
+    },
   };
 
   const activeComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
-      set({ activeComponentUUID })
+      set({ activeComponentUUID });
     },
     getActiveComponentState: () => {
       const { activeComponentUUID, getActivePageState } = get();
@@ -144,12 +155,18 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         (component) => component.uuid === activeComponentUUID
       );
     },
-    setComponentProps: (pageName: string, componentUUID: string, props: PropValues) => {
+    setComponentProps: (
+      pageName: string,
+      componentUUID: string,
+      props: PropValues
+    ) => {
       set((store) => {
         const components = store.pages[pageName].componentTree;
-        const matchingComponent = components.find((c) => c.uuid === componentUUID);
+        const matchingComponent = components.find(
+          (c) => c.uuid === componentUUID
+        );
         if (!matchingComponent) {
-          throw new Error('Could not find component.')
+          throw new Error("Could not find component.");
         }
         if (matchingComponent.kind === ComponentStateKind.Fragment) {
           console.error(
@@ -160,8 +177,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
         matchingComponent.props = props;
         store.pendingChanges.pagesToUpdate.add(pageName);
-      })
-    }
+      });
+    },
   };
 
   const activeEntityFileActions = {

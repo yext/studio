@@ -1,4 +1,10 @@
-import { ComponentState, FileMetadata, ModuleMetadata, ModuleState, PageState, PropValues } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ModuleMetadata,
+  ModuleState,
+  PageState,
+  PropValues,
+} from "@yext/studio-plugin";
 
 export interface PagesRecord {
   [pageName: string]: PageState;
@@ -43,11 +49,21 @@ interface PageSliceActions {
   getActivePageState: () => PageState | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
-  setComponentProps: (pageName: string, componentUUID: string, props: PropValues) => void;
+  setComponentProps: (
+    pageName: string,
+    componentUUID: string,
+    props: PropValues
+  ) => void;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
   setActiveModuleState: (moduleState: ModuleState | undefined) => void;
-  setComponentTreeInPage: (pageName: string, componentTree: ComponentState[]) => void;
-  addComponentToPage: (pageName: string, componentState: ComponentState) => void;
+  setComponentTreeInPage: (
+    pageName: string,
+    componentTree: ComponentState[]
+  ) => void;
+  addComponentToPage: (
+    pageName: string,
+    componentState: ComponentState
+  ) => void;
   removeComponentFromPage: (pageName: string, uuidToRemove: string) => void;
 
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;

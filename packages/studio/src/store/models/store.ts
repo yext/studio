@@ -18,11 +18,11 @@ export type StudioStore = {
   createModule: (filepath: string) => boolean;
   addComponent: (componentState: ComponentState) => void;
   removeComponent: (componentUUID: string) => void;
-} & ActiveComponentActions
+} & ActiveComponentActions;
 
 export type ActiveComponentActions = {
   updateActiveComponentProps: (props: PropValues) => void;
   getActiveComponentState: () => ComponentState | undefined;
   updateComponentTree: (componentTree: ComponentState[]) => void;
   getComponentTree: () => ComponentState[];
-}
+};
