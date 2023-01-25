@@ -1,29 +1,31 @@
 import { ComponentState, PropValues } from "@yext/studio-plugin";
 import { ActiveComponentActions, StudioStore } from "./models/store";
 
+
 export default function createActiveComponentActions(
   get: () => StudioStore
 ): ActiveComponentActions {
   return {
     getComponentTree: () => {
       const store = get();
-      const activeModuleState = store.pages.activeModuleState;
-      if (activeModuleState) {
+      const moduleStateBeingEdited = store.pages.getModuleStateBeingEdited();
+      console.log({ moduleStateBeingEdited })
+      if (moduleStateBeingEdited) {
         return store.fileMetadatas.getModuleMetadata(
-          activeModuleState.metadataUUID
+          moduleStateBeingEdited.metadataUUID
         ).componentTree;
       }
-      return store.pages.getActivePageState()?.componentTree ?? [];
+      return store.pages.getActivePageState()?.componentTree;
     },
     getActiveComponentState: () => {
       const { activeComponentUUID } = get().pages;
       return get()
         .getComponentTree()
-        .find((component) => component.uuid === activeComponentUUID);
+        ?.find((component) => component.uuid === activeComponentUUID);
     },
     updateActiveComponentProps: (props: PropValues) => {
       const store = get();
-      const { activeComponentUUID, activePageName, activeModuleState } =
+      const { activeComponentUUID, activePageName, getModuleStateBeingEdited } =
         store.pages;
       if (!activeComponentUUID) {
         console.error(
@@ -32,9 +34,10 @@ export default function createActiveComponentActions(
         return;
       }
 
-      if (activeModuleState) {
+      const moduleStateBeingEdited = getModuleStateBeingEdited();
+      if (moduleStateBeingEdited) {
         store.fileMetadatas.updateComponentPropsInsideModule(
-          activeModuleState.metadataUUID,
+          moduleStateBeingEdited.metadataUUID,
           activeComponentUUID,
           props
         );
@@ -48,12 +51,12 @@ export default function createActiveComponentActions(
     },
     updateComponentTree: (componentTree: ComponentState[]) => {
       const store = get();
-      const activeModuleState = store.pages.activeModuleState;
+      const moduleStateBeingEdited = store.pages.getModuleStateBeingEdited();
       const activePageName = store.pages.activePageName;
 
-      if (activeModuleState) {
+      if (moduleStateBeingEdited) {
         store.fileMetadatas.setComponentTreeInModule(
-          activeModuleState.metadataUUID,
+          moduleStateBeingEdited.metadataUUID,
           componentTree
         );
       } else if (activePageName) {

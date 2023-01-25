@@ -87,10 +87,11 @@ const useStudioStore = create<StudioStore>()(
       };
 
       const addComponent = (componentState: ComponentState) => {
-        const { activePageName, activeModuleState } = get().pages;
-        if (activeModuleState) {
+        const { activePageName, getModuleStateBeingEdited } = get().pages;
+        const moduleStateBeingEdited = getModuleStateBeingEdited();
+        if (moduleStateBeingEdited) {
           get().fileMetadatas.addComponentToModule(
-            activeModuleState.metadataUUID,
+            moduleStateBeingEdited.metadataUUID,
             componentState
           );
         } else if (activePageName) {
@@ -99,10 +100,11 @@ const useStudioStore = create<StudioStore>()(
       };
 
       const removeComponent = (componentUUID: string) => {
-        const { activePageName, activeModuleState } = get().pages;
-        if (activeModuleState) {
+        const { activePageName, getModuleStateBeingEdited } = get().pages;
+        const moduleStateBeingEdited = getModuleStateBeingEdited();
+        if (moduleStateBeingEdited) {
           get().fileMetadatas.removeComponentFromModule(
-            activeModuleState.metadataUUID,
+            moduleStateBeingEdited.metadataUUID,
             componentUUID
           );
         } else if (activePageName) {

@@ -14,26 +14,23 @@ import RemovePageButton from "./RemovePageButton";
  * modules in the component tree of the active page.
  */
 export default function ActivePagePanel(): JSX.Element {
-  const { pages, setActivePageName, activePageName, setActiveModuleState } =
-    useStudioStore((store) => {
-      const { pages, setActivePageName, activePageName, setActiveModuleState } =
-        store.pages;
-      return { pages, setActivePageName, activePageName, setActiveModuleState };
-    });
+  const { pages, setActivePageName, activePageName, setModuleUUIDBeingEdited, getModuleStateBeingEdited } =
+    useStudioStore((store) => store.pages);
   const pageNames = useMemo(() => Object.keys(pages), [pages]);
+  const moduleStateBeingEdited = getModuleStateBeingEdited();
 
   const renderPageList = useCallback(
     (pageNames: string[]) => {
       return (
         <div className="flex flex-col pb-2 items-stretch">
           {pageNames.map((pageName) => {
-            const isActivePage = activePageName === pageName;
+            const isActivePage = activePageName === pageName && !moduleStateBeingEdited;
             const checkClasses = classNames({
               invisible: !isActivePage,
             });
             function handleSelectPage() {
               setActivePageName(pageName);
-              setActiveModuleState(undefined);
+              setModuleUUIDBeingEdited(undefined);
             }
             return (
               <div key={pageName} className="flex justify-between pb-4 px-2">
@@ -54,7 +51,7 @@ export default function ActivePagePanel(): JSX.Element {
         </div>
       );
     },
-    [activePageName, setActiveModuleState, setActivePageName]
+    [activePageName, moduleStateBeingEdited, setActivePageName, setModuleUUIDBeingEdited]
   );
 
   return (

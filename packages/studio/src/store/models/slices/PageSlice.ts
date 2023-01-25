@@ -33,10 +33,9 @@ export interface PageSliceStates {
     pagesToUpdate: Set<string>;
   };
   /**
-   * The current active module if one exists. This will take precedence over the PageState
-   * for things like adding components.
+   * The {@link ComponentState.uuid} for the module currently being edited, if it exists.
    */
-  activeModuleState?: ModuleState;
+  moduleUUIDBeingEdited?: string;
 }
 
 interface PageSliceActions {
@@ -47,6 +46,7 @@ interface PageSliceActions {
   setActivePageName: (pageName: string | undefined) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState | undefined;
+  getActivePageStateOrThrow: () => PageState;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setComponentProps: (
@@ -55,7 +55,7 @@ interface PageSliceActions {
     props: PropValues
   ) => void;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
-  setActiveModuleState: (moduleState: ModuleState | undefined) => void;
+  setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
   setComponentTreeInPage: (
     pageName: string,
     componentTree: ComponentState[]
@@ -65,6 +65,7 @@ interface PageSliceActions {
     componentState: ComponentState
   ) => void;
   removeComponentFromPage: (pageName: string, uuidToRemove: string) => void;
+  getModuleStateBeingEdited: () => ModuleState | undefined;
 
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }

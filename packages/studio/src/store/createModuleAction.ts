@@ -87,7 +87,7 @@ export default function getCreateModuleAction(
   }
 
   return (filepath: string) => {
-    const componentTree = get().getComponentTree();
+    const componentTree = get().getComponentTree() ?? [];
     const activeComponentState = get().getActiveComponentState();
     if (!activeComponentState) {
       console.error("Tried to create module without active component.");

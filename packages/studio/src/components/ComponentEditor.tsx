@@ -8,6 +8,7 @@ import {
   PropShape,
   FileMetadataKind,
   ModuleState,
+  ComponentStateKind,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
@@ -34,12 +35,14 @@ export default function ComponentEditor(): JSX.Element | null {
     return null;
   }
 
+  const isModule = activeComponentMetadata.kind === FileMetadataKind.Module && activeComponentState.kind === ComponentStateKind.Module;
+
   return (
     <div>
-      {activeComponentMetadata?.kind === FileMetadataKind.Module && (
+      {isModule && (
         <ModuleActions
           metadata={activeComponentMetadata}
-          moduleState={activeComponentState as ModuleState}
+          moduleState={activeComponentState}
         />
       )}
       <PropEditors

@@ -24,5 +24,5 @@ export type ActiveComponentActions = {
   updateActiveComponentProps: (props: PropValues) => void;
   getActiveComponentState: () => ComponentState | undefined;
   updateComponentTree: (componentTree: ComponentState[]) => void;
-  getComponentTree: () => ComponentState[];
+  getComponentTree: () => ComponentState[] | undefined;
 };

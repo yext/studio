@@ -28,7 +28,7 @@ const initialStates: PageSliceStates = {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
   },
-  activeModuleState: undefined,
+  moduleUUIDBeingEdited: undefined,
 };
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
@@ -127,10 +127,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       return pages[activePageName];
     },
-    setActiveModuleState: (moduleState: ModuleState | undefined) => {
-      set((store) => {
-        store.activeModuleState = moduleState;
-      });
+    getActivePageStateOrThrow: () => {
+      const pageState = get().getActivePageState();
+      if (!pageState) {
+        throw new Error('No active PageState found.');
+      }
+      return pageState;
     },
     addComponentToPage(pageName: string, componentState: ComponentState) {
       const tree = get().pages[pageName].componentTree;
@@ -211,12 +213,29 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
+  const moduleStateActions: Pick<PageSlice, 'getModuleStateBeingEdited' | 'setModuleUUIDBeingEdited'> = {
+    getModuleStateBeingEdited(): ModuleState | undefined {
+      const activePageState = get().getActivePageState();
+      if (!activePageState) {
+        return;
+      }
+      const moduleUUIDBeingEdited = get().moduleUUIDBeingEdited;
+      return activePageState.componentTree.find((c): c is ModuleState => c.kind === ComponentStateKind.Module && c.uuid === moduleUUIDBeingEdited);
+    },
+    setModuleUUIDBeingEdited(moduleStateUUID: string | undefined) {
+      set(store => {
+        store.moduleUUIDBeingEdited = moduleStateUUID
+      });
+    },
+  }
+
   return {
     ...initialStates,
     ...pageActions,
     ...activePageActions,
     ...activeComponentActions,
     ...activeEntityFileActions,
+    ...moduleStateActions,
     detachAllModuleInstances: createDetachAllModuleInstances(get),
   };
 };

@@ -21,11 +21,11 @@ export default function AddElementButton(): JSX.Element | null {
   const activePageState = useStudioStore((store) => {
     return store.pages.getActivePageState();
   });
-  const activeModuleState = useStudioStore(
-    (store) => store.pages.activeModuleState
+  const moduleUUIDBeingEdited = useStudioStore(
+    (store) => store.pages.moduleUUIDBeingEdited
   );
 
-  if (!activePageState && !activeModuleState) {
+  if (!activePageState && !moduleUUIDBeingEdited) {
     return null;
   }
 
