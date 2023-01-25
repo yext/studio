@@ -1,4 +1,4 @@
-import PageSlice, { PagesRecord } from "../../models/slices/PageSlice";
+import PageSlice from "../../models/slices/PageSlice";
 import {
   ComponentState,
   ComponentStateKind,
@@ -10,9 +10,7 @@ import { v4 } from "uuid";
 /**
  * Creates an action that loops through all pages, and detaches all instances of the given module.
  */
-export default function createDetachAllModuleInstances(
-  get: () => PageSlice
-) {
+export default function createDetachAllModuleInstances(get: () => PageSlice) {
   return (metadata: ModuleMetadata) => {
     const pagesSlice = get();
     pagesSlice.setActiveComponentUUID(undefined);

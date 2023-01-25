@@ -58,10 +58,9 @@ export default function AddElementsList({
 
 function Option({ metadata }: { metadata: FileMetadata }) {
   const componentName = path.basename(metadata.filepath, ".tsx");
-  const moduleStateBeingEdited = useStudioStore(
-    (store) => store.pages.getModuleStateBeingEdited()
+  const moduleStateBeingEdited = useStudioStore((store) =>
+    store.pages.getModuleStateBeingEdited()
   );
-  const getModuleMetadata = useStudioStore(store => store.fileMetadatas.getModuleMetadata);
   const addComponent = useStudioStore((store) => {
     return store.addComponent;
   });
@@ -87,7 +86,8 @@ function Option({ metadata }: { metadata: FileMetadata }) {
   }, [addElement, componentName]);
 
   // Prevent users from adding infinite looping modules.
-  const isSameAsActiveModule = moduleStateBeingEdited?.metadataUUID === metadata.metadataUUID;
+  const isSameAsActiveModule =
+    moduleStateBeingEdited?.metadataUUID === metadata.metadataUUID;
 
   return (
     <button

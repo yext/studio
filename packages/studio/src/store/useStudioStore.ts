@@ -121,7 +121,7 @@ const useStudioStore = create<StudioStore>()(
         previousCommit: lens(createPreviousCommitSlice),
         addComponent,
         removeComponent,
-        ...createActiveComponentActions(get)
+        ...createActiveComponentActions(get),
       };
     })
   )

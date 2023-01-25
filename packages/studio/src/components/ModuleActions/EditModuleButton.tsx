@@ -9,7 +9,9 @@ export default function EditModuleButton({
 }: {
   moduleState: ModuleState;
 }) {
-  const setModuleUUIDBeingEdited = useStudioStore(store => store.pages.setModuleUUIDBeingEdited);
+  const setModuleUUIDBeingEdited = useStudioStore(
+    (store) => store.pages.setModuleUUIDBeingEdited
+  );
 
   const handleClick = useCallback(() => {
     setModuleUUIDBeingEdited(moduleState.uuid);

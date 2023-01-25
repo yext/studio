@@ -7,7 +7,6 @@ import {
   StandardOrModuleComponentState,
   PropShape,
   FileMetadataKind,
-  ModuleState,
   ComponentStateKind,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
@@ -35,7 +34,9 @@ export default function ComponentEditor(): JSX.Element | null {
     return null;
   }
 
-  const isModule = activeComponentMetadata.kind === FileMetadataKind.Module && activeComponentState.kind === ComponentStateKind.Module;
+  const isModule =
+    activeComponentMetadata.kind === FileMetadataKind.Module &&
+    activeComponentState.kind === ComponentStateKind.Module;
 
   return (
     <div>

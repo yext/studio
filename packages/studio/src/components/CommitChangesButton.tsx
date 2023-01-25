@@ -5,7 +5,7 @@ import { isEqual } from "lodash";
  * Renders a button for committing changes to user's files.
  */
 export default function CommitChangesButton() {
-  const hasChanges = useHasChanges()
+  const hasChanges = useHasChanges();
   const commitChangesAction = useStudioStore((store) => store.commitChanges);
 
   return (
@@ -21,9 +21,10 @@ export default function CommitChangesButton() {
 
 function useHasChanges() {
   // TODO(SLAP-2556) Refactor pendingChanges to use PreviousCommitSlice
-  const [pagesToRemove, pagesToUpdate ] = useStudioStore(
-    (store) => [store.pages.pendingChanges.pagesToRemove, store.pages.pendingChanges.pagesToUpdate]
-  );
+  const [pagesToRemove, pagesToUpdate] = useStudioStore((store) => [
+    store.pages.pendingChanges.pagesToRemove,
+    store.pages.pendingChanges.pagesToUpdate,
+  ]);
   const { modulesToUpdate } = useStudioStore(
     (store) => store.fileMetadatas.pendingChanges
   );
@@ -44,9 +45,11 @@ function useHasChanges() {
     UUIDToFileMetadata
   );
 
-  return pagesToRemove.size > 0 ||
+  return (
+    pagesToRemove.size > 0 ||
     pagesToUpdate.size > 0 ||
     modulesToUpdate.size > 0 ||
     siteSettingsHaveChanged ||
-    hasFileMetadataChanges;
+    hasFileMetadataChanges
+  );
 }

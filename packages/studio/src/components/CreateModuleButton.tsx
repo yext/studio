@@ -53,7 +53,10 @@ export default function CreateModuleButton(): JSX.Element | null {
   );
 
   const activeComponentState = getActiveComponentState();
-  if (!activeComponentState || activeComponentState.kind === ComponentStateKind.Module) {
+  if (
+    !activeComponentState ||
+    activeComponentState.kind === ComponentStateKind.Module
+  ) {
     return null;
   }
 

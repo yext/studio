@@ -5,7 +5,7 @@ import {
   PageState,
   PropValues,
 } from "@yext/studio-plugin";
-import { isEqual } from 'lodash';
+import { isEqual } from "lodash";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import PageSlice, {
@@ -83,7 +83,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       componentTree: ComponentState[]
     ) => {
       set((store) => {
-        const originalComponentTree = store.pages[pageName].componentTree
+        const originalComponentTree = store.pages[pageName].componentTree;
         store.pages[pageName].componentTree = componentTree;
         if (!isEqual(originalComponentTree, componentTree)) {
           store.pendingChanges.pagesToUpdate.add(pageName);
@@ -130,7 +130,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     getActivePageStateOrThrow: () => {
       const pageState = get().getActivePageState();
       if (!pageState) {
-        throw new Error('No active PageState found.');
+        throw new Error("No active PageState found.");
       }
       return pageState;
     },
@@ -213,21 +213,28 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const moduleStateActions: Pick<PageSlice, 'getModuleStateBeingEdited' | 'setModuleUUIDBeingEdited'> = {
+  const moduleStateActions: Pick<
+    PageSlice,
+    "getModuleStateBeingEdited" | "setModuleUUIDBeingEdited"
+  > = {
     getModuleStateBeingEdited(): ModuleState | undefined {
       const activePageState = get().getActivePageState();
       if (!activePageState) {
         return;
       }
       const moduleUUIDBeingEdited = get().moduleUUIDBeingEdited;
-      return activePageState.componentTree.find((c): c is ModuleState => c.kind === ComponentStateKind.Module && c.uuid === moduleUUIDBeingEdited);
+      return activePageState.componentTree.find(
+        (c): c is ModuleState =>
+          c.kind === ComponentStateKind.Module &&
+          c.uuid === moduleUUIDBeingEdited
+      );
     },
     setModuleUUIDBeingEdited(moduleStateUUID: string | undefined) {
-      set(store => {
-        store.moduleUUIDBeingEdited = moduleStateUUID
+      set((store) => {
+        store.moduleUUIDBeingEdited = moduleStateUUID;
       });
     },
-  }
+  };
 
   return {
     ...initialStates,

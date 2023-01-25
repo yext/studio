@@ -1,7 +1,6 @@
 import { ComponentState, PropValues } from "@yext/studio-plugin";
 import { ActiveComponentActions, StudioStore } from "./models/store";
 
-
 export default function createActiveComponentActions(
   get: () => StudioStore
 ): ActiveComponentActions {
@@ -9,7 +8,6 @@ export default function createActiveComponentActions(
     getComponentTree: () => {
       const store = get();
       const moduleStateBeingEdited = store.pages.getModuleStateBeingEdited();
-      console.log({ moduleStateBeingEdited })
       if (moduleStateBeingEdited) {
         return store.fileMetadatas.getModuleMetadata(
           moduleStateBeingEdited.metadataUUID

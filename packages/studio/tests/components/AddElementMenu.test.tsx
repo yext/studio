@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
 import AddElementMenu from "../../src/components/AddElementMenu/AddElementMenu";
-import useStudioStore from '../../src/store/useStudioStore';
+import useStudioStore from "../../src/store/useStudioStore";
 import mockActivePage from "../__utils__/mockActivePage";
 import mockStore from "../__utils__/mockStore";
 
@@ -71,14 +71,14 @@ it("can add a container to the tree", async () => {
   await userEvent.click(screen.getByText("Containers"));
   await userEvent.click(screen.getByText("Mock-Container"));
   expect(useStudioStore.getState().getComponentTree()).toEqual([
-      {
-        componentName: "Mock-Container",
-        kind: ComponentStateKind.Standard,
-        metadataUUID: "cont",
-        props: {},
-        uuid: expect.any(String),
-      },
-    ]);
+    {
+      componentName: "Mock-Container",
+      kind: ComponentStateKind.Standard,
+      metadataUUID: "cont",
+      props: {},
+      uuid: expect.any(String),
+    },
+  ]);
 });
 
 it("can switch to Modules", async () => {
