@@ -1,4 +1,4 @@
-import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind, FileMetadata, FileMetadataKind, ModuleState, PageState, PropValues } from "@yext/studio-plugin";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import PageSlice, {
@@ -7,6 +7,7 @@ import PageSlice, {
 } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
+import { v4 } from 'uuid';
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
@@ -21,6 +22,7 @@ const initialStates: PageSliceStates = {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
   },
+  activeModuleState: undefined,
 };
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
@@ -70,6 +72,11 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         store.pages = pagesRecord;
       });
     },
+    setComponentTreeInPage: (pageName: string, componentTree: ComponentState[]) => {
+      set((store) => {
+        store.pages[pageName].componentTree = componentTree
+      })
+    }
   };
 
   const activePageActions = {
@@ -107,11 +114,26 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       return pages[activePageName];
     },
+    setActiveModuleState: (moduleState: ModuleState | undefined) => {
+      set((store) => {
+        store.activeModuleState = moduleState;
+      });
+    },
+    addComponentToPage(pageName: string, componentState: ComponentState) {
+      const tree = get().pages[pageName].componentTree;
+      get().setComponentTreeInPage(pageName, [...tree, componentState])
+    },
+    removeComponentFromPage(pageName: string, componentUUID: string) {
+      const store = get();
+      const componentTree = store.pages[pageName].componentTree;
+      store.setComponentTreeInPage(pageName, componentTree.filter(c => c.uuid === componentUUID))
+    }
   };
 
   const activeComponentActions = {
-    setActiveComponentUUID: (activeComponentUUID: string | undefined) =>
-      set({ activeComponentUUID }),
+    setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
+      set({ activeComponentUUID })
+    },
     getActiveComponentState: () => {
       const { activeComponentUUID, getActivePageState } = get();
       const activePageState = getActivePageState();
@@ -122,37 +144,24 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         (component) => component.uuid === activeComponentUUID
       );
     },
-    setActiveComponentProps: (props: PropValues) =>
+    setComponentProps: (pageName: string, componentUUID: string, props: PropValues) => {
       set((store) => {
-        const activePageName = store.activePageName;
-        if (!activePageName) {
+        const components = store.pages[pageName].componentTree;
+        const matchingComponent = components.find((c) => c.uuid === componentUUID);
+        if (!matchingComponent) {
+          throw new Error('Could not find component.')
+        }
+        if (matchingComponent.kind === ComponentStateKind.Fragment) {
           console.error(
-            "Tried to setActiveComponentProps when activePageName was undefined"
+            "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
           );
           return;
         }
-        const activeComponent = get().getActiveComponentState();
-        if (!activeComponent) {
-          console.error(
-            "Error in setActiveComponentProps: No active component selected in store."
-          );
-          return;
-        }
-        const components = store.pages[activePageName].componentTree;
-        components.forEach((c) => {
-          if (c.uuid === activeComponent.uuid) {
-            if (c.kind === ComponentStateKind.Fragment) {
-              console.error(
-                "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
-              );
-              return;
-            } else {
-              c.props = props;
-              store.pendingChanges.pagesToUpdate.add(activePageName);
-            }
-          }
-        });
-      }),
+
+        matchingComponent.props = props;
+        store.pendingChanges.pagesToUpdate.add(pageName);
+      })
+    }
   };
 
   const activeEntityFileActions = {

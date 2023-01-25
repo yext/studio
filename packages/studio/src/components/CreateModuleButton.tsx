@@ -11,7 +11,7 @@ import { ComponentStateKind } from "@yext/studio-plugin";
  */
 export default function CreateModuleButton(): JSX.Element | null {
   const [getActiveComponentState, createModule] = useStudioStore((store) => [
-    store.pages.getActiveComponentState,
+    store.getActiveComponentState,
     store.createModule,
   ]);
   const [errorMessage, setErrorMessage] = useState<string>(
@@ -54,8 +54,7 @@ export default function CreateModuleButton(): JSX.Element | null {
 
   const activeComponentState = getActiveComponentState();
   if (
-    !activeComponentState ||
-    activeComponentState.kind === ComponentStateKind.Module
+    activeComponentState?.kind === ComponentStateKind.Module
   ) {
     return null;
   }

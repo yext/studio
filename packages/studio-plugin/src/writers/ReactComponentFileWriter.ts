@@ -169,7 +169,7 @@ export default class ReactComponentFileWriter {
       if (initialProps) {
         this.updateInitialProps(initialProps);
       }
-      if (propShape) {
+      if (propShape && Object.keys(propShape).length !== 0) {
         this.updatePropInterface(propShape);
         this.studioSourceFileWriter.updateFunctionParameter(
           functionComponent,

@@ -1,9 +1,4 @@
-import {
-  ComponentState,
-  ModuleMetadata,
-  PageState,
-  PropValues,
-} from "@yext/studio-plugin";
+import { ComponentState, FileMetadata, ModuleMetadata, ModuleState, PageState, PropValues } from "@yext/studio-plugin";
 
 export interface PagesRecord {
   [pageName: string]: PageState;
@@ -31,6 +26,11 @@ export interface PageSliceStates {
      */
     pagesToUpdate: Set<string>;
   };
+  /**
+   * The current active module if one exists. This will take precedence over the PageState
+   * for things like adding components.
+   */
+  activeModuleState?: ModuleState;
 }
 
 interface PageSliceActions {
@@ -43,9 +43,12 @@ interface PageSliceActions {
   getActivePageState: () => PageState | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
-  setActiveComponentProps: (props: PropValues) => void;
-  getActiveComponentState: () => ComponentState | undefined;
+  setComponentProps: (pageName: string, componentUUID: string, props: PropValues) => void;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
+  setActiveModuleState: (moduleState: ModuleState | undefined) => void;
+  setComponentTreeInPage: (pageName: string, componentTree: ComponentState[]) => void;
+  addComponentToPage: (pageName: string, componentState: ComponentState) => void;
+  removeComponentFromPage: (pageName: string, uuidToRemove: string) => void;
 
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }

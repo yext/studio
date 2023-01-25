@@ -11,10 +11,11 @@ import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
 import { getUserUpdatableStore } from "./utils";
 import sendMessage from "../messaging/sendMessage";
-import { MessageID } from "@yext/studio-plugin";
+import { ComponentState, MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
+import createActiveComponentActions from "./activeComponentActions";
 
 enableMapSet();
 
@@ -85,6 +86,24 @@ const useStudioStore = create<StudioStore>()(
         });
       };
 
+      const addComponent = (componentState: ComponentState) => {
+        const { activePageName, activeModuleState } = get().pages;
+        if (activeModuleState) {
+          get().fileMetadatas.addComponentToModule(activeModuleState.metadataUUID, componentState);
+        } else if (activePageName) {
+          get().pages.addComponentToPage(activePageName, componentState);
+        }
+      }
+
+      const removeComponent = (componentUUID: string) => {
+        const { activePageName, activeModuleState } = get().pages;
+        if (activeModuleState) {
+          get().fileMetadatas.removeComponentFromModule(activeModuleState.metadataUUID, componentUUID);
+        } else if (activePageName) {
+          get().pages.removeComponentFromPage(activePageName, componentUUID);
+        }
+      }
+
       return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
@@ -92,6 +111,9 @@ const useStudioStore = create<StudioStore>()(
         commitChanges,
         createModule: getCreateModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
+        addComponent,
+        removeComponent,
+        ...createActiveComponentActions(get),
       };
     })
   )

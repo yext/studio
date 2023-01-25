@@ -9,7 +9,7 @@ export default function useActiveComponent(): {
   activeComponentState?: ComponentState;
 } {
   return useStudioStore((store) => {
-    const activeComponentState = store.pages.getActiveComponentState();
+    const activeComponentState = store.getActiveComponentState();
     const activeComponentMetadata =
       activeComponentState &&
       TypeGuards.isStandardOrModuleComponentState(activeComponentState)

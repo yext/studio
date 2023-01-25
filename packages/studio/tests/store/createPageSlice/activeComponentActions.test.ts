@@ -43,7 +43,7 @@ describe("PageSlice", () => {
           value: true,
         },
       };
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
+      useStudioStore.getState().setActiveComponentProps(newPropValues);
       const componentState =
         useStudioStore.getState().pages.pages["universal"].componentTree[1];
       const actualPropValues =
@@ -61,7 +61,7 @@ describe("PageSlice", () => {
           value: true,
         },
       };
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
+      useStudioStore.getState().setActiveComponentProps(newPropValues);
       const pagesToUpdate =
         useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
       expect(pagesToUpdate).toEqual(new Set<string>(["universal"]));
@@ -91,7 +91,7 @@ describe("PageSlice", () => {
       const consoleErrorSpy = jest
         .spyOn(global.console, "error")
         .mockImplementation();
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
+      useStudioStore.getState().setActiveComponentProps(newPropValues);
       const actualPages = useStudioStore.getState().pages.pages;
       expect(actualPages).toEqual(initialPages);
       expect(consoleErrorSpy).toBeCalledWith(
@@ -123,7 +123,7 @@ describe("PageSlice", () => {
       const consoleErrorSpy = jest
         .spyOn(global.console, "error")
         .mockImplementation();
-      useStudioStore.getState().pages.setActiveComponentProps(newPropValues);
+      useStudioStore.getState().setActiveComponentProps(newPropValues);
       const actualPages = useStudioStore.getState().pages.pages;
       expect(actualPages).toEqual(initialPages);
       expect(consoleErrorSpy).toBeCalledWith(

@@ -133,10 +133,7 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
 }
 
 function useTree(): NodeModel<ComponentState>[] | undefined {
-  const componentTree = useStudioStore((store) => {
-    const activePageState = store.pages.getActivePageState();
-    return activePageState?.componentTree;
-  });
+  const componentTree = useStudioStore((store) => store.getComponentTree)();
 
   const getComponentMetadata = useStudioStore(
     (store) => store.fileMetadatas.getComponentMetadata
@@ -184,21 +181,9 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 }
 
 function useDropHandler() {
-  const activePageState = useStudioStore((store) =>
-    store.pages.getActivePageState()
+  const updateComponentTree = useStudioStore(
+    (store) => store.updateComponentTree
   );
-
-  const setComponentTree = useStudioStore((store) => {
-    return (componentTree: ComponentState[]) => {
-      if (!activePageState) {
-        return;
-      }
-      store.pages.setActivePageState({
-        ...activePageState,
-        componentTree,
-      });
-    };
-  });
 
   const handleDrop = useCallback(
     (tree: NodeModel<ComponentState>[]) => {
@@ -219,9 +204,9 @@ function useDropHandler() {
         }
         return componentState;
       });
-      setComponentTree(updatedComponentTree);
+      updateComponentTree(updatedComponentTree);
     },
-    [setComponentTree]
+    [updateComponentTree]
   );
   return handleDrop;
 }

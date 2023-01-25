@@ -173,7 +173,7 @@ describe("PageSlice", () => {
     });
 
     it("setActiveComponentProps", () => {
-      useStudioStore.getState().pages.setActiveComponentProps({});
+      useStudioStore.getState().setActiveComponentProps({});
       expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
       expect(consoleErrorSpy).toHaveBeenCalledWith(
         "Tried to setActiveComponentProps when activePageName was undefined"

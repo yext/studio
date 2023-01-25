@@ -14,12 +14,12 @@ import RemovePageButton from "./RemovePageButton";
  * modules in the component tree of the active page.
  */
 export default function ActivePagePanel(): JSX.Element {
-  const { pages, setActivePageName, activePageName } = useStudioStore(
-    (store) => {
-      const { pages, setActivePageName, activePageName } = store.pages;
-      return { pages, setActivePageName, activePageName };
-    }
-  );
+  const { pages, setActivePageName, activePageName, setActiveModuleState } =
+    useStudioStore((store) => {
+      const { pages, setActivePageName, activePageName, setActiveModuleState } =
+        store.pages;
+      return { pages, setActivePageName, activePageName, setActiveModuleState };
+    });
   const pageNames = useMemo(() => Object.keys(pages), [pages]);
 
   const renderPageList = useCallback(
@@ -33,6 +33,7 @@ export default function ActivePagePanel(): JSX.Element {
             });
             function handleSelectPage() {
               setActivePageName(pageName);
+              setActiveModuleState(undefined);
             }
             return (
               <div key={pageName} className="flex justify-between pb-4 px-2">
@@ -53,7 +54,7 @@ export default function ActivePagePanel(): JSX.Element {
         </div>
       );
     },
-    [activePageName, setActivePageName]
+    [activePageName, setActiveModuleState, setActivePageName]
   );
 
   return (
@@ -64,7 +65,7 @@ export default function ActivePagePanel(): JSX.Element {
       </div>
       {renderPageList(pageNames)}
       <Divider />
-      <div className="font-bold">Modules</div>
+      <div className="font-bold mb-3">Layers</div>
       <ComponentTree />
     </div>
   );

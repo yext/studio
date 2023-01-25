@@ -14,35 +14,11 @@ interface RemoveElementButtonProps {
 export default function RemoveElementButton({
   elementUUID,
 }: RemoveElementButtonProps): JSX.Element | null {
-  const [getActivePageState, setActivePageState] = useStudioStore((store) => {
-    const pages = store.pages;
-    return [pages.getActivePageState, pages.setActivePageState];
-  });
+  const removeComponent = useStudioStore((store) => store.removeComponent);
 
   const handleClick = useCallback(() => {
-    const activePageState = getActivePageState();
-    if (!activePageState) {
-      throw new Error("Tried to remove component without active page state.");
-    }
-    const componentTree = activePageState.componentTree;
-    const parentUUID = componentTree.find(
-      (c) => c.uuid === elementUUID
-    )?.parentUUID;
-    const updatedComponentTree = componentTree
-      .filter((c) => c.uuid !== elementUUID)
-      .map((c) => {
-        const updatedParentUUID =
-          c.parentUUID === elementUUID ? parentUUID : c.parentUUID;
-        return {
-          ...c,
-          parentUUID: updatedParentUUID,
-        };
-      });
-    setActivePageState({
-      ...activePageState,
-      componentTree: updatedComponentTree,
-    });
-  }, [elementUUID, getActivePageState, setActivePageState]);
+    removeComponent(elementUUID);
+  }, [elementUUID, removeComponent]);
 
   return (
     <button onClick={handleClick} aria-label="Remove Element">
