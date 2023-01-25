@@ -42,9 +42,9 @@ function handleDefaultImports(pluginImports: (PluginConfig | { default: PluginCo
   return pluginImports.map(function (pluginImport) {
 
     if ("default" in pluginImport) {
-      return pluginImport.default;
+      return pluginImport.default as PluginConfig;
     }
 
-    return pluginImport;
+    return pluginImport as PluginConfig;
   });
 }
