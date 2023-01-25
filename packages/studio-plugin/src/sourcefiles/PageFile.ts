@@ -1,5 +1,5 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
-import { PageState, PluginRef } from "../types";
+import { PageState, PluginName } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
 import ReactComponentFileWriter, {
   GetFileMetadataByUUID,
@@ -28,13 +28,14 @@ export default class PageFile {
   private streamConfigWriter: StreamConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
+  private pluginFilepathToComponentName?: Record<string, string>;
 
   constructor(
     filepath: string,
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
-    private pluginRefs?: PluginRef[],
+    filepathToPluginNames: Record<string, PluginName> = {},
     private entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
@@ -60,19 +61,17 @@ export default class PageFile {
       this.studioSourceFileParser,
       getFileMetadata
     );
+    this.pluginFilepathToComponentName = Object.keys(filepathToPluginNames).reduce((filepathToComponent, filepath) => {
+      filepathToComponent[filepath] = filepathToPluginNames[filepath].componentName;
+      return filepathToComponent;
+    }, {});
   }
 
   getPageState(): PageState {
-    const absPathToComponentName = {
+    const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-      ...this.pluginRefs?.reduce((pathToPluginName, ref) => {
-        pathToPluginName[ref.filepath] = ref.componentName;
-        return pathToPluginName;
-      }, {}),
-    };
-    const componentTree = this.componentTreeParser.parseComponentTree(
-      absPathToComponentName
-    );
+      ...this.pluginFilepathToComponentName,
+    });
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();
     return {

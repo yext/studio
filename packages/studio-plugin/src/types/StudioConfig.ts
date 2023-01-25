@@ -23,5 +23,5 @@ export interface StudioConfig {
    * \}
    */
   paths?: Partial<UserPaths>;
-  plugins?: PluginConfig[];
+  plugins?: (PluginConfig | { default: PluginConfig })[];
 }

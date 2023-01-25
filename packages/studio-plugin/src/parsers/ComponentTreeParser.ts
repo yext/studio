@@ -101,10 +101,7 @@ export default class ComponentTreeParser {
 
     const filepath = Object.keys(defaultImports).find((importIdentifier) => {
       const compareComponent = defaultImports[importIdentifier];
-      return (
-        compareComponent === componentName ||
-        componentName.startsWith(`${compareComponent}.`)
-      );
+      return compareComponent === componentName;
     });
     const assumeIsBuiltInElement = filepath === undefined;
     if (assumeIsBuiltInElement) {

@@ -1,10 +1,10 @@
 export type PluginConfig = {
   name: string;
   components: Record<string, string>;
+  default: never;
 };
 
-export type PluginRef = {
-  filepath: string;
+export type PluginName = {
   componentName: string;
   moduleName: string;
 };

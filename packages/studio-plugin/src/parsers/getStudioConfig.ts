@@ -1,4 +1,4 @@
-import { StudioConfig } from "../types";
+import { PluginConfig, StudioConfig } from "../types";
 import fs from "fs";
 import path from "path";
 import getUserPaths from "./getUserPaths";
@@ -31,6 +31,18 @@ export default async function getStudioConfig(
     return defaultConfig;
   }
 
-  const studioConfig = (await import(configFilepath)).default;
+  const studioConfig = (await import(configFilepath)).default as StudioConfig;
+  studioConfig.plugins = studioConfig.plugins && handleDefaultImports(studioConfig.plugins);
   return lodashMerge({}, defaultConfig, studioConfig);
+}
+
+function handleDefaultImports(pluginImports: (PluginConfig | { default: PluginConfig })[]): PluginConfig[] {
+  return pluginImports.map(function (pluginImport) {
+
+    if ("default" in pluginImport) {
+      return pluginImport.default;
+    }
+
+    return pluginImport;
+  });
 }

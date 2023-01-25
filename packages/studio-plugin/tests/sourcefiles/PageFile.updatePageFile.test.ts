@@ -46,8 +46,6 @@ describe("updatePageFile", () => {
     );
   });
 
-  // TODO add a named import c/p
-
   describe("stream config", () => {
     beforeEach(() => {
       jest.spyOn(uuidUtils, "v4").mockReturnValue("mock-uuid-value");

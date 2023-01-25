@@ -31,3 +31,32 @@ it("returns user studio config merge with default config for unspecified fields"
     plugins: [],
   });
 });
+
+it("returns user studio config merge with multiple plugin import methods", async () => {
+  const projectRoot = path.resolve(__dirname, "../__fixtures__/PluginConfig");
+  const studioConfig = await getStudioConfig(projectRoot);
+  expect(studioConfig).toEqual({
+    isPagesJSRepo: false,
+    paths: {
+      components: "custom/components/folder/path",
+      localData: projectRoot + "/localData",
+      modules: projectRoot + "/src/modules",
+      pages: "custom/pages/folder/path",
+      siteSettings: projectRoot + "/src/siteSettings.ts",
+    },
+    plugins: [
+      {
+        name: "@yext/sample-component",
+        components: [
+          "src/components/AceComponent.tsx"
+        ],
+      },
+      {
+        name: "@yext/sample-component-2",
+        components: [
+          "src/components/BevComponent.tsx"
+        ],
+      }
+    ],
+  });
+});
