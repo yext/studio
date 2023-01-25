@@ -90,6 +90,42 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
+    setComponentProps: (
+      pageName: string,
+      componentUUID: string,
+      props: PropValues
+    ) => {
+      set((store) => {
+        const components = store.pages[pageName].componentTree;
+        const matchingComponent = components.find(
+          (c) => c.uuid === componentUUID
+        );
+        if (!matchingComponent) {
+          throw new Error("Could not find component.");
+        }
+        if (matchingComponent.kind === ComponentStateKind.Fragment) {
+          console.error(
+            "Error in setComponentProps: The active component is a fragment and does not accept props."
+          );
+          return;
+        }
+
+        matchingComponent.props = props;
+        store.pendingChanges.pagesToUpdate.add(pageName);
+      });
+    },
+    addComponentToPage(pageName: string, componentState: ComponentState) {
+      const tree = get().pages[pageName].componentTree;
+      get().setComponentTreeInPage(pageName, [...tree, componentState]);
+    },
+    removeComponentFromPage(pageName: string, componentUUID: string) {
+      const store = get();
+      const componentTree = store.pages[pageName].componentTree;
+      store.setComponentTreeInPage(
+        pageName,
+        componentTree.filter((c) => c.uuid !== componentUUID)
+      );
+    },
   };
 
   const activePageActions = {
@@ -127,25 +163,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       return pages[activePageName];
     },
-    getActivePageStateOrThrow: () => {
-      const pageState = get().getActivePageState();
-      if (!pageState) {
-        throw new Error("No active PageState found.");
-      }
-      return pageState;
-    },
-    addComponentToPage(pageName: string, componentState: ComponentState) {
-      const tree = get().pages[pageName].componentTree;
-      get().setComponentTreeInPage(pageName, [...tree, componentState]);
-    },
-    removeComponentFromPage(pageName: string, componentUUID: string) {
-      const store = get();
-      const componentTree = store.pages[pageName].componentTree;
-      store.setComponentTreeInPage(
-        pageName,
-        componentTree.filter((c) => c.uuid !== componentUUID)
-      );
-    },
   };
 
   const activeComponentActions = {
@@ -161,30 +178,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       return activePageState.componentTree.find(
         (component) => component.uuid === activeComponentUUID
       );
-    },
-    setComponentProps: (
-      pageName: string,
-      componentUUID: string,
-      props: PropValues
-    ) => {
-      set((store) => {
-        const components = store.pages[pageName].componentTree;
-        const matchingComponent = components.find(
-          (c) => c.uuid === componentUUID
-        );
-        if (!matchingComponent) {
-          throw new Error("Could not find component.");
-        }
-        if (matchingComponent.kind === ComponentStateKind.Fragment) {
-          console.error(
-            "Error in setComponentProps: The active component is a fragment and does not accept props."
-          );
-          return;
-        }
-
-        matchingComponent.props = props;
-        store.pendingChanges.pagesToUpdate.add(pageName);
-      });
     },
   };
 

@@ -46,16 +46,6 @@ interface PageSliceActions {
   setActivePageName: (pageName: string | undefined) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState | undefined;
-  getActivePageStateOrThrow: () => PageState;
-
-  setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
-  setComponentProps: (
-    pageName: string,
-    componentUUID: string,
-    props: PropValues
-  ) => void;
-  setActiveEntityFile: (activeEntityFile?: string) => boolean;
-  setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
   setComponentTreeInPage: (
     pageName: string,
     componentTree: ComponentState[]
@@ -66,6 +56,15 @@ interface PageSliceActions {
   ) => void;
   removeComponentFromPage: (pageName: string, uuidToRemove: string) => void;
   getModuleStateBeingEdited: () => ModuleState | undefined;
+
+  setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
+  setComponentProps: (
+    pageName: string,
+    componentUUID: string,
+    props: PropValues
+  ) => void;
+  setActiveEntityFile: (activeEntityFile?: string) => boolean;
+  setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }

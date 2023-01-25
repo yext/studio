@@ -172,12 +172,5 @@ describe("PageSlice", () => {
       expect(nonexistantComponentState).toBeUndefined();
     });
 
-    it("updateActiveComponentProps", () => {
-      useStudioStore.getState().updateActiveComponentProps({});
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error in updateActiveComponentProps: No active component in store."
-      );
-    });
   });
 });
