@@ -189,7 +189,10 @@ export default class ParsingOrchestrator {
     );
 
     if (!fileMetadata) {
-      return;
+      throw new Error(
+        `Could not get FileMetadata for ${metadataUUID}, file does not ` +
+          `exist or was not properly loaded into application.`
+      );
     }
 
     return fileMetadata;
