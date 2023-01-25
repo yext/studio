@@ -73,7 +73,7 @@ export default function ActivePagePanel(): JSX.Element {
       </div>
       {renderPageList(pageNames)}
       <Divider />
-      <div className="font-bold mb-3">Layers</div>
+      <div className="font-bold">Layers</div>
       <ComponentTree />
     </div>
   );
