@@ -109,20 +109,23 @@ export default class ParsingOrchestrator {
     return newModuleFile;
   }
 
-  async getStudioData(): Promise<StudioData> {
+  getUUIDToFileMetadata() {
     const UUIDToFileMetadata = Object.values(
       this.filepathToFileMetadata
     ).reduce((prev, curr) => {
       prev[curr.metadataUUID] = curr;
       return prev;
     }, {});
+    return UUIDToFileMetadata;
+  }
 
+  async getStudioData(): Promise<StudioData> {
     const siteSettings = this.getSiteSettings();
     const pageNameToPageState = await this.getPageNameToPageState();
 
     return {
       pageNameToPageState,
-      UUIDToFileMetadata,
+      UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
       userPaths: this.paths,
     };

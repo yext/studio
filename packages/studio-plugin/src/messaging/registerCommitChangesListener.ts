@@ -22,8 +22,8 @@ export default function registerCommitChangesListener(
           path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
         fileManager.removeFile(filepath);
       });
-      pendingChanges.modulesToUpdate.forEach((moduleToUpdate) => {
-        const metadata = UUIDToFileMetadata[moduleToUpdate];
+      pendingChanges.modulesToUpdate.forEach((moduleUUID) => {
+        const metadata = UUIDToFileMetadata[moduleUUID];
         if (metadata.kind === FileMetadataKind.Module) {
           fileManager.updateModuleFile(metadata.filepath, metadata);
         }
@@ -40,6 +40,7 @@ export default function registerCommitChangesListener(
       if (siteSettings?.values) {
         fileManager.updateSiteSettings(siteSettings.values);
       }
+      fileManager.syncFileMetadata(UUIDToFileMetadata);
 
       return "Changes saved successfully.";
     }

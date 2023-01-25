@@ -1,8 +1,12 @@
 import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
-import PageSlice, { PageSliceStates } from "../models/slices/PageSlice";
-import { SliceCreator } from "../models/utils";
+import PageSlice, {
+  PageSliceStates,
+  PagesRecord,
+} from "../../models/slices/PageSlice";
+import { SliceCreator } from "../../models/utils";
+import createDetachAllModuleInstances from "./detachAllModuleInstances";
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
@@ -59,6 +63,11 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         const { pagesToRemove, pagesToUpdate } = store.pendingChanges;
         pagesToUpdate.delete(pageName);
         pagesToRemove.add(pageName);
+      });
+    },
+    setPagesRecord: (pagesRecord: PagesRecord) => {
+      set((store) => {
+        store.pages = pagesRecord;
       });
     },
   };
@@ -177,6 +186,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     ...activePageActions,
     ...activeComponentActions,
     ...activeEntityFileActions,
+    detachAllModuleInstances: createDetachAllModuleInstances(get, set),
   };
 };
 

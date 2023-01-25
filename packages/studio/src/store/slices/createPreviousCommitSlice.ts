@@ -6,6 +6,9 @@ const createPreviousCommitSlice: SliceCreator<PreviousCommitSlice> = () => ({
   siteSettings: {
     values: initialStudioData.siteSettings?.values,
   },
+  fileMetadatas: {
+    UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
+  },
 });
 
 export default createPreviousCommitSlice;

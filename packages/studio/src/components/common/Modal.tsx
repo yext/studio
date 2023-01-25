@@ -11,6 +11,7 @@ interface ModalProps {
   handleConfirm: () => void;
   isConfirmButtonDisabled?: boolean;
   confirmButtonText?: string;
+  confirmButtonEnabledColor?: string;
 }
 
 const customReactModalStyles = {
@@ -33,6 +34,7 @@ export default function Modal({
   handleConfirm,
   isConfirmButtonDisabled,
   confirmButtonText = "Ok",
+  confirmButtonEnabledColor,
 }: ModalProps) {
   const footerClasses = classNames("mt-2 items-center", {
     "flex justify-between": errorMessage,
@@ -41,7 +43,7 @@ export default function Modal({
     "ml-2 py-1 px-3 text-white rounded-md",
     {
       "bg-gray-400": isConfirmButtonDisabled,
-      "bg-blue-600": !isConfirmButtonDisabled,
+      [confirmButtonEnabledColor ?? "bg-blue-600"]: !isConfirmButtonDisabled,
     }
   );
 

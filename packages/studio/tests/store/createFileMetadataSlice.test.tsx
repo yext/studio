@@ -61,13 +61,37 @@ it("returns a FileMetadata using getFileMetadata", () => {
   expect(fileMetadata).toEqual(componentMetadata);
 });
 
-it("removes a FileMetadata using removeFileMetadata", () => {
-  setInitialState({
+it("errors when removeFileMetadata is called on a non-module", () => {
+  const initialState = {
     UUIDToFileMetadata: {
       "uuid-1": componentMetadata,
     },
-  });
+  };
+  setInitialState(initialState);
+  const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
   useStudioStore.getState().fileMetadatas.removeFileMetadata("uuid-1");
+  expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+  expect(consoleErrorSpy).toHaveBeenCalledWith(
+    "removeFileMetadata is only allowed for modules, not:",
+    FileMetadataKind.Component
+  );
+
+  const UUIDToFileMetadata =
+    useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
+  expect(UUIDToFileMetadata).toEqual(initialState.UUIDToFileMetadata);
+});
+
+it("removeFileMetadata can remove a module metadata", () => {
+  const initialState = {
+    UUIDToFileMetadata: {
+      "uuid-1": moduleMetadata,
+    },
+  };
+  setInitialState(initialState);
+  useStudioStore.getState().fileMetadatas.removeFileMetadata("uuid-1");
+  const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+  expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
+
   const UUIDToFileMetadata =
     useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
   expect(UUIDToFileMetadata).toEqual({});

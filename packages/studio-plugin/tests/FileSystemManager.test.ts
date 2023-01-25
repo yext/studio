@@ -53,9 +53,8 @@ paths.modules = path.join(projectRoot, "modules");
 
 const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, [], false);
 const fileManager = new FileSystemManager(
-  tsMorphProject,
   paths,
-  new FileSystemWriter(orchestrator, false)
+  new FileSystemWriter(orchestrator, false, tsMorphProject)
 );
 
 const bannerFilepath = path.join(paths.components, "Banner.tsx");

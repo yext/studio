@@ -20,22 +20,58 @@ export default class ComponentTreeHelpers {
     handler: (component: ComponentState, mappedChildren: T[]) => T,
     parent?: ComponentState
   ): T[] {
+    const { directChildren, otherNodes } =
+      ComponentTreeHelpers.separateDescendants(componentTree, parent);
+    return directChildren.map((component) => {
+      const children = this.mapComponentTree(otherNodes, handler, component);
+      return handler(component, children);
+    });
+  }
+
+  /**
+   * Similar to mapComponentTree but guarantees that parent nodes are
+   * called before leaf nodes.
+   *
+   * @param componentTree - the component tree to perform on
+   * @param handler - a function to execute on each component
+   *
+   * @returns an array of elements returned by the handler function
+   */
+  static mapComponentTreeParentsFirst<T>(
+    componentTree: ComponentState[],
+    handler: (component: ComponentState, parentValue?: T) => T,
+    parent?: ComponentState,
+    parentValue?: T
+  ): T[] {
+    const { directChildren, otherNodes } =
+      ComponentTreeHelpers.separateDescendants(componentTree, parent);
+    return directChildren.flatMap((component) => {
+      const mappedValue = handler(component, parentValue);
+      return [
+        mappedValue,
+        ...ComponentTreeHelpers.mapComponentTreeParentsFirst(
+          otherNodes,
+          handler,
+          component,
+          mappedValue
+        ),
+      ];
+    });
+  }
+
+  private static separateDescendants(
+    componentTree: ComponentState[],
+    parent?: ComponentState
+  ) {
     const directChildren: ComponentState[] = [];
-    const nonDirectChildren: ComponentState[] = [];
+    const otherNodes: ComponentState[] = [];
     componentTree.forEach((component) => {
       if (component.parentUUID === parent?.uuid) {
         directChildren.push(component);
-      } else if (component.uuid !== parent?.uuid) {
-        nonDirectChildren.push(component);
+      } else {
+        otherNodes.push(component);
       }
     });
-    return directChildren.map((component) => {
-      const children = this.mapComponentTree(
-        nonDirectChildren,
-        handler,
-        component
-      );
-      return handler(component, children);
-    });
+    return { directChildren, otherNodes };
   }
 }

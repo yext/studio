@@ -32,9 +32,12 @@ export default async function createStudioPlugin(
   const studioData = await orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
-    tsMorphProject,
     studioConfig.paths,
-    new FileSystemWriter(orchestrator, studioConfig.isPagesJSRepo)
+    new FileSystemWriter(
+      orchestrator,
+      studioConfig.isPagesJSRepo,
+      tsMorphProject
+    )
   );
 
   // We have to use a dynamic import here - if we use a regular import,

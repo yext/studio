@@ -1,4 +1,5 @@
 import {
+  FileMetadata,
   ModuleMetadata,
   PageState,
   SiteSettingsValues,
@@ -6,7 +7,6 @@ import {
 } from "./types";
 import fs from "fs";
 import path from "path";
-import { Project } from "ts-morph";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 
 /**
@@ -14,24 +14,14 @@ import { FileSystemWriter } from "./writers/FileSystemWriter";
  * based on updated state from Studio's client side.
  */
 export default class FileSystemManager {
-  constructor(
-    private project: Project,
-    private paths: UserPaths,
-    private writer: FileSystemWriter
-  ) {}
+  constructor(private paths: UserPaths, private writer: FileSystemWriter) {}
+
+  removeFile(filepath: string) {
+    this.writer.removeFile(filepath);
+  }
 
   getUserPaths(): UserPaths {
     return this.paths;
-  }
-
-  removeFile(filepath: string) {
-    if (fs.existsSync(filepath)) {
-      const sourceFile = this.project.getSourceFile(filepath);
-      if (sourceFile) {
-        this.project.removeSourceFile(sourceFile);
-      }
-      fs.rmSync(filepath);
-    }
   }
 
   async updatePageFile(filepath: string, pageState: PageState): Promise<void> {
@@ -63,6 +53,10 @@ export default class FileSystemManager {
 
   updateSiteSettings(siteSettingsValues: SiteSettingsValues) {
     this.writer.writeToSiteSettings(siteSettingsValues);
+  }
+
+  syncFileMetadata(UUIDToFileMetadata: Record<string, FileMetadata>) {
+    this.writer.syncFileMetadata(UUIDToFileMetadata);
   }
 
   private static openFile(filepath: string) {
