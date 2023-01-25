@@ -39,7 +39,7 @@ export default class ParsingOrchestrator {
   private pageNameToPageFile: Record<string, PageFile> = {};
   private localDataMapping?: Record<string, string[]>;
   private siteSettingsFile?: SiteSettingsFile;
-  private pluginReferences: Record<string, PluginComponentData>;
+  private filepathToPluginComponentData: Record<string, PluginComponentData>;
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -50,7 +50,7 @@ export default class ParsingOrchestrator {
   ) {
     this.getFileMetadata = this.getFileMetadata.bind(this);
     this.getFileMetadataByUUID = this.getFileMetadataByUUID.bind(this);
-    this.pluginReferences = this.getFilepathToPluginNames(plugins);
+    this.filepathToPluginComponentData = this.getFilepathToPluginNames(plugins);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
 
@@ -87,7 +87,7 @@ export default class ParsingOrchestrator {
       this.getFileMetadata,
       this.getFileMetadataByUUID,
       this.project,
-      this.pluginReferences,
+      this.filepathToPluginComponentData,
       pageEntityFiles
     );
     this.pageNameToPageFile[pageName] = newPageFile;
@@ -150,7 +150,7 @@ export default class ParsingOrchestrator {
 
     addDirectoryToMapping(this.paths.components);
     addDirectoryToMapping(this.paths.modules);
-    Object.keys(this.pluginReferences).forEach((pluginFile) =>
+    Object.keys(this.filepathToPluginComponentData).forEach((pluginFile) =>
       addFileToMapping(pluginFile)
     );
 
@@ -169,7 +169,7 @@ export default class ParsingOrchestrator {
       const moduleFile = this.getModuleFile(absPath);
       return moduleFile.getModuleMetadata();
     }
-    const plugin = this.pluginReferences[absPath];
+    const plugin = this.filepathToPluginComponentData[absPath];
     if (plugin?.moduleName) {
       const componentFile = new ComponentFile(
         absPath,
