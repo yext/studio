@@ -188,16 +188,12 @@ export default class ParsingOrchestrator {
   private getFileMetadataByUUID(
     metadataUUID: string
   ): FileMetadata | undefined {
-    console.log(this.filepathToFileMetadata, metadataUUID);
     const fileMetadata = Object.values(this.filepathToFileMetadata).find(
       (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
     );
 
     if (!fileMetadata) {
-      throw new Error(
-        `Could not get FileMetadata for ${metadataUUID}, file does not ` +
-          `exist or was not properly loaded into application.`
-      );
+      return;
     }
 
     return fileMetadata;
