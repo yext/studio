@@ -4,9 +4,9 @@ import {
   ModuleMetadata,
   PropValueType,
 } from "@yext/studio-plugin";
-import useStudioStore from "../../src/store/useStudioStore";
-import { FileMetadataSliceStates } from "../../src/store/models/slices/FileMetadataSlice";
-import mockStore from "../__utils__/mockStore";
+import useStudioStore from "../../../src/store/useStudioStore";
+import { FileMetadataSliceStates } from "../../../src/store/models/slices/FileMetadataSlice";
+import mockStore from "../../__utils__/mockStore";
 
 const componentMetadata: ComponentMetadata = {
   kind: FileMetadataKind.Component,
@@ -108,6 +108,34 @@ it("updates UUIDToImportedComponent using setUUIDToImportedComponent", () => {
     useStudioStore.getState().fileMetadatas.UUIDToImportedComponent;
   expect(UUIDToImportedComponent).toEqual(newImportedComponents);
 });
+
+it('getComponentMetadata', () => {
+
+})
+
+it('getModuleMetadata', () => {
+
+})
+
+it('setComponentTreeInModule', () => {
+
+})
+
+it('updateComponentPropsInsideModule', () => {
+
+})
+
+it('getComponentStateInsideModule', () => {
+
+})
+
+it('addComponentToModule', () => {
+
+})
+
+it('removeComponentFromModule', () => {
+  
+})
 
 function setInitialState(initialState: Partial<FileMetadataSliceStates>): void {
   const baseState: FileMetadataSliceStates = {

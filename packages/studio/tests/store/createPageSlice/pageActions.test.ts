@@ -113,3 +113,11 @@ describe("removePage", () => {
     });
   });
 });
+
+it('addComponentToPage', () => {
+
+})
+
+it('removeComponentFromPage', () => {
+  
+})

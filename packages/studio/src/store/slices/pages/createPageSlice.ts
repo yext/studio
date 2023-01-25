@@ -73,11 +73,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         pagesToRemove.add(pageName);
       });
     },
-    setPagesRecord: (pagesRecord: PagesRecord) => {
-      set((store) => {
-        store.pages = pagesRecord;
-      });
-    },
     setComponentTreeInPage: (
       pageName: string,
       componentTree: ComponentState[]
@@ -165,7 +160,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const activeComponentActions = {
+  const pageComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
       set({ activeComponentUUID });
     },
@@ -233,7 +228,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     ...initialStates,
     ...pageActions,
     ...activePageActions,
-    ...activeComponentActions,
+    ...pageComponentActions,
     ...activeEntityFileActions,
     ...moduleStateActions,
     detachAllModuleInstances: createDetachAllModuleInstances(get),

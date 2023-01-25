@@ -41,7 +41,6 @@ export interface PageSliceStates {
 interface PageSliceActions {
   addPage: (filepath: string) => boolean;
   removePage: (filepath: string) => void;
-  setPagesRecord: (pages: PagesRecord) => void;
 
   setActivePageName: (pageName: string | undefined) => void;
   setActivePageState: (pageState: PageState) => void;

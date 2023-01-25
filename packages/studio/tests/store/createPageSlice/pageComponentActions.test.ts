@@ -12,7 +12,7 @@ import {
 } from "../../__fixtures__/componentStates";
 
 describe("PageSlice", () => {
-  describe("active component actions", () => {
+  describe("page component actions", () => {
     beforeEach(() => {
       mockPageSliceStates({
         pages: {
