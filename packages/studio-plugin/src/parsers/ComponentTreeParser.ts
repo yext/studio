@@ -40,7 +40,9 @@ export default class ComponentTreeParser {
       returnStatement;
     const topLevelJsxNode = JsxNodeWrapper.getChildren().find(
       (n): n is JsxElement | JsxFragment | JsxSelfClosingElement =>
-        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment) || n.isKind(SyntaxKind.JsxSelfClosingElement)
+        n.isKind(SyntaxKind.JsxElement) ||
+        n.isKind(SyntaxKind.JsxFragment) ||
+        n.isKind(SyntaxKind.JsxSelfClosingElement)
     );
     if (!topLevelJsxNode) {
       throw new Error(
