@@ -39,8 +39,8 @@ export default class ComponentTreeParser {
       returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression) ??
       returnStatement;
     const topLevelJsxNode = JsxNodeWrapper.getChildren().find(
-      (n): n is JsxElement | JsxFragment =>
-        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment)
+      (n): n is JsxElement | JsxFragment | JsxSelfClosingElement =>
+        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment) || n.isKind(SyntaxKind.JsxSelfClosingElement)
     );
     if (!topLevelJsxNode) {
       throw new Error(
