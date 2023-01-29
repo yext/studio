@@ -1,8 +1,8 @@
 import ParsingOrchestrator, {
   createTsMorphProject,
 } from "../src/ParsingOrchestrator";
-import path from "path";
 import getUserPaths from "../src/parsers/getUserPaths";
+import path from "path";
 import {
   ComponentStateKind,
   FileMetadataKind,
@@ -10,6 +10,20 @@ import {
   StudioData,
 } from "../src";
 import { Project } from "ts-morph";
+import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
+
+const mockGetPathToModuleResponse = path.join(
+  process.cwd(),
+  "tests/__fixtures__/PluginConfig"
+);
+const mockGetPathToModule = jest
+  .fn()
+  .mockReturnValue(mockGetPathToModuleResponse);
+jest.mock("../src/utils/NpmLookup", () => {
+  return jest.fn().mockImplementation(() => {
+    return { getRootPath: mockGetPathToModule };
+  });
+});
 
 const projectRoot = path.resolve(
   __dirname,
@@ -56,6 +70,7 @@ describe("aggregates data as expected", () => {
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     userPaths,
+    [],
     false
   );
   let studioData: StudioData;
@@ -122,6 +137,7 @@ describe("aggregates data as expected", () => {
       const orchestrator = new ParsingOrchestrator(
         tsMorphProject,
         userPaths,
+        [],
         true
       );
       const studioData = await orchestrator.getStudioData();
@@ -139,12 +155,51 @@ describe("aggregates data as expected", () => {
       const orchestrator = new ParsingOrchestrator(
         tsMorphProject,
         userPaths,
+        [],
         true
       );
       await expect(orchestrator.getStudioData()).rejects.toThrow(
         /^The localData's mapping.json does not exist/
       );
     });
+  });
+});
+
+describe("includes plugins in aggregate data as expected", () => {
+  const tsMorphProject: Project = createTsMorphProject();
+  const orchestrator = new ParsingOrchestrator(
+    tsMorphProject,
+    userPaths,
+    [PluginConfig],
+    false
+  );
+  let studioData: StudioData;
+
+  beforeAll(async () => {
+    studioData = await orchestrator.getStudioData();
+  });
+
+  it("properly installs @yext/sample-component plugin.", () => {
+    const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
+    expect(fileMetadataArray).toHaveLength(7);
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("components/AceComponent.tsx"),
+        kind: FileMetadataKind.Component,
+      })
+    );
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("components/BevComponent.tsx"),
+        kind: FileMetadataKind.Component,
+      })
+    );
+    expect(fileMetadataArray).toContainEqual(
+      expect.objectContaining({
+        filepath: expect.stringContaining("components/ChazComponent.tsx"),
+        kind: FileMetadataKind.Component,
+      })
+    );
   });
 });
 
@@ -158,6 +213,7 @@ it("throws an error when the page imports components from unexpected folders", a
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     userPaths,
+    [],
     false
   );
   await expect(orchestrator.getStudioData()).rejects.toThrow(
@@ -175,6 +231,7 @@ it("throws when the pages folder does not exist", async () => {
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     userPaths,
+    [],
     false
   );
   await expect(orchestrator.getStudioData()).rejects.toThrow(

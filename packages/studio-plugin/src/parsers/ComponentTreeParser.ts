@@ -39,8 +39,10 @@ export default class ComponentTreeParser {
       returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression) ??
       returnStatement;
     const topLevelJsxNode = JsxNodeWrapper.getChildren().find(
-      (n): n is JsxElement | JsxFragment =>
-        n.isKind(SyntaxKind.JsxElement) || n.isKind(SyntaxKind.JsxFragment)
+      (n): n is JsxElement | JsxFragment | JsxSelfClosingElement =>
+        n.isKind(SyntaxKind.JsxElement) ||
+        n.isKind(SyntaxKind.JsxFragment) ||
+        n.isKind(SyntaxKind.JsxSelfClosingElement)
     );
     if (!topLevelJsxNode) {
       throw new Error(
@@ -99,9 +101,10 @@ export default class ComponentTreeParser {
       ? component.getAttributes()
       : component.getOpeningElement().getAttributes();
 
-    const filepath = Object.keys(defaultImports).find(
-      (importIdentifier) => defaultImports[importIdentifier] === componentName
-    );
+    const filepath = Object.keys(defaultImports).find((importIdentifier) => {
+      const compareComponent = defaultImports[importIdentifier];
+      return compareComponent === componentName;
+    });
     const assumeIsBuiltInElement = filepath === undefined;
     if (assumeIsBuiltInElement) {
       if (attributes.length > 0) {

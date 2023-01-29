@@ -15,7 +15,7 @@ export default class ComponentFile {
   private componentName: string;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string, project: Project) {
+  constructor(filepath: string, project: Project, private pluginName?: string) {
     this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
@@ -33,11 +33,14 @@ export default class ComponentFile {
       return propName !== SpecialReactProps.Children;
     };
 
+    const filepath = this.studioSourceFileParser.getFilepath();
+
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
-      filepath: this.studioSourceFileParser.getFilepath(),
+      filepath,
+      pluginName: this.pluginName,
     };
   }
 }

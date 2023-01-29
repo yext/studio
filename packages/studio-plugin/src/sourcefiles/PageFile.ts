@@ -1,13 +1,16 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
-import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
+import ReactComponentFileWriter, {
+  GetFileMetadataByUUID,
+} from "../writers/ReactComponentFileWriter";
 import path from "path";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
+import { PluginComponentData } from "../ParsingOrchestrator";
 
 /**
  * Configuration options to the page file's update process
@@ -26,11 +29,14 @@ export default class PageFile {
   private streamConfigWriter: StreamConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
+  private pluginFilepathToComponentName?: Record<string, string>;
 
   constructor(
     filepath: string,
     getFileMetadata: GetFileMetadata,
+    getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
+    filepathToPluginNames: Record<string, PluginComponentData> = {},
     private entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
@@ -49,20 +55,27 @@ export default class PageFile {
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
       studioSourceFileWriter,
-      this.studioSourceFileParser
+      this.studioSourceFileParser,
+      getFileMetadataByUUID
     );
     this.componentTreeParser = new ComponentTreeParser(
       this.studioSourceFileParser,
       getFileMetadata
     );
+    this.pluginFilepathToComponentName = Object.keys(
+      filepathToPluginNames
+    ).reduce((filepathToComponent, filepath) => {
+      filepathToComponent[filepath] =
+        filepathToPluginNames[filepath].componentName;
+      return filepathToComponent;
+    }, {});
   }
 
   getPageState(): PageState {
-    const absPathDefaultImports =
-      this.studioSourceFileParser.getAbsPathDefaultImports();
-    const componentTree = this.componentTreeParser.parseComponentTree(
-      absPathDefaultImports
-    );
+    const componentTree = this.componentTreeParser.parseComponentTree({
+      ...this.studioSourceFileParser.getAbsPathDefaultImports(),
+      ...this.pluginFilepathToComponentName,
+    });
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();
     return {

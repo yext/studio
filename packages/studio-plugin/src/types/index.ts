@@ -1,6 +1,7 @@
 export * from "./PropShape";
 export * from "./PropValues";
 export * from "./ComponentMetadata";
+export * from "./Plugin";
 export * from "./ModuleMetadata";
 export * from "./FileMetadata";
 export * from "./State";

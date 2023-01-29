@@ -33,10 +33,13 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     }
   );
 
-  const text =
-    componentState.kind === ComponentStateKind.Fragment
-      ? "Fragment"
-      : componentState.componentName;
+  const text = (): string => {
+    if (componentState.kind === ComponentStateKind.Fragment) {
+      return "Fragment";
+    }
+
+    return componentState.componentName;
+  };
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
@@ -71,7 +74,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         <div className="pl-2">
           <ComponentKindIcon componentState={componentState} />
         </div>
-        <span className="pl-1.5">{text}</span>
+        <span className="pl-1.5">{text()}</span>
       </div>
       <RemoveElementButton elementUUID={componentState.uuid} />
     </div>
