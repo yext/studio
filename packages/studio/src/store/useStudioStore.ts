@@ -5,7 +5,7 @@ import { enableMapSet } from "immer";
 import { temporal } from "zundo";
 import { throttle, isEqual, cloneDeep } from "lodash";
 
-import { StudioStore } from "./models/store";
+import { StudioStore } from "./models/StudioStore";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
 import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";

@@ -1,9 +1,5 @@
 import useStudioStore from "../../../src/store/useStudioStore";
-import {
-  PropValueKind,
-  PropValues,
-  PropValueType,
-} from "@yext/studio-plugin";
+import { PropValueKind, PropValues, PropValueType } from "@yext/studio-plugin";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import {
   searchBarComponent,
@@ -58,7 +54,9 @@ describe("PageSlice", () => {
       const consoleErrorSpy = jest
         .spyOn(global.console, "error")
         .mockImplementation();
-      useStudioStore.getState().pages.setComponentProps('universal', 'fragment-uuid', newPropValues);
+      useStudioStore
+        .getState()
+        .pages.setComponentProps("universal", "fragment-uuid", newPropValues);
       const actualPages = useStudioStore.getState().pages.pages;
       expect(actualPages).toEqual(initialPages);
       expect(consoleErrorSpy).toBeCalledWith(

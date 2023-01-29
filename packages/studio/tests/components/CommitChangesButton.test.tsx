@@ -82,14 +82,14 @@ it("disables the button when there are no pending changes", async () => {
     fileMetadatas: {
       UUIDToFileMetadata: {},
       pendingChanges: {
-        modulesToUpdate: new Set()
-      }
+        modulesToUpdate: new Set(),
+      },
     },
     pages: {
       pendingChanges: {
         pagesToRemove: new Set(),
-        pagesToUpdate: new Set()
-      }
+        pagesToUpdate: new Set(),
+      },
     },
   });
   render(<CommitChangesButton />);

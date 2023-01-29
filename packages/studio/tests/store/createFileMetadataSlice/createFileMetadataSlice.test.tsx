@@ -109,34 +109,6 @@ it("updates UUIDToImportedComponent using setUUIDToImportedComponent", () => {
   expect(UUIDToImportedComponent).toEqual(newImportedComponents);
 });
 
-it('getComponentMetadata', () => {
-
-})
-
-it('getModuleMetadata', () => {
-
-})
-
-it('setComponentTreeInModule', () => {
-
-})
-
-it('updateComponentPropsInsideModule', () => {
-
-})
-
-it('getComponentStateInsideModule', () => {
-
-})
-
-it('addComponentToModule', () => {
-
-})
-
-it('removeComponentFromModule', () => {
-  
-})
-
 function setInitialState(initialState: Partial<FileMetadataSliceStates>): void {
   const baseState: FileMetadataSliceStates = {
     UUIDToFileMetadata: {},

@@ -1,5 +1,5 @@
 import { ComponentState, PropValues } from "@yext/studio-plugin";
-import { ActiveComponentActions, StudioStore } from "./models/store";
+import { ActiveComponentActions, StudioStore } from "./models/StudioStore";
 
 export default function createActiveComponentActions(
   get: () => StudioStore

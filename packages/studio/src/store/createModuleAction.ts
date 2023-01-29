@@ -1,4 +1,4 @@
-import { StudioStore } from "./models/store";
+import { StudioStore } from "./models/StudioStore";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import {

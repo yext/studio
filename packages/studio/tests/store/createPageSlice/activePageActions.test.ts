@@ -171,6 +171,5 @@ describe("PageSlice", () => {
       expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
       expect(nonexistantComponentState).toBeUndefined();
     });
-
   });
 });
