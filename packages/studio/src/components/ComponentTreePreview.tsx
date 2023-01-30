@@ -80,12 +80,10 @@ function useComponentTreeElements(
           modulesToUpdate.has(metadata.metadataUUID)
         ) {
           return (
-            <ErrorBoundary>
-              <ComponentTreePreview
-                componentTree={metadata.componentTree}
-                props={c.props}
-              />
-            </ErrorBoundary>
+            <ComponentTreePreview
+              componentTree={metadata.componentTree}
+              props={c.props}
+            />
           );
         }
         if (!UUIDToImportedComponent[c.metadataUUID]) {
@@ -113,15 +111,17 @@ function useComponentTreeElements(
         ...children
       );
 
-      return <ErrorBoundary>{component}</ErrorBoundary>;
+      return component;
     }
     return ComponentTreeHelpers.mapComponentTree(
       componentTree,
       (c, children) => {
         return (
-          <ComponentContainer key={c.uuid} uuid={c.uuid}>
-            {renderComponent(c, children)}
-          </ComponentContainer>
+          <HighlightingContainer key={c.uuid} uuid={c.uuid}>
+            <ErrorBoundary>
+              {renderComponent(c, children)}
+            </ErrorBoundary>
+          </HighlightingContainer>
         );
       }
     );
@@ -134,7 +134,11 @@ function useComponentTreeElements(
   ]);
 }
 
-function ComponentContainer(props: PropsWithChildren<{ uuid: string }>) {
+/**
+ * Responsible for highlighting the active component,
+ * and updating the active component when clicked on.
+ */
+function HighlightingContainer(props: PropsWithChildren<{ uuid: string }>) {
   const setActiveComponentUUID = useStudioStore(
     (store) => store.pages.setActiveComponentUUID
   );
