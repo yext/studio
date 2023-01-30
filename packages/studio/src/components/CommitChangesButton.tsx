@@ -62,7 +62,7 @@ export default function CommitChangesButton() {
       className={buttonClasses}
       onClick={handleClickSave}
       disabled={isButtonDisabled}
-      aria-label="Save to file"
+      aria-label="Commit Changes to Repository"
     >
       Save
     </button>
