@@ -24,12 +24,9 @@ test("can remove a page", async ({ page }) => {
   await expect.poll(() => newPageInTree.count()).toBe(1);
 
   await page
-    .locator(
-      "li",
-      {
-        has: newPageInTree
-      }
-    )
+    .locator("li", {
+      has: newPageInTree,
+    })
     .getByRole("button", {
       exact: true,
       name: "Remove Page",
