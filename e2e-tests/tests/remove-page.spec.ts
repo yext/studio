@@ -3,18 +3,18 @@ import { test, expect } from "@playwright/test";
 test("can remove a page", async ({ page }) => {
   await page.goto("./");
 
-  const newPageInTree = page.getByText("UniversalPage");
+  const pageInTree = page.getByText("UniversalPage");
   const saveToFileButton = page.getByRole("button", {
     exact: true,
     name: "Save to file",
   });
 
-  await expect.poll(() => newPageInTree.count()).toBe(1);
+  await expect.poll(() => pageInTree.count()).toBe(1);
   await expect(saveToFileButton).toBeDisabled();
 
   await page
     .locator("li", {
-      has: newPageInTree,
+      has: pageInTree,
     })
     .getByRole("button", {
       exact: true,
@@ -23,6 +23,6 @@ test("can remove a page", async ({ page }) => {
     .click();
   await page.getByText("Delete", { exact: true }).click();
 
-  await expect.poll(() => newPageInTree.count()).toBe(0);
+  await expect.poll(() => pageInTree.count()).toBe(0);
   await expect(saveToFileButton).toBeEnabled();
 });
