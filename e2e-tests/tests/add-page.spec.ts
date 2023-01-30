@@ -6,7 +6,7 @@ test("can add a new page", async ({ page }) => {
   const newPageInTree = page.getByText("MyNewPage");
   const saveToFileButton = page.getByRole("button", {
     exact: true,
-    name: "Save to file",
+    name: "Commit Changes to Repository",
   });
 
   await expect.poll(() => newPageInTree.count()).toBe(0);
