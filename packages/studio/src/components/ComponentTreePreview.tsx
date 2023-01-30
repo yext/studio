@@ -4,6 +4,9 @@ import {
   createElement,
   useMemo,
   useState,
+  PropsWithChildren,
+  useCallback,
+  MouseEvent,
 } from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
@@ -20,6 +23,7 @@ import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import initialStudioData from "virtual:yext-studio";
 import { transformPropValuesToRaw } from "@yext/studio-plugin";
+import classNames from "classnames";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
@@ -58,56 +62,67 @@ function useComponentTreeElements(
     if (Object.keys(UUIDToImportedComponent).length === 0) {
       return null;
     }
+
+    function renderComponent(
+      c: ComponentState,
+      children: (JSX.Element | null)[]
+    ) {
+      let element: ImportType | string;
+      if (c.kind === ComponentStateKind.Fragment) {
+        element = Fragment;
+      } else if (c.kind === ComponentStateKind.BuiltIn) {
+        element = c.componentName;
+      } else {
+        const metadata = UUIDToFileMetadata[c.metadataUUID];
+        if (
+          metadata &&
+          metadata.kind === FileMetadataKind.Module &&
+          modulesToUpdate.has(metadata.metadataUUID)
+        ) {
+          return (
+            <ErrorBoundary>
+              <ComponentTreePreview
+                componentTree={metadata.componentTree}
+                props={c.props}
+              />
+            </ErrorBoundary>
+          );
+        }
+        if (!UUIDToImportedComponent[c.metadataUUID]) {
+          console.warn(
+            `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
+          );
+          return null;
+        }
+        element = UUIDToImportedComponent[c.metadataUUID];
+      }
+
+      const previewProps = TypeGuards.isStandardOrModuleComponentState(c)
+        ? getPreviewProps(
+            c.props,
+            UUIDToFileMetadata[c.metadataUUID].propShape ?? {},
+            expressionSources
+          )
+        : {};
+      const component = createElement(
+        element,
+        {
+          ...previewProps,
+          key: c.uuid,
+        },
+        ...children
+      );
+
+      return <ErrorBoundary>{component}</ErrorBoundary>;
+    }
     return ComponentTreeHelpers.mapComponentTree(
       componentTree,
       (c, children) => {
-        let element: ImportType | string;
-        if (c.kind === ComponentStateKind.Fragment) {
-          element = Fragment;
-        } else if (c.kind === ComponentStateKind.BuiltIn) {
-          element = c.componentName;
-        } else {
-          const metadata = UUIDToFileMetadata[c.metadataUUID];
-          if (
-            metadata &&
-            metadata.kind === FileMetadataKind.Module &&
-            modulesToUpdate.has(metadata.metadataUUID)
-          ) {
-            return (
-              <ErrorBoundary key={c.uuid}>
-                <ComponentTreePreview
-                  componentTree={metadata.componentTree}
-                  props={c.props}
-                />
-              </ErrorBoundary>
-            );
-          }
-          if (!UUIDToImportedComponent[c.metadataUUID]) {
-            console.warn(
-              `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
-            );
-            return null;
-          }
-          element = UUIDToImportedComponent[c.metadataUUID];
-        }
-
-        const previewProps = TypeGuards.isStandardOrModuleComponentState(c)
-          ? getPreviewProps(
-              c.props,
-              UUIDToFileMetadata[c.metadataUUID].propShape ?? {},
-              expressionSources
-            )
-          : {};
-        const component = createElement(
-          element,
-          {
-            ...previewProps,
-            key: c.uuid,
-          },
-          ...children
+        return (
+          <ComponentContainer key={c.uuid} uuid={c.uuid}>
+            {renderComponent(c, children)}
+          </ComponentContainer>
         );
-
-        return <ErrorBoundary key={c.uuid}>{component}</ErrorBoundary>;
       }
     );
   }, [
@@ -117,6 +132,33 @@ function useComponentTreeElements(
     componentTree,
     modulesToUpdate,
   ]);
+}
+
+function ComponentContainer(props: PropsWithChildren<{ uuid: string }>) {
+  const setActiveComponentUUID = useStudioStore(
+    (store) => store.pages.setActiveComponentUUID
+  );
+  const activeComponentUUID = useStudioStore(
+    (store) => store.pages.activeComponentUUID
+  );
+  const borderClass =
+    "relative before:border-4 before:absolute before:w-full before:h-full before:z-50";
+  const className = classNames(borderClass, {
+    "before:border-red-600": activeComponentUUID === props.uuid,
+    "before:border-transparent": activeComponentUUID !== props.uuid,
+  });
+  const handleClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
+      setActiveComponentUUID(props.uuid);
+    },
+    [props.uuid, setActiveComponentUUID]
+  );
+  return (
+    <div className={className} onClick={handleClick}>
+      {props.children}
+    </div>
+  );
 }
 
 /**
