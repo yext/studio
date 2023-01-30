@@ -118,9 +118,7 @@ function useComponentTreeElements(
       (c, children) => {
         return (
           <HighlightingContainer key={c.uuid} uuid={c.uuid}>
-            <ErrorBoundary>
-              {renderComponent(c, children)}
-            </ErrorBoundary>
+            <ErrorBoundary>{renderComponent(c, children)}</ErrorBoundary>
           </HighlightingContainer>
         );
       }
