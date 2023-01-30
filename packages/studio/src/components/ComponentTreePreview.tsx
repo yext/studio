@@ -141,11 +141,11 @@ function ComponentContainer(props: PropsWithChildren<{ uuid: string }>) {
   const activeComponentUUID = useStudioStore(
     (store) => store.pages.activeComponentUUID
   );
-  const borderClass =
-    "relative before:border-4 before:absolute before:w-full before:h-full before:z-50";
-  const className = classNames(borderClass, {
-    "before:border-red-600": activeComponentUUID === props.uuid,
-    "before:border-transparent": activeComponentUUID !== props.uuid,
+  const ringClass =
+    "relative before:ring before:absolute before:w-full before:h-full before:z-50";
+  const className = classNames(ringClass, {
+    "before:ring-red-400": activeComponentUUID === props.uuid,
+    "before:ring-transparent": activeComponentUUID !== props.uuid,
   });
   const handleClick = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
