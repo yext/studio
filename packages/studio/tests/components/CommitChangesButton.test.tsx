@@ -19,7 +19,9 @@ it("enables the button when there are pending page changes", async () => {
   expect(screen.getByRole("button", { name: "Save to file" })).toBeDisabled();
 
   await userEvent.click(screen.getByRole("button", { name: "Remove Page" }));
-  const commitChangesButton = screen.getByRole("button", { name: "Save to file" });
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Save to file",
+  });
   expect(commitChangesButton).not.toBeDisabled();
 
   await userEvent.click(commitChangesButton);
@@ -50,7 +52,9 @@ it("enables the button when there are pending SiteSettingsValues changes", async
     },
   });
   render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", { name: "Save to file" });
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Save to file",
+  });
   expect(commitChangesButton).not.toBeDisabled();
 });
 
@@ -84,7 +88,9 @@ it("disables the button when there are no pending SiteSettingsValues changes", a
     },
   });
   render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", { name: "Save to file" });
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Save to file",
+  });
   expect(commitChangesButton).toBeDisabled();
 });
 
@@ -100,8 +106,12 @@ it("triggers commit changes action in store when click", async () => {
     commitChanges: mockCommitChangesAction,
   });
   render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", { name: "Save to file" });
-  expect(screen.getByRole("button", { name: "Save to file" })).not.toBeDisabled();
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Save to file",
+  });
+  expect(
+    screen.getByRole("button", { name: "Save to file" })
+  ).not.toBeDisabled();
   await userEvent.click(commitChangesButton);
   expect(mockCommitChangesAction).toBeCalled();
 });
