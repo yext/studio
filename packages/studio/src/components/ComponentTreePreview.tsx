@@ -1,5 +1,4 @@
 import {
-  ComponentState,
   Fragment,
   createElement,
   useMemo,
@@ -15,6 +14,7 @@ import {
   TypeGuards,
   FileMetadataKind,
   PropValues,
+  ComponentState,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
@@ -85,8 +85,7 @@ function useComponentTreeElements(
               props={c.props}
             />
           );
-        }
-        if (!UUIDToImportedComponent[c.metadataUUID]) {
+        } else if (!UUIDToImportedComponent[c.metadataUUID]) {
           console.warn(
             `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
           );
@@ -102,7 +101,7 @@ function useComponentTreeElements(
             expressionSources
           )
         : {};
-      const component = createElement(
+      return createElement(
         element,
         {
           ...previewProps,
@@ -110,8 +109,6 @@ function useComponentTreeElements(
         },
         ...children
       );
-
-      return component;
     }
     return ComponentTreeHelpers.mapComponentTree(
       componentTree,
