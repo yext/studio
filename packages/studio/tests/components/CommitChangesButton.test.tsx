@@ -16,7 +16,9 @@ it("enables the button when there are pending page changes", async () => {
       <RemovePage />
     </div>
   );
-  expect(screen.getByRole("button", { name: "Commit Changes to Repository" })).toBeDisabled();
+  expect(
+    screen.getByRole("button", { name: "Commit Changes to Repository" })
+  ).toBeDisabled();
 
   await userEvent.click(screen.getByRole("button", { name: "Remove Page" }));
   const commitChangesButton = screen.getByRole("button", {
