@@ -13,11 +13,10 @@ test("can add a new page", async ({ page }) => {
     })
     .click();
 
-  const modal = page
-    .getByRole("dialog", {
-      exact: true,
-      name: "Add Page Modal",
-    });
+  const modal = page.getByRole("dialog", {
+    exact: true,
+    name: "Add Page Modal",
+  });
 
   await modal.getByRole("textbox").type("My New Page");
   await modal.getByText("Save").click();
