@@ -12,14 +12,15 @@ test("can add a new page", async ({ page }) => {
       name: "Add Page",
     })
     .click();
-  await page.getByRole("textbox").type("My New Page");
-  await page
+
+  const modal = page
     .getByRole("dialog", {
       exact: true,
       name: "Add Page Modal",
-    })
-    .getByText("Save")
-    .click();
+    });
 
-    await expect.poll(() => newPageInTree.count()).toBe(1);
+  await modal.getByRole("textbox").type("My New Page");
+  await modal.getByText("Save").click();
+
+  await expect.poll(() => newPageInTree.count()).toBe(1);
 });
