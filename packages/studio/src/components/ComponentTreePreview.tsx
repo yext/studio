@@ -144,7 +144,7 @@ function ComponentContainer(props: PropsWithChildren<{ uuid: string }>) {
   const ringClass =
     "relative before:ring before:absolute before:w-full before:h-full before:z-50";
   const className = classNames(ringClass, {
-    "before:ring-red-400": activeComponentUUID === props.uuid,
+    "before:ring-blue-400": activeComponentUUID === props.uuid,
     "before:ring-transparent": activeComponentUUID !== props.uuid,
   });
   const handleClick = useCallback(
