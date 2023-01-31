@@ -56,6 +56,7 @@ export default function Modal({
       ariaHideApp={false}
       shouldCloseOnEsc={true}
       shouldCloseOnOverlayClick={true}
+      role="dialog"
     >
       <div className="flex justify-between items-center font-bold mb-4">
         {title}

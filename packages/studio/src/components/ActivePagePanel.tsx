@@ -27,7 +27,7 @@ export default function ActivePagePanel(): JSX.Element {
   const renderPageList = useCallback(
     (pageNames: string[]) => {
       return (
-        <div className="flex flex-col pb-2 items-stretch">
+        <ul className="flex flex-col pb-2 items-stretch">
           {pageNames.map((pageName) => {
             const isActivePage =
               activePageName === pageName && !moduleStateBeingEdited;
@@ -39,7 +39,7 @@ export default function ActivePagePanel(): JSX.Element {
               setModuleUUIDBeingEdited(undefined);
             }
             return (
-              <div key={pageName} className="flex justify-between pb-4 px-2">
+              <li key={pageName} className="flex justify-between pb-4 px-2">
                 <div className="flex items-center">
                   <Check className={checkClasses} />
                   <button
@@ -51,10 +51,10 @@ export default function ActivePagePanel(): JSX.Element {
                   </button>
                 </div>
                 <RemovePageButton pageName={pageName} />
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       );
     },
     [
