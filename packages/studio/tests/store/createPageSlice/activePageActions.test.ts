@@ -163,13 +163,5 @@ describe("PageSlice", () => {
       expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
       expect(nonexistantPage).toBeUndefined();
     });
-
-    it("getActiveComponentState", () => {
-      const nonexistantComponentState = useStudioStore
-        .getState()
-        .getActiveComponentState();
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
-      expect(nonexistantComponentState).toBeUndefined();
-    });
   });
 });

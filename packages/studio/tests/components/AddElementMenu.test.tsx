@@ -47,7 +47,7 @@ it("renders Components on load", () => {
 it("can add a component to the tree", async () => {
   render(<AddElementMenu />);
   await userEvent.click(screen.getByText("Mock-Component"));
-  expect(useStudioStore.getState().getComponentTree()).toEqual([
+  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
       componentName: "Mock-Component",
       kind: ComponentStateKind.Standard,
@@ -70,7 +70,7 @@ it("can add a container to the tree", async () => {
   render(<AddElementMenu />);
   await userEvent.click(screen.getByText("Containers"));
   await userEvent.click(screen.getByText("Mock-Container"));
-  expect(useStudioStore.getState().getComponentTree()).toEqual([
+  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
       componentName: "Mock-Container",
       kind: ComponentStateKind.Standard,
@@ -93,7 +93,7 @@ it("can add a module to the tree", async () => {
   render(<AddElementMenu />);
   await userEvent.click(screen.getByText("Modules"));
   await userEvent.click(screen.getByText("Mock-Module"));
-  expect(useStudioStore.getState().getComponentTree()).toEqual([
+  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
       componentName: "Mock-Module",
       kind: ComponentStateKind.Module,

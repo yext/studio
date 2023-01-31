@@ -50,7 +50,7 @@ it("removes components from ModuleMetadata when a module is being edited", () =>
       },
     },
   });
-  useStudioStore.getState().removeComponent("remove-uuid");
+  useStudioStore.getState().actions.removeComponent("remove-uuid");
   expect(
     useStudioStore.getState().fileMetadatas.UUIDToFileMetadata[
       "StarModuleMetadataUUID"
@@ -93,7 +93,7 @@ it("adds components to the active PageState when no module is being edited", () 
     },
   });
 
-  useStudioStore.getState().removeComponent("remove-uuid");
+  useStudioStore.getState().actions.removeComponent("remove-uuid");
   const updatedTree =
     useStudioStore.getState().pages.pages["pagename"].componentTree;
   expect(updatedTree).toEqual([initialTree[1]]);

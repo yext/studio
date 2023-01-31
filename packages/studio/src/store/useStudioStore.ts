@@ -11,11 +11,10 @@ import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
 import { getUserUpdatableStore } from "./utils";
 import sendMessage from "../messaging/sendMessage";
-import { ComponentState, MessageID } from "@yext/studio-plugin";
+import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
-import createActiveComponentActions from "./activeComponentActions";
 import StudioActions from "./StudioActions";
 
 enableMapSet();
@@ -94,7 +93,7 @@ const useStudioStore = create<StudioStore>()(
         commitChanges,
         createModule: getCreateModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
-        actions: new StudioActions(get)
+        actions: new StudioActions(get),
       };
     })
   )

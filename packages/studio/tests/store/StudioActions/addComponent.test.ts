@@ -51,7 +51,7 @@ it("adds components to ModuleMetadata when a module is being edited", () => {
     props: {},
     metadataUUID: "metadata-uuid",
   };
-  useStudioStore.getState().addComponent(newComponentState);
+  useStudioStore.getState().actions.addComponent(newComponentState);
   expect(
     useStudioStore.getState().fileMetadatas.UUIDToFileMetadata[
       "StarModuleMetadataUUID"
@@ -87,7 +87,7 @@ it("adds components to the active PageState when no module is being edited", () 
   });
 
   const newComponentState = initialTree[0];
-  useStudioStore.getState().addComponent(newComponentState);
+  useStudioStore.getState().actions.addComponent(newComponentState);
   const updatedTree =
     useStudioStore.getState().pages.pages["pagename"].componentTree;
   expect(updatedTree).toEqual([...initialTree, newComponentState]);

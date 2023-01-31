@@ -62,7 +62,7 @@ function Option({ metadata }: { metadata: FileMetadata }) {
     store.pages.getModuleStateBeingEdited()
   );
   const addComponent = useStudioStore((store) => {
-    return store.addComponent;
+    return store.actions.addComponent;
   });
 
   const addElement = useCallback(

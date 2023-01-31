@@ -191,7 +191,7 @@ function testStandardOrModuleComponentState(
       (
         useStudioStore
           .getState()
-          .pages.getActiveComponentState() as StandardOrModuleComponentState
+          .actions.getActiveComponentState() as StandardOrModuleComponentState
       ).props;
     await userEvent.type(screen.getByLabelText("title"), "test!");
     await userEvent.type(screen.getByLabelText("num"), "10");

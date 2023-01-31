@@ -6,7 +6,9 @@ import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
 
 export default function App() {
-  const componentTree = useStudioStore((store) => store.getComponentTree());
+  const componentTree = useStudioStore((store) =>
+    store.actions.getComponentTree()
+  );
 
   return (
     <div className="App">

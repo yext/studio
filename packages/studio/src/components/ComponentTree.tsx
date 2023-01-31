@@ -133,7 +133,9 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
 }
 
 function useTree(): NodeModel<ComponentState>[] | undefined {
-  const componentTree = useStudioStore((store) => store.getComponentTree)();
+  const componentTree = useStudioStore(
+    (store) => store.actions.getComponentTree
+  )();
 
   const getComponentMetadata = useStudioStore(
     (store) => store.fileMetadatas.getComponentMetadata
@@ -182,7 +184,7 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 
 function useDropHandler() {
   const updateComponentTree = useStudioStore(
-    (store) => store.updateComponentTree
+    (store) => store.actions.updateComponentTree
   );
 
   const handleDrop = useCallback(

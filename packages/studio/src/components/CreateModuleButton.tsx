@@ -11,7 +11,7 @@ import { ComponentStateKind } from "@yext/studio-plugin";
  */
 export default function CreateModuleButton(): JSX.Element | null {
   const [getActiveComponentState, createModule] = useStudioStore((store) => [
-    store.getActiveComponentState,
+    store.actions.getActiveComponentState,
     store.createModule,
   ]);
   const [errorMessage, setErrorMessage] = useState<string>(

@@ -60,7 +60,7 @@ function PropEditors(props: {
   propShape: PropShape;
 }) {
   const updateActiveComponentProps = useStudioStore(
-    (store) => store.updateActiveComponentProps
+    (store) => store.actions.updateActiveComponentProps
   );
   const { activeComponentState, propShape } = props;
 

@@ -1,4 +1,3 @@
-import { ComponentState } from "@yext/studio-plugin";
 import StudioActions from "../StudioActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
@@ -17,5 +16,5 @@ export type StudioStore = {
   previousCommit: PreviousCommitSlice;
   commitChanges: () => void;
   createModule: (filepath: string) => boolean;
-  actions: StudioActions
+  actions: StudioActions;
 };

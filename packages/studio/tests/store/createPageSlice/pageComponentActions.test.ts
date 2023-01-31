@@ -67,7 +67,7 @@ describe("PageSlice", () => {
     it("returns active component using getActiveComponentState", () => {
       const activeComponent = useStudioStore
         .getState()
-        .getActiveComponentState();
+        .actions.getActiveComponentState();
       expect(activeComponent).toEqual(resultsComponent);
     });
 
@@ -85,7 +85,7 @@ describe("PageSlice", () => {
       });
       const activeComponent = useStudioStore
         .getState()
-        .getActiveComponentState();
+        .actions.getActiveComponentState();
       expect(activeComponent).toEqual(undefined);
     });
   });
