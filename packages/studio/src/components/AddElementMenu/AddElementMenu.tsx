@@ -18,7 +18,7 @@ export default function AddElementMenu(): JSX.Element {
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
 
   return (
-    <div className="absolute z-10 rounded bg-white text-sm text-gray-700 shadow-lg">
+    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
       <ElementTypeSwitcher activeType={activeType} setType={setType} />
       <AddElementsList activeType={activeType} />
     </div>
