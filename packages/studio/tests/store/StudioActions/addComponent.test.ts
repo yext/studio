@@ -1,6 +1,6 @@
 import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
-import useStudioStore from "../../src/store/useStudioStore";
-import mockStore from "../__utils__/mockStore";
+import useStudioStore from "../../../src/store/useStudioStore";
+import mockStore from "../../__utils__/mockStore";
 
 it("adds components to ModuleMetadata when a module is being edited", () => {
   const initialTree = [

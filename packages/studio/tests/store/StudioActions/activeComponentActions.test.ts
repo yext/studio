@@ -6,13 +6,13 @@ import {
   PropValues,
   PropValueType,
 } from "@yext/studio-plugin";
-import useStudioStore from "../../src/store/useStudioStore";
-import mockStore from "../__utils__/mockStore";
+import useStudioStore from "../../../src/store/useStudioStore";
+import mockStore from "../../__utils__/mockStore";
 
 describe("getActiveComponentState", () => {
   it("can get the current active component within a module", () => {
     mockInitialStore(true);
-    const componentState = useStudioStore.getState().getActiveComponentState();
+    const componentState = useStudioStore.getState().actions.getActiveComponentState();
     expect(componentState).toEqual(
       expect.objectContaining({
         componentName: "Banner",
@@ -22,7 +22,7 @@ describe("getActiveComponentState", () => {
 
   it("can get the current active componentwithin a page", () => {
     mockInitialStore(false);
-    const componentState = useStudioStore.getState().getActiveComponentState();
+    const componentState = useStudioStore.getState().actions.getActiveComponentState();
     expect(componentState).toEqual(
       expect.objectContaining({
         componentName: "MyModule",
@@ -41,9 +41,10 @@ describe("updateActiveComponentProps", () => {
         value: "bye bye bocchi",
       },
     };
-    useStudioStore.getState().updateActiveComponentProps(updatedProps);
+    useStudioStore.getState().actions.updateActiveComponentProps(updatedProps);
     const componentStateAfterUpdate = useStudioStore
       .getState()
+      .actions
       .getActiveComponentState();
     expect(componentStateAfterUpdate).toEqual(
       expect.objectContaining({
@@ -62,9 +63,10 @@ describe("updateActiveComponentProps", () => {
         value: "bye bye bocchi",
       },
     };
-    useStudioStore.getState().updateActiveComponentProps(updatedProps);
+    useStudioStore.getState().actions.updateActiveComponentProps(updatedProps);
     const componentStateAfterUpdate = useStudioStore
       .getState()
+      .actions
       .getActiveComponentState();
     expect(componentStateAfterUpdate).toEqual(
       expect.objectContaining({
@@ -78,7 +80,7 @@ describe("updateActiveComponentProps", () => {
 describe("getComponentTree", () => {
   it("can get the component tree when a module is being edited", () => {
     mockInitialStore(true);
-    const tree = useStudioStore.getState().getComponentTree();
+    const tree = useStudioStore.getState().actions.getComponentTree();
     expect(tree).toEqual([
       expect.objectContaining({
         componentName: "Banner",
@@ -87,7 +89,7 @@ describe("getComponentTree", () => {
   });
   it("can get the component tree when a page is being edited", () => {
     mockInitialStore(false);
-    const tree = useStudioStore.getState().getComponentTree();
+    const tree = useStudioStore.getState().actions.getComponentTree();
     expect(tree).toEqual([
       expect.objectContaining({
         componentName: "MyModule",
