@@ -141,7 +141,7 @@ function HighlightingContainer(props: PropsWithChildren<{ uuid: string }>) {
     (store) => store.pages.activeComponentUUID
   );
   const ringClass =
-    "relative before:ring before:absolute before:w-full before:h-full before:z-0";
+    "relative before:ring before:absolute before:w-full before:h-full before:z-10";
   const className = classNames(ringClass, {
     "before:ring-blue-400": activeComponentUUID === props.uuid,
     "before:ring-transparent": activeComponentUUID !== props.uuid,
