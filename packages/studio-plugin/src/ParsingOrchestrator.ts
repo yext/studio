@@ -48,8 +48,6 @@ export default class ParsingOrchestrator {
     plugins: PluginConfig[],
     private isPagesJSRepo?: boolean
   ) {
-    this.getFileMetadata = this.getFileMetadata.bind(this);
-    this.getFileMetadataByUUID = this.getFileMetadataByUUID.bind(this);
     this.filepathToPluginComponentData = this.getFilepathToPluginNames(plugins);
     this.filepathToFileMetadata = this.setFilepathToFileMetadata();
   }
@@ -128,9 +126,8 @@ export default class ParsingOrchestrator {
   async reloadFile(filepath: string) {
     const sourceFile = this.project.getSourceFile(filepath)
     if (sourceFile) {
-      this.project.removeSourceFile(sourceFile);
+      sourceFile.refreshFromFileSystemSync();
     }
-    this.project.addSourceFileAtPath(filepath);
     if (filepath.startsWith(this.paths.modules) || filepath.startsWith(this.paths.components)) {
       delete this.filepathToFileMetadata[filepath];
       this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
@@ -184,7 +181,7 @@ export default class ParsingOrchestrator {
     return this.filepathToFileMetadata;
   }
 
-  private getFileMetadata(absPath: string): FileMetadata {
+  private getFileMetadata = (absPath: string): FileMetadata => {
     if (this.filepathToFileMetadata[absPath]) {
       return this.filepathToFileMetadata[absPath];
     }
@@ -212,9 +209,9 @@ export default class ParsingOrchestrator {
     );
   }
 
-  private getFileMetadataByUUID(
+  private getFileMetadataByUUID = (
     metadataUUID: string
-  ): FileMetadata | undefined {
+  ): FileMetadata | undefined => {
     const fileMetadata = Object.values(this.filepathToFileMetadata).find(
       (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
     );

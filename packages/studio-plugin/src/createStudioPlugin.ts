@@ -90,7 +90,7 @@ export default async function createStudioPlugin(
 
       const studioDataModule = moduleGraph.getModuleById(resolvedVirtualModuleId)
       if (studioDataModule && ctx.file.startsWith(pathToUserProjectRoot)) {
-        orchestrator.reloadFile(ctx.file);
+        await orchestrator.reloadFile(ctx.file);
         studioData = await orchestrator.getStudioData();
         moduleGraph.invalidateModule(studioDataModule)
       }
