@@ -188,7 +188,7 @@ function useExpressionSources(
       return;
     }
     const entityFilepath = `${initialStudioData.userPaths.localData}/${activeEntityFile}`;
-    import(entityFilepath).then((importedModule) => {
+    import(/* @vite-ignore */entityFilepath).then((importedModule) => {
       setExpressionSources((prev) => ({
         ...prev,
         document: importedModule["default"] as Record<string, unknown>,
