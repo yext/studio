@@ -75,6 +75,7 @@ function useComponentTreeElements(
       } else {
         const metadata = UUIDToFileMetadata[c.metadataUUID];
         if (metadata && metadata.kind === FileMetadataKind.Module) {
+          console.log(JSON.stringify(metadata.componentTree, null, 2));
           return (
             <ComponentTreePreview
               componentTree={metadata.componentTree}

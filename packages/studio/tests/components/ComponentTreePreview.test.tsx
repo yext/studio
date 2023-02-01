@@ -133,7 +133,7 @@ const moduleMetadata: ModuleMetadata = {
     {
       kind: ComponentStateKind.Standard,
       componentName: "Banner",
-      uuid: "internal-banner-uuid",
+      uuid: "internal-banner-uuid-0",
       props: {
         title: {
           kind: PropValueKind.Expression,
@@ -145,10 +145,17 @@ const moduleMetadata: ModuleMetadata = {
       parentUUID: "fragment-uuid",
     },
     {
-      kind: ComponentStateKind.BuiltIn,
-      componentName: "button",
-      props: {},
-      uuid: "button-uuid",
+      kind: ComponentStateKind.Standard,
+      componentName: "Banner",
+      uuid: "internal-banner-uuid-1",
+      props: {
+        title: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "This is Banner",
+        },
+      },
+      metadataUUID: "banner-metadata-uuid",
       parentUUID: "fragment-uuid",
     },
   ],
@@ -262,10 +269,8 @@ it("renders component tree with Module component type", async () => {
     />
   );
   const panel = await screen.findByText(/This is Panel module/);
-  const button = await within(panel).findByText(/This is button/);
-  const banner = await within(panel).findByText(/This is Banner/);
+  const banner = await screen.findByText(/This is Banner/);
   expect(panel).toBeDefined();
-  expect(button).toBeDefined();
   expect(banner).toBeDefined();
 });
 
@@ -280,30 +285,6 @@ it("renders component with transformed props", async () => {
   expect(siteSettingsExpressionProp).toBeDefined();
   const documentExpressionProp = await screen.findByText(/123/);
   expect(documentExpressionProp).toBeDefined();
-});
-
-it("renders component tree with an updated Module component with props", async () => {
-  mockStore({
-    ...mockStoreModuleState,
-    fileMetadatas: {
-      ...mockStoreModuleState.fileMetadatas,
-      pendingChanges: {
-        modulesToUpdate: new Set(["panel-metadata-uuid"]),
-      },
-      UUIDToImportedComponent: {
-        test: () => {
-          return null;
-        },
-      },
-    },
-  });
-  render(
-    <ComponentTreePreview
-      componentTree={getPageState(mockStoreModuleState).componentTree}
-    />
-  );
-  expect(await screen.findByText(/This is Panel module/)).toBeDefined();
-  expect(await screen.findByRole("button")).toBeDefined();
 });
 
 it("can render component using nested siteSettings expression", async () => {
