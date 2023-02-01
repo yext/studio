@@ -1,3 +1,3 @@
 export default function Button() {
-  return <button>Press me!</button>;
+  return <button className='bg-indigo-100'>Press me!</button>;
 }
