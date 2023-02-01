@@ -14,7 +14,11 @@ export default defineConfig(async (args: ConfigEnv): Promise<UserConfig> => {
     root: __dirname,
     server: {
       fs: {
-        allow: [searchForWorkspaceRoot(process.cwd()), process.cwd()],
+        allow: [
+          searchForWorkspaceRoot(process.cwd()),
+          process.cwd(),
+          __dirname,
+        ],
       },
     },
     build: {

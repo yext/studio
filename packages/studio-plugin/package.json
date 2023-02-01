@@ -1,7 +1,6 @@
 {
   "name": "@yext/studio-plugin",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0-alpha.0",
   "types": "./lib/esm/index.d.ts",
   "main": "./lib/esm/index.js",
   "exports": {
@@ -14,6 +13,7 @@
       "types": "./virtual-module.d.ts"
     }
   },
+  "files": ["lib"],
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.esm.json & tsc --watch --preserveWatchOutput -p tsconfig.json >/dev/null",
     "build": "rm -rf lib && tsc -p tsconfig.esm.json && tsc -p tsconfig.json",
