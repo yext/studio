@@ -50,11 +50,12 @@ function useComponentTreeElements(
   componentTree: ComponentState[],
   props?: PropValues
 ): (JSX.Element | null)[] | null {
-  const [UUIDToImportedComponent, UUIDToFileMetadata] =
-    useStudioStore((store) => [
+  const [UUIDToImportedComponent, UUIDToFileMetadata] = useStudioStore(
+    (store) => [
       store.fileMetadatas.UUIDToImportedComponent,
       store.fileMetadatas.UUIDToFileMetadata,
-    ]);
+    ]
+  );
   const expressionSources = useExpressionSources(props);
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
@@ -73,10 +74,7 @@ function useComponentTreeElements(
         element = c.componentName;
       } else {
         const metadata = UUIDToFileMetadata[c.metadataUUID];
-        if (
-          metadata &&
-          metadata.kind === FileMetadataKind.Module
-        ) {
+        if (metadata && metadata.kind === FileMetadataKind.Module) {
           return (
             <ComponentTreePreview
               componentTree={metadata.componentTree}
