@@ -50,11 +50,10 @@ function useComponentTreeElements(
   componentTree: ComponentState[],
   props?: PropValues
 ): (JSX.Element | null)[] | null {
-  const [UUIDToImportedComponent, UUIDToFileMetadata, modulesToUpdate] =
+  const [UUIDToImportedComponent, UUIDToFileMetadata] =
     useStudioStore((store) => [
       store.fileMetadatas.UUIDToImportedComponent,
       store.fileMetadatas.UUIDToFileMetadata,
-      store.fileMetadatas.pendingChanges.modulesToUpdate,
     ]);
   const expressionSources = useExpressionSources(props);
   return useMemo(() => {
@@ -76,8 +75,7 @@ function useComponentTreeElements(
         const metadata = UUIDToFileMetadata[c.metadataUUID];
         if (
           metadata &&
-          metadata.kind === FileMetadataKind.Module &&
-          modulesToUpdate.has(metadata.metadataUUID)
+          metadata.kind === FileMetadataKind.Module
         ) {
           return (
             <ComponentTreePreview
@@ -125,7 +123,6 @@ function useComponentTreeElements(
     UUIDToImportedComponent,
     expressionSources,
     componentTree,
-    modulesToUpdate,
   ]);
 }
 
