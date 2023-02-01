@@ -1,7 +1,7 @@
 import { ComponentState, PropValues } from "@yext/studio-plugin";
 import { StudioStore } from "./models/StudioStore";
 
-export default class StudioActions {
+export default class ComponentActions {
   constructor(private get: () => StudioStore) {}
 
   getComponentTree = () => {

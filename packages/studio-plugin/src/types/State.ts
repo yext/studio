@@ -19,6 +19,7 @@ export type ComponentState =
 export type StandardOrModuleComponentState =
   | StandardComponentState
   | ModuleState;
+
 export enum ComponentStateKind {
   Standard = "standard",
   Module = "module",
@@ -42,8 +43,20 @@ export type StandardComponentState = {
   parentUUID?: string;
 };
 
-export type ModuleState = Omit<StandardComponentState, "kind"> & {
+export type ModuleState = {
   kind: ComponentStateKind.Module;
+  /** The name of the component (i.e. Card or Banner). */
+  componentName: string;
+  /** Represents the props of the component. */
+  props: PropValues;
+  /** A unique UUID for this specific component instance. */
+  uuid: string;
+  /**
+   * The UUID of the corresponding StandardComponentMetadata or ModuleMetadata.
+   */
+  metadataUUID: string;
+  /** The UUID of the parent component in the tree, if one exists. */
+  parentUUID?: string;
 };
 
 type FragmentState = {

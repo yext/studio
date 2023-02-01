@@ -15,7 +15,7 @@ import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
-import StudioActions from "./StudioActions";
+import ComponentActions from "./ComponentActions";
 
 enableMapSet();
 
@@ -93,7 +93,7 @@ const useStudioStore = create<StudioStore>()(
         commitChanges,
         createModule: getCreateModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
-        actions: new StudioActions(get),
+        actions: new ComponentActions(get),
       };
     })
   )
