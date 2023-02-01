@@ -82,13 +82,13 @@ export default function getCreateModuleAction(
       }
       return c;
     });
-    get().updateComponentTree(updatedPageComponentTree);
+    get().actions.updateComponentTree(updatedPageComponentTree);
     get().pages.setActiveComponentUUID(moduleComponentUUID);
   }
 
   return (filepath: string) => {
-    const componentTree = get().getComponentTree() ?? [];
-    const activeComponentState = get().getActiveComponentState();
+    const componentTree = get().actions.getComponentTree() ?? [];
+    const activeComponentState = get().actions.getActiveComponentState();
     if (!activeComponentState) {
       console.error("Tried to create module without active component.");
       return false;

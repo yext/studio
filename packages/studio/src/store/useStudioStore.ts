@@ -11,11 +11,11 @@ import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
 import { getUserUpdatableStore } from "./utils";
 import sendMessage from "../messaging/sendMessage";
-import { ComponentState, MessageID } from "@yext/studio-plugin";
+import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
-import createActiveComponentActions from "./activeComponentActions";
+import ComponentActions from "./ComponentActions";
 
 enableMapSet();
 
@@ -86,35 +86,6 @@ const useStudioStore = create<StudioStore>()(
         });
       };
 
-      const addComponent = (componentState: ComponentState) => {
-        const { activePageName, getModuleStateBeingEdited } = get().pages;
-        const moduleStateBeingEdited = getModuleStateBeingEdited();
-        if (moduleStateBeingEdited) {
-          get().fileMetadatas.addComponentToModule(
-            moduleStateBeingEdited.metadataUUID,
-            componentState
-          );
-        } else if (activePageName) {
-          get().pages.addComponentToPage(activePageName, componentState);
-        }
-      };
-
-      const removeComponent = (componentUUID: string) => {
-        const { activePageName, getModuleStateBeingEdited } = get().pages;
-        const moduleStateBeingEdited = getModuleStateBeingEdited();
-        if (moduleStateBeingEdited) {
-          get().fileMetadatas.removeComponentFromModule(
-            moduleStateBeingEdited.metadataUUID,
-            componentUUID
-          );
-        } else if (activePageName) {
-          get().pages.removeComponentFromPage(activePageName, componentUUID);
-        }
-        if (get().pages.activeComponentUUID === componentUUID) {
-          get().pages.setActiveComponentUUID(undefined);
-        }
-      };
-
       return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
@@ -122,9 +93,10 @@ const useStudioStore = create<StudioStore>()(
         commitChanges,
         createModule: getCreateModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
-        addComponent,
-        removeComponent,
-        ...createActiveComponentActions(get),
+        actions: new ComponentActions(
+          () => get().pages,
+          () => get().fileMetadatas
+        ),
       };
     })
   )

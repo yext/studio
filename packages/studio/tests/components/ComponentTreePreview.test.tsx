@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import ComponentTreePreview from "../../src/components/ComponentTreePreview";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
 import {
@@ -11,6 +11,7 @@ import {
   PropValueType,
 } from "@yext/studio-plugin";
 import path from "path";
+import useStudioStore from "../../src/store/useStudioStore";
 
 const UUIDToFileMetadata: Record<string, FileMetadata> = {
   "banner-metadata-uuid": {
@@ -132,7 +133,7 @@ const moduleMetadata: ModuleMetadata = {
     {
       kind: ComponentStateKind.Standard,
       componentName: "Banner",
-      uuid: "internal-banner-uuid",
+      uuid: "internal-banner-uuid-0",
       props: {
         title: {
           kind: PropValueKind.Expression,
@@ -144,10 +145,17 @@ const moduleMetadata: ModuleMetadata = {
       parentUUID: "fragment-uuid",
     },
     {
-      kind: ComponentStateKind.BuiltIn,
-      componentName: "button",
-      props: {},
-      uuid: "button-uuid",
+      kind: ComponentStateKind.Standard,
+      componentName: "Banner",
+      uuid: "internal-banner-uuid-1",
+      props: {
+        title: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "This is Banner",
+        },
+      },
+      metadataUUID: "banner-metadata-uuid",
       parentUUID: "fragment-uuid",
     },
   ],
@@ -261,10 +269,8 @@ it("renders component tree with Module component type", async () => {
     />
   );
   const panel = await screen.findByText(/This is Panel module/);
-  const button = await within(panel).findByText(/This is button/);
-  const banner = await within(panel).findByText(/This is Banner/);
+  const banner = await screen.findByText(/This is Banner/);
   expect(panel).toBeDefined();
-  expect(button).toBeDefined();
   expect(banner).toBeDefined();
 });
 
@@ -279,30 +285,6 @@ it("renders component with transformed props", async () => {
   expect(siteSettingsExpressionProp).toBeDefined();
   const documentExpressionProp = await screen.findByText(/123/);
   expect(documentExpressionProp).toBeDefined();
-});
-
-it("renders component tree with an updated Module component with props", async () => {
-  mockStore({
-    ...mockStoreModuleState,
-    fileMetadatas: {
-      ...mockStoreModuleState.fileMetadatas,
-      pendingChanges: {
-        modulesToUpdate: new Set(["panel-metadata-uuid"]),
-      },
-      UUIDToImportedComponent: {
-        test: () => {
-          return null;
-        },
-      },
-    },
-  });
-  render(
-    <ComponentTreePreview
-      componentTree={getPageState(mockStoreModuleState).componentTree}
-    />
-  );
-  expect(await screen.findByText(/This is Panel module/)).toBeDefined();
-  expect(await screen.findByRole("button")).toBeDefined();
 });
 
 it("can render component using nested siteSettings expression", async () => {
@@ -419,3 +401,25 @@ function getPageState(
   }
   return pageState;
 }
+
+it("clicking a component in the preview updates the activeComponentUUID", async () => {
+  mockStore(mockStoreNestedComponentState);
+  render(
+    <ComponentTreePreview
+      componentTree={getPageState(mockStoreNestedComponentState).componentTree}
+    />
+  );
+  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
+    undefined
+  );
+  const container1 = await screen.findByText(/Container 1/);
+  fireEvent.click(container1);
+  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
+    "container-uuid"
+  );
+  const banner1 = await within(container1).findByText(/Banner 1/);
+  fireEvent.click(banner1);
+  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
+    "banner-uuid"
+  );
+});

@@ -14,7 +14,9 @@ interface RemoveElementButtonProps {
 export default function RemoveElementButton({
   elementUUID,
 }: RemoveElementButtonProps): JSX.Element | null {
-  const removeComponent = useStudioStore((store) => store.removeComponent);
+  const removeComponent = useStudioStore(
+    (store) => store.actions.removeComponent
+  );
 
   const handleClick = useCallback(() => {
     removeComponent(elementUUID);

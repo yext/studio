@@ -111,9 +111,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       get().setComponentTreeInPage(pageName, [...tree, componentState]);
     },
     removeComponentFromPage(pageName: string, componentUUID: string) {
-      const store = get();
-      const componentTree = store.pages[pageName].componentTree;
-      store.setComponentTreeInPage(
+      const componentTree = get().pages[pageName].componentTree;
+      get().setComponentTreeInPage(
         pageName,
         componentTree.filter((c) => c.uuid !== componentUUID)
       );

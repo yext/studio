@@ -1,6 +1,5 @@
 import { ModuleMetadata, ModuleState } from "@yext/studio-plugin";
 import DeleteModuleButton from "./DeleteModuleButton";
-import DetachModuleButton from "./DetachModuleButton";
 import EditModuleButton from "./EditModuleButton";
 
 /**
@@ -19,7 +18,6 @@ export default function ModuleActions({
       <span className="font-medium">Module Actions</span>
       <div className="flex grow justify-evenly">
         <EditModuleButton moduleState={moduleState} />
-        <DetachModuleButton />
         <DeleteModuleButton metadata={metadata} />
       </div>
     </div>

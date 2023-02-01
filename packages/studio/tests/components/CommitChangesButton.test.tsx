@@ -16,10 +16,14 @@ it("enables the button when there are pending page changes", async () => {
       <RemovePage />
     </div>
   );
-  expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+  expect(
+    screen.getByRole("button", { name: "Commit Changes to Repository" })
+  ).toBeDisabled();
 
   await userEvent.click(screen.getByRole("button", { name: "Remove Page" }));
-  const commitChangesButton = screen.getByRole("button", { name: "Save" });
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Commit Changes to Repository",
+  });
   expect(commitChangesButton).not.toBeDisabled();
 
   await userEvent.click(commitChangesButton);
@@ -50,7 +54,9 @@ it("enables the button when there are pending SiteSettingsValues changes", async
     },
   });
   render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", { name: "Save" });
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Commit Changes to Repository",
+  });
   expect(commitChangesButton).not.toBeDisabled();
 });
 
@@ -93,7 +99,9 @@ it("disables the button when there are no pending changes", async () => {
     },
   });
   render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", { name: "Save" });
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Commit Changes to Repository",
+  });
   expect(commitChangesButton).toBeDisabled();
 });
 
@@ -109,8 +117,12 @@ it("triggers commit changes action in store when click", async () => {
     commitChanges: mockCommitChangesAction,
   });
   render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", { name: "Save" });
-  expect(screen.getByRole("button", { name: "Save" })).not.toBeDisabled();
+  const commitChangesButton = screen.getByRole("button", {
+    name: "Commit Changes to Repository",
+  });
+  expect(
+    screen.getByRole("button", { name: "Commit Changes to Repository" })
+  ).not.toBeDisabled();
   await userEvent.click(commitChangesButton);
   expect(mockCommitChangesAction).toBeCalled();
 });
