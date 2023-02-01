@@ -1,4 +1,4 @@
-import { ConfigEnv, Plugin } from "vite";
+import { ConfigEnv, HmrContext, Plugin } from "vite";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator, {
   createTsMorphProject,
@@ -6,6 +6,7 @@ import ParsingOrchestrator, {
 import configureStudioServer from "./configureStudioServer";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
+import { UserPaths } from "./types";
 
 /**
  * Handles server-client communication.
@@ -29,7 +30,7 @@ export default async function createStudioPlugin(
     studioConfig.plugins,
     studioConfig.isPagesJSRepo
   );
-  const studioData = await orchestrator.getStudioData();
+  let studioData = await orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -41,16 +42,34 @@ export default async function createStudioPlugin(
   );
 
   // We have to use a dynamic import here - if we use a regular import,
-  // Vite will import react-dev-utils in the browser.
+  // Vite will import deps like react-dev-utils in the browser.
   // This causes an error to be thrown regarding `process` not being defined.
   const { default: openBrowser } = await import("react-dev-utils/openBrowser");
+  const { readdirSync } = await import('fs');
+  const path = await import('path');
 
   return {
     name: "yext-studio-vite-plugin",
-    buildStart() {
+    async buildStart() {
       if (args.mode === "development" && args.command === "serve") {
         openBrowser("http://localhost:5173/");
       }
+      const watchUserFiles = (userPaths: UserPaths) => {
+        readdirSync(userPaths.pages).forEach(dir => {
+          const pagePath = path.join(userPaths.pages, dir)
+          this.addWatchFile(pagePath);
+        })
+        readdirSync(userPaths.components).forEach(dir => {
+          const pagePath = path.join(userPaths.pages, dir)
+          this.addWatchFile(pagePath);
+        })
+        readdirSync(userPaths.modules).forEach(dir => {
+          const pagePath = path.join(userPaths.pages, dir)
+          this.addWatchFile(pagePath);
+        })
+        this.addWatchFile(userPaths.siteSettings);
+      }
+      watchUserFiles(studioConfig.paths);
     },
     resolveId(id) {
       if (id === virtualModuleId) {
@@ -64,6 +83,17 @@ export default async function createStudioPlugin(
     },
     configureServer: (server) => {
       configureStudioServer(server, fileSystemManager);
+    },
+    async handleHotUpdate(ctx: HmrContext) {
+      const { moduleGraph } = ctx.server
+      ctx.modules.forEach(m => ctx.server.reloadModule(m));
+
+      const studioDataModule = moduleGraph.getModuleById(resolvedVirtualModuleId)
+      if (studioDataModule && ctx.file.startsWith(pathToUserProjectRoot)) {
+        orchestrator.reloadFile(ctx.file);
+        studioData = await orchestrator.getStudioData();
+        moduleGraph.invalidateModule(studioDataModule)
+      }
     },
   };
 }

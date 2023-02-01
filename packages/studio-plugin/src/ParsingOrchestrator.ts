@@ -120,6 +120,28 @@ export default class ParsingOrchestrator {
     }, {});
     return UUIDToFileMetadata;
   }
+  
+  /**
+   * Given a filepath, performs necessary actions for reloading the file,
+   * so that getStudioData returns up to date information.
+   */
+  async reloadFile(filepath: string) {
+    const sourceFile = this.project.getSourceFile(filepath)
+    if (sourceFile) {
+      this.project.removeSourceFile(sourceFile);
+    }
+    this.project.addSourceFileAtPath(filepath);
+    if (filepath.startsWith(this.paths.modules) || filepath.startsWith(this.paths.components)) {
+      delete this.filepathToFileMetadata[filepath];
+      this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
+    } else if (filepath === this.paths.siteSettings) {
+      this.siteSettingsFile = new SiteSettingsFile(filepath, this.project);
+    } else if (filepath.startsWith(this.paths.pages)) {
+      const pageName = path.basename(filepath, ".tsx");
+      delete this.pageNameToPageFile[pageName];
+      this.pageNameToPageFile[pageName] = await this.getPageFile(pageName);
+    }
+  }
 
   async getStudioData(): Promise<StudioData> {
     const siteSettings = this.getSiteSettings();
