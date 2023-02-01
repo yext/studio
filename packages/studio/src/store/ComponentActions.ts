@@ -1,7 +1,6 @@
 import { ComponentState, PropValues } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
-import { StudioStore } from "./models/StudioStore";
 
 export default class ComponentActions {
   constructor(
@@ -21,8 +20,9 @@ export default class ComponentActions {
 
   getActiveComponentState = () => {
     const { activeComponentUUID } = this.getPages();
-    return this.getComponentTree()
-      ?.find((component) => component.uuid === activeComponentUUID);
+    return this.getComponentTree()?.find(
+      (component) => component.uuid === activeComponentUUID
+    );
   };
 
   updateActiveComponentProps = (props: PropValues) => {
