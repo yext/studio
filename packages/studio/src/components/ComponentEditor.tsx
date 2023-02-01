@@ -7,6 +7,7 @@ import {
   StandardOrModuleComponentState,
   PropShape,
   FileMetadataKind,
+  ComponentStateKind,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { PropEditor } from "./PropEditor";
@@ -33,10 +34,17 @@ export default function ComponentEditor(): JSX.Element | null {
     return null;
   }
 
+  const isModule =
+    activeComponentMetadata.kind === FileMetadataKind.Module &&
+    activeComponentState.kind === ComponentStateKind.Module;
+
   return (
     <div>
-      {activeComponentMetadata?.kind === FileMetadataKind.Module && (
-        <ModuleActions metadata={activeComponentMetadata} />
+      {isModule && (
+        <ModuleActions
+          metadata={activeComponentMetadata}
+          moduleState={activeComponentState}
+        />
       )}
       <PropEditors
         activeComponentState={activeComponentState}
@@ -51,19 +59,19 @@ function PropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
 }) {
-  const setActiveComponentProps = useStudioStore(
-    (store) => store.pages.setActiveComponentProps
+  const updateActiveComponentProps = useStudioStore(
+    (store) => store.actions.updateActiveComponentProps
   );
   const { activeComponentState, propShape } = props;
 
   const updateProps = useCallback(
     (propName: string, newPropVal: PropVal) => {
-      setActiveComponentProps({
+      updateActiveComponentProps({
         ...activeComponentState.props,
         [propName]: newPropVal,
       });
     },
-    [setActiveComponentProps, activeComponentState]
+    [updateActiveComponentProps, activeComponentState]
   );
   return (
     <>

@@ -41,33 +41,14 @@ beforeEach(() => {
 });
 
 it("removes element from component tree and updates the store", async () => {
-  const setActivePageStateSpy = jest.spyOn(
-    useStudioStore.getState().pages,
-    "setActivePageState"
+  const removeComponentSpy = jest.spyOn(
+    useStudioStore.getState().actions,
+    "removeComponent"
   );
   render(<RemoveElementButton elementUUID="mock-uuid-1" />);
   const removeElementButton = screen.getByRole("button");
   await userEvent.click(removeElementButton);
 
-  expect(setActivePageStateSpy).toBeCalledWith({
-    componentTree: [
-      {
-        kind: ComponentStateKind.Fragment,
-        uuid: "mock-uuid-0",
-      },
-      {
-        ...searchBarComponent,
-        uuid: "mock-uuid-2",
-        parentUUID: "mock-uuid-0",
-      },
-      {
-        ...searchBarComponent,
-        uuid: "mock-uuid-3",
-        parentUUID: "mock-uuid-0",
-      },
-    ],
-    cssImports: [],
-    filepath: "mock-filepath",
-  });
+  expect(removeComponentSpy).toBeCalledWith("mock-uuid-1");
   expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
 });

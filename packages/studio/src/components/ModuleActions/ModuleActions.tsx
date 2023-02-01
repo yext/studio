@@ -1,5 +1,6 @@
-import { ModuleMetadata } from "@yext/studio-plugin";
+import { ModuleMetadata, ModuleState } from "@yext/studio-plugin";
 import DeleteModuleButton from "./DeleteModuleButton";
+import EditModuleButton from "./EditModuleButton";
 
 /**
  * Displays a list of available actions for manipulating a Module when
@@ -7,13 +8,16 @@ import DeleteModuleButton from "./DeleteModuleButton";
  */
 export default function ModuleActions({
   metadata,
+  moduleState,
 }: {
   metadata: ModuleMetadata;
+  moduleState: ModuleState;
 }) {
   return (
     <div className="flex px-2 mb-6">
       <span className="font-medium">Module Actions</span>
       <div className="flex grow justify-evenly">
+        <EditModuleButton moduleState={moduleState} />
         <DeleteModuleButton metadata={metadata} />
       </div>
     </div>

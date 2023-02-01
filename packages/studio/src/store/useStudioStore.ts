@@ -5,7 +5,7 @@ import { enableMapSet } from "immer";
 import { temporal } from "zundo";
 import { throttle, isEqual, cloneDeep } from "lodash";
 
-import { StudioStore } from "./models/store";
+import { StudioStore } from "./models/StudioStore";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
 import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
@@ -15,6 +15,7 @@ import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
+import ComponentActions from "./ComponentActions";
 
 enableMapSet();
 
@@ -66,7 +67,7 @@ const useStudioStore = create<StudioStore>()(
           UUIDToFileMetadata,
           pendingChanges: {
             pagesToRemove: [...pagesToRemove.keys()],
-            pagesToUpdate: [...pagesToUpdate.keys()],
+            pagesToUpdate: [...pagesToUpdate],
             modulesToUpdate: [...modulesToUpdate.keys()],
           },
           siteSettings: { values },
@@ -92,6 +93,10 @@ const useStudioStore = create<StudioStore>()(
         commitChanges,
         createModule: getCreateModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
+        actions: new ComponentActions(
+          () => get().pages,
+          () => get().fileMetadatas
+        ),
       };
     })
   )

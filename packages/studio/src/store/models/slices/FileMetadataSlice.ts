@@ -1,4 +1,10 @@
-import { ComponentMetadata, FileMetadata } from "@yext/studio-plugin";
+import {
+  ComponentMetadata,
+  ComponentState,
+  FileMetadata,
+  ModuleMetadata,
+  PropValues,
+} from "@yext/studio-plugin";
 import { ImportType } from "../ImportType";
 
 export interface FileMetadataSliceStates {
@@ -18,10 +24,32 @@ export interface FileMetadataSliceStates {
 export interface FileMetadataSliceActions {
   setFileMetadata: (uuid: string, fileMetadata: FileMetadata) => void;
   getFileMetadata: (uuid: string) => FileMetadata;
+  getModuleMetadata: (uuid: string) => ModuleMetadata;
   removeFileMetadata: (uuid: string) => void;
   getComponentMetadata: (uuid: string) => ComponentMetadata;
   setUUIDToImportedComponent: (
     importedComponents: Record<string, ImportType>
+  ) => void;
+  setComponentTreeInModule: (
+    metadataUUID: string,
+    componentTree: ComponentState[]
+  ) => void;
+  updateComponentPropsInsideModule: (
+    metadataUUID: string,
+    componentUUID: string,
+    props: PropValues
+  ) => void;
+  getComponentStateInsideModule: (
+    metadataUUID: string,
+    componentUUID: string
+  ) => ComponentState;
+  addComponentToModule: (
+    metadataUUID: string,
+    componentState: ComponentState
+  ) => void;
+  removeComponentFromModule: (
+    metadataUUID: string,
+    componentUUID: string
   ) => void;
 }
 

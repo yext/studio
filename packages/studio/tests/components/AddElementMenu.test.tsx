@@ -2,21 +2,17 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
 import AddElementMenu from "../../src/components/AddElementMenu/AddElementMenu";
+import useStudioStore from "../../src/store/useStudioStore";
 import mockActivePage from "../__utils__/mockActivePage";
 import mockStore from "../__utils__/mockStore";
 
-let setActivePageState;
 beforeEach(() => {
-  setActivePageState = jest.fn();
   mockActivePage({
     componentTree: [],
     filepath: "",
     cssImports: [],
   });
   mockStore({
-    pages: {
-      setActivePageState,
-    },
     fileMetadatas: {
       UUIDToFileMetadata: {
         "uuid-component": {
@@ -50,22 +46,16 @@ it("renders Components on load", () => {
 
 it("can add a component to the tree", async () => {
   render(<AddElementMenu />);
-  expect(setActivePageState).toHaveBeenCalledTimes(0);
   await userEvent.click(screen.getByText("Mock-Component"));
-  expect(setActivePageState).toHaveBeenCalledTimes(1);
-  expect(setActivePageState).toHaveBeenCalledWith({
-    componentTree: [
-      {
-        componentName: "Mock-Component",
-        kind: ComponentStateKind.Standard,
-        metadataUUID: "comp",
-        props: {},
-        uuid: expect.any(String),
-      },
-    ],
-    cssImports: [],
-    filepath: "",
-  });
+  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
+    {
+      componentName: "Mock-Component",
+      kind: ComponentStateKind.Standard,
+      metadataUUID: "comp",
+      props: {},
+      uuid: expect.any(String),
+    },
+  ]);
 });
 
 it("can switch to Containers", async () => {
@@ -79,22 +69,16 @@ it("can switch to Containers", async () => {
 it("can add a container to the tree", async () => {
   render(<AddElementMenu />);
   await userEvent.click(screen.getByText("Containers"));
-  expect(setActivePageState).toHaveBeenCalledTimes(0);
   await userEvent.click(screen.getByText("Mock-Container"));
-  expect(setActivePageState).toHaveBeenCalledTimes(1);
-  expect(setActivePageState).toHaveBeenCalledWith({
-    componentTree: [
-      {
-        componentName: "Mock-Container",
-        kind: ComponentStateKind.Standard,
-        metadataUUID: "cont",
-        props: {},
-        uuid: expect.any(String),
-      },
-    ],
-    cssImports: [],
-    filepath: "",
-  });
+  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
+    {
+      componentName: "Mock-Container",
+      kind: ComponentStateKind.Standard,
+      metadataUUID: "cont",
+      props: {},
+      uuid: expect.any(String),
+    },
+  ]);
 });
 
 it("can switch to Modules", async () => {
@@ -108,20 +92,14 @@ it("can switch to Modules", async () => {
 it("can add a module to the tree", async () => {
   render(<AddElementMenu />);
   await userEvent.click(screen.getByText("Modules"));
-  expect(setActivePageState).toHaveBeenCalledTimes(0);
   await userEvent.click(screen.getByText("Mock-Module"));
-  expect(setActivePageState).toHaveBeenCalledTimes(1);
-  expect(setActivePageState).toHaveBeenCalledWith({
-    componentTree: [
-      {
-        componentName: "Mock-Module",
-        kind: ComponentStateKind.Module,
-        metadataUUID: "modu",
-        props: {},
-        uuid: expect.any(String),
-      },
-    ],
-    cssImports: [],
-    filepath: "",
-  });
+  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
+    {
+      componentName: "Mock-Module",
+      kind: ComponentStateKind.Module,
+      metadataUUID: "modu",
+      props: {},
+      uuid: expect.any(String),
+    },
+  ]);
 });

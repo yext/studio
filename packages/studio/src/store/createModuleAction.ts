@@ -1,4 +1,4 @@
-import { StudioStore } from "./models/store";
+import { StudioStore } from "./models/StudioStore";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import {
@@ -6,7 +6,6 @@ import {
   ComponentStateKind,
   ComponentTreeHelpers,
   FileMetadataKind,
-  PageState,
 } from "@yext/studio-plugin";
 import { differenceWith, isEqual } from "lodash";
 import { v4 } from "uuid";
@@ -41,14 +40,14 @@ export default function getCreateModuleAction(
 
   function createModule(
     filepath: string,
-    activePageState: PageState,
+    componentTree: ComponentState[],
     activeComponentState: ComponentState
   ) {
     const metadataUUID = filepath;
     const childComponentTree = ComponentTreeHelpers.mapComponentTree<
       ComponentState[]
     >(
-      activePageState.componentTree,
+      componentTree,
       (componentState, mappedChildren) => [
         componentState,
         ...mappedChildren.flat(),
@@ -67,7 +66,7 @@ export default function getCreateModuleAction(
     });
     const moduleComponentUUID = v4();
     const updatedPageComponentTree = differenceWith(
-      activePageState.componentTree,
+      componentTree,
       childComponentTree,
       isEqual
     ).map((c) => {
@@ -83,20 +82,13 @@ export default function getCreateModuleAction(
       }
       return c;
     });
-    get().pages.setActivePageState({
-      ...activePageState,
-      componentTree: updatedPageComponentTree,
-    });
+    get().actions.updateComponentTree(updatedPageComponentTree);
     get().pages.setActiveComponentUUID(moduleComponentUUID);
   }
 
   return (filepath: string) => {
-    const activePageState = get().pages.getActivePageState();
-    if (!activePageState) {
-      console.error("Tried to create module without active page.");
-      return false;
-    }
-    const activeComponentState = get().pages.getActiveComponentState();
+    const componentTree = get().actions.getComponentTree() ?? [];
+    const activeComponentState = get().actions.getActiveComponentState();
     if (!activeComponentState) {
       console.error("Tried to create module without active component.");
       return false;
@@ -104,7 +96,7 @@ export default function getCreateModuleAction(
     if (!isValidFilepath(filepath)) {
       return false;
     }
-    createModule(filepath, activePageState, activeComponentState);
+    createModule(filepath, componentTree, activeComponentState);
     return true;
   };
 }

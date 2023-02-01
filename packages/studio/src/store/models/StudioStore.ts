@@ -1,3 +1,4 @@
+import ComponentActions from "../ComponentActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousCommitSlice from "./slices/PreviousCommitSlice";
@@ -8,11 +9,12 @@ import SiteSettingSlice from "./slices/SiteSettingsSlice";
  * It's comprised of three slices, each of which is responsible for
  * handling actions and updating specific isolated set of data.
  */
-export interface StudioStore {
+export type StudioStore = {
   fileMetadatas: FileMetadataSlice;
   pages: PageSlice;
   siteSettings: SiteSettingSlice;
+  previousCommit: PreviousCommitSlice;
   commitChanges: () => void;
   createModule: (filepath: string) => boolean;
-  previousCommit: PreviousCommitSlice;
-}
+  actions: ComponentActions;
+};

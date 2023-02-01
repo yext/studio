@@ -50,12 +50,12 @@ function useComponentTreeElements(
   componentTree: ComponentState[],
   props?: PropValues
 ): (JSX.Element | null)[] | null {
-  const [UUIDToImportedComponent, UUIDToFileMetadata, modulesToUpdate] =
-    useStudioStore((store) => [
+  const [UUIDToImportedComponent, UUIDToFileMetadata] = useStudioStore(
+    (store) => [
       store.fileMetadatas.UUIDToImportedComponent,
       store.fileMetadatas.UUIDToFileMetadata,
-      store.fileMetadatas.pendingChanges.modulesToUpdate,
-    ]);
+    ]
+  );
   const expressionSources = useExpressionSources(props);
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
@@ -74,11 +74,7 @@ function useComponentTreeElements(
         element = c.componentName;
       } else {
         const metadata = UUIDToFileMetadata[c.metadataUUID];
-        if (
-          metadata &&
-          metadata.kind === FileMetadataKind.Module &&
-          modulesToUpdate.has(metadata.metadataUUID)
-        ) {
+        if (metadata && metadata.kind === FileMetadataKind.Module) {
           return (
             <ComponentTreePreview
               componentTree={metadata.componentTree}
@@ -125,7 +121,6 @@ function useComponentTreeElements(
     UUIDToImportedComponent,
     expressionSources,
     componentTree,
-    modulesToUpdate,
   ]);
 }
 
@@ -141,7 +136,7 @@ function HighlightingContainer(props: PropsWithChildren<{ uuid: string }>) {
     (store) => store.pages.activeComponentUUID
   );
   const ringClass =
-    "relative before:ring before:absolute before:w-full before:h-full before:z-50";
+    "relative before:ring before:absolute before:w-full before:h-full before:z-10";
   const className = classNames(ringClass, {
     "before:ring-blue-400": activeComponentUUID === props.uuid,
     "before:ring-transparent": activeComponentUUID !== props.uuid,

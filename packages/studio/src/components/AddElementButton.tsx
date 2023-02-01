@@ -13,14 +13,19 @@ export default function AddElementButton(): JSX.Element | null {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useRootClose(containerRef, () => setIsOpen(false));
+  useRootClose(containerRef, () => {
+    setIsOpen(false);
+  });
   const handleClick = useCallback(() => setIsOpen(!isOpen), [isOpen]);
 
   const activePageState = useStudioStore((store) => {
     return store.pages.getActivePageState();
   });
+  const moduleUUIDBeingEdited = useStudioStore(
+    (store) => store.pages.moduleUUIDBeingEdited
+  );
 
-  if (!activePageState) {
+  if (!activePageState && !moduleUUIDBeingEdited) {
     return null;
   }
 

@@ -4,9 +4,9 @@ import {
   ModuleMetadata,
   PropValueType,
 } from "@yext/studio-plugin";
-import useStudioStore from "../../src/store/useStudioStore";
-import { FileMetadataSliceStates } from "../../src/store/models/slices/FileMetadataSlice";
-import mockStore from "../__utils__/mockStore";
+import useStudioStore from "../../../src/store/useStudioStore";
+import { FileMetadataSliceStates } from "../../../src/store/models/slices/FileMetadataSlice";
+import mockStore from "../../__utils__/mockStore";
 
 const componentMetadata: ComponentMetadata = {
   kind: FileMetadataKind.Component,

@@ -1,10 +1,14 @@
-import { ComponentStateKind, PageState, PropValues } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentStateKind,
+  ModuleState,
+  PageState,
+  PropValues,
+} from "@yext/studio-plugin";
+import { isEqual } from "lodash";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
-import PageSlice, {
-  PageSliceStates,
-  PagesRecord,
-} from "../../models/slices/PageSlice";
+import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
 
@@ -21,6 +25,7 @@ const initialStates: PageSliceStates = {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
   },
+  moduleUUIDBeingEdited: undefined,
 };
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
@@ -65,10 +70,52 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         pagesToRemove.add(pageName);
       });
     },
-    setPagesRecord: (pagesRecord: PagesRecord) => {
+    setComponentTreeInPage: (
+      pageName: string,
+      componentTree: ComponentState[]
+    ) => {
       set((store) => {
-        store.pages = pagesRecord;
+        const originalComponentTree = store.pages[pageName].componentTree;
+        store.pages[pageName].componentTree = componentTree;
+        if (!isEqual(originalComponentTree, componentTree)) {
+          store.pendingChanges.pagesToUpdate.add(pageName);
+        }
       });
+    },
+    setComponentProps: (
+      pageName: string,
+      componentUUID: string,
+      props: PropValues
+    ) => {
+      set((store) => {
+        const components = store.pages[pageName].componentTree;
+        const matchingComponent = components.find(
+          (c) => c.uuid === componentUUID
+        );
+        if (!matchingComponent) {
+          throw new Error("Could not find component.");
+        }
+        if (matchingComponent.kind === ComponentStateKind.Fragment) {
+          console.error(
+            "Error in setComponentProps: The active component is a fragment and does not accept props."
+          );
+          return;
+        }
+
+        matchingComponent.props = props;
+        store.pendingChanges.pagesToUpdate.add(pageName);
+      });
+    },
+    addComponentToPage(pageName: string, componentState: ComponentState) {
+      const tree = get().pages[pageName].componentTree;
+      get().setComponentTreeInPage(pageName, [...tree, componentState]);
+    },
+    removeComponentFromPage(pageName: string, componentUUID: string) {
+      const componentTree = get().pages[pageName].componentTree;
+      get().setComponentTreeInPage(
+        pageName,
+        componentTree.filter((c) => c.uuid !== componentUUID)
+      );
     },
   };
 
@@ -109,9 +156,10 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const activeComponentActions = {
-    setActiveComponentUUID: (activeComponentUUID: string | undefined) =>
-      set({ activeComponentUUID }),
+  const pageComponentActions = {
+    setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
+      set({ activeComponentUUID });
+    },
     getActiveComponentState: () => {
       const { activeComponentUUID, getActivePageState } = get();
       const activePageState = getActivePageState();
@@ -122,37 +170,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         (component) => component.uuid === activeComponentUUID
       );
     },
-    setActiveComponentProps: (props: PropValues) =>
-      set((store) => {
-        const activePageName = store.activePageName;
-        if (!activePageName) {
-          console.error(
-            "Tried to setActiveComponentProps when activePageName was undefined"
-          );
-          return;
-        }
-        const activeComponent = get().getActiveComponentState();
-        if (!activeComponent) {
-          console.error(
-            "Error in setActiveComponentProps: No active component selected in store."
-          );
-          return;
-        }
-        const components = store.pages[activePageName].componentTree;
-        components.forEach((c) => {
-          if (c.uuid === activeComponent.uuid) {
-            if (c.kind === ComponentStateKind.Fragment) {
-              console.error(
-                "Error in setActiveComponentProps: The active component is a fragment and does not accept props."
-              );
-              return;
-            } else {
-              c.props = props;
-              store.pendingChanges.pagesToUpdate.add(activePageName);
-            }
-          }
-        });
-      }),
   };
 
   const activeEntityFileActions = {
@@ -180,13 +197,37 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
+  const moduleStateActions: Pick<
+    PageSlice,
+    "getModuleStateBeingEdited" | "setModuleUUIDBeingEdited"
+  > = {
+    getModuleStateBeingEdited(): ModuleState | undefined {
+      const activePageState = get().getActivePageState();
+      if (!activePageState) {
+        return;
+      }
+      const moduleUUIDBeingEdited = get().moduleUUIDBeingEdited;
+      return activePageState.componentTree.find(
+        (c): c is ModuleState =>
+          c.kind === ComponentStateKind.Module &&
+          c.uuid === moduleUUIDBeingEdited
+      );
+    },
+    setModuleUUIDBeingEdited(moduleStateUUID: string | undefined) {
+      set((store) => {
+        store.moduleUUIDBeingEdited = moduleStateUUID;
+      });
+    },
+  };
+
   return {
     ...initialStates,
     ...pageActions,
     ...activePageActions,
-    ...activeComponentActions,
+    ...pageComponentActions,
     ...activeEntityFileActions,
-    detachAllModuleInstances: createDetachAllModuleInstances(get, set),
+    ...moduleStateActions,
+    detachAllModuleInstances: createDetachAllModuleInstances(get),
   };
 };
 

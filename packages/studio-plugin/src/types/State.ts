@@ -15,6 +15,11 @@ export type ComponentState =
   | StandardOrModuleComponentState
   | FragmentState
   | BuiltInState;
+
+export type StandardOrModuleComponentState =
+  | StandardComponentState
+  | ModuleState;
+
 export enum ComponentStateKind {
   Standard = "standard",
   Module = "module",
@@ -22,8 +27,24 @@ export enum ComponentStateKind {
   BuiltIn = "builtIn", // for built in elements like div and img
 }
 
-export type StandardOrModuleComponentState = {
-  kind: ComponentStateKind.Standard | ComponentStateKind.Module;
+export type StandardComponentState = {
+  kind: ComponentStateKind.Standard;
+  /** The name of the component (i.e. Card or Banner). */
+  componentName: string;
+  /** Represents the props of the component. */
+  props: PropValues;
+  /** A unique UUID for this specific component instance. */
+  uuid: string;
+  /**
+   * The UUID of the corresponding StandardComponentMetadata or ModuleMetadata.
+   */
+  metadataUUID: string;
+  /** The UUID of the parent component in the tree, if one exists. */
+  parentUUID?: string;
+};
+
+export type ModuleState = {
+  kind: ComponentStateKind.Module;
   /** The name of the component (i.e. Card or Banner). */
   componentName: string;
   /** Represents the props of the component. */

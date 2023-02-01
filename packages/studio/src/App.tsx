@@ -6,7 +6,9 @@ import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
 
 export default function App() {
-  const pageState = useStudioStore((store) => store.pages.getActivePageState());
+  const componentTree = useStudioStore((store) =>
+    store.actions.getComponentTree()
+  );
 
   return (
     <div className="App">
@@ -16,8 +18,8 @@ export default function App() {
         <div className="flex flex-row grow">
           <ActivePagePanel />
           <div className="grow w-1/3 bg-gray-300">
-            {pageState && (
-              <ComponentTreePreview componentTree={pageState.componentTree} />
+            {componentTree && (
+              <ComponentTreePreview componentTree={componentTree} />
             )}
           </div>
           <EditorPanel />

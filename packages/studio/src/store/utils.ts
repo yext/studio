@@ -1,5 +1,5 @@
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
-import { StudioStore } from "./models/store";
+import { StudioStore } from "./models/StudioStore";
 
 type UserUpdatableStore = Omit<StudioStore, "fileMetadatas"> & {
   fileMetadatas: Omit<FileMetadataSlice, "UUIDToImportedComponent">;

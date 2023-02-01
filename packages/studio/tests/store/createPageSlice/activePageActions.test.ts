@@ -163,21 +163,5 @@ describe("PageSlice", () => {
       expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
       expect(nonexistantPage).toBeUndefined();
     });
-
-    it("getActiveComponentState", () => {
-      const nonexistantComponentState = useStudioStore
-        .getState()
-        .pages.getActiveComponentState();
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
-      expect(nonexistantComponentState).toBeUndefined();
-    });
-
-    it("setActiveComponentProps", () => {
-      useStudioStore.getState().pages.setActiveComponentProps({});
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Tried to setActiveComponentProps when activePageName was undefined"
-      );
-    });
   });
 });

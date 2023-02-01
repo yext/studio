@@ -1,15 +1,31 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import useStudioStore from "../store/useStudioStore";
-import classNames from "classnames";
 import { isEqual } from "lodash";
 
 /**
  * Renders a button for committing changes to user's files.
  */
 export default function CommitChangesButton() {
-  const { pagesToRemove, pagesToUpdate } = useStudioStore(
-    (store) => store.pages.pendingChanges
+  const hasChanges = useHasChanges();
+  const commitChangesAction = useStudioStore((store) => store.commitChanges);
+
+  return (
+    <button
+      className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600"
+      onClick={commitChangesAction}
+      disabled={!hasChanges}
+      aria-label="Commit Changes to Repository"
+    >
+      Save
+    </button>
   );
+}
+
+function useHasChanges() {
+  // TODO(SLAP-2556) Refactor pendingChanges to use PreviousCommitSlice
+  const [pagesToRemove, pagesToUpdate] = useStudioStore((store) => [
+    store.pages.pendingChanges.pagesToRemove,
+    store.pages.pendingChanges.pagesToUpdate,
+  ]);
   const { modulesToUpdate } = useStudioStore(
     (store) => store.fileMetadatas.pendingChanges
   );
@@ -20,8 +36,6 @@ export default function CommitChangesButton() {
   const siteSettingsValues = useStudioStore(
     (store) => store.siteSettings.values
   );
-  const commitChangesAction = useStudioStore((store) => store.commitChanges);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const siteSettingsHaveChanged = !isEqual(
     previousCommit.siteSettings.values,
@@ -31,40 +45,12 @@ export default function CommitChangesButton() {
     previousCommit.fileMetadatas.UUIDToFileMetadata,
     UUIDToFileMetadata
   );
-  // TODO(SLAP-2556) Refactor pendingChanges to use PreviousCommitSlice
-  const hasPendingChanges =
+
+  return (
     pagesToRemove.size > 0 ||
     pagesToUpdate.size > 0 ||
     modulesToUpdate.size > 0 ||
     siteSettingsHaveChanged ||
-    hasFileMetadataChanges;
-
-  useEffect(() => {
-    setIsButtonDisabled(!hasPendingChanges);
-  }, [hasPendingChanges]);
-
-  const handleClickSave = useCallback(() => {
-    commitChangesAction();
-    setIsButtonDisabled(true);
-  }, [commitChangesAction]);
-
-  const buttonClasses = useMemo(
-    () =>
-      classNames("ml-4 py-1 px-3 text-white rounded-md", {
-        "bg-gray-400": isButtonDisabled,
-        "bg-blue-600": !isButtonDisabled,
-      }),
-    [isButtonDisabled]
-  );
-
-  return (
-    <button
-      className={buttonClasses}
-      onClick={handleClickSave}
-      disabled={isButtonDisabled}
-      aria-label="Commit Changes to Repository"
-    >
-      Save
-    </button>
+    hasFileMetadataChanges
   );
 }

@@ -58,16 +58,15 @@ export default function AddElementsList({
 
 function Option({ metadata }: { metadata: FileMetadata }) {
   const componentName = path.basename(metadata.filepath, ".tsx");
-  const [getActivePageState, setActivePageState] = useStudioStore((store) => {
-    return [store.pages.getActivePageState, store.pages.setActivePageState];
+  const moduleStateBeingEdited = useStudioStore((store) =>
+    store.pages.getModuleStateBeingEdited()
+  );
+  const addComponent = useStudioStore((store) => {
+    return store.actions.addComponent;
   });
 
   const addElement = useCallback(
     (componentName: string) => {
-      const activePageState = getActivePageState();
-      if (!activePageState) {
-        throw new Error("Tried to add component without active page state.");
-      }
       const componentState = {
         kind:
           metadata.kind === FileMetadataKind.Module
@@ -78,22 +77,24 @@ function Option({ metadata }: { metadata: FileMetadata }) {
         uuid: v4(),
         metadataUUID: metadata.metadataUUID,
       };
-      setActivePageState({
-        ...activePageState,
-        componentTree: [...activePageState.componentTree, componentState],
-      });
+      addComponent(componentState);
     },
-    [getActivePageState, setActivePageState, metadata]
+    [addComponent, metadata.initialProps, metadata.kind, metadata.metadataUUID]
   );
   const handleClick = useCallback(() => {
     addElement(componentName);
   }, [addElement, componentName]);
 
+  // Prevent users from adding infinite looping modules.
+  const isSameAsActiveModule =
+    moduleStateBeingEdited?.metadataUUID === metadata.metadataUUID;
+
   return (
     <button
-      className="px-6 py-1 cursor-pointer hover:opacity-75"
+      className="px-6 py-1 cursor-pointer hover:opacity-75 disabled:opacity-25"
       onClick={handleClick}
       aria-label={`Add ${componentName} Element`}
+      disabled={isSameAsActiveModule}
     >
       {componentName}
     </button>

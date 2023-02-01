@@ -1,6 +1,7 @@
 import {
   ComponentState,
   ModuleMetadata,
+  ModuleState,
   PageState,
   PropValues,
 } from "@yext/studio-plugin";
@@ -31,21 +32,38 @@ export interface PageSliceStates {
      */
     pagesToUpdate: Set<string>;
   };
+  /**
+   * The {@link ComponentState.uuid} for the module currently being edited, if it exists.
+   */
+  moduleUUIDBeingEdited?: string;
 }
 
 interface PageSliceActions {
   addPage: (filepath: string) => boolean;
   removePage: (filepath: string) => void;
-  setPagesRecord: (pages: PagesRecord) => void;
 
   setActivePageName: (pageName: string | undefined) => void;
   setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState | undefined;
+  setComponentTreeInPage: (
+    pageName: string,
+    componentTree: ComponentState[]
+  ) => void;
+  addComponentToPage: (
+    pageName: string,
+    componentState: ComponentState
+  ) => void;
+  removeComponentFromPage: (pageName: string, uuidToRemove: string) => void;
+  getModuleStateBeingEdited: () => ModuleState | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
-  setActiveComponentProps: (props: PropValues) => void;
-  getActiveComponentState: () => ComponentState | undefined;
+  setComponentProps: (
+    pageName: string,
+    componentUUID: string,
+    props: PropValues
+  ) => void;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
+  setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }

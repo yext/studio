@@ -1,12 +1,14 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import {
   FileMetadata,
+  FileMetadataKind,
   ModuleMetadata,
   PageState,
   SiteSettingsValues,
 } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
+import { isEqual } from "lodash";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -56,6 +58,19 @@ export class FileSystemWriter {
     Object.keys(UUIDToFileMetadata).forEach((moduleUUID) => {
       if (!updatedUUIDToFileMetadata.hasOwnProperty(moduleUUID)) {
         this.removeFile(UUIDToFileMetadata[moduleUUID].filepath);
+      }
+    });
+
+    Object.keys(updatedUUIDToFileMetadata).forEach((moduleUUID) => {
+      const updatedMetadata = updatedUUIDToFileMetadata[moduleUUID];
+      if (updatedMetadata.kind !== FileMetadataKind.Module) {
+        return;
+      }
+      const originalMetadata = UUIDToFileMetadata[moduleUUID];
+      if (!isEqual(originalMetadata, updatedMetadata)) {
+        this.orchestrator
+          .getModuleFile(updatedMetadata.filepath)
+          .updateModuleFile(updatedMetadata);
       }
     });
   }

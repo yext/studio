@@ -60,7 +60,7 @@ it("enables the button when there are pending SiteSettingsValues changes", async
   expect(commitChangesButton).not.toBeDisabled();
 });
 
-it("disables the button when there are no pending SiteSettingsValues changes", async () => {
+it("disables the button when there are no pending changes", async () => {
   mockStore({
     previousCommit: {
       siteSettings: {
@@ -87,6 +87,15 @@ it("disables the button when there are no pending SiteSettingsValues changes", a
     },
     fileMetadatas: {
       UUIDToFileMetadata: {},
+      pendingChanges: {
+        modulesToUpdate: new Set(),
+      },
+    },
+    pages: {
+      pendingChanges: {
+        pagesToRemove: new Set(),
+        pagesToUpdate: new Set(),
+      },
     },
   });
   render(<CommitChangesButton />);

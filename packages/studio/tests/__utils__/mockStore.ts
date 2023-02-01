@@ -1,4 +1,4 @@
-import { StudioStore } from "../../src/store/models/store";
+import { StudioStore } from "../../src/store/models/StudioStore";
 import useStudioStore from "../../src/store/useStudioStore";
 
 export type MockStudioStore = {
@@ -23,6 +23,10 @@ export default function mockStore(state: MockStudioStore) {
     pages: {
       ...useStudioStore.getState().pages,
       ...state.pages,
+    },
+    previousCommit: {
+      ...useStudioStore.getState(),
+      ...state.previousCommit,
     },
   });
 }
