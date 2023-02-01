@@ -240,8 +240,21 @@ it("throws when the pages folder does not exist", async () => {
   );
 });
 
-it("reloadFile can reload a module file", async () => {
-  const updatedModuleFile = `
+describe("reloadFile", () => {
+  const userPaths = getUserPaths(
+    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
+  );
+  const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
+  const originalFile = fs.readFileSync(modulePath, "utf-8");
+  const project = createTsMorphProject();
+  const orchestrator = new ParsingOrchestrator(project, userPaths, []);
+
+  afterEach(() => {
+    fs.writeFileSync(modulePath, originalFile);
+  });
+
+  it("reloadFile can reload a module file", async () => {
+    const updatedModuleFile = `
     import Banner from "../components/Banner";
 
     export default function NestedModule() {
@@ -250,38 +263,30 @@ it("reloadFile can reload a module file", async () => {
       );
     }
   `;
-  const userPaths = getUserPaths(
-    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
-  );
-  const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
-  const project = createTsMorphProject();
+    const originalTree = orchestrator
+      .getModuleFile(modulePath)
+      .getModuleMetadata().componentTree;
+    expect(originalTree).toEqual([
+      expect.objectContaining({
+        kind: ComponentStateKind.Fragment,
+      }),
+      expect.objectContaining({
+        componentName: "Banner",
+      }),
+      expect.objectContaining({
+        componentName: "Banner",
+      }),
+    ]);
 
-  const orchestrator = new ParsingOrchestrator(project, userPaths, []);
-  const originalTree = orchestrator
-    .getModuleFile(modulePath)
-    .getModuleMetadata().componentTree;
-  expect(originalTree).toEqual([
-    expect.objectContaining({
-      kind: ComponentStateKind.Fragment,
-    }),
-    expect.objectContaining({
-      componentName: "Banner",
-    }),
-    expect.objectContaining({
-      componentName: "Banner",
-    }),
-  ]);
-
-  const originalFile = fs.readFileSync(modulePath, "utf-8");
-  fs.writeFileSync(modulePath, updatedModuleFile);
-  await orchestrator.reloadFile(modulePath);
-  const updatedTree = orchestrator
-    .getModuleFile(modulePath)
-    .getModuleMetadata().componentTree;
-  expect(updatedTree).toEqual([
-    expect.objectContaining({
-      componentName: "Banner",
-    }),
-  ]);
-  fs.writeFileSync(modulePath, originalFile);
+    fs.writeFileSync(modulePath, updatedModuleFile);
+    await orchestrator.reloadFile(modulePath);
+    const updatedTree = orchestrator
+      .getModuleFile(modulePath)
+      .getModuleMetadata().componentTree;
+    expect(updatedTree).toEqual([
+      expect.objectContaining({
+        componentName: "Banner",
+      }),
+    ]);
+  });
 });
