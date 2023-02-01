@@ -28,6 +28,7 @@ import classNames from "classnames";
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   props?: PropValues;
+  isWithinModule?: boolean;
 }
 
 /**
@@ -36,9 +37,14 @@ interface ComponentTreePreviewProps {
 export default function ComponentTreePreview({
   componentTree,
   props,
+  isWithinModule,
 }: ComponentTreePreviewProps): JSX.Element {
   useImportedComponents(componentTree);
-  const elements = useComponentTreeElements(componentTree, props);
+  const elements = useComponentTreeElements(
+    componentTree,
+    props,
+    isWithinModule
+  );
   return <>{elements}</>;
 }
 
@@ -48,7 +54,8 @@ export default function ComponentTreePreview({
  */
 function useComponentTreeElements(
   componentTree: ComponentState[],
-  props?: PropValues
+  props?: PropValues,
+  isWithinModule?: boolean
 ): (JSX.Element | null)[] | null {
   const [UUIDToImportedComponent, UUIDToFileMetadata] = useStudioStore(
     (store) => [
@@ -79,6 +86,7 @@ function useComponentTreeElements(
             <ComponentTreePreview
               componentTree={metadata.componentTree}
               props={c.props}
+              isWithinModule={true}
             />
           );
         } else if (!UUIDToImportedComponent[c.metadataUUID]) {
@@ -109,6 +117,9 @@ function useComponentTreeElements(
     return ComponentTreeHelpers.mapComponentTree(
       componentTree,
       (c, children) => {
+        if (isWithinModule) {
+          return <ErrorBoundary>{renderComponent(c, children)}</ErrorBoundary>;
+        }
         return (
           <HighlightingContainer key={c.uuid} uuid={c.uuid}>
             <ErrorBoundary>{renderComponent(c, children)}</ErrorBoundary>
@@ -121,6 +132,7 @@ function useComponentTreeElements(
     UUIDToImportedComponent,
     expressionSources,
     componentTree,
+    isWithinModule,
   ]);
 }
 
