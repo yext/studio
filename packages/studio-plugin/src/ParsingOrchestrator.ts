@@ -118,17 +118,20 @@ export default class ParsingOrchestrator {
     }, {});
     return UUIDToFileMetadata;
   }
-  
+
   /**
    * Given a filepath, performs necessary actions for reloading the file,
    * so that getStudioData returns up to date information.
    */
   async reloadFile(filepath: string) {
-    const sourceFile = this.project.getSourceFile(filepath)
+    const sourceFile = this.project.getSourceFile(filepath);
     if (sourceFile) {
       sourceFile.refreshFromFileSystemSync();
     }
-    if (filepath.startsWith(this.paths.modules) || filepath.startsWith(this.paths.components)) {
+    if (
+      filepath.startsWith(this.paths.modules) ||
+      filepath.startsWith(this.paths.components)
+    ) {
       delete this.filepathToFileMetadata[filepath];
       this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
     } else if (filepath === this.paths.siteSettings) {
@@ -207,7 +210,7 @@ export default class ParsingOrchestrator {
       `Could not get FileMetadata for ${absPath}, file does not ` +
         `live inside the expected folders for modules: ${modules}, ${components}, or a plugin.`
     );
-  }
+  };
 
   private getFileMetadataByUUID = (
     metadataUUID: string
@@ -221,7 +224,7 @@ export default class ParsingOrchestrator {
     }
 
     return fileMetadata;
-  }
+  };
 
   private async getLocalDataMapping(): Promise<
     Record<string, string[]> | undefined

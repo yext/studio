@@ -45,8 +45,8 @@ export default async function createStudioPlugin(
   // Vite will import deps like react-dev-utils in the browser.
   // This causes an error to be thrown regarding `process` not being defined.
   const { default: openBrowser } = await import("react-dev-utils/openBrowser");
-  const { readdirSync } = await import('fs');
-  const path = await import('path');
+  const { readdirSync } = await import("fs");
+  const path = await import("path");
 
   return {
     name: "yext-studio-vite-plugin",
@@ -55,20 +55,20 @@ export default async function createStudioPlugin(
         openBrowser("http://localhost:5173/");
       }
       const watchUserFiles = (userPaths: UserPaths) => {
-        readdirSync(userPaths.pages).forEach(dir => {
-          const pagePath = path.join(userPaths.pages, dir)
+        readdirSync(userPaths.pages).forEach((dir) => {
+          const pagePath = path.join(userPaths.pages, dir);
           this.addWatchFile(pagePath);
-        })
-        readdirSync(userPaths.components).forEach(dir => {
-          const pagePath = path.join(userPaths.pages, dir)
+        });
+        readdirSync(userPaths.components).forEach((dir) => {
+          const pagePath = path.join(userPaths.pages, dir);
           this.addWatchFile(pagePath);
-        })
-        readdirSync(userPaths.modules).forEach(dir => {
-          const pagePath = path.join(userPaths.pages, dir)
+        });
+        readdirSync(userPaths.modules).forEach((dir) => {
+          const pagePath = path.join(userPaths.pages, dir);
           this.addWatchFile(pagePath);
-        })
+        });
         this.addWatchFile(userPaths.siteSettings);
-      }
+      };
       watchUserFiles(studioConfig.paths);
     },
     resolveId(id) {
@@ -85,14 +85,16 @@ export default async function createStudioPlugin(
       configureStudioServer(server, fileSystemManager);
     },
     async handleHotUpdate(ctx: HmrContext) {
-      const { moduleGraph } = ctx.server
-      ctx.modules.forEach(m => ctx.server.reloadModule(m));
+      const { moduleGraph } = ctx.server;
+      ctx.modules.forEach((m) => ctx.server.reloadModule(m));
 
-      const studioDataModule = moduleGraph.getModuleById(resolvedVirtualModuleId)
+      const studioDataModule = moduleGraph.getModuleById(
+        resolvedVirtualModuleId
+      );
       if (studioDataModule && ctx.file.startsWith(pathToUserProjectRoot)) {
         await orchestrator.reloadFile(ctx.file);
         studioData = await orchestrator.getStudioData();
-        moduleGraph.invalidateModule(studioDataModule)
+        moduleGraph.invalidateModule(studioDataModule);
       }
     },
   };
