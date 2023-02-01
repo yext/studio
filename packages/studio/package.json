@@ -1,11 +1,12 @@
 {
-  "name": "@yext/studios",
+  "name": "@yext/studio",
   "private": true,
   "version": "0.0.0",
   "types": "./lib/types.d.ts",
   "bin": {
     "studio": "./lib/bin/studio.js"
   },
+  "description": "Some Stuff",
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
     "build": "rm -rf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json && chmod 755 lib/bin/studio.js",
