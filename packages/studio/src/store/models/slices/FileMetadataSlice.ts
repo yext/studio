@@ -22,11 +22,11 @@ export interface FileMetadataSliceStates {
 }
 
 export interface FileMetadataSliceActions {
-  setFileMetadata: (uuid: string, fileMetadata: FileMetadata) => void;
-  getFileMetadata: (uuid: string) => FileMetadata;
-  getModuleMetadata: (uuid: string) => ModuleMetadata;
-  removeFileMetadata: (uuid: string) => void;
-  getComponentMetadata: (uuid: string) => ComponentMetadata;
+  setFileMetadata: (metadataUUID: string, fileMetadata: FileMetadata) => void;
+  getFileMetadata: (metadataUUID: string) => FileMetadata;
+  getModuleMetadata: (metadataUUID: string) => ModuleMetadata;
+  removeFileMetadata: (metadataUUID: string) => void;
+  getComponentMetadata: (metadataUUID: string) => ComponentMetadata;
   setUUIDToImportedComponent: (
     importedComponents: Record<string, ImportType>
   ) => void;
