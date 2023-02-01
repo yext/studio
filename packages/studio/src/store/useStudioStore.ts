@@ -93,7 +93,7 @@ const useStudioStore = create<StudioStore>()(
         commitChanges,
         createModule: getCreateModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
-        actions: new ComponentActions(get),
+        actions: new ComponentActions(() => get().pages, () => get().fileMetadatas),
       };
     })
   )

@@ -1,29 +1,33 @@
 import { ComponentState, PropValues } from "@yext/studio-plugin";
+import FileMetadataSlice from "./models/slices/FileMetadataSlice";
+import PageSlice from "./models/slices/PageSlice";
 import { StudioStore } from "./models/StudioStore";
 
 export default class ComponentActions {
-  constructor(private get: () => StudioStore) {}
+  constructor(
+    private getPages: () => PageSlice,
+    private getFileMetadatas: () => FileMetadataSlice
+  ) {}
 
   getComponentTree = () => {
-    const moduleStateBeingEdited = this.get().pages.getModuleStateBeingEdited();
+    const moduleStateBeingEdited = this.getPages().getModuleStateBeingEdited();
     if (moduleStateBeingEdited) {
-      return this.get().fileMetadatas.getModuleMetadata(
+      return this.getFileMetadatas().getModuleMetadata(
         moduleStateBeingEdited.metadataUUID
       ).componentTree;
     }
-    return this.get().pages.getActivePageState()?.componentTree;
+    return this.getPages().getActivePageState()?.componentTree;
   };
 
   getActiveComponentState = () => {
-    const { activeComponentUUID } = this.get().pages;
-    return this.get()
-      .actions.getComponentTree()
+    const { activeComponentUUID } = this.getPages();
+    return this.getComponentTree()
       ?.find((component) => component.uuid === activeComponentUUID);
   };
 
   updateActiveComponentProps = (props: PropValues) => {
     const { activeComponentUUID, activePageName, getModuleStateBeingEdited } =
-      this.get().pages;
+      this.getPages();
     if (!activeComponentUUID) {
       console.error(
         "Error in updateActiveComponentProps: No active component in this.get()."
@@ -33,13 +37,13 @@ export default class ComponentActions {
 
     const moduleStateBeingEdited = getModuleStateBeingEdited();
     if (moduleStateBeingEdited) {
-      this.get().fileMetadatas.updateComponentPropsInsideModule(
+      this.getFileMetadatas().updateComponentPropsInsideModule(
         moduleStateBeingEdited.metadataUUID,
         activeComponentUUID,
         props
       );
     } else if (activePageName) {
-      this.get().pages.setComponentProps(
+      this.getPages().setComponentProps(
         activePageName,
         activeComponentUUID,
         props
@@ -48,45 +52,45 @@ export default class ComponentActions {
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
-    const moduleStateBeingEdited = this.get().pages.getModuleStateBeingEdited();
-    const activePageName = this.get().pages.activePageName;
+    const moduleStateBeingEdited = this.getPages().getModuleStateBeingEdited();
+    const activePageName = this.getPages().activePageName;
 
     if (moduleStateBeingEdited) {
-      this.get().fileMetadatas.setComponentTreeInModule(
+      this.getFileMetadatas().setComponentTreeInModule(
         moduleStateBeingEdited.metadataUUID,
         componentTree
       );
     } else if (activePageName) {
-      this.get().pages.setComponentTreeInPage(activePageName, componentTree);
+      this.getPages().setComponentTreeInPage(activePageName, componentTree);
     }
   };
 
   addComponent = (componentState: ComponentState) => {
-    const { activePageName, getModuleStateBeingEdited } = this.get().pages;
+    const { activePageName, getModuleStateBeingEdited } = this.getPages();
     const moduleStateBeingEdited = getModuleStateBeingEdited();
     if (moduleStateBeingEdited) {
-      this.get().fileMetadatas.addComponentToModule(
+      this.getFileMetadatas().addComponentToModule(
         moduleStateBeingEdited.metadataUUID,
         componentState
       );
     } else if (activePageName) {
-      this.get().pages.addComponentToPage(activePageName, componentState);
+      this.getPages().addComponentToPage(activePageName, componentState);
     }
   };
 
   removeComponent = (componentUUID: string) => {
-    const { activePageName, getModuleStateBeingEdited } = this.get().pages;
+    const { activePageName, getModuleStateBeingEdited } = this.getPages();
     const moduleStateBeingEdited = getModuleStateBeingEdited();
     if (moduleStateBeingEdited) {
-      this.get().fileMetadatas.removeComponentFromModule(
+      this.getFileMetadatas().removeComponentFromModule(
         moduleStateBeingEdited.metadataUUID,
         componentUUID
       );
     } else if (activePageName) {
-      this.get().pages.removeComponentFromPage(activePageName, componentUUID);
+      this.getPages().removeComponentFromPage(activePageName, componentUUID);
     }
-    if (this.get().pages.activeComponentUUID === componentUUID) {
-      this.get().pages.setActiveComponentUUID(undefined);
+    if (this.getPages().activeComponentUUID === componentUUID) {
+      this.getPages().setActiveComponentUUID(undefined);
     }
   };
 }
