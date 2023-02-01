@@ -134,12 +134,6 @@ export default class ParsingOrchestrator {
     ) {
       delete this.filepathToFileMetadata[filepath];
       this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
-    } else if (filepath === this.paths.siteSettings) {
-      this.siteSettingsFile = new SiteSettingsFile(filepath, this.project);
-    } else if (filepath.startsWith(this.paths.pages)) {
-      const pageName = path.basename(filepath, ".tsx");
-      delete this.pageNameToPageFile[pageName];
-      this.pageNameToPageFile[pageName] = await this.getPageFile(pageName);
     }
   }
 
