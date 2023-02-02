@@ -22,19 +22,20 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     modulesToUpdate: new Set<string>(),
     modulesToRemove: new Set<string>(),
   },
-  setFileMetadata: (uuid: string, metadata: FileMetadata) =>
+  setFileMetadata: (metadataUUID: string, metadata: FileMetadata) =>
     set((store) => {
-      store.UUIDToFileMetadata[uuid] = metadata;
+      store.UUIDToFileMetadata[metadataUUID] = metadata;
       if (metadata.kind === FileMetadataKind.Module) {
-        store.pendingChanges.modulesToUpdate.add(uuid);
+        store.pendingChanges.modulesToUpdate.add(metadataUUID);
       }
     }),
-  getFileMetadata: (uuid: string) => get().UUIDToFileMetadata[uuid],
-  removeFileMetadata: (uuid: string) =>
+  getFileMetadata: (metadataUUID: string) =>
+    get().UUIDToFileMetadata[metadataUUID],
+  removeFileMetadata: (metadataUUID: string) =>
     set((store) => {
-      const metadata = store.UUIDToFileMetadata[uuid];
+      const metadata = store.UUIDToFileMetadata[metadataUUID];
       if (metadata.kind === FileMetadataKind.Module) {
-        delete store.UUIDToFileMetadata[uuid];
+        delete store.UUIDToFileMetadata[metadataUUID];
       } else {
         console.error(
           "removeFileMetadata is only allowed for modules, not:",
@@ -42,13 +43,13 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
         );
       }
     }),
-  getComponentMetadata: (uuid) => {
-    const fileMetadata = get().getFileMetadata(uuid);
+  getComponentMetadata: (metadataUUID) => {
+    const fileMetadata = get().getFileMetadata(metadataUUID);
     assertIsComponentMetadata(fileMetadata);
     return fileMetadata;
   },
-  getModuleMetadata: (uuid) => {
-    const fileMetadata = get().getFileMetadata(uuid);
+  getModuleMetadata: (metadataUUID) => {
+    const fileMetadata = get().getFileMetadata(metadataUUID);
     assertIsModuleMetadata(fileMetadata);
     return fileMetadata;
   },
