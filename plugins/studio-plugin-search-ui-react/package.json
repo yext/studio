@@ -1,0 +1,29 @@
+{
+  "name": "@yext/studio-plugin-search-ui-react",
+  "version": "0.0.0",
+  "description": "",
+  "main": "./lib/cjs/src/index.js",
+  "exports": {
+    ".": {
+      "types": "./lib/esm/src/index.d.ts",
+      "import": "./lib/esm/src/index.js",
+      "require": "./lib/cjs/src/index.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
+    "build": "rm -rf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json",
+    "lint": "eslint . && npm run prettier-check",
+    "prettier-write": "prettier --write .",
+    "prettier-check": "prettier --check ."
+  },
+  "dependencies": {
+    "@yext/search-headless": "^2.2.0",
+    "@yext/search-headless-react": "^2.1.0",
+    "@yext/search-ui-react": "^1.1.0",
+    "@yext/studio": "*"
+  },
+  "peerDependencies": {
+    "react": "^17 || ^18"
+  }
+}

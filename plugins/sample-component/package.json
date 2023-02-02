@@ -8,9 +8,6 @@
       "types": "./lib/esm/index.d.ts",
       "import": "./lib/esm/index.js",
       "require": "./lib/cjs/index.js"
-    },
-    "./virtual-module": {
-      "types": "./virtual-module.d.ts"
     }
   },
   "scripts": {

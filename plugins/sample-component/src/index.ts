@@ -2,7 +2,7 @@ import { PluginConfig } from "@yext/studio-plugin";
 
 export * from "./components";
 
-const PluginConfig: PluginConfig = {
+const pluginConfig: PluginConfig = {
   name: "@yext/sample-component",
   components: {
     AceComponent: "src/components/AceComponent.tsx",
@@ -11,4 +11,4 @@ const PluginConfig: PluginConfig = {
   },
 };
 
-export default PluginConfig;
+export default pluginConfig;
