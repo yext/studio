@@ -11,6 +11,7 @@ import {
 } from "../src";
 import { Project } from "ts-morph";
 import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
+import fs from "fs";
 
 const mockGetPathToModuleResponse = path.join(
   process.cwd(),
@@ -237,4 +238,55 @@ it("throws when the pages folder does not exist", async () => {
   await expect(orchestrator.getStudioData()).rejects.toThrow(
     /^The pages directory does not exist/
   );
+});
+
+describe("reloadFile", () => {
+  const userPaths = getUserPaths(
+    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
+  );
+  const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
+  const originalFile = fs.readFileSync(modulePath, "utf-8");
+  const project = createTsMorphProject();
+  const orchestrator = new ParsingOrchestrator(project, userPaths, []);
+
+  afterEach(() => {
+    fs.writeFileSync(modulePath, originalFile);
+  });
+
+  it("reloadFile can reload a module file", () => {
+    const updatedModuleFile = `
+    import Banner from "../components/Banner";
+
+    export default function NestedModule() {
+      return (
+        <Banner />
+      );
+    }
+  `;
+    const originalTree = orchestrator
+      .getModuleFile(modulePath)
+      .getModuleMetadata().componentTree;
+    expect(originalTree).toEqual([
+      expect.objectContaining({
+        kind: ComponentStateKind.Fragment,
+      }),
+      expect.objectContaining({
+        componentName: "Banner",
+      }),
+      expect.objectContaining({
+        componentName: "Banner",
+      }),
+    ]);
+
+    fs.writeFileSync(modulePath, updatedModuleFile);
+    orchestrator.reloadFile(modulePath);
+    const updatedTree = orchestrator
+      .getModuleFile(modulePath)
+      .getModuleMetadata().componentTree;
+    expect(updatedTree).toEqual([
+      expect.objectContaining({
+        componentName: "Banner",
+      }),
+    ]);
+  });
 });
