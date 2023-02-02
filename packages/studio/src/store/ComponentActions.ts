@@ -1,6 +1,13 @@
-import { ComponentState, PropValues } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentTreeHelpers,
+  ModuleMetadata,
+  ModuleState,
+  PropValues,
+} from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
+import { v4 } from "uuid";
 
 export default class ComponentActions {
   constructor(
@@ -92,5 +99,37 @@ export default class ComponentActions {
     if (this.getPages().activeComponentUUID === componentUUID) {
       this.getPages().setActiveComponentUUID(undefined);
     }
+  };
+
+  /**
+   * @param moduleMetadata - the {@link ModuleMetadata} of the module to detach.
+   * @param instanceUUID - the instance to detach.
+   */
+  detachModuleInstance = (
+    moduleMetadata: ModuleMetadata,
+    moduleState: ModuleState
+  ) => {
+    const currentComponentTree = this.getComponentTree();
+    if (!currentComponentTree) {
+      return;
+    }
+    const updatedComponentTree = currentComponentTree.flatMap(
+      (componentState) => {
+        if (componentState.uuid !== moduleState.uuid) {
+          return componentState;
+        }
+        return ComponentTreeHelpers.mapComponentTreeParentsFirst<ComponentState>(
+          moduleMetadata.componentTree,
+          (child, parentValue) => {
+            return {
+              ...child,
+              uuid: v4(),
+              parentUUID: parentValue?.uuid ?? componentState.parentUUID,
+            };
+          }
+        );
+      }
+    );
+    this.updateComponentTree(updatedComponentTree);
   };
 }
