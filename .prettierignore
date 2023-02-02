@@ -1,4 +1,5 @@
 **/coverage
 **/lib
 packages/studio-plugin/tests/__fixtures__/PageFile/noReturnParenthesesPage.tsx
+packages/studio/src/tailwind-full.css
 .github
