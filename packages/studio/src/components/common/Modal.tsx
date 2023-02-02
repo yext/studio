@@ -24,8 +24,8 @@ const customReactModalStyles = {
     transform: "translate(-50%, -50%)",
   },
   overlay: {
-    zIndex: 1000
-  }
+    zIndex: 1000,
+  },
 };
 
 export default function Modal({
