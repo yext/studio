@@ -18,6 +18,7 @@ const pages: PagesRecord = {
     componentTree: [resultsComponent],
     cssImports: [],
     filepath: "mock-filepath",
+    entityFiles: ["mock-entityFile"],
   },
 };
 
@@ -46,6 +47,12 @@ describe("PageSlice", () => {
       const activeComponentUUID =
         useStudioStore.getState().pages.activeComponentUUID;
       expect(activeComponentUUID).toBeUndefined();
+    });
+
+    it("updates activeEntityFile when setActivePageName is used", () => {
+      useStudioStore.getState().pages.setActivePageName("vertical");
+      const activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
+      expect(activeEntityFile).toEqual("mock-entityFile");
     });
 
     it("logs an error when using setActivePageName for a page not found in store", () => {

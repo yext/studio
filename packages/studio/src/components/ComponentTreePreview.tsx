@@ -197,7 +197,10 @@ function useExpressionSources(
 
   useLayoutEffect(() => {
     if (!activeEntityFile) {
-      return;
+      return setExpressionSources((prev) => {
+        const { document: _, ...otherSources } = prev;
+        return otherSources;
+      });
     }
     const entityFilepath = `${initialStudioData.userPaths.localData}/${activeEntityFile}`;
     import(/* @vite-ignore */ entityFilepath).then((importedModule) => {
