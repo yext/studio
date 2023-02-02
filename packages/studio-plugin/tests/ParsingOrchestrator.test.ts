@@ -253,7 +253,7 @@ describe("reloadFile", () => {
     fs.writeFileSync(modulePath, originalFile);
   });
 
-  it("reloadFile can reload a module file", async () => {
+  it("reloadFile can reload a module file", () => {
     const updatedModuleFile = `
     import Banner from "../components/Banner";
 
@@ -279,7 +279,7 @@ describe("reloadFile", () => {
     ]);
 
     fs.writeFileSync(modulePath, updatedModuleFile);
-    await orchestrator.reloadFile(modulePath);
+    orchestrator.reloadFile(modulePath);
     const updatedTree = orchestrator
       .getModuleFile(modulePath)
       .getModuleMetadata().componentTree;

@@ -92,7 +92,7 @@ export default async function createStudioPlugin(
         resolvedVirtualModuleId
       );
       if (studioDataModule && ctx.file.startsWith(pathToUserProjectRoot)) {
-        await orchestrator.reloadFile(ctx.file);
+        orchestrator.reloadFile(ctx.file);
         studioData = await orchestrator.getStudioData();
         moduleGraph.invalidateModule(studioDataModule);
       }

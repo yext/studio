@@ -123,7 +123,7 @@ export default class ParsingOrchestrator {
    * Given a filepath, performs necessary actions for reloading the file,
    * so that getStudioData returns up to date information.
    */
-  async reloadFile(filepath: string) {
+  reloadFile(filepath: string) {
     const sourceFile = this.project.getSourceFile(filepath);
     if (sourceFile) {
       sourceFile.refreshFromFileSystemSync();
