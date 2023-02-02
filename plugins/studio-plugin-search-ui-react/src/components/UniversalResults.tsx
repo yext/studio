@@ -2,14 +2,16 @@ import { UniversalResults as UnwrappedUniversalResults } from "@yext/search-ui-r
 
 export default function UniversalResults() {
   return (
-    <UnwrappedUniversalResults verticalConfigMap={{
-      people: {},
-      products: {},
-      links: {},
-      KM: {},
-      financial_professionals: {},
-      healthcare_professionals: {},
-      jobs: {}
-    }}/>
-  )
+    <UnwrappedUniversalResults
+      verticalConfigMap={{
+        people: {},
+        products: {},
+        links: {},
+        KM: {},
+        financial_professionals: {},
+        healthcare_professionals: {},
+        jobs: {},
+      }}
+    />
+  );
 }
