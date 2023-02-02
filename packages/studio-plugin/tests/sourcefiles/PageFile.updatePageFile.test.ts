@@ -90,6 +90,45 @@ describe("updatePageFile", () => {
       );
     });
 
+    it("does not add stream config if it is not already defined and no document paths are used", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/EmptyPage"),
+        throwIfCalled,
+        jest.fn(),
+        tsMorphProject
+      );
+      pageFile.updatePageFile(
+        {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "SimpleBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Literal,
+                  value: "title",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid",
+            },
+          ],
+          cssImports: [],
+          filepath: "mock-filepath",
+        },
+        { updateStreamConfig: true }
+      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithoutStreamConfig"),
+          "utf-8"
+        )
+      );
+    });
+
     it("adds new stream document paths used in new page state", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const pageFile = new PageFile(

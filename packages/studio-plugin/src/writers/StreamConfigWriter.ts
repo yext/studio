@@ -80,6 +80,8 @@ export default class StreamConfigWriter {
   /**
    * Creates a Pages template config by merging current stream config, if defined,
    * with a new stream configuration used by the constructed page from Studio.
+   * If there is no current stream config and there are no used document paths
+   * found, then it returns undefined.
    *
    * @param componentTree - the states of the page's component tree
    * @param currentTemplateConfig - template config defined in page file
@@ -88,8 +90,12 @@ export default class StreamConfigWriter {
   private getUpdatedTemplateConfig(
     componentTree: ComponentState[],
     currentTemplateConfig?: TemplateConfig
-  ): TemplateConfig {
+  ): TemplateConfig | undefined {
     const usedDocumentPaths = this.getUsedStreamDocumentPaths(componentTree);
+    if (!currentTemplateConfig && usedDocumentPaths.size === 0) {
+      return undefined;
+    }
+
     const fields = [...usedDocumentPaths]
       // Stream config's fields do not allow specifying an index of a field.
       .map((documentPath) => documentPath.split("document.")[1].split("[")[0])
@@ -114,11 +120,13 @@ export default class StreamConfigWriter {
 
   /**
    * Updates the stream configuration by mutating the current template config
-   * or adding a template config definition to the original sourceFile.
+   * or adding a template config definition to the original sourceFile if any
+   * document paths are used in the component tree.
    *
    * @param componentTree - the states of the page's component tree
+   * @returns Whether or not a stream config was written to the sourceFile
    */
-  updateStreamConfig(componentTree: ComponentState[]): void {
+  updateStreamConfig(componentTree: ComponentState[]): boolean {
     const streamObjectLiteralExp =
       this.studioSourceFileParser.getExportedObjectExpression(
         STREAM_CONFIG_VARIABLE_NAME
@@ -133,12 +141,16 @@ export default class StreamConfigWriter {
       currentTemplateConfig
     );
 
-    const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
-    this.studioSourceFileWriter.updateVariableStatement(
-      STREAM_CONFIG_VARIABLE_NAME,
-      stringifiedConfig,
-      STREAM_CONFIG_VARIABLE_TYPE
-    );
+    if (updatedTemplateConfig) {
+      const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
+      this.studioSourceFileWriter.updateVariableStatement(
+        STREAM_CONFIG_VARIABLE_NAME,
+        stringifiedConfig,
+        STREAM_CONFIG_VARIABLE_TYPE
+      );
+      return true;
+    }
+    return false;
   }
 
   addStreamImport(): void {
