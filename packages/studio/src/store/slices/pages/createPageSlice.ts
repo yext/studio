@@ -56,14 +56,14 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         };
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
-      get().setActivePageName(pageName);
+      get().setActivePage(pageName);
       return true;
     },
     removePage: (pageName: string) => {
       set((store) => {
         delete store.pages[pageName];
         if (pageName === store.activePageName) {
-          get().setActivePageName(undefined);
+          get().setActivePage(undefined);
         }
         const { pagesToRemove, pagesToUpdate } = store.pendingChanges;
         pagesToUpdate.delete(pageName);
@@ -120,7 +120,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   };
 
   const activePageActions = {
-    setActivePageName: (activePageName: string | undefined) => {
+    setActivePage: (activePageName: string | undefined) => {
       if (activePageName === undefined) {
         set({
           activePageName,
