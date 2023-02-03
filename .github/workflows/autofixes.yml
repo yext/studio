@@ -36,7 +36,8 @@ jobs:
         run: npx tailwindcss -o src/tailwind-full.css -c ../../.github/tailwind-safelist-all.config.js --minify
         working-directory: ./packages/studio
       - name: Compress Full Tailwind Bundle
-        run: gzip packages/studio/src/tailwind-full.css
+        run: node .github/compress-tailwind-full.js
+      - run: rm packages/studio/src/tailwind-full.css
       - name: Automated Tailwind Bundle Sync
         uses: EndBug/add-and-commit@v9
         with:
