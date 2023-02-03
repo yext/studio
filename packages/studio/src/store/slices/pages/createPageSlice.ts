@@ -56,14 +56,14 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         };
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
-      get().setActivePageName(pageName);
+      get().setActivePage(pageName);
       return true;
     },
     removePage: (pageName: string) => {
       set((store) => {
         delete store.pages[pageName];
         if (pageName === store.activePageName) {
-          get().setActivePageName(undefined);
+          get().setActivePage(undefined);
         }
         const { pagesToRemove, pagesToUpdate } = store.pendingChanges;
         pagesToUpdate.delete(pageName);
@@ -120,13 +120,26 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   };
 
   const activePageActions = {
-    setActivePageName: (activePageName: string | undefined) => {
-      if (activePageName === undefined || get().pages[activePageName]) {
-        set({ activePageName, activeComponentUUID: undefined });
+    setActivePage: (activePageName: string | undefined) => {
+      if (activePageName === undefined) {
+        set({
+          activePageName,
+          activeComponentUUID: undefined,
+          activeEntityFile: undefined,
+        });
       } else {
-        console.error(
-          `Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`
-        );
+        const activePageState = get().pages[activePageName];
+        if (activePageState) {
+          set({
+            activePageName,
+            activeComponentUUID: undefined,
+            activeEntityFile: activePageState.entityFiles?.[0],
+          });
+        } else {
+          console.error(
+            `Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`
+          );
+        }
       }
     },
     setActivePageState: (pageState: PageState) =>

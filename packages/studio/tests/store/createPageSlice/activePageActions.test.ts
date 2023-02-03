@@ -18,6 +18,7 @@ const pages: PagesRecord = {
     componentTree: [resultsComponent],
     cssImports: [],
     filepath: "mock-filepath",
+    entityFiles: ["mock-entityFile"],
   },
 };
 
@@ -30,29 +31,35 @@ describe("PageSlice", () => {
       });
     });
 
-    it("updates activePageName using setActivePageName", () => {
-      useStudioStore.getState().pages.setActivePageName("vertical");
+    it("updates activePageName using setActivePage", () => {
+      useStudioStore.getState().pages.setActivePage("vertical");
       const activePageName = useStudioStore.getState().pages.activePageName;
       expect(activePageName).toEqual("vertical");
     });
 
-    it("resets activeComponentUUID when setActivePageName is used", () => {
+    it("resets activeComponentUUID when setActivePage is used", () => {
       mockPageSliceStates({
         pages,
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
       });
-      useStudioStore.getState().pages.setActivePageName("vertical");
+      useStudioStore.getState().pages.setActivePage("vertical");
       const activeComponentUUID =
         useStudioStore.getState().pages.activeComponentUUID;
       expect(activeComponentUUID).toBeUndefined();
     });
 
-    it("logs an error when using setActivePageName for a page not found in store", () => {
+    it("updates activeEntityFile when setActivePage is used", () => {
+      useStudioStore.getState().pages.setActivePage("vertical");
+      const activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
+      expect(activeEntityFile).toEqual("mock-entityFile");
+    });
+
+    it("logs an error when using setActivePage for a page not found in store", () => {
       const consoleErrorSpy = jest
         .spyOn(global.console, "error")
         .mockImplementation();
-      useStudioStore.getState().pages.setActivePageName("location");
+      useStudioStore.getState().pages.setActivePage("location");
       const activePageName = useStudioStore.getState().pages.activePageName;
       expect(activePageName).toEqual("universal");
       expect(consoleErrorSpy).toBeCalledWith(

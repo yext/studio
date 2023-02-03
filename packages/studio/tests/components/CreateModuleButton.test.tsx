@@ -56,7 +56,7 @@ beforeEach(() => {
 });
 
 it("does not render when there is no active page state", () => {
-  useStudioStore.getState().pages.setActivePageName(undefined);
+  useStudioStore.getState().pages.setActivePage(undefined);
   render(<CreateModuleButton />);
   expect(screen.queryByRole("button")).toBeNull();
 });

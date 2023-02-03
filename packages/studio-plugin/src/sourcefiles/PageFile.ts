@@ -102,11 +102,13 @@ export default class PageFile {
       pageComponent: FunctionDeclaration | ArrowFunction
     ) => {
       if (options.updateStreamConfig) {
-        this.streamConfigWriter.updateStreamConfig(
+        const hasStreamConfig = this.streamConfigWriter.updateStreamConfig(
           updatedPageState.componentTree
         );
-        this.streamConfigWriter.addStreamParameter(pageComponent);
-        this.streamConfigWriter.addStreamImport();
+        if (hasStreamConfig) {
+          this.streamConfigWriter.addStreamParameter(pageComponent);
+          this.streamConfigWriter.addStreamImport();
+        }
       }
     };
 

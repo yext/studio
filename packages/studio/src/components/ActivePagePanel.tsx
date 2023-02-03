@@ -16,7 +16,7 @@ import RemovePageButton from "./RemovePageButton";
 export default function ActivePagePanel(): JSX.Element {
   const {
     pages,
-    setActivePageName,
+    setActivePage,
     activePageName,
     setModuleUUIDBeingEdited,
     getModuleStateBeingEdited,
@@ -35,7 +35,7 @@ export default function ActivePagePanel(): JSX.Element {
               invisible: !isActivePage,
             });
             function handleSelectPage() {
-              setActivePageName(pageName);
+              setActivePage(pageName);
               setModuleUUIDBeingEdited(undefined);
             }
             return (
@@ -60,7 +60,7 @@ export default function ActivePagePanel(): JSX.Element {
     [
       activePageName,
       moduleStateBeingEdited,
-      setActivePageName,
+      setActivePage,
       setModuleUUIDBeingEdited,
     ]
   );

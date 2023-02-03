@@ -89,7 +89,7 @@ export default class StudioSourceFileWriter {
   }): void {
     const { source, namedImports, defaultImport } = importData;
     const importDeclaration = this.sourceFile.getImportDeclaration(
-      (i) => i.getModuleSpecifierValue() !== source
+      (i) => i.getModuleSpecifierValue() === source
     );
     if (importDeclaration) {
       namedImports && importDeclaration.addNamedImports(namedImports);

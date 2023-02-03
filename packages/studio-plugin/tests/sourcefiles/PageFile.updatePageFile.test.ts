@@ -52,9 +52,9 @@ describe("updatePageFile", () => {
     });
 
     it("adds template config variable when it is not already defined", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = new PageFile(
-        getPagePath("updatePageFile/EmptyPage"),
+        getPagePath("updatePageFile/PageWithAComponent"),
         throwIfCalled,
         jest.fn(),
         tsMorphProject
@@ -64,7 +64,7 @@ describe("updatePageFile", () => {
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
-              componentName: "SimpleBanner",
+              componentName: "ComplexBanner",
               uuid: "mock-uuid-0",
               props: {
                 title: {
@@ -82,7 +82,7 @@ describe("updatePageFile", () => {
         { updateStreamConfig: true }
       );
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("EmptyPage.tsx"),
+        expect.stringContaining("PageWithAComponent.tsx"),
         fs.readFileSync(
           getPagePath("updatePageFile/PageWithStreamConfig"),
           "utf-8"
@@ -90,8 +90,47 @@ describe("updatePageFile", () => {
       );
     });
 
+    it("does not add stream config if it is not already defined and no document paths are used", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/PageWithAComponent"),
+        throwIfCalled,
+        jest.fn(),
+        tsMorphProject
+      );
+      pageFile.updatePageFile(
+        {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Literal,
+                  value: "title",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid",
+            },
+          ],
+          cssImports: [],
+          filepath: "mock-filepath",
+        },
+        { updateStreamConfig: true }
+      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithAComponent.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithoutStreamConfig"),
+          "utf-8"
+        )
+      );
+    });
+
     it("adds new stream document paths used in new page state", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPage"),
         throwIfCalled,
@@ -116,7 +155,7 @@ describe("updatePageFile", () => {
     });
 
     it("removes unused stream document paths", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
         throwIfCalled,
@@ -128,7 +167,7 @@ describe("updatePageFile", () => {
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
-              componentName: "SimpleBanner",
+              componentName: "ComplexBanner",
               uuid: "mock-uuid-0",
               props: {
                 title: {
