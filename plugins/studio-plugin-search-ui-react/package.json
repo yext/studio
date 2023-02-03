@@ -1,7 +1,11 @@
 {
   "name": "@yext/studio-plugin-search-ui-react",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "",
+  "files": [
+    "lib",
+    "src"
+  ],
   "main": "./lib/cjs/src/index.js",
   "exports": {
     ".": {

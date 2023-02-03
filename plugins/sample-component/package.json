@@ -2,6 +2,10 @@
   "name": "@yext/sample-component",
   "private": true,
   "version": "0.0.0",
+  "files": [
+    "lib",
+    "src"
+  ],
   "main": "./lib/cjs/index.js",
   "exports": {
     ".": {
