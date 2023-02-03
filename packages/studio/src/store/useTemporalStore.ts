@@ -1,4 +1,4 @@
-import create from "zustand";
+import { useStore } from "zustand";
 import useStudioStore from "./useStudioStore";
 
 /**
@@ -6,6 +6,8 @@ import useStudioStore from "./useStudioStore";
  * future versions of the store and provides actions for navigating between
  * them (`undo()` and `redo()`) and clearing the history (`clear()`).
  */
-const useTemporalStore = create(useStudioStore.temporal);
+function useTemporalStore() {
+  return useStore(useStudioStore.temporal);
+}
 
 export default useTemporalStore;
