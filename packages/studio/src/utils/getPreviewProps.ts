@@ -7,7 +7,7 @@ import {
   PropShape,
   transformPropValuesToRaw,
 } from "@yext/studio-plugin";
-import lodashGet from "lodash/get";
+import { get } from "lodash";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 
 /**
@@ -115,7 +115,7 @@ function getExpressionValue(
       return null;
     }
     const newPropValue =
-      (lodashGet({ [parentPath]: sourceObject }, path) as unknown) ?? path;
+      (get({ [parentPath]: sourceObject }, path) as unknown) ?? path;
     const propVal = {
       kind: PropValueKind.Literal,
       valueType: propType,

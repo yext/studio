@@ -2,7 +2,7 @@ import { PluginConfig, StudioConfig } from "../types";
 import fs from "fs";
 import path from "path";
 import getUserPaths from "./getUserPaths";
-import lodashMerge from "lodash/merge";
+import { merge } from "lodash";
 
 type RecursiveRequired<T> = {
   [P in keyof T]-?: T[P] extends object
@@ -39,7 +39,7 @@ export default async function getStudioConfig(
     .default as StudioConfig;
   studioConfig.plugins =
     studioConfig.plugins && handleDefaultImports(studioConfig.plugins);
-  return lodashMerge({}, defaultConfig, studioConfig);
+  return merge({}, defaultConfig, studioConfig);
 }
 
 function handleDefaultImports(

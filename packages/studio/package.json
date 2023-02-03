@@ -1,7 +1,6 @@
 {
   "name": "@yext/studio",
-  "private": true,
-  "version": "0.0.0",
+  "version": "0.1.0",
   "types": "./lib/types.d.ts",
   "bin": {
     "studio": "./lib/bin/studio.js"
