@@ -15,5 +15,17 @@ export default defineConfig(async (args: ConfigEnv): Promise<UserConfig> => {
     css: {
       postcss: __dirname,
     },
+    optimizeDeps: {
+      include: [
+        "recent-searches",
+        "hashlru",
+        "lodash/isEqual",
+        "prop-types",
+        "react-dom",
+        "raf",
+        "cross-fetch",
+        "mapbox-gl",
+      ],
+    },
   };
 });
