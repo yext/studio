@@ -6,4 +6,4 @@ const raw = fs.readFileSync(path.resolve(__dirname, '../packages/studio/src/tail
 const compressed = brotli.compress(raw, {
   quality: 11
 });
-fs.writeFileSync(path.resolve(__dirname, '../packages/studio/src/tailwind-full.css.brotli'), compressed);
+fs.writeFileSync(path.resolve(__dirname, '../packages/studio/src/tailwind-full.css.br'), compressed);
