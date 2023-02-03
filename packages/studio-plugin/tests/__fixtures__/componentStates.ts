@@ -102,7 +102,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
   fragmentComponent,
   {
     kind: ComponentStateKind.Standard,
-    componentName: "SimpleBanner",
+    componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-1",
     metadataUUID: "banner-metadata",
@@ -116,7 +116,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: "SimpleBanner",
+    componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-2",
     metadataUUID: "banner-metadata",
@@ -130,7 +130,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: "SimpleBanner",
+    componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-3",
     metadataUUID: "banner-metadata",
@@ -144,7 +144,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
   },
   {
     kind: ComponentStateKind.Standard,
-    componentName: "SimpleBanner",
+    componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-4",
     metadataUUID: "banner-metadata",

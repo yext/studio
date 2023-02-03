@@ -1,5 +1,5 @@
-import SimpleBanner from "../../ComponentFile/SimpleBanner";
+import ComplexBanner from "../../ComponentFile/ComplexBanner";
 
 export default function IndexPage() {
-  return <SimpleBanner title="title" />;
+  return <ComplexBanner title="title" />;
 }

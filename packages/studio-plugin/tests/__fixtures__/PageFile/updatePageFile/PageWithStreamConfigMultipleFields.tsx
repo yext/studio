@@ -1,5 +1,5 @@
 import { TemplateConfig, TemplateProps } from "@yext/pages";
-import SimpleBanner from "../../ComponentFile/SimpleBanner";
+import ComplexBanner from "../../ComponentFile/ComplexBanner";
 
 export const config: TemplateConfig = {
   stream: {
@@ -13,10 +13,10 @@ export const config: TemplateConfig = {
 export default function IndexPage({ document }: TemplateProps) {
   return (
     <>
-      <SimpleBanner title={document.title} />
-      <SimpleBanner title={`this is ${document.stringLiteral}`} />
-      <SimpleBanner title={document.arrayIndex[0]} />
-      <SimpleBanner title="document.notAStreamField" />
+      <ComplexBanner title={document.title} />
+      <ComplexBanner title={`this is ${document.stringLiteral}`} />
+      <ComplexBanner title={document.arrayIndex[0]} />
+      <ComplexBanner title="document.notAStreamField" />
     </>
   );
 }
