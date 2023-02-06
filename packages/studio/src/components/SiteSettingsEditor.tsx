@@ -28,7 +28,6 @@ export default function SiteSettingsEditor(): JSX.Element {
 
   const updateValues = useCallback(
     (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
-      console.log("updatevalues", propName, updatedProp);
       setValues({ ...siteSettingsValues, [propName]: updatedProp });
     },
     [siteSettingsValues, setValues]
