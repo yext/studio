@@ -10,7 +10,10 @@ export type SiteSettingsShape = {
   [key: string]: PropMetadata<SiteSettingsPropValueType>;
 };
 
-export type SiteSettingsPropValueType = Exclude<PropValueType, PropValueType.ReactNode>
+export type SiteSettingsPropValueType = Exclude<
+  PropValueType,
+  PropValueType.ReactNode
+>;
 
 export type SiteSettingsValues = {
   [propName: string]: LiteralProp<SiteSettingsValues>;

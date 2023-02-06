@@ -137,6 +137,8 @@ export default class TypeGuards {
   static isSiteSettingsShape(
     propShape: PropShape
   ): propShape is SiteSettingsShape {
-    return Object.values(propShape).every(metadata => metadata.type !== PropValueType.ReactNode);
+    return Object.values(propShape).every(
+      (metadata) => metadata.type !== PropValueType.ReactNode
+    );
   }
 }

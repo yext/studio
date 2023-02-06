@@ -28,7 +28,7 @@ export default function SiteSettingsEditor(): JSX.Element {
 
   const updateValues = useCallback(
     (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
-      console.log('updatevalues', propName, updatedProp)
+      console.log("updatevalues", propName, updatedProp);
       setValues({ ...siteSettingsValues, [propName]: updatedProp });
     },
     [siteSettingsValues, setValues]
@@ -62,8 +62,9 @@ function renderSiteSettings(
   );
 
   return sortedShape.map(([propName, propMetadata], index) => {
-    const propVal: LiteralProp<SiteSettingsValues> | undefined = siteSettingsValues[propName];
-    const valueType = propMetadata.type
+    const propVal: LiteralProp<SiteSettingsValues> | undefined =
+      siteSettingsValues[propName];
+    const valueType = propMetadata.type;
     if (valueType !== PropValueType.Object) {
       return (
         <SimplePropInput
@@ -130,8 +131,8 @@ function RecursiveGroup(props: {
 }
 
 function SimplePropInput(props: {
-  valueType: Exclude<SiteSettingsPropValueType, PropValueType.Object>,
-  value?: string | number | boolean,
+  valueType: Exclude<SiteSettingsPropValueType, PropValueType.Object>;
+  value?: string | number | boolean;
   updateValues: (
     propName: string,
     updatedProp: LiteralProp<SiteSettingsValues>
@@ -144,7 +145,7 @@ function SimplePropInput(props: {
       const updatedValue = {
         kind: PropValueKind.Literal,
         value: rawValue,
-        valueType
+        valueType,
       };
       if (!TypeGuards.isValidPropValue(updatedValue)) {
         console.error(

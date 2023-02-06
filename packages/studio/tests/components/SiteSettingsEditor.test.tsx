@@ -22,7 +22,7 @@ const shape: SiteSettingsShape = {
   },
   experienceKey: {
     type: PropValueType.string,
-  }
+  },
 } as const;
 const values: SiteSettingsValues = {
   "Global Colors": {
@@ -62,21 +62,21 @@ it("can render nested site settings", () => {
   expect(screen.getByText("experienceKey")).toBeDefined();
 });
 
-it('can render even when optional settings are not specified', () => {
+it("can render even when optional settings are not specified", () => {
   mockStore({
     siteSettings: {
       shape: {
         ...shape,
         optionalString: {
-          type: PropValueType.string
-        }
+          type: PropValueType.string,
+        },
       },
       values,
     },
   });
   render(<SiteSettingsEditor />);
   expect(screen.getByText("Global Colors")).toBeDefined();
-})
+});
 
 it("can edit site settings", () => {
   const setValues = jest.fn();
