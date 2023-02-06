@@ -108,7 +108,7 @@ describe("aggregates data as expected", () => {
     );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining("modules/NestedModule.tsx"),
+        filepath: expect.stringContaining("modules/a/b/NestedModule.tsx"),
         kind: FileMetadataKind.Module,
         componentTree: [
           expect.objectContaining({ kind: ComponentStateKind.Fragment }),

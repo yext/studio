@@ -45,7 +45,7 @@ export default async function createStudioPlugin(
   // Vite will import deps like react-dev-utils in the browser.
   // This causes an error to be thrown regarding `process` not being defined.
   const { default: openBrowser } = await import("react-dev-utils/openBrowser");
-  const { readdirSync, existsSync } = await import("fs");
+  const { readdirSync, existsSync, lstatSync } = await import("fs");
   const path = await import("path");
 
   return {
@@ -58,7 +58,11 @@ export default async function createStudioPlugin(
         if (existsSync(dirPath)) {
           readdirSync(dirPath).forEach((filename) => {
             const filepath = path.join(dirPath, filename);
-            this.addWatchFile(filepath);
+            if (lstatSync(filepath).isDirectory()) {
+              watchDir(filepath);
+            } else {
+              this.addWatchFile(filepath);
+            }
           });
         }
       };
