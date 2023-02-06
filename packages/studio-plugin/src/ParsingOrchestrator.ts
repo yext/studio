@@ -132,8 +132,13 @@ export default class ParsingOrchestrator {
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)
     ) {
+      const originalMetadataUUID =
+        this.filepathToFileMetadata[filepath].metadataUUID;
       delete this.filepathToFileMetadata[filepath];
-      this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
+      this.filepathToFileMetadata[filepath] = {
+        ...this.getFileMetadata(filepath),
+        metadataUUID: originalMetadataUUID,
+      };
     }
   }
 

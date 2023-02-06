@@ -97,7 +97,7 @@ export default async function createStudioPlugin(
         moduleGraph.invalidateModule(studioDataModule);
         const data: StudioHMRPayload = {
           updateType: getHMRUpdateType(ctx.file, studioConfig.paths),
-          studioData
+          studioData,
         };
         ctx.server.ws.send({
           type: "custom",
@@ -110,21 +110,21 @@ export default async function createStudioPlugin(
 }
 
 function getHMRUpdateType(file: string, userPaths: UserPaths) {
-  const updateTypes: Exclude<keyof UserPaths, 'localData'>[] = [
-    'siteSettings',
-    'components',
-    'modules',
-    'pages'
+  const updateTypes: Exclude<keyof UserPaths, "localData">[] = [
+    "siteSettings",
+    "components",
+    "modules",
+    "pages",
   ];
   for (const updateType of updateTypes) {
     if (file.startsWith(userPaths[updateType])) {
-      return updateType
+      return updateType;
     }
   }
-  return 'full';
+  return "full";
 }
 
 export type StudioHMRPayload = {
-  updateType: 'siteSettings' | 'components' | 'modules' | 'pages' | 'full';
+  updateType: "siteSettings" | "components" | "modules" | "pages" | "full";
   studioData: StudioData;
-}
+};

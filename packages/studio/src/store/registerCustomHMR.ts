@@ -5,17 +5,17 @@ import useStudioStore from "./useStudioStore";
 export default function registerCustomHMR() {
   if (import.meta.hot) {
     import.meta.hot.on("studio:update", (hmrPayload: StudioHMRPayload) => {
-      console.log(hmrPayload)
+      console.log(hmrPayload);
       const { updateType, studioData } = hmrPayload;
-      switch(updateType) {
-        case 'components':
-        case 'modules':
-          syncFileMetadata(hmrPayload.studioData);
+      switch (updateType) {
+        case "components":
+        case "modules":
+          syncFileMetadata(studioData);
           break;
-        case 'pages':
+        case "pages":
           syncPages(studioData);
           break;
-        case 'siteSettings':
+        case "siteSettings":
           syncSiteSettings(studioData);
           break;
         default:
@@ -39,7 +39,6 @@ function syncPages(studioData: StudioData) {
     store.pages.pages = studioData.pageNameToPageState;
   });
 }
-
 
 function syncSiteSettings(studioData: StudioData) {
   useStudioStore.setState((store) => {
