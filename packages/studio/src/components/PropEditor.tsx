@@ -1,4 +1,5 @@
 import {
+  NestedPropMetadata,
   PropMetadata,
   PropVal,
   PropValueKind,
@@ -13,7 +14,7 @@ import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 
 interface PropEditorProps {
   propName: string;
-  propMetadata: PropMetadata;
+  propMetadata: Exclude<PropMetadata, NestedPropMetadata>;
   currentPropValue?: string | number | boolean;
   currentPropKind?: PropValueKind;
   onPropChange: (propName: string, propVal: PropVal) => void;
