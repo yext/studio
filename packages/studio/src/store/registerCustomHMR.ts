@@ -5,7 +5,6 @@ import useStudioStore from "./useStudioStore";
 export default function registerCustomHMR() {
   if (import.meta.hot) {
     import.meta.hot.on("studio:update", (hmrPayload: StudioHMRPayload) => {
-      console.log(hmrPayload);
       const { updateType, studioData } = hmrPayload;
       switch (updateType) {
         case "components":
