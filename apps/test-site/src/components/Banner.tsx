@@ -15,7 +15,7 @@ export const initialProps: BannerProps = {
   bgColor: "#abcdef",
   num: 5,
   bool: true,
-  title: "initial title",
+  title: "initial !!",
 };
 
 export default function Banner(props: BannerProps) {

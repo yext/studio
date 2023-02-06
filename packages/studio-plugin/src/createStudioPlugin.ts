@@ -6,7 +6,7 @@ import ParsingOrchestrator, {
 import configureStudioServer from "./configureStudioServer";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
-import { UserPaths } from "./types";
+import { StudioData, UserPaths } from "./types";
 
 /**
  * Handles server-client communication.
@@ -95,12 +95,36 @@ export default async function createStudioPlugin(
         orchestrator.reloadFile(ctx.file);
         studioData = await orchestrator.getStudioData();
         moduleGraph.invalidateModule(studioDataModule);
+        const data: StudioHMRPayload = {
+          updateType: getHMRUpdateType(ctx.file, studioConfig.paths),
+          studioData
+        };
         ctx.server.ws.send({
           type: "custom",
           event: "studio:update",
-          data: studioData,
+          data,
         });
       }
     },
   };
+}
+
+function getHMRUpdateType(file: string, userPaths: UserPaths) {
+  const updateTypes: Exclude<keyof UserPaths, 'localData'>[] = [
+    'siteSettings',
+    'components',
+    'modules',
+    'pages'
+  ];
+  for (const updateType of updateTypes) {
+    if (file.startsWith(userPaths[updateType])) {
+      return updateType
+    }
+  }
+  return 'full';
+}
+
+export type StudioHMRPayload = {
+  updateType: 'siteSettings' | 'components' | 'modules' | 'pages' | 'full';
+  studioData: StudioData;
 }
