@@ -95,6 +95,11 @@ export default async function createStudioPlugin(
         orchestrator.reloadFile(ctx.file);
         studioData = await orchestrator.getStudioData();
         moduleGraph.invalidateModule(studioDataModule);
+        ctx.server.ws.send({
+          type: 'custom',
+          event: 'studio:update',
+          data: studioData
+        })
       }
     },
   };
