@@ -15,6 +15,7 @@ import {
   FileMetadataKind,
   PropValues,
   ComponentState,
+  transformPropValuesToRaw,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
@@ -22,7 +23,6 @@ import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import initialStudioData from "virtual:yext-studio";
-import { transformPropValuesToRaw } from "@yext/studio-plugin";
 import classNames from "classnames";
 
 interface ComponentTreePreviewProps {
@@ -87,6 +87,7 @@ function useComponentTreeElements(
               componentTree={metadata.componentTree}
               props={c.props}
               isWithinModule={true}
+              key={c.uuid}
             />
           );
         } else if (!UUIDToImportedComponent[c.metadataUUID]) {
@@ -118,7 +119,11 @@ function useComponentTreeElements(
       componentTree,
       (c, children) => {
         if (isWithinModule) {
-          return <ErrorBoundary>{renderComponent(c, children)}</ErrorBoundary>;
+          return (
+            <ErrorBoundary key={c.uuid}>
+              {renderComponent(c, children)}
+            </ErrorBoundary>
+          );
         }
         return (
           <HighlightingContainer key={c.uuid} uuid={c.uuid}>
