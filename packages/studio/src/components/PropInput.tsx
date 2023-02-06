@@ -13,6 +13,9 @@ interface PropInputProps<T = string | number | boolean> {
 const inputBoxCssClasses =
   "border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full";
 
+const selectCssClasses =
+  "bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5";
+
 /**
  * Renders the input element of a PropEditor component, that
  * will update the corresponding prop's value for the active
@@ -53,10 +56,7 @@ export default function PropInput({
   );
   if (unionValues) {
     return (
-      <select
-        onChange={onSelectChange}
-        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5"
-      >
+      <select onChange={onSelectChange} className={selectCssClasses}>
         {unionValues.map((val) => {
           return (
             <option value={val} key={val}>
