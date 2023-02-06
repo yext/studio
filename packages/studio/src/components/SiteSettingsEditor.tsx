@@ -140,7 +140,7 @@ function SimplePropInput(props: {
   propName: string;
   unionValues?: string[];
 }) {
-  const { propVal, updateValues, propName, unionValues } = props;
+  const { value, valueType, updateValues, propName, unionValues } = props;
   const handleUpdate = useCallback(
     (rawValue: string | number | boolean) => {
       const updatedValue = {
