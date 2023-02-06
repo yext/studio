@@ -7,10 +7,12 @@ import {
 import {
   ComponentState,
   ComponentStateKind,
+  PropShape,
   PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
+  SiteSettingsShape,
   SiteSettingsValues,
   StandardOrModuleComponentState,
 } from "../types";
@@ -130,5 +132,11 @@ export default class TypeGuards {
       }
     }
     return true;
+  }
+
+  static isSiteSettingsShape(
+    propShape: PropShape
+  ): propShape is SiteSettingsShape {
+    return Object.values(propShape).every(metadata => metadata.type !== PropValueType.ReactNode);
   }
 }
