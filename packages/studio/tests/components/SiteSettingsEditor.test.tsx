@@ -1,14 +1,14 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import {
-  PropShape,
   PropValueKind,
-  PropValues,
   PropValueType,
+  SiteSettingsShape,
+  SiteSettingsValues,
 } from "@yext/studio-plugin";
 import SiteSettingsEditor from "../../src/components/SiteSettingsEditor";
 import mockStore from "../__utils__/mockStore";
 
-const shape: PropShape = {
+const shape: SiteSettingsShape = {
   "Global Colors": {
     type: PropValueType.Object,
     shape: {
@@ -24,7 +24,7 @@ const shape: PropShape = {
     type: PropValueType.string,
   },
 } as const;
-const values: PropValues = {
+const values: SiteSettingsValues = {
   "Global Colors": {
     kind: PropValueKind.Literal,
     valueType: PropValueType.Object,
@@ -60,6 +60,22 @@ it("can render nested site settings", () => {
   expect(screen.getByText("primary")).toBeDefined();
   expect(screen.getByText("secondary")).toBeDefined();
   expect(screen.getByText("experienceKey")).toBeDefined();
+});
+
+it("can render even when optional settings are not specified", () => {
+  mockStore({
+    siteSettings: {
+      shape: {
+        ...shape,
+        optionalString: {
+          type: PropValueType.string,
+        },
+      },
+      values,
+    },
+  });
+  render(<SiteSettingsEditor />);
+  expect(screen.getByText("Global Colors")).toBeDefined();
 });
 
 it("can edit site settings", () => {

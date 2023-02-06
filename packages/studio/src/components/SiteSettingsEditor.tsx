@@ -6,6 +6,8 @@ import {
   ObjectProp,
   NestedPropMetadata,
   TypeGuards,
+  PropValueKind,
+  SiteSettingsPropValueType,
 } from "@yext/studio-plugin";
 import React, { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
@@ -59,13 +61,16 @@ function renderSiteSettings(
   );
 
   return sortedShape.map(([propName, propMetadata], index) => {
-    const propVal = siteSettingsValues[propName];
-    if (propVal.valueType !== PropValueType.Object) {
+    const propVal: LiteralProp<SiteSettingsValues> | undefined =
+      siteSettingsValues[propName];
+    const valueType = propMetadata.type;
+    if (valueType !== PropValueType.Object) {
       return (
         <SimplePropInput
           key={propName}
           propName={propName}
-          propVal={propVal}
+          valueType={valueType}
+          value={propVal?.value as string | number | boolean}
           updateValues={updateValues}
         />
       );
@@ -77,8 +82,8 @@ function renderSiteSettings(
         <div className="font-bold px-2 pb-2">{propName}</div>
         <RecursiveGroup
           propName={propName}
-          propVal={propVal}
-          propMetadata={propMetadata as NestedPropMetadata}
+          propVal={propVal as ObjectProp<SiteSettingsValues>}
+          propMetadata={propMetadata}
           updateValues={updateValues}
         />
         {shouldRenderDivider && (
@@ -95,7 +100,7 @@ function renderSiteSettings(
  */
 function RecursiveGroup(props: {
   propVal: ObjectProp<SiteSettingsValues>;
-  propMetadata: NestedPropMetadata;
+  propMetadata: NestedPropMetadata<SiteSettingsPropValueType>;
   updateValues: (
     propName: string,
     updatedProp: LiteralProp<SiteSettingsValues>
@@ -124,25 +129,22 @@ function RecursiveGroup(props: {
   );
 }
 
-type SimpleProp = Exclude<
-  LiteralProp<SiteSettingsValues>,
-  ObjectProp<SiteSettingsValues>
->;
-
 function SimplePropInput(props: {
-  propVal: SimpleProp;
+  valueType: Exclude<SiteSettingsPropValueType, PropValueType.Object>;
+  value?: string | number | boolean;
   updateValues: (
     propName: string,
     updatedProp: LiteralProp<SiteSettingsValues>
   ) => void;
   propName: string;
 }) {
-  const { propVal, updateValues, propName } = props;
+  const { value, valueType, updateValues, propName } = props;
   const handleUpdate = useCallback(
-    (rawValue: SimpleProp["value"]) => {
+    (rawValue: string | number | boolean) => {
       const updatedValue = {
-        ...propVal,
+        kind: PropValueKind.Literal,
         value: rawValue,
+        valueType,
       };
       if (!TypeGuards.isValidPropValue(updatedValue)) {
         console.error(
@@ -153,15 +155,15 @@ function SimplePropInput(props: {
       }
       updateValues(propName, updatedValue);
     },
-    [propName, updateValues, propVal]
+    [propName, updateValues, valueType]
   );
 
   return (
     <label className="flex h-10 items-center" id={propName} key={propName}>
       <span className="px-2">{propName}</span>
       <PropInput
-        propType={propVal.valueType}
-        currentPropValue={propVal.value}
+        propType={valueType}
+        currentPropValue={value}
         onChange={handleUpdate}
       />
     </label>

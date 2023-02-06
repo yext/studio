@@ -38,6 +38,12 @@ export default class SiteSettingsFile {
         `Improperly formatted SiteSettingsValues ${stringifiedValues}`
       );
     }
+    if (!TypeGuards.isSiteSettingsShape(siteSettingsShape)) {
+      const stringifiedValues = JSON.stringify(values, null, 2);
+      throw new Error(
+        `Improperly formatted SiteSettingsShape ${stringifiedValues}`
+      );
+    }
     return {
       shape: siteSettingsShape,
       values,
