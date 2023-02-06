@@ -61,6 +61,10 @@ export default class FileSystemManager {
 
   private static openFile(filepath: string) {
     if (!fs.existsSync(filepath)) {
+      const dirName = path.dirname(filepath);
+      if (!fs.existsSync(dirName)) {
+        fs.mkdirSync(dirName, { recursive: true });
+      }
       fs.openSync(filepath, "w");
     }
   }
