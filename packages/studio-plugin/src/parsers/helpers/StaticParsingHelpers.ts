@@ -19,7 +19,11 @@ import {
   PropertyAssignment,
   UnionTypeNode,
 } from "ts-morph";
-import { PropValueKind, PropValues, PropValueType } from "../../types/PropValues";
+import {
+  PropValueKind,
+  PropValues,
+  PropValueType,
+} from "../../types/PropValues";
 import { PropShape } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
@@ -174,7 +178,7 @@ export default class StaticParsingHelpers {
     };
 
     const handleSimplePropertySignature = (p: PropertySignature) => {
-      const { name: propName, type, docs } = p.getStructure();
+      const { name: propName, type } = p.getStructure();
       if (typeof type !== "string") {
         console.error(
           "Unable to parse prop:",
@@ -193,11 +197,16 @@ export default class StaticParsingHelpers {
       };
     };
 
-    const handleUnionType = (p: PropertySignature, unionType: UnionTypeNode) => {
-      const unionValues = unionType.getTypeNodes().map(n => {
-        const stringLiteral = n.getFirstChildByKindOrThrow(SyntaxKind.StringLiteral);
+    const handleUnionType = (
+      p: PropertySignature,
+      unionType: UnionTypeNode
+    ) => {
+      const unionValues = unionType.getTypeNodes().map((n) => {
+        const stringLiteral = n.getFirstChildByKindOrThrow(
+          SyntaxKind.StringLiteral
+        );
         return stringLiteral.getLiteralText();
-      })
+      });
       const jsdoc = this.getJsDocs(p);
       parsedInterface[this.getEscapedName(p)] = {
         kind: ParsedInterfaceKind.Simple,
@@ -205,14 +214,14 @@ export default class StaticParsingHelpers {
         unionValues,
         ...(jsdoc && { doc: jsdoc }),
       };
-    }
+    };
 
     propertySignatures.forEach((p) => {
       const typeNode = p.getTypeNode();
       if (typeNode?.isKind(SyntaxKind.TypeLiteral)) {
         handleNestedType(typeNode, p);
-        return
-      } 
+        return;
+      }
       const unionType = p.getFirstChildByKind(SyntaxKind.UnionType);
       if (unionType) {
         handleUnionType(p, unionType);

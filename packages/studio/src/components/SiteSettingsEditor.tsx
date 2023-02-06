@@ -67,6 +67,7 @@ function renderSiteSettings(
           propName={propName}
           propVal={propVal}
           updateValues={updateValues}
+          unionValues={propMetadata["unionValues"]}
         />
       );
     }
@@ -136,8 +137,9 @@ function SimplePropInput(props: {
     updatedProp: LiteralProp<SiteSettingsValues>
   ) => void;
   propName: string;
+  unionValues?: string[];
 }) {
-  const { propVal, updateValues, propName } = props;
+  const { propVal, updateValues, propName, unionValues } = props;
   const handleUpdate = useCallback(
     (rawValue: SimpleProp["value"]) => {
       const updatedValue = {
@@ -163,6 +165,7 @@ function SimplePropInput(props: {
         propType={propVal.valueType}
         currentPropValue={propVal.value}
         onChange={handleUpdate}
+        unionValues={unionValues}
       />
     </label>
   );

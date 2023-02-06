@@ -1,7 +1,9 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../../src/types/PropShape";
 import { PropValueType } from "../../src/types/PropValues";
-import StaticParsingHelpers, { ParsedInterfaceKind } from "../../src/parsers/helpers/StaticParsingHelpers";
+import StaticParsingHelpers, {
+  ParsedInterfaceKind,
+} from "../../src/parsers/helpers/StaticParsingHelpers";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
 
@@ -181,7 +183,7 @@ describe("parseExportAssignment", () => {
 });
 
 describe("parseInterfaceDeclaration", () => {
-  it('can parse a string union type', () => {
+  it("can parse a string union type", () => {
     const { sourceFile } = createTestSourceFile(
       `export interface MyProps {
         fruit: 'apple' | 'pear',
@@ -190,13 +192,14 @@ describe("parseInterfaceDeclaration", () => {
     const interfaceDeclaration = sourceFile.getFirstDescendantByKindOrThrow(
       SyntaxKind.InterfaceDeclaration
     );
-    const parsedInterface = StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
+    const parsedInterface =
+      StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
     expect(parsedInterface).toEqual({
       fruit: {
         kind: ParsedInterfaceKind.Simple,
         type: PropValueType.string,
-        unionValues: ['apple', 'pear']
-      }
+        unionValues: ["apple", "pear"],
+      },
     });
   });
 });

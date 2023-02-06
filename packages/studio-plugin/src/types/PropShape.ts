@@ -21,10 +21,10 @@ export type PropMetadata =
       unionValues?: undefined;
     }
   | {
-    type: PropValueType.string;
-    doc?: string;
-    unionValues?: string[]
-  }
+      type: PropValueType.string;
+      doc?: string;
+      unionValues?: string[];
+    };
 
 export type NestedPropMetadata = {
   type: PropValueType.Object;

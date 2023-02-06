@@ -40,7 +40,8 @@ export function PropEditor({
   const [propKind, setPropKind] = useState<PropValueKind>(
     currentPropKind ?? PropValueKind.Literal
   );
-  const { type, doc } = propMetadata;
+  const { type, doc, unionValues } = propMetadata;
+  console.log(propMetadata);
 
   const onChange = useCallback(
     (value: string | number | boolean, kind?: PropValueKind) => {
@@ -93,6 +94,7 @@ export function PropEditor({
               currentPropValue,
               onChange,
             }}
+            unionValues={unionValues}
           />
         </label>
         {doc && (
