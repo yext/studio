@@ -1,6 +1,6 @@
 {
   "name": "@yext/studio",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "types": "./lib/types.d.ts",
   "bin": {
     "studio": "./lib/bin/studio.js"
@@ -29,8 +29,8 @@
     "tailwindcss": "^3.2.4",
     "vite": "^4.0.4",
     "vite-plugin-svgr": "^2.4.0",
-    "zundo": "2.0.0-beta.8",
-    "zustand": "^4.2.0"
+    "zundo": "2.0.0-beta.10",
+    "zustand": "^4.3.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.5",
