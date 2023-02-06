@@ -41,7 +41,6 @@ export function PropEditor({
     currentPropKind ?? PropValueKind.Literal
   );
   const { type, doc, unionValues } = propMetadata;
-  console.log(propMetadata);
 
   const onChange = useCallback(
     (value: string | number | boolean, kind?: PropValueKind) => {
