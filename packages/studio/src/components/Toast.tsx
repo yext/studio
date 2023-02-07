@@ -12,7 +12,7 @@ export default function Toast() {
       toast.success(payload.msg);
     }
   }, []);
-  useMessageListener(MessageID.StudioCommitChanges, listenerCallback);
+  useMessageListener(MessageID.SaveChanges, listenerCallback);
 
   return <ToastContainer autoClose={1000} />;
 }

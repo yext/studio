@@ -1,7 +1,7 @@
 import AddElementButton from "./AddElementButton";
 import UndoRedo from "./UndoRedo";
 import { ReactComponent as YextSeal } from "../icons/yextseal.svg";
-import CommitChangesButton from "./CommitChangesButton";
+import SaveButton from "./SaveButton";
 import CreateModuleButton from "./CreateModuleButton";
 
 /**
@@ -19,7 +19,7 @@ export default function ActionsBar(): JSX.Element {
       <div className="ml-auto flex">
         <UndoRedo />
       </div>
-      <CommitChangesButton />
+      <SaveButton />
     </div>
   );
 }

@@ -4,14 +4,14 @@ import { isEqual } from "lodash";
 /**
  * Renders a button for committing changes to user's files.
  */
-export default function CommitChangesButton() {
+export default function SaveButton() {
   const hasChanges = useHasChanges();
-  const commitChangesAction = useStudioStore((store) => store.commitChanges);
+  const saveChanges = useStudioStore((store) => store.saveChanges);
 
   return (
     <button
       className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600"
-      onClick={commitChangesAction}
+      onClick={saveChanges}
       disabled={!hasChanges}
       aria-label="Commit Changes to Repository"
     >

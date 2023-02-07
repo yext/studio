@@ -14,7 +14,7 @@ export type StudioStore = {
   pages: PageSlice;
   siteSettings: SiteSettingSlice;
   previousCommit: PreviousCommitSlice;
-  commitChanges: () => void;
+  saveChanges: () => void;
   createModule: (filepath: string) => boolean;
   actions: ComponentActions;
 };
