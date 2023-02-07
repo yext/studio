@@ -2,7 +2,7 @@ import useStudioStore from "../store/useStudioStore";
 import { isEqual } from "lodash";
 
 /**
- * Renders a button for committing changes to user's files.
+ * Renders a button for saving changes to user's files.
  */
 export default function SaveButton() {
   const hasChanges = useHasChanges();
@@ -13,7 +13,7 @@ export default function SaveButton() {
       className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600"
       onClick={saveChanges}
       disabled={!hasChanges}
-      aria-label="Commit Changes to Repository"
+      aria-label="Save Changes to Repository"
     >
       Save
     </button>
