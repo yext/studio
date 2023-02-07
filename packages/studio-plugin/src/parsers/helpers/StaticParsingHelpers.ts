@@ -204,7 +204,9 @@ export default class StaticParsingHelpers {
       const unionValues = unionType.getTypeNodes().map((n) => {
         const firstChild = n.getFirstChild();
         if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
-          throw new Error(`Union types only support strings. Found a ${firstChild?.getKindName()}.`)
+          throw new Error(
+            `Union types only support strings. Found a ${firstChild?.getKindName()}.`
+          );
         }
         return firstChild.getLiteralText();
       });
