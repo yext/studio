@@ -21,7 +21,7 @@ export default function SaveButton() {
 }
 
 function useHasChanges() {
-  // TODO(SLAP-2556) Refactor pendingChanges to use PreviousCommitSlice
+  // TODO(SLAP-2556) Refactor pendingChanges to use previousSaveSlice
   const [pagesToRemove, pagesToUpdate] = useStudioStore((store) => [
     store.pages.pendingChanges.pagesToRemove,
     store.pages.pendingChanges.pagesToUpdate,
@@ -32,17 +32,17 @@ function useHasChanges() {
   const UUIDToFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.UUIDToFileMetadata
   );
-  const previousCommit = useStudioStore((store) => store.previousCommit);
+  const previousSave = useStudioStore((store) => store.previousSave);
   const siteSettingsValues = useStudioStore(
     (store) => store.siteSettings.values
   );
 
   const siteSettingsHaveChanged = !isEqual(
-    previousCommit.siteSettings.values,
+    previousSave.siteSettings.values,
     siteSettingsValues
   );
   const hasFileMetadataChanges = !isEqual(
-    previousCommit.fileMetadatas.UUIDToFileMetadata,
+    previousSave.fileMetadatas.UUIDToFileMetadata,
     UUIDToFileMetadata
   );
 

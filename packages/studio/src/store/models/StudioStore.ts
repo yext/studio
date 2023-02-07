@@ -1,7 +1,7 @@
 import ComponentActions from "../ComponentActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
-import PreviousCommitSlice from "./slices/PreviousCommitSlice";
+import PreviousSaveSlice from "./slices/PreviousSaveSlice";
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
 
 /**
@@ -13,7 +13,7 @@ export type StudioStore = {
   fileMetadatas: FileMetadataSlice;
   pages: PageSlice;
   siteSettings: SiteSettingSlice;
-  previousCommit: PreviousCommitSlice;
+  previousSave: PreviousSaveSlice;
   saveChanges: () => void;
   createModule: (filepath: string) => boolean;
   actions: ComponentActions;

@@ -14,7 +14,7 @@ import sendMessage from "../messaging/sendMessage";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
-import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
+import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import ComponentActions from "./ComponentActions";
 
 enableMapSet();
@@ -72,9 +72,9 @@ const useStudioStore = create<StudioStore>()(
           },
           siteSettings: { values },
         });
-        // Update the previousCommit state.
+        // Update the previousSave state.
         set((s) => {
-          const previousCommitState = cloneDeep({
+          const previousSaveState = cloneDeep({
             siteSettings: {
               values: get().siteSettings.values,
             },
@@ -82,7 +82,7 @@ const useStudioStore = create<StudioStore>()(
               UUIDToFileMetadata: UUIDToFileMetadata,
             },
           });
-          s.previousCommit = previousCommitState;
+          s.previousSave = previousSaveState;
         });
       };
 
@@ -92,7 +92,7 @@ const useStudioStore = create<StudioStore>()(
         siteSettings: lens(createSiteSettingSlice),
         saveChanges,
         createModule: getCreateModuleAction(get),
-        previousCommit: lens(createPreviousCommitSlice),
+        previousSave: lens(createPreviousSaveSlice),
         actions: new ComponentActions(
           () => get().pages,
           () => get().fileMetadatas

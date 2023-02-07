@@ -32,7 +32,7 @@ it("enables the button when there are pending page changes", async () => {
 
 it("enables the button when there are pending SiteSettingsValues changes", async () => {
   mockStore({
-    previousCommit: {
+    previousSave: {
       siteSettings: {
         values: undefined,
       },
@@ -62,7 +62,7 @@ it("enables the button when there are pending SiteSettingsValues changes", async
 
 it("disables the button when there are no pending changes", async () => {
   mockStore({
-    previousCommit: {
+    previousSave: {
       siteSettings: {
         values: {
           anything: {
