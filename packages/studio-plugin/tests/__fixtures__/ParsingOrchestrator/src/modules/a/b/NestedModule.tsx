@@ -1,4 +1,4 @@
-import BannerWithCard from "./BannerWithCard";
+import BannerWithCard from "../../BannerWithCard";
 
 export default function NestedModule() {
   return (
