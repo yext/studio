@@ -1,4 +1,4 @@
-import ComponentActions from "../ComponentActions";
+import StudioActions from "../StudioActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousSaveSlice from "./slices/PreviousSaveSlice";
@@ -14,7 +14,6 @@ export type StudioStore = {
   pages: PageSlice;
   siteSettings: SiteSettingSlice;
   previousSave: PreviousSaveSlice;
-  saveChanges: () => void;
   createModule: (filepath: string) => boolean;
-  actions: ComponentActions;
+  actions: StudioActions;
 };

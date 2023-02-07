@@ -1,0 +1,38 @@
+import FileSystemManager from "../FileSystemManager";
+import { FileMetadataKind, SaveChangesPayload } from "../types";
+import path from "path";
+
+export default async function handleSaveChanges(saveData: SaveChangesPayload,
+  fileManager: FileSystemManager) {
+  const {
+    pageNameToPageState,
+    pendingChanges,
+    UUIDToFileMetadata,
+    siteSettings,
+  } = saveData;
+
+  pendingChanges.pagesToRemove.forEach((pageToRemove) => {
+    const filepath =
+      path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
+    fileManager.removeFile(filepath);
+  });
+  pendingChanges.modulesToUpdate.forEach((moduleUUID) => {
+    const metadata = UUIDToFileMetadata[moduleUUID];
+    if (metadata.kind === FileMetadataKind.Module) {
+      fileManager.updateModuleFile(metadata.filepath, metadata);
+    }
+  });
+  await Promise.all(
+    pendingChanges.pagesToUpdate.map(async (pageToUpdate) => {
+      const filepath = pageNameToPageState[pageToUpdate]?.filepath;
+      fileManager.updatePageFile(
+        filepath,
+        pageNameToPageState[pageToUpdate]
+      );
+    })
+  );
+  if (siteSettings?.values) {
+    fileManager.updateSiteSettings(siteSettings.values);
+  }
+  fileManager.syncFileMetadata(UUIDToFileMetadata);
+}

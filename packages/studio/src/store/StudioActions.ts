@@ -1,6 +1,7 @@
 import {
   ComponentState,
   ComponentTreeHelpers,
+  MessageID,
   ModuleMetadata,
   ModuleState,
   PropValues,
@@ -8,11 +9,17 @@ import {
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
 import { v4 } from "uuid";
+import sendMessage from "../messaging/sendMessage";
+import { cloneDeep } from "lodash";
+import SiteSettingSlice from "./models/slices/SiteSettingsSlice";
+import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 
-export default class ComponentActions {
+export default class StudioActions {
   constructor(
     private getPages: () => PageSlice,
-    private getFileMetadatas: () => FileMetadataSlice
+    private getFileMetadatas: () => FileMetadataSlice,
+    private getSiteSettings: () => SiteSettingSlice,
+    private getPreviousSave: () => PreviousSaveSlice
   ) {}
 
   getComponentTree = () => {
@@ -132,4 +139,48 @@ export default class ComponentActions {
     );
     this.updateComponentTree(updatedComponentTree);
   };
+
+  deploy = () => {
+    sendMessage(MessageID.Deploy, this.getSaveData());
+    this.updatePreviousSave();
+  }
+
+  saveChanges = () => {
+    sendMessage(MessageID.SaveChanges, this.getSaveData());
+    this.updatePreviousSave();
+  };
+
+  private updatePreviousSave() {
+    const { UUIDToFileMetadata } =
+      this.getFileMetadatas();
+    const { values } = this.getSiteSettings();
+    const previousSaveState = cloneDeep({
+      siteSettings: {
+        values,
+      },
+      fileMetadatas: {
+        UUIDToFileMetadata,
+      },
+    });
+    this.getPreviousSave().setPreviousSave(previousSaveState)
+  }
+
+  private getSaveData() {
+    const { pages, pendingChanges: pendingPageChanges } = this.getPages();
+    const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
+    const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
+      this.getFileMetadatas();
+    const { modulesToUpdate } = pendingModuleChanges;
+    const { values } = this.getSiteSettings();
+    return {
+      pageNameToPageState: pages,
+      UUIDToFileMetadata,
+      pendingChanges: {
+        pagesToRemove: [...pagesToRemove.keys()],
+        pagesToUpdate: [...pagesToUpdate],
+        modulesToUpdate: [...modulesToUpdate.keys()],
+      },
+      siteSettings: { values },
+    };
+  }
 }

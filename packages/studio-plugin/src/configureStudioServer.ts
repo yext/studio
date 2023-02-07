@@ -1,5 +1,6 @@
 import { ViteDevServer } from "vite";
 import FileSystemManager from "./FileSystemManager";
+import registerDeployListener from "./messaging/registerDeployListener";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
 
 export default function configureStudioServer(
@@ -7,4 +8,5 @@ export default function configureStudioServer(
   fileSystemManager: FileSystemManager
 ) {
   registerSaveChangesListener(server, fileSystemManager);
+  registerDeployListener(server, fileSystemManager);
 }

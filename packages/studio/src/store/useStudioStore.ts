@@ -15,7 +15,7 @@ import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
-import ComponentActions from "./ComponentActions";
+import StudioActions from "./StudioActions";
 
 enableMapSet();
 
@@ -54,48 +54,18 @@ const useStudioStore = create<StudioStore>()(
           });
         }
       });
-      const saveChanges = () => {
-        const { pages, pendingChanges: pendingPageChanges } = get().pages;
-        const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
-        const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
-          get().fileMetadatas;
-        const { modulesToUpdate } = pendingModuleChanges;
-        const { values } = get().siteSettings;
-        // Serialize pendingChanges (uses type Set) to send to server side.
-        sendMessage(MessageID.SaveChanges, {
-          pageNameToPageState: pages,
-          UUIDToFileMetadata,
-          pendingChanges: {
-            pagesToRemove: [...pagesToRemove.keys()],
-            pagesToUpdate: [...pagesToUpdate],
-            modulesToUpdate: [...modulesToUpdate.keys()],
-          },
-          siteSettings: { values },
-        });
-        // Update the previousSave state.
-        set((s) => {
-          const previousSaveState = cloneDeep({
-            siteSettings: {
-              values: get().siteSettings.values,
-            },
-            fileMetadatas: {
-              UUIDToFileMetadata: UUIDToFileMetadata,
-            },
-          });
-          s.previousSave = previousSaveState;
-        });
-      };
 
       return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
-        saveChanges,
         createModule: getCreateModuleAction(get),
         previousSave: lens(createPreviousSaveSlice),
-        actions: new ComponentActions(
+        actions: new StudioActions(
           () => get().pages,
-          () => get().fileMetadatas
+          () => get().fileMetadatas,
+          () => get().siteSettings,
+          () => get().previousSave
         ),
       };
     })

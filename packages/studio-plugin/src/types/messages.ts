@@ -3,6 +3,7 @@ import { StudioData } from "./StudioData";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
+  Deploy = "studio:deploy",
 }
 
 export interface SaveChangesPayload
@@ -19,6 +20,7 @@ export interface SaveChangesPayload
 
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
+  [MessageID.Deploy]: SaveChangesPayload
 };
 
 export type ResponseEventMap = {
