@@ -7,6 +7,7 @@ import {
   ModuleMetadata,
   PropValues,
 } from "@yext/studio-plugin";
+import initialStudioData from "virtual:yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { SliceCreator } from "../models/utils";
 import { ImportType } from "../models/ImportType";
@@ -15,7 +16,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   set,
   get
 ) => ({
-  UUIDToFileMetadata: {},
+  UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
   UUIDToImportedComponent: {},
   pendingChanges: {
     modulesToUpdate: new Set<string>(),

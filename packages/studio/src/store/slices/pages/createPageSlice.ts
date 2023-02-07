@@ -17,7 +17,7 @@ const firstPageEntry = Object.entries(
 )?.[0];
 
 const initialStates: PageSliceStates = {
-  pages: {},
+  pages: initialStudioData.pageNameToPageState,
   activePageName: firstPageEntry?.[0],
   activeEntityFile: firstPageEntry?.[1]?.["entityFiles"]?.[0],
   activeComponentUUID: undefined,

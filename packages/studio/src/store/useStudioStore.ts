@@ -17,8 +17,6 @@ import getCreateModuleAction from "./createModuleAction";
 import createPreviousCommitSlice from "./slices/createPreviousCommitSlice";
 import ComponentActions from "./ComponentActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
-import syncStudioStore from "./syncStudioStore";
-import initialStudioData from "virtual:yext-studio";
 
 enableMapSet();
 
@@ -104,14 +102,6 @@ const useStudioStore = create<StudioStore>()(
       };
     })
   )
-);
-
-syncStudioStore(
-  {
-    updateType: "full",
-    studioData: initialStudioData,
-  },
-  useStudioStore
 );
 
 export default useStudioStore;

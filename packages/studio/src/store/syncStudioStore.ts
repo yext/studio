@@ -1,57 +1,48 @@
 import { StudioData, StudioHMRPayload } from "@yext/studio-plugin";
-import type useStudioStore from "./useStudioStore";
+import useStudioStore from "./useStudioStore";
 
-export default function syncStudioStore(
-  payload: StudioHMRPayload,
-  useStore: typeof useStudioStore
-) {
+export default function syncStudioStore(payload: StudioHMRPayload) {
   const { updateType, studioData } = payload;
   switch (updateType) {
     case "components":
     case "modules":
-      syncFileMetadata(studioData, useStore);
+      syncFileMetadata(studioData);
       break;
     case "pages":
-      syncPages(studioData, useStore);
+      syncPages(studioData);
       break;
     case "siteSettings":
-      syncSiteSettings(studioData, useStore);
+      syncSiteSettings(studioData);
       break;
     default:
-      fullSync(studioData, useStore);
+      fullSync(studioData);
       break;
   }
 }
 
-function fullSync(studioData: StudioData, useStore: typeof useStudioStore) {
-  syncPages(studioData, useStore);
-  syncFileMetadata(studioData, useStore);
-  syncSiteSettings(studioData, useStore);
-  useStore.setState((store) => {
+function fullSync(studioData: StudioData) {
+  syncPages(studioData);
+  syncFileMetadata(studioData);
+  syncSiteSettings(studioData);
+  useStudioStore.setState((store) => {
     store.studioConfig.paths = studioData.userPaths;
   });
 }
 
-function syncFileMetadata(
-  studioData: StudioData,
-  useStore: typeof useStudioStore
-) {
-  useStore.setState((store) => {
+function syncFileMetadata(studioData: StudioData) {
+  useStudioStore.setState((store) => {
     store.fileMetadatas.UUIDToFileMetadata = studioData.UUIDToFileMetadata;
   });
 }
 
-function syncPages(studioData: StudioData, useStore: typeof useStudioStore) {
-  useStore.setState((store) => {
+function syncPages(studioData: StudioData) {
+  useStudioStore.setState((store) => {
     store.pages.pages = studioData.pageNameToPageState;
   });
 }
 
-function syncSiteSettings(
-  studioData: StudioData,
-  useStore: typeof useStudioStore
-) {
-  useStore.setState((store) => {
+function syncSiteSettings(studioData: StudioData) {
+  useStudioStore.setState((store) => {
     store.siteSettings.shape = studioData.siteSettings?.shape;
     store.siteSettings.values = studioData.siteSettings?.values;
   });
