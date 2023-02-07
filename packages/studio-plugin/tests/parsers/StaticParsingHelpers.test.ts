@@ -214,6 +214,8 @@ describe("parseInterfaceDeclaration", () => {
     );
     expect(() =>
       StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration)
-    ).toThrowError("Union types only support strings. Found a NumericLiteral.");
+    ).toThrowError(
+      'Union types only support strings. Found a NumericLiteral within "fruit".'
+    );
   });
 });

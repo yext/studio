@@ -205,7 +205,8 @@ export default class StaticParsingHelpers {
         const firstChild = n.getFirstChild();
         if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
           throw new Error(
-            `Union types only support strings. Found a ${firstChild?.getKindName()}.`
+            `Union types only support strings. Found a ${firstChild?.getKindName()} ` +
+              `within "${this.getEscapedName(p)}".`
           );
         }
         return firstChild.getLiteralText();
