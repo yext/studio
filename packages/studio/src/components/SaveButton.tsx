@@ -21,7 +21,7 @@ export default function SaveButton() {
 }
 
 function useHasChanges() {
-  // TODO(SLAP-2556) Refactor pendingChanges to use previousSaveSlice
+  // TODO(SLAP-2556) Refactor pendingChanges to use PreviousSaveSlice
   const [pagesToRemove, pagesToUpdate] = useStudioStore((store) => [
     store.pages.pendingChanges.pagesToRemove,
     store.pages.pendingChanges.pagesToUpdate,
