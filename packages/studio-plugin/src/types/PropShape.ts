@@ -18,7 +18,7 @@ export type PropMetadata<T = PropValueType> =
   | {
       type: Exclude<T, PropValueType.Object | PropValueType.string>;
       doc?: string;
-      unionValues?: undefined;
+      unionValues?: never;
     }
   | {
       type: PropValueType.string;

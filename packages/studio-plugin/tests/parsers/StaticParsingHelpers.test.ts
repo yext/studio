@@ -202,4 +202,18 @@ describe("parseInterfaceDeclaration", () => {
       },
     });
   });
+
+  it("errors for unions of non strings", () => {
+    const { sourceFile } = createTestSourceFile(
+      `export interface MyProps {
+        fruit: 1 | 2,
+    }`
+    );
+    const interfaceDeclaration = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.InterfaceDeclaration
+    );
+    expect(() =>
+      StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration)
+    ).toThrowError("A child of the kind StringLiteral was expected.");
+  });
 });

@@ -81,9 +81,9 @@ export default class PropShapeParser {
           `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
         );
       }
-      if (unionValues && type === PropValueType.string) {
+      if (unionValues) {
         propShape[propName] = {
-          type,
+          type: PropValueType.string,
           ...(doc && { doc }),
           unionValues,
         };
