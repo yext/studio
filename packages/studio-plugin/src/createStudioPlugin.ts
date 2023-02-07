@@ -30,7 +30,7 @@ export default async function createStudioPlugin(
     studioConfig.plugins,
     studioConfig.isPagesJSRepo
   );
-  let studioData = await orchestrator.getStudioData();
+  const initialStudioData = await orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -78,33 +78,29 @@ export default async function createStudioPlugin(
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        return `export default ${JSON.stringify(studioData)}`;
+        return `export default ${JSON.stringify(initialStudioData)}`;
       }
     },
     configureServer: (server) => {
       configureStudioServer(server, fileSystemManager);
     },
     async handleHotUpdate(ctx: HmrContext) {
-      const { moduleGraph } = ctx.server;
       ctx.modules.forEach((m) => ctx.server.reloadModule(m));
-
-      const studioDataModule = moduleGraph.getModuleById(
-        resolvedVirtualModuleId
-      );
-      if (studioDataModule && ctx.file.startsWith(pathToUserProjectRoot)) {
-        orchestrator.reloadFile(ctx.file);
-        studioData = await orchestrator.getStudioData();
-        moduleGraph.invalidateModule(studioDataModule);
-        const data: StudioHMRPayload = {
-          updateType: getHMRUpdateType(ctx.file, studioConfig.paths),
-          studioData,
-        };
-        ctx.server.ws.send({
-          type: "custom",
-          event: "studio:update",
-          data,
-        });
+      if (!ctx.file.startsWith(pathToUserProjectRoot)) {
+        return;
       }
+
+      orchestrator.reloadFile(ctx.file);
+      const studioData = await orchestrator.getStudioData();
+      const data: StudioHMRPayload = {
+        updateType: getHMRUpdateType(ctx.file, studioConfig.paths),
+        studioData,
+      };
+      ctx.server.ws.send({
+        type: "custom",
+        event: "studio:update",
+        data,
+      });
     },
   };
 }
@@ -116,12 +112,11 @@ function getHMRUpdateType(file: string, userPaths: UserPaths) {
     "modules",
     "pages",
   ];
-  for (const updateType of updateTypes) {
-    if (file.startsWith(userPaths[updateType])) {
-      return updateType;
-    }
-  }
-  return "full";
+  return (
+    updateTypes.find((updateType) => {
+      return file.startsWith(userPaths[updateType]);
+    }) ?? "full"
+  );
 }
 
 export type StudioHMRPayload = {

@@ -17,7 +17,7 @@ const firstPageEntry = Object.entries(
 )?.[0];
 
 const initialStates: PageSliceStates = {
-  pages: initialStudioData.pageNameToPageState,
+  pages: {},
   activePageName: firstPageEntry?.[0],
   activeEntityFile: firstPageEntry?.[1]?.["entityFiles"]?.[0],
   activeComponentUUID: undefined,
@@ -35,8 +35,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         console.error("Error adding page: a filepath is required.");
         return false;
       }
-      const pagesPath = initialStudioData.userPaths.pages;
-      if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
+      if (!path.isAbsolute(filepath)) {
         console.error(`Error adding page: filepath is invalid: ${filepath}`);
         return false;
       }

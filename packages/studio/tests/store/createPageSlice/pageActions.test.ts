@@ -69,15 +69,6 @@ describe("addPage", () => {
       );
     });
 
-    it("gives an error for a filepath outside the allowed path for pages", () => {
-      const filepath = path.join(__dirname, "../../__mocks__", "../test.tsx");
-      useStudioStore.getState().pages.addPage(filepath);
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        `Error adding page: filepath is invalid: ${filepath}`
-      );
-    });
-
     it("gives an error for a filepath with a page name that already exists", () => {
       const filepath = path.join(
         __dirname,

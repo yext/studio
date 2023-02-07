@@ -3,9 +3,15 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./tailwind-directives.css";
 import "react-tooltip/dist/react-tooltip.css";
-import registerCustomHMR from "./store/registerCustomHMR";
+import { StudioHMRPayload } from "@yext/studio-plugin";
+import syncStudioStore from "./store/syncStudioStore";
+import useStudioStore from "./store/useStudioStore";
 
-registerCustomHMR();
+if (import.meta.hot) {
+  import.meta.hot.on("studio:update", (hmrPayload: StudioHMRPayload) => {
+    syncStudioStore(hmrPayload, useStudioStore);
+  });
+}
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>

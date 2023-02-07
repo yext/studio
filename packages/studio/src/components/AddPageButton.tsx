@@ -4,7 +4,6 @@ import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Plus } from "../icons/plus.svg";
 import { useCallback, useState } from "react";
 import path from "path-browserify";
-import initialStudioData from "virtual:yext-studio";
 
 /**
  * Renders a button for adding new pages to the store. When the button is
@@ -12,12 +11,17 @@ import initialStudioData from "virtual:yext-studio";
  */
 export default function AddPageButton(): JSX.Element {
   const addPage = useStudioStore((store) => store.pages.addPage);
+  const pagesPath = useStudioStore((store) => store.studioConfig.paths.pages);
   const [errorMessage, setErrorMessage] =
     useState<string>("Invalid page name.");
 
   const handleModalSave = useCallback(
     (pageName: string) => {
-      const pagesPath = initialStudioData.userPaths.pages;
+      if (pageName.startsWith("..")) {
+        setErrorMessage('Page name cannot start with "..".');
+        return false;
+      }
+
       const filepath = path.join(pagesPath, pageName + ".tsx");
       if (addPage(filepath)) {
         return true;
@@ -30,7 +34,7 @@ export default function AddPageButton(): JSX.Element {
         return false;
       }
     },
-    [addPage, setErrorMessage]
+    [addPage, setErrorMessage, pagesPath]
   );
 
   const renderModal: renderModalFunction = useCallback(

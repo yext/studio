@@ -49,20 +49,13 @@ it("gives an error if the page name is already used", async () => {
   );
 });
 
-it("gives an error if the page path is invalid", async () => {
+it('displays an error if the page path starts with ".."', async () => {
   render(<AddPageButton />);
   const addPageButton = screen.getByRole("button");
   await userEvent.click(addPageButton);
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "../test");
   const saveButton = screen.getByRole("button", { name: "Save" });
-  const consoleErrorSpy = jest
-    .spyOn(global.console, "error")
-    .mockImplementation();
   await userEvent.click(saveButton);
-  expect(screen.getByText("Page path is invalid.")).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1);
-  expect(consoleErrorSpy).toBeCalledWith(
-    expect.stringContaining("Error adding page: filepath is invalid")
-  );
+  expect(screen.getByText('Page name cannot start with "..".')).toBeDefined();
 });

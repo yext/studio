@@ -125,9 +125,11 @@ export default class ParsingOrchestrator {
    */
   reloadFile(filepath: string) {
     const sourceFile = this.project.getSourceFile(filepath);
-    if (sourceFile) {
-      sourceFile.refreshFromFileSystemSync();
+    if (!sourceFile) {
+      return;
     }
+
+    sourceFile.refreshFromFileSystemSync();
     if (
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)

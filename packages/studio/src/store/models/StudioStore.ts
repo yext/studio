@@ -3,6 +3,7 @@ import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousCommitSlice from "./slices/PreviousCommitSlice";
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
+import StudioConfigSlice from "./slices/StudioConfigSlice";
 
 /**
  * The overall shape of the Zustand store as the state manager for Studio.
@@ -17,4 +18,5 @@ export type StudioStore = {
   commitChanges: () => void;
   createModule: (filepath: string) => boolean;
   actions: ComponentActions;
+  studioConfig: StudioConfigSlice;
 };

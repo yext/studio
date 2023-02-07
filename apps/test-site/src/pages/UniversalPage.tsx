@@ -11,7 +11,6 @@ export default function UniversalPage() {
       <Container>
         <Button />
       </Container>
-      <AceComponent text="ace" />
       <ContainerWithButtons />
       <Banner nestedProp={{ egg: "eggyweggy" }} />
     </div>

@@ -1,6 +1,5 @@
 import { StudioStore } from "./models/StudioStore";
 import path from "path-browserify";
-import initialStudioData from "virtual:yext-studio";
 import {
   ComponentState,
   ComponentStateKind,
@@ -18,7 +17,7 @@ export default function getCreateModuleAction(
       console.error("Error creating module: a filepath is required.");
       return false;
     }
-    const modulesPath = initialStudioData.userPaths.modules;
+    const modulesPath = get().studioConfig.paths.modules;
     if (!path.isAbsolute(filepath) || !filepath.startsWith(modulesPath)) {
       console.error(`Error creating module: filepath is invalid: ${filepath}`);
       return false;
