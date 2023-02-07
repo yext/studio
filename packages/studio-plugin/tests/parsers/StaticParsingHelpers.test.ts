@@ -214,6 +214,6 @@ describe("parseInterfaceDeclaration", () => {
     );
     expect(() =>
       StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration)
-    ).toThrowError("A child of the kind StringLiteral was expected.");
+    ).toThrowError("Union types only support strings. Found a NumericLiteral.");
   });
 });

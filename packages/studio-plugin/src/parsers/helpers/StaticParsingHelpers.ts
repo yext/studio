@@ -202,10 +202,11 @@ export default class StaticParsingHelpers {
       unionType: UnionTypeNode
     ) => {
       const unionValues = unionType.getTypeNodes().map((n) => {
-        const stringLiteral = n.getFirstChildByKindOrThrow(
-          SyntaxKind.StringLiteral
-        );
-        return stringLiteral.getLiteralText();
+        const firstChild = n.getFirstChild();
+        if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
+          throw new Error(`Union types only support strings. Found a ${firstChild?.getKindName()}.`)
+        }
+        return firstChild.getLiteralText();
       });
       const jsdoc = this.getJsDocs(p);
       parsedInterface[this.getEscapedName(p)] = {
