@@ -16,8 +16,14 @@ export enum SpecialReactProps {
 export type PropMetadata<T = PropValueType> =
   | NestedPropMetadata<T>
   | {
-      type: Exclude<T, PropValueType.Object>;
+      type: Exclude<T, PropValueType.Object | PropValueType.string>;
       doc?: string;
+      unionValues?: never;
+    }
+  | {
+      type: PropValueType.string;
+      doc?: string;
+      unionValues?: string[];
     };
 
 export type NestedPropMetadata<T = PropValueType> = {

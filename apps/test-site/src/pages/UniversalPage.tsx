@@ -9,7 +9,7 @@ export default function UniversalPage() {
     <div>
       <Banner />
       <Container>
-        <Button />
+        <Button bgColor="bg-red-100" />
       </Container>
       <AceComponent text="ace" />
       <ContainerWithButtons />

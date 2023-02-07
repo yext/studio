@@ -72,6 +72,7 @@ function renderSiteSettings(
           valueType={valueType}
           value={propVal?.value as string | number | boolean}
           updateValues={updateValues}
+          unionValues={propMetadata["unionValues"]}
         />
       );
     }
@@ -137,8 +138,9 @@ function SimplePropInput(props: {
     updatedProp: LiteralProp<SiteSettingsValues>
   ) => void;
   propName: string;
+  unionValues?: string[];
 }) {
-  const { value, valueType, updateValues, propName } = props;
+  const { value, valueType, updateValues, propName, unionValues } = props;
   const handleUpdate = useCallback(
     (rawValue: string | number | boolean) => {
       const updatedValue = {
@@ -165,6 +167,7 @@ function SimplePropInput(props: {
         propType={valueType}
         currentPropValue={value}
         onChange={handleUpdate}
+        unionValues={unionValues}
       />
     </label>
   );

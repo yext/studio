@@ -1,7 +1,9 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../../src/types/PropShape";
 import { PropValueType } from "../../src/types/PropValues";
-import StaticParsingHelpers from "../../src/parsers/helpers/StaticParsingHelpers";
+import StaticParsingHelpers, {
+  ParsedInterfaceKind,
+} from "../../src/parsers/helpers/StaticParsingHelpers";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
 
@@ -177,5 +179,43 @@ describe("parseExportAssignment", () => {
     expect(() =>
       StaticParsingHelpers.parseExportAssignment(exportAssignment)
     ).toThrowError(/^Could not find a child of kind/);
+  });
+});
+
+describe("parseInterfaceDeclaration", () => {
+  it("can parse a string union type", () => {
+    const { sourceFile } = createTestSourceFile(
+      `export interface MyProps {
+        fruit: 'apple' | 'pear',
+    }`
+    );
+    const interfaceDeclaration = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.InterfaceDeclaration
+    );
+    const parsedInterface =
+      StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
+    expect(parsedInterface).toEqual({
+      fruit: {
+        kind: ParsedInterfaceKind.Simple,
+        type: PropValueType.string,
+        unionValues: ["apple", "pear"],
+      },
+    });
+  });
+
+  it("errors for unions of non strings", () => {
+    const { sourceFile } = createTestSourceFile(
+      `export interface MyProps {
+        fruit: 1 | 2,
+    }`
+    );
+    const interfaceDeclaration = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.InterfaceDeclaration
+    );
+    expect(() =>
+      StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration)
+    ).toThrowError(
+      'Union types only support strings. Found a NumericLiteral within "fruit".'
+    );
   });
 });

@@ -1,4 +1,5 @@
 import {
+  NestedPropMetadata,
   PropMetadata,
   PropVal,
   PropValueKind,
@@ -13,7 +14,7 @@ import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 
 interface PropEditorProps {
   propName: string;
-  propMetadata: PropMetadata;
+  propMetadata: Exclude<PropMetadata, NestedPropMetadata>;
   currentPropValue?: string | number | boolean;
   currentPropKind?: PropValueKind;
   onPropChange: (propName: string, propVal: PropVal) => void;
@@ -39,7 +40,7 @@ export function PropEditor({
   const [propKind, setPropKind] = useState<PropValueKind>(
     currentPropKind ?? PropValueKind.Literal
   );
-  const { type, doc } = propMetadata;
+  const { type, doc, unionValues } = propMetadata;
 
   const onChange = useCallback(
     (value: string | number | boolean, kind?: PropValueKind) => {
@@ -92,6 +93,7 @@ export function PropEditor({
               currentPropValue,
               onChange,
             }}
+            unionValues={unionValues}
           />
         </label>
         {doc && (
