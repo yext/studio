@@ -3,11 +3,11 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./tailwind-directives.css";
 import "react-tooltip/dist/react-tooltip.css";
-import { StudioHMRPayload } from "@yext/studio-plugin";
+import { MessageID, StudioHMRPayload } from "@yext/studio-plugin";
 import hotReloadStore from "./store/hotReloadStore";
 
 if (import.meta.hot) {
-  import.meta.hot.on("studio:update", (hmrPayload: StudioHMRPayload) => {
+  import.meta.hot.on(MessageID.StudioHMR, (hmrPayload: StudioHMRPayload) => {
     hotReloadStore(hmrPayload);
   });
 }

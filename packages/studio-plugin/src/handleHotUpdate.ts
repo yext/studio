@@ -1,7 +1,8 @@
 import { HmrContext } from "vite";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
-import { UserPaths, StudioData } from "./types";
+import { UserPaths, MessageID } from "./types";
+import { StudioHMRPayload } from "./types/messages";
 
 /**
  * Factory method for creating our handleHotUpdate handler.
@@ -35,7 +36,7 @@ export default function createHandleHotUpdate(
     };
     ctx.server.ws.send({
       type: "custom",
-      event: "studio:update",
+      event: MessageID.StudioHMR,
       data,
     });
   };
@@ -54,8 +55,3 @@ function getHMRUpdateType(file: string, userPaths: UserPaths) {
     }) ?? "full"
   );
 }
-
-export type StudioHMRPayload = {
-  updateType: "siteSettings" | "components" | "modules" | "pages" | "full";
-  studioData: StudioData;
-};
