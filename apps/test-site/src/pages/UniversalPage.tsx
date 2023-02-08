@@ -7,7 +7,7 @@ export default function UniversalPage() {
     <div>
       <Banner />
       <Container>
-        <Button />
+        <Button bgColor="bg-red-100" />
       </Container>
       <Banner nestedProp={{ egg: "!!!" }} />
     </div>

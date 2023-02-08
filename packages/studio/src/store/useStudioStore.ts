@@ -42,7 +42,7 @@ function storeMiddlewares(
 const useStudioStore = create<StudioStore>()(
   storeMiddlewares(
     withLenses((set, get) => {
-      registerMessageListener(MessageID.StudioCommitChanges, (payload) => {
+      registerMessageListener(MessageID.SaveChanges, (payload) => {
         if (payload.type === "success") {
           set((s) => {
             s.pages.pendingChanges = {
@@ -55,7 +55,7 @@ const useStudioStore = create<StudioStore>()(
           });
         }
       });
-      const commitChanges = () => {
+      const saveChanges = () => {
         const { pages, pendingChanges: pendingPageChanges } = get().pages;
         const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
         const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
@@ -63,7 +63,7 @@ const useStudioStore = create<StudioStore>()(
         const { modulesToUpdate } = pendingModuleChanges;
         const { values } = get().siteSettings;
         // Serialize pendingChanges (uses type Set) to send to server side.
-        sendMessage(MessageID.StudioCommitChanges, {
+        sendMessage(MessageID.SaveChanges, {
           pageNameToPageState: pages,
           UUIDToFileMetadata,
           pendingChanges: {
@@ -73,9 +73,9 @@ const useStudioStore = create<StudioStore>()(
           },
           siteSettings: { values },
         });
-        // Update the previousCommit state.
+        // Update the previousSave state.
         set((s) => {
-          const previousCommitState = cloneDeep({
+          const previousSaveState = cloneDeep({
             siteSettings: {
               values: get().siteSettings.values,
             },
@@ -83,7 +83,7 @@ const useStudioStore = create<StudioStore>()(
               UUIDToFileMetadata: UUIDToFileMetadata,
             },
           });
-          s.previousCommit = previousCommitState;
+          s.previousSave = previousSaveState;
         });
       };
 
@@ -91,9 +91,11 @@ const useStudioStore = create<StudioStore>()(
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
-        commitChanges,
+        saveChanges,
         createModule: getCreateModuleAction(get),
         previousCommit: lens(createPreviousCommitSlice),
+        actions: new StudioActions(
+        previousSave: lens(createPreviousSaveSlice),
         actions: new StudioActions(
           () => get().pages,
           () => get().fileMetadatas,

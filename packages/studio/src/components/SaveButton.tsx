@@ -2,18 +2,18 @@ import useStudioStore from "../store/useStudioStore";
 import { isEqual } from "lodash";
 
 /**
- * Renders a button for committing changes to user's files.
+ * Renders a button for saving changes to user's files.
  */
-export default function CommitChangesButton() {
+export default function SaveButton() {
   const hasChanges = useHasChanges();
-  const commitChangesAction = useStudioStore((store) => store.commitChanges);
+  const saveChanges = useStudioStore((store) => store.saveChanges);
 
   return (
     <button
       className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600"
-      onClick={commitChangesAction}
+      onClick={saveChanges}
       disabled={!hasChanges}
-      aria-label="Commit Changes to Repository"
+      aria-label="Save Changes to Repository"
     >
       Save
     </button>
@@ -21,7 +21,7 @@ export default function CommitChangesButton() {
 }
 
 function useHasChanges() {
-  // TODO(SLAP-2556) Refactor pendingChanges to use PreviousCommitSlice
+  // TODO(SLAP-2556) Refactor pendingChanges to use PreviousSaveSlice
   const [pagesToRemove, pagesToUpdate] = useStudioStore((store) => [
     store.pages.pendingChanges.pagesToRemove,
     store.pages.pendingChanges.pagesToUpdate,
@@ -32,17 +32,17 @@ function useHasChanges() {
   const UUIDToFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.UUIDToFileMetadata
   );
-  const previousCommit = useStudioStore((store) => store.previousCommit);
+  const previousSave = useStudioStore((store) => store.previousSave);
   const siteSettingsValues = useStudioStore(
     (store) => store.siteSettings.values
   );
 
   const siteSettingsHaveChanged = !isEqual(
-    previousCommit.siteSettings.values,
+    previousSave.siteSettings.values,
     siteSettingsValues
   );
   const hasFileMetadataChanges = !isEqual(
-    previousCommit.fileMetadatas.UUIDToFileMetadata,
+    previousSave.fileMetadatas.UUIDToFileMetadata,
     UUIDToFileMetadata
   );
 

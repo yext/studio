@@ -46,7 +46,7 @@ export default async function createStudioPlugin(
   // Vite will import deps like react-dev-utils in the browser.
   // This causes an error to be thrown regarding `process` not being defined.
   const { default: openBrowser } = await import("react-dev-utils/openBrowser");
-  const { readdirSync } = await import("fs");
+  const { readdirSync, existsSync, lstatSync } = await import("fs");
   const path = await import("path");
 
   return {
@@ -55,19 +55,22 @@ export default async function createStudioPlugin(
       if (args.mode === "development" && args.command === "serve") {
         openBrowser("http://localhost:5173/");
       }
+      const watchDir = (dirPath: string) => {
+        if (existsSync(dirPath)) {
+          readdirSync(dirPath).forEach((filename) => {
+            const filepath = path.join(dirPath, filename);
+            if (lstatSync(filepath).isDirectory()) {
+              watchDir(filepath);
+            } else {
+              this.addWatchFile(filepath);
+            }
+          });
+        }
+      };
       const watchUserFiles = (userPaths: UserPaths) => {
-        readdirSync(userPaths.pages).forEach((dir) => {
-          const pagePath = path.join(userPaths.pages, dir);
-          this.addWatchFile(pagePath);
-        });
-        readdirSync(userPaths.components).forEach((dir) => {
-          const pagePath = path.join(userPaths.pages, dir);
-          this.addWatchFile(pagePath);
-        });
-        readdirSync(userPaths.modules).forEach((dir) => {
-          const pagePath = path.join(userPaths.pages, dir);
-          this.addWatchFile(pagePath);
-        });
+        watchDir(userPaths.pages);
+        watchDir(userPaths.components);
+        watchDir(userPaths.modules);
         this.addWatchFile(userPaths.siteSettings);
       };
       watchUserFiles(studioConfig.paths);

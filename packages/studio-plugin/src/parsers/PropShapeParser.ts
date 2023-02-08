@@ -63,7 +63,7 @@ export default class PropShapeParser {
         propShape[propName] = propMetadata;
         return;
       }
-      const { type, doc } = prop;
+      const { type, doc, unionValues } = prop;
       if (onProp && !onProp(propName)) {
         return;
       }
@@ -81,10 +81,18 @@ export default class PropShapeParser {
           `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
         );
       }
-      propShape[propName] = {
-        type,
-        ...(doc && { doc }),
-      };
+      if (unionValues) {
+        propShape[propName] = {
+          type: PropValueType.string,
+          ...(doc && { doc }),
+          unionValues,
+        };
+      } else {
+        propShape[propName] = {
+          type,
+          ...(doc && { doc }),
+        };
+      }
     });
     return propShape;
   }

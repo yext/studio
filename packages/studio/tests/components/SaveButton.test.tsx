@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import CommitChangesButton from "../../src/components/CommitChangesButton";
+import SaveButton from "../../src/components/SaveButton";
 import userEvent from "@testing-library/user-event";
 import mockStore from "../__utils__/mockStore";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -12,27 +12,27 @@ it("enables the button when there are pending page changes", async () => {
   };
   render(
     <div>
-      <CommitChangesButton />
+      <SaveButton />
       <RemovePage />
     </div>
   );
   expect(
-    screen.getByRole("button", { name: "Commit Changes to Repository" })
+    screen.getByRole("button", { name: "Save Changes to Repository" })
   ).toBeDisabled();
 
   await userEvent.click(screen.getByRole("button", { name: "Remove Page" }));
-  const commitChangesButton = screen.getByRole("button", {
-    name: "Commit Changes to Repository",
+  const saveButton = screen.getByRole("button", {
+    name: "Save Changes to Repository",
   });
-  expect(commitChangesButton).not.toBeDisabled();
+  expect(saveButton).not.toBeDisabled();
 
-  await userEvent.click(commitChangesButton);
-  expect(commitChangesButton).toBeDisabled();
+  await userEvent.click(saveButton);
+  expect(saveButton).toBeDisabled();
 });
 
 it("enables the button when there are pending SiteSettingsValues changes", async () => {
   mockStore({
-    previousCommit: {
+    previousSave: {
       siteSettings: {
         values: undefined,
       },
@@ -53,16 +53,16 @@ it("enables the button when there are pending SiteSettingsValues changes", async
       UUIDToFileMetadata: {},
     },
   });
-  render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", {
-    name: "Commit Changes to Repository",
+  render(<SaveButton />);
+  const saveButton = screen.getByRole("button", {
+    name: "Save Changes to Repository",
   });
-  expect(commitChangesButton).not.toBeDisabled();
+  expect(saveButton).not.toBeDisabled();
 });
 
 it("disables the button when there are no pending changes", async () => {
   mockStore({
-    previousCommit: {
+    previousSave: {
       siteSettings: {
         values: {
           anything: {
@@ -98,15 +98,15 @@ it("disables the button when there are no pending changes", async () => {
       },
     },
   });
-  render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", {
-    name: "Commit Changes to Repository",
+  render(<SaveButton />);
+  const saveButton = screen.getByRole("button", {
+    name: "Save Changes to Repository",
   });
-  expect(commitChangesButton).toBeDisabled();
+  expect(saveButton).toBeDisabled();
 });
 
-it("triggers commit changes action in store when click", async () => {
-  const mockCommitChangesAction = jest.fn();
+it("triggers save changes action in store when click", async () => {
+  const mockSaveChanges = jest.fn();
   mockStore({
     pages: {
       pendingChanges: {
@@ -114,15 +114,15 @@ it("triggers commit changes action in store when click", async () => {
         pagesToUpdate: new Set(),
       },
     },
-    commitChanges: mockCommitChangesAction,
+    saveChanges: mockSaveChanges,
   });
-  render(<CommitChangesButton />);
-  const commitChangesButton = screen.getByRole("button", {
-    name: "Commit Changes to Repository",
+  render(<SaveButton />);
+  const saveButton = screen.getByRole("button", {
+    name: "Save Changes to Repository",
   });
   expect(
-    screen.getByRole("button", { name: "Commit Changes to Repository" })
+    screen.getByRole("button", { name: "Save Changes to Repository" })
   ).not.toBeDisabled();
-  await userEvent.click(commitChangesButton);
-  expect(mockCommitChangesAction).toBeCalled();
+  await userEvent.click(saveButton);
+  expect(mockSaveChanges).toBeCalled();
 });

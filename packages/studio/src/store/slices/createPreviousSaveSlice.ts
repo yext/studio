@@ -1,8 +1,8 @@
 import initialStudioData from "virtual:yext-studio";
-import PreviousCommitSlice from "../models/slices/PreviousCommitSlice";
+import PreviousSaveSlice from "../models/slices/PreviousSaveSlice";
 import { SliceCreator } from "../models/utils";
 
-const createPreviousCommitSlice: SliceCreator<PreviousCommitSlice> = () => ({
+const createPreviousSaveSlice: SliceCreator<PreviousSaveSlice> = () => ({
   siteSettings: {
     values: initialStudioData.siteSettings?.values,
   },
@@ -11,4 +11,4 @@ const createPreviousCommitSlice: SliceCreator<PreviousCommitSlice> = () => ({
   },
 });
 
-export default createPreviousCommitSlice;
+export default createPreviousSaveSlice;

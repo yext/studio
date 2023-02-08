@@ -17,8 +17,13 @@ import {
   TypeNode,
   PropertySignature,
   PropertyAssignment,
+  UnionTypeNode,
 } from "ts-morph";
-import { PropValueKind, PropValues } from "../../types/PropValues";
+import {
+  PropValueKind,
+  PropValues,
+  PropValueType,
+} from "../../types/PropValues";
 import { PropShape } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
@@ -33,6 +38,7 @@ export type ParsedInterface = {
     | {
         kind: ParsedInterfaceKind.Simple;
         type: string;
+        unionValues?: string[];
         doc?: string;
       }
     | {
@@ -150,6 +156,13 @@ export default class StaticParsingHelpers {
     return p.getSymbolOrThrow().getEscapedName();
   }
 
+  private static getJsDocs(propertySignature: PropertySignature) {
+    const docs = propertySignature.getStructure().docs;
+    return docs
+      ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
+      .join("\n");
+  }
+
   private static parsePropertySignatures(
     propertySignatures: PropertySignature[]
   ): ParsedInterface {
@@ -165,7 +178,7 @@ export default class StaticParsingHelpers {
     };
 
     const handleSimplePropertySignature = (p: PropertySignature) => {
-      const { name: propName, type, docs } = p.getStructure();
+      const { name: propName, type } = p.getStructure();
       if (typeof type !== "string") {
         console.error(
           "Unable to parse prop:",
@@ -176,12 +189,33 @@ export default class StaticParsingHelpers {
         return;
       }
 
-      const jsdoc = docs
-        ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
-        .join("\n");
+      const jsdoc = this.getJsDocs(p);
       parsedInterface[this.getEscapedName(p)] = {
         kind: ParsedInterfaceKind.Simple,
         type,
+        ...(jsdoc && { doc: jsdoc }),
+      };
+    };
+
+    const handleUnionType = (
+      p: PropertySignature,
+      unionType: UnionTypeNode
+    ) => {
+      const unionValues = unionType.getTypeNodes().map((n) => {
+        const firstChild = n.getFirstChild();
+        if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
+          throw new Error(
+            `Union types only support strings. Found a ${firstChild?.getKindName()} ` +
+              `within "${this.getEscapedName(p)}".`
+          );
+        }
+        return firstChild.getLiteralText();
+      });
+      const jsdoc = this.getJsDocs(p);
+      parsedInterface[this.getEscapedName(p)] = {
+        kind: ParsedInterfaceKind.Simple,
+        type: PropValueType.string,
+        unionValues,
         ...(jsdoc && { doc: jsdoc }),
       };
     };
@@ -190,6 +224,11 @@ export default class StaticParsingHelpers {
       const typeNode = p.getTypeNode();
       if (typeNode?.isKind(SyntaxKind.TypeLiteral)) {
         handleNestedType(typeNode, p);
+        return;
+      }
+      const unionType = p.getFirstChildByKind(SyntaxKind.UnionType);
+      if (unionType) {
+        handleUnionType(p, unionType);
       } else {
         handleSimplePropertySignature(p);
       }

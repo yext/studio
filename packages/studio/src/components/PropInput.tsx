@@ -7,10 +7,14 @@ interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
   currentPropValue?: T;
   onChange: (value: T) => void;
+  unionValues?: string[];
 }
 
 const inputBoxCssClasses =
   "border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full";
+
+const selectCssClasses =
+  "bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5";
 
 /**
  * Renders the input element of a PropEditor component, that
@@ -21,6 +25,7 @@ export default function PropInput({
   propType,
   currentPropValue,
   onChange,
+  unionValues,
 }: PropInputProps): JSX.Element {
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,6 +47,26 @@ export default function PropInput({
   }, [currentPropValue, onChange, propType]);
 
   const propVal = currentPropValue ?? getPropTypeDefaultValue(propType);
+
+  const onSelectChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      onChange(e.target.value);
+    },
+    [onChange]
+  );
+  if (unionValues) {
+    return (
+      <select onChange={onSelectChange} className={selectCssClasses}>
+        {unionValues.map((val) => {
+          return (
+            <option value={val} key={val}>
+              {val}
+            </option>
+          );
+        })}
+      </select>
+    );
+  }
 
   switch (propType) {
     case PropValueType.number:

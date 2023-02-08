@@ -4,13 +4,13 @@ import { FileMetadataKind, MessageID } from "../types";
 import { registerListener } from "./registerListener";
 import path from "path";
 
-export default function registerCommitChangesListener(
+export default function registerSaveChangesListener(
   server: ViteDevServer,
   fileManager: FileSystemManager
 ) {
   registerListener(
     server,
-    MessageID.StudioCommitChanges,
+    MessageID.SaveChanges,
     async ({
       pageNameToPageState,
       pendingChanges,

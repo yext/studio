@@ -165,7 +165,11 @@ export default class ParsingOrchestrator {
       }
       fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
         const absPath = path.join(folderPath, filename);
-        this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
+        if (fs.lstatSync(absPath).isDirectory()) {
+          addDirectoryToMapping(absPath);
+        } else {
+          this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
+        }
       });
     };
 

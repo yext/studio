@@ -98,6 +98,7 @@ describe("updatePageFile", () => {
 
   it("creates a new page file and add a page component based on new state", async () => {
     jest.spyOn(fs, "existsSync").mockImplementation(() => false);
+    const fsMkdirSyncSpy = jest.spyOn(fs, "mkdirSync").mockImplementation();
     const fsOpenSyncSpy = jest
       .spyOn(fs, "openSync")
       .mockImplementationOnce(jest.fn());
@@ -108,6 +109,9 @@ describe("updatePageFile", () => {
     const pageFilepath = path.join(paths.pages, "NewPage.tsx");
     await fileManager.updatePageFile(pageFilepath, pageState);
 
+    expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.pages, {
+      recursive: true,
+    });
     expect(fsOpenSyncSpy).toHaveBeenCalledWith(pageFilepath, "w");
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
       expect.stringContaining("NewPage.tsx"),
@@ -148,6 +152,7 @@ describe("updateModuleFile", () => {
 
   it("creates a new module file and adds a component based on new state", async () => {
     jest.spyOn(fs, "existsSync").mockImplementation(() => false);
+    const fsMkdirSyncSpy = jest.spyOn(fs, "mkdirSync").mockImplementation();
     const fsOpenSyncSpy = jest
       .spyOn(fs, "openSync")
       .mockImplementationOnce(jest.fn());
@@ -158,6 +163,9 @@ describe("updateModuleFile", () => {
     const moduleFilepath = path.join(paths.modules, "NewModule.tsx");
     fileManager.updateModuleFile(moduleFilepath, moduleMetadata);
 
+    expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.modules, {
+      recursive: true,
+    });
     expect(fsOpenSyncSpy).toHaveBeenCalledWith(moduleFilepath, "w");
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
       expect.stringContaining("NewModule.tsx"),
