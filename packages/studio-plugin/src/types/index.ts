@@ -10,4 +10,4 @@ export * from "./UserPaths";
 export * from "./StudioConfig";
 export * from "./messages";
 export * from "./SiteSettings";
-export { StudioHMRPayload } from "../createStudioPlugin";
+export { StudioHMRPayload } from "../handleHotUpdate";

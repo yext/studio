@@ -1,12 +1,13 @@
-import { ConfigEnv, HmrContext, Plugin } from "vite";
+import { ConfigEnv, Plugin } from "vite";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator, {
   createTsMorphProject,
 } from "./ParsingOrchestrator";
-import configureStudioServer from "./configureStudioServer";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
-import { StudioData, UserPaths } from "./types";
+import { UserPaths } from "./types";
+import createHandleHotUpdate from "./handleHotUpdate";
+import createConfigureStudioServer from "./configureStudioServer";
 
 /**
  * Handles server-client communication.
@@ -81,45 +82,7 @@ export default async function createStudioPlugin(
         return `export default ${JSON.stringify(initialStudioData)}`;
       }
     },
-    configureServer: (server) => {
-      configureStudioServer(server, fileSystemManager);
-    },
-    async handleHotUpdate(ctx: HmrContext) {
-      ctx.modules.forEach((m) => ctx.server.reloadModule(m));
-      if (!ctx.file.startsWith(pathToUserProjectRoot)) {
-        return;
-      }
-
-      orchestrator.reloadFile(ctx.file);
-      const studioData = await orchestrator.getStudioData();
-      const data: StudioHMRPayload = {
-        updateType: getHMRUpdateType(ctx.file, studioConfig.paths),
-        studioData,
-      };
-      ctx.server.ws.send({
-        type: "custom",
-        event: "studio:update",
-        data,
-      });
-    },
+    configureServer: createConfigureStudioServer(fileSystemManager),
+    handleHotUpdate: createHandleHotUpdate(orchestrator, pathToUserProjectRoot, studioConfig.paths)
   };
 }
-
-function getHMRUpdateType(file: string, userPaths: UserPaths) {
-  const updateTypes: Exclude<keyof UserPaths, "localData">[] = [
-    "siteSettings",
-    "components",
-    "modules",
-    "pages",
-  ];
-  return (
-    updateTypes.find((updateType) => {
-      return file.startsWith(userPaths[updateType]);
-    }) ?? "full"
-  );
-}
-
-export type StudioHMRPayload = {
-  updateType: "siteSettings" | "components" | "modules" | "pages" | "full";
-  studioData: StudioData;
-};

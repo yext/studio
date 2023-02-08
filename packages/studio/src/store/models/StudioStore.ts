@@ -1,4 +1,4 @@
-import ComponentActions from "../ComponentActions";
+import StudioActions from "../StudioActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousCommitSlice from "./slices/PreviousCommitSlice";
@@ -17,6 +17,6 @@ export type StudioStore = {
   previousCommit: PreviousCommitSlice;
   commitChanges: () => void;
   createModule: (filepath: string) => boolean;
-  actions: ComponentActions;
+  actions: StudioActions;
   studioConfig: StudioConfigSlice;
 };

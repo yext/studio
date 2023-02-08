@@ -10,6 +10,6 @@ export interface SiteSettings {
 export default {
   experienceKey: "slanswers",
   "Global Colors": {
-    primary: "#AABBCC",
+    primary: "#FFBBFF",
   },
 };
