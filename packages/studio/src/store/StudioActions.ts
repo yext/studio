@@ -143,13 +143,13 @@ export default class StudioActions {
     this.updateComponentTree(updatedComponentTree);
   };
 
-  deploy = () => {
-    sendMessage(MessageID.Deploy, this.getSaveData());
+  deploy = async () => {
+    await sendMessage(MessageID.Deploy, this.getSaveData());
     this.updatePreviousSave();
   }
 
-  saveChanges = () => {
-    sendMessage(MessageID.SaveChanges, this.getSaveData());
+  saveChanges = async () => {
+    await sendMessage(MessageID.SaveChanges, this.getSaveData());
     this.updatePreviousSave();
   };
 

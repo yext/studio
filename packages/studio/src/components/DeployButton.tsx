@@ -1,16 +1,24 @@
 import useStudioStore from "../store/useStudioStore";
-import useHasChanges from "../hooks/useHasChanges";
+import { useCallback, useState } from "react";
 
 /**
  * Renders a button for saving, committing, and pushing changes..
  */
 export default function DeployButton() {
   const deploy = useStudioStore((store) => store.actions.deploy);
+  const [deployInProgress, setDeployInProgress] = useState(false);
+
+  const handleClick = useCallback(async () => {
+    setDeployInProgress(true);
+    await deploy();
+    setDeployInProgress(false)
+  }, [deploy, setDeployInProgress])
 
   return (
     <button
-      className="ml-4 py-1 px-3 text-white rounded-md bg-blue-600 hover:bg-blue-500"
-      onClick={deploy}
+      className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600 hover:bg-blue-500"
+      onClick={handleClick}
+      disabled={deployInProgress}
       aria-label="Deploy Changes to Repository"
     >
       Deploy
