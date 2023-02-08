@@ -2,8 +2,10 @@ import FileSystemManager from "../FileSystemManager";
 import { FileMetadataKind, SaveChangesPayload } from "../types";
 import path from "path";
 
-export default async function executeSaveChanges(saveData: SaveChangesPayload,
-  fileManager: FileSystemManager) {
+export default async function executeSaveChanges(
+  saveData: SaveChangesPayload,
+  fileManager: FileSystemManager
+) {
   const {
     pageNameToPageState,
     pendingChanges,
@@ -25,10 +27,7 @@ export default async function executeSaveChanges(saveData: SaveChangesPayload,
   await Promise.all(
     pendingChanges.pagesToUpdate.map(async (pageToUpdate) => {
       const filepath = pageNameToPageState[pageToUpdate]?.filepath;
-      fileManager.updatePageFile(
-        filepath,
-        pageNameToPageState[pageToUpdate]
-      );
+      fileManager.updatePageFile(filepath, pageNameToPageState[pageToUpdate]);
     })
   );
   if (siteSettings?.values) {

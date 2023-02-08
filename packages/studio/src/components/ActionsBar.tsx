@@ -21,7 +21,7 @@ export default function ActionsBar(): JSX.Element {
         <UndoRedo />
       </div>
       <SaveButton />
-      <DeployButton/>
+      <DeployButton />
     </div>
   );
 }

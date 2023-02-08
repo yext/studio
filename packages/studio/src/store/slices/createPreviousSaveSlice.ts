@@ -1,5 +1,7 @@
 import initialStudioData from "virtual:yext-studio";
-import PreviousSaveSlice, { PreviousSaveSliceState } from "../models/slices/PreviousSaveSlice";
+import PreviousSaveSlice, {
+  PreviousSaveSliceState,
+} from "../models/slices/PreviousSaveSlice";
 import { SliceCreator } from "../models/utils";
 
 const createPreviousSaveSlice: SliceCreator<PreviousSaveSlice> = (set) => ({
@@ -10,7 +12,7 @@ const createPreviousSaveSlice: SliceCreator<PreviousSaveSlice> = (set) => ({
     UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
   },
   setPreviousSave(saveState: PreviousSaveSliceState) {
-    set(saveState)
+    set(saveState);
   },
 });
 

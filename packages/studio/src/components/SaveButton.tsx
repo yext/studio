@@ -14,8 +14,8 @@ export default function SaveButton() {
   const handleClick = useCallback(async () => {
     setSaveInProgress(true);
     await saveChanges();
-    setSaveInProgress(false)
-  }, [saveChanges, setSaveInProgress])
+    setSaveInProgress(false);
+  }, [saveChanges, setSaveInProgress]);
 
   return (
     <button

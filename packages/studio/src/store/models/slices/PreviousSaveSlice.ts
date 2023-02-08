@@ -9,7 +9,7 @@ export interface PreviousSaveSliceState {
   fileMetadatas: Pick<FileMetadataSlice, "UUIDToFileMetadata">;
 }
 
-export interface PreviousSaveSliceActions  {
+export interface PreviousSaveSliceActions {
   setPreviousSave: (saveState: PreviousSaveSliceState) => void;
 }
 

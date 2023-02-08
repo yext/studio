@@ -146,7 +146,7 @@ export default class StudioActions {
   deploy = async () => {
     await sendMessage(MessageID.Deploy, this.getSaveData());
     this.updatePreviousSave();
-  }
+  };
 
   saveChanges = async () => {
     await sendMessage(MessageID.SaveChanges, this.getSaveData());
@@ -154,8 +154,7 @@ export default class StudioActions {
   };
 
   private updatePreviousSave() {
-    const { UUIDToFileMetadata } =
-      this.getFileMetadatas();
+    const { UUIDToFileMetadata } = this.getFileMetadatas();
     const { values } = this.getSiteSettings();
     const previousSaveState = cloneDeep({
       siteSettings: {
@@ -165,7 +164,7 @@ export default class StudioActions {
         UUIDToFileMetadata,
       },
     });
-    this.getPreviousSave().setPreviousSave(previousSaveState)
+    this.getPreviousSave().setPreviousSave(previousSaveState);
   }
 
   private getSaveData() {

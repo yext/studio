@@ -11,8 +11,8 @@ export default function DeployButton() {
   const handleClick = useCallback(async () => {
     setDeployInProgress(true);
     await deploy();
-    setDeployInProgress(false)
-  }, [deploy, setDeployInProgress])
+    setDeployInProgress(false);
+  }, [deploy, setDeployInProgress]);
 
   return (
     <button
