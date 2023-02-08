@@ -6,7 +6,7 @@ test("can remove a page", async ({ page }) => {
   const pageInTree = page.getByText("UniversalPage");
   const saveToFileButton = page.getByRole("button", {
     exact: true,
-    name: "Commit Changes to Repository",
+    name: "Save Changes to Repository",
   });
 
   await expect.poll(() => pageInTree.count()).toBe(1);

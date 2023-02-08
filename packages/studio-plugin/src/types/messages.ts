@@ -2,10 +2,10 @@ import { SiteSettingsValues } from "./SiteSettings";
 import { StudioData } from "./StudioData";
 
 export enum MessageID {
-  StudioCommitChanges = "studio:commitChanges",
+  SaveChanges = "studio:saveChanges",
 }
 
-export interface CommitChangesEventPayload
+export interface SaveChangesPayload
   extends Pick<StudioData, "pageNameToPageState" | "UUIDToFileMetadata"> {
   pendingChanges: {
     pagesToRemove: string[];
@@ -18,7 +18,7 @@ export interface CommitChangesEventPayload
 }
 
 export type StudioEventMap = {
-  [MessageID.StudioCommitChanges]: CommitChangesEventPayload;
+  [MessageID.SaveChanges]: SaveChangesPayload;
 };
 
 export type ResponseEventMap = {

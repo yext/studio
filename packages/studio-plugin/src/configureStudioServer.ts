@@ -1,10 +1,10 @@
 import { ViteDevServer } from "vite";
 import FileSystemManager from "./FileSystemManager";
-import registerCommitChangesListener from "./messaging/registerCommitChangesListener";
+import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
 
 export default function configureStudioServer(
   server: ViteDevServer,
   fileSystemManager: FileSystemManager
 ) {
-  registerCommitChangesListener(server, fileSystemManager);
+  registerSaveChangesListener(server, fileSystemManager);
 }

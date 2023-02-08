@@ -41,9 +41,9 @@ beforeEach(() => {
 
 it("sends pending changes to server to update files", () => {
   const sendMessageSpy = jest.spyOn(sendMessageModule, "default");
-  useStudioStore.getState().commitChanges();
+  useStudioStore.getState().saveChanges();
   expect(sendMessageSpy).toBeCalledTimes(1);
-  expect(sendMessageSpy).toBeCalledWith(MessageID.StudioCommitChanges, {
+  expect(sendMessageSpy).toBeCalledWith(MessageID.SaveChanges, {
     pageNameToPageState: mockPages,
     UUIDToFileMetadata: mockUUIDToFileMetadata,
     pendingChanges: {
@@ -57,8 +57,8 @@ it("sends pending changes to server to update files", () => {
   });
 });
 
-it("resets pending changes on successful response from server after committing changes", () => {
-  useStudioStore.getState().commitChanges();
+it("resets pending changes on successful response from server after saving changes", () => {
+  useStudioStore.getState().saveChanges();
   expect(useStudioStore.getState().pages.pendingChanges).toEqual({
     pagesToRemove: new Set(),
     pagesToUpdate: new Set(),
