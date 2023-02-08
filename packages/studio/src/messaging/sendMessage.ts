@@ -5,14 +5,12 @@ type ListenerMap = {
   [uuid: string]: (payload: ResponseEventMap[MessageID]) => void
 }
 
-const messageIdToPendingMessages = Object.keys(MessageID).reduce((listeners, messageID) => {
+const messageIdToPendingMessages = Object.values(MessageID).reduce((listeners, messageID) => {
   listeners[messageID] = {} as ListenerMap;
   return listeners;
 }, {} as Record<MessageID, ListenerMap>);
 
-console.log(messageIdToPendingMessages)
-
-Object.keys(MessageID).forEach((messageId) => {
+Object.values(MessageID).forEach((messageId) => {
   import.meta.hot?.on(messageId, (payload: ResponseEventMap[MessageID]) => {
     const listenerMap = messageIdToPendingMessages[messageId];
     const callback = listenerMap[payload.uuid];
