@@ -4,8 +4,8 @@ import { StudioData } from "./StudioData";
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
   Deploy = "studio:deploy",
-  StudioHMR = "studio:hmrUpdate",
 }
+export const StudioHMRUpdateID = "studio:hmrUpdate";
 
 export interface SaveChangesPayload
   extends Pick<StudioData, "pageNameToPageState" | "UUIDToFileMetadata"> {
