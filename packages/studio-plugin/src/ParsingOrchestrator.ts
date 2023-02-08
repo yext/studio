@@ -119,18 +119,21 @@ export default class ParsingOrchestrator {
         metadataUUID: originalMetadataUUID,
       };
     } else if (filepath.startsWith(this.paths.pages)) {
-      const pageName = path.basename(filepath, '.tsx');
-      delete this.pageNameToPageFile[pageName]
+      const pageName = path.basename(filepath, ".tsx");
+      delete this.pageNameToPageFile[pageName];
       this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
     }
   }
 
   getStudioData(): StudioData {
     const siteSettings = this.getSiteSettings();
-    const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce((prev, curr) => {
-      prev[curr] = this.pageNameToPageFile[curr].getPageState()
-      return prev;
-    }, {});
+    const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(
+      (prev, curr) => {
+        prev[curr] = this.pageNameToPageFile[curr].getPageState();
+        return prev;
+      },
+      {}
+    );
 
     return {
       pageNameToPageState,
@@ -216,11 +219,13 @@ export default class ParsingOrchestrator {
       );
     }
     const files = fs.readdirSync(this.paths.pages, "utf-8");
-    const arrayOfPageNameToStateEntries: [string, PageFile][] = files.map((filename) => {
-      const pageName = path.basename(filename, ".tsx");
-      const pageFile = this.getPageFile(pageName);
-      return [pageName, pageFile];
-    })
+    const arrayOfPageNameToStateEntries: [string, PageFile][] = files.map(
+      (filename) => {
+        const pageName = path.basename(filename, ".tsx");
+        const pageFile = this.getPageFile(pageName);
+        return [pageName, pageFile];
+      }
+    );
     return Object.fromEntries(arrayOfPageNameToStateEntries);
   }
 

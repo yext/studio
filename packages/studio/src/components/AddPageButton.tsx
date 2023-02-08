@@ -3,7 +3,6 @@ import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Plus } from "../icons/plus.svg";
 import { useCallback, useState } from "react";
-import path from "path-browserify";
 
 /**
  * Renders a button for adding new pages to the store. When the button is
@@ -11,31 +10,24 @@ import path from "path-browserify";
  */
 export default function AddPageButton(): JSX.Element {
   const createPage = useStudioStore((store) => store.actions.createPage);
-  const pagesPath = useStudioStore((store) => store.studioConfig.paths.pages);
-  const [errorMessage, setErrorMessage] =
-    useState<string>("Invalid page name.");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleModalSave = useCallback(
     (pageName: string) => {
-      if (pageName.startsWith("..")) {
-        setErrorMessage('Page name cannot start with "..".');
-        return false;
-      }
-
-      const filepath = path.join(pagesPath, pageName + ".tsx");
       try {
-        createPage(filepath)
-        return true
+        createPage(pageName);
+        return true;
       } catch (err: unknown) {
         if (err instanceof Error) {
           setErrorMessage(err.message);
+          console.error(err.message);
           return false;
         } else {
           throw err;
         }
       }
     },
-    [createPage, setErrorMessage, pagesPath]
+    [createPage, setErrorMessage]
   );
 
   const renderModal: renderModalFunction = useCallback(

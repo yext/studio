@@ -136,15 +136,15 @@ export default class StudioActions {
     this.updateComponentTree(updatedComponentTree);
   };
 
-  createPage = (filepath: string) => {
-    if (!filepath) {
-      throw new Error("Error adding page: a filepath is required.");
+  createPage = (pageName: string) => {
+    if (!pageName) {
+      throw new Error("Error adding page: a pageName is required.");
     }
     const pagesPath = this.getStudioConfig().paths.pages;
+    const filepath = path.join(pagesPath, pageName + ".tsx");
     if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
-      throw new Error(`Error adding page: filepath is invalid: ${filepath}`);
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
-    const pageName = path.basename(filepath, ".tsx");
     this.getPages().addPage(pageName, {
       componentTree: [],
       cssImports: [],

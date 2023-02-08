@@ -21,7 +21,7 @@ export default function createHandleHotUpdate(
       updateType: getHMRUpdateType(ctx.file, userPaths),
       studioData: {
         ...studioData,
-        userPaths: studioConfig.paths
+        userPaths: studioConfig.paths,
       },
     };
     ctx.server.ws.send({

@@ -22,7 +22,11 @@ describe("addPage", () => {
   const filepath = path.resolve(__dirname, "../../__mocks__", "./test.tsx");
 
   it("adds a page to pages", () => {
-    useStudioStore.getState().pages.addPage(filepath);
+    useStudioStore.getState().pages.addPage("test", {
+      componentTree: [],
+      cssImports: [],
+      filepath,
+    });
     const pagesRecord = useStudioStore.getState().pages.pages;
     expect(pagesRecord).toEqual({
       ...pages,
@@ -34,53 +38,16 @@ describe("addPage", () => {
     });
   });
 
-  it("sets active page name to the new page", () => {
-    useStudioStore.getState().pages.addPage(filepath);
-    const activePageName = useStudioStore.getState().pages.activePageName;
-    expect(activePageName).toEqual("test");
-  });
-
-  it("adds the new page name to pagesToUpdate", () => {
-    useStudioStore.getState().pages.addPage(filepath);
-    const pagesToUpdate =
-      useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
-    expect(pagesToUpdate).toEqual(new Set<string>(["test"]));
-  });
-
-  describe("errors", () => {
-    let consoleErrorSpy;
-    beforeEach(() => {
-      consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-    });
-
-    it("gives an error for an empty string filepath", () => {
-      useStudioStore.getState().pages.addPage("");
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error adding page: a filepath is required."
-      );
-    });
-
-    it("gives an error for a relative filepath", () => {
-      useStudioStore.getState().pages.addPage("./test.tsx");
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Error adding page: filepath is invalid: ./test.tsx"
-      );
-    });
-
-    it("gives an error for a filepath with a page name that already exists", () => {
-      const filepath = path.join(
-        __dirname,
-        "../../__mocks__",
-        "./universal.tsx"
-      );
-      useStudioStore.getState().pages.addPage(filepath);
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        'Error adding page: page name "universal" is already used.'
-      );
-    });
+  it("gives an error for a filepath with a page name that already exists", () => {
+    const action = () =>
+      useStudioStore.getState().pages.addPage("universal", {
+        componentTree: [],
+        cssImports: [],
+        filepath: "/blah/universal.tsx",
+      });
+    expect(action).toThrowError(
+      'Error adding page: page name "universal" is already used.'
+    );
   });
 });
 

@@ -60,7 +60,7 @@ const fileManager = new FileSystemManager(
 const bannerFilepath = path.join(paths.components, "Banner.tsx");
 jest
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  .spyOn(ParsingOrchestrator.prototype as any, "setFilepathToFileMetadata")
+  .spyOn(ParsingOrchestrator.prototype as any, "initFilepathToFileMetadata")
   .mockImplementation(() => ({
     [bannerFilepath]: {
       kind: FileMetadataKind.Component,

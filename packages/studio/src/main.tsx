@@ -4,11 +4,11 @@ import App from "./App";
 import "./tailwind-directives.css";
 import "react-tooltip/dist/react-tooltip.css";
 import { StudioHMRPayload } from "@yext/studio-plugin";
-import syncStudioStore from "./store/syncStudioStore";
+import hotReloadStore from "./store/hotReloadStore";
 
 if (import.meta.hot) {
   import.meta.hot.on("studio:update", (hmrPayload: StudioHMRPayload) => {
-    syncStudioStore(hmrPayload);
+    hotReloadStore(hmrPayload);
   });
 }
 
