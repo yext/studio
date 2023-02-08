@@ -8,14 +8,14 @@ import {
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
 import { v4 } from "uuid";
-import path from 'path-browserify'
+import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
 
 export default class StudioActions {
   constructor(
     private getPages: () => PageSlice,
     private getFileMetadatas: () => FileMetadataSlice,
-    private getStudioConfig: () => StudioConfigSlice,
+    private getStudioConfig: () => StudioConfigSlice
   ) {}
 
   getComponentTree = () => {
@@ -148,8 +148,8 @@ export default class StudioActions {
     this.getPages().addPage(pageName, {
       componentTree: [],
       cssImports: [],
-      filepath
+      filepath,
     });
-    this.getPages().setActivePage(pageName)
-  }
+    this.getPages().setActivePage(pageName);
+  };
 }

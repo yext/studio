@@ -2,8 +2,10 @@ import { ViteDevServer } from "vite";
 import FileSystemManager from "./FileSystemManager";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
 
-export default function createConfigureStudioServer(fileSystemManager: FileSystemManager) {
+export default function createConfigureStudioServer(
+  fileSystemManager: FileSystemManager
+) {
   return function configureStudioServer(server: ViteDevServer) {
-    registerCommitChangesListener(server, fileSystemManager);
-  }
+    registerSaveChangesListener(server, fileSystemManager);
+  };
 }

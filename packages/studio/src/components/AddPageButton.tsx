@@ -10,7 +10,7 @@ import path from "path-browserify";
  * clicked, a modal is displayed prompting the user for a page name.
  */
 export default function AddPageButton(): JSX.Element {
-  const addPage = useStudioStore((store) => store.pages.addPage);
+  const createPage = useStudioStore((store) => store.actions.createPage);
   const pagesPath = useStudioStore((store) => store.studioConfig.paths.pages);
   const [errorMessage, setErrorMessage] =
     useState<string>("Invalid page name.");
@@ -23,18 +23,19 @@ export default function AddPageButton(): JSX.Element {
       }
 
       const filepath = path.join(pagesPath, pageName + ".tsx");
-      if (addPage(filepath)) {
-        return true;
-      } else {
-        if (filepath.startsWith(pagesPath)) {
-          setErrorMessage("Page name already used.");
+      try {
+        createPage(filepath)
+        return true
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setErrorMessage(err.message);
+          return false;
         } else {
-          setErrorMessage("Page path is invalid.");
+          throw err;
         }
-        return false;
       }
     },
-    [addPage, setErrorMessage, pagesPath]
+    [createPage, setErrorMessage, pagesPath]
   );
 
   const renderModal: renderModalFunction = useCallback(

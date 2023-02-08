@@ -1,5 +1,6 @@
 import { StudioData, StudioHMRPayload } from "@yext/studio-plugin";
 import useStudioStore from "./useStudioStore";
+import { isEqual } from 'lodash'
 
 export default function syncStudioStore(payload: StudioHMRPayload) {
   const { updateType, studioData } = payload;

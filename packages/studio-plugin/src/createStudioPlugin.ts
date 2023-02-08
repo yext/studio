@@ -18,6 +18,7 @@ import createConfigureStudioServer from "./configureStudioServer";
 export default async function createStudioPlugin(
   args: ConfigEnv
 ): Promise<Plugin> {
+  const getLocalDataMapping = (await import("./parsers/getLocalDataMapping")).default;
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserProjectRoot = process.cwd();
@@ -25,13 +26,14 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
+  const localDataMapping = studioConfig.isPagesJSRepo ? await getLocalDataMapping(studioConfig.paths.localData) : undefined;
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig.paths,
     studioConfig.plugins,
-    studioConfig.isPagesJSRepo
+    localDataMapping
   );
-  const initialStudioData = await orchestrator.getStudioData();
+  const initialStudioData = orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -86,6 +88,10 @@ export default async function createStudioPlugin(
       }
     },
     configureServer: createConfigureStudioServer(fileSystemManager),
-    handleHotUpdate: createHandleHotUpdate(orchestrator, pathToUserProjectRoot, studioConfig.paths)
+    handleHotUpdate: createHandleHotUpdate(
+      orchestrator,
+      pathToUserProjectRoot,
+      studioConfig.paths
+    ),
   };
 }

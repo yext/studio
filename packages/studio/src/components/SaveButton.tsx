@@ -45,6 +45,17 @@ function useHasChanges() {
     previousSave.fileMetadatas.UUIDToFileMetadata,
     UUIDToFileMetadata
   );
+  console.log(previousSave.fileMetadatas.UUIDToFileMetadata, UUIDToFileMetadata)
+  Object.keys(UUIDToFileMetadata).forEach(k => {
+    console.log(isEqual(previousSave.fileMetadatas.UUIDToFileMetadata[k], UUIDToFileMetadata[k]), k)
+  })
+
+  console.log(
+    pagesToRemove.size > 0,
+    pagesToUpdate.size > 0,
+    modulesToUpdate.size > 0,
+    siteSettingsHaveChanged,
+    hasFileMetadataChanges)
 
   return (
     pagesToRemove.size > 0 ||
