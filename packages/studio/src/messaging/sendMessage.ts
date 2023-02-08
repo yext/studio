@@ -31,7 +31,7 @@ export default async function sendMessage<T extends MessageID>(
     payload: payload 
   } as any);
   const listenerMap: ListenerMap = messageIdToPendingMessages[messageId];
-  console.log({ listenerMap })
+  console.log({ listenerMap, messageId })
   return new Promise((resolve, reject) => {
     listenerMap[uuid] = (payload) => {
       if (payload.type === 'success') {
