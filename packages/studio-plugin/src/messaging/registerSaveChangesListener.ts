@@ -1,7 +1,7 @@
 import { ViteDevServer } from "vite";
 import FileSystemManager from "../FileSystemManager";
 import { MessageID, SaveChangesPayload } from "../types";
-import handleSaveChanges from "./handleSaveChanges";
+import executeSaveChanges from "./executeSaveChanges";
 import { registerListener } from "./registerListener";
 
 export default function registerSaveChangesListener(
@@ -12,7 +12,7 @@ export default function registerSaveChangesListener(
     server,
     MessageID.SaveChanges,
     async (saveData: SaveChangesPayload) => {
-      await handleSaveChanges(saveData, fileManager);
+      await executeSaveChanges(saveData, fileManager);
       return "Changes saved successfully.";
     }
   );

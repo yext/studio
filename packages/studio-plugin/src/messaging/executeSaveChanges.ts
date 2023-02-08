@@ -2,7 +2,7 @@ import FileSystemManager from "../FileSystemManager";
 import { FileMetadataKind, SaveChangesPayload } from "../types";
 import path from "path";
 
-export default async function handleSaveChanges(saveData: SaveChangesPayload,
+export default async function executeSaveChanges(saveData: SaveChangesPayload,
   fileManager: FileSystemManager) {
   const {
     pageNameToPageState,
