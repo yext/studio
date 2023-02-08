@@ -61,12 +61,28 @@ function Option({ metadata }: { metadata: FileMetadata }) {
   const moduleStateBeingEdited = useStudioStore((store) =>
     store.pages.getModuleStateBeingEdited()
   );
-  const addComponent = useStudioStore((store) => {
-    return store.actions.addComponent;
-  });
+  const [addComponent, getActiveComponentState, getComponentMetadata] =
+    useStudioStore((store) => {
+      return [
+        store.actions.addComponent,
+        store.actions.getActiveComponentState,
+        store.fileMetadatas.getComponentMetadata,
+      ];
+    });
 
   const addElement = useCallback(
     (componentName: string) => {
+      const activeComponentState = getActiveComponentState();
+      const activeComponentMetadata =
+        activeComponentState?.kind === ComponentStateKind.Standard
+          ? getComponentMetadata(activeComponentState.metadataUUID)
+          : undefined;
+      const parentUUID =
+        activeComponentMetadata?.acceptsChildren ||
+        activeComponentState?.kind === ComponentStateKind.Fragment ||
+        activeComponentState?.kind === ComponentStateKind.BuiltIn
+          ? activeComponentState?.uuid
+          : activeComponentState?.parentUUID;
       const componentState = {
         kind:
           metadata.kind === FileMetadataKind.Module
@@ -76,10 +92,18 @@ function Option({ metadata }: { metadata: FileMetadata }) {
         props: metadata.initialProps ?? {},
         uuid: v4(),
         metadataUUID: metadata.metadataUUID,
+        parentUUID,
       };
       addComponent(componentState);
     },
-    [addComponent, metadata.initialProps, metadata.kind, metadata.metadataUUID]
+    [
+      addComponent,
+      metadata.initialProps,
+      metadata.kind,
+      metadata.metadataUUID,
+      getActiveComponentState,
+      getComponentMetadata,
+    ]
   );
   const handleClick = useCallback(() => {
     addElement(componentName);

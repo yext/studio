@@ -73,12 +73,14 @@ export default class ComponentActions {
   };
 
   addComponent = (componentState: ComponentState) => {
-    const { activePageName, getModuleStateBeingEdited } = this.getPages();
+    const { activePageName, getModuleStateBeingEdited, activeComponentUUID } =
+      this.getPages();
     const moduleStateBeingEdited = getModuleStateBeingEdited();
     if (moduleStateBeingEdited) {
       this.getFileMetadatas().addComponentToModule(
         moduleStateBeingEdited.metadataUUID,
-        componentState
+        componentState,
+        activeComponentUUID
       );
     } else if (activePageName) {
       this.getPages().addComponentToPage(activePageName, componentState);
