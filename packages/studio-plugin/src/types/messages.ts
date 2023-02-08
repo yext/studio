@@ -27,7 +27,6 @@ export interface StudioHMRPayload {
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
   [MessageID.Deploy]: SaveChangesPayload;
-  [MessageID.StudioHMR]: StudioHMRPayload;
 };
 
 export type ResponseEventMap = {

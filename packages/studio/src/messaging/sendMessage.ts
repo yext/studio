@@ -13,7 +13,6 @@ const messageIdToPendingMessages = Object.values(MessageID).reduce((listeners, m
 Object.values(MessageID).forEach((messageID) => {
   import.meta.hot?.on(messageID, (payload: ResponseEventMap[MessageID]) => {
     const callback = messageIdToPendingMessages[messageID][payload.uuid];
-    console.log(messageIdToPendingMessages, callback, messageID, payload)
     if (callback) {
       callback(payload);
     }
