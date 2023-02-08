@@ -1,6 +1,10 @@
 import { StudioData, StudioHMRPayload } from "@yext/studio-plugin";
 import useStudioStore from "./useStudioStore";
 
+/**
+ * A handler for custom Studio HMR events.
+ * When a custom studio HMR event is received, updates the store.
+ */
 export default function hotReloadStore(payload: StudioHMRPayload) {
   const { updateType, studioData } = payload;
   switch (updateType) {

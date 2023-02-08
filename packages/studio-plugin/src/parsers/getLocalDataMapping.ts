@@ -1,6 +1,9 @@
 import { join } from "path";
 import { existsSync } from "fs";
 
+/**
+ * Import the user's localData/mapping.json file, so that studio can find the user's test data.
+ */
 export default async function getLocalDataMapping(
   localDataPath: string
 ): Promise<Record<string, string[]> | undefined> {
