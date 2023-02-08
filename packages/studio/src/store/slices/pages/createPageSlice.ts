@@ -108,17 +108,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     addComponentToPage(pageName: string, componentState: ComponentState) {
       const tree = get().pages[pageName].componentTree;
-      const activeComponentUUID = get().activeComponentUUID;
-      if (componentState.parentUUID !== activeComponentUUID) {
-        const activeComponentIndex = tree.findIndex(
-          (c) => c.uuid === activeComponentUUID
-        );
-        if (activeComponentIndex >= 0) {
-          const updatedTree = [...tree];
-          updatedTree.splice(activeComponentIndex + 1, 0, componentState);
-          return get().setComponentTreeInPage(pageName, updatedTree);
-        }
-      }
       get().setComponentTreeInPage(pageName, [...tree, componentState]);
     },
     removeComponentFromPage(pageName: string, componentUUID: string) {

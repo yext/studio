@@ -45,8 +45,7 @@ export interface FileMetadataSliceActions {
   ) => ComponentState;
   addComponentToModule: (
     metadataUUID: string,
-    componentState: ComponentState,
-    activeComponentUUID: string | undefined
+    componentState: ComponentState
   ) => void;
   removeComponentFromModule: (
     metadataUUID: string,

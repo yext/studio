@@ -95,25 +95,13 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     assertIsModuleMetadata(fileMetadata);
     return fileMetadata.componentTree[componentUUID];
   },
-  addComponentToModule(
-    metadataUUID: string,
-    componentState: ComponentState,
-    activeComponentUUID: string | undefined
-  ) {
+  addComponentToModule(metadataUUID: string, componentState: ComponentState) {
     const metadata = get().UUIDToFileMetadata[metadataUUID];
     assertIsModuleMetadata(metadata);
-    const tree = metadata.componentTree;
-    if (componentState.parentUUID !== activeComponentUUID) {
-      const activeComponentIndex = tree.findIndex(
-        (c) => c.uuid === activeComponentUUID
-      );
-      if (activeComponentIndex >= 0) {
-        const updatedTree = [...tree];
-        updatedTree.splice(activeComponentIndex + 1, 0, componentState);
-        return get().setComponentTreeInModule(metadataUUID, updatedTree);
-      }
-    }
-    get().setComponentTreeInModule(metadataUUID, [...tree, componentState]);
+    get().setComponentTreeInModule(metadataUUID, [
+      ...metadata.componentTree,
+      componentState,
+    ]);
   },
   removeComponentFromModule(metadataUUID, componentUUID) {
     const metadata = get().UUIDToFileMetadata[metadataUUID];
