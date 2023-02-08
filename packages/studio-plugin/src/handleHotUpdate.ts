@@ -15,7 +15,7 @@ export default function createHandleHotUpdate(
     }
 
     orchestrator.reloadFile(ctx.file);
-    const studioData = await orchestrator.getStudioData();
+    const studioData = orchestrator.getStudioData();
     const studioConfig = await getStudioConfig(pathToUserProjectRoot);
     const data: StudioHMRPayload = {
       updateType: getHMRUpdateType(ctx.file, userPaths),
