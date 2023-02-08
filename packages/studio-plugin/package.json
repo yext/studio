@@ -1,13 +1,13 @@
 {
   "name": "@yext/studio-plugin",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "types": "./lib/esm/index.d.ts",
   "main": "./lib/esm/index.js",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./lib/esm/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js"
+      "import": "./lib/esm/index.js"
     },
     "./virtual-module": {
       "types": "./virtual-module.d.ts"

@@ -8,7 +8,7 @@ import {
 } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
-import { isEqual } from "lodash";
+import lodash from "lodash";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -67,7 +67,7 @@ export class FileSystemWriter {
         return;
       }
       const originalMetadata = UUIDToFileMetadata[moduleUUID];
-      if (!isEqual(originalMetadata, updatedMetadata)) {
+      if (!lodash.isEqual(originalMetadata, updatedMetadata)) {
         this.orchestrator
           .getModuleFile(updatedMetadata.filepath)
           .updateModuleFile(updatedMetadata);
