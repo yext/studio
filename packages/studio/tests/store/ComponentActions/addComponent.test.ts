@@ -32,7 +32,8 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
         uuid: "mock-comp-uuid",
         props: {},
         metadataUUID: "unused",
-      }, {
+      },
+      {
         kind: ComponentStateKind.Standard,
         componentName: "BComponent",
         uuid: "unused",
@@ -53,7 +54,7 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
       },
       pages: pagesState,
     });
-  
+
     const newComponentState = {
       kind: ComponentStateKind.Standard,
       componentName: "AddedComp",
@@ -81,7 +82,8 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
         uuid: "mock-comp-uuid",
         props: {},
         metadataUUID: "unused",
-      }, {
+      },
+      {
         kind: ComponentStateKind.Standard,
         componentName: "BComponent",
         uuid: "unused",
@@ -103,7 +105,7 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
       },
       pages: pagesState,
     });
-  
+
     const newComponentState = {
       kind: ComponentStateKind.Standard,
       componentName: "AddedComp",
@@ -134,7 +136,8 @@ describe("adds components to the active PageState when no module is being edited
         uuid: "mock-comp-uuid",
         props: {},
         metadataUUID: "unused",
-      }, {
+      },
+      {
         kind: ComponentStateKind.Standard,
         componentName: "BComponent",
         uuid: "unused",
@@ -159,7 +162,11 @@ describe("adds components to the active PageState when no module is being edited
     useStudioStore.getState().actions.addComponent(newComponentState);
     const updatedTree =
       useStudioStore.getState().pages.pages["pagename"].componentTree;
-    expect(updatedTree).toEqual([initialTree[0], newComponentState, initialTree[1]]);
+    expect(updatedTree).toEqual([
+      initialTree[0],
+      newComponentState,
+      initialTree[1],
+    ]);
   });
 
   it("puts new component at the end when active component is the parent", () => {
@@ -170,13 +177,14 @@ describe("adds components to the active PageState when no module is being edited
         uuid: "mock-comp-uuid",
         props: {},
         metadataUUID: "unused",
-      }, {
+      },
+      {
         kind: ComponentStateKind.Standard,
         componentName: "BComponent",
         uuid: "unused",
         props: {},
         metadataUUID: "unused",
-        parentUID: "mock-comp-uuid"
+        parentUID: "mock-comp-uuid",
       },
     ];
     mockStore({
@@ -192,7 +200,11 @@ describe("adds components to the active PageState when no module is being edited
         },
       },
     });
-    const newComponentState = { ...initialTree[0], uuid: "new-comp", parentUUID: "mock-comp-uuid" };
+    const newComponentState = {
+      ...initialTree[0],
+      uuid: "new-comp",
+      parentUUID: "mock-comp-uuid",
+    };
     useStudioStore.getState().actions.addComponent(newComponentState);
     const updatedTree =
       useStudioStore.getState().pages.pages["pagename"].componentTree;

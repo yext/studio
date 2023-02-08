@@ -107,147 +107,177 @@ it("can add a module to the tree", async () => {
 describe("sets parentUUID for added component correctly", () => {
   it("no active component", async () => {
     mockActivePage({
-      componentTree: [{
-        componentName: "Mock-Container",
-        kind: ComponentStateKind.Standard,
-        metadataUUID: "uuid-container",
-        props: {},
-        uuid: "mock-container-uuid",
-      }],
+      componentTree: [
+        {
+          componentName: "Mock-Container",
+          kind: ComponentStateKind.Standard,
+          metadataUUID: "uuid-container",
+          props: {},
+          uuid: "mock-container-uuid",
+        },
+      ],
       filepath: "",
       cssImports: [],
     });
     render(<AddElementMenu />);
     await userEvent.click(screen.getByText("Mock-Component"));
-    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual({
-      componentName: "Mock-Component",
-      kind: ComponentStateKind.Standard,
-      metadataUUID: "uuid-component",
-      props: {},
-      uuid: expect.any(String),
-      parentUUID: undefined
-    });
-  });
-
-  it("container as active component", async () => {
-    mockActivePage({
-      componentTree: [{
-        componentName: "Mock-Container",
-        kind: ComponentStateKind.Standard,
-        metadataUUID: "uuid-container",
-        props: {},
-        uuid: "mock-container-uuid",
-      }],
-      filepath: "",
-      cssImports: [],
-    });
-    useStudioStore.getState().pages.setActiveComponentUUID("mock-container-uuid");
-    render(<AddElementMenu />);
-    await userEvent.click(screen.getByText("Mock-Component"));
-    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual({
-      componentName: "Mock-Component",
-      kind: ComponentStateKind.Standard,
-      metadataUUID: "uuid-component",
-      props: {},
-      uuid: expect.any(String),
-      parentUUID: "mock-container-uuid"
-    });
-  });
-
-  it("regular component as active component", async () => {
-    mockActivePage({
-      componentTree: [{
+    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual(
+      {
         componentName: "Mock-Component",
         kind: ComponentStateKind.Standard,
         metadataUUID: "uuid-component",
         props: {},
-        uuid: "mock-component-uuid",
-      }],
+        uuid: expect.any(String),
+        parentUUID: undefined,
+      }
+    );
+  });
+
+  it("container as active component", async () => {
+    mockActivePage({
+      componentTree: [
+        {
+          componentName: "Mock-Container",
+          kind: ComponentStateKind.Standard,
+          metadataUUID: "uuid-container",
+          props: {},
+          uuid: "mock-container-uuid",
+        },
+      ],
       filepath: "",
       cssImports: [],
     });
-    useStudioStore.getState().pages.setActiveComponentUUID("mock-component-uuid");
+    useStudioStore
+      .getState()
+      .pages.setActiveComponentUUID("mock-container-uuid");
+    render(<AddElementMenu />);
+    await userEvent.click(screen.getByText("Mock-Component"));
+    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual(
+      {
+        componentName: "Mock-Component",
+        kind: ComponentStateKind.Standard,
+        metadataUUID: "uuid-component",
+        props: {},
+        uuid: expect.any(String),
+        parentUUID: "mock-container-uuid",
+      }
+    );
+  });
+
+  it("regular component as active component", async () => {
+    mockActivePage({
+      componentTree: [
+        {
+          componentName: "Mock-Component",
+          kind: ComponentStateKind.Standard,
+          metadataUUID: "uuid-component",
+          props: {},
+          uuid: "mock-component-uuid",
+        },
+      ],
+      filepath: "",
+      cssImports: [],
+    });
+    useStudioStore
+      .getState()
+      .pages.setActiveComponentUUID("mock-component-uuid");
     render(<AddElementMenu />);
     await userEvent.click(screen.getByText("Containers"));
     await userEvent.click(screen.getByText("Mock-Container"));
-    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual({
-      componentName: "Mock-Container",
-      kind: ComponentStateKind.Standard,
-      metadataUUID: "uuid-container",
-      props: {},
-      uuid: expect.any(String),
-      parentUUID: undefined,
-    });
+    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual(
+      {
+        componentName: "Mock-Container",
+        kind: ComponentStateKind.Standard,
+        metadataUUID: "uuid-container",
+        props: {},
+        uuid: expect.any(String),
+        parentUUID: undefined,
+      }
+    );
   });
 
   it("module as active component", async () => {
     mockActivePage({
-      componentTree: [{
-        componentName: "Mock-Module",
-        kind: ComponentStateKind.Module,
-        metadataUUID: "uuid-module",
-        props: {},
-        uuid: "mock-module-uuid",
-      }],
+      componentTree: [
+        {
+          componentName: "Mock-Module",
+          kind: ComponentStateKind.Module,
+          metadataUUID: "uuid-module",
+          props: {},
+          uuid: "mock-module-uuid",
+        },
+      ],
       filepath: "",
       cssImports: [],
     });
     useStudioStore.getState().pages.setActiveComponentUUID("mock-module-uuid");
     render(<AddElementMenu />);
     await userEvent.click(screen.getByText("Mock-Component"));
-    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual({
-      componentName: "Mock-Component",
-      kind: ComponentStateKind.Standard,
-      metadataUUID: "uuid-component",
-      props: {},
-      uuid: expect.any(String),
-      parentUUID: undefined
-    });
+    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual(
+      {
+        componentName: "Mock-Component",
+        kind: ComponentStateKind.Standard,
+        metadataUUID: "uuid-component",
+        props: {},
+        uuid: expect.any(String),
+        parentUUID: undefined,
+      }
+    );
   });
 
   it("built-in component as active component", async () => {
     mockActivePage({
-      componentTree: [{
-        kind: ComponentStateKind.BuiltIn,
-        componentName: "div",
-        props: {},
-        uuid: "mock-builtin-uuid"
-      }],
+      componentTree: [
+        {
+          kind: ComponentStateKind.BuiltIn,
+          componentName: "div",
+          props: {},
+          uuid: "mock-builtin-uuid",
+        },
+      ],
       filepath: "",
       cssImports: [],
     });
     useStudioStore.getState().pages.setActiveComponentUUID("mock-builtin-uuid");
     render(<AddElementMenu />);
     await userEvent.click(screen.getByText("Mock-Component"));
-    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual({
-      componentName: "Mock-Component",
-      kind: ComponentStateKind.Standard,
-      metadataUUID: "uuid-component",
-      props: {},
-      uuid: expect.any(String),
-      parentUUID: "mock-builtin-uuid"
-    });
+    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual(
+      {
+        componentName: "Mock-Component",
+        kind: ComponentStateKind.Standard,
+        metadataUUID: "uuid-component",
+        props: {},
+        uuid: expect.any(String),
+        parentUUID: "mock-builtin-uuid",
+      }
+    );
   });
 
   it("fragment as active component", async () => {
     mockActivePage({
-      componentTree: [{
-        kind: ComponentStateKind.Fragment,
-        uuid: "mock-fragment-uuid"
-      }],
+      componentTree: [
+        {
+          kind: ComponentStateKind.Fragment,
+          uuid: "mock-fragment-uuid",
+        },
+      ],
       filepath: "",
       cssImports: [],
     });
-    useStudioStore.getState().pages.setActiveComponentUUID("mock-fragment-uuid");
+    useStudioStore
+      .getState()
+      .pages.setActiveComponentUUID("mock-fragment-uuid");
     render(<AddElementMenu />);
     await userEvent.click(screen.getByText("Mock-Component"));
-    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual({
-      componentName: "Mock-Component",
-      kind: ComponentStateKind.Standard,
-      metadataUUID: "uuid-component",
-      props: {},
-      uuid: expect.any(String),
-      parentUUID: "mock-fragment-uuid"
-    });
+    expect(useStudioStore.getState().actions.getComponentTree()).toContainEqual(
+      {
+        componentName: "Mock-Component",
+        kind: ComponentStateKind.Standard,
+        metadataUUID: "uuid-component",
+        props: {},
+        uuid: expect.any(String),
+        parentUUID: "mock-fragment-uuid",
+      }
+    );
   });
 });
