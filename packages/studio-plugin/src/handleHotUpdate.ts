@@ -1,8 +1,8 @@
 import { HmrContext } from "vite";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
-import { UserPaths, MessageID } from "./types";
-import { StudioHMRPayload } from "./types/messages";
+import { UserPaths } from "./types";
+import { StudioHMRPayload, StudioHMRUpdateID } from "./types/messages";
 
 /**
  * Factory method for creating our handleHotUpdate handler.
@@ -36,7 +36,7 @@ export default function createHandleHotUpdate(
     };
     ctx.server.ws.send({
       type: "custom",
-      event: MessageID.StudioHMR,
+      event: StudioHMRUpdateID,
       data,
     });
   };

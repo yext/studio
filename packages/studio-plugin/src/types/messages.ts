@@ -3,8 +3,8 @@ import { StudioData } from "./StudioData";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
-  StudioHMR = "studio:hmrUpdate",
 }
+export const StudioHMRUpdateID = "studio:hmrUpdate";
 
 export interface SaveChangesPayload
   extends Pick<StudioData, "pageNameToPageState" | "UUIDToFileMetadata"> {
@@ -25,7 +25,6 @@ export interface StudioHMRPayload {
 
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
-  [MessageID.StudioHMR]: StudioHMRPayload;
 };
 
 export type ResponseEventMap = {
