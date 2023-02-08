@@ -13,13 +13,16 @@ import sendMessage from "../messaging/sendMessage";
 import { cloneDeep } from "lodash";
 import SiteSettingSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
+import path from "path-browserify";
+import StudioConfigSlice from "./models/slices/StudioConfigSlice";
 
 export default class StudioActions {
   constructor(
     private getPages: () => PageSlice,
     private getFileMetadatas: () => FileMetadataSlice,
     private getSiteSettings: () => SiteSettingSlice,
-    private getPreviousSave: () => PreviousSaveSlice
+    private getPreviousSave: () => PreviousSaveSlice,
+    private getStudioConfig: () => StudioConfigSlice
   ) {}
 
   getComponentTree = () => {
@@ -183,4 +186,21 @@ export default class StudioActions {
       siteSettings: { values },
     };
   }
+
+  createPage = (pageName: string) => {
+    if (!pageName) {
+      throw new Error("Error adding page: a pageName is required.");
+    }
+    const pagesPath = this.getStudioConfig().paths.pages;
+    const filepath = path.join(pagesPath, pageName + ".tsx");
+    if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
+    }
+    this.getPages().addPage(pageName, {
+      componentTree: [],
+      cssImports: [],
+      filepath,
+    });
+    this.getPages().setActivePage(pageName);
+  };
 }

@@ -1,12 +1,13 @@
-import { ConfigEnv, HmrContext, Plugin } from "vite";
+import { ConfigEnv, Plugin } from "vite";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator, {
   createTsMorphProject,
 } from "./ParsingOrchestrator";
-import configureStudioServer from "./configureStudioServer";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 import { UserPaths } from "./types";
+import createHandleHotUpdate from "./handleHotUpdate";
+import createConfigureStudioServer from "./configureStudioServer";
 
 /**
  * Handles server-client communication.
@@ -17,6 +18,8 @@ import { UserPaths } from "./types";
 export default async function createStudioPlugin(
   args: ConfigEnv
 ): Promise<Plugin> {
+  const getLocalDataMapping = (await import("./parsers/getLocalDataMapping"))
+    .default;
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserProjectRoot = process.cwd();
@@ -24,13 +27,16 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
+  const localDataMapping = studioConfig.isPagesJSRepo
+    ? await getLocalDataMapping(studioConfig.paths.localData)
+    : undefined;
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig.paths,
     studioConfig.plugins,
-    studioConfig.isPagesJSRepo
+    localDataMapping
   );
-  let studioData = await orchestrator.getStudioData();
+  const initialStudioData = orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -81,24 +87,14 @@ export default async function createStudioPlugin(
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        return `export default ${JSON.stringify(studioData)}`;
+        return `export default ${JSON.stringify(initialStudioData)}`;
       }
     },
-    configureServer: (server) => {
-      configureStudioServer(server, fileSystemManager);
-    },
-    async handleHotUpdate(ctx: HmrContext) {
-      const { moduleGraph } = ctx.server;
-      ctx.modules.forEach((m) => ctx.server.reloadModule(m));
-
-      const studioDataModule = moduleGraph.getModuleById(
-        resolvedVirtualModuleId
-      );
-      if (studioDataModule && ctx.file.startsWith(pathToUserProjectRoot)) {
-        orchestrator.reloadFile(ctx.file);
-        studioData = await orchestrator.getStudioData();
-        moduleGraph.invalidateModule(studioDataModule);
-      }
-    },
+    configureServer: createConfigureStudioServer(fileSystemManager),
+    handleHotUpdate: createHandleHotUpdate(
+      orchestrator,
+      pathToUserProjectRoot,
+      studioConfig.paths
+    ),
   };
 }

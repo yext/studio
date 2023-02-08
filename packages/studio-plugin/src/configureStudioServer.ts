@@ -3,10 +3,17 @@ import FileSystemManager from "./FileSystemManager";
 import registerDeployListener from "./messaging/registerDeployListener";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
 
-export default function configureStudioServer(
-  server: ViteDevServer,
+/**
+ * A factory method for our vite plugin's configureServer handler.
+ */
+export default function createConfigureStudioServer(
   fileSystemManager: FileSystemManager
 ) {
-  registerSaveChangesListener(server, fileSystemManager);
-  registerDeployListener(server, fileSystemManager);
+  /**
+   * Sets up websocket listeners.
+   */
+  return function configureStudioServer(server: ViteDevServer) {
+    registerSaveChangesListener(server, fileSystemManager);
+    registerDeployListener(server, fileSystemManager);
+  };
 }

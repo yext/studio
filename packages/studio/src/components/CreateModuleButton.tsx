@@ -3,7 +3,6 @@ import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import useStudioStore from "../store/useStudioStore";
 import { useCallback, useState } from "react";
 import path from "path-browserify";
-import initialStudioData from "virtual:yext-studio";
 import { ComponentStateKind } from "@yext/studio-plugin";
 
 /**
@@ -17,10 +16,12 @@ export default function CreateModuleButton(): JSX.Element | null {
   const [errorMessage, setErrorMessage] = useState<string>(
     "Invalid module name."
   );
+  const modulesPath = useStudioStore(
+    (store) => store.studioConfig.paths.modules
+  );
 
   const handleModalSave = useCallback(
     (moduleName: string) => {
-      const modulesPath = initialStudioData.userPaths.modules;
       const filepath = path.join(modulesPath, moduleName + ".tsx");
       if (createModule(filepath)) {
         return true;
@@ -33,7 +34,7 @@ export default function CreateModuleButton(): JSX.Element | null {
         return false;
       }
     },
-    [setErrorMessage, createModule]
+    [setErrorMessage, createModule, modulesPath]
   );
 
   const renderModal: renderModalFunction = useCallback(

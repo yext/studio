@@ -4,6 +4,7 @@ import { StudioData } from "./StudioData";
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
   Deploy = "studio:deploy",
+  StudioHMR = "studio:hmrUpdate",
 }
 
 export interface SaveChangesPayload
@@ -18,9 +19,15 @@ export interface SaveChangesPayload
   };
 }
 
+export interface StudioHMRPayload {
+  updateType: "siteSettings" | "components" | "modules" | "pages" | "full";
+  studioData: StudioData;
+}
+
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
-  [MessageID.Deploy]: SaveChangesPayload
+  [MessageID.Deploy]: SaveChangesPayload;
+  [MessageID.StudioHMR]: StudioHMRPayload;
 };
 
 export type ResponseEventMap = {

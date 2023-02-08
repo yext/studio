@@ -14,8 +14,9 @@ import sendMessage from "../messaging/sendMessage";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
-import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import StudioActions from "./StudioActions";
+import createStudioConfigSlice from "./slices/createStudioConfigSlice";
+import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 
 enableMapSet();
 
@@ -65,10 +66,13 @@ const useStudioStore = create<StudioStore>()(
           () => get().pages,
           () => get().fileMetadatas,
           () => get().siteSettings,
-          () => get().previousSave
+          () => get().previousSave,
+          () => get().studioConfig
         ),
+        studioConfig: lens(createStudioConfigSlice),
       };
     })
   )
 );
+
 export default useStudioStore;
