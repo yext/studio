@@ -16,6 +16,7 @@ import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 import { NpmLookup } from "./utils";
+import { JsonImporter } from "./types/JsonImporter";
 
 export function createTsMorphProject() {
   return new Project({
@@ -46,6 +47,7 @@ export default class ParsingOrchestrator {
     private project: Project,
     private paths: UserPaths,
     plugins: PluginConfig[],
+    private jsonImporter: JsonImporter,
     private isPagesJSRepo?: boolean
   ) {
     this.filepathToPluginComponentData = this.getFilepathToPluginNames(plugins);
@@ -240,7 +242,9 @@ export default class ParsingOrchestrator {
         `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
       );
     }
-    const mapping = await import(/* @vite-ignore */ localDataMappingFilepath);
+    const mapping = (await this.jsonImporter(localDataMappingFilepath)) as {
+      [key: string]: string[];
+    };
     this.localDataMapping = mapping;
     return mapping;
   }

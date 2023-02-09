@@ -1,7 +1,7 @@
 import fs from "fs";
 import { Project } from "ts-morph";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
-import { FileMetadataKind } from "../../src";
+import { FileMetadataKind } from "../../src/types";
 import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { complexBannerComponent } from "../__fixtures__/componentStates";

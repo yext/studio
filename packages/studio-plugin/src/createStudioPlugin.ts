@@ -7,6 +7,7 @@ import configureStudioServer from "./configureStudioServer";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 import { UserPaths } from "./types";
+import { JsonImporter } from "./types/JsonImporter";
 
 /**
  * Handles server-client communication.
@@ -15,7 +16,8 @@ import { UserPaths } from "./types";
  * for the initial load, and messaging using the vite HMR API.
  */
 export default async function createStudioPlugin(
-  args: ConfigEnv
+  args: ConfigEnv,
+  jsonImporter: JsonImporter
 ): Promise<Plugin> {
   const virtualModuleId = "virtual:yext-studio";
   const resolvedVirtualModuleId = "\0" + virtualModuleId;
@@ -28,6 +30,7 @@ export default async function createStudioPlugin(
     tsMorphProject,
     studioConfig.paths,
     studioConfig.plugins,
+    jsonImporter,
     studioConfig.isPagesJSRepo
   );
   let studioData = await orchestrator.getStudioData();

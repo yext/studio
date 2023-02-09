@@ -2,12 +2,14 @@
   "name": "e2e-tests",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "playwright": "playwright test",
     "report": "playwright show-report "
   },
   "devDependencies": {
     "@playwright/test": "^1.30.0",
-    "@yext/studio": "*"
+    "@yext/studio": "*",
+    "vite": "^4.1.1"
   }
 }
