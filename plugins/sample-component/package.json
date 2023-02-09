@@ -6,17 +6,17 @@
     "lib",
     "src"
   ],
-  "main": "./lib/cjs/index.js",
+  "main": "./lib/index.js",
+  "type": "module",
   "exports": {
     ".": {
-      "types": "./lib/esm/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js"
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
     }
   },
   "scripts": {
-    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
-    "build": "rm -rf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json"
+    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.json",
+    "build": "rm -rf lib && tsc -p tsconfig.json"
   },
   "dependencies": {
     "react": "^18.2.0",

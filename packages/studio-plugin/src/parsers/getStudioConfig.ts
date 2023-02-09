@@ -2,7 +2,7 @@ import { PluginConfig, StudioConfig } from "../types";
 import fs from "fs";
 import path from "path";
 import getUserPaths from "./getUserPaths";
-import { merge } from "lodash";
+import lodash from "lodash";
 
 type RecursiveRequired<T> = {
   [P in keyof T]-?: T[P] extends object
@@ -17,7 +17,7 @@ type RequiredStudioConfig = RecursiveRequired<
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's
- * configuration defined in "studio.config.ts" file, if exist. Any unspecified
+ * configuration defined in "studio.config.js" file, if exist. Any unspecified
  * fields will be given a default value.
  *
  * @param pathToProjectRoot - An absolute path to the project's root folder
@@ -30,7 +30,7 @@ export default async function getStudioConfig(
     paths: getUserPaths(pathToProjectRoot),
     plugins: [],
   };
-  const configFilepath = path.join(pathToProjectRoot, "studio.config.ts");
+  const configFilepath = path.join(pathToProjectRoot, "studio.config.js");
   if (!fs.existsSync(configFilepath)) {
     return defaultConfig;
   }
@@ -39,7 +39,7 @@ export default async function getStudioConfig(
     .default as StudioConfig;
   studioConfig.plugins =
     studioConfig.plugins && handleDefaultImports(studioConfig.plugins);
-  return merge({}, defaultConfig, studioConfig);
+  return lodash.merge({}, defaultConfig, studioConfig);
 }
 
 function handleDefaultImports(

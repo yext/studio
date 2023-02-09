@@ -219,14 +219,11 @@ export default class ParsingOrchestrator {
       );
     }
     const files = fs.readdirSync(this.paths.pages, "utf-8");
-    const arrayOfPageNameToStateEntries: [string, PageFile][] = files.map(
-      (filename) => {
-        const pageName = path.basename(filename, ".tsx");
-        const pageFile = this.getPageFile(pageName);
-        return [pageName, pageFile];
-      }
-    );
-    return Object.fromEntries(arrayOfPageNameToStateEntries);
+    return files.reduce((pageMap, filename) => {
+      const pageName = path.basename(filename, ".tsx");
+      pageMap[pageName] = this.getPageFile(pageName);
+      return pageMap;
+    }, {} as Record<string, PageFile>);
   }
 
   private getSiteSettings(): SiteSettings | undefined {

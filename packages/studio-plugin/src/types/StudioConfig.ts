@@ -3,7 +3,7 @@ import { UserPaths } from "./UserPaths";
 
 /**
  * User configurations for Studio. Expected to be defined in
- * "studio.config.ts" file of the user's project root folder.
+ * "studio.config.js" file of the user's project root folder.
  */
 export interface StudioConfig {
   /**

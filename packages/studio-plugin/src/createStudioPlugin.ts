@@ -8,7 +8,6 @@ import { FileSystemWriter } from "./writers/FileSystemWriter";
 import { UserPaths } from "./types";
 import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
-
 /**
  * Handles server-client communication.
  *

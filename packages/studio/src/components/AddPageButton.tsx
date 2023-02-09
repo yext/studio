@@ -20,7 +20,6 @@ export default function AddPageButton(): JSX.Element {
       } catch (err: unknown) {
         if (err instanceof Error) {
           setErrorMessage(err.message);
-          console.error(err.message);
           return false;
         } else {
           throw err;
