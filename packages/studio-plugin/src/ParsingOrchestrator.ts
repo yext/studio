@@ -133,7 +133,7 @@ export default class ParsingOrchestrator {
       delete this.filepathToFileMetadata[filepath];
     } else if (filepath.startsWith(this.paths.pages)) {
       const pageName = path.basename(filepath, ".tsx");
-      delete this.pageNameToPageFile[pageName]; 
+      delete this.pageNameToPageFile[pageName];
     }
   };
 
