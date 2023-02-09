@@ -2,17 +2,19 @@ import { UserPaths } from "./types";
 import fs from "fs";
 import path from "path";
 
+
 export default class FileWatchOrchestrator {
   constructor(
-    private addWatchFile: (filepath: string) => void,
-    private handleRemoveFile: (filepath: string) => void
+    private watchFile: (filepath: string) => void,
+    private unwatchFile: (filepath: string) => void,
+    private watchDir: (dirpath: string) => void
   ) {}
 
   watchUserFiles(userPaths: UserPaths) {
     [userPaths.pages, userPaths.components, userPaths.modules].forEach(
       this.watchPath
     );
-    this.addWatchFile(userPaths.siteSettings);
+    this.watchFile(userPaths.siteSettings);
   }
 
   private watchPath = (filepath: string) => {
@@ -25,7 +27,7 @@ export default class FileWatchOrchestrator {
       });
       this.watchDirForRenameEvents(filepath);
     } else {
-      this.addWatchFile(filepath);
+      this.watchFile(filepath);
     }
   };
 
@@ -38,6 +40,7 @@ export default class FileWatchOrchestrator {
    * usage of .node files.
    */
   private watchDirForRenameEvents = (dirpath: string) => {
+    this.watchDir(dirpath)
     fs.watch(dirpath, (event, filename) => {
       if (event !== "rename") {
         return;
@@ -58,7 +61,7 @@ export default class FileWatchOrchestrator {
         this.watchPath(filepath);
       } else {
         console.log("fs.watch remove", dirpath, event, filename);
-        this.handleRemoveFile(filepath);
+        this.unwatchFile(filepath);
       }
     });
   };

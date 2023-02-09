@@ -59,17 +59,6 @@ export default async function createStudioPlugin(
       if (args.mode === "development" && args.command === "serve") {
         openBrowser("http://localhost:5173/");
       }
-
-      new FileWatchOrchestrator(
-        (filepath: string) => {
-          this.addWatchFile(filepath);
-          const studioData = orchestrator.getStudioData()
-          sendHMRUpdate(studioData, filepath, this)
-        },
-        (filepath: string) => {
-          orchestrator.removeFile(filepath);
-        }
-      ).watchUserFiles(studioConfig.paths);
     },
     resolveId(id) {
       if (id === virtualModuleId) {
@@ -81,7 +70,12 @@ export default async function createStudioPlugin(
         return `export default ${JSON.stringify(initialStudioData)}`;
       }
     },
-    configureServer: createConfigureStudioServer(fileSystemManager),
+    configureServer: createConfigureStudioServer(
+      fileSystemManager, 
+      orchestrator, 
+      pathToUserProjectRoot, 
+      studioConfig.paths
+    ),
     handleHotUpdate: createHandleHotUpdate(
       orchestrator,
       pathToUserProjectRoot,

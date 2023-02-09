@@ -102,21 +102,20 @@ export default class ParsingOrchestrator {
    */
   reloadFile(filepath: string) {
     const sourceFile = this.project.getSourceFile(filepath);
-    if (!sourceFile) {
-      return;
+    if (sourceFile) {
+      sourceFile.refreshFromFileSystemSync();
     }
 
-    sourceFile.refreshFromFileSystemSync();
     if (
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)
     ) {
-      const originalMetadataUUID =
-        this.filepathToFileMetadata[filepath].metadataUUID;
+      const originalMetadataUUID: string | undefined =
+        this.filepathToFileMetadata[filepath]?.metadataUUID
       delete this.filepathToFileMetadata[filepath];
       this.filepathToFileMetadata[filepath] = {
         ...this.getFileMetadata(filepath),
-        metadataUUID: originalMetadataUUID,
+        ...(originalMetadataUUID && { metadataUUID: originalMetadataUUID })
       };
     } else if (filepath.startsWith(this.paths.pages)) {
       const pageName = path.basename(filepath, ".tsx");
@@ -132,7 +131,10 @@ export default class ParsingOrchestrator {
     }
     if (this.filepathToFileMetadata[filepath]) {
       delete this.filepathToFileMetadata[filepath];
+      return
     }
+    const pageName = path.basename(filepath, '.tsx')
+    delete this.pageNameToPageFile[pageName];
   };
 
   getStudioData(): StudioData {
