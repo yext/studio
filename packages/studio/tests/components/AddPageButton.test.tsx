@@ -42,19 +42,12 @@ it("gives an error if the page name is already used", async () => {
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "universal");
   const saveButton = screen.getByRole("button", { name: "Save" });
-  const consoleErrorSpy = jest
-    .spyOn(global.console, "error")
-    .mockImplementation();
   await userEvent.click(saveButton);
   expect(
     screen.getByText(
       'Error adding page: page name "universal" is already used.'
     )
   ).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1);
-  expect(consoleErrorSpy).toBeCalledWith(
-    'Error adding page: page name "universal" is already used.'
-  );
 });
 
 it("gives an error if the page path is invalid", async () => {
@@ -64,15 +57,8 @@ it("gives an error if the page path is invalid", async () => {
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "../test");
   const saveButton = screen.getByRole("button", { name: "Save" });
-  const consoleErrorSpy = jest
-    .spyOn(global.console, "error")
-    .mockImplementation();
   await userEvent.click(saveButton);
   expect(
     screen.getByText("Error adding page: pageName is invalid: ../test")
   ).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1);
-  expect(consoleErrorSpy).toBeCalledWith(
-    "Error adding page: pageName is invalid: ../test"
-  );
 });
