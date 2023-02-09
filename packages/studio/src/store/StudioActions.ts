@@ -174,7 +174,7 @@ export default class StudioActions {
     this.updatePreviousSave();
   };
 
-  private updatePreviousSave() {
+  private updatePreviousSave = () => {
     const { UUIDToFileMetadata } = this.getFileMetadatas();
     const { values } = this.getSiteSettings();
     const previousSaveState = cloneDeep({
@@ -185,10 +185,11 @@ export default class StudioActions {
         UUIDToFileMetadata,
       },
     });
+    console.log(this.getPreviousSave());
     this.getPreviousSave().setPreviousSave(previousSaveState);
-  }
+  };
 
-  private getSaveData() {
+  private getSaveData = () => {
     const { pages, pendingChanges: pendingPageChanges } = this.getPages();
     const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
     const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
@@ -205,7 +206,7 @@ export default class StudioActions {
       },
       siteSettings: { values },
     };
-  }
+  };
 
   createPage = (pageName: string) => {
     if (!pageName) {
