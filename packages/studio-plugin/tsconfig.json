@@ -4,5 +4,6 @@
     "module": "CommonJS",
     "outDir": "lib/cjs"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/index.ts"]
 }

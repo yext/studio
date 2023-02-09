@@ -3,7 +3,7 @@ import createStudioPluginFactory from "./createStudioPlugin";
 import { JsonImporter } from "./types/JsonImporter";
 
 const createStudioPlugin = (args: ConfigEnv) => {
-  const jsonImporter: JsonImporter = filename => import(filename, { assert: { type: 'json '}});
+  const jsonImporter: JsonImporter = filename => import(filename);
   return createStudioPluginFactory(args, jsonImporter)
 }
 

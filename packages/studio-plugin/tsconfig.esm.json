@@ -4,5 +4,6 @@
     "module": "ESNext",
     "outDir": "lib/esm"
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["src/index-cjs.ts"]
 }
