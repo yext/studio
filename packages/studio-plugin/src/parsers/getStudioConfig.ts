@@ -17,7 +17,7 @@ type RequiredStudioConfig = RecursiveRequired<
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's
- * configuration defined in "studio.config.ts" file, if exist. Any unspecified
+ * configuration defined in "studio.config.js" file, if exist. Any unspecified
  * fields will be given a default value.
  *
  * @param pathToProjectRoot - An absolute path to the project's root folder
@@ -30,7 +30,7 @@ export default async function getStudioConfig(
     paths: getUserPaths(pathToProjectRoot),
     plugins: [],
   };
-  const configFilepath = path.join(pathToProjectRoot, "studio.config.ts");
+  const configFilepath = path.join(pathToProjectRoot, "studio.config.js");
   if (!fs.existsSync(configFilepath)) {
     return defaultConfig;
   }

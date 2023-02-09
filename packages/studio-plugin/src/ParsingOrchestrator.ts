@@ -15,7 +15,6 @@ import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 import { NpmLookup } from "./utils";
-import { JsonImporter } from "./types/JsonImporter";
 
 export function createTsMorphProject() {
   return new Project({

@@ -1,14 +1,14 @@
 {
   "name": "@yext/studio-plugin",
   "version": "0.3.0-alpha.119",
-  "types": "./lib/esm/index.d.ts",
-  "main": "./lib/esm/index.js",
+  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
   "type": "module",
   "exports": {
     ".": {
-      "types": "./lib/esm/index.d.ts",
-      "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index-cjs.js"
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.js",
+      "require": "./lib/index.js"
     },
     "./virtual-module": {
       "types": "./virtual-module.d.ts"
@@ -18,8 +18,8 @@
     "lib"
   ],
   "scripts": {
-    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.esm.json & tsc --watch --preserveWatchOutput -p tsconfig.json >/dev/null",
-    "build": "rm -rf lib && tsc -p tsconfig.esm.json && tsc -p tsconfig.json",
+    "dev": "tsc --watch --preserveWatchOutput -p tsconfig.json",
+    "build": "rm -rf lib && tsc -p tsconfig.json",
     "test": "jest"
   },
   "dependencies": {

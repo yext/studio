@@ -2,6 +2,7 @@
   "name": "test-site",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "dependencies": {
     "@craco/craco": "^7.0.0",
     "react": "^18.2.0",
@@ -20,13 +21,14 @@
     "@yext/eslint-config": "^1.0.0",
     "@yext/eslint-plugin-export-star": "^1.0.2",
     "@yext/pages": "^1.0.0-beta.15",
-    "@yext/studio": "*",
     "@yext/sample-component": "*",
+    "@yext/studio": "*",
     "eslint": "^8.11.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-react-perf": "^3.3.1",
     "eslint-plugin-tsdoc": "^0.2.17",
-    "prettier": "2.7.1"
+    "prettier": "2.7.1",
+    "vite": "^4.1.1"
   },
   "scripts": {
     "dev": "studio",

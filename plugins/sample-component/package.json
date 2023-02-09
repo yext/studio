@@ -6,7 +6,8 @@
     "lib",
     "src"
   ],
-  "main": "./lib/cjs/index.js",
+  "main": "./lib/esm/index.js",
+  "type": "module",
   "exports": {
     ".": {
       "types": "./lib/esm/index.d.ts",

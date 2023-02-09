@@ -6,7 +6,7 @@ import { existsSync } from "fs";
  */
 export default async function getLocalDataMapping(
   localDataPath: string
-): Promise<Record<string, string[]> | undefined> {
+): Promise<Record<string, string[]>> {
   const streamMappingFile = "mapping.json";
   const localDataMappingFilepath = join(localDataPath, streamMappingFile);
   if (!existsSync(localDataMappingFilepath)) {
@@ -14,6 +14,6 @@ export default async function getLocalDataMapping(
       `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
     );
   }
-  const mapping = await import(/* @vite-ignore */ localDataMappingFilepath);
+  const mapping = await import(localDataMappingFilepath, { assert: { type: 'json' }}) ;
   return mapping.default;
 }
