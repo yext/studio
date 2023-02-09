@@ -3,7 +3,7 @@ import {
   ComponentStateKind,
   PropValueKind,
   PropValueType,
-} from "../../src/index-cjs";
+} from "../../src/types";
 import { getComponentPath } from "../__utils__/getFixturePath";
 
 export const fragmentComponent: ComponentState = {

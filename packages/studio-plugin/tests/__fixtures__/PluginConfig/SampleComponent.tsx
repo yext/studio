@@ -1,4 +1,4 @@
-import { PluginConfig } from "../../../src/index-cjs";
+import { PluginConfig } from "../../../src/types";
 
 const Config: PluginConfig = {
   name: "@yext/sample-component",

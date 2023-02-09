@@ -1,6 +1,6 @@
 {
   "name": "@yext/studio-plugin",
-  "version": "0.3.0",
+  "version": "0.3.0-alpha.119",
   "types": "./lib/esm/index.d.ts",
   "main": "./lib/esm/index.js",
   "type": "module",

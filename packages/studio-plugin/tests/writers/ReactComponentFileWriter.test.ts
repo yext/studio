@@ -18,7 +18,7 @@ import {
   PropShape,
   PropValueKind,
   PropValueType,
-} from "../../src/index-cjs";
+} from "../../src/types";
 import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";

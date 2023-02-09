@@ -1,4 +1,4 @@
-import { PropValueKind, PropValueType } from "../../src/index-cjs";
+import { PropValueKind, PropValueType } from "../../src/types";
 import SiteSettingsFile, {
   SiteSettings,
 } from "../../src/sourcefiles/SiteSettingsFile";

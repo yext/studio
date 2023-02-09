@@ -8,7 +8,7 @@ import {
   FileMetadataKind,
   PageState,
   StudioData,
-} from "../src/index-cjs";
+} from "../src/types";
 import { Project } from "ts-morph";
 import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
 import fs from "fs";

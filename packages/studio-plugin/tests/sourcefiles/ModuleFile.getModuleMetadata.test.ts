@@ -6,7 +6,7 @@ import {
   PropValueType,
   PropShape,
   FileMetadataKind,
-} from "../../src/index-cjs";
+} from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
