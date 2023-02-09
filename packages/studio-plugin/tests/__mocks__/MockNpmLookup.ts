@@ -1,5 +1,5 @@
 import typescript, { Extension } from "typescript";
-import { NpmLookup } from "../../src";
+import { NpmLookup } from "../../src/index-cjs";
 
 export default class MockNpmLookup extends NpmLookup {
   constructor(moduleName: string) {

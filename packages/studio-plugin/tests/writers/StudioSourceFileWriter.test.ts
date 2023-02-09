@@ -1,5 +1,5 @@
 import { Project } from "ts-morph";
-import { PropValueKind, PropValueType } from "../../src";
+import { PropValueKind, PropValueType } from "../../src/index-cjs";
 import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
 
 describe("createPropsObjectLiteralWriter", () => {

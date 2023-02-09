@@ -13,7 +13,7 @@ import {
   FileMetadataKind,
   ModuleMetadata,
   PageState,
-} from "../src";
+} from "../src/index-cjs";
 
 const bannerComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,

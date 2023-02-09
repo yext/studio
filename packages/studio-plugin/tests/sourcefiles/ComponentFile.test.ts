@@ -6,7 +6,7 @@ import {
   FileMetadataKind,
   PropValueKind,
   PropValueType,
-} from "../../src";
+} from "../../src/index-cjs";
 
 describe("getComponentMetadata", () => {
   const project = createTsMorphProject();
