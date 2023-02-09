@@ -72,7 +72,7 @@ describe("aggregates data as expected", () => {
     tsMorphProject,
     userPaths,
     [],
-    filename => import(filename),
+    (filename) => import(filename),
     false
   );
   let studioData: StudioData;
@@ -140,7 +140,7 @@ describe("aggregates data as expected", () => {
         tsMorphProject,
         userPaths,
         [],
-        filename => import(filename),
+        (filename) => import(filename),
         true
       );
       const studioData = await orchestrator.getStudioData();
@@ -159,7 +159,7 @@ describe("aggregates data as expected", () => {
         tsMorphProject,
         userPaths,
         [],
-        filename => import(filename),
+        (filename) => import(filename),
         true
       );
       await expect(orchestrator.getStudioData()).rejects.toThrow(
@@ -175,7 +175,7 @@ describe("includes plugins in aggregate data as expected", () => {
     tsMorphProject,
     userPaths,
     [PluginConfig],
-    filename => import(filename),
+    (filename) => import(filename),
     false
   );
   let studioData: StudioData;
@@ -219,7 +219,7 @@ it("throws an error when the page imports components from unexpected folders", a
     tsMorphProject,
     userPaths,
     [],
-    filename => import(filename),
+    (filename) => import(filename),
     false
   );
   await expect(orchestrator.getStudioData()).rejects.toThrow(
@@ -238,7 +238,7 @@ it("throws when the pages folder does not exist", async () => {
     tsMorphProject,
     userPaths,
     [],
-    filename => import(filename),
+    (filename) => import(filename),
     false
   );
   await expect(orchestrator.getStudioData()).rejects.toThrow(
@@ -253,7 +253,12 @@ describe("reloadFile", () => {
   const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
   const originalFile = fs.readFileSync(modulePath, "utf-8");
   const project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(project, userPaths, [], filename => import(filename));
+  const orchestrator = new ParsingOrchestrator(
+    project,
+    userPaths,
+    [],
+    (filename) => import(filename)
+  );
 
   afterEach(() => {
     fs.writeFileSync(modulePath, originalFile);

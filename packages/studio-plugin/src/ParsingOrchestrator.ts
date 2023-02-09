@@ -242,7 +242,9 @@ export default class ParsingOrchestrator {
         `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
       );
     }
-    const mapping = await this.jsonImporter(localDataMappingFilepath) as { [key: string]: string[] };
+    const mapping = (await this.jsonImporter(localDataMappingFilepath)) as {
+      [key: string]: string[];
+    };
     this.localDataMapping = mapping;
     return mapping;
   }
