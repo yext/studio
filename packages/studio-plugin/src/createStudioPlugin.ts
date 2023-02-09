@@ -7,8 +7,6 @@ import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
-import FileWatchOrchestrator from "./FileWatchOrchestrator";
-import sendHMRUpdate from "./messaging/sendHMRUpdate";
 
 /**
  * Handles server-client communication.
@@ -71,9 +69,9 @@ export default async function createStudioPlugin(
       }
     },
     configureServer: createConfigureStudioServer(
-      fileSystemManager, 
-      orchestrator, 
-      pathToUserProjectRoot, 
+      fileSystemManager,
+      orchestrator,
+      pathToUserProjectRoot,
       studioConfig.paths
     ),
     handleHotUpdate: createHandleHotUpdate(

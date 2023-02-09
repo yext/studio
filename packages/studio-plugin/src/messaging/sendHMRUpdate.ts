@@ -1,12 +1,17 @@
 import { WebSocketServer } from "vite";
 import getStudioConfig from "../parsers/getStudioConfig";
-import { StudioData, StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "../types";
+import {
+  StudioData,
+  StudioHMRPayload,
+  StudioHMRUpdateID,
+  UserPaths,
+} from "../types";
 
 export default async function sendHMRUpdate(
   studioData: StudioData,
-  filepath: string, 
+  filepath: string,
   server: WebSocketServer,
-  pathToUserProjectRoot: string, 
+  pathToUserProjectRoot: string,
   userPaths: UserPaths
 ) {
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
