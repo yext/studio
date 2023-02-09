@@ -14,6 +14,8 @@ export default async function getLocalDataMapping(
       `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
     );
   }
-  const mapping = await import(localDataMappingFilepath, { assert: { type: 'json' }}) ;
+  const mapping = await import(localDataMappingFilepath, {
+    assert: { type: "json" },
+  });
   return mapping.default;
 }

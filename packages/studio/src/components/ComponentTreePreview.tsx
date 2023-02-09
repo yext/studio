@@ -188,7 +188,7 @@ function useExpressionSources(
   const activeEntityFile = useStudioStore(
     (store) => store.pages.activeEntityFile
   );
-  console.log('activeentitytfile', activeEntityFile)
+  console.log("activeentitytfile", activeEntityFile);
   useLayoutEffect(() => {
     const siteSettingsSource = siteSettingValues
       ? transformPropValuesToRaw(siteSettingValues)
