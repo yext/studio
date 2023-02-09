@@ -31,7 +31,7 @@ export default function registerSaveChangesListener(
       await Promise.all(
         pendingChanges.pagesToUpdate.map(async (pageToUpdate) => {
           const filepath = pageNameToPageState[pageToUpdate]?.filepath;
-          fileManager.updatePageFile(
+          await fileManager.updatePageFile(
             filepath,
             pageNameToPageState[pageToUpdate]
           );
