@@ -14,6 +14,6 @@ export default async function getLocalDataMapping(
       `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
     );
   }
-  const mapping = await import(/* @vite-ignore */ localDataMappingFilepath);
+  const mapping = await import(/* @vite-ignore */ localDataMappingFilepath, { assert: { type: 'json' }});
   return mapping.default;
 }
