@@ -106,10 +106,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },
-    addComponentToPage(pageName: string, componentState: ComponentState) {
-      const tree = get().pages[pageName].componentTree;
-      get().setComponentTreeInPage(pageName, [...tree, componentState]);
-    },
     removeComponentFromPage(pageName: string, componentUUID: string) {
       const componentTree = get().pages[pageName].componentTree;
       get().setComponentTreeInPage(

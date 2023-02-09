@@ -1,5 +1,6 @@
 import {
   ComponentState,
+  ComponentStateKind,
   ComponentTreeHelpers,
   ModuleMetadata,
   ModuleState,
@@ -73,16 +74,36 @@ export default class ComponentActions {
   };
 
   addComponent = (componentState: ComponentState) => {
-    const { activePageName, getModuleStateBeingEdited } = this.getPages();
-    const moduleStateBeingEdited = getModuleStateBeingEdited();
-    if (moduleStateBeingEdited) {
-      this.getFileMetadatas().addComponentToModule(
-        moduleStateBeingEdited.metadataUUID,
-        componentState
-      );
-    } else if (activePageName) {
-      this.getPages().addComponentToPage(activePageName, componentState);
+    const activeComponentState = this.getActiveComponentState();
+    const activeComponentMetadata =
+      activeComponentState?.kind === ComponentStateKind.Standard
+        ? this.getFileMetadatas().getComponentMetadata(
+            activeComponentState.metadataUUID
+          )
+        : undefined;
+    const activeComponentIsParent =
+      activeComponentMetadata?.acceptsChildren ||
+      activeComponentState?.kind === ComponentStateKind.Fragment ||
+      activeComponentState?.kind === ComponentStateKind.BuiltIn;
+    const parentUUID = activeComponentIsParent
+      ? activeComponentState?.uuid
+      : activeComponentState?.parentUUID;
+    const updatedComponentState = {
+      ...componentState,
+      parentUUID,
+    };
+
+    const tree = this.getComponentTree();
+    if (!tree) {
+      return;
     }
+    const { activeComponentUUID } = this.getPages();
+    const activeComponentIndex = tree.findIndex(
+      (c) => c.uuid === activeComponentUUID
+    );
+    const updatedTree = [...tree];
+    updatedTree.splice(activeComponentIndex + 1, 0, updatedComponentState);
+    return this.updateComponentTree(updatedTree);
   };
 
   removeComponent = (componentUUID: string) => {
