@@ -44,11 +44,11 @@ beforeEach(() => {
     },
     fileMetadatas: {
       UUIDToFileMetadata: {
-        test: {
+        Testy: {
           kind: FileMetadataKind.Module,
           componentTree: [],
-          metadataUUID: "test",
-          filepath: "src/modules/test.tsx",
+          metadataUUID: "testy",
+          filepath: "src/modules/Testy.tsx",
         },
       },
     },
@@ -77,34 +77,26 @@ it("gives an error if the module name is already used", async () => {
   render(<CreateModuleButton />);
   await userEvent.click(screen.getByRole("button"));
   const textbox = screen.getByRole("textbox");
-  await userEvent.type(textbox, "test");
+  await userEvent.type(textbox, "Testy");
   const saveButton = screen.getByRole("button", { name: "Save" });
-  const consoleErrorSpy = jest
-    .spyOn(global.console, "error")
-    .mockImplementation();
   await userEvent.click(saveButton);
-  expect(screen.getByText("Module name already used.")).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1);
-  expect(consoleErrorSpy).toBeCalledWith(
-    'Error creating module: module name "test" is already used.'
-  );
+  expect(
+    screen.getByText(
+      'Error creating module: module name "Testy" is already used.'
+    )
+  ).toBeDefined();
 });
 
 it("gives an error if the module path is invalid", async () => {
   render(<CreateModuleButton />);
   await userEvent.click(screen.getByRole("button"));
   const textbox = screen.getByRole("textbox");
-  await userEvent.type(textbox, "../test");
+  await userEvent.type(textbox, "../Test");
   const saveButton = screen.getByRole("button", { name: "Save" });
-  const consoleErrorSpy = jest
-    .spyOn(global.console, "error")
-    .mockImplementation();
   await userEvent.click(saveButton);
-  expect(screen.getByText("Module path is invalid.")).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1);
-  expect(consoleErrorSpy).toBeCalledWith(
-    expect.stringContaining("Error creating module: filepath is invalid")
-  );
+  expect(
+    screen.getByText('Error creating module: moduleName is invalid: "../Test".')
+  ).toBeDefined();
 });
 
 it("closes the modal when a module is successfully created", async () => {
@@ -112,11 +104,9 @@ it("closes the modal when a module is successfully created", async () => {
   render(<CreateModuleButton />);
   await userEvent.click(screen.getByRole("button"));
   const textbox = screen.getByRole("textbox");
-  await userEvent.type(textbox, "module");
+  await userEvent.type(textbox, "Module");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  expect(createModuleSpy).toBeCalledWith(
-    expect.stringMatching(/\/module.tsx$/)
-  );
+  expect(createModuleSpy).toBeCalledWith("Module");
   expect(screen.queryByText("Save")).toBeNull();
 });
