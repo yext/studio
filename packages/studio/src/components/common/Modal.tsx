@@ -20,7 +20,8 @@ const customReactModalStyles = {
     left: "50%",
     right: "50%",
     bottom: "auto",
-    marginRight: "-30%",
+    marginRight: "-95%",
+    maxWidth: "600px",
     transform: "translate(-50%, -50%)",
   },
   overlay: {
