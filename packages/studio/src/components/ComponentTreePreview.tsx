@@ -22,7 +22,6 @@ import { useLayoutEffect } from "react";
 import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
-import initialStudioData from "virtual:yext-studio";
 import classNames from "classnames";
 
 interface ComponentTreePreviewProps {
@@ -200,6 +199,10 @@ function useExpressionSources(
     }));
   }, [siteSettingValues]);
 
+  const localDataPath = useStudioStore(
+    (store) => store.studioConfig.paths.localData
+  );
+
   useLayoutEffect(() => {
     if (!activeEntityFile) {
       return setExpressionSources((prev) => {
@@ -207,14 +210,14 @@ function useExpressionSources(
         return otherSources;
       });
     }
-    const entityFilepath = `${initialStudioData.userPaths.localData}/${activeEntityFile}`;
+    const entityFilepath = `${localDataPath}/${activeEntityFile}`;
     import(/* @vite-ignore */ entityFilepath).then((importedModule) => {
       setExpressionSources((prev) => ({
         ...prev,
         document: importedModule["default"] as Record<string, unknown>,
       }));
     });
-  }, [activeEntityFile]);
+  }, [activeEntityFile, localDataPath]);
 
   useLayoutEffect(() => {
     const propsSource = Object.entries(props ?? {}).reduce(

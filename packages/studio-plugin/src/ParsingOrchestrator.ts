@@ -3,7 +3,6 @@ import {
   FileMetadata,
   UserPaths,
   StudioData,
-  PageState,
   SiteSettingsValues,
   SiteSettings,
   PluginConfig,
@@ -16,7 +15,6 @@ import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 import { NpmLookup } from "./utils";
-import { JsonImporter } from "./types/JsonImporter";
 
 export function createTsMorphProject() {
   return new Project({
@@ -38,7 +36,6 @@ export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
   private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
-  private localDataMapping?: Record<string, string[]>;
   private siteSettingsFile?: SiteSettingsFile;
   private filepathToPluginComponentData: Record<string, PluginComponentData>;
 
@@ -47,44 +44,24 @@ export default class ParsingOrchestrator {
     private project: Project,
     private paths: UserPaths,
     plugins: PluginConfig[],
-    private jsonImporter: JsonImporter,
-    private isPagesJSRepo?: boolean
+    private localDataMapping?: Record<string, string[]>
   ) {
-    this.filepathToPluginComponentData = this.getFilepathToPluginNames(plugins);
-    this.filepathToFileMetadata = this.setFilepathToFileMetadata();
+    this.filepathToPluginComponentData = initFilepathToPluginNames(plugins);
+    this.filepathToFileMetadata = this.initFilepathToFileMetadata();
+    this.pageNameToPageFile = this.initPageNameToPageFile();
   }
 
-  private getFilepathToPluginNames(
-    plugins: PluginConfig[] = []
-  ): Record<string, PluginComponentData> {
-    const filepathToPluginNames = {};
-
-    plugins.forEach((plugin: PluginConfig) => {
-      const npmModule = new NpmLookup(plugin.name);
-      Object.entries(plugin.components).forEach(([componentName, filepath]) => {
-        const absPath = path.join(npmModule.getRootPath(), filepath);
-        filepathToPluginNames[absPath] = {
-          moduleName: plugin.name,
-          componentName,
-        };
-      });
-    });
-
-    return filepathToPluginNames;
-  }
-
-  async getPageFile(pageName: string): Promise<PageFile> {
+  getPageFile(pageName: string): PageFile {
     const pageFile = this.pageNameToPageFile[pageName];
     if (pageFile) {
       return pageFile;
     }
-    let localDataMapping: Record<string, string[]> | undefined =
-      this.localDataMapping;
-    if (!localDataMapping && this.isPagesJSRepo) {
-      localDataMapping = await this.getLocalDataMapping();
-    }
-    const pageEntityFiles = localDataMapping?.[pageName];
-    const newPageFile = new PageFile(
+    return this.createPageFile(pageName);
+  }
+
+  private createPageFile(pageName: string) {
+    const pageEntityFiles = this.localDataMapping?.[pageName];
+    return new PageFile(
       path.join(this.paths.pages, pageName + ".tsx"),
       this.getFileMetadata,
       this.getFileMetadataByUUID,
@@ -92,8 +69,6 @@ export default class ParsingOrchestrator {
       this.filepathToPluginComponentData,
       pageEntityFiles
     );
-    this.pageNameToPageFile[pageName] = newPageFile;
-    return newPageFile;
   }
 
   getModuleFile(filepath: string): ModuleFile {
@@ -127,21 +102,38 @@ export default class ParsingOrchestrator {
    */
   reloadFile(filepath: string) {
     const sourceFile = this.project.getSourceFile(filepath);
-    if (sourceFile) {
-      sourceFile.refreshFromFileSystemSync();
+    if (!sourceFile) {
+      return;
     }
+
+    sourceFile.refreshFromFileSystemSync();
     if (
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)
     ) {
+      const originalMetadataUUID =
+        this.filepathToFileMetadata[filepath].metadataUUID;
       delete this.filepathToFileMetadata[filepath];
-      this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
+      this.filepathToFileMetadata[filepath] = {
+        ...this.getFileMetadata(filepath),
+        metadataUUID: originalMetadataUUID,
+      };
+    } else if (filepath.startsWith(this.paths.pages)) {
+      const pageName = path.basename(filepath, ".tsx");
+      delete this.pageNameToPageFile[pageName];
+      this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
     }
   }
 
-  async getStudioData(): Promise<StudioData> {
+  getStudioData(): StudioData {
     const siteSettings = this.getSiteSettings();
-    const pageNameToPageState = await this.getPageNameToPageState();
+    const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(
+      (prev, curr) => {
+        prev[curr] = this.pageNameToPageFile[curr].getPageState();
+        return prev;
+      },
+      {}
+    );
 
     return {
       pageNameToPageState,
@@ -151,7 +143,7 @@ export default class ParsingOrchestrator {
     };
   }
 
-  private setFilepathToFileMetadata(): Record<string, FileMetadata> {
+  private initFilepathToFileMetadata(): Record<string, FileMetadata> {
     this.filepathToFileMetadata = {};
 
     const addDirectoryToMapping = (folderPath: string) => {
@@ -215,56 +207,23 @@ export default class ParsingOrchestrator {
   private getFileMetadataByUUID = (
     metadataUUID: string
   ): FileMetadata | undefined => {
-    const fileMetadata = Object.values(this.filepathToFileMetadata).find(
+    return Object.values(this.filepathToFileMetadata).find(
       (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
     );
-
-    if (!fileMetadata) {
-      return;
-    }
-
-    return fileMetadata;
   };
 
-  private async getLocalDataMapping(): Promise<
-    Record<string, string[]> | undefined
-  > {
-    if (this.localDataMapping) {
-      return this.localDataMapping;
-    }
-    const streamMappingFile = "mapping.json";
-    const localDataMappingFilepath = path.join(
-      this.paths.localData,
-      streamMappingFile
-    );
-    if (!fs.existsSync(localDataMappingFilepath)) {
-      throw new Error(
-        `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
-      );
-    }
-    const mapping = (await this.jsonImporter(localDataMappingFilepath)) as {
-      [key: string]: string[];
-    };
-    this.localDataMapping = mapping;
-    return mapping;
-  }
-
-  private async getPageNameToPageState(): Promise<Record<string, PageState>> {
+  private initPageNameToPageFile(): Record<string, PageFile> {
     if (!fs.existsSync(this.paths.pages)) {
       throw new Error(
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
     const files = fs.readdirSync(this.paths.pages, "utf-8");
-    const arrayOfPageNameToStateEntries: [string, PageState][] =
-      await Promise.all(
-        files.map(async (file) => {
-          const pageName = path.basename(file, ".tsx");
-          const pageFile = await this.getPageFile(pageName);
-          return [pageName, pageFile.getPageState()];
-        })
-      );
-    return Object.fromEntries(arrayOfPageNameToStateEntries);
+    return files.reduce((pageMap, filename) => {
+      const pageName = path.basename(filename, ".tsx");
+      pageMap[pageName] = this.getPageFile(pageName);
+      return pageMap;
+    }, {} as Record<string, PageFile>);
   }
 
   private getSiteSettings(): SiteSettings | undefined {
@@ -288,4 +247,23 @@ export default class ParsingOrchestrator {
   updateSiteSettings(siteSettingsValues: SiteSettingsValues): void {
     this.siteSettingsFile?.updateSiteSettingValues(siteSettingsValues);
   }
+}
+
+function initFilepathToPluginNames(
+  plugins: PluginConfig[] = []
+): Record<string, PluginComponentData> {
+  const filepathToPluginNames = {};
+
+  plugins.forEach((plugin: PluginConfig) => {
+    const npmModule = new NpmLookup(plugin.name);
+    Object.entries(plugin.components).forEach(([componentName, filepath]) => {
+      const absPath = path.join(npmModule.getRootPath(), filepath);
+      filepathToPluginNames[absPath] = {
+        moduleName: plugin.name,
+        componentName,
+      };
+    });
+  });
+
+  return filepathToPluginNames;
 }

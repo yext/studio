@@ -9,11 +9,14 @@ import {
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
 import { v4 } from "uuid";
+import path from "path-browserify";
+import StudioConfigSlice from "./models/slices/StudioConfigSlice";
 
-export default class ComponentActions {
+export default class StudioActions {
   constructor(
     private getPages: () => PageSlice,
-    private getFileMetadatas: () => FileMetadataSlice
+    private getFileMetadatas: () => FileMetadataSlice,
+    private getStudioConfig: () => StudioConfigSlice
   ) {}
 
   getComponentTree = () => {
@@ -152,5 +155,22 @@ export default class ComponentActions {
       }
     );
     this.updateComponentTree(updatedComponentTree);
+  };
+
+  createPage = (pageName: string) => {
+    if (!pageName) {
+      throw new Error("Error adding page: a pageName is required.");
+    }
+    const pagesPath = this.getStudioConfig().paths.pages;
+    const filepath = path.join(pagesPath, pageName + ".tsx");
+    if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
+    }
+    this.getPages().addPage(pageName, {
+      componentTree: [],
+      cssImports: [],
+      filepath,
+    });
+    this.getPages().setActivePage(pageName);
   };
 }

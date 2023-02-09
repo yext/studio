@@ -6,7 +6,6 @@ import {
   PropValues,
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
-import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
@@ -30,34 +29,17 @@ const initialStates: PageSliceStates = {
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pageActions = {
-    addPage: (filepath: string) => {
-      if (!filepath) {
-        console.error("Error adding page: a filepath is required.");
-        return false;
-      }
-      const pagesPath = initialStudioData.userPaths.pages;
-      if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
-        console.error(`Error adding page: filepath is invalid: ${filepath}`);
-        return false;
-      }
-      const pageName = path.basename(filepath, ".tsx");
+    addPage: (pageName: string, page: PageState) => {
       if (get().pages[pageName]) {
-        console.error(
+        throw new Error(
           `Error adding page: page name "${pageName}" is already used.`
         );
-        return false;
       }
 
       set((store) => {
-        store.pages[pageName] = {
-          componentTree: [],
-          cssImports: [],
-          filepath,
-        };
+        store.pages[pageName] = page;
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
-      get().setActivePage(pageName);
-      return true;
     },
     removePage: (pageName: string) => {
       set((store) => {

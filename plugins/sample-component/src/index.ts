@@ -1,6 +1,6 @@
 import { PluginConfig } from "@yext/studio-plugin";
 
-export * from "./components";
+export * from "./components/index.js";
 
 const pluginConfig: PluginConfig = {
   name: "@yext/sample-component",

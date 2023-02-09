@@ -28,7 +28,7 @@ export class FileSystemWriter {
    * @param pageState - the updated state for the page file
    */
   async writeToPageFile(pageName: string, pageState: PageState): Promise<void> {
-    const pageFile = await this.orchestrator.getPageFile(pageName);
+    const pageFile = this.orchestrator.getPageFile(pageName);
     pageFile.updatePageFile(pageState, {
       updateStreamConfig: this.isPagesJSRepo,
     });

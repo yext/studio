@@ -1,8 +1,9 @@
-import ComponentActions from "../ComponentActions";
+import StudioActions from "../StudioActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousSaveSlice from "./slices/PreviousSaveSlice";
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
+import StudioConfigSlice from "./slices/StudioConfigSlice";
 
 /**
  * The overall shape of the Zustand store as the state manager for Studio.
@@ -16,5 +17,6 @@ export type StudioStore = {
   previousSave: PreviousSaveSlice;
   saveChanges: () => void;
   createModule: (filepath: string) => boolean;
-  actions: ComponentActions;
+  actions: StudioActions;
+  studioConfig: StudioConfigSlice;
 };

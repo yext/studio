@@ -1,12 +1,4 @@
-import { ConfigEnv } from "vite";
-import createStudioPluginFactory from "./createStudioPlugin";
-import { JsonImporter } from "./types/JsonImporter";
-
-const createStudioPlugin = (args: ConfigEnv) => {
-  const jsonImporter: JsonImporter = (filename) =>
-    import(/* @vite-ignore */ filename, { assert: { type: "json " } });
-  return createStudioPluginFactory(args, jsonImporter);
-};
+import createStudioPlugin from "./createStudioPlugin";
 
 export default createStudioPlugin;
 export * from "./types";

@@ -4,6 +4,7 @@ import { StudioData } from "./StudioData";
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
 }
+export const StudioHMRUpdateID = "studio:hmrUpdate";
 
 export interface SaveChangesPayload
   extends Pick<StudioData, "pageNameToPageState" | "UUIDToFileMetadata"> {
@@ -15,6 +16,11 @@ export interface SaveChangesPayload
   siteSettings: {
     values?: SiteSettingsValues;
   };
+}
+
+export interface StudioHMRPayload {
+  updateType: "siteSettings" | "components" | "modules" | "pages" | "full";
+  studioData: StudioData;
 }
 
 export type StudioEventMap = {

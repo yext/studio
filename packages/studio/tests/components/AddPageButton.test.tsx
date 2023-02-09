@@ -27,7 +27,11 @@ it("closes the modal when a page name is successfully added", async () => {
   await userEvent.type(textbox, "test");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  expect(addPageSpy).toBeCalledWith(expect.stringMatching(/\/test.tsx$/));
+  expect(addPageSpy).toBeCalledWith("test", {
+    componentTree: [],
+    cssImports: [],
+    filepath: expect.stringContaining("test.tsx"),
+  });
   expect(screen.queryByText("Save")).toBeNull();
 });
 
@@ -38,15 +42,12 @@ it("gives an error if the page name is already used", async () => {
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "universal");
   const saveButton = screen.getByRole("button", { name: "Save" });
-  const consoleErrorSpy = jest
-    .spyOn(global.console, "error")
-    .mockImplementation();
   await userEvent.click(saveButton);
-  expect(screen.getByText("Page name already used.")).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1);
-  expect(consoleErrorSpy).toBeCalledWith(
-    'Error adding page: page name "universal" is already used.'
-  );
+  expect(
+    screen.getByText(
+      'Error adding page: page name "universal" is already used.'
+    )
+  ).toBeDefined();
 });
 
 it("gives an error if the page path is invalid", async () => {
@@ -56,13 +57,8 @@ it("gives an error if the page path is invalid", async () => {
   const textbox = screen.getByRole("textbox");
   await userEvent.type(textbox, "../test");
   const saveButton = screen.getByRole("button", { name: "Save" });
-  const consoleErrorSpy = jest
-    .spyOn(global.console, "error")
-    .mockImplementation();
   await userEvent.click(saveButton);
-  expect(screen.getByText("Page path is invalid.")).toBeDefined();
-  expect(consoleErrorSpy).toBeCalledTimes(1);
-  expect(consoleErrorSpy).toBeCalledWith(
-    expect.stringContaining("Error adding page: filepath is invalid")
-  );
+  expect(
+    screen.getByText("Error adding page: pageName is invalid: ../test")
+  ).toBeDefined();
 });
