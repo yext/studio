@@ -1,8 +1,8 @@
-import useStudioStore from "../../src/store/useStudioStore";
-import * as sendMessageModule from "../../src/messaging/sendMessage";
-import mockStore from "../__utils__/mockStore";
+import useStudioStore from "../../../src/store/useStudioStore";
+import * as sendMessageModule from "../../../src/messaging/sendMessage";
+import mockStore from "../../__utils__/mockStore";
 import { FileMetadata, FileMetadataKind, MessageID } from "@yext/studio-plugin";
-import { PagesRecord } from "../../src/store/models/slices/PageSlice";
+import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 
 const mockPages: PagesRecord = {
   UpdateMe: {
