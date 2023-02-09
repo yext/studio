@@ -6,7 +6,7 @@ import { existsSync } from "fs";
  */
 export default async function getLocalDataMapping(
   localDataPath: string
-): Promise<Record<string, string[]> | undefined> {
+): Promise<Record<string, string[]>> {
   const streamMappingFile = "mapping.json";
   const localDataMappingFilepath = join(localDataPath, streamMappingFile);
   if (!existsSync(localDataMappingFilepath)) {
