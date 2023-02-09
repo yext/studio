@@ -4,7 +4,7 @@ import { JsonImporter } from "./types/JsonImporter";
 
 const createStudioPlugin = (args: ConfigEnv) => {
   const jsonImporter: JsonImporter = (filename) =>
-    import(filename, { assert: { type: "json " } });
+    import(/* @vite-ignore */ filename, { assert: { type: "json " } });
   return createStudioPluginFactory(args, jsonImporter);
 };
 

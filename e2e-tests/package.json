@@ -2,6 +2,7 @@
   "name": "e2e-tests",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "playwright": "playwright test",
     "report": "playwright show-report "
