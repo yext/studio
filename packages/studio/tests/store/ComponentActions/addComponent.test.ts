@@ -211,7 +211,7 @@ function insertionOrderTestSuite(
     );
   });
 
-  it("puts new component directly after built-in compoent if it is active component", () => {
+  it("puts new component directly after built-in component if it is active component", () => {
     useStudioStore.getState().pages.setActiveComponentUUID("mock-builtin-uuid");
     useStudioStore.getState().actions.addComponent(newComponentState);
     expect(getExpectedObject()).toEqual(
