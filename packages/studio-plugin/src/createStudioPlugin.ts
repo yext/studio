@@ -8,6 +8,7 @@ import { FileSystemWriter } from "./writers/FileSystemWriter";
 import { UserPaths } from "./types";
 import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
+import { JsonImporter } from "./types/JsonImporter";
 
 /**
  * Handles server-client communication.
@@ -16,7 +17,8 @@ import createConfigureStudioServer from "./configureStudioServer";
  * for the initial load, and messaging using the vite HMR API.
  */
 export default async function createStudioPlugin(
-  args: ConfigEnv
+  args: ConfigEnv,
+  jsonImporter: JsonImporter
 ): Promise<Plugin> {
   const getLocalDataMapping = (await import("./parsers/getLocalDataMapping"))
     .default;
@@ -28,7 +30,7 @@ export default async function createStudioPlugin(
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
   const localDataMapping = studioConfig.isPagesJSRepo
-    ? await getLocalDataMapping(studioConfig.paths.localData)
+    ? await getLocalDataMapping(studioConfig.paths.localData, jsonImporter)
     : undefined;
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,

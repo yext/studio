@@ -8,7 +8,7 @@ import {
   FileMetadataKind,
   PageState,
   StudioData,
-} from "../src";
+} from "../src/types";
 import { Project } from "ts-morph";
 import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
 import fs from "fs";
@@ -217,7 +217,12 @@ describe("reloadFile", () => {
   const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
   const originalFile = fs.readFileSync(modulePath, "utf-8");
   const project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(project, userPaths, []);
+  const orchestrator = new ParsingOrchestrator(
+    project,
+    userPaths,
+    [],
+    (filename) => import(filename)
+  );
 
   afterEach(() => {
     fs.writeFileSync(modulePath, originalFile);

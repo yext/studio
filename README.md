@@ -1,4 +1,4 @@
-This is a monorepo for Studio-related packages, using [Turbo](https://turbo.build/) build system and npm as package manager.
+This is a mono-repo for Studio-related packages, using [Turbo](https://turbo.build/) build system and npm as package manager.
 
 ### Apps and Packages
 

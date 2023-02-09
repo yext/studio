@@ -49,10 +49,6 @@ interface PageSliceActions {
     pageName: string,
     componentTree: ComponentState[]
   ) => void;
-  addComponentToPage: (
-    pageName: string,
-    componentState: ComponentState
-  ) => void;
   removeComponentFromPage: (pageName: string, uuidToRemove: string) => void;
   getModuleStateBeingEdited: () => ModuleState | undefined;
 
