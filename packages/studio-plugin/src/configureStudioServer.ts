@@ -1,6 +1,7 @@
 import { ViteDevServer } from "vite";
 import FileSystemManager from "./FileSystemManager";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
+import sendHMRUpdate from "./messaging/sendHMRUpdate";
 
 /**
  * A factory method for our vite plugin's configureServer handler.

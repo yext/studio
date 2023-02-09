@@ -5,9 +5,11 @@ import ParsingOrchestrator, {
 } from "./ParsingOrchestrator";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
-import { UserPaths } from "./types";
 import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
+import FileWatchOrchestrator from "./FileWatchOrchestrator";
+import sendHMRUpdate from "./messaging/sendHMRUpdate";
+
 /**
  * Handles server-client communication.
  *
@@ -50,34 +52,24 @@ export default async function createStudioPlugin(
   // Vite will import deps like react-dev-utils in the browser.
   // This causes an error to be thrown regarding `process` not being defined.
   const { default: openBrowser } = await import("react-dev-utils/openBrowser");
-  const { readdirSync, existsSync, lstatSync } = await import("fs");
-  const path = await import("path");
 
   return {
     name: "yext-studio-vite-plugin",
-    async buildStart() {
+    buildStart() {
       if (args.mode === "development" && args.command === "serve") {
         openBrowser("http://localhost:5173/");
       }
-      const watchDir = (dirPath: string) => {
-        if (existsSync(dirPath)) {
-          readdirSync(dirPath).forEach((filename) => {
-            const filepath = path.join(dirPath, filename);
-            if (lstatSync(filepath).isDirectory()) {
-              watchDir(filepath);
-            } else {
-              this.addWatchFile(filepath);
-            }
-          });
+
+      new FileWatchOrchestrator(
+        (filepath: string) => {
+          this.addWatchFile(filepath);
+          const studioData = orchestrator.getStudioData()
+          sendHMRUpdate(studioData, filepath, this)
+        },
+        (filepath: string) => {
+          orchestrator.removeFile(filepath);
         }
-      };
-      const watchUserFiles = (userPaths: UserPaths) => {
-        watchDir(userPaths.pages);
-        watchDir(userPaths.components);
-        watchDir(userPaths.modules);
-        this.addWatchFile(userPaths.siteSettings);
-      };
-      watchUserFiles(studioConfig.paths);
+      ).watchUserFiles(studioConfig.paths);
     },
     resolveId(id) {
       if (id === virtualModuleId) {

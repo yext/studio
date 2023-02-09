@@ -125,6 +125,16 @@ export default class ParsingOrchestrator {
     }
   }
 
+  removeFile = (filepath: string) => {
+    const sourceFile = this.project.getSourceFile(filepath);
+    if (sourceFile) {
+      this.project.removeSourceFile(sourceFile);
+    }
+    if (this.filepathToFileMetadata[filepath]) {
+      delete this.filepathToFileMetadata[filepath];
+    }
+  };
+
   getStudioData(): StudioData {
     const siteSettings = this.getSiteSettings();
     const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(

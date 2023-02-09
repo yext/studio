@@ -1,4 +1,5 @@
 import { HmrContext } from "vite";
+import sendHMRUpdate from "./messaging/sendHMRUpdate";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { UserPaths } from "./types";
@@ -26,32 +27,6 @@ export default function createHandleHotUpdate(
 
     orchestrator.reloadFile(ctx.file);
     const studioData = orchestrator.getStudioData();
-    const studioConfig = await getStudioConfig(pathToUserProjectRoot);
-    const data: StudioHMRPayload = {
-      updateType: getHMRUpdateType(ctx.file, userPaths),
-      studioData: {
-        ...studioData,
-        userPaths: studioConfig.paths,
-      },
-    };
-    ctx.server.ws.send({
-      type: "custom",
-      event: StudioHMRUpdateID,
-      data,
-    });
+    sendHMRUpdate(studioData, ctx.file, ctx.server, pathToUserProjectRoot, userPaths);
   };
-}
-
-function getHMRUpdateType(file: string, userPaths: UserPaths) {
-  const updateTypes: Exclude<keyof UserPaths, "localData">[] = [
-    "siteSettings",
-    "components",
-    "modules",
-    "pages",
-  ];
-  return (
-    updateTypes.find((updateType) => {
-      return file.startsWith(userPaths[updateType]);
-    }) ?? "full"
-  );
 }
