@@ -8,6 +8,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.30.0",
-    "@yext/studio": "*"
+    "@yext/studio": "*",
+    "vite": "^4.1.1"
   }
 }
