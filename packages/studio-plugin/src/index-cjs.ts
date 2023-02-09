@@ -3,7 +3,8 @@ import createStudioPluginFactory from "./createStudioPlugin";
 import { JsonImporter } from "./types/JsonImporter";
 
 const createStudioPlugin = (args: ConfigEnv) => {
-  const jsonImporter: JsonImporter = (filename) => import(/* @vite-ignore */ filename);
+  const jsonImporter: JsonImporter = (filename) =>
+    import(/* @vite-ignore */ filename);
   return createStudioPluginFactory(args, jsonImporter);
 };
 
