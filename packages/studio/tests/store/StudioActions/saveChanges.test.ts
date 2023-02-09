@@ -40,7 +40,6 @@ beforeEach(() => {
 });
 
 it("sends pending changes to server to update files", () => {
-  console.log(useStudioStore.getState());
   const sendMessageSpy = jest.spyOn(sendMessageModule, "default");
   useStudioStore.getState().actions.saveChanges();
   expect(sendMessageSpy).toBeCalledTimes(1);
@@ -58,13 +57,13 @@ it("sends pending changes to server to update files", () => {
   });
 });
 
-// it("resets pending changes on successful response from server after saving changes", () => {
-//   useStudioStore.getState().actions.saveChanges();
-//   expect(useStudioStore.getState().pages.pendingChanges).toEqual({
-//     pagesToRemove: new Set(),
-//     pagesToUpdate: new Set(),
-//   });
-//   expect(useStudioStore.getState().fileMetadatas.pendingChanges).toEqual({
-//     modulesToUpdate: new Set(),
-//   });
-// });
+it("resets pending changes on successful response from server after saving changes", () => {
+  useStudioStore.getState().actions.saveChanges();
+  expect(useStudioStore.getState().pages.pendingChanges).toEqual({
+    pagesToRemove: new Set(),
+    pagesToUpdate: new Set(),
+  });
+  expect(useStudioStore.getState().fileMetadatas.pendingChanges).toEqual({
+    modulesToUpdate: new Set(),
+  });
+});

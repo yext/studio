@@ -185,7 +185,6 @@ export default class StudioActions {
         UUIDToFileMetadata,
       },
     });
-    console.log(this.getPreviousSave());
     this.getPreviousSave().setPreviousSave(previousSaveState);
   };
 

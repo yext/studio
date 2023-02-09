@@ -5,10 +5,17 @@ import {
 } from "@yext/studio-plugin";
 import { v4 } from "uuid";
 
+/**
+ * A map of pending message UUID to its Promise resolution callback for
+ * the Promise returned by {@link sendMessage}.
+ */
 type ListenerMap = {
   [uuid: string]: (payload: ResponseEventMap[MessageID]) => void;
 };
 
+/**
+ * A mapping of MessageID to ListenerMap.
+ */
 const messageIdToPendingMessages = Object.values(MessageID).reduce(
   (listeners, messageID) => {
     listeners[messageID] = {} as ListenerMap;
@@ -16,7 +23,6 @@ const messageIdToPendingMessages = Object.values(MessageID).reduce(
   },
   {} as Record<MessageID, ListenerMap>
 );
-
 Object.values(MessageID).forEach((messageID) => {
   import.meta.hot?.on(messageID, (payload: ResponseEventMap[MessageID]) => {
     const callback = messageIdToPendingMessages[messageID][payload.uuid];
@@ -26,6 +32,11 @@ Object.values(MessageID).forEach((messageID) => {
   });
 });
 
+/**
+ * Send a message to the backend, e.g. to save changes to file or deploy changes.
+ *
+ * @returns A Promise that will be resolved once a response is received from the server.
+ */
 export default async function sendMessage<T extends MessageID>(
   messageId: T,
   payload: StudioEventMap[T]
