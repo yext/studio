@@ -140,16 +140,16 @@ describe("adds components to the active PageState when no module is being edited
 function insertionOrderTestSuite(
   getExpectedObject: () => PageState | FileMetadata
 ) {
-  it("puts new component at end when no active component", () => {
+  it("puts new component at start when no active component", () => {
     useStudioStore.getState().actions.addComponent(newComponentState);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
-        componentTree: [...initialTree, newComponentState],
+        componentTree: [newComponentState, ...initialTree],
       })
     );
   });
 
-  it("puts new component at end when container is active component", () => {
+  it("puts new component directly after container if it is active component", () => {
     useStudioStore
       .getState()
       .pages.setActiveComponentUUID("mock-container-uuid");
@@ -157,8 +157,9 @@ function insertionOrderTestSuite(
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
-          ...initialTree,
+          initialTree[0],
           { ...newComponentState, parentUUID: "mock-container-uuid" },
+          ...initialTree.slice(1),
         ],
       })
     );
@@ -194,7 +195,7 @@ function insertionOrderTestSuite(
     );
   });
 
-  it("puts new component at end when fragment is active component", () => {
+  it("puts new component directly after fragment if it is active component", () => {
     useStudioStore
       .getState()
       .pages.setActiveComponentUUID("mock-fragment-uuid");
@@ -202,14 +203,15 @@ function insertionOrderTestSuite(
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
-          ...initialTree,
+          ...initialTree.slice(0, 4),
           { ...newComponentState, parentUUID: "mock-fragment-uuid" },
+          ...initialTree.slice(4),
         ],
       })
     );
   });
 
-  it("puts new component at end when built-in compoent is active component", () => {
+  it("puts new component directly after built-in compoent if it is active component", () => {
     useStudioStore.getState().pages.setActiveComponentUUID("mock-builtin-uuid");
     useStudioStore.getState().actions.addComponent(newComponentState);
     expect(getExpectedObject()).toEqual(

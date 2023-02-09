@@ -74,9 +74,6 @@ export default class ComponentActions {
   };
 
   addComponent = (componentState: ComponentState) => {
-    const { activePageName, getModuleStateBeingEdited, activeComponentUUID } =
-      this.getPages();
-
     const activeComponentState = this.getActiveComponentState();
     const activeComponentMetadata =
       activeComponentState?.kind === ComponentStateKind.Standard
@@ -97,25 +94,16 @@ export default class ComponentActions {
     };
 
     const tree = this.getComponentTree();
-    if (tree && !activeComponentIsParent) {
-      const activeComponentIndex = tree.findIndex(
-        (c) => c.uuid === activeComponentUUID
-      );
-      if (activeComponentIndex >= 0) {
-        const updatedTree = [...tree];
-        updatedTree.splice(activeComponentIndex + 1, 0, updatedComponentState);
-        return this.updateComponentTree(updatedTree);
-      }
+    if (!tree) {
+      return;
     }
-    const moduleStateBeingEdited = getModuleStateBeingEdited();
-    if (moduleStateBeingEdited) {
-      this.getFileMetadatas().addComponentToModule(
-        moduleStateBeingEdited.metadataUUID,
-        updatedComponentState
-      );
-    } else if (activePageName) {
-      this.getPages().addComponentToPage(activePageName, updatedComponentState);
-    }
+    const { activeComponentUUID } = this.getPages();
+    const activeComponentIndex = tree.findIndex(
+      (c) => c.uuid === activeComponentUUID
+    );
+    const updatedTree = [...tree];
+    updatedTree.splice(activeComponentIndex + 1, 0, updatedComponentState);
+    return this.updateComponentTree(updatedTree);
   };
 
   removeComponent = (componentUUID: string) => {
