@@ -19,9 +19,9 @@ export function registerListener<T extends MessageID>(
     try {
       const msg = await listener(data.payload);
       sendClientMessage(client, messageId, {
-        type: 'success',
+        type: "success",
         uuid: data.uuid,
-        msg
+        msg,
       });
     } catch (error: unknown) {
       let msg = `Error occurred for event ${messageId}`;

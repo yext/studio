@@ -42,7 +42,9 @@ export default function createHandleHotUpdate(
       data,
     });
 
-    const gitDataModule = ctx.server.moduleGraph.getModuleById("\0" + VirtualModuleID.GitData)
+    const gitDataModule = ctx.server.moduleGraph.getModuleById(
+      "\0" + VirtualModuleID.GitData
+    );
     if (gitDataModule) {
       await gitWrapper.refreshData();
       ctx.server.moduleGraph.invalidateModule(gitDataModule);

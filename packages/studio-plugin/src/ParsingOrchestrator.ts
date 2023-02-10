@@ -139,7 +139,7 @@ export default class ParsingOrchestrator {
       pageNameToPageState,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
-      userPaths: this.paths
+      userPaths: this.paths,
     };
   }
 

@@ -83,7 +83,7 @@ export default async function createStudioPlugin(
     },
     async resolveId(id) {
       if (id === VirtualModuleID.StudioData || id === VirtualModuleID.GitData) {
-        return "\0" + id
+        return "\0" + id;
       }
     },
     load(id) {

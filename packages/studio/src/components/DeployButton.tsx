@@ -1,8 +1,8 @@
 import useStudioStore from "../store/useStudioStore";
 import { useCallback, useState } from "react";
-import gitData from 'virtual:yext-studio-git-data'
+import gitData from "virtual:yext-studio-git-data";
 
-console.log(gitData)
+console.log(gitData);
 
 /**
  * Renders a button for saving, committing, and pushing changes..

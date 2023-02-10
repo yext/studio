@@ -34,5 +34,5 @@ export type ResponseEventMap = {
     type: "success" | "error";
     msg: string;
     uuid: string;
-  }
+  };
 };

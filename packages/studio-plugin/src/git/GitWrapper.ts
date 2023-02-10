@@ -19,29 +19,29 @@ export default class GitWrapper {
     return this.gitData;
   }
 
-  private async canPush(): Promise<{ reason?: string, status: boolean }> {
+  private async canPush(): Promise<{ reason?: string; status: boolean }> {
     const remotes = await this.git.getRemotes();
     if (remotes.length === 0) {
       return {
         status: false,
-        reason: 'No remote branches found.'
+        reason: "No remote branches found.",
       };
     } else if (remotes.length > 1) {
       return {
         status: false,
-        reason: 'Multiple remote branches found.'
+        reason: "Multiple remote branches found.",
       };
     }
-    const diff = await this.git.diff(['--stat', remotes[0].name]);
-    console.log(diff)
+    const diff = await this.git.diff(["--stat", remotes[0].name]);
+    console.log(diff);
     return {
       status: true,
-      reason: "No prob"
-    }
+      reason: "No prob",
+    };
   }
 
   async refreshData() {
-    console.log('refreshing')
+    console.log("refreshing");
     const canPush = await this.canPush();
     this.gitData = { canPush };
   }
