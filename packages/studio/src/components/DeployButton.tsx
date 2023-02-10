@@ -22,6 +22,9 @@ export default function DeployButton() {
   useEffect(() => {
     // When the HMR update is fully complete after a deploy,
     // reset deployInProgress back to false.
+    // Setting it back to false immediately after awaiting the deploy action
+    // can lead to an intermediate state when deployInProgress is false
+    // but the HMR update hasn't completed yet, resulting in a momentary flicker.
     if (!gitData.canPush.status) {
       setDeployInProgress(false);
     }
