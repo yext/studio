@@ -6,7 +6,7 @@ import { Tooltip } from "react-tooltip";
 
 const tooltipAnchorID = "YextStudio-deployButton";
 
-console.log(gitData)
+console.log(gitData);
 
 /**
  * Renders a button for saving, committing, and pushing changes..
