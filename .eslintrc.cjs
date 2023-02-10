@@ -5,5 +5,23 @@ module.exports = {
     "**/lib",
     "**/build",
     "packages/studio-plugin/tests/__fixtures__/**/*.tsx",
+    ".eslintrc.cjs",
+  ],
+  parserOptions: {
+    project: ["tsconfig.json"],
+  },
+  rules: {
+    "@typescript-eslint/require-await": "error",
+    "@typescript-eslint/no-misused-promises": "error",
+    "@typescript-eslint/no-floating-promises": "error",
+  },
+  overrides: [
+    {
+      files: ["**/*.test.*"],
+      rules: {
+        "@typescript-eslint/require-await": "off",
+        "@typescript-eslint/no-floating-promises": "off",
+      },
+    },
   ],
 };

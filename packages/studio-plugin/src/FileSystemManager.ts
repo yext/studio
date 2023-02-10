@@ -24,7 +24,7 @@ export default class FileSystemManager {
     return this.paths;
   }
 
-  async updatePageFile(filepath: string, pageState: PageState): Promise<void> {
+  updatePageFile(filepath: string, pageState: PageState): void {
     if (filepath.startsWith(this.paths.pages)) {
       FileSystemManager.openFile(filepath);
       return this.writer.writeToPageFile(
