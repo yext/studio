@@ -16,6 +16,7 @@ import {
   PropValues,
   ComponentState,
   transformPropValuesToRaw,
+  PropShape,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
@@ -27,6 +28,7 @@ import classNames from "classnames";
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   props?: PropValues;
+  propShape?: PropShape;
   isWithinModule?: boolean;
 }
 
@@ -36,12 +38,14 @@ interface ComponentTreePreviewProps {
 export default function ComponentTreePreview({
   componentTree,
   props,
+  propShape,
   isWithinModule,
 }: ComponentTreePreviewProps): JSX.Element {
   useImportedComponents(componentTree);
   const elements = useComponentTreeElements(
     componentTree,
     props,
+    propShape,
     isWithinModule
   );
   return <>{elements}</>;
@@ -54,6 +58,7 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   props?: PropValues,
+  propShape?: PropShape,
   isWithinModule?: boolean
 ): (JSX.Element | null)[] | null {
   const [UUIDToImportedComponent, UUIDToFileMetadata] = useStudioStore(
@@ -62,7 +67,7 @@ function useComponentTreeElements(
       store.fileMetadatas.UUIDToFileMetadata,
     ]
   );
-  const expressionSources = useExpressionSources(props);
+  const expressionSources = useExpressionSources(props, propShape);
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
     if (Object.keys(UUIDToImportedComponent).length === 0) {
@@ -85,6 +90,7 @@ function useComponentTreeElements(
             <ComponentTreePreview
               componentTree={metadata.componentTree}
               props={c.props}
+              propShape={metadata.propShape}
               isWithinModule={true}
               key={c.uuid}
             />
@@ -177,17 +183,18 @@ function HighlightingContainer(props: PropsWithChildren<{ uuid: string }>) {
  * value sourced from props, site settings file, or a Stream document.
  */
 function useExpressionSources(
-  props?: PropValues
+  props?: PropValues,
+  propShape?: PropShape
 ): Record<string, Record<string, unknown>> {
   const [expressionSources, setExpressionSources] = useState<
     Record<string, Record<string, unknown>>
   >({});
-  const siteSettingValues = useStudioStore(
-    (store) => store.siteSettings.values
-  );
-  const activeEntityFile = useStudioStore(
-    (store) => store.pages.activeEntityFile
-  );
+  const [siteSettingValues, activeEntityFile, isModuleBeingEdited] =
+    useStudioStore((store) => [
+      store.siteSettings.values,
+      store.pages.activeEntityFile,
+      !!store.pages.moduleUUIDBeingEdited,
+    ]);
 
   useLayoutEffect(() => {
     const siteSettingsSource = siteSettingValues
@@ -204,7 +211,7 @@ function useExpressionSources(
   );
 
   useLayoutEffect(() => {
-    if (!activeEntityFile) {
+    if (!activeEntityFile || isModuleBeingEdited) {
       return setExpressionSources((prev) => {
         const { document: _, ...otherSources } = prev;
         return otherSources;
@@ -217,21 +224,21 @@ function useExpressionSources(
         document: importedModule["default"] as Record<string, unknown>,
       }));
     });
-  }, [activeEntityFile, localDataPath]);
+  }, [activeEntityFile, localDataPath, isModuleBeingEdited]);
 
   useLayoutEffect(() => {
-    const propsSource = Object.entries(props ?? {}).reduce(
-      (map, [propName, proVal]) => {
-        map[propName] = proVal.value;
-        return map;
-      },
-      {}
-    );
-    setExpressionSources((prev) => ({
-      ...prev,
-      props: propsSource,
-    }));
-  }, [props]);
+    setExpressionSources((prev) => {
+      const { props: _, ...otherSources } = prev;
+      if (!props || !propShape) {
+        return otherSources;
+      }
+      const propsSource = getPreviewProps(props, propShape, otherSources);
+      return {
+        ...otherSources,
+        props: propsSource,
+      };
+    });
+  }, [props, propShape]);
 
   return expressionSources;
 }

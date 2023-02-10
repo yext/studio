@@ -6,9 +6,17 @@ import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
 
 export default function App() {
-  const componentTree = useStudioStore((store) =>
-    store.actions.getComponentTree()
-  );
+  const [componentTree, getModuleStateBeingEdited, UUIDToFileMetadata] =
+    useStudioStore((store) => [
+      store.actions.getComponentTree(),
+      store.pages.getModuleStateBeingEdited,
+      store.fileMetadatas.UUIDToFileMetadata,
+    ]);
+  const moduleStateBeingEdited = getModuleStateBeingEdited();
+  const props = moduleStateBeingEdited?.props;
+  const propShape =
+    moduleStateBeingEdited &&
+    UUIDToFileMetadata[moduleStateBeingEdited.metadataUUID].propShape;
 
   return (
     <div className="App">
@@ -19,7 +27,11 @@ export default function App() {
           <ActivePagePanel />
           <div className="grow w-1/3 bg-gray-300">
             {componentTree && (
-              <ComponentTreePreview componentTree={componentTree} />
+              <ComponentTreePreview
+                componentTree={componentTree}
+                props={props}
+                propShape={propShape}
+              />
             )}
           </div>
           <EditorPanel />
