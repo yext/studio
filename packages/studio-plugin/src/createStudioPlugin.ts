@@ -81,7 +81,7 @@ export default async function createStudioPlugin(
       };
       watchUserFiles(studioConfig.paths);
     },
-    async resolveId(id) {
+    resolveId(id) {
       if (id === VirtualModuleID.StudioData || id === VirtualModuleID.GitData) {
         return "\0" + id;
       }

@@ -13,5 +13,4 @@ export default {
   "Global Colors": {
     primary: "#AABBCC",
   },
-  optionalString: "",
 };
