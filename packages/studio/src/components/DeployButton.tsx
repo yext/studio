@@ -6,8 +6,6 @@ import { Tooltip } from "react-tooltip";
 
 const tooltipAnchorID = "YextStudio-deployButton";
 
-console.log('!!!\n\n', gitData);
-
 /**
  * Renders a button for saving, committing, and pushing changes..
  */
@@ -15,20 +13,22 @@ export default function DeployButton() {
   const deploy = useStudioStore((store) => store.actions.deploy);
   const [deployInProgress, setDeployInProgress] = useState(false);
   const hasChanges = useHasChanges();
-  console.log({ deployInProgress})
-  
-  useEffect(() => {
-    console.log("HRMHRMRHMRHRMHRMRHMRNHMRHRNMHRJ", gitData)
-  }, [gitData.canPush.status])
 
   const handleClick = useCallback(async () => {
     setDeployInProgress(true);
     await deploy();
   }, [deploy, setDeployInProgress]);
 
+  useEffect(() => {
+    // When the HMR update is fully complete after a deploy,
+    // reset deployInProgress back to false.
+    if (!gitData.canPush.status) {
+      setDeployInProgress(false);
+    }
+  }, []);
+
   const isDisabled =
     deployInProgress || (!hasChanges && !gitData.canPush.status);
-  console.error(isDisabled, deployInProgress, hasChanges, gitData);
 
   return (
     <button
