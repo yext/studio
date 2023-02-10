@@ -20,35 +20,45 @@ export default class GitWrapper {
   }
 
   private async canPush(): Promise<{ reason?: string; status: boolean }> {
-    const remotes = await this.git.getRemotes();
-    if (remotes.length === 0) {
-      return {
-        status: false,
-        reason: "No remotes found.",
-      };
-    } else if (remotes.length > 1) {
-      return {
-        status: false,
-        reason: "Multiple remotes found.",
-      };
-    }
-    const upstreamBranch = await this.git.revparse(["--abbrev-ref", "@{u}"]);
-    if (!upstreamBranch) {
-      return {
-        status: false,
-        reason: "No upstream branch found",
-      };
-    }
-    const diff = await this.git.diff(["--stat", upstreamBranch]);
-    if (!diff) {
-      return {
-        status: false,
-        reason: "No changes to push.",
-      };
+    try {
+      const remotes = await this.git.getRemotes();
+      if (remotes.length === 0) {
+        return {
+          status: false,
+          reason: "No remotes found.",
+        };
+      } else if (remotes.length > 1) {
+        return {
+          status: false,
+          reason: "Multiple remotes found.",
+        };
+      }
+      const upstreamBranch = await this.git.revparse(["--abbrev-ref", "@{u}"]);
+      if (!upstreamBranch) {
+        return {
+          status: false,
+          reason: "No upstream branch found",
+        };
+      }
+      const diff = await this.git.diff(["--stat", upstreamBranch]);
+      if (!diff) {
+        return {
+          status: false,
+          reason: "No changes to push.",
+        };
+      }
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return {
+          status: false,
+          reason: err.message,
+        };
+      } else {
+        throw err;
+      }
     }
     return {
       status: true,
-      reason: "No prob",
     };
   }
 
