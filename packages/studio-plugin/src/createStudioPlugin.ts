@@ -97,8 +97,7 @@ export default async function createStudioPlugin(
     handleHotUpdate: createHandleHotUpdate(
       orchestrator,
       pathToUserProjectRoot,
-      studioConfig.paths,
-      gitWrapper
+      studioConfig.paths
     ),
   };
 }

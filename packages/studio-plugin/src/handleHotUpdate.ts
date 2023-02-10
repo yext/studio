@@ -1,6 +1,4 @@
 import { HmrContext } from "vite";
-import GitWrapper from "./git/GitWrapper";
-import reloadGitData from "./git/reloadGitData";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { UserPaths } from "./types";
@@ -12,8 +10,7 @@ import { StudioHMRPayload, StudioHMRUpdateID } from "./types/messages";
 export default function createHandleHotUpdate(
   orchestrator: ParsingOrchestrator,
   pathToUserProjectRoot: string,
-  userPaths: UserPaths,
-  gitWrapper: GitWrapper
+  userPaths: UserPaths
 ) {
   /**
    * When an HMR event is received, if there are any associated modules, reload them.

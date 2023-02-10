@@ -20,7 +20,7 @@ export default function DeployButton() {
   }, [deploy, setDeployInProgress]);
 
   const isDisabled =
-    !hasChanges && (deployInProgress || !gitData.canPush.status);
+    deployInProgress || (!hasChanges && !gitData.canPush.status);
 
   return (
     <button
