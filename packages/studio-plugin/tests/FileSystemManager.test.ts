@@ -76,10 +76,10 @@ jest
   }));
 
 describe("updatePageFile", () => {
-  it("throw errors if the filepath to update is not a valid page path", async () => {
-    await expect(
+  it("throw errors if the filepath to update is not a valid page path", () => {
+    expect(() =>
       fileManager.updatePageFile("/invalid/pages/NewPage.tsx", pageState)
-    ).rejects.toThrow(
+    ).toThrow(
       'Cannot update page file: filepath "/invalid/pages/NewPage.tsx"' +
         ` is not within the expected path for pages "${paths.pages}".`
     );
