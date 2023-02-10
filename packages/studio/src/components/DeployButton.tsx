@@ -20,6 +20,7 @@ export default function DeployButton() {
   useEffect(() => {
     if (import.meta.hot) {
       import.meta.hot.accept(() => {
+        console.log('self accept');
         setDeployInProgress(false);
       })
     }
