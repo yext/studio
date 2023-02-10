@@ -13,5 +13,5 @@ export default async function reloadGitData(
   if (!gitDataModule) {
     throw new Error("Expected a GitData module.");
   }
-  server.reloadModule(gitDataModule);
+  await server.reloadModule(gitDataModule);
 }
