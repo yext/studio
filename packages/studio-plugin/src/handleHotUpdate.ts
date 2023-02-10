@@ -41,7 +41,6 @@ export default function createHandleHotUpdate(
       event: StudioHMRUpdateID,
       data,
     });
-    await reloadGitData(gitWrapper, ctx.server);
   };
 }
 
