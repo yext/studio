@@ -7,7 +7,7 @@ import ContainerWithButtons from "../modules/ContainerWithButtons";
 export default function UniversalPage() {
   return (
     <div>
-      <Banner />
+      <Banner bgColor="#FFFFFF" bool={false} num={0} title="" />
       <Container>
         <Button bgColor="bg-red-100" />
       </Container>
