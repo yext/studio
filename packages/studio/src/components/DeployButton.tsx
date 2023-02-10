@@ -1,5 +1,5 @@
 import useStudioStore from "../store/useStudioStore";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import gitData from "virtual:yext-studio-git-data";
 import useHasChanges from "../hooks/useHasChanges";
 import { Tooltip } from "react-tooltip";
@@ -16,15 +16,18 @@ export default function DeployButton() {
   const [deployInProgress, setDeployInProgress] = useState(false);
   const hasChanges = useHasChanges();
   console.log({ deployInProgress})
-
-  const handleClick = useCallback(async () => {
-    setDeployInProgress(true);
-    await deploy();
+  
+  useEffect(() => {
     if (import.meta.hot) {
       import.meta.hot.accept(() => {
         setDeployInProgress(false);
       })
     }
+  }, [setDeployInProgress])
+
+  const handleClick = useCallback(async () => {
+    setDeployInProgress(true);
+    await deploy();
   }, [deploy, setDeployInProgress]);
 
   const isDisabled =
