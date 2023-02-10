@@ -40,7 +40,7 @@ Object.values(MessageID).forEach((messageID) => {
 export default async function sendMessage<T extends MessageID>(
   messageId: T,
   payload: StudioEventMap[T]
-): Promise<string> {
+): Promise<ResponseEventMap[T]> {
   const uuid = v4();
   import.meta.hot?.send(messageId, {
     uuid,
@@ -52,9 +52,9 @@ export default async function sendMessage<T extends MessageID>(
     const listenerMap: ListenerMap = messageIdToPendingMessages[messageId];
     listenerMap[uuid] = (payload) => {
       if (payload.type === "success") {
-        resolve(payload.msg);
+        resolve(payload);
       } else {
-        reject(payload.msg);
+        reject(payload);
       }
     };
   });

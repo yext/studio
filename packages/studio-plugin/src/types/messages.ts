@@ -4,6 +4,7 @@ import { StudioData } from "./StudioData";
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
   Deploy = "studio:deploy",
+  CanPush = "studio:canPush",
 }
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
@@ -27,12 +28,26 @@ export interface StudioHMRPayload {
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
   [MessageID.Deploy]: SaveChangesPayload;
+  [MessageID.CanPush]: undefined;
 };
 
+type EventResponse<R = never> = {
+  type: "success";
+  msg: string;
+  uuid: string;
+  res: R;
+} | {
+  type: "error";
+  msg: string;
+  uuid: string;
+  res?: never;
+}
+
 export type ResponseEventMap = {
-  [key in MessageID]: {
-    type: "success" | "error";
-    msg: string;
-    uuid: string;
-  };
+  [MessageID.Deploy]: EventResponse
+  [MessageID.SaveChanges]: EventResponse
+  [MessageID.CanPush]: EventResponse<{
+    canPush: boolean,
+    reason?: string
+  }>
 };

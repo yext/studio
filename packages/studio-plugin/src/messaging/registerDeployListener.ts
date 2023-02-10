@@ -1,7 +1,7 @@
 import { ViteDevServer } from "vite";
 import { MessageID, SaveChangesPayload } from "../types";
 import { registerListener } from "./registerListener";
-import { simpleGit as simpleGitFactory, SimpleGit } from "simple-git";
+import { simpleGit, SimpleGit } from "simple-git";
 import executeSaveChanges from "./executeSaveChanges";
 import FileSystemManager from "../FileSystemManager";
 
@@ -9,7 +9,7 @@ export default function registerDeployListener(
   server: ViteDevServer,
   fileManager: FileSystemManager
 ) {
-  const git: SimpleGit = simpleGitFactory();
+  const git: SimpleGit = simpleGit();
   registerListener(
     server,
     MessageID.Deploy,
@@ -18,7 +18,9 @@ export default function registerDeployListener(
       await git.add("-A");
       await git.commit("Yext Studio Commit");
       await git.push();
-      return "Deployed successfully.";
+      return {
+        msg: "Deployed successfully."
+      };
     }
   );
 }
