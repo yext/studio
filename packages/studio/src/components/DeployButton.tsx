@@ -15,6 +15,7 @@ export default function DeployButton() {
   const deploy = useStudioStore((store) => store.actions.deploy);
   const [deployInProgress, setDeployInProgress] = useState(false);
   const hasChanges = useHasChanges();
+  console.log({ deployInProgress})
 
   const handleClick = useCallback(async () => {
     setDeployInProgress(true);
