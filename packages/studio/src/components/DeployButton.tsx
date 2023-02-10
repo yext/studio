@@ -19,7 +19,8 @@ export default function DeployButton() {
     setDeployInProgress(false);
   }, [deploy, setDeployInProgress]);
 
-  const isDisabled = !hasChanges && (deployInProgress || !gitData.canPush.status)
+  const isDisabled =
+    !hasChanges && (deployInProgress || !gitData.canPush.status);
 
   return (
     <button
