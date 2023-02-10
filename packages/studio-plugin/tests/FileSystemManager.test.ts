@@ -91,7 +91,7 @@ describe("updatePageFile", () => {
       .spyOn(fs, "writeFileSync")
       .mockImplementation();
 
-    await fileManager.updatePageFile(
+    fileManager.updatePageFile(
       path.join(paths.pages, "NewPage.tsx"),
       pageState
     );
@@ -113,7 +113,7 @@ describe("updatePageFile", () => {
       .mockImplementation();
 
     const pageFilepath = path.join(paths.pages, "NewPage.tsx");
-    await fileManager.updatePageFile(pageFilepath, pageState);
+    fileManager.updatePageFile(pageFilepath, pageState);
 
     expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.pages, {
       recursive: true,
