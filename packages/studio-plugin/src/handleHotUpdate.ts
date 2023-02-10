@@ -1,8 +1,10 @@
 import { HmrContext } from "vite";
+import GitWrapper from "./git/GitWrapper";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { UserPaths } from "./types";
 import { StudioHMRPayload, StudioHMRUpdateID } from "./types/messages";
+import VirtualModuleID from "./VirtualModuleID";
 
 /**
  * Factory method for creating our handleHotUpdate handler.
@@ -10,7 +12,8 @@ import { StudioHMRPayload, StudioHMRUpdateID } from "./types/messages";
 export default function createHandleHotUpdate(
   orchestrator: ParsingOrchestrator,
   pathToUserProjectRoot: string,
-  userPaths: UserPaths
+  userPaths: UserPaths,
+  gitWrapper: GitWrapper
 ) {
   /**
    * When an HMR event is received, if there are any associated modules, reload them.
@@ -23,7 +26,6 @@ export default function createHandleHotUpdate(
     if (!ctx.file.startsWith(pathToUserProjectRoot)) {
       return;
     }
-
     orchestrator.reloadFile(ctx.file);
     const studioData = orchestrator.getStudioData();
     const studioConfig = await getStudioConfig(pathToUserProjectRoot);
@@ -39,6 +41,12 @@ export default function createHandleHotUpdate(
       event: StudioHMRUpdateID,
       data,
     });
+
+    const gitDataModule = ctx.server.moduleGraph.getModuleById("\0" + VirtualModuleID.GitData)
+    if (gitDataModule) {
+      await gitWrapper.refreshData();
+      ctx.server.moduleGraph.invalidateModule(gitDataModule);
+    }
   };
 }
 

@@ -7,17 +7,16 @@ import GitWrapper from "../git/GitWrapper";
 
 export default function registerDeployListener(
   server: ViteDevServer,
-  fileManager: FileSystemManager
+  fileManager: FileSystemManager,
+  gitWrapper: GitWrapper
 ) {
   registerListener(
     server,
     MessageID.Deploy,
     async (saveData: SaveChangesPayload) => {
       await executeSaveChanges(saveData, fileManager);
-      await GitWrapper.deploy();
-      return {
-        msg: "Deployed successfully."
-      };
+      await gitWrapper.deploy();
+      return "Deployed successfully.";
     }
   );
 }

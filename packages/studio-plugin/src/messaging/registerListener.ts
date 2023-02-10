@@ -13,17 +13,16 @@ type WebSocketListener<T extends MessageID> = WebSocketCustomListener<{
 export function registerListener<T extends MessageID>(
   server: ViteDevServer,
   messageId: T,
-  listener: (data: StudioEventMap[T]) => Promise<Pick<ResponseEventMap[T], 'msg' | 'res'>>
+  listener: (data: StudioEventMap[T]) => Promise<string>
 ) {
   const handleRes: WebSocketListener<T> = async (data, client) => {
     try {
-      const msgAndRes = await listener(data.payload);
-      const fullResponse = {
+      const msg = await listener(data.payload);
+      sendClientMessage(client, messageId, {
         type: 'success',
         uuid: data.uuid,
-        ...msgAndRes
-      } as ResponseEventMap[T];
-      sendClientMessage(client, messageId, fullResponse);
+        msg
+      });
     } catch (error: unknown) {
       let msg = `Error occurred for event ${messageId}`;
       if (typeof error === "string") {

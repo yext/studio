@@ -13,9 +13,7 @@ export default function registerSaveChangesListener(
     MessageID.SaveChanges,
     async (saveData: SaveChangesPayload) => {
       await executeSaveChanges(saveData, fileManager);
-      return {
-        msg: "Changes saved successfully."
-      };
+      return "Changes saved successfully.";
     }
   );
 }
