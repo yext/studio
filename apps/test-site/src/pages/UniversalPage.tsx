@@ -7,8 +7,8 @@ import ContainerWithButtons from "../modules/ContainerWithButtons";
 export default function UniversalPage() {
   return (
     <div>
-      <Banner bgColor="#FFFFFF" bool={false} num={0} title="asdf" />
-      <Container>
+      <Banner bgColor="#FFFFFF" bool={false} num={0} title="" />
+      <Container className="asdf">
         <Button bgColor="bg-red-100" />
       </Container>
       <AceComponent text="ace" />
