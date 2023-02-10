@@ -4,6 +4,7 @@ import { registerListener } from "./registerListener";
 import executeSaveChanges from "./executeSaveChanges";
 import FileSystemManager from "../FileSystemManager";
 import GitWrapper from "../git/GitWrapper";
+import reloadGitData from "../git/reloadGitData";
 
 export default function registerDeployListener(
   server: ViteDevServer,
@@ -16,6 +17,7 @@ export default function registerDeployListener(
     async (saveData: SaveChangesPayload) => {
       await executeSaveChanges(saveData, fileManager);
       await gitWrapper.deploy();
+      await reloadGitData(gitWrapper, server);
       return "Deployed successfully.";
     }
   );

@@ -24,16 +24,29 @@ export default class GitWrapper {
     if (remotes.length === 0) {
       return {
         status: false,
-        reason: "No remote branches found.",
+        reason: "No remotes found.",
       };
     } else if (remotes.length > 1) {
       return {
         status: false,
-        reason: "Multiple remote branches found.",
+        reason: "Multiple remotes found.",
       };
     }
-    const diff = await this.git.diff(["--stat", remotes[0].name]);
-    console.log(diff);
+    const upstreamBranch = await this.git.revparse(["--abbrev-ref", "@{u}"]);
+    if (!upstreamBranch) {
+      return {
+        status: false,
+        reason: "No upstream branch found",
+      };
+    }
+    const diff = await this.git.diff(["--stat", upstreamBranch]);
+    console.log(diff, upstreamBranch);
+    if (!diff) {
+      return {
+        status: false,
+        reason: "No changes to push.",
+      };
+    }
     return {
       status: true,
       reason: "No prob",

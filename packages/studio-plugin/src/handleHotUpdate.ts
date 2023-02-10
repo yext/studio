@@ -1,10 +1,10 @@
 import { HmrContext } from "vite";
 import GitWrapper from "./git/GitWrapper";
+import reloadGitData from "./git/reloadGitData";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { UserPaths } from "./types";
 import { StudioHMRPayload, StudioHMRUpdateID } from "./types/messages";
-import VirtualModuleID from "./VirtualModuleID";
 
 /**
  * Factory method for creating our handleHotUpdate handler.
@@ -41,14 +41,7 @@ export default function createHandleHotUpdate(
       event: StudioHMRUpdateID,
       data,
     });
-
-    const gitDataModule = ctx.server.moduleGraph.getModuleById(
-      "\0" + VirtualModuleID.GitData
-    );
-    if (gitDataModule) {
-      await gitWrapper.refreshData();
-      ctx.server.moduleGraph.invalidateModule(gitDataModule);
-    }
+    await reloadGitData(gitWrapper, ctx.server);
   };
 }
 
