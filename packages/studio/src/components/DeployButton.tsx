@@ -18,13 +18,8 @@ export default function DeployButton() {
   console.log({ deployInProgress})
   
   useEffect(() => {
-    if (import.meta.hot) {
-      import.meta.hot.accept(() => {
-        console.log('self accept');
-        setDeployInProgress(false);
-      })
-    }
-  }, [setDeployInProgress])
+    console.log("HRMHRMRHMRHRMHRMRHMRNHMRHRNMHRJ", gitData)
+  }, [gitData.canPush.status])
 
   const handleClick = useCallback(async () => {
     setDeployInProgress(true);
