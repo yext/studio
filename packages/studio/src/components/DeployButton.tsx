@@ -20,9 +20,11 @@ export default function DeployButton() {
   const handleClick = useCallback(async () => {
     setDeployInProgress(true);
     await deploy();
-    import.meta.hot?.accept(() => {
-      setDeployInProgress(false);
-    })
+    if (import.meta.hot) {
+      import.meta.hot.accept(() => {
+        setDeployInProgress(false);
+      })
+    }
   }, [deploy, setDeployInProgress]);
 
   const isDisabled =
