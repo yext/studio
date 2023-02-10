@@ -12,7 +12,7 @@ import PageSlice from "./models/slices/PageSlice";
 import { v4 } from "uuid";
 import sendMessage from "../messaging/sendMessage";
 import { cloneDeep } from "lodash";
-import SiteSettingSlice from "./models/slices/SiteSettingsSlice";
+import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
@@ -21,7 +21,7 @@ export default class StudioActions {
   constructor(
     private getPages: () => PageSlice,
     private getFileMetadatas: () => FileMetadataSlice,
-    private getSiteSettings: () => SiteSettingSlice,
+    private getSiteSettings: () => SiteSettingsSlice,
     private getPreviousSave: () => PreviousSaveSlice,
     private getStudioConfig: () => StudioConfigSlice
   ) {}

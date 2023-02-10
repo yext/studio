@@ -49,7 +49,7 @@ export default async function sendMessage<T extends MessageID>(
   } as any);
 
   return new Promise((resolve, reject) => {
-    const listenerMap = messageIdToPendingMessages[messageId as MessageID];
+    const listenerMap: ListenerMap = messageIdToPendingMessages[messageId];
     listenerMap[uuid] = (payload) => {
       if (payload.type === "success") {
         resolve(payload.msg);
