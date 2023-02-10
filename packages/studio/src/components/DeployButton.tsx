@@ -2,8 +2,9 @@ import useStudioStore from "../store/useStudioStore";
 import { useCallback, useState } from "react";
 import gitData from "virtual:yext-studio-git-data";
 import useHasChanges from "../hooks/useHasChanges";
+import { Tooltip } from "react-tooltip";
 
-console.log(gitData);
+const tooltipAnchorID = "YextStudio-deployButton";
 
 /**
  * Renders a button for saving, committing, and pushing changes..
@@ -29,7 +30,14 @@ export default function DeployButton() {
       disabled={isDisabled}
       aria-label="Deploy Changes to Repository"
     >
-      Deploy
+      <span id={tooltipAnchorID}>Deploy</span>
+      {isDisabled && gitData.canPush.reason && (
+        <Tooltip
+          className="z-20"
+          anchorId={tooltipAnchorID}
+          content={gitData.canPush.reason}
+        />
+      )}
     </button>
   );
 }

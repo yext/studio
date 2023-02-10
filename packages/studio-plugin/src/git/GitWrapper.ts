@@ -40,7 +40,6 @@ export default class GitWrapper {
       };
     }
     const diff = await this.git.diff(["--stat", upstreamBranch]);
-    console.log(diff, upstreamBranch);
     if (!diff) {
       return {
         status: false,
@@ -54,7 +53,6 @@ export default class GitWrapper {
   }
 
   async refreshData() {
-    console.log("refreshing");
     const canPush = await this.canPush();
     this.gitData = { canPush };
   }
