@@ -34,7 +34,7 @@ export default async function createStudioPlugin(
     studioConfig.paths,
     studioConfig.plugins,
     studioConfig.isPagesJSRepo,
-    localDataMapping,
+    localDataMapping
   );
   const initialStudioData = orchestrator.getStudioData();
 

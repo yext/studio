@@ -95,7 +95,7 @@ export default class StreamConfigWriter {
           primary: false,
         },
         ...currentTemplateConfig?.stream,
-        fields: this.streamFieldsMerger(currentFields, newFields)
+        fields: this.streamFieldsMerger(currentFields, newFields),
       },
     };
   }
