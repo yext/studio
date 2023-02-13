@@ -23,6 +23,7 @@ export default function createHandleHotUpdate(
       return;
     }
 
+    console.log('on hot update', ctx.file)
     orchestrator.reloadFile(ctx.file);
     const studioData = orchestrator.getStudioData();
     sendHMRUpdate(

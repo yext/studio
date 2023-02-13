@@ -34,6 +34,7 @@ export default function createConfigureStudioServer(
       );
     });
     server.watcher.on("add", (filepath) => {
+      console.log('on add', filepath)
       orchestrator.reloadFile(filepath);
       const studioData = orchestrator.getStudioData();
       sendHMRUpdate(
