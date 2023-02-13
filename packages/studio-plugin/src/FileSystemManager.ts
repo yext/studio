@@ -26,7 +26,7 @@ export default class FileSystemManager {
 
   updatePageFile(filepath: string, pageState: PageState): void {
     if (filepath.startsWith(this.paths.pages)) {
-      FileSystemManager.openFile(filepath);
+      FileSystemWriter.openFile(filepath);
       return this.writer.writeToPageFile(
         path.basename(filepath, ".tsx"),
         pageState
@@ -41,8 +41,6 @@ export default class FileSystemManager {
 
   updateModuleFile(filepath: string, moduleMetadata: ModuleMetadata) {
     if (filepath.startsWith(this.paths.modules)) {
-      FileSystemManager.openFile(filepath);
-      return this.writer.writeToModuleFile(filepath, moduleMetadata);
     } else {
       throw new Error(
         `Cannot update module file: filepath "${filepath}" is not within the` +
@@ -57,15 +55,5 @@ export default class FileSystemManager {
 
   syncFileMetadata(UUIDToFileMetadata: Record<string, FileMetadata>) {
     this.writer.syncFileMetadata(UUIDToFileMetadata);
-  }
-
-  private static openFile(filepath: string) {
-    if (!fs.existsSync(filepath)) {
-      const dirName = path.dirname(filepath);
-      if (!fs.existsSync(dirName)) {
-        fs.mkdirSync(dirName, { recursive: true });
-      }
-      fs.openSync(filepath, "w");
-    }
   }
 }

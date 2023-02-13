@@ -18,19 +18,21 @@ export default async function executeSaveChanges(
     siteSettings,
   } = saveData;
   hmrManager.pauseHMR();
+  fileManager.syncFileMetadata(UUIDToFileMetadata);
   pendingChanges.pagesToRemove.forEach((pageToRemove) => {
     const filepath =
       path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
     fileManager.removeFile(filepath);
     hmrManager.reloadFile(filepath);
   });
-  pendingChanges.modulesToUpdate.forEach((moduleUUID) => {
-    const metadata = UUIDToFileMetadata[moduleUUID];
-    if (metadata.kind === FileMetadataKind.Module) {
-      fileManager.updateModuleFile(metadata.filepath, metadata);
-    }
-    hmrManager.reloadFile(metadata.filepath);
-  });
+  // pendingChanges.modulesToUpdate.forEach((moduleUUID) => {
+  //   const metadata = UUIDToFileMetadata[moduleUUID];
+  //   if (metadata.kind === FileMetadataKind.Module) {
+  //     console.log('--- update module file', metadata.filepath)
+  //     fileManager.updateModuleFile(metadata.filepath, metadata);
+  //   }
+  //   hmrManager.reloadFile(metadata.filepath);
+  // });
   pendingChanges.pagesToUpdate.forEach((pageToUpdate) => {
     const filepath = pageNameToPageState[pageToUpdate]?.filepath;
     fileManager.updatePageFile(filepath, pageNameToPageState[pageToUpdate]);
@@ -39,7 +41,6 @@ export default async function executeSaveChanges(
   if (siteSettings?.values) {
     fileManager.updateSiteSettings(siteSettings.values);
   }
-  fileManager.syncFileMetadata(UUIDToFileMetadata);
   hmrManager.resumeHMR();
   await hmrManager.sendFullUpdate(server);
 }

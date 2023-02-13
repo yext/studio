@@ -106,18 +106,23 @@ export default class ParsingOrchestrator {
       return;
     }
 
+    console.log('reloading', path.basename(filepath, '.tsx'))
     sourceFile.refreshFromFileSystemSync();
     if (
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)
     ) {
-      const originalMetadataUUID =
-        this.filepathToFileMetadata[filepath].metadataUUID;
-      delete this.filepathToFileMetadata[filepath];
-      this.filepathToFileMetadata[filepath] = {
-        ...this.getFileMetadata(filepath),
-        metadataUUID: originalMetadataUUID,
-      };
+      if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
+        const originalMetadataUUID =
+          this.filepathToFileMetadata[filepath].metadataUUID;
+        delete this.filepathToFileMetadata[filepath];
+        this.filepathToFileMetadata[filepath] = {
+          ...this.getFileMetadata(filepath),
+          metadataUUID: originalMetadataUUID,
+        };
+      } else {
+        this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
+      }
     } else if (filepath.startsWith(this.paths.pages)) {
       const pageName = path.basename(filepath, ".tsx");
       delete this.pageNameToPageFile[pageName];
