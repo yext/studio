@@ -25,6 +25,10 @@ export default class HmrManager {
     console.log('hmr ga ugoki', this.shouldSendHotUpdates)
   }
 
+  reloadFile(filepath: string) {
+    this.orchestrator.reloadFile(filepath);
+  }
+
   /**
    * When an HMR event is received, if there are any associated modules, reload them.
    * Then, if the file can be recognized as one of the user's src files,

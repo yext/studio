@@ -17,7 +17,7 @@ export default function registerDeployListener(
     server,
     MessageID.Deploy,
     async (saveData: SaveChangesPayload) => {
-      executeSaveChanges(saveData, fileManager, hmrManager, server);
+      await executeSaveChanges(saveData, fileManager, hmrManager, server);
       await gitWrapper.deploy();
       await reloadGitData(gitWrapper, server);
       return "Deployed successfully.";

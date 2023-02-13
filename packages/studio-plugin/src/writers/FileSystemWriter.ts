@@ -71,6 +71,7 @@ export class FileSystemWriter {
         this.orchestrator
           .getModuleFile(updatedMetadata.filepath)
           .updateModuleFile(updatedMetadata);
+        this.orchestrator.reloadFile(updatedMetadata.filepath);
       }
     });
   }
