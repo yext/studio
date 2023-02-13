@@ -23,9 +23,13 @@ export default function createConfigureStudioServer(
   return function configureStudioServer(server: ViteDevServer) {
     registerSaveChangesListener(server, fileSystemManager, gitWrapper);
     registerDeployListener(server, fileSystemManager, gitWrapper);
-    server.watcher.add(userPaths.components);
-    server.watcher.add(userPaths.modules);
-    server.watcher.add(userPaths.pages);
+
+    server.watcher.add([
+      userPaths.components,
+      userPaths.modules,
+      userPaths.pages,
+    ]);
+
     server.watcher.on("unlink", (filepath) => {
       orchestrator.removeFile(filepath);
       const studioData = orchestrator.getStudioData();
@@ -37,17 +41,26 @@ export default function createConfigureStudioServer(
         userPaths
       );
     });
+
     server.watcher.on("add", (filepath) => {
-      console.log("on add", filepath);
-      orchestrator.reloadFile(filepath);
-      const studioData = orchestrator.getStudioData();
-      void sendHMRUpdate(
-        studioData,
-        filepath,
-        server,
-        pathToUserProjectRoot,
-        userPaths
-      );
+      const asyncHandler = async () => {
+        console.log("on add", filepath);
+        // const modules = server.moduleGraph.getModulesByFile(filepath);
+        // if (modules) {
+        //   await Promise.all([...modules].map((m) => server.reloadModule(m)));
+        // }
+
+        orchestrator.reloadFile(filepath);
+        const studioData = orchestrator.getStudioData();
+        await sendHMRUpdate(
+          studioData,
+          filepath,
+          server,
+          pathToUserProjectRoot,
+          userPaths
+        );
+      };
+      void asyncHandler();
     });
   };
 }

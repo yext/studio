@@ -6,6 +6,7 @@ import {
   StudioHMRUpdateID,
   UserPaths,
 } from "../types";
+import VirtualModuleID from "../VirtualModuleID";
 
 export default async function sendHMRUpdate(
   studioData: StudioData,
@@ -23,7 +24,7 @@ export default async function sendHMRUpdate(
     },
   };
   const studioModule = server.moduleGraph.getModuleById(
-    "\0virtual:yext-studio"
+    "\0" + VirtualModuleID.StudioData
   );
   if (studioModule) {
     server.moduleGraph.invalidateModule(studioModule);
