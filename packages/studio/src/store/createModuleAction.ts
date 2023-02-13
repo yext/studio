@@ -12,29 +12,30 @@ import { v4 } from "uuid";
 export default function getCreateModuleAction(
   get: () => StudioStore
 ): StudioStore["createModule"] {
-  function isValidFilepath(filepath: string): boolean {
-    if (!filepath) {
-      console.error("Error creating module: a filepath is required.");
-      return false;
-    }
-    const modulesPath = get().studioConfig.paths.modules;
-    if (!path.isAbsolute(filepath) || !filepath.startsWith(modulesPath)) {
-      console.error(`Error creating module: filepath is invalid: ${filepath}`);
-      return false;
-    }
+  function throwIfInvalidFilepath(filepath: string) {
+    const modulesFolder = get().studioConfig.paths.modules;
     const moduleName = path.basename(filepath, ".tsx");
-    if (
+    if (!path.isAbsolute(filepath) || !filepath.startsWith(modulesFolder)) {
+      throw new Error(
+        `Error creating module: modulePath is invalid: "${path.relative(
+          modulesFolder,
+          filepath
+        )}".`
+      );
+    } else if (moduleName.charAt(0) !== moduleName.charAt(0).toUpperCase()) {
+      throw new Error(
+        "Error creating module: Module names must start with an uppercase letter."
+      );
+    } else if (
       Object.values(get().fileMetadatas.UUIDToFileMetadata).some(
         (fileMetadata) =>
           path.basename(fileMetadata.filepath, ".tsx") === moduleName
       )
     ) {
-      console.error(
+      throw new Error(
         `Error creating module: module name "${moduleName}" is already used.`
       );
-      return false;
     }
-    return true;
   }
 
   function createModule(
@@ -42,7 +43,7 @@ export default function getCreateModuleAction(
     componentTree: ComponentState[],
     activeComponentState: ComponentState
   ) {
-    const metadataUUID = filepath;
+    const metadataUUID = v4();
     const childComponentTree = ComponentTreeHelpers.mapComponentTree<
       ComponentState[]
     >(
@@ -85,17 +86,19 @@ export default function getCreateModuleAction(
     get().pages.setActiveComponentUUID(moduleComponentUUID);
   }
 
-  return (filepath: string) => {
+  return (modulePath: string) => {
+    if (!modulePath) {
+      throw new Error("Error creating module: a modulePath is required.");
+    }
+    const modulesFolder = get().studioConfig.paths.modules;
+    const filepath = path.join(modulesFolder, modulePath + ".tsx");
+    throwIfInvalidFilepath(filepath);
+
     const componentTree = get().actions.getComponentTree() ?? [];
     const activeComponentState = get().actions.getActiveComponentState();
     if (!activeComponentState) {
-      console.error("Tried to create module without active component.");
-      return false;
-    }
-    if (!isValidFilepath(filepath)) {
-      return false;
+      throw new Error("Tried to create module without active component.");
     }
     createModule(filepath, componentTree, activeComponentState);
-    return true;
   };
 }
