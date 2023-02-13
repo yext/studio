@@ -27,9 +27,11 @@ export default function createHandleHotUpdate(
     if (!ctx.file.startsWith(pathToUserProjectRoot)) {
       return;
     }
-  
+
     orchestrator.reloadFile(ctx.file);
-    const studioModule = ctx.server.moduleGraph.getModuleById("\0" + VirtualModuleID.StudioData);
+    const studioModule = ctx.server.moduleGraph.getModuleById(
+      "\0" + VirtualModuleID.StudioData
+    );
     if (studioModule) {
       ctx.server.moduleGraph.invalidateModule(studioModule);
     }
