@@ -109,9 +109,9 @@ function getExpressionValue(
   function getValueFromPath(path: string, parentPath: string) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {
-      console.warn(
-        `Invalid expression source type: ${parentPath}. Unable to extract the desired data from path: ${path}`
-      );
+      // console.warn(
+      //   `Invalid expression source type: ${parentPath}. Unable to extract the desired data from path: ${path}`
+      // );
       return null;
     }
     const newPropValue =
@@ -127,9 +127,9 @@ function getExpressionValue(
       }
       return propVal.value;
     } else {
-      console.warn(
-        `Invalid expression prop value: ${newPropValue}. The value extracted from the expression "${path}" does not match with the expected propType ${propType}.`
-      );
+      // console.warn(
+      //   `Invalid expression prop value: ${newPropValue}. The value extracted from the expression "${path}" does not match with the expected propType ${propType}.`
+      // );
       return null;
     }
   }

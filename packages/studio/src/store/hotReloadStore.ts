@@ -6,6 +6,7 @@ import useStudioStore from "./useStudioStore";
  * When a custom studio HMR event is received, updates the store.
  */
 export default function hotReloadStore(payload: StudioHMRPayload) {
+  console.log('hot!', payload)
   const { updateType, studioData } = payload;
   switch (updateType) {
     case "components":

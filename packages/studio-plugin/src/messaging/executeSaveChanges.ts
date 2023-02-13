@@ -1,10 +1,14 @@
 import FileSystemManager from "../FileSystemManager";
 import { FileMetadataKind, SaveChangesPayload } from "../types";
 import path from "path";
+import HmrManager from "../HmrManager";
+import { ViteDevServer } from "vite"
 
 export default function executeSaveChanges(
   saveData: SaveChangesPayload,
-  fileManager: FileSystemManager
+  fileManager: FileSystemManager,
+  hmrManager: HmrManager,
+  server: ViteDevServer
 ) {
   const {
     pageNameToPageState,
@@ -12,7 +16,7 @@ export default function executeSaveChanges(
     UUIDToFileMetadata,
     siteSettings,
   } = saveData;
-
+  hmrManager.pauseHMR();
   pendingChanges.pagesToRemove.forEach((pageToRemove) => {
     const filepath =
       path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
@@ -32,4 +36,6 @@ export default function executeSaveChanges(
     fileManager.updateSiteSettings(siteSettings.values);
   }
   fileManager.syncFileMetadata(UUIDToFileMetadata);
+  hmrManager.resumeHMR();
+  hmrManager.sendFullUpdate(server);
 }

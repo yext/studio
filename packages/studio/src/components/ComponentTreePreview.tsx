@@ -96,9 +96,9 @@ function useComponentTreeElements(
             />
           );
         } else if (!UUIDToImportedComponent[c.metadataUUID]) {
-          console.warn(
-            `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
-          );
+          // console.warn(
+          //   `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
+          // );
           return null;
         }
         element = UUIDToImportedComponent[c.metadataUUID];

@@ -10,6 +10,7 @@ import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
+import HmrManager from "./HmrManager";
 /**
  * Handles server-client communication.
  *
@@ -37,6 +38,7 @@ export default async function createStudioPlugin(
     studioConfig.plugins,
     localDataMapping
   );
+  const hmrManager = new HmrManager(orchestrator, pathToUserProjectRoot, studioConfig.paths)
   const initialStudioData = orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
@@ -93,11 +95,7 @@ export default async function createStudioPlugin(
         return `export default ${JSON.stringify(gitWrapper.getStoredData())}`;
       }
     },
-    configureServer: createConfigureStudioServer(fileSystemManager, gitWrapper),
-    handleHotUpdate: createHandleHotUpdate(
-      orchestrator,
-      pathToUserProjectRoot,
-      studioConfig.paths
-    ),
+    configureServer: createConfigureStudioServer(fileSystemManager, gitWrapper, hmrManager),
+    handleHotUpdate: createHandleHotUpdate(hmrManager),
   };
 }
