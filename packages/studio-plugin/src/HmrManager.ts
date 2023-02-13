@@ -8,6 +8,7 @@ import { ViteDevServer } from 'vite';
  */
 export default class HmrManager {
   private shouldSendHotUpdates = true;
+  private timestamp?: number;
 
   constructor(
     private orchestrator: ParsingOrchestrator,
@@ -34,6 +35,11 @@ export default class HmrManager {
    * will be send to the client.
    */
   async handleHotUpdate(server: ViteDevServer, filepath: string) {
+    if (this.timestamp) {
+      console.log(Date.now() - this.timestamp)
+    }
+    console.log(filepath);
+    this.timestamp = Date.now()
     if (!filepath.startsWith(this.pathToUserProjectRoot)) {
       return;
     }

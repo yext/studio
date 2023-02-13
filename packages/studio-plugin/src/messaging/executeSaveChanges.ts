@@ -37,5 +37,5 @@ export default function executeSaveChanges(
   }
   fileManager.syncFileMetadata(UUIDToFileMetadata);
   hmrManager.resumeHMR();
-  hmrManager.sendFullUpdate(server);
+  // hmrManager.sendFullUpdate(server);
 }
