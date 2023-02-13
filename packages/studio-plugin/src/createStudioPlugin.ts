@@ -33,7 +33,8 @@ export default async function createStudioPlugin(
     tsMorphProject,
     studioConfig.paths,
     studioConfig.plugins,
-    localDataMapping
+    studioConfig.isPagesJSRepo,
+    localDataMapping,
   );
   const initialStudioData = orchestrator.getStudioData();
 

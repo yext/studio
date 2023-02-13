@@ -10,24 +10,7 @@ import { PropValueKind } from "../types/PropValues";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
-
-/**
- * These are stream properties that will throw an error if specified within
- * a "Stream.fields", with the exception of `id` (at the time of writing),
- * and should always be present in localData even if not specifically asked for.
- */
-const NON_CONFIGURABLE_STREAM_PROPERTIES = [
-  "__",
-  "businessId",
-  "id",
-  "key",
-  "locale",
-  "meta",
-  "siteDomain",
-  "siteId",
-  "siteInternalHostName",
-  "uid",
-];
+import { StreamConfigFieldsMerger } from "../utils/StreamConfigFieldsMerger";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
@@ -40,7 +23,8 @@ const STREAM_PAGE_PROPS_TYPE = "TemplateProps";
 export default class StreamConfigWriter {
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
-    private studioSourceFileParser: StudioSourceFileParser
+    private studioSourceFileParser: StudioSourceFileParser,
+    private streamFieldsMerger: StreamConfigFieldsMerger
   ) {}
 
   /**
@@ -96,13 +80,11 @@ export default class StreamConfigWriter {
       return undefined;
     }
 
-    const fields = [...usedDocumentPaths]
+    const currentFields = currentTemplateConfig?.stream?.fields || [];
+    const newFields = [...usedDocumentPaths]
       // Stream config's fields do not allow specifying an index of a field.
-      .map((documentPath) => documentPath.split("document.")[1].split("[")[0])
-      .filter(
-        (documentPath) =>
-          !NON_CONFIGURABLE_STREAM_PROPERTIES.includes(documentPath)
-      );
+      .map((documentPath) => documentPath.split("document.")[1].split("[")[0]);
+
     return {
       ...currentTemplateConfig,
       stream: {
@@ -113,7 +95,7 @@ export default class StreamConfigWriter {
           primary: false,
         },
         ...currentTemplateConfig?.stream,
-        fields,
+        fields: this.streamFieldsMerger(currentFields, newFields)
       },
     };
   }

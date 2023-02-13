@@ -44,6 +44,7 @@ export default class ParsingOrchestrator {
     private project: Project,
     private paths: UserPaths,
     plugins: PluginConfig[],
+    private isPagesJSRepo: boolean,
     private localDataMapping?: Record<string, string[]>
   ) {
     this.filepathToPluginComponentData = initFilepathToPluginNames(plugins);
@@ -61,12 +62,14 @@ export default class ParsingOrchestrator {
 
   private createPageFile(pageName: string) {
     const pageEntityFiles = this.localDataMapping?.[pageName];
+
     return new PageFile(
       path.join(this.paths.pages, pageName + ".tsx"),
       this.getFileMetadata,
       this.getFileMetadataByUUID,
       this.project,
       this.filepathToPluginComponentData,
+      this.isPagesJSRepo,
       pageEntityFiles
     );
   }
