@@ -217,6 +217,19 @@ const mockStoreWithPropExpression: MockStudioStore = {
             uuid: "banner-uuid",
             metadataUUID: "banner-metadata-uuid",
           },
+          {
+            kind: ComponentStateKind.Module,
+            componentName: "Panel",
+            props: {
+              text: {
+                kind: PropValueKind.Expression,
+                value: "siteSettings.someText",
+                valueType: PropValueType.string,
+              },
+            },
+            uuid: "panel-uuid",
+            metadataUUID: "panel-metadata-uuid",
+          },
         ],
         cssImports: [],
         entityFiles: ["entityFile.json"],
@@ -227,13 +240,21 @@ const mockStoreWithPropExpression: MockStudioStore = {
     activeEntityFile: "entityFile.json",
   },
   fileMetadatas: {
-    UUIDToFileMetadata,
+    UUIDToFileMetadata: {
+      ...UUIDToFileMetadata,
+      "panel-metadata-uuid": moduleMetadata,
+    },
   },
   siteSettings: {
     values: {
       apiKey: {
         kind: PropValueKind.Literal,
         value: "mock-api-key",
+        valueType: PropValueType.string,
+      },
+      someText: {
+        kind: PropValueKind.Literal,
+        value: "mock-text",
         valueType: PropValueType.string,
       },
     },
@@ -285,6 +306,8 @@ it("renders component with transformed props", async () => {
   expect(siteSettingsExpressionProp).toBeDefined();
   const documentExpressionProp = await screen.findByText(/123/);
   expect(documentExpressionProp).toBeDefined();
+  const moduleExpressionProp = await screen.findByText(/mock-text/);
+  expect(moduleExpressionProp).toBeDefined();
 });
 
 it("can render component using nested siteSettings expression", async () => {
