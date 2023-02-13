@@ -1,6 +1,6 @@
 import { FileMetadata } from "./FileMetadata";
 import { SiteSettings } from "./SiteSettings";
-import { PageState } from "./State";
+import { PageState } from "./PageState";
 import { UserPaths } from "./UserPaths";
 
 export interface StudioData {
