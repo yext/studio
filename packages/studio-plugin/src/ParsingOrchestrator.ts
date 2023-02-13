@@ -61,7 +61,6 @@ export default class ParsingOrchestrator {
 
   private createPageFile(pageName: string) {
     const pageEntityFiles = this.localDataMapping?.[pageName];
-
     return new PageFile(
       path.join(this.paths.pages, pageName + ".tsx"),
       this.getFileMetadata,
