@@ -29,7 +29,7 @@ export default function createConfigureStudioServer(
     server.watcher.on("unlink", (filepath) => {
       orchestrator.removeFile(filepath);
       const studioData = orchestrator.getStudioData();
-      sendHMRUpdate(
+      void sendHMRUpdate(
         studioData,
         filepath,
         server,
@@ -38,10 +38,10 @@ export default function createConfigureStudioServer(
       );
     });
     server.watcher.on("add", (filepath) => {
-      console.log('on add', filepath)
+      console.log("on add", filepath);
       orchestrator.reloadFile(filepath);
       const studioData = orchestrator.getStudioData();
-      sendHMRUpdate(
+      void sendHMRUpdate(
         studioData,
         filepath,
         server,

@@ -18,18 +18,19 @@ export default function createHandleHotUpdate(
    * action may be taken. For example, updating the zustand store.
    */
   return async function (ctx: HmrContext) {
-    const reloadModulePromises = ctx.modules.map((m) => {
-      return ctx.server.reloadModule(m);
-    });
-    await Promise.all(reloadModulePromises);
+    await Promise.all(
+      ctx.modules.map((m) => {
+        return ctx.server.reloadModule(m);
+      })
+    );
     if (!ctx.file.startsWith(pathToUserProjectRoot)) {
       return;
     }
 
-    console.log('on hot update', ctx.file)
+    console.log("on hot update", ctx.file);
     orchestrator.reloadFile(ctx.file);
     const studioData = orchestrator.getStudioData();
-    sendHMRUpdate(
+    void sendHMRUpdate(
       studioData,
       ctx.file,
       ctx.server,

@@ -1,4 +1,10 @@
-import { FunctionComponent, useCallback, useRef, useEffect, useLayoutEffect } from "react";
+import {
+  FunctionComponent,
+  useCallback,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+} from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentState,
@@ -69,7 +75,7 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
       if (c.kind === ComponentStateKind.Standard) {
         return importComponent(c, newLoadedComponents);
       } else if (c.kind === ComponentStateKind.Module) {
-        console.log(UUIDToFileMetadata, c)
+        console.log(UUIDToFileMetadata, c);
         const moduleMetadata = getModuleMetadata(c.metadataUUID);
         return moduleMetadata.componentTree.flatMap(importComponentState);
       } else {
@@ -90,7 +96,7 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
     componentTree,
     setUUIDToImportedComponent,
     getModuleMetadata,
-    UUIDToFileMetadata
+    UUIDToFileMetadata,
   ]);
 }
 

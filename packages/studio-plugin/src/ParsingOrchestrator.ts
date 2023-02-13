@@ -6,7 +6,6 @@ import {
   SiteSettingsValues,
   SiteSettings,
   PluginConfig,
-  FileMetadataKind,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -117,7 +116,12 @@ export default class ParsingOrchestrator {
         this.filepathToFileMetadata[filepath]?.metadataUUID;
       delete this.filepathToFileMetadata[filepath];
       const newFileMetadata = this.getFileMetadata(filepath);
-      console.log('reloading', path.basename(filepath, '.tsx'), newFileMetadata, originalMetadataUUID)
+      console.log(
+        "reloading",
+        path.basename(filepath, ".tsx"),
+        newFileMetadata,
+        originalMetadataUUID
+      );
       this.filepathToFileMetadata[filepath] = {
         ...newFileMetadata,
         ...(originalMetadataUUID && { metadataUUID: originalMetadataUUID }),

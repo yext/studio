@@ -66,7 +66,7 @@ export default async function createStudioPlugin(
     },
     load(id) {
       if (id === "\0" + VirtualModuleID.StudioData) {
-        return `export default ${JSON.stringify(initialStudioData)}`;
+        return `export default ${JSON.stringify(orchestrator.getStudioData())}`;
       } else if (id === "\0" + VirtualModuleID.GitData) {
         return `export default ${JSON.stringify(gitWrapper.getStoredData())}`;
       }
