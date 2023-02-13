@@ -11,7 +11,7 @@ export default function registerSaveChangesListener(
   registerListener(
     server,
     MessageID.SaveChanges,
-    async ({
+    ({
       pageNameToPageState,
       pendingChanges,
       UUIDToFileMetadata,
@@ -28,15 +28,10 @@ export default function registerSaveChangesListener(
           fileManager.updateModuleFile(metadata.filepath, metadata);
         }
       });
-      await Promise.all(
-        pendingChanges.pagesToUpdate.map(async (pageToUpdate) => {
-          const filepath = pageNameToPageState[pageToUpdate]?.filepath;
-          await fileManager.updatePageFile(
-            filepath,
-            pageNameToPageState[pageToUpdate]
-          );
-        })
-      );
+      pendingChanges.pagesToUpdate.forEach((pageToUpdate) => {
+        const filepath = pageNameToPageState[pageToUpdate]?.filepath;
+        fileManager.updatePageFile(filepath, pageNameToPageState[pageToUpdate]);
+      });
       if (siteSettings?.values) {
         fileManager.updateSiteSettings(siteSettings.values);
       }

@@ -8,14 +8,14 @@ import { MessageID, ResponseEventMap, StudioEventMap } from "../types";
 export function registerListener<T extends MessageID>(
   server: ViteDevServer,
   messageId: T,
-  listener: (data: StudioEventMap[T]) => string | Promise<string>
+  listener: (data: StudioEventMap[T]) => string
 ) {
-  const handleRes: WebSocketCustomListener<StudioEventMap[T]> = async (
+  const handleRes: WebSocketCustomListener<StudioEventMap[T]> = (
     data,
     client
   ) => {
     try {
-      const msg = await listener(data);
+      const msg = listener(data);
       sendClientMessage(client, messageId, { type: "success", msg });
     } catch (error: unknown) {
       let msg = `Error occurred for event ${messageId}`;
