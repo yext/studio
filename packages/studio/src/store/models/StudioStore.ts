@@ -16,7 +16,7 @@ export type StudioStore = {
   siteSettings: SiteSettingSlice;
   previousSave: PreviousSaveSlice;
   saveChanges: () => void;
-  createModule: (moduleName: string) => void;
+  createModule: (modulePath: string) => void;
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
 };

@@ -1,4 +1,4 @@
-import { WebSocketServer } from "vite";
+import { ViteDevServer } from "vite";
 import getStudioConfig from "../parsers/getStudioConfig";
 import {
   StudioData,
@@ -10,7 +10,7 @@ import {
 export default async function sendHMRUpdate(
   studioData: StudioData,
   filepath: string,
-  server: WebSocketServer,
+  server: ViteDevServer,
   pathToUserProjectRoot: string,
   userPaths: UserPaths
 ) {
@@ -22,7 +22,11 @@ export default async function sendHMRUpdate(
       userPaths: studioConfig.paths,
     },
   };
-  server.send({
+  const studioModule = server.moduleGraph.getModuleById("\0virtual:yext-studio");
+  if (studioModule) {
+    server.moduleGraph.invalidateModule(studioModule);
+  }
+  server.ws.send({
     type: "custom",
     event: StudioHMRUpdateID,
     data,

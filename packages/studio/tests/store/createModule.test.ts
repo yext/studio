@@ -136,13 +136,13 @@ describe("errors", () => {
 
   it("throws an error for an empty moduleName", () => {
     const action = () => useStudioStore.getState().createModule("");
-    expect(action).toThrow("Error creating module: a moduleName is required.");
+    expect(action).toThrow("Error creating module: a modulePath is required.");
   });
 
-  it("throws an error for a moduleName outside the allowed path for modules", () => {
+  it("throws an error for a modulePath outside the allowed path for modules", () => {
     const action = () => useStudioStore.getState().createModule("../Module");
     expect(action).toThrow(
-      `Error creating module: moduleName is invalid: "../Module".`
+      `Error creating module: modulePath is invalid: "../Module.tsx".`
     );
   });
 

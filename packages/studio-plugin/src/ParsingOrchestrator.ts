@@ -38,6 +38,7 @@ export default class ParsingOrchestrator {
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private filepathToPluginComponentData: Record<string, PluginComponentData>;
+  private studioData: StudioData;
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -49,6 +50,7 @@ export default class ParsingOrchestrator {
     this.filepathToPluginComponentData = initFilepathToPluginNames(plugins);
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
+    this.studioData = this.calculateStudioData();
   }
 
   getPageFile(pageName: string): PageFile {
@@ -122,6 +124,7 @@ export default class ParsingOrchestrator {
       delete this.pageNameToPageFile[pageName];
       this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
     }
+    this.studioData = this.calculateStudioData();
   }
 
   removeFile = (filepath: string) => {
@@ -135,9 +138,14 @@ export default class ParsingOrchestrator {
       const pageName = path.basename(filepath, ".tsx");
       delete this.pageNameToPageFile[pageName];
     }
+    this.studioData = this.calculateStudioData();
   };
 
-  getStudioData(): StudioData {
+  getStudioData() {
+    return this.studioData;
+  }
+
+  private calculateStudioData() {
     const siteSettings = this.getSiteSettings();
     const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(
       (prev, curr) => {

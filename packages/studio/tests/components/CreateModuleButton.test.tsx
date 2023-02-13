@@ -47,7 +47,7 @@ beforeEach(() => {
         Testy: {
           kind: FileMetadataKind.Module,
           componentTree: [],
-          metadataUUID: "testy",
+          metadataUUID: "Testy-metadata-uuid",
           filepath: "src/modules/Testy.tsx",
         },
       },
@@ -95,7 +95,7 @@ it("gives an error if the module path is invalid", async () => {
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
   expect(
-    screen.getByText('Error creating module: moduleName is invalid: "../Test".')
+    screen.getByText('Error creating module: modulePath is invalid: "../Test.tsx".')
   ).toBeDefined();
 });
 

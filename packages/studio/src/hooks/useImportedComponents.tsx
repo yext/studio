@@ -10,16 +10,15 @@ import { useLayoutEffect } from "react";
  */
 export default function useImportedComponents(componentTree: ComponentState[]) {
   const [
-    UUIDToFileMetadata,
     setUUIDToImportedComponent,
     UUIDToImportedComponent,
     modulesToUpdate,
   ] = useStudioStore((store) => [
-    store.fileMetadatas.UUIDToFileMetadata,
     store.fileMetadatas.setUUIDToImportedComponent,
     store.fileMetadatas.UUIDToImportedComponent,
     store.fileMetadatas.pendingChanges.modulesToUpdate,
   ]);
+  const UUIDToFileMetadata = useStudioStore(store => store.fileMetadatas.UUIDToFileMetadata)
 
   // Use ref instead of to avoid triggering rerender (infinite loop)
   // when UUIDToImportedComponent is updated within this hook.
@@ -41,14 +40,15 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
         return null;
       }
       const { metadataUUID, componentName } = c;
-      if (modulesToUpdate.has(metadataUUID)) {
-        return null;
-      }
       // Avoid re-importing components
       if (metadataUUID in UUIDToImportedComponentRef) {
         return null;
       }
-      const filepath = UUIDToFileMetadata[metadataUUID].filepath;
+      const metadata = UUIDToFileMetadata[metadataUUID]
+      if (!metadata) {
+        console.log(c, metadata, metadataUUID, UUIDToFileMetadata)
+      }
+      const filepath = metadata.filepath;
       const importedModule = await import(/* @vite-ignore */ filepath);
       const functionComponent = getFunctionComponent(
         importedModule,

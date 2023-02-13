@@ -12,14 +12,12 @@ export default function CreateModuleButton(): JSX.Element | null {
     store.actions.getActiveComponentState,
     store.createModule,
   ]);
-  const [errorMessage, setErrorMessage] = useState<string>(
-    "Invalid module name."
-  );
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleModalSave = useCallback(
-    (moduleName: string) => {
+    (modulePath: string) => {
       try {
-        createModule(moduleName);
+        createModule(modulePath);
         return true;
       } catch (err: unknown) {
         if (err instanceof Error) {

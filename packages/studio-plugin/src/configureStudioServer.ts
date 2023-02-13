@@ -28,7 +28,7 @@ export default function createConfigureStudioServer(
       sendHMRUpdate(
         studioData,
         filepath,
-        server.ws,
+        server,
         pathToUserProjectRoot,
         userPaths
       );
@@ -39,7 +39,7 @@ export default function createConfigureStudioServer(
       sendHMRUpdate(
         studioData,
         filepath,
-        server.ws,
+        server,
         pathToUserProjectRoot,
         userPaths
       );

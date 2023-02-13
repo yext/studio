@@ -35,7 +35,6 @@ export default async function createStudioPlugin(
     studioConfig.plugins,
     localDataMapping
   );
-  const initialStudioData = orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -65,7 +64,7 @@ export default async function createStudioPlugin(
     },
     load(id) {
       if (id === resolvedVirtualModuleId) {
-        return `export default ${JSON.stringify(initialStudioData)}`;
+        return `export default ${JSON.stringify(orchestrator.getStudioData())}`;
       }
     },
     configureServer: createConfigureStudioServer(

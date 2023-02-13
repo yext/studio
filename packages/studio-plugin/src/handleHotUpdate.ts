@@ -28,7 +28,7 @@ export default function createHandleHotUpdate(
     sendHMRUpdate(
       studioData,
       ctx.file,
-      ctx.server.ws,
+      ctx.server,
       pathToUserProjectRoot,
       userPaths
     );
