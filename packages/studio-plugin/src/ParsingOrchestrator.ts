@@ -38,7 +38,7 @@ export default class ParsingOrchestrator {
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private filepathToPluginComponentData: Record<string, PluginComponentData>;
-  private studioData: StudioData;
+  private studioData?: StudioData;
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -50,7 +50,6 @@ export default class ParsingOrchestrator {
     this.filepathToPluginComponentData = initFilepathToPluginNames(plugins);
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
-    this.studioData = this.calculateStudioData();
   }
 
   getPageFile(pageName: string): PageFile {
@@ -129,6 +128,9 @@ export default class ParsingOrchestrator {
   }
 
   getStudioData(): StudioData {
+    if (!this.studioData) {
+      this.studioData = this.calculateStudioData();
+    }
     return this.studioData;
   }
 
