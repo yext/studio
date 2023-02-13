@@ -76,10 +76,10 @@ jest
   }));
 
 describe("updatePageFile", () => {
-  it("throw errors if the filepath to update is not a valid page path", async () => {
-    await expect(
+  it("throw errors if the filepath to update is not a valid page path", () => {
+    expect(() =>
       fileManager.updatePageFile("/invalid/pages/NewPage.tsx", pageState)
-    ).rejects.toThrow(
+    ).toThrow(
       'Cannot update page file: filepath "/invalid/pages/NewPage.tsx"' +
         ` is not within the expected path for pages "${paths.pages}".`
     );
@@ -91,7 +91,7 @@ describe("updatePageFile", () => {
       .spyOn(fs, "writeFileSync")
       .mockImplementation();
 
-    await fileManager.updatePageFile(
+    fileManager.updatePageFile(
       path.join(paths.pages, "NewPage.tsx"),
       pageState
     );
@@ -113,7 +113,7 @@ describe("updatePageFile", () => {
       .mockImplementation();
 
     const pageFilepath = path.join(paths.pages, "NewPage.tsx");
-    await fileManager.updatePageFile(pageFilepath, pageState);
+    fileManager.updatePageFile(pageFilepath, pageState);
 
     expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.pages, {
       recursive: true,

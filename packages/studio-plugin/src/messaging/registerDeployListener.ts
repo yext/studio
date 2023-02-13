@@ -1,23 +1,24 @@
 import { ViteDevServer } from "vite";
+import { MessageID, SaveChangesPayload } from "../types";
+import { registerListener } from "./registerListener";
+import executeSaveChanges from "./executeSaveChanges";
 import FileSystemManager from "../FileSystemManager";
 import GitWrapper from "../git/GitWrapper";
 import reloadGitData from "../git/reloadGitData";
-import { MessageID, SaveChangesPayload } from "../types";
-import executeSaveChanges from "./executeSaveChanges";
-import { registerListener } from "./registerListener";
 
-export default function registerSaveChangesListener(
+export default function registerDeployListener(
   server: ViteDevServer,
   fileManager: FileSystemManager,
   gitWrapper: GitWrapper
 ) {
   registerListener(
     server,
-    MessageID.SaveChanges,
+    MessageID.Deploy,
     async (saveData: SaveChangesPayload) => {
       executeSaveChanges(saveData, fileManager);
+      await gitWrapper.deploy();
       await reloadGitData(gitWrapper, server);
-      return "Changes saved successfully.";
+      return "Deployed successfully.";
     }
   );
 }

@@ -179,7 +179,6 @@ export default class ReactComponentFileWriter {
         this.updatePropInterface(propShape);
         this.studioSourceFileWriter.updateFunctionParameter(
           functionComponent,
-          Object.keys(propShape),
           `${this.componentName}Props`
         );
       }

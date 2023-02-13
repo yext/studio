@@ -13,6 +13,7 @@ export default function Toast() {
     }
   }, []);
   useMessageListener(MessageID.SaveChanges, listenerCallback);
+  useMessageListener(MessageID.Deploy, listenerCallback);
 
   return <ToastContainer autoClose={1000} />;
 }

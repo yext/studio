@@ -1,5 +1,7 @@
 import { ViteDevServer } from "vite";
 import FileSystemManager from "./FileSystemManager";
+import GitWrapper from "./git/GitWrapper";
+import registerDeployListener from "./messaging/registerDeployListener";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { UserPaths } from "./types";
@@ -12,13 +14,15 @@ export default function createConfigureStudioServer(
   fileSystemManager: FileSystemManager,
   orchestrator: ParsingOrchestrator,
   pathToUserProjectRoot: string,
-  userPaths: UserPaths
+  userPaths: UserPaths,
+  gitWrapper: GitWrapper
 ) {
   /**
    * Sets up websocket listeners.
    */
   return function configureStudioServer(server: ViteDevServer) {
-    registerSaveChangesListener(server, fileSystemManager);
+    registerSaveChangesListener(server, fileSystemManager, gitWrapper);
+    registerDeployListener(server, fileSystemManager, gitWrapper);
     server.watcher.add(userPaths.components);
     server.watcher.add(userPaths.modules);
     server.watcher.add(userPaths.pages);

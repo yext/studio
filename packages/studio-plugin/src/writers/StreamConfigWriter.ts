@@ -163,8 +163,8 @@ export default class StreamConfigWriter {
   addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
     this.studioSourceFileWriter.updateFunctionParameter(
       componentFunction,
-      ["document"],
-      STREAM_PAGE_PROPS_TYPE
+      STREAM_PAGE_PROPS_TYPE,
+      ["document"]
     );
   }
 }

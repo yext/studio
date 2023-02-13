@@ -3,3 +3,9 @@ declare module "virtual:yext-studio" {
   const context: StudioData;
   export default context;
 }
+
+declare module "virtual:yext-studio-git-data" {
+  import { GitData } from "@yext/studio-plugin";
+  const context: GitData;
+  export default context;
+}

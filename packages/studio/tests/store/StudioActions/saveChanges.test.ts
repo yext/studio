@@ -1,8 +1,8 @@
-import useStudioStore from "../../src/store/useStudioStore";
-import * as sendMessageModule from "../../src/messaging/sendMessage";
-import mockStore from "../__utils__/mockStore";
+import useStudioStore from "../../../src/store/useStudioStore";
+import * as sendMessageModule from "../../../src/messaging/sendMessage";
+import mockStore from "../../__utils__/mockStore";
 import { FileMetadata, FileMetadataKind, MessageID } from "@yext/studio-plugin";
-import { PagesRecord } from "../../src/store/models/slices/PageSlice";
+import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 
 const mockPages: PagesRecord = {
   UpdateMe: {
@@ -41,7 +41,7 @@ beforeEach(() => {
 
 it("sends pending changes to server to update files", () => {
   const sendMessageSpy = jest.spyOn(sendMessageModule, "default");
-  useStudioStore.getState().saveChanges();
+  useStudioStore.getState().actions.saveChanges();
   expect(sendMessageSpy).toBeCalledTimes(1);
   expect(sendMessageSpy).toBeCalledWith(MessageID.SaveChanges, {
     pageNameToPageState: mockPages,
@@ -58,7 +58,7 @@ it("sends pending changes to server to update files", () => {
 });
 
 it("resets pending changes on successful response from server after saving changes", () => {
-  useStudioStore.getState().saveChanges();
+  useStudioStore.getState().actions.saveChanges();
   expect(useStudioStore.getState().pages.pendingChanges).toEqual({
     pagesToRemove: new Set(),
     pagesToUpdate: new Set(),

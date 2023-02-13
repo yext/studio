@@ -159,23 +159,24 @@ export default class StudioSourceFileWriter {
   /**
    * Update the function's parameter by removing the existing parameter
    * at the specified index, if any, and insert a new parameter with
-   * the provided content in the form of ObjectBindingPattern
-   * (e.g. \{ x, y \}: PropsType).
+   * the provided content. If props are passed in, the content is in the
+   * form of ObjectBindingPattern (e.g. \{ x, y \}: PropsType).
+   * Otherwise, it is in the form of `props: PropsType`.
    *
    * @param functionNode - the function node to modify the parameter
-   * @param props - the props to display in the ObjectBindingPattern
    * @param type - the type of the parameter
+   * @param props - the props to display in the ObjectBindingPattern
    * @param index - the index of the parameter to update or insert
    */
   updateFunctionParameter(
     functionNode: FunctionDeclaration | ArrowFunction,
-    props: string[],
     type: string,
+    props?: string[],
     index = 0
   ): void {
     functionNode.getParameters()[index]?.remove();
     functionNode.insertParameter(index, {
-      name: `{ ${props.join(", ")} }`,
+      name: props ? `{ ${props.join(", ")} }` : "props",
       type,
     });
   }

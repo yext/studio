@@ -7,6 +7,8 @@ import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
+import GitWrapper from "./git/GitWrapper";
+import VirtualModuleID from "./VirtualModuleID";
 
 /**
  * Handles server-client communication.
@@ -19,10 +21,10 @@ export default async function createStudioPlugin(
 ): Promise<Plugin> {
   const getLocalDataMapping = (await import("./parsers/getLocalDataMapping"))
     .default;
-  const virtualModuleId = "virtual:yext-studio";
-  const resolvedVirtualModuleId = "\0" + virtualModuleId;
   const pathToUserProjectRoot = process.cwd();
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
+  const gitWrapper = new GitWrapper();
+  await gitWrapper.refreshData();
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
@@ -58,20 +60,23 @@ export default async function createStudioPlugin(
       }
     },
     resolveId(id) {
-      if (id === virtualModuleId) {
-        return resolvedVirtualModuleId;
+      if (id === VirtualModuleID.StudioData || id === VirtualModuleID.GitData) {
+        return "\0" + id;
       }
     },
     load(id) {
-      if (id === resolvedVirtualModuleId) {
-        return `export default ${JSON.stringify(orchestrator.getStudioData())}`;
+      if (id === "\0" + VirtualModuleID.StudioData) {
+        return `export default ${JSON.stringify(initialStudioData)}`;
+      } else if (id === "\0" + VirtualModuleID.GitData) {
+        return `export default ${JSON.stringify(gitWrapper.getStoredData())}`;
       }
     },
     configureServer: createConfigureStudioServer(
       fileSystemManager,
       orchestrator,
       pathToUserProjectRoot,
-      studioConfig.paths
+      studioConfig.paths,
+      gitWrapper
     ),
     handleHotUpdate: createHandleHotUpdate(
       orchestrator,
