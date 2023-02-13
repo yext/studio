@@ -1,5 +1,5 @@
 import PageFile from "../../src/sourcefiles/PageFile";
-import { ComponentStateKind } from "../../src/types/State";
+import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueType } from "../../src/types/PropValues";
 import { getPagePath } from "../__utils__/getFixturePath";
 import { FileMetadata, FileMetadataKind, PropShape } from "../../src/types";
