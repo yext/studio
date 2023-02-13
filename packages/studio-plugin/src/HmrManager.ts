@@ -16,10 +16,12 @@ export default class HmrManager {
 
   pauseHMR() {
     this.shouldSendHotUpdates = false;
+    console.log('hmr is tomare', this.shouldSendHotUpdates)
   }
 
   resumeHMR() {
     this.shouldSendHotUpdates = true;
+    console.log('hmr ga ugoki', this.shouldSendHotUpdates)
   }
 
   /**
