@@ -217,12 +217,7 @@ describe("reloadFile", () => {
   const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
   const originalFile = fs.readFileSync(modulePath, "utf-8");
   const project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(
-    project,
-    userPaths,
-    [],
-    (filename) => import(filename)
-  );
+  const orchestrator = new ParsingOrchestrator(project, userPaths, []);
 
   afterEach(() => {
     fs.writeFileSync(modulePath, originalFile);

@@ -192,5 +192,44 @@ describe("updatePageFile", () => {
         )
       );
     });
+
+    it("preserves 'slug' field for PagesJS PageFile", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/EmptyPageWithStreamConfigSlugField"),
+        throwIfCalled,
+        jest.fn(),
+        tsMorphProject
+      );
+      pageFile.updatePageFile(
+        {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.title",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid",
+            },
+          ],
+          cssImports: [],
+          filepath: "mock-filepath",
+        },
+        { updateStreamConfig: true }
+      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithStreamConfigSlugField.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithStreamConfigSlugField"),
+          "utf-8"
+        )
+      );
+    });
   });
 });
