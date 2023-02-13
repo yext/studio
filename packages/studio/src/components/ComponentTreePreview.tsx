@@ -90,9 +90,10 @@ function useComponentTreeElements(
             />
           );
         } else if (!UUIDToImportedComponent[c.metadataUUID]) {
-          // console.warn(
-          //   `Expected to find component loaded for ${c.componentName}.`
-          // );
+          console.warn(
+            `Expected to find component loaded for ${c.componentName}.`,
+            UUIDToImportedComponent
+          );
           return null;
         }
         element = UUIDToImportedComponent[c.metadataUUID];

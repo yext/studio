@@ -1,6 +1,6 @@
-import SamplePluginConfig from "@yext/sample-component";
+// import SamplePluginConfig from "@yext/sample-component";
 
 export default {
   isPagesJSRepo: true,
-  plugins: [SamplePluginConfig],
+  // plugins: [SamplePluginConfig],
 };

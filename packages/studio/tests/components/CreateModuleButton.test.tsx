@@ -95,7 +95,9 @@ it("gives an error if the module path is invalid", async () => {
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
   expect(
-    screen.getByText('Error creating module: modulePath is invalid: "../Test.tsx".')
+    screen.getByText(
+      'Error creating module: modulePath is invalid: "../Test.tsx".'
+    )
   ).toBeDefined();
 });
 

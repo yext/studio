@@ -23,7 +23,9 @@ export default function getCreateModuleAction(
         )}".`
       );
     } else if (moduleName.charAt(0) !== moduleName.charAt(0).toUpperCase()) {
-      throw new Error("Error creating module: Module names must start with an uppercase letter.");
+      throw new Error(
+        "Error creating module: Module names must start with an uppercase letter."
+      );
     } else if (
       Object.values(get().fileMetadatas.UUIDToFileMetadata).some(
         (fileMetadata) =>

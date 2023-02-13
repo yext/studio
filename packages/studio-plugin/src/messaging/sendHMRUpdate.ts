@@ -22,7 +22,9 @@ export default async function sendHMRUpdate(
       userPaths: studioConfig.paths,
     },
   };
-  const studioModule = server.moduleGraph.getModuleById("\0virtual:yext-studio");
+  const studioModule = server.moduleGraph.getModuleById(
+    "\0virtual:yext-studio"
+  );
   if (studioModule) {
     server.moduleGraph.invalidateModule(studioModule);
   }

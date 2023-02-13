@@ -1,8 +1,11 @@
-import { FunctionComponent, useCallback, useRef } from "react";
+import { FunctionComponent, useCallback, useRef, useEffect, useLayoutEffect } from "react";
 import useStudioStore from "../store/useStudioStore";
-import { ComponentState, TypeGuards } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentStateKind,
+  StandardComponentState,
+} from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
-import { useLayoutEffect } from "react";
 
 /**
  * Load all functional component methods correspond to the components
@@ -12,13 +15,15 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
   const [
     setUUIDToImportedComponent,
     UUIDToImportedComponent,
-    modulesToUpdate,
+    getModuleMetadata,
   ] = useStudioStore((store) => [
     store.fileMetadatas.setUUIDToImportedComponent,
     store.fileMetadatas.UUIDToImportedComponent,
-    store.fileMetadatas.pendingChanges.modulesToUpdate,
+    store.fileMetadatas.getModuleMetadata,
   ]);
-  const UUIDToFileMetadata = useStudioStore(store => store.fileMetadatas.UUIDToFileMetadata)
+  const UUIDToFileMetadata = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToFileMetadata
+  );
 
   // Use ref instead of to avoid triggering rerender (infinite loop)
   // when UUIDToImportedComponent is updated within this hook.
@@ -33,20 +38,17 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
 
   const importComponent = useCallback(
     async (
-      c: ComponentState,
+      c: StandardComponentState,
       newImportedComponents: Record<string, ImportType>
     ) => {
-      if (!TypeGuards.isStandardOrModuleComponentState(c)) {
-        return null;
-      }
       const { metadataUUID, componentName } = c;
       // Avoid re-importing components
       if (metadataUUID in UUIDToImportedComponentRef) {
         return null;
       }
-      const metadata = UUIDToFileMetadata[metadataUUID]
+      const metadata = UUIDToFileMetadata[metadataUUID];
       if (!metadata) {
-        console.log(c, metadata, metadataUUID, UUIDToFileMetadata)
+        console.log(c, metadata, metadataUUID, UUIDToFileMetadata);
       }
       const filepath = metadata.filepath;
       const importedModule = await import(/* @vite-ignore */ filepath);
@@ -58,14 +60,24 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
         newImportedComponents[metadataUUID] = functionComponent;
       }
     },
-    [UUIDToFileMetadata, modulesToUpdate]
+    [UUIDToFileMetadata]
   );
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const newLoadedComponents: Record<string, ImportType> = {};
-    Promise.all([
-      ...componentTree.map((c) => importComponent(c, newLoadedComponents)),
-    ]).then(() => {
+    const importComponentState = (c: ComponentState) => {
+      if (c.kind === ComponentStateKind.Standard) {
+        return importComponent(c, newLoadedComponents);
+      } else if (c.kind === ComponentStateKind.Module) {
+        console.log(UUIDToFileMetadata, c)
+        const moduleMetadata = getModuleMetadata(c.metadataUUID);
+        return moduleMetadata.componentTree.flatMap(importComponentState);
+      } else {
+        return null;
+      }
+    };
+    const importPromises = componentTree.flatMap(importComponentState);
+    Promise.all(importPromises).then(() => {
       const newState = {
         ...UUIDToImportedComponentRef.current,
         ...newLoadedComponents,
@@ -73,7 +85,13 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
       UUIDToImportedComponentRef.current = newState;
       setUUIDToImportedComponent(newState);
     });
-  }, [importComponent, componentTree, setUUIDToImportedComponent]);
+  }, [
+    importComponent,
+    componentTree,
+    setUUIDToImportedComponent,
+    getModuleMetadata,
+    UUIDToFileMetadata
+  ]);
 }
 
 function getFunctionComponent(

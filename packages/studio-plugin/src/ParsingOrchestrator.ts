@@ -112,13 +112,8 @@ export default class ParsingOrchestrator {
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)
     ) {
-      const originalMetadataUUID: string | undefined =
-        this.filepathToFileMetadata[filepath]?.metadataUUID;
       delete this.filepathToFileMetadata[filepath];
-      this.filepathToFileMetadata[filepath] = {
-        ...this.getFileMetadata(filepath),
-        ...(originalMetadataUUID && { metadataUUID: originalMetadataUUID }),
-      };
+      this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
     } else if (filepath.startsWith(this.paths.pages)) {
       const pageName = path.basename(filepath, ".tsx");
       delete this.pageNameToPageFile[pageName];
