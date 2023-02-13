@@ -3,6 +3,7 @@ import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { UserPaths } from "./types";
 import { StudioHMRPayload, StudioHMRUpdateID } from "./types/messages";
+import VirtualModuleID from "./VirtualModuleID";
 
 /**
  * Factory method for creating our handleHotUpdate handler.
@@ -26,7 +27,12 @@ export default function createHandleHotUpdate(
     if (!ctx.file.startsWith(pathToUserProjectRoot)) {
       return;
     }
+  
     orchestrator.reloadFile(ctx.file);
+    const studioModule = ctx.server.moduleGraph.getModuleById("\0" + VirtualModuleID.StudioData);
+    if (studioModule) {
+      ctx.server.moduleGraph.invalidateModule(studioModule);
+    }
     const studioData = orchestrator.getStudioData();
     const studioConfig = await getStudioConfig(pathToUserProjectRoot);
     const data: StudioHMRPayload = {
