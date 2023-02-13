@@ -23,14 +23,10 @@ const STREAM_PAGE_PROPS_TYPE = "TemplateProps";
  * updating logic for Stream config in PageFile.
  */
 export default class StreamConfigWriter {
-  private streamFieldsMerger: StreamConfigFieldsMerger;
-
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
     private studioSourceFileParser: StudioSourceFileParser
-  ) {
-    this.streamFieldsMerger = pagesJSFieldsMerger;
-  }
+  ) {}
 
   /**
    * Extracts stream's data expressions used in the provided component tree,
@@ -100,7 +96,7 @@ export default class StreamConfigWriter {
           primary: false,
         },
         ...currentTemplateConfig?.stream,
-        fields: this.streamFieldsMerger(currentFields, newFields),
+        fields: pagesJSFieldsMerger(currentFields, newFields),
       },
     };
   }
