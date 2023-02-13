@@ -10,9 +10,7 @@ import { PropValueKind } from "../types/PropValues";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
-import pagesJSFieldsMerger, {
-  StreamConfigFieldsMerger,
-} from "../utils/StreamConfigFieldsMerger";
+import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
