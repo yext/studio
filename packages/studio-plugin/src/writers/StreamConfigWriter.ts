@@ -7,7 +7,7 @@ import {
 import TypeGuards from "../utils/TypeGuards";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import { PropValueKind } from "../types/PropValues";
-import { ComponentState, ComponentStateKind } from "../types/State";
+import { ComponentState, ComponentStateKind } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 

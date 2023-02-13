@@ -6,6 +6,7 @@ import {
   SiteSettingsValues,
   SiteSettings,
   PluginConfig,
+  FileMetadataKind,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -112,8 +113,29 @@ export default class ParsingOrchestrator {
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)
     ) {
+      const originalMetadataUUID: string | undefined =
+        this.filepathToFileMetadata[filepath]?.metadataUUID;
       delete this.filepathToFileMetadata[filepath];
-      this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
+      const newFileMetadata = this.getFileMetadata(filepath);
+      console.log('reloading', path.basename(filepath, '.tsx'), newFileMetadata, originalMetadataUUID)
+      this.filepathToFileMetadata[filepath] = {
+        ...newFileMetadata,
+        ...(originalMetadataUUID && { metadataUUID: originalMetadataUUID }),
+      };
+      // if (newFileMetadata.kind === FileMetadataKind.Component) {
+      //   this.filepathToFileMetadata[filepath] = {
+      //     ...newFileMetadata,
+      //     ...(originalMetadataUUID && { metadataUUID: originalMetadataUUID }),
+      //   };
+      // } else {
+      //   this.filepathToFileMetadata[filepath] = {
+      //     ...newFileMetadata,
+      //     ...(originalMetadataUUID && { metadataUUID: originalMetadataUUID }),
+      //     componentTree: newFileMetadata.componentTree.map(c => {
+
+      //     })
+      //   };
+      // }
     } else if (filepath.startsWith(this.paths.pages)) {
       const pageName = path.basename(filepath, ".tsx");
       delete this.pageNameToPageFile[pageName];
