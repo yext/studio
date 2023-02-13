@@ -15,7 +15,7 @@ export default function registerSaveChangesListener(
     server,
     MessageID.SaveChanges,
     async (saveData: SaveChangesPayload) => {
-      await executeSaveChanges(saveData, fileManager);
+      executeSaveChanges(saveData, fileManager);
       await reloadGitData(gitWrapper, server);
       return "Changes saved successfully.";
     }

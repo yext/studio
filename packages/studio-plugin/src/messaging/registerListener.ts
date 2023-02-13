@@ -1,10 +1,13 @@
-import { ViteDevServer, WebSocketCustomListener, WebSocketClient } from "vite";
+import { ViteDevServer, WebSocketClient } from "vite";
 import { MessageID, ResponseEventMap, StudioEventMap } from "../types";
 
-type WebSocketListener<T extends MessageID> = WebSocketCustomListener<{
-  payload: StudioEventMap[T];
-  uuid: string;
-}>;
+type WebSocketListener<T extends MessageID> = (
+  data: {
+    payload: StudioEventMap[T];
+    uuid: string;
+  },
+  client: WebSocketClient
+) => Promise<void>;
 
 /**
  * Registers a listener for the given messageId,
@@ -38,7 +41,7 @@ export function registerListener<T extends MessageID>(
       });
     }
   };
-  server.ws.on(messageId, handleRes);
+  server.ws.on(messageId, (data, client) => void handleRes(data, client));
 }
 
 function sendClientMessage<T extends MessageID>(

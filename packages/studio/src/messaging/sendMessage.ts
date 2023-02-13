@@ -44,7 +44,7 @@ export default async function sendMessage<T extends MessageID>(
   const uuid = v4();
   import.meta.hot?.send(messageId, {
     uuid,
-    payload: payload,
+    payload,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } as any);
 
