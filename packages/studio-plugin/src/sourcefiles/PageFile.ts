@@ -11,10 +11,6 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
-import {
-  DEFAULT_STREAM_FIELDS_MERGER,
-  PAGES_JS_STREAM_FIELDS_MERGER,
-} from "../utils/StreamConfigFieldsMerger";
 
 /**
  * Configuration options to the page file's update process
@@ -40,7 +36,6 @@ export default class PageFile {
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
-    private isPagesJSRepo: boolean = false,
     filepathToPluginNames: Record<string, PluginComponentData> = {},
     private entityFiles?: string[]
   ) {
@@ -55,11 +50,7 @@ export default class PageFile {
     );
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
-      this.studioSourceFileParser,
-      this.isPagesJSRepo
-        ? PAGES_JS_STREAM_FIELDS_MERGER
-        : DEFAULT_STREAM_FIELDS_MERGER
-    );
+      this.studioSourceFileParser);
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
       studioSourceFileWriter,

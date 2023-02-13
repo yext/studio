@@ -136,7 +136,6 @@ describe("aggregates data as expected", () => {
         tsMorphProject,
         userPaths,
         [],
-        false,
         localDataMapping
       );
       const studioData = orchestrator.getStudioData();

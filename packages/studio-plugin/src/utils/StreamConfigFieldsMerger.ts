@@ -25,39 +25,24 @@ export const NON_CONFIGURABLE_STREAM_PROPERTIES = [
 ];
 
 /**
- * The default strategy for merging fields in a {@link TemplateConfig}. It
- * simply overrides the exisitng 'fields' attribute with the new one. It also
- * ensures that no top-level Stream properties are included in the 'fields' attribute.
+ * The strategy for merging fields in a PagesJS Stream Config. This strategy overwrites all
+ * existing fields, except for 'slug' (if present). Additionally, any top-level Stream
+ * Config attributes are filtered out of the returned fields.
  *
  * @param existingFields - The existing 'fields' attribute in the Config.
- * @param newFields - The new fields to add.
+ * @param newFields - The new fields.
  * @returns - The value of the new 'fields' attribute.
  */
-export const DEFAULT_STREAM_FIELDS_MERGER: StreamConfigFieldsMerger = (
+const pagesJSFieldsMerger: StreamConfigFieldsMerger = (
   existingFields: string[],
   newFields: string[]
 ): string[] => {
-  return newFields.filter(
+  const mergedFields = newFields.filter(
     (documentPath) => !NON_CONFIGURABLE_STREAM_PROPERTIES.includes(documentPath)
   );
-};
-
-/**
- * The strategy for merging of fields in a PagesJS repo. This strategy behaves in
- * much the same way as the {@link DEFAULT_STREAM_FIELDS_MERGER}. The one difference
- * is that if 'slug' is present in the existing 'fields' attribute, it will be
- * preserved.
- *
- * @param existingFields - The existing 'fields' attribute in the Config.
- * @param newFields - The new fields to add.
- * @returns - The value of the new 'fields' attribute.
- */
-export const PAGES_JS_STREAM_FIELDS_MERGER: StreamConfigFieldsMerger = (
-  existingFields: string[],
-  newFields: string[]
-): string[] => {
-  const mergedFields = DEFAULT_STREAM_FIELDS_MERGER(existingFields, newFields);
   existingFields.includes("slug") && mergedFields.push("slug");
 
   return mergedFields;
 };
+
+export default pagesJSFieldsMerger;

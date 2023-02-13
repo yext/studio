@@ -44,7 +44,6 @@ export default class ParsingOrchestrator {
     private project: Project,
     private paths: UserPaths,
     plugins: PluginConfig[],
-    private isPagesJSRepo: boolean = false,
     private localDataMapping?: Record<string, string[]>
   ) {
     this.filepathToPluginComponentData = initFilepathToPluginNames(plugins);
@@ -68,7 +67,6 @@ export default class ParsingOrchestrator {
       this.getFileMetadata,
       this.getFileMetadataByUUID,
       this.project,
-      this.isPagesJSRepo,
       this.filepathToPluginComponentData,
       pageEntityFiles
     );

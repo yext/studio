@@ -154,7 +154,7 @@ describe("updatePageFile", () => {
       );
     });
 
-    it("removes all unused stream document paths by default", () => {
+    it("removes unused stream document paths", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
@@ -193,14 +193,13 @@ describe("updatePageFile", () => {
       );
     });
 
-    it("constructs correct stream document paths for PagesJS PageFile", () => {
+    it("preserves 'slug' field for PagesJS PageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = new PageFile(
         getPagePath("updatePageFile/EmptyPageWithStreamConfigSlugField"),
         throwIfCalled,
         jest.fn(),
-        tsMorphProject,
-        true
+        tsMorphProject
       );
       pageFile.updatePageFile(
         {
