@@ -50,7 +50,8 @@ export default class PageFile {
     );
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
-      this.studioSourceFileParser);
+      this.studioSourceFileParser
+    );
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
       studioSourceFileWriter,

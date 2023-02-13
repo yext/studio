@@ -10,7 +10,9 @@ import { PropValueKind } from "../types/PropValues";
 import { ComponentState, ComponentStateKind } from "../types/State";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
-import pagesJSFieldsMerger, { StreamConfigFieldsMerger } from "../utils/StreamConfigFieldsMerger";
+import pagesJSFieldsMerger, {
+  StreamConfigFieldsMerger,
+} from "../utils/StreamConfigFieldsMerger";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
@@ -21,12 +23,13 @@ const STREAM_PAGE_PROPS_TYPE = "TemplateProps";
  * updating logic for Stream config in PageFile.
  */
 export default class StreamConfigWriter {
-  private streamFieldsMerger: StreamConfigFieldsMerger
+  private streamFieldsMerger: StreamConfigFieldsMerger;
 
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
-    private studioSourceFileParser: StudioSourceFileParser) {
-      this.streamFieldsMerger = pagesJSFieldsMerger;
+    private studioSourceFileParser: StudioSourceFileParser
+  ) {
+    this.streamFieldsMerger = pagesJSFieldsMerger;
   }
 
   /**
