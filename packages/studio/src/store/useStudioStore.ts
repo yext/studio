@@ -3,14 +3,13 @@ import { withLenses, lens } from "@dhmk/zustand-lens";
 import { immer } from "zustand/middleware/immer";
 import { enableMapSet } from "immer";
 import { temporal } from "zundo";
-import { throttle, isEqual, cloneDeep } from "lodash";
+import { throttle, isEqual } from "lodash";
 
 import { StudioStore } from "./models/StudioStore";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
 import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
 import { getUserUpdatableStore } from "./utils";
-import sendMessage from "../messaging/sendMessage";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
@@ -55,48 +54,18 @@ const useStudioStore = create<StudioStore>()(
           });
         }
       });
-      const saveChanges = () => {
-        const { pages, pendingChanges: pendingPageChanges } = get().pages;
-        const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
-        const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
-          get().fileMetadatas;
-        const { modulesToUpdate } = pendingModuleChanges;
-        const { values } = get().siteSettings;
-        // Serialize pendingChanges (uses type Set) to send to server side.
-        sendMessage(MessageID.SaveChanges, {
-          pageNameToPageState: pages,
-          UUIDToFileMetadata,
-          pendingChanges: {
-            pagesToRemove: [...pagesToRemove.keys()],
-            pagesToUpdate: [...pagesToUpdate],
-            modulesToUpdate: [...modulesToUpdate.keys()],
-          },
-          siteSettings: { values },
-        });
-        // Update the previousSave state.
-        set((s) => {
-          const previousSaveState = cloneDeep({
-            siteSettings: {
-              values: get().siteSettings.values,
-            },
-            fileMetadatas: {
-              UUIDToFileMetadata: UUIDToFileMetadata,
-            },
-          });
-          s.previousSave = previousSaveState;
-        });
-      };
 
       return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
-        saveChanges,
         createModule: getCreateModuleAction(get),
         previousSave: lens(createPreviousSaveSlice),
         actions: new StudioActions(
           () => get().pages,
           () => get().fileMetadatas,
+          () => get().siteSettings,
+          () => get().previousSave,
           () => get().studioConfig
         ),
         studioConfig: lens(createStudioConfigSlice),

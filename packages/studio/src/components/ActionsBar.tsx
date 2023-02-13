@@ -3,6 +3,7 @@ import UndoRedo from "./UndoRedo";
 import { ReactComponent as YextSeal } from "../icons/yextseal.svg";
 import SaveButton from "./SaveButton";
 import CreateModuleButton from "./CreateModuleButton";
+import DeployButton from "./DeployButton";
 
 /**
  * Renders the top bar of Studio, which includes buttons for performing undo
@@ -20,6 +21,7 @@ export default function ActionsBar(): JSX.Element {
         <UndoRedo />
       </div>
       <SaveButton />
+      <DeployButton />
     </div>
   );
 }

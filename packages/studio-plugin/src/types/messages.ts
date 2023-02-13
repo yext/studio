@@ -3,6 +3,7 @@ import { StudioData } from "./StudioData";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
+  Deploy = "studio:deploy",
 }
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
@@ -25,11 +26,13 @@ export interface StudioHMRPayload {
 
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
+  [MessageID.Deploy]: SaveChangesPayload;
 };
 
 export type ResponseEventMap = {
   [key in MessageID]: {
     type: "success" | "error";
     msg: string;
+    uuid: string;
   };
 };

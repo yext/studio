@@ -114,7 +114,9 @@ it("triggers save changes action in store when click", async () => {
         pagesToUpdate: new Set(),
       },
     },
-    saveChanges: mockSaveChanges,
+    actions: {
+      saveChanges: mockSaveChanges,
+    },
   });
   render(<SaveButton />);
   const saveButton = screen.getByRole("button", {

@@ -1,5 +1,13 @@
-import { ViteDevServer, WebSocketCustomListener, WebSocketClient } from "vite";
+import { ViteDevServer, WebSocketClient } from "vite";
 import { MessageID, ResponseEventMap, StudioEventMap } from "../types";
+
+type WebSocketListener<T extends MessageID> = (
+  data: {
+    payload: StudioEventMap[T];
+    uuid: string;
+  },
+  client: WebSocketClient
+) => Promise<void>;
 
 /**
  * Registers a listener for the given messageId,
@@ -8,15 +16,16 @@ import { MessageID, ResponseEventMap, StudioEventMap } from "../types";
 export function registerListener<T extends MessageID>(
   server: ViteDevServer,
   messageId: T,
-  listener: (data: StudioEventMap[T]) => string
+  listener: (data: StudioEventMap[T]) => Promise<string>
 ) {
-  const handleRes: WebSocketCustomListener<StudioEventMap[T]> = (
-    data,
-    client
-  ) => {
+  const handleRes: WebSocketListener<T> = async (data, client) => {
     try {
-      const msg = listener(data);
-      sendClientMessage(client, messageId, { type: "success", msg });
+      const msg = await listener(data.payload);
+      sendClientMessage(client, messageId, {
+        type: "success",
+        uuid: data.uuid,
+        msg,
+      });
     } catch (error: unknown) {
       let msg = `Error occurred for event ${messageId}`;
       if (typeof error === "string") {
@@ -25,10 +34,14 @@ export function registerListener<T extends MessageID>(
         msg = error.message;
       }
       console.error(error);
-      sendClientMessage(client, messageId, { type: "error", msg });
+      sendClientMessage(client, messageId, {
+        type: "error",
+        msg,
+        uuid: data.uuid,
+      });
     }
   };
-  server.ws.on(messageId, handleRes);
+  server.ws.on(messageId, (data, client) => void handleRes(data, client));
 }
 
 function sendClientMessage<T extends MessageID>(

@@ -26,7 +26,6 @@ export default function createHandleHotUpdate(
     if (!ctx.file.startsWith(pathToUserProjectRoot)) {
       return;
     }
-
     orchestrator.reloadFile(ctx.file);
     const studioData = orchestrator.getStudioData();
     const studioConfig = await getStudioConfig(pathToUserProjectRoot);
