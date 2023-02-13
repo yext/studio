@@ -40,8 +40,8 @@ export default class PageFile {
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
-    filepathToPluginNames: Record<string, PluginComponentData> = {},
     private isPagesJSRepo: boolean = false,
+    filepathToPluginNames: Record<string, PluginComponentData> = {},
     private entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);

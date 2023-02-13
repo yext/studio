@@ -68,8 +68,8 @@ export default class ParsingOrchestrator {
       this.getFileMetadata,
       this.getFileMetadataByUUID,
       this.project,
-      this.filepathToPluginComponentData,
       this.isPagesJSRepo,
+      this.filepathToPluginComponentData,
       pageEntityFiles
     );
   }
