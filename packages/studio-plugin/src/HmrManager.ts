@@ -13,14 +13,10 @@ export default class HmrManager {
     private pathToUserProjectRoot: string,
     private userPaths: UserPaths
   ) {}
+
   /**
-   * When an HMR event is received, if there are any associated modules, reload them.
-   * Then, if the file can be recognized as one of the user's src files,
-   * update the StudioData and send a custom HMR event to the frontend so that special
-   * action may be taken. For example, updating the zustand store.
-   *
-   * When HMR updates are paused, the orchestrator will update files, but no HMR messages
-   * will be send to the client.
+   * If the file can be recognized as one of the user's src files,
+   * update the StudioData and send a custom HMR event to the frontend.
    */
   async handleHotUpdate(server: ViteDevServer, filepath: string) {
     if (!filepath.startsWith(this.pathToUserProjectRoot)) {
