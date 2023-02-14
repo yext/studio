@@ -67,7 +67,6 @@ export default class StudioSourceFileWriter {
     }));
     this.sourceFile.addImportDeclarations(structures);
     this.sourceFile.fixMissingImports();
-    return
     cssImports?.forEach((importSource) => {
       this.sourceFile.addImportDeclaration({
         moduleSpecifier: importSource,

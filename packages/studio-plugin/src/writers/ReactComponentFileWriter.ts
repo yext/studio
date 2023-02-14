@@ -191,7 +191,6 @@ export default class ReactComponentFileWriter {
       pluginNameToComponentNames,
       cssImports
     );
-    return;
     this.studioSourceFileWriter.writeToFile();
   }
 

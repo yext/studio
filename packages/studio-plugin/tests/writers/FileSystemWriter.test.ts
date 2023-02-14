@@ -46,15 +46,13 @@ describe("syncFileMetadata", () => {
   const paths = getUserPaths(projectRoot);
   paths.pages = path.join(projectRoot, "pages");
   paths.modules = path.join(projectRoot, "modules");
+  const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, []);
+  const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 
   it("updates user module file based on new state", async () => {
-    jest.spyOn(fs, "existsSync").mockImplementation(() => true);
     const fsWriteFileSyncSpy = jest
       .spyOn(fs, "writeFileSync")
       .mockImplementation();
-
-    const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, []);
-    const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 
     fileWriter.writeToModuleFile(
       path.join(paths.modules, "NewModule.tsx"),
@@ -68,28 +66,15 @@ describe("syncFileMetadata", () => {
   });
 
   it("creates a new module file and adds a component based on new state", async () => {
-    const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, []);
-    const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
-
-    // jest.spyOn(fs, "existsSync").mockImplementation(() => true);
-    const fsMkdirSyncSpy = jest.spyOn(fs, "mkdirSync").mockImplementation();
-    const fsOpenSyncSpy = jest
-      .spyOn(fs, "openSync")
-      .mockImplementationOnce(jest.fn());
     const fsWriteFileSyncSpy = jest
       .spyOn(fs, "writeFileSync")
       .mockImplementation();
 
     const moduleFilepath = path.join(paths.modules, "NewModule.tsx");
     fileWriter.writeToModuleFile(moduleFilepath, moduleMetadata);
-
-    // expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.modules, {
-    //   recursive: true,
-    // });
-    // expect(fsOpenSyncSpy).toHaveBeenCalledWith(moduleFilepath, "w");
-    // expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-    //   expect.stringContaining("NewModule.tsx"),
-    //   fs.readFileSync(path.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
-    // );
+    expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
+      expect.stringContaining("NewModule.tsx"),
+      fs.readFileSync(path.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
+    );
   });
 });
