@@ -5,6 +5,7 @@ import {
   PageState,
   PropValues,
 } from "@yext/studio-plugin";
+import DOMRectProperties from "../DOMRectProperties";
 
 export interface PagesRecord {
   [pageName: string]: PageState;
@@ -19,6 +20,8 @@ export interface PageSliceStates {
   activeComponentUUID?: string;
   /** The entity file whose data is seeding the active preview page. */
   activeEntityFile?: string;
+  /** The DOMRect of the active component, for highlighting purposes. */
+  activeComponentRect?: DOMRectProperties;
   /**
    * The part of state that tracks which pages have been interacted with from
    * the UI and have changes pending on commit.
@@ -53,6 +56,7 @@ interface PageSliceActions {
   getModuleStateBeingEdited: () => ModuleState | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
+  setActiveComponentRect: (rect: DOMRect | undefined) => void;
   setComponentProps: (
     pageName: string,
     componentUUID: string,

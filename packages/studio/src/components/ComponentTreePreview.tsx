@@ -1,12 +1,4 @@
-import {
-  Fragment,
-  createElement,
-  useMemo,
-  useState,
-  PropsWithChildren,
-  useCallback,
-  MouseEvent,
-} from "react";
+import { Fragment, createElement, useMemo, useState } from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentTreeHelpers,
@@ -23,7 +15,7 @@ import { useLayoutEffect } from "react";
 import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
-import classNames from "classnames";
+import HighlightingContainer from "./HighlightingContainer";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
@@ -144,37 +136,6 @@ function useComponentTreeElements(
     componentTree,
     isWithinModule,
   ]);
-}
-
-/**
- * Responsible for highlighting the active component,
- * and updating the active component when clicked on.
- */
-function HighlightingContainer(props: PropsWithChildren<{ uuid: string }>) {
-  const setActiveComponentUUID = useStudioStore(
-    (store) => store.pages.setActiveComponentUUID
-  );
-  const activeComponentUUID = useStudioStore(
-    (store) => store.pages.activeComponentUUID
-  );
-  const ringClass =
-    "relative before:ring before:absolute before:w-full before:h-full before:z-10";
-  const className = classNames(ringClass, {
-    "before:ring-blue-400": activeComponentUUID === props.uuid,
-    "before:ring-transparent": activeComponentUUID !== props.uuid,
-  });
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation();
-      setActiveComponentUUID(props.uuid);
-    },
-    [props.uuid, setActiveComponentUUID]
-  );
-  return (
-    <div className={className} onClick={handleClick}>
-      {props.children}
-    </div>
-  );
 }
 
 /**

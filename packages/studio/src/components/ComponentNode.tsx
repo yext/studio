@@ -56,7 +56,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 
   const componentNodeClasses = classNames(
-    "flex px-2 items-center justify-between h-8 cursor-pointer",
+    "flex px-2 items-center justify-between h-8",
     {
       "bg-blue-100": activeComponentUUID === componentState.uuid,
       "hover:bg-gray-100": activeComponentUUID !== componentState.uuid,
@@ -69,7 +69,10 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
-      <div className="flex grow items-center" onClick={handleClick}>
+      <div
+        className="flex grow items-center cursor-pointer"
+        onClick={handleClick}
+      >
         <Vector className={vectorClassName} onClick={handleToggle} />
         <div className="pl-2">
           <ComponentKindIcon componentState={componentState} />
