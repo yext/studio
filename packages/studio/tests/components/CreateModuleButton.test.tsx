@@ -44,7 +44,7 @@ beforeEach(() => {
     },
     fileMetadatas: {
       UUIDToFileMetadata: {
-        Testy: {
+        "Testy-metadata-uuid": {
           kind: FileMetadataKind.Module,
           componentTree: [],
           metadataUUID: "Testy-metadata-uuid",

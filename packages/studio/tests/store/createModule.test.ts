@@ -146,8 +146,8 @@ describe("errors", () => {
     );
   });
 
-  it("throws an error for a filepath with a module name that already exists", () => {
-    const action = () => useStudioStore.getState().createModule("test");
+  it("throws an error when module name starts with a lowercase letter", () => {
+    const action = () => useStudioStore.getState().createModule("bob/test");
     expect(action).toThrow("Module names must start with an uppercase letter.");
   });
 });
