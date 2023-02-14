@@ -1,5 +1,5 @@
 import PageFile from "../../src/sourcefiles/PageFile";
-import { ComponentStateKind } from "../../src/types/State";
+import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 import * as uuidUtils from "uuid";

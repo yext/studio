@@ -10,7 +10,7 @@ import {
   ComponentState,
   ComponentStateKind,
   StandardOrModuleComponentState,
-} from "../types/State";
+} from "../types/ComponentState";
 import { v4 } from "uuid";
 import { FileMetadataKind } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
