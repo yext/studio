@@ -39,7 +39,6 @@ export default function PropInput({
       } else if (propKind === PropValueKind.Expression) {
         value = "`" + e.target.value + "`";
       }
-      console.log("onchange", value);
       onChange(value);
     },
     [onChange, propType, propKind]
@@ -125,7 +124,6 @@ function getDisplayValue(
   value: string | number | boolean,
   kind: PropValueKind
 ) {
-  // console.log("get display value", value, kind);
   if (kind === PropValueKind.Expression) {
     if (typeof value !== "string") {
       throw new Error(
@@ -133,7 +131,6 @@ function getDisplayValue(
       );
     }
     if (value.length >= 2 && value.startsWith("`") && value.endsWith("`")) {
-      console.log("slicing", value);
       return value.slice(1, -1);
     }
   }
