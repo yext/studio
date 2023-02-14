@@ -55,39 +55,35 @@ beforeEach(() => {
   });
 });
 
-const filepath = path.resolve(__dirname, "../__mocks__", "./module.tsx");
-
 it("adds module metadata to UUIDToFileMetadata", () => {
-  useStudioStore.getState().createModule(filepath);
+  const moduleName = "Module";
+  useStudioStore.getState().createModule(moduleName);
   const UUIDToFileMetadata =
     useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
-  expect(UUIDToFileMetadata).toEqual({
-    ...UUIDToFileMetadata,
-    [filepath]: {
-      kind: FileMetadataKind.Module,
-      componentTree: [
-        {
-          ...searchBarComponent,
-          uuid: "mock-uuid-1",
-        },
-        {
-          kind: ComponentStateKind.Module,
-          uuid: "mock-uuid-2",
-          parentUUID: "mock-uuid-1",
-          componentName: "module",
-          props: {},
-          metadataUUID: "mock-metadata",
-        },
-      ],
-      filepath,
-      metadataUUID: filepath,
-      propShape: {},
-    },
+  expect(Object.values(UUIDToFileMetadata).at(-1)).toEqual({
+    kind: FileMetadataKind.Module,
+    componentTree: [
+      {
+        ...searchBarComponent,
+        uuid: "mock-uuid-1",
+      },
+      {
+        kind: ComponentStateKind.Module,
+        uuid: "mock-uuid-2",
+        parentUUID: "mock-uuid-1",
+        componentName: "module",
+        props: {},
+        metadataUUID: "mock-metadata",
+      },
+    ],
+    filepath: expect.stringContaining(moduleName + ".tsx"),
+    metadataUUID: expect.any(String),
+    propShape: {},
   });
 });
 
 it("updates active page state to include new module component", () => {
-  useStudioStore.getState().createModule(filepath);
+  useStudioStore.getState().createModule("Module");
   const activeComponentState = useStudioStore
     .getState()
     .pages.getActivePageState();
@@ -101,8 +97,8 @@ it("updates active page state to include new module component", () => {
         kind: ComponentStateKind.Module,
         uuid: expect.anything(),
         parentUUID: "mock-uuid-0",
-        componentName: "module",
-        metadataUUID: expect.stringMatching(/\/module.tsx$/),
+        componentName: "Module",
+        metadataUUID: expect.any(String),
         props: {},
       },
       {
@@ -117,69 +113,41 @@ it("updates active page state to include new module component", () => {
 });
 
 it("sets active component to the new module component", () => {
-  useStudioStore.getState().createModule(filepath);
+  useStudioStore.getState().createModule("Module");
   const activeComponentState = useStudioStore
     .getState()
-    .pages.getActiveComponentState();
+    .actions.getActiveComponentState();
   expect(activeComponentState).toEqual({
     kind: ComponentStateKind.Module,
-    uuid: expect.anything(),
+    uuid: expect.any(String),
     parentUUID: "mock-uuid-0",
-    componentName: "module",
-    metadataUUID: expect.stringMatching(/\/module.tsx$/),
+    componentName: "Module",
+    metadataUUID: expect.any(String),
     props: {},
   });
 });
 
 describe("errors", () => {
-  let consoleErrorSpy: jest.SpyInstance;
-  beforeEach(() => {
-    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-  });
-
-  it("gives an error when there is no active component state", () => {
+  it("throws an error when there is no active component state", () => {
     useStudioStore.getState().pages.setActiveComponentUUID(undefined);
-    const consoleErrorSpy = jest
-      .spyOn(global.console, "error")
-      .mockImplementation();
-    expect(useStudioStore.getState().createModule(filepath)).toBeFalsy();
-    expect(consoleErrorSpy).toBeCalledTimes(1);
-    expect(consoleErrorSpy).toBeCalledWith(
-      "Tried to create module without active component."
+    const action = () => useStudioStore.getState().createModule("Any");
+    expect(action).toThrow("Tried to create module without active component.");
+  });
+
+  it("throws an error for an empty moduleName", () => {
+    const action = () => useStudioStore.getState().createModule("");
+    expect(action).toThrow("Error creating module: a modulePath is required.");
+  });
+
+  it("throws an error for a modulePath outside the allowed path for modules", () => {
+    const action = () => useStudioStore.getState().createModule("../Module");
+    expect(action).toThrow(
+      `Error creating module: modulePath is invalid: "../Module.tsx".`
     );
   });
 
-  it("gives an error for an empty string filepath", () => {
-    useStudioStore.getState().createModule("");
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Error creating module: a filepath is required."
-    );
-  });
-
-  it("gives an error for a relative filepath", () => {
-    useStudioStore.getState().createModule("./module.tsx");
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      "Error creating module: filepath is invalid: ./module.tsx"
-    );
-  });
-
-  it("gives an error for a filepath outside the allowed path for modules", () => {
-    const filepath = path.join(__dirname, "../__mocks__", "../module.tsx");
-    useStudioStore.getState().createModule(filepath);
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      `Error creating module: filepath is invalid: ${filepath}`
-    );
-  });
-
-  it("gives an error for a filepath with a module name that already exists", () => {
-    const filepath = path.join(__dirname, "../__mocks__", "./test.tsx");
-    useStudioStore.getState().createModule(filepath);
-    expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-    expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Error creating module: module name "test" is already used.'
-    );
+  it("throws an error when module name starts with a lowercase letter", () => {
+    const action = () => useStudioStore.getState().createModule("bob/test");
+    expect(action).toThrow("Module names must start with an uppercase letter.");
   });
 });
