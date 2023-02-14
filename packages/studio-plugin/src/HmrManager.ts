@@ -2,6 +2,7 @@ import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
 import { ViteDevServer } from 'vite';
+import VirtualModuleID from "./VirtualModuleID";
 
 /**
  * HmrManager is responsible for handling studio specific HMR updates.
@@ -48,6 +49,7 @@ export default class HmrManager {
       return;
     }
     this.orchestrator.reloadFile(filepath);
+    HmrManager.invalidateStudioData(server);
     console.log('reloaded file', filepath, this.shouldSendHotUpdates)
     if (!this.shouldSendHotUpdates) {
       return;
@@ -59,6 +61,18 @@ export default class HmrManager {
       event: StudioHMRUpdateID,
       data,
     });
+  }
+
+  /**
+   * Tells the client it needs to refresh its StudioData.
+   */
+  private static invalidateStudioData(server: ViteDevServer) {
+    const studioModule = server.moduleGraph.getModuleById(
+      "\0" + VirtualModuleID.StudioData
+    );
+    if (studioModule) {
+      server.moduleGraph.invalidateModule(studioModule);
+    }
   }
 
   async sendFullUpdate(server: ViteDevServer) {

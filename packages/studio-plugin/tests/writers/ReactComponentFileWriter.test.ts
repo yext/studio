@@ -1,4 +1,4 @@
-import { ComponentStateKind } from "../../src/types/State";
+import { ComponentStateKind } from "../../src/types/ComponentState";
 import {
   getComponentPath,
   getModulePath,

@@ -11,6 +11,7 @@ import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
 import HmrManager from "./HmrManager";
+
 /**
  * Handles server-client communication.
  *
@@ -39,7 +40,6 @@ export default async function createStudioPlugin(
     localDataMapping
   );
   const hmrManager = new HmrManager(orchestrator, pathToUserProjectRoot, studioConfig.paths)
-  const initialStudioData = orchestrator.getStudioData();
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -90,7 +90,7 @@ export default async function createStudioPlugin(
     },
     load(id) {
       if (id === "\0" + VirtualModuleID.StudioData) {
-        return `export default ${JSON.stringify(initialStudioData)}`;
+        return `export default ${JSON.stringify(orchestrator.getStudioData())}`;
       } else if (id === "\0" + VirtualModuleID.GitData) {
         return `export default ${JSON.stringify(gitWrapper.getStoredData())}`;
       }
