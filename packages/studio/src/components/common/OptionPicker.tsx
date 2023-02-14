@@ -86,7 +86,6 @@ function Option<T extends string>({
       className={isSelected ? cssClasses?.selectedOption : cssClasses?.option}
     >
       {icon && <div className="mr-2">{icon}</div>}
-      {option}
     </button>
   );
 }
