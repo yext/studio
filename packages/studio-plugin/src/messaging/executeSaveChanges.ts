@@ -25,14 +25,6 @@ export default async function executeSaveChanges(
     fileManager.removeFile(filepath);
     hmrManager.reloadFile(filepath);
   });
-  // pendingChanges.modulesToUpdate.forEach((moduleUUID) => {
-  //   const metadata = UUIDToFileMetadata[moduleUUID];
-  //   if (metadata.kind === FileMetadataKind.Module) {
-  //     console.log('--- update module file', metadata.filepath)
-  //     fileManager.updateModuleFile(metadata.filepath, metadata);
-  //   }
-  //   hmrManager.reloadFile(metadata.filepath);
-  // });
   pendingChanges.pagesToUpdate.forEach((pageToUpdate) => {
     const filepath = pageNameToPageState[pageToUpdate]?.filepath;
     fileManager.updatePageFile(filepath, pageNameToPageState[pageToUpdate]);
