@@ -49,7 +49,9 @@ class HighlightingClass extends Component<HighlightingProps> {
 
   constructor(props) {
     super(props);
-    this.resizeObserver = new ResizeObserver(() => this.highlightSelf());
+    this.resizeObserver = new ResizeObserver(() => {
+      this.highlightSelf();
+    });
   }
 
   highlightSelf = (e?: Event) => {
@@ -73,7 +75,7 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     childNode.addEventListener("click", this.highlightSelf);
-    this.resizeObserver.observe(childNode);
+    this.resizeObserver.observe(document.body);
   }
 
   componentDidUpdate(): void {
