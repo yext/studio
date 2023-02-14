@@ -32,9 +32,6 @@ beforeEach(() => {
     },
     fileMetadatas: {
       UUIDToFileMetadata: mockUUIDToFileMetadata,
-      pendingChanges: {
-        modulesToUpdate: new Set(["module-uuid"]),
-      },
     },
   });
 });
@@ -49,7 +46,6 @@ it("sends pending changes to server to update files", () => {
     pendingChanges: {
       pagesToRemove: ["RemoveMe"],
       pagesToUpdate: ["UpdateMe"],
-      modulesToUpdate: ["module-uuid"],
     },
     siteSettings: {
       values: undefined,
@@ -62,8 +58,5 @@ it("resets pending changes on successful response from server after saving chang
   expect(useStudioStore.getState().pages.pendingChanges).toEqual({
     pagesToRemove: new Set(),
     pagesToUpdate: new Set(),
-  });
-  expect(useStudioStore.getState().fileMetadatas.pendingChanges).toEqual({
-    modulesToUpdate: new Set(),
   });
 });

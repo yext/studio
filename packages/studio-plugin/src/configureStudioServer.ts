@@ -1,9 +1,9 @@
 import { ViteDevServer } from "vite";
 import FileSystemManager from "./FileSystemManager";
 import GitWrapper from "./git/GitWrapper";
-import HmrManager from "./HmrManager";
 import registerDeployListener from "./messaging/registerDeployListener";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
+import ParsingOrchestrator from "./ParsingOrchestrator";
 
 /**
  * A factory method for our vite plugin's configureServer handler.
@@ -11,7 +11,7 @@ import registerSaveChangesListener from "./messaging/registerSaveChangesListener
 export default function createConfigureStudioServer(
   fileSystemManager: FileSystemManager,
   gitWrapper: GitWrapper,
-  hmrManager: HmrManager
+  orchestrator: ParsingOrchestrator
 ) {
   /**
    * Sets up websocket listeners.
@@ -21,8 +21,8 @@ export default function createConfigureStudioServer(
       server,
       fileSystemManager,
       gitWrapper,
-      hmrManager
+      orchestrator
     );
-    registerDeployListener(server, fileSystemManager, gitWrapper, hmrManager);
+    registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
   };
 }

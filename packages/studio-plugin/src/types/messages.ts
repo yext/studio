@@ -12,7 +12,6 @@ export interface SaveChangesPayload
   pendingChanges: {
     pagesToRemove: string[];
     pagesToUpdate: string[];
-    modulesToUpdate: string[];
   };
   siteSettings: {
     values?: SiteSettingsValues;

@@ -49,8 +49,8 @@ export default async function createStudioPlugin(
     studioConfig.paths,
     new FileSystemWriter(
       orchestrator,
-      studioConfig.isPagesJSRepo,
-      tsMorphProject
+      tsMorphProject,
+      studioConfig.isPagesJSRepo
     )
   );
 
@@ -102,7 +102,7 @@ export default async function createStudioPlugin(
     configureServer: createConfigureStudioServer(
       fileSystemManager,
       gitWrapper,
-      hmrManager
+      orchestrator
     ),
     handleHotUpdate: createHandleHotUpdate(hmrManager),
   };

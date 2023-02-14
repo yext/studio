@@ -5,19 +5,19 @@ import executeSaveChanges from "./executeSaveChanges";
 import FileSystemManager from "../FileSystemManager";
 import GitWrapper from "../git/GitWrapper";
 import reloadGitData from "../git/reloadGitData";
-import HmrManager from "../HmrManager";
+import ParsingOrchestrator from "../ParsingOrchestrator";
 
 export default function registerDeployListener(
   server: ViteDevServer,
   fileManager: FileSystemManager,
   gitWrapper: GitWrapper,
-  hmrManager: HmrManager
+  orchestrator: ParsingOrchestrator
 ) {
   registerListener(
     server,
     MessageID.Deploy,
     async (saveData: SaveChangesPayload) => {
-      await executeSaveChanges(saveData, fileManager, hmrManager, server);
+      executeSaveChanges(saveData, fileManager, orchestrator);
       await gitWrapper.deploy();
       await reloadGitData(gitWrapper, server);
       return "Deployed successfully.";

@@ -8,29 +8,11 @@ import VirtualModuleID from "./VirtualModuleID";
  * HmrManager is responsible for handling studio specific HMR updates.
  */
 export default class HmrManager {
-  private shouldSendHotUpdates = true;
-  private timestamp?: number;
-
   constructor(
     private orchestrator: ParsingOrchestrator,
     private pathToUserProjectRoot: string,
     private userPaths: UserPaths
   ) {}
-
-  pauseHMR() {
-    this.shouldSendHotUpdates = false;
-    console.log("hmr is tomare", this.shouldSendHotUpdates);
-  }
-
-  resumeHMR() {
-    this.shouldSendHotUpdates = true;
-    console.log("hmr ga ugoki", this.shouldSendHotUpdates);
-  }
-
-  reloadFile(filepath: string) {
-    this.orchestrator.reloadFile(filepath);
-  }
-
   /**
    * When an HMR event is received, if there are any associated modules, reload them.
    * Then, if the file can be recognized as one of the user's src files,
@@ -41,20 +23,11 @@ export default class HmrManager {
    * will be send to the client.
    */
   async handleHotUpdate(server: ViteDevServer, filepath: string) {
-    if (this.timestamp) {
-      console.log(Date.now() - this.timestamp);
-    }
-    console.log(filepath);
-    this.timestamp = Date.now();
     if (!filepath.startsWith(this.pathToUserProjectRoot)) {
       return;
     }
     this.orchestrator.reloadFile(filepath);
     HmrManager.invalidateStudioData(server);
-    console.log("reloaded file", filepath, this.shouldSendHotUpdates);
-    if (!this.shouldSendHotUpdates) {
-      return;
-    }
     const updateType = getHMRUpdateType(filepath, this.userPaths);
     const data = await this.getPayload(updateType);
     server.ws.send({
@@ -74,18 +47,6 @@ export default class HmrManager {
     if (studioModule) {
       server.moduleGraph.invalidateModule(studioModule);
     }
-  }
-
-  async sendFullUpdate(server: ViteDevServer) {
-    if (!this.shouldSendHotUpdates) {
-      throw new Error("Tried to send a full update when HMR was paused.");
-    }
-    const data = await this.getPayload("full");
-    server.ws.send({
-      type: "custom",
-      event: StudioHMRUpdateID,
-      data,
-    });
   }
 
   private async getPayload(

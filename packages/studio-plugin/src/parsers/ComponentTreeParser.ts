@@ -108,9 +108,9 @@ export default class ComponentTreeParser {
     const assumeIsBuiltInElement = filepath === undefined;
     if (assumeIsBuiltInElement) {
       if (attributes.length > 0) {
-        // console.warn(
-        //   `Props for builtIn element: '${componentName}' are currently not supported.`
-        // );
+        console.warn(
+          `Props for builtIn element: '${componentName}' are currently not supported.`
+        );
       }
       return {
         kind: ComponentStateKind.BuiltIn,

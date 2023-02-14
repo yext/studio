@@ -11,7 +11,6 @@ import {
   ComponentState,
   ComponentStateKind,
   FileMetadataKind,
-  ModuleMetadata,
   PageState,
 } from "../src/types";
 
@@ -29,22 +28,6 @@ const pageState: PageState = {
   filepath: "some/file/path",
 };
 
-const moduleMetadata: ModuleMetadata = {
-  kind: FileMetadataKind.Module,
-  componentTree: [
-    {
-      kind: ComponentStateKind.Fragment,
-      uuid: "mock-uuid-parent",
-    },
-    {
-      ...bannerComponentState,
-      parentUUID: "mock-uuid-parent",
-    },
-  ],
-  metadataUUID: "metadata-uuid",
-  filepath: "mock-filepath",
-};
-
 const projectRoot = path.resolve(__dirname, "./__fixtures__/FileSystemManager");
 const tsMorphProject: Project = createTsMorphProject();
 const paths = getUserPaths(projectRoot);
@@ -54,7 +37,7 @@ paths.modules = path.join(projectRoot, "modules");
 const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, []);
 const fileManager = new FileSystemManager(
   paths,
-  new FileSystemWriter(orchestrator, false, tsMorphProject)
+  new FileSystemWriter(orchestrator, tsMorphProject)
 );
 
 const bannerFilepath = path.join(paths.components, "Banner.tsx");
@@ -116,60 +99,6 @@ describe("updatePageFile", () => {
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
       expect.stringContaining("NewPage.tsx"),
       fs.readFileSync(path.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
-    );
-  });
-});
-
-describe("updateModuleFile", () => {
-  it("throw errors if the filepath to update is not a valid module path", async () => {
-    expect(() =>
-      fileManager.updateModuleFile(
-        "/invalid/modules/NewModule.tsx",
-        moduleMetadata
-      )
-    ).toThrowError(
-      'Cannot update module file: filepath "/invalid/modules/NewModule.tsx"' +
-        ` is not within the expected path for modules "${paths.modules}".`
-    );
-  });
-
-  it("updates user module file based on new state", async () => {
-    jest.spyOn(fs, "existsSync").mockImplementation(() => true);
-    const fsWriteFileSyncSpy = jest
-      .spyOn(fs, "writeFileSync")
-      .mockImplementation();
-
-    fileManager.updateModuleFile(
-      path.join(paths.modules, "NewModule.tsx"),
-      moduleMetadata
-    );
-
-    expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("NewModule.tsx"),
-      fs.readFileSync(path.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
-    );
-  });
-
-  it("creates a new module file and adds a component based on new state", async () => {
-    jest.spyOn(fs, "existsSync").mockImplementation(() => false);
-    const fsMkdirSyncSpy = jest.spyOn(fs, "mkdirSync").mockImplementation();
-    const fsOpenSyncSpy = jest
-      .spyOn(fs, "openSync")
-      .mockImplementationOnce(jest.fn());
-    const fsWriteFileSyncSpy = jest
-      .spyOn(fs, "writeFileSync")
-      .mockImplementation();
-
-    const moduleFilepath = path.join(paths.modules, "NewModule.tsx");
-    fileManager.updateModuleFile(moduleFilepath, moduleMetadata);
-
-    expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.modules, {
-      recursive: true,
-    });
-    expect(fsOpenSyncSpy).toHaveBeenCalledWith(moduleFilepath, "w");
-    expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("NewModule.tsx"),
-      fs.readFileSync(path.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
     );
   });
 });

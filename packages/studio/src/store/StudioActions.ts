@@ -191,9 +191,7 @@ export default class StudioActions {
   private getSaveData = () => {
     const { pages, pendingChanges: pendingPageChanges } = this.getPages();
     const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
-    const { UUIDToFileMetadata, pendingChanges: pendingModuleChanges } =
-      this.getFileMetadatas();
-    const { modulesToUpdate } = pendingModuleChanges;
+    const { UUIDToFileMetadata } = this.getFileMetadatas();
     const { values } = this.getSiteSettings();
     return {
       pageNameToPageState: pages,
@@ -201,7 +199,6 @@ export default class StudioActions {
       pendingChanges: {
         pagesToRemove: [...pagesToRemove.keys()],
         pagesToUpdate: [...pagesToUpdate],
-        modulesToUpdate: [...modulesToUpdate.keys()],
       },
       siteSettings: { values },
     };

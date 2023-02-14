@@ -1,11 +1,9 @@
 import {
   FileMetadata,
-  ModuleMetadata,
   PageState,
   SiteSettingsValues,
   UserPaths,
 } from "./types";
-import fs from "fs";
 import path from "path";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 
@@ -35,16 +33,6 @@ export default class FileSystemManager {
       throw new Error(
         `Cannot update page file: filepath "${filepath}" is not within the` +
           ` expected path for pages "${this.paths.pages}".`
-      );
-    }
-  }
-
-  updateModuleFile(filepath: string, moduleMetadata: ModuleMetadata) {
-    if (filepath.startsWith(this.paths.modules)) {
-    } else {
-      throw new Error(
-        `Cannot update module file: filepath "${filepath}" is not within the` +
-          ` expected path for modules "${this.paths.modules}".`
       );
     }
   }

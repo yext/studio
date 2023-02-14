@@ -18,8 +18,8 @@ import path from "path";
 export class FileSystemWriter {
   constructor(
     private orchestrator: ParsingOrchestrator,
-    private isPagesJSRepo: boolean,
-    private project: Project
+    private project: Project,
+    private isPagesJSRepo = false
   ) {}
 
   /**
@@ -70,14 +70,8 @@ export class FileSystemWriter {
       const originalMetadata = UUIDToFileMetadata[moduleUUID];
       if (!lodash.isEqual(originalMetadata, updatedMetadata)) {
         const { filepath } = updatedMetadata;
-        console.log("--- sync module file", updatedMetadata.filepath);
-
         FileSystemWriter.openFile(filepath);
         this.writeToModuleFile(filepath, updatedMetadata);
-        // this.orchestrator.reloadFile(updatedMetadata.filepath);
-        // this.orchestrator
-        //   .getModuleFile(updatedMetadata.filepath)
-        //   .updateModuleFile(updatedMetadata);
         this.orchestrator.reloadFile(updatedMetadata.filepath);
       }
     });

@@ -13,12 +13,10 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
     UUIDToFileMetadata,
     setUUIDToImportedComponent,
     UUIDToImportedComponent,
-    modulesToUpdate,
   ] = useStudioStore((store) => [
     store.fileMetadatas.UUIDToFileMetadata,
     store.fileMetadatas.setUUIDToImportedComponent,
     store.fileMetadatas.UUIDToImportedComponent,
-    store.fileMetadatas.pendingChanges.modulesToUpdate,
   ]);
 
   // Use ref instead of to avoid triggering rerender (infinite loop)
@@ -41,9 +39,6 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
         return null;
       }
       const { metadataUUID, componentName } = c;
-      if (modulesToUpdate.has(metadataUUID)) {
-        return null;
-      }
       // Avoid re-importing components
       if (metadataUUID in UUIDToImportedComponentRef) {
         return null;
@@ -58,7 +53,7 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
         newImportedComponents[metadataUUID] = functionComponent;
       }
     },
-    [UUIDToFileMetadata, modulesToUpdate]
+    [UUIDToFileMetadata]
   );
 
   useLayoutEffect(() => {

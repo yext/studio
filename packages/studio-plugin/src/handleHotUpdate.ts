@@ -10,6 +10,6 @@ export default function createHandleHotUpdate(hmrManager: HmrManager) {
       return ctx.server.reloadModule(m);
     });
     await Promise.all(reloadModulePromises);
-    hmrManager.handleHotUpdate(ctx.server, ctx.file);
+    await hmrManager.handleHotUpdate(ctx.server, ctx.file);
   };
 }

@@ -87,9 +87,6 @@ it("disables the button when there are no pending changes", async () => {
     },
     fileMetadatas: {
       UUIDToFileMetadata: {},
-      pendingChanges: {
-        modulesToUpdate: new Set(),
-      },
     },
     pages: {
       pendingChanges: {

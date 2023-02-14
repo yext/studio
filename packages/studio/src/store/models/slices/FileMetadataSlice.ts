@@ -12,13 +12,6 @@ export interface FileMetadataSliceStates {
   UUIDToFileMetadata: Record<string, FileMetadata>;
   /** Component's metadata uuid and its functional component method. */
   UUIDToImportedComponent: Record<string, ImportType>;
-  pendingChanges: {
-    /**
-     * The UUID of modules (new or existing) that need to be updated in the
-     * user's file system.
-     */
-    modulesToUpdate: Set<string>;
-  };
 }
 
 export interface FileMetadataSliceActions {
