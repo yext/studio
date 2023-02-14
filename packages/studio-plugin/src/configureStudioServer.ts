@@ -17,7 +17,12 @@ export default function createConfigureStudioServer(
    * Sets up websocket listeners.
    */
   return function configureStudioServer(server: ViteDevServer) {
-    registerSaveChangesListener(server, fileSystemManager, gitWrapper, hmrManager);
+    registerSaveChangesListener(
+      server,
+      fileSystemManager,
+      gitWrapper,
+      hmrManager
+    );
     registerDeployListener(server, fileSystemManager, gitWrapper, hmrManager);
   };
 }

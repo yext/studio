@@ -9,7 +9,7 @@ import {
 import fs from "fs";
 import { Project } from "ts-morph";
 import lodash from "lodash";
-import path from 'path'
+import path from "path";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -69,8 +69,8 @@ export class FileSystemWriter {
       }
       const originalMetadata = UUIDToFileMetadata[moduleUUID];
       if (!lodash.isEqual(originalMetadata, updatedMetadata)) {
-        const {filepath} = updatedMetadata;
-        console.log('--- sync module file', updatedMetadata.filepath)
+        const { filepath } = updatedMetadata;
+        console.log("--- sync module file", updatedMetadata.filepath);
 
         FileSystemWriter.openFile(filepath);
         this.writeToModuleFile(filepath, updatedMetadata);

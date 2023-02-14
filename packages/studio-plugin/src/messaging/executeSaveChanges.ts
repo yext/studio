@@ -2,7 +2,7 @@ import FileSystemManager from "../FileSystemManager";
 import { FileMetadataKind, SaveChangesPayload } from "../types";
 import path from "path";
 import HmrManager from "../HmrManager";
-import { ViteDevServer } from "vite"
+import { ViteDevServer } from "vite";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 
 export default async function executeSaveChanges(

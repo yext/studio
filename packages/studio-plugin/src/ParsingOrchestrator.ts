@@ -107,7 +107,7 @@ export default class ParsingOrchestrator {
       return;
     }
 
-    console.log('reloading', path.basename(filepath, '.tsx'))
+    console.log("reloading", path.basename(filepath, ".tsx"));
     sourceFile.refreshFromFileSystemSync();
     if (
       filepath.startsWith(this.paths.modules) ||

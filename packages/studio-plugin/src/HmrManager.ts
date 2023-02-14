@@ -1,7 +1,7 @@
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
-import { ViteDevServer } from 'vite';
+import { ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID";
 
 /**
@@ -14,16 +14,17 @@ export default class HmrManager {
   constructor(
     private orchestrator: ParsingOrchestrator,
     private pathToUserProjectRoot: string,
-    private userPaths: UserPaths) {}
+    private userPaths: UserPaths
+  ) {}
 
   pauseHMR() {
     this.shouldSendHotUpdates = false;
-    console.log('hmr is tomare', this.shouldSendHotUpdates)
+    console.log("hmr is tomare", this.shouldSendHotUpdates);
   }
 
   resumeHMR() {
     this.shouldSendHotUpdates = true;
-    console.log('hmr ga ugoki', this.shouldSendHotUpdates)
+    console.log("hmr ga ugoki", this.shouldSendHotUpdates);
   }
 
   reloadFile(filepath: string) {
@@ -35,26 +36,26 @@ export default class HmrManager {
    * Then, if the file can be recognized as one of the user's src files,
    * update the StudioData and send a custom HMR event to the frontend so that special
    * action may be taken. For example, updating the zustand store.
-   * 
+   *
    * When HMR updates are paused, the orchestrator will update files, but no HMR messages
    * will be send to the client.
    */
   async handleHotUpdate(server: ViteDevServer, filepath: string) {
     if (this.timestamp) {
-      console.log(Date.now() - this.timestamp)
+      console.log(Date.now() - this.timestamp);
     }
     console.log(filepath);
-    this.timestamp = Date.now()
+    this.timestamp = Date.now();
     if (!filepath.startsWith(this.pathToUserProjectRoot)) {
       return;
     }
     this.orchestrator.reloadFile(filepath);
     HmrManager.invalidateStudioData(server);
-    console.log('reloaded file', filepath, this.shouldSendHotUpdates)
+    console.log("reloaded file", filepath, this.shouldSendHotUpdates);
     if (!this.shouldSendHotUpdates) {
       return;
     }
-    const updateType = getHMRUpdateType(filepath, this.userPaths)
+    const updateType = getHMRUpdateType(filepath, this.userPaths);
     const data = await this.getPayload(updateType);
     server.ws.send({
       type: "custom",
@@ -87,7 +88,9 @@ export default class HmrManager {
     });
   }
 
-  private async getPayload(updateType: StudioHMRPayload['updateType']): Promise<StudioHMRPayload> {
+  private async getPayload(
+    updateType: StudioHMRPayload["updateType"]
+  ): Promise<StudioHMRPayload> {
     const studioData = this.orchestrator.getStudioData();
     const studioConfig = await getStudioConfig(this.pathToUserProjectRoot);
     return {

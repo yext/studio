@@ -4,9 +4,7 @@ import HmrManager from "./HmrManager";
 /**
  * Factory method for creating our handleHotUpdate handler.
  */
-export default function createHandleHotUpdate(
-  hmrManager: HmrManager
-) {
+export default function createHandleHotUpdate(hmrManager: HmrManager) {
   return async function (ctx: HmrContext) {
     const reloadModulePromises = ctx.modules.map((m) => {
       return ctx.server.reloadModule(m);

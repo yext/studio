@@ -39,7 +39,11 @@ export default async function createStudioPlugin(
     studioConfig.plugins,
     localDataMapping
   );
-  const hmrManager = new HmrManager(orchestrator, pathToUserProjectRoot, studioConfig.paths)
+  const hmrManager = new HmrManager(
+    orchestrator,
+    pathToUserProjectRoot,
+    studioConfig.paths
+  );
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -95,7 +99,11 @@ export default async function createStudioPlugin(
         return `export default ${JSON.stringify(gitWrapper.getStoredData())}`;
       }
     },
-    configureServer: createConfigureStudioServer(fileSystemManager, gitWrapper, hmrManager),
+    configureServer: createConfigureStudioServer(
+      fileSystemManager,
+      gitWrapper,
+      hmrManager
+    ),
     handleHotUpdate: createHandleHotUpdate(hmrManager),
   };
 }
