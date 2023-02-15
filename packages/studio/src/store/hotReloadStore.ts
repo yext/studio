@@ -46,6 +46,7 @@ function syncPages(studioData: StudioData) {
     store.pages.pages = studioData.pageNameToPageState;
     store.pages.pendingChanges.pagesToRemove = new Set();
     store.pages.pendingChanges.pagesToUpdate = new Set();
+    store.pages.activeComponentUUID = undefined;
   });
 }
 
