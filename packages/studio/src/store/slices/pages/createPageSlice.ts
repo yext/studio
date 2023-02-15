@@ -7,7 +7,7 @@ import {
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual:yext-studio";
-import rectToJson from "../../../utils/rectToJson";
+import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
@@ -153,12 +153,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
       set({ activeComponentUUID });
     },
-    setActiveComponentRect: (rect: DOMRect | undefined) => {
-      if (!rect) {
-        set({ activeComponentRect: undefined });
-        return;
-      }
-      set({ activeComponentRect: rectToJson(rect) });
+    setActiveComponentRect: (rect?: DOMRectProperties) => {
+      set({ activeComponentRect: rect });
     },
     getActiveComponentState: () => {
       const { activeComponentUUID, getActivePageState } = get();

@@ -41,7 +41,7 @@ type HighlightingProps = PropsWithChildren<{
   uuid: string;
   activeComponentUUID?: string;
   setActiveUUID: (uuid: string) => void;
-  setRect: (rect: DOMRect) => void;
+  setRect: (rect: DOMRectProperties) => void;
   rect?: DOMRectProperties;
 }>;
 
@@ -63,8 +63,8 @@ class HighlightingClass extends Component<HighlightingProps> {
     if (!(childNode instanceof HTMLElement)) {
       return;
     }
-    const rect = childNode.getBoundingClientRect();
-    if (!isEqual(this.props.rect, rectToJson(rect))) {
+    const rect = rectToJson(childNode.getBoundingClientRect());
+    if (!isEqual(this.props.rect, rect)) {
       this.props.setRect(rect);
     }
     if (this.props.activeComponentUUID !== this.props.uuid) {

@@ -56,7 +56,7 @@ interface PageSliceActions {
   getModuleStateBeingEdited: () => ModuleState | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
-  setActiveComponentRect: (rect: DOMRect | undefined) => void;
+  setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
   setComponentProps: (
     pageName: string,
     componentUUID: string,
