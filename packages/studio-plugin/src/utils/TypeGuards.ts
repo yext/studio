@@ -7,6 +7,10 @@ import {
 import {
   ComponentState,
   ComponentStateKind,
+  FileMetadata,
+  FileMetadataKind,
+  ModuleMetadata,
+  ModuleState,
   PropShape,
   PropVal,
   PropValueKind,
@@ -106,6 +110,18 @@ export default class TypeGuards {
     }
     const name = StaticParsingHelpers.parseJsxElementName(element);
     return !["Fragment", "React.Fragment"].includes(name);
+  }
+
+  static isModuleMetadata(
+    metadata?: FileMetadata | null
+  ): metadata is ModuleMetadata {
+    return metadata?.kind === FileMetadataKind.Module;
+  }
+
+  static isModuleState(
+    componentState: ComponentState
+  ): componentState is ModuleState {
+    return componentState.kind === ComponentStateKind.Module;
   }
 
   static isStandardOrModuleComponentState(

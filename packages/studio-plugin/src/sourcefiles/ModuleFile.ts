@@ -11,6 +11,7 @@ import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
+import getImportSpecifier from "../utils/getImportSpecifier";
 
 /**
  * ModuleFile is responsible for parsing and updating a single
@@ -71,11 +72,22 @@ export default class ModuleFile {
    * the module's updated moduleMetadata.
    *
    * @param moduleMetadata - the updated moduleMetadata for module file
+   * @param moduleDependencies - the filepaths of any depended upon modules
    */
-  updateModuleFile(moduleMetadata: ModuleMetadata): void {
+  updateModuleFile(
+    moduleMetadata: ModuleMetadata,
+    moduleDependencies?: string[]
+  ): void {
+    const defaultImports = moduleDependencies?.map((filepath) => {
+      return {
+        name: path.basename(filepath, ".tsx"),
+        moduleSpecifier: getImportSpecifier(moduleMetadata.filepath, filepath),
+      };
+    });
     this.reactComponentFileWriter.updateFile({
       componentTree: moduleMetadata.componentTree,
       fileMetadata: moduleMetadata,
+      defaultImports,
     });
   }
 }
