@@ -83,7 +83,8 @@ export default class StaticParsingHelpers {
       expression.isKind(SyntaxKind.PropertyAccessExpression) ||
       expression.isKind(SyntaxKind.TemplateExpression) ||
       expression.isKind(SyntaxKind.ElementAccessExpression) ||
-      expression.isKind(SyntaxKind.Identifier)
+      expression.isKind(SyntaxKind.Identifier) ||
+      expression.isKind(SyntaxKind.NoSubstitutionTemplateLiteral)
     ) {
       return { value: expression.getText(), isExpression: true };
     } else if (
