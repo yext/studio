@@ -48,6 +48,7 @@ export class FileSystemWriter {
     moduleMetadata: ModuleMetadata,
     moduleDependencies?: string[]
   ): void {
+    FileSystemWriter.openFile(moduleMetadata.filepath);
     const moduleFile = this.orchestrator.getModuleFile(filepath);
     moduleFile.updateModuleFile(moduleMetadata, moduleDependencies);
   }
@@ -108,7 +109,6 @@ export class FileSystemWriter {
         const moduleDependencyPaths = moduleDependencies.map((c) => {
           return getModuleMetadata(c.metadataUUID).filepath;
         });
-        FileSystemWriter.openFile(moduleMetadata.filepath);
         this.writeToModuleFile(
           moduleMetadata.filepath,
           moduleMetadata,
@@ -122,9 +122,9 @@ export class FileSystemWriter {
 
   static openFile(filepath: string) {
     if (!fs.existsSync(filepath)) {
-      const dirName = path.dirname(filepath);
-      if (!fs.existsSync(dirName)) {
-        fs.mkdirSync(dirName, { recursive: true });
+      const dirname = path.dirname(filepath);
+      if (!fs.existsSync(dirname)) {
+        fs.mkdirSync(dirname, { recursive: true });
       }
       fs.openSync(filepath, "w");
     }
