@@ -1,10 +1,12 @@
 import FileSystemManager from "../FileSystemManager";
-import { FileMetadataKind, SaveChangesPayload } from "../types";
+import { SaveChangesPayload } from "../types";
 import path from "path";
+import ParsingOrchestrator from "../ParsingOrchestrator";
 
 export default function executeSaveChanges(
   saveData: SaveChangesPayload,
-  fileManager: FileSystemManager
+  fileManager: FileSystemManager,
+  orchestrator: ParsingOrchestrator
 ) {
   const {
     pageNameToPageState,
@@ -12,24 +14,19 @@ export default function executeSaveChanges(
     UUIDToFileMetadata,
     siteSettings,
   } = saveData;
-
+  fileManager.syncFileMetadata(UUIDToFileMetadata);
   pendingChanges.pagesToRemove.forEach((pageToRemove) => {
     const filepath =
       path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
     fileManager.removeFile(filepath);
-  });
-  pendingChanges.modulesToUpdate.forEach((moduleUUID) => {
-    const metadata = UUIDToFileMetadata[moduleUUID];
-    if (metadata.kind === FileMetadataKind.Module) {
-      fileManager.updateModuleFile(metadata.filepath, metadata);
-    }
+    orchestrator.reloadFile(filepath);
   });
   pendingChanges.pagesToUpdate.forEach((pageToUpdate) => {
     const filepath = pageNameToPageState[pageToUpdate]?.filepath;
     fileManager.updatePageFile(filepath, pageNameToPageState[pageToUpdate]);
+    orchestrator.reloadFile(filepath);
   });
   if (siteSettings?.values) {
     fileManager.updateSiteSettings(siteSettings.values);
   }
-  fileManager.syncFileMetadata(UUIDToFileMetadata);
 }

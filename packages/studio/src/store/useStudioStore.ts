@@ -48,9 +48,6 @@ const useStudioStore = create<StudioStore>()(
               pagesToRemove: new Set<string>(),
               pagesToUpdate: new Set<string>(),
             };
-            s.fileMetadatas.pendingChanges = {
-              modulesToUpdate: new Set<string>(),
-            };
           });
         }
       });

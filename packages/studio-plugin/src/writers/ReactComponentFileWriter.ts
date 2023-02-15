@@ -140,6 +140,7 @@ export default class ReactComponentFileWriter {
     fileMetadata,
     cssImports,
     onFileUpdate,
+    defaultImports,
   }: {
     componentTree: ComponentState[];
     fileMetadata?: FileMetadata;
@@ -147,6 +148,7 @@ export default class ReactComponentFileWriter {
     onFileUpdate?: (
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
+    defaultImports?: { name: string; moduleSpecifier: string }[];
   }): void {
     let defaultExport: VariableDeclaration | FunctionDeclaration;
     try {
@@ -189,7 +191,8 @@ export default class ReactComponentFileWriter {
       this.getPluginNameToComponentNames(componentTree);
     this.studioSourceFileWriter.updateFileImports(
       pluginNameToComponentNames,
-      cssImports
+      cssImports,
+      defaultImports
     );
     this.studioSourceFileWriter.writeToFile();
   }
