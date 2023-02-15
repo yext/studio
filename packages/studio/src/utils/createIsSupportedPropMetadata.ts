@@ -5,10 +5,15 @@ import {
   PropValueType,
 } from "@yext/studio-plugin";
 
-export default function createIsValidProp(
+/**
+ * Generates a typeguard used to ensure that a specific {@link PropMetadata}
+ * is not either a {@link PropValueType.ReactNode} or a {@link PropValueType.Object},
+ * which are types that we don't support editing via the UI.
+ */
+export default function createIsSupportedPropMetadata(
   activeComponentState: StandardOrModuleComponentState
 ) {
-  return function isValidProp(
+  return function isSupportedPropMetadata(
     entry: [string, PropMetadata]
   ): entry is [string, Exclude<PropMetadata, NestedPropMetadata>] {
     const [propName, propMetadata] = entry;

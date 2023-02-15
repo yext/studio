@@ -7,7 +7,7 @@ import {
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
-import createIsValidProp from "../utils/createIsValidProp";
+import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
 import PropEditor from "./PropEditor";
 
 export default function PropEditors(props: {
@@ -33,7 +33,7 @@ export default function PropEditors(props: {
   return (
     <>
       {Object.entries(propShape)
-        .filter(createIsValidProp(activeComponentState))
+        .filter(createIsSupportedPropMetadata(activeComponentState))
         .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true)
         .map(([propName, propMetadata]) => {
           const propValue = activeComponentState.props[propName]?.value as
