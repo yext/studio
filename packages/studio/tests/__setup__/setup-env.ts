@@ -2,6 +2,9 @@ import "@testing-library/jest-dom";
 import { MessageID } from "@yext/studio-plugin";
 import { ListenerCallbackFn } from "../../src/messaging/registerMessageListener";
 import { storeRegisteredListeners } from "../../__mocks__/zustand";
+import ResizeObserverPolyfill from "resize-observer-polyfill";
+
+global.ResizeObserver = ResizeObserverPolyfill;
 
 export type MessageIdToListeners = {
   [P in MessageID]?: ListenerCallbackFn<P>[];

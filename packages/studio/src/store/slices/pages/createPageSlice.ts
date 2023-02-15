@@ -7,6 +7,7 @@ import {
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual:yext-studio";
+import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
@@ -20,6 +21,7 @@ const initialStates: PageSliceStates = {
   activePageName: firstPageEntry?.[0],
   activeEntityFile: firstPageEntry?.[1]?.["entityFiles"]?.[0],
   activeComponentUUID: undefined,
+  activeComponentRect: undefined,
   pendingChanges: {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
@@ -150,6 +152,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pageComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
       set({ activeComponentUUID });
+    },
+    setActiveComponentRect: (rect: DOMRectProperties | undefined) => {
+      set({ activeComponentRect: rect });
     },
     getActiveComponentState: () => {
       const { activeComponentUUID, getActivePageState } = get();

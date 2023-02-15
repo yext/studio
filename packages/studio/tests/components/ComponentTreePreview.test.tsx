@@ -1,9 +1,8 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import ComponentTreePreview from "../../src/components/ComponentTreePreview";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
 import {
   ComponentStateKind,
-  FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
   PageState,
@@ -11,112 +10,10 @@ import {
   PropValueType,
 } from "@yext/studio-plugin";
 import path from "path";
-import useStudioStore from "../../src/store/useStudioStore";
-
-const UUIDToFileMetadata: Record<string, FileMetadata> = {
-  "banner-metadata-uuid": {
-    kind: FileMetadataKind.Component,
-    metadataUUID: "banner-metadata-uuid",
-    propShape: {
-      title: { type: PropValueType.string },
-      num: { type: PropValueType.number },
-      bool: { type: PropValueType.boolean },
-      bgColor: { type: PropValueType.HexColor },
-      nestedProp: {
-        type: PropValueType.Object,
-        shape: {
-          egg: {
-            type: PropValueType.string,
-          },
-        },
-      },
-    },
-    filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
-  },
-};
-const mockStoreNestedComponentState: MockStudioStore = {
-  pages: {
-    pages: {
-      universalPage: {
-        componentTree: [
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Container",
-            props: {
-              text: {
-                kind: PropValueKind.Literal,
-                value: "Container 1",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "container-uuid",
-            metadataUUID: "container-metadata-uuid",
-          },
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Banner",
-            props: {
-              title: {
-                kind: PropValueKind.Literal,
-                value: "Banner 1",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "banner-uuid",
-            metadataUUID: "banner-metadata-uuid",
-            parentUUID: "container-uuid",
-          },
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Container",
-            props: {
-              text: {
-                kind: PropValueKind.Literal,
-                value: "Container 2",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "container-uuid-2",
-            metadataUUID: "container-metadata-uuid",
-            parentUUID: "container-uuid",
-          },
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Banner",
-            props: {
-              title: {
-                kind: PropValueKind.Literal,
-                value: "Banner 2",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "banner-uuid-2",
-            metadataUUID: "banner-metadata-uuid",
-            parentUUID: "container-uuid-2",
-          },
-        ],
-        filepath: "mock/file/path",
-        entityFiles: ["entityFile.json"],
-        cssImports: [],
-      },
-    },
-    activePageName: "universalPage",
-    activeEntityFile: "entityFile.json",
-  },
-  fileMetadatas: {
-    UUIDToFileMetadata: {
-      ...UUIDToFileMetadata,
-      "container-metadata-uuid": {
-        kind: FileMetadataKind.Component,
-        metadataUUID: "container-metadata-uuid",
-        propShape: {
-          text: { type: PropValueType.string },
-        },
-        filepath: path.resolve(__dirname, "../__mocks__/Container.tsx"),
-      },
-    },
-  },
-};
+import {
+  mockStoreNestedComponentState,
+  mockUUIDToFileMetadata,
+} from "../__fixtures__/mockStoreNestedComponents";
 
 const moduleMetadata: ModuleMetadata = {
   kind: FileMetadataKind.Module,
@@ -188,7 +85,7 @@ const mockStoreModuleState: MockStudioStore = {
   },
   fileMetadatas: {
     UUIDToFileMetadata: {
-      ...UUIDToFileMetadata,
+      ...mockUUIDToFileMetadata,
       "panel-metadata-uuid": moduleMetadata,
     },
   },
@@ -241,7 +138,7 @@ const mockStoreWithPropExpression: MockStudioStore = {
   },
   fileMetadatas: {
     UUIDToFileMetadata: {
-      ...UUIDToFileMetadata,
+      ...mockUUIDToFileMetadata,
       "panel-metadata-uuid": moduleMetadata,
     },
   },
@@ -338,7 +235,7 @@ it("can render component using nested siteSettings expression", async () => {
       activePageName: "universalPage",
     },
     fileMetadatas: {
-      UUIDToFileMetadata,
+      UUIDToFileMetadata: mockUUIDToFileMetadata,
     },
     siteSettings: {
       values: {
@@ -399,7 +296,7 @@ it("can render component using prop of PropValueType.Object", async () => {
       activePageName: "universalPage",
     },
     fileMetadatas: {
-      UUIDToFileMetadata,
+      UUIDToFileMetadata: mockUUIDToFileMetadata,
     },
   };
   mockStore(mockState);
@@ -424,25 +321,3 @@ function getPageState(
   }
   return pageState;
 }
-
-it("clicking a component in the preview updates the activeComponentUUID", async () => {
-  mockStore(mockStoreNestedComponentState);
-  render(
-    <ComponentTreePreview
-      componentTree={getPageState(mockStoreNestedComponentState).componentTree}
-    />
-  );
-  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    undefined
-  );
-  const container1 = await screen.findByText(/Container 1/);
-  fireEvent.click(container1);
-  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    "container-uuid"
-  );
-  const banner1 = await within(container1).findByText(/Banner 1/);
-  fireEvent.click(banner1);
-  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    "banner-uuid"
-  );
-});
