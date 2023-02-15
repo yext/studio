@@ -31,9 +31,6 @@ export default function useOnPropChange(
   );
 }
 
-/**
- * Adds backtiks around {@link PropValueKind.Expression} props.
- */
 function createPropVal(
   value: string | number | boolean,
   propKind: PropValueKind,
