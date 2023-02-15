@@ -33,7 +33,9 @@ export default function PropEditors(props: {
   return (
     <>
       {Object.entries(propShape)
-        .filter(createIsSupportedPropMetadata(activeComponentState))
+        .filter(
+          createIsSupportedPropMetadata(activeComponentState.componentName)
+        )
         .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true)
         .map(([propName, propMetadata]) => {
           const propValue = activeComponentState.props[propName]?.value as
