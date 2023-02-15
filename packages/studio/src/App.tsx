@@ -1,4 +1,4 @@
-import EditorPanel from "./components/EditorPanel";
+import EditorSidebar from "./components/EditorSidebar";
 import ComponentTreePreview from "./components/ComponentTreePreview";
 import ActivePagePanel from "./components/ActivePagePanel";
 import useStudioStore from "./store/useStudioStore";
@@ -34,7 +34,7 @@ export default function App() {
               />
             )}
           </div>
-          <EditorPanel />
+          <EditorSidebar />
         </div>
       </div>
     </div>

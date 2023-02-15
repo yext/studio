@@ -1,13 +1,14 @@
-import { PropValueType } from "@yext/studio-plugin";
+import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
-  currentPropValue?: T;
+  propValue?: T;
   onChange: (value: T) => void;
   unionValues?: string[];
+  propKind: PropValueKind;
 }
 
 const inputBoxCssClasses =
@@ -23,9 +24,10 @@ const selectCssClasses =
  */
 export default function PropInput({
   propType,
-  currentPropValue,
+  propValue,
   onChange,
   unionValues,
+  propKind,
 }: PropInputProps): JSX.Element {
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,19 +36,15 @@ export default function PropInput({
         value = e.target.valueAsNumber;
       } else if (propType === PropValueType.boolean) {
         value = e.target.checked;
+      } else if (propKind === PropValueKind.Expression) {
+        value = "`" + e.target.value + "`";
       }
       onChange(value);
     },
-    [onChange, propType]
+    [onChange, propType, propKind]
   );
 
-  useLayoutEffect(() => {
-    if (currentPropValue === undefined) {
-      onChange(getPropTypeDefaultValue(propType));
-    }
-  }, [currentPropValue, onChange, propType]);
-
-  const propVal = currentPropValue ?? getPropTypeDefaultValue(propType);
+  const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
 
   const onSelectChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -54,6 +52,7 @@ export default function PropInput({
     },
     [onChange]
   );
+
   if (unionValues) {
     return (
       <select onChange={onSelectChange} className={selectCssClasses}>
@@ -75,7 +74,7 @@ export default function PropInput({
           type="number"
           onChange={onInputChange}
           className={inputBoxCssClasses}
-          value={propVal as number}
+          value={displayValue as number}
         />
       );
     case PropValueType.string:
@@ -84,20 +83,56 @@ export default function PropInput({
           type="text"
           onChange={onInputChange}
           className={inputBoxCssClasses}
-          value={propVal as string}
+          value={displayValue as string}
         />
       );
     case PropValueType.boolean:
-      return <Toggle checked={propVal as boolean} onToggle={onInputChange} />;
+      return (
+        <Toggle checked={displayValue as boolean} onToggle={onInputChange} />
+      );
     case PropValueType.HexColor:
       return (
         <input
           type="color"
           onChange={onInputChange}
-          value={propVal as string}
+          value={displayValue as string}
         />
       );
     default:
       return <div>Unknown PropValueType {propType}.</div>;
   }
+}
+
+function useDisplayValue(
+  propValue: string | number | boolean | undefined,
+  propType: PropValueType,
+  propKind: PropValueKind,
+  onChange: (value: string | number | boolean) => void
+) {
+  useLayoutEffect(() => {
+    if (propValue === undefined) {
+      onChange(getPropTypeDefaultValue(propType, propKind));
+    }
+  }, [propValue, onChange, propType, propKind]);
+
+  const propValueWithDefaulting =
+    propValue ?? getPropTypeDefaultValue(propType, propKind);
+  return getDisplayValue(propValueWithDefaulting, propKind);
+}
+
+function getDisplayValue(
+  value: string | number | boolean,
+  kind: PropValueKind
+) {
+  if (kind === PropValueKind.Expression) {
+    if (typeof value !== "string") {
+      throw new Error(
+        `Expression props are only supported for strings. Received: "${value}".`
+      );
+    }
+    if (value.length >= 2 && value.startsWith("`") && value.endsWith("`")) {
+      return value.slice(1, -1);
+    }
+  }
+  return value;
 }
