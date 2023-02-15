@@ -153,7 +153,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
       set({ activeComponentUUID });
     },
-    setActiveComponentRect: (rect?: DOMRectProperties) => {
+    setActiveComponentRect: (rect: DOMRectProperties | undefined) => {
       set({ activeComponentRect: rect });
     },
     getActiveComponentState: () => {
