@@ -21,7 +21,11 @@ export default function ActivePagePanel(): JSX.Element {
     setModuleUUIDBeingEdited,
     getModuleStateBeingEdited,
   } = useStudioStore((store) => store.pages);
-  const pageNames = useMemo(() => Object.keys(pages), [pages]);
+  const pageNames = useMemo(() => {
+    const names = Object.keys(pages);
+    names.sort();
+    return names;
+  }, [pages]);
   const moduleStateBeingEdited = getModuleStateBeingEdited();
 
   const renderPageList = useCallback(
