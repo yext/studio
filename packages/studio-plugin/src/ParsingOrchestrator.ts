@@ -100,14 +100,16 @@ export default class ParsingOrchestrator {
   /**
    * Given a filepath, performs necessary actions for reloading the file,
    * so that getStudioData returns up to date information.
+   *
+   * Will remove data for a file if it no longer exists in the filesystem.
    */
   reloadFile(filepath: string) {
     const sourceFile = this.project.getSourceFile(filepath);
-    if (!sourceFile) {
-      return;
+
+    if (sourceFile) {
+      sourceFile.refreshFromFileSystemSync();
     }
 
-    sourceFile.refreshFromFileSystemSync();
     if (
       filepath.startsWith(this.paths.modules) ||
       filepath.startsWith(this.paths.components)
@@ -116,17 +118,21 @@ export default class ParsingOrchestrator {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
         delete this.filepathToFileMetadata[filepath];
-        this.filepathToFileMetadata[filepath] = {
-          ...this.getFileMetadata(filepath),
-          metadataUUID: originalMetadataUUID,
-        };
-      } else {
+        if (sourceFile) {
+          this.filepathToFileMetadata[filepath] = {
+            ...this.getFileMetadata(filepath),
+            metadataUUID: originalMetadataUUID,
+          };
+        }
+      } else if (sourceFile) {
         this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
       }
     } else if (filepath.startsWith(this.paths.pages)) {
       const pageName = path.basename(filepath, ".tsx");
       delete this.pageNameToPageFile[pageName];
-      this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
+      if (sourceFile) {
+        this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
+      }
     }
     this.studioData = this.calculateStudioData();
   }

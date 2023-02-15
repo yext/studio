@@ -49,7 +49,7 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
         UUIDToFileMetadata[metadataUUID];
       if (
         !metadata ||
-        metadataUUID in UUIDToImportedComponentRef ||
+        metadataUUID in UUIDToImportedComponentRef.current ||
         metadataUUID in newLoadedComponents
       ) {
         return null;

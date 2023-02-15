@@ -10,6 +10,7 @@ import fs from "fs";
 import { Project } from "ts-morph";
 import lodash from "lodash";
 import path from "path";
+import { TypeGuards } from "../utils";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -40,10 +41,15 @@ export class FileSystemWriter {
    *
    * @param filepath - path of the module file to update
    * @param moduleMetadata - the updated metadata for the module file
+   * @param moduleDependencies - the filepaths of any depended upon modules
    */
-  writeToModuleFile(filepath: string, moduleMetadata: ModuleMetadata): void {
+  writeToModuleFile(
+    filepath: string,
+    moduleMetadata: ModuleMetadata,
+    moduleDependencies?: string[]
+  ): void {
     const moduleFile = this.orchestrator.getModuleFile(filepath);
-    moduleFile.updateModuleFile(moduleMetadata);
+    moduleFile.updateModuleFile(moduleMetadata, moduleDependencies);
   }
 
   writeToSiteSettings(siteSettingsValues: SiteSettingsValues): void {
@@ -59,22 +65,59 @@ export class FileSystemWriter {
     Object.keys(UUIDToFileMetadata).forEach((moduleUUID) => {
       if (!updatedUUIDToFileMetadata.hasOwnProperty(moduleUUID)) {
         this.removeFile(UUIDToFileMetadata[moduleUUID].filepath);
+        this.orchestrator.reloadFile(UUIDToFileMetadata[moduleUUID].filepath);
       }
     });
 
-    Object.keys(updatedUUIDToFileMetadata).forEach((moduleUUID) => {
-      const updatedMetadata = updatedUUIDToFileMetadata[moduleUUID];
-      if (updatedMetadata.kind !== FileMetadataKind.Module) {
-        return;
+    const getModuleMetadata = (metadataUUID: string): ModuleMetadata => {
+      const metadata = updatedUUIDToFileMetadata[metadataUUID];
+      if (metadata?.kind !== FileMetadataKind.Module) {
+        throw new Error("Expected ModuleMetadata");
       }
-      const originalMetadata = UUIDToFileMetadata[moduleUUID];
-      if (!lodash.isEqual(originalMetadata, updatedMetadata)) {
-        const { filepath } = updatedMetadata;
-        FileSystemWriter.openFile(filepath);
-        this.writeToModuleFile(filepath, updatedMetadata);
-        this.orchestrator.reloadFile(updatedMetadata.filepath);
+      return metadata;
+    };
+
+    const modulesToUpdate = new Set(
+      Object.keys(updatedUUIDToFileMetadata).filter((metadataUUID) => {
+        const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID];
+        if (updatedMetadata.kind !== FileMetadataKind.Module) {
+          return false;
+        }
+        const originalMetadata = UUIDToFileMetadata[metadataUUID];
+        if (lodash.isEqual(originalMetadata, updatedMetadata)) {
+          return false;
+        }
+        return true;
+      })
+    );
+    let maxLoopsRemaining = modulesToUpdate.size;
+    while (modulesToUpdate.size > 0 && maxLoopsRemaining-- > 0) {
+      for (const metadataUUID of modulesToUpdate.values()) {
+        const moduleMetadata = getModuleMetadata(metadataUUID);
+        const moduleDependencies = moduleMetadata.componentTree.filter(
+          TypeGuards.isModuleState
+        );
+        const numUnresolvedModuleDeps = moduleDependencies.filter((m) => {
+          return modulesToUpdate.has(m.metadataUUID);
+        }).length;
+
+        if (numUnresolvedModuleDeps > 0) {
+          continue;
+        }
+
+        const moduleDependencyPaths = moduleDependencies.map((c) => {
+          return getModuleMetadata(c.metadataUUID).filepath;
+        });
+        FileSystemWriter.openFile(moduleMetadata.filepath);
+        this.writeToModuleFile(
+          moduleMetadata.filepath,
+          moduleMetadata,
+          moduleDependencyPaths
+        );
+        this.orchestrator.reloadFile(moduleMetadata.filepath);
+        modulesToUpdate.delete(metadataUUID);
       }
-    });
+    }
   }
 
   static openFile(filepath: string) {

@@ -66,6 +66,7 @@ describe("syncFileMetadata", () => {
   });
 
   it("creates a new module file and adds a component based on new state", async () => {
+    jest.spyOn(fs, "existsSync").mockImplementation(() => false);
     const fsWriteFileSyncSpy = jest
       .spyOn(fs, "writeFileSync")
       .mockImplementation();

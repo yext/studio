@@ -18,9 +18,6 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
 ) => ({
   UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
   UUIDToImportedComponent: {},
-  pendingChanges: {
-    modulesToRemove: new Set<string>(),
-  },
   setFileMetadata: (metadataUUID: string, metadata: FileMetadata) =>
     set((store) => {
       store.UUIDToFileMetadata[metadataUUID] = metadata;
