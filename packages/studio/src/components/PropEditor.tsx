@@ -22,7 +22,7 @@ const tooltipStyle = { backgroundColor: "black" };
 /**
  * Renders an input editor for a single prop of a component or module.
  */
-export default function PropEdit({
+export default function PropEditor({
   propName,
   propMetadata,
   propValue,
