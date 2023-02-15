@@ -8,7 +8,7 @@ import {
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
 import createIsValidProp from "../utils/createIsValidProp";
-import PropEdit from "./PropEdit";
+import PropEditor from "./PropEditor";
 
 export default function PropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
@@ -44,7 +44,7 @@ export default function PropEditors(props: {
             | boolean;
 
           return (
-            <PropEdit
+            <PropEditor
               key={propName}
               onPropChange={updateProps}
               propKind={propKind}

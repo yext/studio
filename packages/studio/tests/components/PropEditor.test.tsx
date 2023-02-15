@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import PropEdit from "../../src/components/PropEdit";
+import PropEditor from "../../src/components/PropEditor";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 
@@ -7,7 +7,7 @@ describe("trigger onChange from input interaction", () => {
   it("constructs expression PropVal type", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEdit
+      <PropEditor
         propKind={PropValueKind.Expression}
         propName="age"
         propMetadata={{ type: PropValueType.number }}
@@ -28,7 +28,7 @@ describe("trigger onChange from input interaction", () => {
   it("constructs string PropVal on type", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEdit
+      <PropEditor
         propKind={PropValueKind.Literal}
         propName="title"
         propMetadata={{ type: PropValueType.string }}
@@ -46,7 +46,7 @@ describe("trigger onChange from input interaction", () => {
   it("constructs number PropVal on type", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEdit
+      <PropEditor
         propKind={PropValueKind.Literal}
         propName="age"
         propMetadata={{ type: PropValueType.number }}
@@ -64,7 +64,7 @@ describe("trigger onChange from input interaction", () => {
   it("constructs boolean PropVal on click", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEdit
+      <PropEditor
         propKind={PropValueKind.Literal}
         propName="is Yext employee?"
         propMetadata={{ type: PropValueType.boolean }}
@@ -82,7 +82,7 @@ describe("trigger onChange from input interaction", () => {
   it("constructs HexColor PropVal on select", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEdit
+      <PropEditor
         propKind={PropValueKind.Literal}
         propName="background color"
         propMetadata={{ type: PropValueType.HexColor }}
