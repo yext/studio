@@ -14,10 +14,10 @@ import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
 
 /**
- * SiteSettingsEditor renders an editor for SiteSettings.
+ * SiteSettingsPanel renders an editor for SiteSettings.
  * It supports SiteSettings that contain nested objects.
  */
-export default function SiteSettingsEditor(): JSX.Element {
+export default function SiteSettingsPanel(): JSX.Element {
   const [siteSettingsShape, siteSettingsValues, setValues] = useStudioStore(
     (store) => [
       store.siteSettings.shape ?? {},
@@ -165,9 +165,10 @@ function SimplePropInput(props: {
       <span className="px-2">{propName}</span>
       <PropInput
         propType={valueType}
-        currentPropValue={value}
+        propValue={value}
         onChange={handleUpdate}
         unionValues={unionValues}
+        propKind={PropValueKind.Literal}
       />
     </label>
   );

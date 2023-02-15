@@ -1,4 +1,4 @@
-import EditorPanel from "./components/EditorPanel";
+import EditorSidebar from "./components/EditorSidebar";
 import ActivePagePanel from "./components/ActivePagePanel";
 import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
@@ -15,7 +15,7 @@ export default function App() {
           <div className="grow w-1/3 bg-gray-300">
             <HighlightedPreview />
           </div>
-          <EditorPanel />
+          <EditorSidebar />
         </div>
       </div>
     </div>

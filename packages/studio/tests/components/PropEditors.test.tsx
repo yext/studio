@@ -1,6 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
-import ComponentEditor from "../../src/components/ComponentEditor";
+import PropEditors from "../../src/components/PropEditors";
 import {
   ComponentState,
   ComponentStateKind,
@@ -8,12 +7,15 @@ import {
   FileMetadataKind,
   PropShape,
   PropValueKind,
-  PropValueType,
   PropValues,
+  PropValueType,
   StandardOrModuleComponentState,
+  TypeGuards,
 } from "@yext/studio-plugin";
+import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
+import useActiveComponent from "../../src/hooks/useActiveComponent";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -22,6 +24,57 @@ const activeComponentState: ComponentState = {
   uuid: "banner-uuid",
   metadataUUID: "banner-metadata-uuid",
 };
+
+it("does not render a prop editor for component's prop of type ReactNode", () => {
+  const propShape: PropShape = {
+    titleNode: {
+      type: PropValueType.ReactNode,
+    },
+  };
+  const consoleWarnSpy = jest
+    .spyOn(global.console, "warn")
+    .mockImplementation();
+  render(
+    <PropEditors
+      activeComponentState={activeComponentState}
+      propShape={propShape}
+      propKind={PropValueKind.Literal}
+    />
+  );
+  expect(screen.queryByText("titleNode")).toBeNull();
+  expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+  expect(consoleWarnSpy).toHaveBeenCalledWith(
+    "Found titleNode in component Banner with PropValueType.ReactNode. Studio does not support editing prop of type ReactNode."
+  );
+});
+
+it("does not render a prop editor for component's prop of type Object", () => {
+  const propShape: PropShape = {
+    objProp: {
+      type: PropValueType.Object,
+      shape: {
+        title: {
+          type: PropValueType.string,
+        },
+      },
+    },
+  };
+  const consoleWarnSpy = jest
+    .spyOn(global.console, "warn")
+    .mockImplementation();
+  render(
+    <PropEditors
+      activeComponentState={activeComponentState}
+      propShape={propShape}
+      propKind={PropValueKind.Literal}
+    />
+  );
+  expect(screen.queryByText("objProp")).toBeNull();
+  expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
+  expect(consoleWarnSpy).toHaveBeenCalledWith(
+    "Found objProp in component Banner with PropValueType.Object. Studio does not support editing nested props."
+  );
+});
 
 const activeComponentMetadata: FileMetadata = {
   kind: FileMetadataKind.Component,
@@ -36,103 +89,11 @@ const propShape: PropShape = {
   bgColor: { type: PropValueType.HexColor },
 };
 
-it("does not render a prop editor for component's prop of type ReactNode", () => {
-  mockStoreActiveComponent({
-    activeComponent: activeComponentState,
-    activeComponentMetadata: {
-      ...activeComponentMetadata,
-      propShape: {
-        titleNode: {
-          type: PropValueType.ReactNode,
-        },
-      },
-    },
-  });
-  const consoleWarnSpy = jest
-    .spyOn(global.console, "warn")
-    .mockImplementation();
-  render(<ComponentEditor />);
-  expect(screen.queryByText("titleNode")).toBeNull();
-  expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
-  expect(consoleWarnSpy).toHaveBeenCalledWith(
-    "Found titleNode in component Banner with PropValueType.ReactNode. Studio does not support editing prop of type ReactNode."
+describe("ComponentStateKind.Component", () => {
+  testStandardOrModuleComponentState(
+    activeComponentState,
+    activeComponentMetadata
   );
-});
-
-it("does not render a prop editor for component's prop of type Object", () => {
-  mockStoreActiveComponent({
-    activeComponent: {
-      kind: ComponentStateKind.Standard,
-      componentName: "Banner",
-      props: {
-        objProp: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.Object,
-          value: {
-            title: {
-              kind: PropValueKind.Literal,
-              valueType: PropValueType.string,
-              value: "-objProp.title-",
-            },
-          },
-        },
-      },
-      uuid: "banner-uuid",
-      metadataUUID: "banner-metadata-uuid",
-    },
-    activeComponentMetadata: {
-      ...activeComponentMetadata,
-      propShape: {
-        objProp: {
-          type: PropValueType.Object,
-          shape: {
-            title: {
-              type: PropValueType.string,
-            },
-          },
-        },
-      },
-    },
-  });
-  const consoleWarnSpy = jest
-    .spyOn(global.console, "warn")
-    .mockImplementation();
-  render(<ComponentEditor />);
-  expect(screen.queryByText("objProp")).toBeNull();
-  expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
-  expect(consoleWarnSpy).toHaveBeenCalledWith(
-    "Found objProp in component Banner with PropValueType.Object. Studio does not support editing nested props."
-  );
-});
-
-it("does not render prop editor(s) for fragment component", () => {
-  mockStoreActiveComponent({
-    activeComponent: {
-      kind: ComponentStateKind.Fragment,
-      uuid: "fragment-uuid",
-    },
-  });
-  const { container } = render(<ComponentEditor />);
-  expect(container).toBeEmptyDOMElement();
-});
-
-it("does not render prop editor(s) for builtin component", () => {
-  mockStoreActiveComponent({
-    activeComponent: {
-      kind: ComponentStateKind.BuiltIn,
-      componentName: "div",
-      props: {},
-      uuid: "builtin-uuid",
-    },
-  });
-  const { container } = render(<ComponentEditor />);
-  expect(container).toBeEmptyDOMElement();
-});
-
-it("does not render prop editor(s) when there's no selected active component", () => {
-  mockStoreActiveComponent({});
-  const { container } = render(<ComponentEditor />);
-  expect(container).toBeEmptyDOMElement();
 });
 
 describe("ComponentStateKind.Module", () => {
@@ -153,13 +114,6 @@ describe("ComponentStateKind.Module", () => {
   testStandardOrModuleComponentState(activeModuleState, activeModuleMetadata);
 });
 
-describe("ComponentStateKind.Component", () => {
-  testStandardOrModuleComponentState(
-    activeComponentState,
-    activeComponentMetadata
-  );
-});
-
 function testStandardOrModuleComponentState(
   state: StandardOrModuleComponentState,
   metadata: FileMetadata
@@ -177,8 +131,14 @@ function testStandardOrModuleComponentState(
     });
   });
 
-  it(`renders prop editors for each of the active ${componentKindLabel}'s props`, () => {
-    render(<ComponentEditor />);
+  it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
+    render(
+      <PropEditors
+        activeComponentState={state}
+        propShape={propShape}
+        propKind={PropValueKind.Literal}
+      />
+    );
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
     expect(screen.getByLabelText("bool")).toHaveAttribute("type", "checkbox");
@@ -186,7 +146,25 @@ function testStandardOrModuleComponentState(
   });
 
   it(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, async () => {
-    render(<ComponentEditor />);
+    function PropEditorsWithActiveState() {
+      const { activeComponentMetadata, activeComponentState } =
+        useActiveComponent();
+      if (
+        !activeComponentMetadata?.propShape ||
+        !activeComponentState ||
+        !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
+      ) {
+        return null;
+      }
+      return (
+        <PropEditors
+          activeComponentState={activeComponentState}
+          propShape={activeComponentMetadata.propShape}
+          propKind={PropValueKind.Literal}
+        />
+      );
+    }
+    render(<PropEditorsWithActiveState />);
     const getComponentProps = () =>
       (
         useStudioStore

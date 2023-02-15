@@ -7,9 +7,6 @@ export default function useHasChanges() {
     store.pages.pendingChanges.pagesToRemove,
     store.pages.pendingChanges.pagesToUpdate,
   ]);
-  const { modulesToUpdate } = useStudioStore(
-    (store) => store.fileMetadatas.pendingChanges
-  );
   const UUIDToFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.UUIDToFileMetadata
   );
@@ -30,7 +27,6 @@ export default function useHasChanges() {
   return (
     pagesToRemove.size > 0 ||
     pagesToUpdate.size > 0 ||
-    modulesToUpdate.size > 0 ||
     siteSettingsHaveChanged ||
     hasFileMetadataChanges
   );

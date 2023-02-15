@@ -9,6 +9,8 @@ import {
 import fs from "fs";
 import { Project } from "ts-morph";
 import lodash from "lodash";
+import path from "path";
+import { TypeGuards } from "../utils";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -17,8 +19,8 @@ import lodash from "lodash";
 export class FileSystemWriter {
   constructor(
     private orchestrator: ParsingOrchestrator,
-    private isPagesJSRepo: boolean,
-    private project: Project
+    private project: Project,
+    private isPagesJSRepo = false
   ) {}
 
   /**
@@ -39,10 +41,16 @@ export class FileSystemWriter {
    *
    * @param filepath - path of the module file to update
    * @param moduleMetadata - the updated metadata for the module file
+   * @param moduleDependencies - the filepaths of any depended upon modules
    */
-  writeToModuleFile(filepath: string, moduleMetadata: ModuleMetadata): void {
+  writeToModuleFile(
+    filepath: string,
+    moduleMetadata: ModuleMetadata,
+    moduleDependencies?: string[]
+  ): void {
+    FileSystemWriter.openFile(moduleMetadata.filepath);
     const moduleFile = this.orchestrator.getModuleFile(filepath);
-    moduleFile.updateModuleFile(moduleMetadata);
+    moduleFile.updateModuleFile(moduleMetadata, moduleDependencies);
   }
 
   writeToSiteSettings(siteSettingsValues: SiteSettingsValues): void {
@@ -58,21 +66,68 @@ export class FileSystemWriter {
     Object.keys(UUIDToFileMetadata).forEach((moduleUUID) => {
       if (!updatedUUIDToFileMetadata.hasOwnProperty(moduleUUID)) {
         this.removeFile(UUIDToFileMetadata[moduleUUID].filepath);
+        this.orchestrator.reloadFile(UUIDToFileMetadata[moduleUUID].filepath);
       }
     });
 
-    Object.keys(updatedUUIDToFileMetadata).forEach((moduleUUID) => {
-      const updatedMetadata = updatedUUIDToFileMetadata[moduleUUID];
-      if (updatedMetadata.kind !== FileMetadataKind.Module) {
-        return;
+    const getModuleMetadata = (metadataUUID: string): ModuleMetadata => {
+      const metadata = updatedUUIDToFileMetadata[metadataUUID];
+      if (metadata?.kind !== FileMetadataKind.Module) {
+        throw new Error("Expected ModuleMetadata");
       }
-      const originalMetadata = UUIDToFileMetadata[moduleUUID];
-      if (!lodash.isEqual(originalMetadata, updatedMetadata)) {
-        this.orchestrator
-          .getModuleFile(updatedMetadata.filepath)
-          .updateModuleFile(updatedMetadata);
+      return metadata;
+    };
+
+    const modulesToUpdate = new Set(
+      Object.keys(updatedUUIDToFileMetadata).filter((metadataUUID) => {
+        const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID];
+        if (updatedMetadata.kind !== FileMetadataKind.Module) {
+          return false;
+        }
+        const originalMetadata = UUIDToFileMetadata[metadataUUID];
+        if (lodash.isEqual(originalMetadata, updatedMetadata)) {
+          return false;
+        }
+        return true;
+      })
+    );
+    let maxLoopsRemaining = modulesToUpdate.size;
+    while (modulesToUpdate.size > 0 && maxLoopsRemaining-- > 0) {
+      for (const metadataUUID of modulesToUpdate.values()) {
+        const moduleMetadata = getModuleMetadata(metadataUUID);
+        const moduleDependencies = moduleMetadata.componentTree.filter(
+          TypeGuards.isModuleState
+        );
+        const numUnresolvedModuleDeps = moduleDependencies.filter((m) => {
+          return modulesToUpdate.has(m.metadataUUID);
+        }).length;
+
+        if (numUnresolvedModuleDeps > 0) {
+          continue;
+        }
+
+        const moduleDependencyPaths = moduleDependencies.map((c) => {
+          return getModuleMetadata(c.metadataUUID).filepath;
+        });
+        this.writeToModuleFile(
+          moduleMetadata.filepath,
+          moduleMetadata,
+          moduleDependencyPaths
+        );
+        this.orchestrator.reloadFile(moduleMetadata.filepath);
+        modulesToUpdate.delete(metadataUUID);
       }
-    });
+    }
+  }
+
+  static openFile(filepath: string) {
+    if (!fs.existsSync(filepath)) {
+      const dirname = path.dirname(filepath);
+      if (!fs.existsSync(dirname)) {
+        fs.mkdirSync(dirname, { recursive: true });
+      }
+      fs.openSync(filepath, "w");
+    }
   }
 
   removeFile(filepath: string) {

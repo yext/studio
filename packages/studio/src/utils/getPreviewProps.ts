@@ -33,7 +33,8 @@ export function getPreviewProps(
 
     if (!props[propName]) {
       transformedProps[propName] = getPropTypeDefaultValue(
-        propShape[propName].type
+        propShape[propName].type,
+        PropValueKind.Literal
       );
       return;
     }
