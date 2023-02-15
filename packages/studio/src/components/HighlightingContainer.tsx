@@ -3,6 +3,7 @@ import { Component, PropsWithChildren } from "react";
 import { findDOMNode } from "react-dom";
 import DOMRectProperties from "../store/models/DOMRectProperties";
 import useStudioStore from "../store/useStudioStore";
+import rectToJson from "../utils/rectToJson";
 
 /**
  * HighlightingContainer is intended to be used as a wrapper around a
@@ -50,7 +51,9 @@ class HighlightingClass extends Component<HighlightingProps> {
   constructor(props) {
     super(props);
     this.resizeObserver = new ResizeObserver(() => {
-      this.highlightSelf();
+      if (this.props.uuid === this.props.activeComponentUUID) {
+        this.highlightSelf();
+      }
     });
   }
 
@@ -61,7 +64,7 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = childNode.getBoundingClientRect();
-    if (!isEqual(this.props.rect, rect.toJSON())) {
+    if (!isEqual(this.props.rect, rectToJson(rect))) {
       this.props.setRect(rect);
     }
     if (this.props.activeComponentUUID !== this.props.uuid) {

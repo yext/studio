@@ -17,7 +17,7 @@ export default function Highlighter() {
     }
     return {
       position: "absolute",
-      zIndex: "999",
+      zIndex: "10",
       left: `${window.scrollX + rect.left}px`,
       top: `${window.scrollY + rect.top}px`,
       width: `${rect.width}px`,

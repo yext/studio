@@ -21,5 +21,7 @@ test("can add a container component", async ({ page }) => {
     })
     .click();
 
+  await page.keyboard.press("Escape");
+
   await expect.poll(() => previews.count()).toBe(2);
 });

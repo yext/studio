@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import ComponentTreePreview from "../../src/components/ComponentTreePreview";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
 import {
@@ -11,7 +11,7 @@ import {
   PropValueType,
 } from "@yext/studio-plugin";
 import path from "path";
-import useStudioStore from "../../src/store/useStudioStore";
+import { mockStoreNestedComponentState } from "../__fixtures__/mockStoreNestedComponents";
 
 const UUIDToFileMetadata: Record<string, FileMetadata> = {
   "banner-metadata-uuid": {
@@ -32,89 +32,6 @@ const UUIDToFileMetadata: Record<string, FileMetadata> = {
       },
     },
     filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
-  },
-};
-const mockStoreNestedComponentState: MockStudioStore = {
-  pages: {
-    pages: {
-      universalPage: {
-        componentTree: [
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Container",
-            props: {
-              text: {
-                kind: PropValueKind.Literal,
-                value: "Container 1",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "container-uuid",
-            metadataUUID: "container-metadata-uuid",
-          },
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Banner",
-            props: {
-              title: {
-                kind: PropValueKind.Literal,
-                value: "Banner 1",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "banner-uuid",
-            metadataUUID: "banner-metadata-uuid",
-            parentUUID: "container-uuid",
-          },
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Container",
-            props: {
-              text: {
-                kind: PropValueKind.Literal,
-                value: "Container 2",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "container-uuid-2",
-            metadataUUID: "container-metadata-uuid",
-            parentUUID: "container-uuid",
-          },
-          {
-            kind: ComponentStateKind.Standard,
-            componentName: "Banner",
-            props: {
-              title: {
-                kind: PropValueKind.Literal,
-                value: "Banner 2",
-                valueType: PropValueType.string,
-              },
-            },
-            uuid: "banner-uuid-2",
-            metadataUUID: "banner-metadata-uuid",
-            parentUUID: "container-uuid-2",
-          },
-        ],
-        filepath: "mock/file/path",
-        entityFiles: ["entityFile.json"],
-        cssImports: [],
-      },
-    },
-    activePageName: "universalPage",
-    activeEntityFile: "entityFile.json",
-  },
-  fileMetadatas: {
-    UUIDToFileMetadata: {
-      ...UUIDToFileMetadata,
-      "container-metadata-uuid": {
-        kind: FileMetadataKind.Component,
-        metadataUUID: "container-metadata-uuid",
-        propShape: {
-          text: { type: PropValueType.string },
-        },
-        filepath: path.resolve(__dirname, "../__mocks__/Container.tsx"),
-      },
-    },
   },
 };
 
@@ -424,25 +341,3 @@ function getPageState(
   }
   return pageState;
 }
-
-it("clicking a component in the preview updates the activeComponentUUID", async () => {
-  mockStore(mockStoreNestedComponentState);
-  render(
-    <ComponentTreePreview
-      componentTree={getPageState(mockStoreNestedComponentState).componentTree}
-    />
-  );
-  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    undefined
-  );
-  const container1 = await screen.findByText(/Container 1/);
-  fireEvent.click(container1);
-  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    "container-uuid"
-  );
-  const banner1 = await within(container1).findByText(/Banner 1/);
-  fireEvent.click(banner1);
-  expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    "banner-uuid"
-  );
-});
