@@ -8,8 +8,6 @@ import { useCallback } from "react";
 
 /**
  * A callback for handling an update to a prop.
- *
- * Automatically adds backtiks around {@link PropValueKind.Expression} props.
  */
 export default function useOnPropChange(
   propKind: PropValueKind,
