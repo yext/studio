@@ -1,33 +1,37 @@
 import { useState } from "react";
-import ComponentEditor from "./ComponentEditor";
+import PropertiesPanel from "./PropertiesPanel";
 import OptionPicker from "./common/OptionPicker";
 import Divider from "./common/Divider";
 import { ReactComponent as Sliders } from "../icons/sliders.svg";
 import { ReactComponent as Globe } from "../icons/globe.svg";
-import SiteSettingsEditor from "./SiteSettingsEditor";
+import { ReactComponent as Content } from "../icons/content.svg";
+import SiteSettingsPanel from "./SiteSettingsPanel";
+import ContentPanel from "./ContentPanel";
 
-enum PanelTab {
+enum Tab {
   Properties = "Properties",
+  Content = "Content",
   SiteSettings = "SiteSettings",
 }
 
 const tabIcons = {
-  [PanelTab.Properties]: <Sliders className="w-4" />,
-  [PanelTab.SiteSettings]: <Globe className="w-4" />,
+  [Tab.Properties]: <Sliders className="w-4" />,
+  [Tab.Content]: <Content className="w-7" />,
+  [Tab.SiteSettings]: <Globe className="w-4" />,
 };
 
 /**
  * Renders the right panel of Studio, for editing a module or component.
  */
-export default function EditorPanel(): JSX.Element {
-  const [selectedTab, setTab] = useState<PanelTab>(PanelTab.Properties);
+export default function EditorSidebar(): JSX.Element {
+  const [selectedTab, setTab] = useState<Tab>(Tab.Properties);
 
   return (
     <div className="w-1/4 px-4">
       <OptionPicker
-        options={PanelTab}
+        options={Tab}
         icons={tabIcons}
-        defaultOption={PanelTab.Properties}
+        defaultOption={Tab.Properties}
         onSelect={setTab}
       />
       <Divider />
@@ -36,11 +40,13 @@ export default function EditorPanel(): JSX.Element {
   );
 }
 
-function renderTab(tab: PanelTab) {
+function renderTab(tab: Tab) {
   switch (tab) {
-    case PanelTab.Properties:
-      return <ComponentEditor />;
-    case PanelTab.SiteSettings:
-      return <SiteSettingsEditor />;
+    case Tab.Properties:
+      return <PropertiesPanel />;
+    case Tab.Content:
+      return <ContentPanel />;
+    case Tab.SiteSettings:
+      return <SiteSettingsPanel />;
   }
 }

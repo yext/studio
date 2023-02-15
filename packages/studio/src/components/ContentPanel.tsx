@@ -1,20 +1,17 @@
 import {
   TypeGuards,
-  FileMetadataKind,
-  ComponentStateKind,
+  PropValueKind,
   PropMetadata,
   PropValueType,
-  PropValueKind,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import useActiveComponent from "../hooks/useActiveComponent";
-import ModuleActions from "./ModuleActions/ModuleActions";
 import PropEditors from "./PropEditors";
 
 /**
  * Renders prop editors for the active component selected by the user.
  */
-export default function PropertiesPanel(): JSX.Element | null {
+export default function ContentPanel(): JSX.Element | null {
   const { activeComponentMetadata, activeComponentState } =
     useActiveComponent();
 
@@ -29,22 +26,12 @@ export default function PropertiesPanel(): JSX.Element | null {
     return null;
   }
 
-  const isModule =
-    activeComponentMetadata.kind === FileMetadataKind.Module &&
-    activeComponentState.kind === ComponentStateKind.Module;
-
   return (
     <div>
-      {isModule && (
-        <ModuleActions
-          metadata={activeComponentMetadata}
-          moduleState={activeComponentState}
-        />
-      )}
       <PropEditors
         activeComponentState={activeComponentState}
         propShape={activeComponentMetadata.propShape}
-        propKind={PropValueKind.Literal}
+        propKind={PropValueKind.Expression}
         shouldRenderProp={shouldRenderProp}
       />
       <Divider />
@@ -53,5 +40,5 @@ export default function PropertiesPanel(): JSX.Element | null {
 }
 
 function shouldRenderProp(metadata: PropMetadata) {
-  return metadata.type !== PropValueType.string;
+  return metadata.type === PropValueType.string;
 }

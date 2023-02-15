@@ -5,7 +5,7 @@ import {
   SiteSettingsShape,
   SiteSettingsValues,
 } from "@yext/studio-plugin";
-import SiteSettingsEditor from "../../src/components/SiteSettingsEditor";
+import SiteSettingsPanel from "../../src/components/SiteSettingsPanel";
 import mockStore from "../__utils__/mockStore";
 
 const shape: SiteSettingsShape = {
@@ -55,7 +55,7 @@ it("can render nested site settings", () => {
       values,
     },
   });
-  render(<SiteSettingsEditor />);
+  render(<SiteSettingsPanel />);
   expect(screen.getByText("Global Colors")).toBeDefined();
   expect(screen.getByText("primary")).toBeDefined();
   expect(screen.getByText("secondary")).toBeDefined();
@@ -74,7 +74,7 @@ it("can render even when optional settings are not specified", () => {
       values,
     },
   });
-  render(<SiteSettingsEditor />);
+  render(<SiteSettingsPanel />);
   expect(screen.getByText("Global Colors")).toBeDefined();
 });
 
@@ -87,7 +87,7 @@ it("can edit site settings", () => {
       setValues,
     },
   });
-  render(<SiteSettingsEditor />);
+  render(<SiteSettingsPanel />);
   expect(setValues).toHaveBeenCalledTimes(0);
   const colorInput = screen.getByLabelText("primary");
   fireEvent.input(colorInput, {

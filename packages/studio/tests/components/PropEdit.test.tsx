@@ -1,26 +1,26 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { PropEditor } from "../../src/components/PropEditor";
+import PropEdit from "../../src/components/PropEdit";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 
 describe("trigger onChange from input interaction", () => {
-  it('constructs expression PropVal type when click "Expression" button', async () => {
+  it("constructs expression PropVal type", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEditor
+      <PropEdit
+        propKind={PropValueKind.Expression}
         propName="age"
         propMetadata={{ type: PropValueType.number }}
         onPropChange={onPropChange}
       />
     );
-    await userEvent.click(screen.getByText("Expression"));
     const inputValue = "doc.age";
     await userEvent.type(screen.getByLabelText("age"), inputValue);
     Array.from(inputValue).forEach((char) => {
       expect(onPropChange).toBeCalledWith("age", {
         kind: PropValueKind.Expression,
         valueType: PropValueType.number,
-        value: char,
+        value: "`" + char + "`",
       });
     });
   });
@@ -28,7 +28,8 @@ describe("trigger onChange from input interaction", () => {
   it("constructs string PropVal on type", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEditor
+      <PropEdit
+        propKind={PropValueKind.Literal}
         propName="title"
         propMetadata={{ type: PropValueType.string }}
         onPropChange={onPropChange}
@@ -45,7 +46,8 @@ describe("trigger onChange from input interaction", () => {
   it("constructs number PropVal on type", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEditor
+      <PropEdit
+        propKind={PropValueKind.Literal}
         propName="age"
         propMetadata={{ type: PropValueType.number }}
         onPropChange={onPropChange}
@@ -62,7 +64,8 @@ describe("trigger onChange from input interaction", () => {
   it("constructs boolean PropVal on click", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEditor
+      <PropEdit
+        propKind={PropValueKind.Literal}
         propName="is Yext employee?"
         propMetadata={{ type: PropValueType.boolean }}
         onPropChange={onPropChange}
@@ -79,7 +82,8 @@ describe("trigger onChange from input interaction", () => {
   it("constructs HexColor PropVal on select", async () => {
     const onPropChange = jest.fn();
     render(
-      <PropEditor
+      <PropEdit
+        propKind={PropValueKind.Literal}
         propName="background color"
         propMetadata={{ type: PropValueType.HexColor }}
         onPropChange={onPropChange}
