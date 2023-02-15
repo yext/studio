@@ -21,7 +21,8 @@ const tabIcons = {
 };
 
 /**
- * Renders the right panel of Studio, for editing a module or component.
+ * Renders the right panel of Studio.
+ * Used for editing the active component's props or site settings.
  */
 export default function EditorSidebar(): JSX.Element {
   const [selectedTab, setTab] = useState<Tab>(Tab.Properties);

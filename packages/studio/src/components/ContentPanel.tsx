@@ -9,6 +9,11 @@ import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 
 /**
  * Renders prop editors for the active component selected by the user.
+ *
+ * Filters by {@link PropValueType} to only render strings.
+ *
+ * Interprets all prop values as {@link PropValueKind.Expression}s, even if
+ * the value could be represented by a string literal.
  */
 export default function ContentPanel(): JSX.Element | null {
   const activeComponentWithProps = useActiveComponentWithProps();

@@ -34,10 +34,8 @@ export default function PropEditors(props: {
     <>
       {Object.entries(propShape)
         .filter(createIsValidProp(activeComponentState))
+        .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true)
         .map(([propName, propMetadata]) => {
-          if (shouldRenderProp && !shouldRenderProp(propMetadata)) {
-            return null;
-          }
           const propValue = activeComponentState.props[propName]?.value as
             | string
             | number
