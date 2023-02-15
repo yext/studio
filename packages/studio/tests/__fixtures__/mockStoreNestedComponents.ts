@@ -8,7 +8,7 @@ import {
 import path from "path-browserify";
 import { MockStudioStore } from "../__utils__/mockStore";
 
-const UUIDToFileMetadata: Record<string, FileMetadata> = {
+export const mockUUIDToFileMetadata: Record<string, FileMetadata> = {
   "banner-metadata-uuid": {
     kind: FileMetadataKind.Component,
     metadataUUID: "banner-metadata-uuid",
@@ -101,7 +101,7 @@ export const mockStoreNestedComponentState: MockStudioStore = {
   },
   fileMetadatas: {
     UUIDToFileMetadata: {
-      ...UUIDToFileMetadata,
+      ...mockUUIDToFileMetadata,
       "container-metadata-uuid": {
         kind: FileMetadataKind.Component,
         metadataUUID: "container-metadata-uuid",

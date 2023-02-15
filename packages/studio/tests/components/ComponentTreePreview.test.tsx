@@ -3,7 +3,6 @@ import ComponentTreePreview from "../../src/components/ComponentTreePreview";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
 import {
   ComponentStateKind,
-  FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
   PageState,
@@ -11,29 +10,10 @@ import {
   PropValueType,
 } from "@yext/studio-plugin";
 import path from "path";
-import { mockStoreNestedComponentState } from "../__fixtures__/mockStoreNestedComponents";
-
-const UUIDToFileMetadata: Record<string, FileMetadata> = {
-  "banner-metadata-uuid": {
-    kind: FileMetadataKind.Component,
-    metadataUUID: "banner-metadata-uuid",
-    propShape: {
-      title: { type: PropValueType.string },
-      num: { type: PropValueType.number },
-      bool: { type: PropValueType.boolean },
-      bgColor: { type: PropValueType.HexColor },
-      nestedProp: {
-        type: PropValueType.Object,
-        shape: {
-          egg: {
-            type: PropValueType.string,
-          },
-        },
-      },
-    },
-    filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
-  },
-};
+import {
+  mockStoreNestedComponentState,
+  mockUUIDToFileMetadata,
+} from "../__fixtures__/mockStoreNestedComponents";
 
 const moduleMetadata: ModuleMetadata = {
   kind: FileMetadataKind.Module,
@@ -105,7 +85,7 @@ const mockStoreModuleState: MockStudioStore = {
   },
   fileMetadatas: {
     UUIDToFileMetadata: {
-      ...UUIDToFileMetadata,
+      ...mockUUIDToFileMetadata,
       "panel-metadata-uuid": moduleMetadata,
     },
   },
@@ -158,7 +138,7 @@ const mockStoreWithPropExpression: MockStudioStore = {
   },
   fileMetadatas: {
     UUIDToFileMetadata: {
-      ...UUIDToFileMetadata,
+      ...mockUUIDToFileMetadata,
       "panel-metadata-uuid": moduleMetadata,
     },
   },
@@ -255,7 +235,7 @@ it("can render component using nested siteSettings expression", async () => {
       activePageName: "universalPage",
     },
     fileMetadatas: {
-      UUIDToFileMetadata,
+      UUIDToFileMetadata: mockUUIDToFileMetadata,
     },
     siteSettings: {
       values: {
@@ -316,7 +296,7 @@ it("can render component using prop of PropValueType.Object", async () => {
       activePageName: "universalPage",
     },
     fileMetadatas: {
-      UUIDToFileMetadata,
+      UUIDToFileMetadata: mockUUIDToFileMetadata,
     },
   };
   mockStore(mockState);
