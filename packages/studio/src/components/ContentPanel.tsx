@@ -1,36 +1,27 @@
 import {
-  TypeGuards,
   PropValueKind,
   PropMetadata,
   PropValueType,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
-import useActiveComponent from "../hooks/useActiveComponent";
 import PropEditors from "./PropEditors";
+import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 
 /**
  * Renders prop editors for the active component selected by the user.
  */
 export default function ContentPanel(): JSX.Element | null {
-  const { activeComponentMetadata, activeComponentState } =
-    useActiveComponent();
-
-  if (!activeComponentMetadata?.propShape) {
+  const activeComponentWithProps = useActiveComponentWithProps();
+  if (!activeComponentWithProps) {
     return null;
   }
-
-  if (
-    !activeComponentState ||
-    !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
-  ) {
-    return null;
-  }
+  const { activeComponentState, propShape } = activeComponentWithProps;
 
   return (
     <div>
       <PropEditors
         activeComponentState={activeComponentState}
-        propShape={activeComponentMetadata.propShape}
+        propShape={propShape}
         propKind={PropValueKind.Expression}
         shouldRenderProp={shouldRenderProp}
       />
