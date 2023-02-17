@@ -29,7 +29,7 @@ const initialTree: ComponentState[] = [
   },
 ];
 
-it("removes components from ModuleMetadata when a module is being edited", () => {
+it("removes component and its children from ModuleMetadata when a module is being edited", () => {
   mockStore({
     fileMetadatas: {
       UUIDToFileMetadata: {
@@ -68,16 +68,12 @@ it("removes components from ModuleMetadata when a module is being edited", () =>
     ]
   ).toEqual(
     expect.objectContaining({
-      componentTree: [
-        initialTree[0],
-        { ...initialTree[2], parentUUID: "mock-uuid-0" },
-        initialTree[3],
-      ],
+      componentTree: [initialTree[0], initialTree[3]],
     })
   );
 });
 
-it("adds components to the active PageState when no module is being edited", () => {
+it("removes component and its children from the active PageState when no module is being edited", () => {
   mockStore({
     pages: {
       activePageName: "pagename",
@@ -94,9 +90,5 @@ it("adds components to the active PageState when no module is being edited", () 
   useStudioStore.getState().actions.removeComponent("mock-uuid-1");
   const updatedTree =
     useStudioStore.getState().pages.pages["pagename"].componentTree;
-  expect(updatedTree).toEqual([
-    initialTree[0],
-    { ...initialTree[2], parentUUID: "mock-uuid-0" },
-    initialTree[3],
-  ]);
+  expect(updatedTree).toEqual([initialTree[0], initialTree[3]]);
 });
