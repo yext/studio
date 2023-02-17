@@ -35,7 +35,7 @@ it("sets module UUID being edited and resets active component when clicked", asy
 
   mockStore({
     pages: {
-      activeComponentUUID: "star-metadata-uuid",
+      activeComponentUUID: "first-comp-state",
       pages: {
         firstPage: {
           componentTree: [moduleState],
