@@ -91,10 +91,21 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   removeComponentFromModule(metadataUUID, componentUUID) {
     const metadata = get().UUIDToFileMetadata[metadataUUID];
     assertIsModuleMetadata(metadata);
-    get().setComponentTreeInModule(
-      metadataUUID,
-      metadata.componentTree.filter((c) => c.uuid !== componentUUID)
-    );
+    const componentTree = metadata.componentTree;
+    const parentUUID = componentTree.find(
+      (c) => c.uuid === componentUUID
+    )?.parentUUID;
+    const updatedComponentTree = componentTree
+      .filter((c) => c.uuid !== componentUUID)
+      .map((c) => {
+        const updatedParentUUID =
+          c.parentUUID === componentUUID ? parentUUID : c.parentUUID;
+        return {
+          ...c,
+          parentUUID: updatedParentUUID,
+        };
+      });
+    get().setComponentTreeInModule(metadataUUID, updatedComponentTree);
   },
 });
 
