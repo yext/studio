@@ -12,7 +12,10 @@ test("can add a container component", async ({ page }) => {
       name: "Open Add Element Menu",
     })
     .click();
+  await expect(page).toHaveScreenshot();
+
   await page.getByText("Containers").click();
+  await expect(page).toHaveScreenshot();
 
   await page
     .getByRole("button", {
@@ -22,6 +25,6 @@ test("can add a container component", async ({ page }) => {
     .click();
 
   await page.keyboard.press("Escape");
-
   await expect.poll(() => previews.count()).toBe(2);
+  await expect(page).toHaveScreenshot();
 });

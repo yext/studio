@@ -4,13 +4,7 @@ test("can add a new page", async ({ page }) => {
   await page.goto("./");
 
   const newPageInTree = page.getByText("MyNewPage");
-  const saveToFileButton = page.getByRole("button", {
-    exact: true,
-    name: "Save Changes to Repository",
-  });
-
   await expect.poll(() => newPageInTree.count()).toBe(0);
-  await expect(saveToFileButton).toBeDisabled();
 
   await page
     .getByRole("button", {
@@ -18,15 +12,15 @@ test("can add a new page", async ({ page }) => {
       name: "Add Page",
     })
     .click();
+  await expect(page).toHaveScreenshot();
 
   const modal = page.getByRole("dialog", {
     exact: true,
     name: "Add Page Modal",
   });
-
   await modal.getByRole("textbox").type("My New Page");
   await modal.getByText("Save").click();
 
   await expect.poll(() => newPageInTree.count()).toBe(1);
-  await expect(saveToFileButton).toBeEnabled();
+  await expect(page).toHaveScreenshot();
 });

@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "playwright": "playwright test",
+    "update-snapshots": "playwright test --update-snapshots",
     "report": "playwright show-report "
   },
   "devDependencies": {
