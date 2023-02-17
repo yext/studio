@@ -1,4 +1,5 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import {
   ComponentStateKind,
   FileMetadataKind,
@@ -56,11 +57,11 @@ it("can open modal and delete modules", async () => {
   const openModalButton = await screen.findByRole("button", {
     name: "Delete Module Star",
   });
-  fireEvent.click(openModalButton);
+  await userEvent.click(openModalButton);
   const deleteModuleConfirmation = await screen.findByRole("button", {
     name: "Delete",
   });
-  fireEvent.click(deleteModuleConfirmation);
+  await userEvent.click(deleteModuleConfirmation);
   expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   expect(useStudioStore.getState().pages.pages).toEqual({
     firstPage: expect.objectContaining({

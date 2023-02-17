@@ -18,7 +18,10 @@ export default function DetachModuleButton(props: {
   }, [detachModuleInstance, metadata, moduleState]);
 
   return (
-    <button onClick={handleClick}>
+    <button
+      onClick={handleClick}
+      aria-label={`Detach Module ${moduleState.componentName}`}
+    >
       <ActionIconWrapper tooltip="Detach">
         <DetachModuleIcon />
       </ActionIconWrapper>

@@ -107,12 +107,14 @@ export default class StudioActions {
     if (!tree) {
       return;
     }
-    const { activeComponentUUID } = this.getPages();
     const activeComponentIndex = tree.findIndex(
-      (c) => c.uuid === activeComponentUUID
+      (c) => c.uuid === activeComponentState?.uuid
     );
+    const insertionIndex = activeComponentIsParent
+      ? 0
+      : activeComponentIndex + 1;
     const updatedTree = [...tree];
-    updatedTree.splice(activeComponentIndex + 1, 0, updatedComponentState);
+    updatedTree.splice(insertionIndex, 0, updatedComponentState);
     return this.updateComponentTree(updatedTree);
   };
 

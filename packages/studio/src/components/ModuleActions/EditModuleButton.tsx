@@ -9,16 +9,23 @@ export default function EditModuleButton({
 }: {
   moduleState: ModuleState;
 }) {
-  const setModuleUUIDBeingEdited = useStudioStore(
-    (store) => store.pages.setModuleUUIDBeingEdited
+  const [setModuleUUIDBeingEdited, setActiveComponentUUID] = useStudioStore(
+    (store) => [
+      store.pages.setModuleUUIDBeingEdited,
+      store.pages.setActiveComponentUUID,
+    ]
   );
 
   const handleClick = useCallback(() => {
     setModuleUUIDBeingEdited(moduleState.uuid);
-  }, [moduleState.uuid, setModuleUUIDBeingEdited]);
+    setActiveComponentUUID(undefined);
+  }, [moduleState.uuid, setModuleUUIDBeingEdited, setActiveComponentUUID]);
 
   return (
-    <button onClick={handleClick}>
+    <button
+      onClick={handleClick}
+      aria-label={`Edit Module ${moduleState.componentName}`}
+    >
       <ActionIconWrapper tooltip="Edit">
         <EditModuleIcon />
       </ActionIconWrapper>
