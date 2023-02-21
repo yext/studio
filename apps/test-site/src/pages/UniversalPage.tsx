@@ -13,7 +13,7 @@ export default function UniversalPage() {
         <Button bgColor="bg-red-100" />
       </Container>
       <AceComponent text="ace" />
-      <ContainerWithButtons bannerNum={siteSettings.someNum} />
+      <ContainerWithButtons bannerTitle={siteSettings.someText} />
       <Banner nestedProp={{ egg: "eggyweggy" }} />
     </div>
   );

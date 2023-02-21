@@ -88,14 +88,6 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     assertIsModuleMetadata(fileMetadata);
     return fileMetadata.componentTree[componentUUID];
   },
-  removeComponentFromModule(metadataUUID, componentUUID) {
-    const metadata = get().UUIDToFileMetadata[metadataUUID];
-    assertIsModuleMetadata(metadata);
-    get().setComponentTreeInModule(
-      metadataUUID,
-      metadata.componentTree.filter((c) => c.uuid !== componentUUID)
-    );
-  },
 });
 
 function assertIsModuleMetadata(

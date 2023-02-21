@@ -1,7 +1,7 @@
 import { HexColor } from "@yext/studio";
 
 export interface SiteSettings {
-  someNum: number;
+  someText: string;
   experienceKey: string;
   optionalString?: string;
   "Global Colors": {
@@ -10,7 +10,7 @@ export interface SiteSettings {
 }
 
 export default {
-  someNum: 12,
+  someText: "name",
   experienceKey: "slanswers",
   "Global Colors": {
     primary: "#AABBCC",

@@ -1,24 +1,35 @@
-import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentStateKind,
+  FileMetadataKind,
+} from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
+import { searchBarComponent } from "../../__fixtures__/componentStates";
 import mockStore from "../../__utils__/mockStore";
 
-it("removes components from ModuleMetadata when a module is being edited", () => {
-  const initialTree = [
-    {
-      kind: ComponentStateKind.Standard,
-      componentName: "AComponent",
-      uuid: "remove-uuid",
-      props: {},
-      metadataUUID: "unused",
-    },
-    {
-      kind: ComponentStateKind.Standard,
-      componentName: "AComponent",
-      uuid: "dont-remove-uuid",
-      props: {},
-      metadataUUID: "unused",
-    },
-  ];
+const initialTree: ComponentState[] = [
+  {
+    kind: ComponentStateKind.Fragment,
+    uuid: "mock-uuid-0",
+  },
+  {
+    ...searchBarComponent,
+    uuid: "mock-uuid-1",
+    parentUUID: "mock-uuid-0",
+  },
+  {
+    ...searchBarComponent,
+    uuid: "mock-uuid-2",
+    parentUUID: "mock-uuid-1",
+  },
+  {
+    ...searchBarComponent,
+    uuid: "mock-uuid-3",
+    parentUUID: "mock-uuid-0",
+  },
+];
+
+it("removes component and its children from ModuleMetadata when a module is being edited", () => {
   mockStore({
     fileMetadatas: {
       UUIDToFileMetadata: {
@@ -50,36 +61,19 @@ it("removes components from ModuleMetadata when a module is being edited", () =>
       },
     },
   });
-  useStudioStore.getState().actions.removeComponent("remove-uuid");
+  useStudioStore.getState().actions.removeComponent("mock-uuid-1");
   expect(
     useStudioStore.getState().fileMetadatas.UUIDToFileMetadata[
       "StarModuleMetadataUUID"
     ]
   ).toEqual(
     expect.objectContaining({
-      componentTree: [initialTree[1]],
+      componentTree: [initialTree[0], initialTree[3]],
     })
   );
 });
 
-it("adds components to the active PageState when no module is being edited", () => {
-  const initialTree = [
-    {
-      kind: ComponentStateKind.Standard,
-      componentName: "AComponent",
-      uuid: "remove-uuid",
-      props: {},
-      metadataUUID: "unused",
-    },
-    {
-      kind: ComponentStateKind.Standard,
-      componentName: "AComponent",
-      uuid: "dont-remove-uuid",
-      props: {},
-      metadataUUID: "unused",
-    },
-  ];
-
+it("removes component and its children from the active PageState when no module is being edited", () => {
   mockStore({
     pages: {
       activePageName: "pagename",
@@ -93,8 +87,8 @@ it("adds components to the active PageState when no module is being edited", () 
     },
   });
 
-  useStudioStore.getState().actions.removeComponent("remove-uuid");
+  useStudioStore.getState().actions.removeComponent("mock-uuid-1");
   const updatedTree =
     useStudioStore.getState().pages.pages["pagename"].componentTree;
-  expect(updatedTree).toEqual([initialTree[1]]);
+  expect(updatedTree).toEqual([initialTree[0], initialTree[3]]);
 });
