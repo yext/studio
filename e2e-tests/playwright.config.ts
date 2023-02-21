@@ -14,8 +14,8 @@ const config: PlaywrightTestConfig = {
      */
     timeout: 5000,
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.05
-    }
+      maxDiffPixelRatio: 0.05,
+    },
   },
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -40,7 +40,6 @@ const config: PlaywrightTestConfig = {
     command: "npx studio",
     port: 5173,
   },
-  
 };
 
 export default config;
