@@ -90,13 +90,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },
-    removeComponentFromPage(pageName: string, componentUUID: string) {
-      const componentTree = get().pages[pageName].componentTree;
-      get().setComponentTreeInPage(
-        pageName,
-        componentTree.filter((c) => c.uuid !== componentUUID)
-      );
-    },
   };
 
   const activePageActions = {

@@ -119,16 +119,18 @@ export default class StudioActions {
   };
 
   removeComponent = (componentUUID: string) => {
-    const { activePageName, getModuleStateBeingEdited } = this.getPages();
-    const moduleStateBeingEdited = getModuleStateBeingEdited();
-    if (moduleStateBeingEdited) {
-      this.getFileMetadatas().removeComponentFromModule(
-        moduleStateBeingEdited.metadataUUID,
-        componentUUID
-      );
-    } else if (activePageName) {
-      this.getPages().removeComponentFromPage(activePageName, componentUUID);
+    const componentTree = this.getComponentTree();
+    if (!componentTree) {
+      return;
     }
+    const updatedComponentTree = ComponentTreeHelpers.mapComponentTree<
+      ComponentState[]
+    >(componentTree, (componentState, mappedChildren) => {
+      return componentState.uuid === componentUUID
+        ? []
+        : [componentState, ...mappedChildren.flat()];
+    }).flat();
+    this.updateComponentTree(updatedComponentTree);
     if (this.getPages().activeComponentUUID === componentUUID) {
       this.getPages().setActiveComponentUUID(undefined);
     }
