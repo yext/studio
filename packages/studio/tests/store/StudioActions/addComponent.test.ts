@@ -149,7 +149,7 @@ function insertionOrderTestSuite(
     );
   });
 
-  it("puts new component directly after container if it is active component", () => {
+  it("puts new component at start if container is active component", () => {
     useStudioStore
       .getState()
       .pages.setActiveComponentUUID("mock-container-uuid");
@@ -157,9 +157,8 @@ function insertionOrderTestSuite(
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
-          initialTree[0],
           { ...newComponentState, parentUUID: "mock-container-uuid" },
-          ...initialTree.slice(1),
+          ...initialTree,
         ],
       })
     );
@@ -195,7 +194,7 @@ function insertionOrderTestSuite(
     );
   });
 
-  it("puts new component directly after fragment if it is active component", () => {
+  it("puts new component at start if fragment is active component", () => {
     useStudioStore
       .getState()
       .pages.setActiveComponentUUID("mock-fragment-uuid");
@@ -203,22 +202,21 @@ function insertionOrderTestSuite(
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
-          ...initialTree.slice(0, 4),
           { ...newComponentState, parentUUID: "mock-fragment-uuid" },
-          ...initialTree.slice(4),
+          ...initialTree,
         ],
       })
     );
   });
 
-  it("puts new component directly after built-in component if it is active component", () => {
+  it("puts new component at start if built-in component is active component", () => {
     useStudioStore.getState().pages.setActiveComponentUUID("mock-builtin-uuid");
     useStudioStore.getState().actions.addComponent(newComponentState);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
-          ...initialTree,
           { ...newComponentState, parentUUID: "mock-builtin-uuid" },
+          ...initialTree,
         ],
       })
     );
