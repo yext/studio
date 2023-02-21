@@ -1,6 +1,6 @@
 name: Playwright Tests
 
-on: push
+on: pull_request
 
 jobs:
   test:
