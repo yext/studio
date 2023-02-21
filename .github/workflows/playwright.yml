@@ -25,8 +25,8 @@ jobs:
           name: playwright-report
           path: ./e2e-tests/playwright-report/
           retention-days: 30
-      # Commits new screenshots to the repo, if any exist
       - name: Commit New Screenshots
+        if: ${{ failure() }}
         uses: EndBug/add-and-commit@v9
         with:
           message: "Commit new screenshots"
