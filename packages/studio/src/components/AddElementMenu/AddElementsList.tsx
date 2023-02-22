@@ -66,6 +66,7 @@ function Option({ metadata }: { metadata: FileMetadata }) {
     return store.actions.addComponent;
   });
 
+  // This is used to display the icon for the component. Probably an simpler way to do this
   const componentState = useMemo(
     () => ({
       kind:
