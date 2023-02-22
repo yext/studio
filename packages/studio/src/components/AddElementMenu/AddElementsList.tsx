@@ -80,13 +80,26 @@ function Option({ metadata }: { metadata: FileMetadata }) {
     [componentName, metadata.initialProps, metadata.kind, metadata.metadataUUID]
   );
 
-  const addElement = useCallback(() => {
-    addComponent(componentState);
-  }, [addComponent, componentState]);
+  const addElement = useCallback(
+    (componentName: string) => {
+      const componentState = {
+        kind:
+          metadata.kind === FileMetadataKind.Module
+            ? ComponentStateKind.Module
+            : ComponentStateKind.Standard,
+        componentName,
+        props: metadata.initialProps ?? {},
+        uuid: v4(),
+        metadataUUID: metadata.metadataUUID,
+      };
+      addComponent(componentState);
+    },
+    [addComponent, metadata.initialProps, metadata.kind, metadata.metadataUUID]
+  );
 
   const handleClick = useCallback(() => {
-    addElement();
-  }, [addElement]);
+    addElement(componentName);
+  }, [addElement, componentName]);
 
   // Prevent users from adding infinite looping modules.
   const isSameAsActiveModule =
