@@ -1,8 +1,8 @@
-import Modal from "./common/Modal";
-import useStudioStore from "../store/useStudioStore";
-import { ReactComponent as X } from "../icons/x.svg";
 import { useCallback } from "react";
+import { ReactComponent as X } from "../icons/x.svg";
+import useStudioStore from "../store/useStudioStore";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
+import Modal from "./common/Modal";
 
 interface RemovePageButtonProps {
   /** The name of the page to be removed. */
@@ -43,6 +43,7 @@ export default function RemovePageButton({
       buttonContent={<X />}
       renderModal={renderModal}
       ariaLabel="Remove Page"
+      buttonClassName="hidden group-hover:block"
     />
   );
 }

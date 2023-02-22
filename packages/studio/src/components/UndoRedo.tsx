@@ -1,7 +1,7 @@
-import useTemporalStore from "../store/useTemporalStore";
-import { ReactComponent as Undo } from "../icons/undo.svg";
-import { useCallback } from "react";
 import classNames from "classnames";
+import { useCallback } from "react";
+import { ReactComponent as Undo } from "../icons/undo.svg";
+import useTemporalStore from "../store/useTemporalStore";
 
 /**
  * Buttons for undo and redo actions.
@@ -23,7 +23,7 @@ export default function UndoRedo(): JSX.Element {
     "text-gray-400": disableUndo,
     "text-gray-800": !disableUndo,
   });
-  const redoClasses = classNames("w-4 mx-4 scale-x-[-1]", {
+  const redoClasses = classNames("w-4 scale-x-[-1]", {
     "text-gray-400": disableRedo,
     "text-gray-800": !disableRedo,
   });

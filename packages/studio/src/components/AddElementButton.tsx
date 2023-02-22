@@ -1,9 +1,9 @@
+import useRootClose from "@restart/ui/useRootClose";
+import classNames from "classnames";
 import { useCallback, useRef, useState } from "react";
 import { ReactComponent as AddIcon } from "../icons/addcomponent.svg";
-import useRootClose from "@restart/ui/useRootClose";
 import useStudioStore from "../store/useStudioStore";
 import AddElementMenu from "./AddElementMenu/AddElementMenu";
-import classNames from "classnames";
 
 /**
  * AddElementButton is a button that when clicked, renders a dropdown menu for
@@ -30,7 +30,7 @@ export default function AddElementButton(): JSX.Element | null {
   }
 
   const className = classNames(
-    "rounded-md text-gray-700 shadow-md hover:bg-gray-50",
+    "rounded-md text-white bg-blue-600 px-2 py-1 flex items-center gap-2 shadow-md hover:bg-blue-700 hover:shadow-lg",
     {
       "bg-gray-200": !isOpen,
       "bg-white": isOpen,
@@ -45,6 +45,7 @@ export default function AddElementButton(): JSX.Element | null {
         aria-label="Open Add Element Menu"
       >
         <AddIcon />
+        Insert
       </button>
       {isOpen && <AddElementMenu />}
     </div>

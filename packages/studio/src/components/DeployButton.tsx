@@ -1,8 +1,8 @@
-import useStudioStore from "../store/useStudioStore";
 import { useCallback, useEffect, useState } from "react";
+import { Tooltip } from "react-tooltip";
 import gitData from "virtual:yext-studio-git-data";
 import useHasChanges from "../hooks/useHasChanges";
-import { Tooltip } from "react-tooltip";
+import useStudioStore from "../store/useStudioStore";
 
 const tooltipAnchorID = "YextStudio-deployButton";
 
@@ -35,7 +35,7 @@ export default function DeployButton() {
 
   return (
     <button
-      className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600 hover:bg-blue-500"
+      className="py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600 hover:bg-blue-500"
       onClick={handleClick}
       disabled={isDisabled}
       aria-label="Deploy Changes to Repository"

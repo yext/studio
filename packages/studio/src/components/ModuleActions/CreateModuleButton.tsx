@@ -1,8 +1,10 @@
-import InputModal from "./common/InputModal";
-import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
-import useStudioStore from "../store/useStudioStore";
-import { useCallback, useState } from "react";
 import { ComponentStateKind } from "@yext/studio-plugin";
+import { useCallback, useState } from "react";
+import useStudioStore from "../../store/useStudioStore";
+import ButtonWithModal, {
+  renderModalFunction,
+} from "../common/ButtonWithModal";
+import InputModal from "../common/InputModal";
 
 /**
  * Renders a button for creating a module.
@@ -58,7 +60,7 @@ export default function CreateModuleButton(): JSX.Element | null {
   return (
     <ButtonWithModal
       buttonContent="Create Module"
-      buttonClassName="ml-4 py-1 px-3 text-white rounded-md bg-blue-600"
+      buttonClassName="ml-4 py-1 px-3 text-gray-900 text-sm bg-gray-200 hover:bg-gray-300 rounded-md"
       renderModal={renderModal}
     />
   );

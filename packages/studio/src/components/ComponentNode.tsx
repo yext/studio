@@ -51,12 +51,12 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   }, [componentState.uuid, setActiveComponentUUID]);
 
   const componentNodeStyle = useMemo(
-    () => ({ marginLeft: `${depth}em` }),
+    () => ({ paddingLeft: `${depth}em` }),
     [depth]
   );
 
   const componentNodeClasses = classNames(
-    "flex px-2 items-center justify-between h-8 group",
+    "flex pr-4 items-center justify-between h-9 group",
     {
       "bg-blue-100": activeComponentUUID === componentState.uuid,
       "hover:bg-gray-100": activeComponentUUID !== componentState.uuid,
@@ -70,7 +70,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
       <div
-        className="flex grow items-center cursor-pointer "
+        className="flex grow items-center cursor-pointer pl-4"
         onClick={handleClick}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />

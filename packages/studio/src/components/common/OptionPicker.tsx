@@ -14,8 +14,10 @@ interface OptionPickerCssClasses extends OptionCssClasses {
 }
 
 const builtInCssClasses: OptionPickerCssClasses = {
-  container: "min-w-fit bg-gray-300 flex flex-row p-1 rounded-md mb-6",
-  option: "flex items-center justify-center grow rounded-md p-2 text-gray-500",
+  container:
+    "min-w-fit bg-gray-200 shadow-inset flex flex-row p-1 rounded-md mb-6",
+  option:
+    "flex items-center justify-center grow rounded-md p-2 text-gray-500 hover:bg-white/30",
   selectedOption:
     "flex items-center justify-center grow rounded-md p-2 drop-shadow bg-white",
 };

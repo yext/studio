@@ -1,8 +1,8 @@
 import { render, screen } from "@testing-library/react";
-import CreateModuleButton from "../../src/components/CreateModuleButton";
-import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
-import useStudioStore from "../../src/store/useStudioStore";
 import userEvent from "@testing-library/user-event";
+import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
+import CreateModuleButton from "../../src/components/ModuleActions/CreateModuleButton";
+import useStudioStore from "../../src/store/useStudioStore";
 import { searchBarComponent } from "../__fixtures__/componentStates";
 import mockStore from "../__utils__/mockStore";
 
