@@ -1,6 +1,6 @@
-import useStudioStore from "../store/useStudioStore";
-import { ReactComponent as X } from "../icons/x.svg";
 import { useCallback } from "react";
+import { ReactComponent as X } from "../icons/x.svg";
+import useStudioStore from "../store/useStudioStore";
 
 interface RemoveElementButtonProps {
   /** The uuid of the element to be removed. */
@@ -23,7 +23,11 @@ export default function RemoveElementButton({
   }, [elementUUID, removeComponent]);
 
   return (
-    <button onClick={handleClick} aria-label="Remove Element">
+    <button
+      onClick={handleClick}
+      aria-label="Remove Element"
+      className="hidden group-hover:block"
+    >
       <X />
     </button>
   );

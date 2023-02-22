@@ -1,9 +1,9 @@
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
-import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
-import ComponentKindIcon from "./ComponentKindIcon";
 import { useCallback, useMemo } from "react";
+import { ReactComponent as Vector } from "../icons/vector.svg";
 import useStudioStore from "../store/useStudioStore";
+import ComponentKindIcon from "./ComponentKindIcon";
 import RemoveElementButton from "./RemoveElementButton";
 
 interface ComponentNodeProps {
@@ -56,7 +56,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 
   const componentNodeClasses = classNames(
-    "flex px-2 items-center justify-between h-8",
+    "flex px-2 items-center justify-between h-8 group",
     {
       "bg-blue-100": activeComponentUUID === componentState.uuid,
       "hover:bg-gray-100": activeComponentUUID !== componentState.uuid,
@@ -70,7 +70,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
       <div
-        className="flex grow items-center cursor-pointer"
+        className="flex grow items-center cursor-pointer "
         onClick={handleClick}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
