@@ -1,11 +1,10 @@
 import {
-  PropValueKind,
   PropMetadata,
+  PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import Divider from "./common/Divider";
-import PropEditors from "./PropEditors";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
+import PropEditors from "./PropEditors";
 
 /**
  * Renders prop editors for the active component selected by the user.
@@ -18,7 +17,11 @@ import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 export default function ContentPanel(): JSX.Element | null {
   const activeComponentWithProps = useActiveComponentWithProps();
   if (!activeComponentWithProps) {
-    return null;
+    return (
+      <div className="text-sm bg-gray-100 p-4 border text-gray-500 rounded-lg text-center">
+        Select a layer to edit it's content
+      </div>
+    );
   }
   const { activeComponentState, propShape } = activeComponentWithProps;
 
@@ -30,7 +33,6 @@ export default function ContentPanel(): JSX.Element | null {
         propKind={PropValueKind.Expression}
         shouldRenderProp={shouldRenderProp}
       />
-      <Divider />
     </div>
   );
 }

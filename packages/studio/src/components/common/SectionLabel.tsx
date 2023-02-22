@@ -6,8 +6,8 @@ type Props = {
   children?: React.ReactNode;
 };
 
-const Label = ({ className, children }: Props) => {
+const SectionLabel = ({ className, children }: Props) => {
   return <div className={cx(className, "font-semibold")}>{children}</div>;
 };
 
-export default Label;
+export default SectionLabel;

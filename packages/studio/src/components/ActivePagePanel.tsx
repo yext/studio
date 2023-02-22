@@ -4,7 +4,7 @@ import { ReactComponent as Check } from "../icons/check.svg";
 import useStudioStore from "../store/useStudioStore";
 import AddPageButton from "./AddPageButton";
 import Divider from "./common/Divider";
-import Label from "./common/Label";
+import SectionLabel from "./common/SectionLabel";
 import ComponentTree from "./ComponentTree";
 import RemovePageButton from "./RemovePageButton";
 
@@ -76,14 +76,14 @@ export default function ActivePagePanel(): JSX.Element {
   return (
     <div className="flex flex-col">
       <div className="flex flex-row py-4 pr-2 justify-between items-center">
-        <Label className="px-4">Pages</Label>
+        <SectionLabel className="px-4">Pages</SectionLabel>
         <AddPageButton />
       </div>
       {renderPageList(pageNames)}
       <div className="px-4">
         <Divider />
       </div>
-      <Label className="px-4 mt-4">Layers</Label>
+      <SectionLabel className="px-4 mt-4">Layers</SectionLabel>
       <ComponentTree />
     </div>
   );

@@ -4,7 +4,6 @@ import {
   PropValueType,
 } from "@yext/studio-plugin";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
-import Divider from "./common/Divider";
 import ModuleActions from "./ModuleActions/ModuleActions";
 import PropEditors from "./PropEditors";
 
@@ -18,7 +17,11 @@ import PropEditors from "./PropEditors";
 export default function PropertiesPanel(): JSX.Element | null {
   const activeComponentWithProps = useActiveComponentWithProps();
   if (!activeComponentWithProps) {
-    return null;
+    return (
+      <div className="text-sm bg-gray-100 p-4 border text-gray-500 rounded-lg text-center">
+        Select a layer to edit it's properties
+      </div>
+    );
   }
   const { activeComponentState, propShape } = activeComponentWithProps;
 
@@ -31,7 +34,6 @@ export default function PropertiesPanel(): JSX.Element | null {
         propKind={PropValueKind.Literal}
         shouldRenderProp={shouldRenderProp}
       />
-      <Divider />
     </div>
   );
 }

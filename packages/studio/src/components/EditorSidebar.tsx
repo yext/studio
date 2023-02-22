@@ -2,7 +2,6 @@ import { useState } from "react";
 import { ReactComponent as Content } from "../icons/content.svg";
 import { ReactComponent as Globe } from "../icons/globe.svg";
 import { ReactComponent as Sliders } from "../icons/sliders.svg";
-import Divider from "./common/Divider";
 import OptionPicker from "./common/OptionPicker";
 import ContentPanel from "./ContentPanel";
 import PropertiesPanel from "./PropertiesPanel";
@@ -25,7 +24,7 @@ const tabIcons = {
  * Used for editing the active component's props or site settings.
  */
 export default function EditorSidebar(): JSX.Element {
-  const [selectedTab, setTab] = useState<Tab>(Tab.Properties);
+  const [selectedTab, setTab] = useState<Tab>(Tab.Content);
 
   return (
     <div className="p-4 ">
@@ -35,7 +34,7 @@ export default function EditorSidebar(): JSX.Element {
         defaultOption={Tab.Content}
         onSelect={setTab}
       />
-      <Divider />
+
       {renderTab(selectedTab)}
     </div>
   );

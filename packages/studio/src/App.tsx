@@ -6,7 +6,7 @@ import HighlightedPreview from "./components/HighlightedPreview";
 import Toast from "./components/Toast";
 
 const actionBarHeight = "50px";
-const sidebarWidth = "500px";
+const sidebarWidth = "350px";
 
 const baseStyles: CSSProperties = {
   position: "fixed",

@@ -1,7 +1,7 @@
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
-import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
+import Toggle from "./common/Toggle";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -12,7 +12,7 @@ interface PropInputProps<T = string | number | boolean> {
 }
 
 const inputBoxCssClasses =
-  "border border-gray-500 focus:border-blue-600 rounded-lg px-2 py-1 w-full";
+  " block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-3 py-2 border mt-1";
 
 const selectCssClasses =
   "bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5";

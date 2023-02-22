@@ -5,9 +5,11 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
+import cx from "classnames";
 import { Tooltip } from "react-tooltip";
-import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
+import InputLabel from "./common/InputLabel";
+import PropInput from "./PropInput";
 
 interface PropEditorProps {
   propName: string;
@@ -32,10 +34,17 @@ export default function PropEditor({
   const { type, doc, unionValues } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
 
+  // These types will display on one line with label on left and input on right.
+  const inlineTypes = [PropValueType.HexColor, PropValueType.boolean];
+  const labelWrapperClass = cx({
+    "flex items-center justify-between gap-2": inlineTypes.includes(type),
+    "flex flex-col gap-1": !inlineTypes.includes(type),
+  });
+
   return (
     <div className="mb-5">
-      <label className="flex h-10 items-center" id={propName}>
-        <p className="w-1/4">{propName}</p>
+      <label className={labelWrapperClass} id={propName}>
+        <InputLabel>{propName}</InputLabel>
         <PropInput
           {...{
             propType:

@@ -1,16 +1,19 @@
 import {
-  PropValueType,
-  SiteSettingsValues,
   LiteralProp,
-  SiteSettingsShape,
-  ObjectProp,
   NestedPropMetadata,
-  TypeGuards,
+  ObjectProp,
   PropValueKind,
+  PropValueType,
   SiteSettingsPropValueType,
+  SiteSettingsShape,
+  SiteSettingsValues,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import React, { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
+import Divider from "./common/Divider";
+import InputLabel from "./common/InputLabel";
+import SectionLabel from "./common/SectionLabel";
 import PropInput from "./PropInput";
 
 /**
@@ -66,30 +69,29 @@ function renderSiteSettings(
     const valueType = propMetadata.type;
     if (valueType !== PropValueType.Object) {
       return (
-        <SimplePropInput
-          key={propName}
-          propName={propName}
-          valueType={valueType}
-          value={propVal?.value as string | number | boolean}
-          updateValues={updateValues}
-          unionValues={propMetadata["unionValues"]}
-        />
+        <div key={propName} className="mb-2">
+          <SimplePropInput
+            propName={propName}
+            valueType={valueType}
+            value={propVal?.value as string | number | boolean}
+            updateValues={updateValues}
+            unionValues={propMetadata["unionValues"]}
+          />
+        </div>
       );
     }
 
     const shouldRenderDivider = index < sortedShape.length - 1;
     return (
       <React.Fragment key={propName}>
-        <div className="font-bold px-2 pb-2">{propName}</div>
+        <SectionLabel className="">{propName}</SectionLabel>
         <RecursiveGroup
           propName={propName}
           propVal={propVal as ObjectProp<SiteSettingsValues>}
           propMetadata={propMetadata}
           updateValues={updateValues}
         />
-        {shouldRenderDivider && (
-          <hr className="bg-gray-300 h-0.5 rounded-md my-4" />
-        )}
+        {shouldRenderDivider && <Divider />}
       </React.Fragment>
     );
   });
@@ -161,8 +163,8 @@ function SimplePropInput(props: {
   );
 
   return (
-    <label className="flex h-10 items-center" id={propName} key={propName}>
-      <span className="px-2">{propName}</span>
+    <label className="" id={propName} key={propName}>
+      <InputLabel>{propName}</InputLabel>
       <PropInput
         propType={valueType}
         propValue={value}
