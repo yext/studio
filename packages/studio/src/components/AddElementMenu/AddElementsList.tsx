@@ -3,10 +3,11 @@ import {
   FileMetadata,
   FileMetadataKind,
 } from "@yext/studio-plugin";
-import { useCallback } from "react";
+import path from "path-browserify";
+import { useCallback, useMemo } from "react";
 import { v4 } from "uuid";
 import useStudioStore from "../../store/useStudioStore";
-import path from "path-browserify";
+import ComponentKindIcon from "../ComponentKindIcon";
 import { ElementType } from "./AddElementMenu";
 
 /**
@@ -65,25 +66,27 @@ function Option({ metadata }: { metadata: FileMetadata }) {
     return store.actions.addComponent;
   });
 
-  const addElement = useCallback(
-    (componentName: string) => {
-      const componentState = {
-        kind:
-          metadata.kind === FileMetadataKind.Module
-            ? ComponentStateKind.Module
-            : ComponentStateKind.Standard,
-        componentName,
-        props: metadata.initialProps ?? {},
-        uuid: v4(),
-        metadataUUID: metadata.metadataUUID,
-      };
-      addComponent(componentState);
-    },
-    [addComponent, metadata.initialProps, metadata.kind, metadata.metadataUUID]
+  const componentState = useMemo(
+    () => ({
+      kind:
+        metadata.kind === FileMetadataKind.Module
+          ? ComponentStateKind.Module
+          : ComponentStateKind.Standard,
+      componentName,
+      props: metadata.initialProps ?? {},
+      uuid: v4(),
+      metadataUUID: metadata.metadataUUID,
+    }),
+    [componentName, metadata.initialProps, metadata.kind, metadata.metadataUUID]
   );
+
+  const addElement = useCallback(() => {
+    addComponent(componentState);
+  }, [addComponent, componentState]);
+
   const handleClick = useCallback(() => {
-    addElement(componentName);
-  }, [addElement, componentName]);
+    addElement();
+  }, [addElement]);
 
   // Prevent users from adding infinite looping modules.
   const isSameAsActiveModule =
@@ -91,11 +94,12 @@ function Option({ metadata }: { metadata: FileMetadata }) {
 
   return (
     <button
-      className="px-6 py-1 cursor-pointer hover:opacity-75 disabled:opacity-25"
+      className="px-6 py-2 hover:bg-gray-100 cursor-pointer disabled:opacity-25 w-full text-left flex items-center gap-2"
       onClick={handleClick}
       aria-label={`Add ${componentName} Element`}
       disabled={isSameAsActiveModule}
     >
+      <ComponentKindIcon componentState={componentState} />
       {componentName}
     </button>
   );

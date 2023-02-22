@@ -11,7 +11,7 @@ import UndoRedo from "./UndoRedo";
 export default function ActionsBar(): JSX.Element {
   const activePageName = useStudioStore((store) => store.pages.activePageName);
   return (
-    <div className="flex bg-gray-100 py-3 items-center px-4 gap-4 border-b">
+    <div className="flex bg-gray-100 h-full items-center px-4 gap-4 border-b">
       {/* <YextSeal /> */}
       <div className="flex items-center gap-4 flex-grow">
         <AddElementButton />

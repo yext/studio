@@ -74,7 +74,7 @@ export default function ActivePagePanel(): JSX.Element {
   );
 
   return (
-    <div className="flex flex-col w-[400px] border-r bg-white shadow">
+    <div className="flex flex-col">
       <div className="flex flex-row py-4 pr-2 justify-between items-center">
         <Label className="px-4">Pages</Label>
         <AddPageButton />

@@ -1,10 +1,9 @@
-import { useState } from "react";
-import AddElementsList from "./AddElementsList";
 import classNames from "classnames";
-import { useCallback } from "react";
-import { ReactComponent as Hexagon } from "../../icons/hexagon.svg";
+import { useCallback, useState } from "react";
 import { ReactComponent as Box } from "../../icons/box.svg";
 import { ReactComponent as Container } from "../../icons/container.svg";
+import { ReactComponent as Hexagon } from "../../icons/hexagon.svg";
+import AddElementsList from "./AddElementsList";
 
 export enum ElementType {
   Components = "Components",
@@ -18,7 +17,7 @@ export default function AddElementMenu(): JSX.Element {
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
 
   return (
-    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
+    <div className="absolute z-20 rounded border bg-white text-sm text-gray-700 shadow-lg">
       <ElementTypeSwitcher activeType={activeType} setType={setType} />
       <AddElementsList activeType={activeType} />
     </div>

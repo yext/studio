@@ -9,14 +9,14 @@ import PropertiesPanel from "./PropertiesPanel";
 import SiteSettingsPanel from "./SiteSettingsPanel";
 
 enum Tab {
-  Properties = "Properties",
   Content = "Content",
+  Properties = "Properties",
   SiteSettings = "SiteSettings",
 }
 
 const tabIcons = {
-  [Tab.Properties]: <Sliders className="w-4" />,
   [Tab.Content]: <Content className="w-7" />,
+  [Tab.Properties]: <Sliders className="w-4" />,
   [Tab.SiteSettings]: <Globe className="w-4" />,
 };
 
@@ -28,11 +28,11 @@ export default function EditorSidebar(): JSX.Element {
   const [selectedTab, setTab] = useState<Tab>(Tab.Properties);
 
   return (
-    <div className="w-[400px] p-4 border-l bg-white shadow">
+    <div className="p-4 ">
       <OptionPicker
         options={Tab}
         icons={tabIcons}
-        defaultOption={Tab.Properties}
+        defaultOption={Tab.Content}
         onSelect={setTab}
       />
       <Divider />
@@ -43,10 +43,10 @@ export default function EditorSidebar(): JSX.Element {
 
 function renderTab(tab: Tab) {
   switch (tab) {
-    case Tab.Properties:
-      return <PropertiesPanel />;
     case Tab.Content:
       return <ContentPanel />;
+    case Tab.Properties:
+      return <PropertiesPanel />;
     case Tab.SiteSettings:
       return <SiteSettingsPanel />;
   }

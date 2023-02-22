@@ -69,8 +69,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
-      <div
-        className="flex grow items-center cursor-pointer pl-4"
+      <button
+        className="flex grow items-center cursor-pointer pl-4 h-full"
         onClick={handleClick}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
@@ -78,7 +78,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
           <ComponentKindIcon componentState={componentState} />
         </div>
         <span className="pl-1.5">{text()}</span>
-      </div>
+      </button>
       <RemoveElementButton elementUUID={componentState.uuid} />
     </div>
   );

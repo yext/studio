@@ -7,14 +7,30 @@ import siteSettings from "../siteSettings";
 
 export default function UniversalPage() {
   return (
-    <div>
-      <Banner />
-      <Container>
-        <Button bgColor="bg-red-100" />
-      </Container>
-      <AceComponent text="ace" />
-      <ContainerWithButtons bannerTitle={siteSettings.someText} />
-      <Banner nestedProp={{ egg: "eggyweggy" }} />
-    </div>
+    <>
+      <Button />
+      <Button />
+      <>
+        <Button />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
+        <div>
+          <Container>
+            <Button bgColor="bg-red-100" />
+          </Container>
+          <Banner />
+          <AceComponent text="ace" />
+          <ContainerWithButtons bannerTitle={siteSettings.someText} />
+          <Banner nestedProp={{ egg: "eggyweggy" }} />
+        </div>
+      </>
+    </>
   );
 }
