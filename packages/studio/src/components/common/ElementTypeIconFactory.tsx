@@ -18,4 +18,4 @@ export default function getIconForType(type: ElementType) {
       console.error(`Could not find Icon for type ${type}`);
       return null;
   }
-};
+}

@@ -10,7 +10,6 @@ import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
 import getIconForType from "../common/ElementTypeIconFactory";
 
-
 /**
  * The list of available, addable elements for the current activeType.
  */
@@ -52,13 +51,25 @@ export default function AddElementsList({
   return (
     <div className="flex flex-col items-start py-1">
       {addableElements.map((metadata) => {
-        return <Option metadata={metadata} activeType={activeType} key={metadata.metadataUUID} />;
+        return (
+          <Option
+            metadata={metadata}
+            activeType={activeType}
+            key={metadata.metadataUUID}
+          />
+        );
       })}
     </div>
   );
 }
 
-function Option({ metadata, activeType }: { metadata: FileMetadata, activeType: ElementType }) {
+function Option({
+  metadata,
+  activeType,
+}: {
+  metadata: FileMetadata;
+  activeType: ElementType;
+}) {
   const componentName = path.basename(metadata.filepath, ".tsx");
   const moduleStateBeingEdited = useStudioStore((store) =>
     store.pages.getModuleStateBeingEdited()
