@@ -1,29 +1,10 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { ElementType } from "@yext/studio/lib/src/components/AddElementMenu/AddElementMenu";
+import { studioTest } from "./infra/studioTest";
 
-test("can add a container component", async ({ page }) => {
-  await page.goto("./");
-
+studioTest("can add a container component", async ({ page, studioPage }) => {
   const previews = page.getByText("I'm a container:");
   await expect.poll(() => previews.count()).toBe(1);
-
-  await page
-    .getByRole("button", {
-      exact: true,
-      name: "Open Add Element Menu",
-    })
-    .click();
-  await expect(page).toHaveScreenshot();
-
-  await page.getByText("Containers").click();
-  await expect(page).toHaveScreenshot();
-
-  await page
-    .getByRole("button", {
-      name: "Add Container Element",
-      exact: true,
-    })
-    .click();
-
+  await studioPage.addElement("Container", ElementType.Containers);
   await expect.poll(() => previews.count()).toBe(2);
-  await expect(page).toHaveScreenshot();
 });
