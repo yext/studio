@@ -31,7 +31,7 @@ function ElementTypeSwitcher(props: {
 
   return (
     <div className="flex px-4 pt-2 border-b">
-      {Object.keys(ElementType).map((elementType) => {
+      {Object.values(ElementType).map((elementType) => {
         return (
           <ElementTypeButton
             key={elementType}
@@ -47,7 +47,7 @@ function ElementTypeSwitcher(props: {
 
 function ElementTypeButton(props: {
   isActiveType: boolean;
-  elementType: string;
+  elementType: ElementType;
   handleClick: (type: ElementType) => void;
 }) {
   const { isActiveType, elementType, handleClick } = props;
