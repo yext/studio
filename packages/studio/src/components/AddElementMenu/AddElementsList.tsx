@@ -8,7 +8,7 @@ import { v4 } from "uuid";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
-import getIconForType from "../common/ElementTypeIconFactory";
+import renderIconForType from "../common/ElementTypeIconFactory";
 
 /**
  * The list of available, addable elements for the current activeType.
@@ -109,7 +109,7 @@ function Option({
       aria-label={`Add ${componentName} Element`}
       disabled={isSameAsActiveModule}
     >
-      {getIconForType(activeType)}
+      {renderIconForType(activeType)}
       {componentName}
     </button>
   );

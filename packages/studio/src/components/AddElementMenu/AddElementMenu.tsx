@@ -2,7 +2,7 @@ import { useState } from "react";
 import AddElementsList from "./AddElementsList";
 import classNames from "classnames";
 import { useCallback } from "react";
-import getIconForType from "../common/ElementTypeIconFactory";
+import renderIconForType from "../common/ElementTypeIconFactory";
 
 export enum ElementType {
   Components = "Components",
@@ -63,7 +63,7 @@ function ElementTypeButton(props: {
   }, [elementType, handleClick]);
   return (
     <div className={className} onClick={onClick}>
-      <span className="mr-2 pt-0.5">{getIconForType(elementType)}</span>
+      <span className="mr-2 pt-0.5">{renderIconForType(elementType)}</span>
       <span>{elementType}</span>
     </div>
   );

@@ -6,7 +6,7 @@ import { ElementType } from "../AddElementMenu/AddElementMenu";
 /**
  * Returns the Icon that represents the provided Element Type.
  */
-export default function getIconForType(type: ElementType) {
+export default function renderIconForType(type: ElementType) {
   switch (type) {
     case ElementType.Components:
       return <Box />;
