@@ -1,5 +1,5 @@
-import Button from "../components/Button";
 import Container from "../components/Container";
+import Test from "../modules/Test";
 
 export default function UniversalPage() {
   return (
@@ -8,9 +8,7 @@ export default function UniversalPage() {
         <Container>
           <Container className={``}>
             <Container className={``}>
-              <Container className={``}>
-                <Button />
-              </Container>
+              <Test />
             </Container>
           </Container>
         </Container>

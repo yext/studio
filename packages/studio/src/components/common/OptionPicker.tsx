@@ -87,7 +87,7 @@ function Option<T extends string>({
       onClick={onClickCallback}
       className={isSelected ? cssClasses?.selectedOption : cssClasses?.option}
     >
-      {icon && <div className="mr-2">{icon}</div>}
+      {icon && <div className="text-lg">{icon}</div>}
     </button>
   );
 }

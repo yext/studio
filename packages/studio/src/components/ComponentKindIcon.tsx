@@ -1,7 +1,9 @@
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
-import { BsHexagon } from "react-icons/bs";
-import { ReactComponent as Box } from "../icons/box.svg";
-import { ReactComponent as Container } from "../icons/container.svg";
+import { ReactNode } from "react";
+import { BsHexagonFill } from "react-icons/bs";
+import { FaRegSquare } from "react-icons/fa";
+import { HiOutlineSquares2X2 } from "react-icons/hi2";
+
 import useStudioStore from "../store/useStudioStore";
 interface ComponentKindIconProps {
   componentState: ComponentState;
@@ -18,17 +20,20 @@ export default function ComponentKindIcon(
     (store) => store.fileMetadatas.getComponentMetadata
   );
 
+  let icon: ReactNode | null = null;
+
   const { kind } = componentState;
   if (kind === ComponentStateKind.Module) {
-    return <BsHexagon />;
+    icon = <BsHexagonFill className="text-purple-700 rotate-90" />;
+  } else if (kind === ComponentStateKind.Standard) {
+    const { acceptsChildren } = getComponentMetadata(
+      componentState.metadataUUID
+    );
+    if (acceptsChildren) {
+      icon = <HiOutlineSquares2X2 />;
+    } else {
+      icon = <FaRegSquare />;
+    }
   }
-  if (kind !== ComponentStateKind.Standard) {
-    return null;
-  }
-
-  const { acceptsChildren } = getComponentMetadata(componentState.metadataUUID);
-  if (acceptsChildren) {
-    return <Container />;
-  }
-  return <Box />;
+  return <div className=" text-gray-800">{icon}</div>;
 }

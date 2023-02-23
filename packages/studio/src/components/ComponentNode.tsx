@@ -40,10 +40,13 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     return componentState.componentName;
   };
 
-  const vectorClassName = classNames("cursor-pointer w-8 h-4 fill-gray-700", {
-    "rotate-90": isOpen,
-    invisible: !hasChild,
-  });
+  const vectorClassName = classNames(
+    "cursor-pointer text-gray-500 hover:text-black",
+    {
+      "rotate-90": isOpen,
+      invisible: !hasChild,
+    }
+  );
 
   const handleClick = useCallback(() => {
     setActiveComponentUUID(componentState.uuid);

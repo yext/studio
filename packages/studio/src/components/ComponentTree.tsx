@@ -21,7 +21,7 @@ const TREE_CSS_CLASSES: Readonly<Classes> = {
   root: "py-2",
   placeholder: "relative",
   listItem: "relative pb-1",
-  dropTarget: "bg-blue-50",
+  dropTarget: "drop-target",
 };
 
 /**
@@ -128,7 +128,7 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
     const placeHolderStyle = useMemo(() => ({ left: `${depth}em` }), []);
     return (
       <div
-        className="bg-blue-500 absolute w-full h-[4px] z-10 transform -translate-y-1/2"
+        className="bg-blue-500 absolute w-full h-[2px] z-10 transform -translate-y-1/2"
         style={placeHolderStyle}
       ></div>
     );

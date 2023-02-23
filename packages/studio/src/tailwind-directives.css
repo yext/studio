@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.drop-target > div > button:first-child {
+  @apply ring-2 ring-blue-500 rounded-md ring-offset-1;
+}

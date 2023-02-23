@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { ReactComponent as Content } from "../icons/content.svg";
-import { ReactComponent as Globe } from "../icons/globe.svg";
-import { ReactComponent as Sliders } from "../icons/sliders.svg";
+import { BsSliders } from "react-icons/bs";
+import { FiType } from "react-icons/fi";
+import { VscGlobe } from "react-icons/vsc";
 import OptionPicker from "./common/OptionPicker";
 import ContentPanel from "./ContentPanel";
 import PropertiesPanel from "./PropertiesPanel";
@@ -14,9 +14,9 @@ enum Tab {
 }
 
 const tabIcons = {
-  [Tab.Content]: <Content className="w-7" />,
-  [Tab.Properties]: <Sliders className="w-4" />,
-  [Tab.SiteSettings]: <Globe className="w-4" />,
+  [Tab.Content]: <FiType />,
+  [Tab.Properties]: <BsSliders />,
+  [Tab.SiteSettings]: <VscGlobe />,
 };
 
 /**
