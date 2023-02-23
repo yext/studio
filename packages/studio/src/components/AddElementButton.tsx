@@ -3,7 +3,6 @@ import { ReactComponent as AddIcon } from "../icons/addcomponent.svg";
 import useRootClose from "@restart/ui/useRootClose";
 import useStudioStore from "../store/useStudioStore";
 import AddElementMenu from "./AddElementMenu/AddElementMenu";
-import classNames from "classnames";
 
 /**
  * AddElementButton is a button that when clicked, renders a dropdown menu for
@@ -29,22 +28,15 @@ export default function AddElementButton(): JSX.Element | null {
     return null;
   }
 
-  const className = classNames(
-    "rounded-md text-gray-700 shadow-md hover:bg-gray-50",
-    {
-      "bg-gray-200": !isOpen,
-      "bg-white": isOpen,
-    }
-  );
-
   return (
     <div className="relative inline-block" ref={containerRef}>
       <button
-        className={className}
+        className="rounded-md text-white bg-blue-600 px-2 py-1 flex items-center gap-x-2 shadow-md hover:bg-blue-700 hover:shadow-lg"
         onClick={handleClick}
         aria-label="Open Add Element Menu"
       >
         <AddIcon />
+        Insert
       </button>
       {isOpen && <AddElementMenu />}
     </div>
