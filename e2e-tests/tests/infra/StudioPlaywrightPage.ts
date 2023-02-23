@@ -8,19 +8,16 @@ export default class StudioPlaywrightPage {
 
   constructor(private page: Page) {
     this.saveButton = page.getByRole("button", {
-      exact: true,
       name: "Save Changes to Repository",
     });
 
     this.addPageButton = page.getByRole("button", {
-      exact: true,
       name: "Add Page",
     });
 
     this.pagesPanel = page.locator(':text("Pages") + ul');
 
     this.addElementButton = page.getByRole("button", {
-      exact: true,
       name: "Open Add Element Menu",
     });
   }
@@ -30,7 +27,6 @@ export default class StudioPlaywrightPage {
     await this.screenshot();
 
     const modal = this.page.getByRole("dialog", {
-      exact: true,
       name: "Add Page Modal",
     });
     await modal.getByRole("textbox").type(pageName);
@@ -48,10 +44,9 @@ export default class StudioPlaywrightPage {
     await this.screenshot();
     await this.page
       .getByRole("dialog", {
-        exact: true,
         name: "Delete Page Modal",
       })
-      .getByText("Delete", { exact: true })
+      .getByRole("button", { name: "Delete" })
       .click();
   }
 
@@ -68,7 +63,6 @@ export default class StudioPlaywrightPage {
     await this.page
       .getByRole("button", {
         name: `Add ${elementName} Element`,
-        exact: true,
       })
       .click();
   }
