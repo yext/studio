@@ -2,9 +2,7 @@ import { useState } from "react";
 import AddElementsList from "./AddElementsList";
 import classNames from "classnames";
 import { useCallback } from "react";
-import { ReactComponent as Hexagon } from "../../icons/hexagon.svg";
-import { ReactComponent as Box } from "../../icons/box.svg";
-import { ReactComponent as Container } from "../../icons/container.svg";
+import renderIconForType from "../common/renderIconForType";
 
 export enum ElementType {
   Components = "Components",
@@ -33,7 +31,7 @@ function ElementTypeSwitcher(props: {
 
   return (
     <div className="flex px-4 pt-2 border-b">
-      {Object.keys(ElementType).map((elementType) => {
+      {Object.values(ElementType).map((elementType) => {
         return (
           <ElementTypeButton
             key={elementType}
@@ -47,15 +45,9 @@ function ElementTypeSwitcher(props: {
   );
 }
 
-const elementTypeToIcon = {
-  Components: <Box />,
-  Containers: <Container />,
-  Modules: <Hexagon />,
-} as const;
-
 function ElementTypeButton(props: {
   isActiveType: boolean;
-  elementType: string;
+  elementType: ElementType;
   handleClick: (type: ElementType) => void;
 }) {
   const { isActiveType, elementType, handleClick } = props;
@@ -71,7 +63,7 @@ function ElementTypeButton(props: {
   }, [elementType, handleClick]);
   return (
     <div className={className} onClick={onClick}>
-      <span className="mr-2 pt-0.5">{elementTypeToIcon[elementType]}</span>
+      <span className="mr-2 pt-0.5">{renderIconForType(elementType)}</span>
       <span>{elementType}</span>
     </div>
   );
