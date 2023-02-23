@@ -1,11 +1,10 @@
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import classNames from "classnames";
 import { useCallback, useMemo } from "react";
-import { ReactComponent as Vector } from "../icons/vector.svg";
+import { MdChevronRight } from "react-icons/md";
 import useStudioStore from "../store/useStudioStore";
 import ComponentKindIcon from "./ComponentKindIcon";
 import RemoveElementButton from "./RemoveElementButton";
-
 interface ComponentNodeProps {
   /** The ComponentState this node represents in {@link ComponentTree}. */
   componentState: ComponentState;
@@ -41,7 +40,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     return componentState.componentName;
   };
 
-  const vectorClassName = classNames("cursor-pointer", {
+  const vectorClassName = classNames("cursor-pointer w-8 h-4 fill-gray-700", {
     "rotate-90": isOpen,
     invisible: !hasChild,
   });
@@ -63,17 +62,21 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     }
   );
 
-  const handleToggle = useCallback(() => {
-    onToggle(componentState.uuid, !isOpen);
-  }, [componentState.uuid, isOpen, onToggle]);
+  const handleToggle = useCallback(
+    (e: any) => {
+      e.stopPropagation();
+      onToggle(componentState.uuid, !isOpen);
+    },
+    [componentState.uuid, isOpen, onToggle]
+  );
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
       <button
-        className="flex grow items-center cursor-pointer pl-4 h-full"
+        className="flex grow items-center cursor-pointer pl-4 h-full relative"
         onClick={handleClick}
       >
-        <Vector className={vectorClassName} onClick={handleToggle} />
+        <MdChevronRight className={vectorClassName} onClick={handleToggle} />
         <div className="pl-2">
           <ComponentKindIcon componentState={componentState} />
         </div>

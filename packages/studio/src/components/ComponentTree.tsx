@@ -20,7 +20,8 @@ const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
   root: "py-2",
   placeholder: "relative",
-  listItem: "relative",
+  listItem: "relative pb-1",
+  dropTarget: "bg-blue-50",
 };
 
 /**
@@ -81,10 +82,11 @@ export default function ComponentTree(): JSX.Element | null {
         tree={tree}
         rootId={ROOT_ID}
         classes={TREE_CSS_CLASSES}
-        dropTargetOffset={4}
+        dropTargetOffset={5}
         initialOpen={initialOpen}
         sort={false}
         insertDroppableFirst={false}
+        enableAnimateExpand={true}
         onDrop={handleDrop}
         canDrop={canDrop}
         render={renderNodeCallback}
@@ -97,9 +99,11 @@ export default function ComponentTree(): JSX.Element | null {
 
 function canDrop(_: NodeModel[], opts: DropOptions) {
   const { dragSource, dropTargetId, dropTarget } = opts;
+
   if (dropTarget !== undefined && !dropTarget.droppable) {
     return false;
   }
+
   if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
     return true;
   }
@@ -113,7 +117,7 @@ function renderDragPreview(
 ) {
   const item: DragItem<unknown> = monitorProps.item;
   return (
-    <div className="p-2 rounded bg-emerald-200 w-fit">
+    <div className="p-2 rounded bg-blue-200 w-fit">
       <div className="flex">{item.text}</div>
     </div>
   );
@@ -124,7 +128,7 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
     const placeHolderStyle = useMemo(() => ({ left: `${depth}em` }), []);
     return (
       <div
-        className="bg-rose-500 absolute w-full h-0.5 z-10"
+        className="bg-blue-500 absolute w-full h-[4px] z-10 transform -translate-y-1/2"
         style={placeHolderStyle}
       ></div>
     );
@@ -169,7 +173,7 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 
           return {
             ...commonData,
-            droppable: metadata.acceptsChildren,
+            droppable: metadata.acceptsChildren ?? false,
           };
         default:
           throw new Error(

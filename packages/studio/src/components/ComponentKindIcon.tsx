@@ -1,9 +1,8 @@
-import { ReactComponent as Hexagon } from "../icons/hexagon.svg";
+import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
+import { BsHexagon } from "react-icons/bs";
 import { ReactComponent as Box } from "../icons/box.svg";
 import { ReactComponent as Container } from "../icons/container.svg";
 import useStudioStore from "../store/useStudioStore";
-import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
-
 interface ComponentKindIconProps {
   componentState: ComponentState;
 }
@@ -21,7 +20,7 @@ export default function ComponentKindIcon(
 
   const { kind } = componentState;
   if (kind === ComponentStateKind.Module) {
-    return <Hexagon />;
+    return <BsHexagon />;
   }
   if (kind !== ComponentStateKind.Standard) {
     return null;
