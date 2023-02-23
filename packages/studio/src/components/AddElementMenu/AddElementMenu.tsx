@@ -2,7 +2,7 @@ import { useState } from "react";
 import AddElementsList from "./AddElementsList";
 import classNames from "classnames";
 import { useCallback } from "react";
-import renderIconForType from "../common/ElementTypeIconFactory";
+import renderIconForType from "../common/renderIconForType";
 
 export enum ElementType {
   Components = "Components",

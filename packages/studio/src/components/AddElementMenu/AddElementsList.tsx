@@ -8,7 +8,7 @@ import { v4 } from "uuid";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
-import renderIconForType from "../common/ElementTypeIconFactory";
+import renderIconForType from "../common/renderIconForType";
 
 /**
  * The list of available, addable elements for the current activeType.
