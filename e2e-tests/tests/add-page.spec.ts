@@ -1,5 +1,5 @@
 import { expect } from "@playwright/test";
-import { studioTest } from "./infra/studioTest";
+import { studioTest } from "./infra/studioTest.js";
 
 studioTest("can add a new page", async ({ page, studioPage }) => {
   const newPageInTree = page.getByText("MyNewPage");

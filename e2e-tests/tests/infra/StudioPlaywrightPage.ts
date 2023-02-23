@@ -1,5 +1,4 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { ElementType } from "@yext/studio/src/components/AddElementMenu/AddElementMenu";
 
 export default class StudioPlaywrightPage {
   readonly saveButton: Locator;
@@ -56,7 +55,10 @@ export default class StudioPlaywrightPage {
       .click();
   }
 
-  async addElement(elementName: string, category: ElementType) {
+  async addElement(
+    elementName: string,
+    category: "Components" | "Containers" | "Modules"
+  ) {
     await this.addElementButton.click();
     await this.screenshot();
 
