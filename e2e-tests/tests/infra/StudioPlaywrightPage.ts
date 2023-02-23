@@ -5,6 +5,7 @@ export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
   readonly pagesPanel: Locator;
   readonly addElementButton: Locator;
+  readonly successToast: Locator;
 
   constructor(private page: Page) {
     this.saveButton = page.getByRole("button", {
@@ -20,6 +21,10 @@ export default class StudioPlaywrightPage {
     this.addElementButton = page.getByRole("button", {
       name: "Open Add Element Menu",
     });
+
+    this.successToast = page
+      .getByRole("alert")
+      .filter({ hasText: "Changes saved successfully." });
   }
 
   async addPage(pageName: string) {
@@ -67,7 +72,14 @@ export default class StudioPlaywrightPage {
       .click();
   }
 
-  private async screenshot() {
+  async save() {
+    await this.saveButton.click();
+    await expect(this.successToast).toHaveCount(1);
+    await this.successToast.click();
+    await expect(this.successToast).toHaveCount(0);
+  }
+
+  async screenshot() {
     await expect(this.page).toHaveScreenshot();
   }
 }
