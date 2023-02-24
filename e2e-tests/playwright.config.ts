@@ -3,13 +3,17 @@ import fs from "fs";
 
 expect.extend({
   async toHaveContents(filepath: string, expectedContents: string) {
-    return expect
+    await expect
       .poll(() => {
         if (fs.existsSync(filepath)) {
           return fs.readFileSync(filepath, "utf-8").trim();
         }
       })
       .toBe(expectedContents.trim());
+
+    return {
+      pass: true,
+    };
   },
 });
 
