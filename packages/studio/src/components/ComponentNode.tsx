@@ -83,7 +83,9 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         </div>
         <span className="pl-1.5">{text()}</span>
       </div>
-      {isActiveComponent() && <RemoveElementButton elementUUID={componentState.uuid} />}
+      {isActiveComponent() && (
+        <RemoveElementButton elementUUID={componentState.uuid} />
+      )}
     </div>
   );
 }
