@@ -62,7 +62,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     "flex pr-4 items-center justify-between h-9",
     {
       "bg-blue-100": isActiveComponent(),
-      "hover:bg-gray-100": activeComponentUUID !== componentState.uuid,
+      "hover:bg-gray-100": !isActiveComponent(),
     }
   );
 
