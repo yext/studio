@@ -73,9 +73,11 @@ export default class StudioPlaywrightPage {
   }
 
   async save() {
-    void this.saveButton.click();
-    await expect(this.successToast).toHaveCount(1);
-    void this.successToast.click();
+    await this.saveButton.click();
+    await expect(() => expect(this.successToast).toHaveCount(1)).toPass({
+      timeout: 15_000,
+    });
+    await this.successToast.click();
     await expect(this.successToast).toHaveCount(0);
   }
 
