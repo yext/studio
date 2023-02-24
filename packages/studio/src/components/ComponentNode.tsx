@@ -41,6 +41,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     return componentState.componentName;
   };
 
+  const isActiveComponent = activeComponentUUID === componentState.uuid;
+
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
     invisible: !hasChild,
@@ -51,15 +53,15 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   }, [componentState.uuid, setActiveComponentUUID]);
 
   const componentNodeStyle = useMemo(
-    () => ({ marginLeft: `${depth}em` }),
+    () => ({ paddingLeft: `${depth}em` }),
     [depth]
   );
 
   const componentNodeClasses = classNames(
-    "flex px-2 items-center justify-between h-8",
+    "flex pr-4 items-center justify-between h-9",
     {
-      "bg-blue-100": activeComponentUUID === componentState.uuid,
-      "hover:bg-gray-100": activeComponentUUID !== componentState.uuid,
+      "bg-blue-100": isActiveComponent,
+      "hover:bg-gray-100": !isActiveComponent,
     }
   );
 
@@ -79,7 +81,9 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         </div>
         <span className="pl-1.5">{text()}</span>
       </div>
-      <RemoveElementButton elementUUID={componentState.uuid} />
+      {isActiveComponent && (
+        <RemoveElementButton elementUUID={componentState.uuid} />
+      )}
     </div>
   );
 }
