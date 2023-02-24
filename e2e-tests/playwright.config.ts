@@ -1,4 +1,15 @@
-import type { PlaywrightTestConfig } from "@playwright/test";
+import { PlaywrightTestConfig, expect } from "@playwright/test";
+import fs from 'fs';
+
+expect.extend({
+  async toHaveContents(filepath: string, expectedContents: string) {
+    return expect.poll(() => {
+      if (fs.existsSync(filepath)) {
+        return fs.readFileSync(filepath, "utf-8").trim();
+      }
+    }).toBe(expectedContents)
+  }
+})
 
 /**
  * See https://playwright.dev/docs/test-configuration.

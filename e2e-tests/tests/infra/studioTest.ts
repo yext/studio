@@ -9,8 +9,8 @@ type Fixtures = {
 
 const initialState = {
   pages: Object.fromEntries(
-    fs.readdirSync("./src/pages", "utf-8").map((filepath) => {
-      const pathFromRoot = path.join("./src/pages", filepath);
+    fs.readdirSync("./src/pages", "utf-8").map((pagepath) => {
+      const pathFromRoot = path.join("./src/pages", pagepath);
       return [pathFromRoot, fs.readFileSync(pathFromRoot, "utf-8")];
     })
   ),
@@ -27,6 +27,10 @@ export const studioTest = base.extend<Fixtures>({
     // Run the test.
     await use(studioPage);
     await expect(page).toHaveScreenshot();
+    fs.readdirSync("./src/pages", "utf-8").forEach((pagepath) => {
+      const pathFromRoot = path.join("./src/pages", pagepath);
+      fs.unlinkSync(pathFromRoot);
+    });
     Object.entries(initialState.pages).forEach(([pathFromRoot, contents]) => {
       fs.writeFileSync(pathFromRoot, contents);
     });
