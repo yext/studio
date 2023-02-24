@@ -1,26 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { studioTest } from "./infra/studioTest.js";
 
-test("can add a new page", async ({ page }) => {
-  await page.goto("./");
-
+studioTest("can add a new page", async ({ page, studioPage }) => {
   const newPageInTree = page.getByText("MyNewPage");
-  await expect.poll(() => newPageInTree.count()).toBe(0);
-
-  await page
-    .getByRole("button", {
-      exact: true,
-      name: "Add Page",
-    })
-    .click();
-  await expect(page).toHaveScreenshot();
-
-  const modal = page.getByRole("dialog", {
-    exact: true,
-    name: "Add Page Modal",
-  });
-  await modal.getByRole("textbox").type("My New Page");
-  await modal.getByText("Save").click();
-
-  await expect.poll(() => newPageInTree.count()).toBe(1);
-  await expect(page).toHaveScreenshot();
+  await expect(newPageInTree).toHaveCount(0);
+  await studioPage.addPage("MyNewPage");
+  await expect(newPageInTree).toHaveCount(1);
 });

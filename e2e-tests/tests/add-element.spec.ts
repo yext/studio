@@ -1,29 +1,9 @@
-import { test, expect } from "@playwright/test";
+import { expect } from "@playwright/test";
+import { studioTest } from "./infra/studioTest.js";
 
-test("can add a container component", async ({ page }) => {
-  await page.goto("./");
-
+studioTest("can add a container component", async ({ page, studioPage }) => {
   const previews = page.getByText("I'm a container:");
-  await expect.poll(() => previews.count()).toBe(1);
-
-  await page
-    .getByRole("button", {
-      exact: true,
-      name: "Open Add Element Menu",
-    })
-    .click();
-  await expect(page).toHaveScreenshot();
-
-  await page.getByText("Containers").click();
-  await expect(page).toHaveScreenshot();
-
-  await page
-    .getByRole("button", {
-      name: "Add Container Element",
-      exact: true,
-    })
-    .click();
-
-  await expect.poll(() => previews.count()).toBe(2);
-  await expect(page).toHaveScreenshot();
+  await expect(previews).toHaveCount(1);
+  await studioPage.addElement("Container", "Containers");
+  await expect(previews).toHaveCount(2);
 });
