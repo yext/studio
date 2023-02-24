@@ -14,9 +14,5 @@ studioTest("can add a container component", async ({ page, studioPage }) => {
   await expect(previews).toHaveCount(2);
   await studioPage.screenshot();
   await studioPage.save();
-  await expect
-    .poll(() => {
-      return fs.readFileSync("./src/pages/UniversalPage.tsx", "utf-8");
-    })
-    .toBe(expectedNewPage);
+  await expect("./src/pages/UniversalPage.tsx").toHaveContents(expectedNewPage);
 });
