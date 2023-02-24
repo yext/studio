@@ -41,8 +41,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     return componentState.componentName;
   };
 
-  const isActiveComponent = (): boolean =>
-    activeComponentUUID === componentState.uuid;
+  const isActiveComponent = activeComponentUUID === componentState.uuid;
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
@@ -61,8 +60,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const componentNodeClasses = classNames(
     "flex pr-4 items-center justify-between h-9",
     {
-      "bg-blue-100": isActiveComponent(),
-      "hover:bg-gray-100": !isActiveComponent(),
+      "bg-blue-100": isActiveComponent,
+      "hover:bg-gray-100": !isActiveComponent,
     }
   );
 
@@ -82,7 +81,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         </div>
         <span className="pl-1.5">{text()}</span>
       </div>
-      {isActiveComponent() && (
+      {isActiveComponent && (
         <RemoveElementButton elementUUID={componentState.uuid} />
       )}
     </div>
