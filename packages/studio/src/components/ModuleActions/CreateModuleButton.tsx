@@ -60,7 +60,7 @@ export default function CreateModuleButton(): JSX.Element | null {
   return (
     <ButtonWithModal
       buttonContent="Create Module"
-      buttonClassName="ml-4 py-1 px-3 text-white rounded-md bg-blue-600"
+      buttonClassName="ml-4 py-1 px-3 text-gray-900 text-sm bg-gray-200 hover:bg-gray-300 rounded-md"
       renderModal={renderModal}
     />
   );
