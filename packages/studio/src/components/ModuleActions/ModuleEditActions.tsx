@@ -4,8 +4,7 @@ import DetachModuleButton from "./DetachModuleButton";
 import EditModuleButton from "./EditModuleButton";
 
 /**
- * Displays a list of available actions for manipulating a Module when
- * it is the current active component.
+ * Displays a list of available actions for manipulating a Module.
  */
 export default function ModuleEditActions({
   metadata,
