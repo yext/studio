@@ -45,7 +45,7 @@ export default function PropertiesPanel(): JSX.Element | null {
 /**
  * Renders either a {@link CreateModuleButton} or the {@link ModuleEditActions}, depending
  * on if the active Component is already a Module or not.
- * 
+ *
  * @param metadata - The {@link FileMetadata} of the active Component.
  * @param state - The {@link ComponentState} of the active Component.
  */
