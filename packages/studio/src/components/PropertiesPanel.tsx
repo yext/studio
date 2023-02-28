@@ -51,8 +51,8 @@ export default function PropertiesPanel(): JSX.Element | null {
  */
 function renderModuleActions(metadata: FileMetadata, state: ComponentState) {
   const isModule =
-    metadata?.kind === FileMetadataKind.Module &&
-    state?.kind === ComponentStateKind.Module;
+    metadata.kind === FileMetadataKind.Module &&
+    state.kind === ComponentStateKind.Module;
 
   return (
     <div className="flex px-2 mb-6">
