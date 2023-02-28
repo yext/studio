@@ -5,9 +5,7 @@ import {
   PropValueType,
   PropValueKind,
   ComponentState,
-  FileMetadata,
-  ModuleMetadata,
-  ModuleState
+  FileMetadata
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleActions";
