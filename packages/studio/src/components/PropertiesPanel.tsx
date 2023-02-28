@@ -8,7 +8,7 @@ import {
   FileMetadata,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
-import ModuleEditActions from "./ModuleActions/ModuleActions";
+import ModuleEditActions from "./ModuleActions/ModuleEditActions";
 import PropEditors from "./PropEditors";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 import CreateModuleButton from "./CreateModuleButton";
@@ -42,7 +42,14 @@ export default function PropertiesPanel(): JSX.Element | null {
   );
 }
 
-function renderModuleActions(metadata?: FileMetadata, state?: ComponentState) {
+/**
+ * Renders either a {@link CreateModuleButton} or the {@link ModuleEditActions}, depending
+ * on if the active Component is already a Module or not.
+ * 
+ * @param metadata - The {@link FileMetadata} of the active Component.
+ * @param state - The {@link ComponentState} of the active Component.
+ */
+function renderModuleActions(metadata: FileMetadata, state: ComponentState) {
   const isModule =
     metadata?.kind === FileMetadataKind.Module &&
     state?.kind === ComponentStateKind.Module;
