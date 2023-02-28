@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import CreateModuleButton from "../../src/components/CreateModuleButton";
+import CreateModuleButton from "../../src/components/ModuleActions/CreateModuleButton";
 import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
 import userEvent from "@testing-library/user-event";

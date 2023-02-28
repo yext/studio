@@ -11,7 +11,7 @@ import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleEditActions";
 import PropEditors from "./PropEditors";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
-import CreateModuleButton from "./CreateModuleButton";
+import CreateModuleButton from "./ModuleActions/CreateModuleButton";
 
 /**
  * Renders prop editors for the active component selected by the user.
