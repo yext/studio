@@ -1,5 +1,7 @@
 import InputModal from "../common/InputModal";
-import ButtonWithModal, { renderModalFunction } from "../common/ButtonWithModal";
+import ButtonWithModal, {
+  renderModalFunction,
+} from "../common/ButtonWithModal";
 import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useState } from "react";
 import { ComponentStateKind } from "@yext/studio-plugin";
