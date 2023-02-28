@@ -5,7 +5,7 @@ import {
   PropValueType,
   PropValueKind,
   ComponentState,
-  FileMetadata
+  FileMetadata,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleActions";
@@ -46,13 +46,16 @@ function renderModuleActions(metadata?: FileMetadata, state?: ComponentState) {
   const isModule =
     metadata?.kind === FileMetadataKind.Module &&
     state?.kind === ComponentStateKind.Module;
-  
+
   return (
     <div className="flex px-2 mb-6">
       <span className="font-medium">Module Actions</span>
       <div className="flex grow justify-evenly">
-        {isModule
-        ? <ModuleEditActions metadata={metadata} moduleState={state} /> : <CreateModuleButton />}
+        {isModule ? (
+          <ModuleEditActions metadata={metadata} moduleState={state} />
+        ) : (
+          <CreateModuleButton />
+        )}
       </div>
     </div>
   );

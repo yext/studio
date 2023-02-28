@@ -14,14 +14,13 @@ export default function ModuleActions({
   metadata: ModuleMetadata;
   moduleState: ModuleState;
 }) {
-
   return (
     <div className="flex px-2 mb-6">
       <span className="font-medium">Module Actions</span>
       <div className="flex grow justify-evenly">
-          <EditModuleButton moduleState={moduleState} />
-          <DetachModuleButton moduleState={moduleState} metadata={metadata} />
-          <DeleteModuleButton metadata={metadata} />
+        <EditModuleButton moduleState={moduleState} />
+        <DetachModuleButton moduleState={moduleState} metadata={metadata} />
+        <DeleteModuleButton metadata={metadata} />
       </div>
     </div>
   );
