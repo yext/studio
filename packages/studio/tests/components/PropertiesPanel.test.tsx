@@ -55,7 +55,7 @@ it("renders 'Create Module' button for Standard Component", () => {
 it("renders Module Actions for Active Module", () => {
   const state: ModuleState = {
     kind: ComponentStateKind.Module,
-    componentName: "Module",
+    componentName: "Test",
     props: {},
     uuid: "1234",
     metadataUUID: "5678",
@@ -75,7 +75,7 @@ it("renders Module Actions for Active Module", () => {
 
   render(<PropertiesPanel />);
   expect(screen.getAllByRole("button")).toHaveLength(3);
-  screen.getByRole("button", { name: "Edit Module Module" });
-  screen.getByRole("button", { name: "Detach Module Module" });
+  screen.getByRole("button", { name: "Edit Module Test" });
+  screen.getByRole("button", { name: "Detach Module Test" });
   screen.getByRole("button", { name: "Delete Module file" });
 });
