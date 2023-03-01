@@ -1,4 +1,11 @@
-import { ComponentMetadata, ComponentStateKind, FileMetadataKind, ModuleMetadata, ModuleState, StandardComponentState } from "@yext/studio-plugin";
+import {
+  ComponentMetadata,
+  ComponentStateKind,
+  FileMetadataKind,
+  ModuleMetadata,
+  ModuleState,
+  StandardComponentState,
+} from "@yext/studio-plugin";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import PropertiesPanel from "../../src/components/PropertiesPanel";
 import { render, screen } from "@testing-library/react";
@@ -23,52 +30,52 @@ it("does not render prop editor(s) when there's no selected active component", (
 it("renders 'Create Module' button for Standard Component", () => {
   const state: StandardComponentState = {
     kind: ComponentStateKind.Standard,
-    componentName: 'Standard',
+    componentName: "Standard",
     props: {},
-    uuid: '1234',
-    metadataUUID: '5678'
+    uuid: "1234",
+    metadataUUID: "5678",
   };
   const metadata: ComponentMetadata = {
     kind: FileMetadataKind.Component,
-    filepath: '/some/file',
-    metadataUUID: '5678',
-    propShape: {}
+    filepath: "/some/file",
+    metadataUUID: "5678",
+    propShape: {},
   };
 
   mockStoreActiveComponent({
     activeComponent: state,
-    activeComponentMetadata: metadata
+    activeComponentMetadata: metadata,
   });
 
   render(<PropertiesPanel />);
-  expect(screen.getAllByRole('button')).toHaveLength(1);
-  screen.getByRole('button', { name: 'Create Module'});
+  expect(screen.getAllByRole("button")).toHaveLength(1);
+  screen.getByRole("button", { name: "Create Module" });
 });
 
 it("renders Module Actions for Active Module", () => {
   const state: ModuleState = {
     kind: ComponentStateKind.Module,
-    componentName: 'Module',
+    componentName: "Module",
     props: {},
-    uuid: '1234',
-    metadataUUID: '5678'
+    uuid: "1234",
+    metadataUUID: "5678",
   };
   const metadata: ModuleMetadata = {
     kind: FileMetadataKind.Module,
-    filepath: '/some/file',
-    metadataUUID: '5678',
+    filepath: "/some/file",
+    metadataUUID: "5678",
     propShape: {},
-    componentTree: []
+    componentTree: [],
   };
 
   mockStoreActiveComponent({
     activeComponent: state,
-    activeComponentMetadata: metadata
+    activeComponentMetadata: metadata,
   });
 
   render(<PropertiesPanel />);
-  expect(screen.getAllByRole('button')).toHaveLength(3);
-  screen.getByRole('button', { name: 'Edit Module Module'});
-  screen.getByRole('button', { name: 'Detach Module Module'});
-  screen.getByRole('button', { name: 'Delete Module file'});
+  expect(screen.getAllByRole("button")).toHaveLength(3);
+  screen.getByRole("button", { name: "Edit Module Module" });
+  screen.getByRole("button", { name: "Detach Module Module" });
+  screen.getByRole("button", { name: "Delete Module file" });
 });
