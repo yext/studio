@@ -37,28 +37,27 @@ export default function PropEditors(props: {
 
   return (
     <>
-      {editableProps.length > 0 
-      ? editableProps
-        .map(([propName, propMetadata]) => {
-          const propValue = activeComponentState.props[propName]?.value as
-            | string
-            | number
-            | boolean;
+      {editableProps.length > 0
+        ? editableProps.map(([propName, propMetadata]) => {
+            const propValue = activeComponentState.props[propName]?.value as
+              | string
+              | number
+              | boolean;
 
-          return (
-            <PropEditor
-              key={propName}
-              onPropChange={updateProps}
-              propKind={propKind}
-              {...{
-                propName,
-                propMetadata,
-                propValue,
-              }}
-            />
-          );
-        })
-      : 'Blah'}
+            return (
+              <PropEditor
+                key={propName}
+                onPropChange={updateProps}
+                propKind={propKind}
+                {...{
+                  propName,
+                  propMetadata,
+                  propValue,
+                }}
+              />
+            );
+          })
+        : "Blah"}
     </>
   );
 }
