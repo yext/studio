@@ -69,7 +69,6 @@ function renderSiteSettings(
       return (
         <div key={propName} className="mb-2">
           <SimplePropInput
-            key={propName}
             propName={propName}
             valueType={valueType}
             value={propVal?.value as string | number | boolean}
