@@ -10,6 +10,7 @@ import {
   SiteSettingsPropValueType,
 } from "@yext/studio-plugin";
 import React, { useCallback } from "react";
+import startCase from "lodash.startcase";
 import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
 
@@ -67,8 +68,8 @@ function renderSiteSettings(
     if (valueType !== PropValueType.Object) {
       return (
         <SimplePropInput
-          key={propName}
           propName={propName}
+          key={propName}
           valueType={valueType}
           value={propVal?.value as string | number | boolean}
           updateValues={updateValues}
@@ -80,7 +81,7 @@ function renderSiteSettings(
     const shouldRenderDivider = index < sortedShape.length - 1;
     return (
       <React.Fragment key={propName}>
-        <div className="font-bold px-2 pb-2">{propName}</div>
+        <div className="font-bold pb-2">{propName}</div>
         <RecursiveGroup
           propName={propName}
           propVal={propVal as ObjectProp<SiteSettingsValues>}
@@ -161,8 +162,8 @@ function SimplePropInput(props: {
   );
 
   return (
-    <label className="flex h-10 items-center" id={propName} key={propName}>
-      <span className="px-2">{propName}</span>
+    <label id={propName} className="flex flex-col mb-2">
+      <span>{startCase(propName)}</span>
       <PropInput
         propType={valueType}
         propValue={value}

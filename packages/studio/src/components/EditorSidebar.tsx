@@ -9,14 +9,14 @@ import SiteSettingsPanel from "./SiteSettingsPanel";
 import ContentPanel from "./ContentPanel";
 
 enum Tab {
-  Properties = "Properties",
   Content = "Content",
+  Properties = "Properties",
   SiteSettings = "SiteSettings",
 }
 
 const tabIcons = {
-  [Tab.Properties]: <Sliders className="w-4" />,
   [Tab.Content]: <Content className="w-7" />,
+  [Tab.Properties]: <Sliders className="w-4" />,
   [Tab.SiteSettings]: <Globe className="w-4" />,
 };
 
@@ -25,14 +25,14 @@ const tabIcons = {
  * Used for editing the active component's props or site settings.
  */
 export default function EditorSidebar(): JSX.Element {
-  const [selectedTab, setTab] = useState<Tab>(Tab.Properties);
+  const [selectedTab, setTab] = useState<Tab>(Tab.Content);
 
   return (
     <div className="w-1/4 px-4">
       <OptionPicker
         options={Tab}
         icons={tabIcons}
-        defaultOption={Tab.Properties}
+        defaultOption={Tab.Content}
         onSelect={setTab}
       />
       <Divider />
