@@ -30,13 +30,15 @@ export default function PropEditors(props: {
     },
     [updateActiveComponentProps, activeComponentState]
   );
+
+  const editableProps = Object.entries(propShape)
+    .filter(createIsSupportedPropMetadata(activeComponentState.componentName))
+    .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true);
+
   return (
     <>
-      {Object.entries(propShape)
-        .filter(
-          createIsSupportedPropMetadata(activeComponentState.componentName)
-        )
-        .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true)
+      {editableProps.length > 0 
+      ? editableProps
         .map(([propName, propMetadata]) => {
           const propValue = activeComponentState.props[propName]?.value as
             | string
@@ -55,7 +57,8 @@ export default function PropEditors(props: {
               }}
             />
           );
-        })}
+        })
+      : 'Blah'}
     </>
   );
 }
