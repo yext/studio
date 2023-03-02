@@ -67,15 +67,14 @@ function renderSiteSettings(
     const valueType = propMetadata.type;
     if (valueType !== PropValueType.Object) {
       return (
-        <div key={propName} className="mb-2">
-          <SimplePropInput
-            propName={propName}
-            valueType={valueType}
-            value={propVal?.value as string | number | boolean}
-            updateValues={updateValues}
-            unionValues={propMetadata["unionValues"]}
-          />
-        </div>
+        <SimplePropInput
+          propName={propName}
+          key={propName}
+          valueType={valueType}
+          value={propVal?.value as string | number | boolean}
+          updateValues={updateValues}
+          unionValues={propMetadata["unionValues"]}
+        />
       );
     }
 
@@ -163,7 +162,7 @@ function SimplePropInput(props: {
   );
 
   return (
-    <label id={propName} className="flex flex-col">
+    <label id={propName} className="flex flex-col mb-2">
       <span>{startCase(propName)}</span>
       <PropInput
         propType={valueType}
