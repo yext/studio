@@ -164,7 +164,7 @@ function SimplePropInput(props: {
   );
 
   return (
-    <div id={propName} className="flex flex-col">
+    <label id={propName} className="flex flex-col">
       <span>{startCase(propName)}</span>
       <PropInput
         propType={valueType}
@@ -173,6 +173,6 @@ function SimplePropInput(props: {
         unionValues={unionValues}
         propKind={PropValueKind.Literal}
       />
-    </div>
+    </label>
   );
 }
