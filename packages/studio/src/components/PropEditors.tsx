@@ -64,7 +64,7 @@ export default function PropEditors(props: {
 
 /**
  * Renders a styled, formatted message indicating the current Component has no editable props.
- * 
+ *
  * @param componentName - The name of the current Component.
  */
 function renderNoEditableProps(componentName: string) {

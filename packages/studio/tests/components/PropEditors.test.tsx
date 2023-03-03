@@ -137,11 +137,13 @@ function testStandardOrModuleComponentState(
         activeComponentState={state}
         propShape={propShape}
         propKind={PropValueKind.Literal}
-        shouldRenderProp = {() => false}
+        shouldRenderProp={() => false}
       />
     );
 
-    screen.getByText(`${state.componentName} has no Editable Properties in this Panel.`);
+    screen.getByText(
+      `${state.componentName} has no Editable Properties in this Panel.`
+    );
     expect(screen.queryByText("title")).toBeNull();
     expect(screen.queryByText("num")).toBeNull();
     expect(screen.queryByText("bool")).toBeNull();
