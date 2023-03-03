@@ -131,6 +131,25 @@ function testStandardOrModuleComponentState(
     });
   });
 
+  it(`renders message when there are no editable props`, () => {
+    render(
+      <PropEditors
+        activeComponentState={state}
+        propShape={propShape}
+        propKind={PropValueKind.Literal}
+        shouldRenderProp={() => false}
+      />
+    );
+
+    screen.getByText(
+      `${state.componentName} has no Editable Properties in this Panel.`
+    );
+    expect(screen.queryByText("title")).toBeNull();
+    expect(screen.queryByText("num")).toBeNull();
+    expect(screen.queryByText("bool")).toBeNull();
+    expect(screen.queryByText("bgColor")).toBeNull();
+  });
+
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
     render(
       <PropEditors
