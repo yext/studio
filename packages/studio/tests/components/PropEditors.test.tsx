@@ -131,7 +131,7 @@ function testStandardOrModuleComponentState(
     });
   });
 
-  it(`renders correctly when there are no editable props`, () => {
+  it(`renders message when there are no editable props`, () => {
     render(
       <PropEditors
         activeComponentState={state}
