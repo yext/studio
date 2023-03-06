@@ -1,4 +1,4 @@
-import { test as base, expect } from "@playwright/test";
+import { test as base, expect, TestInfo } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
 import fs from "fs";
 import path from "path";
@@ -23,15 +23,20 @@ const initialState = {
 export const studioTest = base.extend<Fixtures>({
   studioPage: async ({ page }, use) => {
     await page.goto("./");
+    await page.reload();
     const studioPage = new StudioPlaywrightPage(page);
     // Run the test.
+    console.log('running test')
     await use(studioPage);
-    await expect(page).toHaveScreenshot();
+    console.log('screenshot')
+    expect(page).toMatchSnapshot();
     fs.readdirSync("./src/pages", "utf-8").forEach((pagepath) => {
       const pathFromRoot = path.join("./src/pages", pagepath);
+      console.log('unlinking', pathFromRoot)
       fs.unlinkSync(pathFromRoot);
     });
     Object.entries(initialState.pages).forEach(([pathFromRoot, contents]) => {
+      console.log('rewriting', pathFromRoot)
       fs.writeFileSync(pathFromRoot, contents);
     });
   },
