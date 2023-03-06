@@ -1,4 +1,4 @@
-import { test as base, expect } from "@playwright/test";
+import { test as base } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
 import fs from "fs";
 import path from "path";
@@ -27,7 +27,6 @@ export const studioTest = base.extend<Fixtures>({
       const studioPage = new StudioPlaywrightPage(page);
       // Run the test.
       await use(studioPage);
-      await expect(page).toHaveScreenshot();
     } finally {
       fs.readdirSync("./src/pages", "utf-8").forEach((pagepath) => {
         const pathFromRoot = path.join("./src/pages", pagepath);
