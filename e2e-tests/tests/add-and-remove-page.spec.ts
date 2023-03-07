@@ -17,10 +17,9 @@ studioTest(
     await page.reload();
     await expect(page).toHaveScreenshot();
 
-    const newPageInTree = page.getByText("UniversalPage");
-    await expect(newPageInTree).toHaveCount(0);
+    await expect(pageInTree).toHaveCount(0);
     await studioPage.addPage("UniversalPage");
-    await expect(newPageInTree).toHaveCount(1);
+    await expect(pageInTree).toHaveCount(1);
     await expect(page).toHaveScreenshot();
     await studioPage.save();
     const expectedPagePath = "./src/pages/UniversalPage.tsx";
