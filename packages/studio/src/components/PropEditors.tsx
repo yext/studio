@@ -30,32 +30,47 @@ export default function PropEditors(props: {
     },
     [updateActiveComponentProps, activeComponentState]
   );
+
+  const editableProps = Object.entries(propShape)
+    .filter(createIsSupportedPropMetadata(activeComponentState.componentName))
+    .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true);
+
   return (
     <>
-      {Object.entries(propShape)
-        .filter(
-          createIsSupportedPropMetadata(activeComponentState.componentName)
-        )
-        .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true)
-        .map(([propName, propMetadata]) => {
-          const propValue = activeComponentState.props[propName]?.value as
-            | string
-            | number
-            | boolean;
+      {editableProps.length > 0
+        ? editableProps.map(([propName, propMetadata]) => {
+            const propValue = activeComponentState.props[propName]?.value as
+              | string
+              | number
+              | boolean;
 
-          return (
-            <PropEditor
-              key={propName}
-              onPropChange={updateProps}
-              propKind={propKind}
-              {...{
-                propName,
-                propMetadata,
-                propValue,
-              }}
-            />
-          );
-        })}
+            return (
+              <PropEditor
+                key={propName}
+                onPropChange={updateProps}
+                propKind={propKind}
+                {...{
+                  propName,
+                  propMetadata,
+                  propValue,
+                }}
+              />
+            );
+          })
+        : renderNoEditableProps(activeComponentState.componentName)}
     </>
+  );
+}
+
+/**
+ * Renders a styled, formatted message indicating the current Component has no editable props.
+ *
+ * @param componentName - The name of the current Component.
+ */
+function renderNoEditableProps(componentName: string) {
+  return (
+    <div className="text-sm bg-gray-100 p-4 border text-gray-500 rounded-lg text-center mb-2">
+      {`${componentName} has no Editable Properties in this Panel.`}
+    </div>
   );
 }

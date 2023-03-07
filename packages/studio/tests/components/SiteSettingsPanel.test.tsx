@@ -57,9 +57,9 @@ it("can render nested site settings", () => {
   });
   render(<SiteSettingsPanel />);
   expect(screen.getByText("Global Colors")).toBeDefined();
-  expect(screen.getByText("primary")).toBeDefined();
-  expect(screen.getByText("secondary")).toBeDefined();
-  expect(screen.getByText("experienceKey")).toBeDefined();
+  expect(screen.getByText("Primary")).toBeDefined();
+  expect(screen.getByText("Secondary")).toBeDefined();
+  expect(screen.getByText("Experience Key")).toBeDefined();
 });
 
 it("can render even when optional settings are not specified", () => {
@@ -89,7 +89,7 @@ it("can edit site settings", () => {
   });
   render(<SiteSettingsPanel />);
   expect(setValues).toHaveBeenCalledTimes(0);
-  const colorInput = screen.getByLabelText("primary");
+  const colorInput = screen.getByLabelText("Primary");
   fireEvent.input(colorInput, {
     target: { value: "#abcdef" },
   });

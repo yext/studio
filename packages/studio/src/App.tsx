@@ -12,7 +12,7 @@ export default function App() {
         <ActionsBar />
         <div className="flex flex-row grow">
           <ActivePagePanel />
-          <div className="grow w-1/3 bg-gray-300">
+          <div className="grow w-1/3 bg-white border-8 shadow">
             <HighlightedPreview />
           </div>
           <EditorSidebar />
