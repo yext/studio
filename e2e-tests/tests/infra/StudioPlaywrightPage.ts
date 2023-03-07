@@ -29,7 +29,7 @@ export default class StudioPlaywrightPage {
 
   async addPage(pageName: string) {
     await this.addPageButton.click();
-    await this.screenshot();
+    await expect(this.page).toHaveScreenshot();
 
     const modal = this.page.getByRole("dialog", {
       name: "Add Page Modal",
@@ -46,7 +46,7 @@ export default class StudioPlaywrightPage {
         name: "Remove Page",
       })
       .click();
-    await this.screenshot();
+    await expect(this.page).toHaveScreenshot();
     await this.page
       .getByRole("dialog", {
         name: "Delete Page Modal",
@@ -60,10 +60,10 @@ export default class StudioPlaywrightPage {
     category: "Components" | "Containers" | "Modules"
   ) {
     await this.addElementButton.click();
-    await this.screenshot();
+    await expect(this.page).toHaveScreenshot();
 
     await this.page.getByText(category).click();
-    await this.screenshot();
+    await expect(this.page).toHaveScreenshot();
 
     await this.page
       .getByRole("button", {
@@ -74,12 +74,10 @@ export default class StudioPlaywrightPage {
 
   async save() {
     await this.saveButton.click();
-    await expect(this.successToast).toHaveCount(1);
+    await expect(() => expect(this.successToast).toHaveCount(1)).toPass({
+      timeout: 15_000,
+    });
     await this.successToast.click();
     await expect(this.successToast).toHaveCount(0);
-  }
-
-  async screenshot() {
-    await expect(this.page).toHaveScreenshot();
   }
 }

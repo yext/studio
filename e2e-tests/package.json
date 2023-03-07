@@ -9,7 +9,7 @@
     "report": "playwright show-report "
   },
   "devDependencies": {
-    "@playwright/test": "^1.30.0",
+    "@playwright/test": "^1.31.2",
     "@yext/studio": "*",
     "vite": "^4.1.1"
   }

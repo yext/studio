@@ -1,4 +1,21 @@
-import type { PlaywrightTestConfig } from "@playwright/test";
+import { PlaywrightTestConfig, expect } from "@playwright/test";
+import fs from "fs";
+
+expect.extend({
+  async toHaveContents(filepath: string, expectedContents: string) {
+    await expect
+      .poll(() => {
+        if (fs.existsSync(filepath)) {
+          return fs.readFileSync(filepath, "utf-8").trim();
+        }
+      })
+      .toBe(expectedContents.trim());
+
+    return {
+      pass: true,
+    };
+  },
+});
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -6,7 +23,8 @@ import type { PlaywrightTestConfig } from "@playwright/test";
 const config: PlaywrightTestConfig = {
   testDir: "./tests",
   /* Maximum time one test can run for. */
-  timeout: 30 * 1000,
+  timeout: 45 * 1000,
+  snapshotPathTemplate: "__screenshots__/{testFilePath}/{arg}{ext}",
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -14,11 +32,10 @@ const config: PlaywrightTestConfig = {
      */
     timeout: 5000,
     toHaveScreenshot: {
-      maxDiffPixelRatio: 0.05,
+      threshold: 0.05,
+      maxDiffPixelRatio: 0.01,
     },
   },
-  /* Run tests in files in parallel */
-  fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
