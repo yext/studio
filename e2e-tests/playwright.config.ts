@@ -25,7 +25,7 @@ const config: PlaywrightTestConfig = {
   /* Maximum time one test can run for. */
   timeout: 30 * 1000,
   snapshotPathTemplate:
-    "__screenshots__{/projectName}/{testFilePath}/{arg}{ext}",
+    "__screenshots__/{testFilePath}/{arg}{ext}",
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
