@@ -111,14 +111,14 @@ export default class ModuleFile {
       componentTree: moduleMetadata.componentTree,
       fileMetadata: moduleMetadata,
       defaultImports,
-      destructuredProps: ModuleFile.calcDestructuredProps(
+      propArgs: ModuleFile.calcPropArgs(
         moduleMetadata.propShape,
         moduleMetadata.componentTree
       ),
     });
   }
 
-  private static calcDestructuredProps(
+  private static calcPropArgs(
     propShape: PropShape | undefined,
     componentTree: ComponentState[]
   ) {
@@ -147,8 +147,7 @@ export default class ModuleFile {
       return ["document"];
     } else if (usesProps) {
       return ["props"];
-    } else {
-      return undefined;
     }
+    return null;
   }
 }

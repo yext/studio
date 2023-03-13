@@ -143,7 +143,7 @@ export default class ReactComponentFileWriter {
     cssImports,
     onFileUpdate,
     defaultImports,
-    destructuredProps,
+    propArgs,
   }: {
     componentTree: ComponentState[];
     fileMetadata?: FileMetadata;
@@ -152,7 +152,7 @@ export default class ReactComponentFileWriter {
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
     defaultImports?: { name: string; moduleSpecifier: string }[];
-    destructuredProps?: string[];
+    propArgs?: string[] | null;
   }): void {
     let defaultExport: VariableDeclaration | FunctionDeclaration;
     try {
@@ -186,7 +186,7 @@ export default class ReactComponentFileWriter {
         this.studioSourceFileWriter.updateFunctionParameter(
           functionComponent,
           `${this.componentName}Props`,
-          destructuredProps
+          propArgs
         );
       }
     }
