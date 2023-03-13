@@ -7,7 +7,9 @@ export interface ContainerWithButtonsProps {
   document: Record<string, any>;
 }
 
-export default function ContainerWithButtons(props: ContainerWithButtonsProps) {
+export default function ContainerWithButtons({
+  props,
+}: ContainerWithButtonsProps) {
   return (
     <Container>
       <Button />

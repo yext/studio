@@ -35,8 +35,8 @@ export type RecordMetadata = {
   type: PropValueType.Record;
   doc?: string;
   // Only Record<string, any> is supported.
-  keyType: "string";
-  valueType: "any";
+  recordKey: "string";
+  recordValue: "any";
   unionValues?: never;
 };
 

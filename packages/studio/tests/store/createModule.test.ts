@@ -86,8 +86,8 @@ it("adds module metadata to UUIDToFileMetadata", () => {
     propShape: {
       document: {
         type: PropValueType.Record,
-        keyType: "string",
-        valueType: "any",
+        recordKey: "string",
+        recordValue: "any",
         required: true,
       },
     },

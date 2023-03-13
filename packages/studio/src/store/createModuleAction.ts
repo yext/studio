@@ -67,8 +67,8 @@ export default function getCreateModuleAction(
       propShape: {
         document: {
           type: PropValueType.Record,
-          keyType: "string",
-          valueType: "any",
+          recordKey: "string",
+          recordValue: "any",
           required: true,
         },
       },

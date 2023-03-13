@@ -73,8 +73,8 @@ export default class PropShapeParser {
         if (type === "Record<string, any>") {
           propShape[propName] = {
             type: PropValueType.Record,
-            keyType: "string",
-            valueType: "any",
+            recordKey: "string",
+            recordValue: "any",
             ...sharedProperties,
           };
           return;

@@ -4,8 +4,9 @@ import Button from "../components/Button";
 import Container from "../components/Container";
 import ContainerWithButtons from "../modules/ContainerWithButtons";
 import siteSettings from "../siteSettings";
+import { TemplateProps } from "@yext/pages";
 
-export default function UniversalPage() {
+export default function UniversalPage({ document }: TemplateProps) {
   return (
     <div>
       <Banner />
@@ -13,7 +14,10 @@ export default function UniversalPage() {
         <Button bgColor="bg-red-100" />
       </Container>
       <AceComponent text="ace" />
-      <ContainerWithButtons bannerTitle={siteSettings.someText} />
+      <ContainerWithButtons
+        bannerTitle={siteSettings.someText}
+        document={document}
+      />
       <Banner nestedProp={{ egg: "eggyweggy" }} />
     </div>
   );

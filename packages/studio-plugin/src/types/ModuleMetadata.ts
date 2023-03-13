@@ -9,5 +9,5 @@ export type ModuleMetadata = {
   metadataUUID: string;
   filepath: string;
   initialProps?: PropValues;
-  propShape?: PropShape;
+  propShape: PropShape;
 };

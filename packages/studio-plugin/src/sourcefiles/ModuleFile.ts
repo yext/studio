@@ -12,7 +12,13 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import getImportSpecifier from "../utils/getImportSpecifier";
-import { PropShape } from "../types";
+import {
+  ComponentState,
+  ExpressionProp,
+  PropShape,
+  PropValueKind,
+} from "../types";
+import { TypeGuards } from "../utils";
 
 /**
  * ModuleFile is responsible for parsing and updating a single
@@ -63,8 +69,24 @@ export default class ModuleFile {
     return {
       kind: FileMetadataKind.Module,
       componentTree,
-      ...this.fileMetadataParser.parse(),
+      ...this.getCommonMetadata(),
       filepath: this.studioSourceFileParser.getFilepath(),
+    };
+  }
+
+  private getCommonMetadata(): Pick<
+    ModuleMetadata,
+    "metadataUUID" | "initialProps" | "propShape"
+  > {
+    const { propShape, ...otherMetadata } = this.fileMetadataParser.parse();
+    if (!propShape?.hasOwnProperty("document")) {
+      throw new Error(
+        "All Modules must contain a prop interface with a document prop."
+      );
+    }
+    return {
+      ...otherMetadata,
+      propShape,
     };
   }
 
@@ -90,18 +112,43 @@ export default class ModuleFile {
       fileMetadata: moduleMetadata,
       defaultImports,
       destructuredProps: ModuleFile.calcDestructuredProps(
-        moduleMetadata.propShape
+        moduleMetadata.propShape,
+        moduleMetadata.componentTree
       ),
     });
   }
 
-  private static calcDestructuredProps(propShape: PropShape | undefined) {
+  private static calcDestructuredProps(
+    propShape: PropShape | undefined,
+    componentTree: ComponentState[]
+  ) {
     if (!propShape?.hasOwnProperty("document")) {
       return undefined;
     }
-    if (Object.keys(propShape).length === 1) {
+    const expressionProps: ExpressionProp[] = componentTree
+      .filter(TypeGuards.isStandardOrModuleComponentState)
+      .flatMap((c) =>
+        Object.values(c.props).filter(
+          (p): p is ExpressionProp => p.kind === PropValueKind.Expression
+        )
+      );
+
+    const usesDocument = expressionProps.some((e) => {
+      return (
+        e.value.startsWith("document.") || e.value.match(/\${document\..*}/)
+      );
+    });
+    const usesProps = expressionProps.some((e) => {
+      return e.value.startsWith("props.") || e.value.match(/\${props\..*}/);
+    });
+    if (usesDocument && usesProps) {
+      return ["document", "...props"];
+    } else if (usesDocument) {
       return ["document"];
+    } else if (usesProps) {
+      return ["props"];
+    } else {
+      return undefined;
     }
-    return ["document", "...props"];
   }
 }
