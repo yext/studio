@@ -153,6 +153,6 @@ export default class ModuleFile {
     } else if (usesProps) {
       return "props";
     }
-    return undefined;
+    return "_props";
   }
 }
