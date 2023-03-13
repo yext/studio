@@ -133,14 +133,19 @@ export default class ModuleFile {
         )
       );
 
-    const usesDocument = expressionProps.some((e) => {
-      return (
-        e.value.startsWith("document.") || e.value.match(/\${document\..*}/)
-      );
-    });
-    const usesProps = expressionProps.some((e) => {
-      return e.value.startsWith("props.") || e.value.match(/\${props\..*}/);
-    });
+    const usesExpressionSource = (source: string) => {
+      return expressionProps.some((e) => {
+        return (
+          e.value === source ||
+          e.value.startsWith(source + ".") ||
+          e.value.match(new RegExp("${document..*}"))
+        );
+      });
+    };
+
+    const usesDocument = usesExpressionSource("document");
+    const usesProps = usesExpressionSource("props");
+
     if (usesDocument && usesProps) {
       return ["document", "...props"];
     } else if (usesDocument) {
