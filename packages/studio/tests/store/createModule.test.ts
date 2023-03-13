@@ -1,4 +1,9 @@
-import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
+import {
+  ComponentStateKind,
+  FileMetadataKind,
+  PropValueKind,
+  PropValueType,
+} from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
 import { searchBarComponent } from "../__fixtures__/componentStates";
 import mockStore from "../__utils__/mockStore";
@@ -78,7 +83,14 @@ it("adds module metadata to UUIDToFileMetadata", () => {
     ],
     filepath: expect.stringContaining(moduleName + ".tsx"),
     metadataUUID: expect.any(String),
-    propShape: {},
+    propShape: {
+      document: {
+        type: PropValueType.Record,
+        keyType: "string",
+        valueType: "any",
+        required: true,
+      },
+    },
   });
 });
 
@@ -99,7 +111,13 @@ it("updates active page state to include new module component", () => {
         parentUUID: "mock-uuid-0",
         componentName: "Module",
         metadataUUID: expect.any(String),
-        props: {},
+        props: {
+          document: {
+            kind: PropValueKind.Expression,
+            valueType: PropValueType.Record,
+            value: "document",
+          },
+        },
       },
       {
         ...searchBarComponent,
@@ -123,7 +141,9 @@ it("sets active component to the new module component", () => {
     parentUUID: "mock-uuid-0",
     componentName: "Module",
     metadataUUID: expect.any(String),
-    props: {},
+    props: {
+      document: expect.any(Object),
+    },
   });
 });
 

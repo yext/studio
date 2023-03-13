@@ -5,6 +5,8 @@ import {
   ComponentStateKind,
   ComponentTreeHelpers,
   FileMetadataKind,
+  PropValueKind,
+  PropValueType,
 } from "@yext/studio-plugin";
 import { differenceWith, isEqual } from "lodash";
 import { v4 } from "uuid";
@@ -62,10 +64,17 @@ export default function getCreateModuleAction(
       ],
       metadataUUID,
       filepath,
-      propShape: {},
+      propShape: {
+        document: {
+          type: PropValueType.Record,
+          keyType: "string",
+          valueType: "any",
+          required: true,
+        },
+      },
     });
     const moduleComponentUUID = v4();
-    const updatedPageComponentTree = differenceWith(
+    const updatedPageComponentTree: ComponentState[] = differenceWith(
       componentTree,
       childComponentTree,
       isEqual
@@ -75,7 +84,13 @@ export default function getCreateModuleAction(
           kind: ComponentStateKind.Module,
           componentName: path.basename(filepath, ".tsx"),
           uuid: moduleComponentUUID,
-          props: {},
+          props: {
+            document: {
+              kind: PropValueKind.Expression,
+              valueType: PropValueType.Record,
+              value: "document",
+            },
+          },
           metadataUUID,
           parentUUID: c.parentUUID,
         };

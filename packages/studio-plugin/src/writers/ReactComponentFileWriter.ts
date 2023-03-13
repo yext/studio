@@ -110,11 +110,13 @@ export default class ReactComponentFileWriter {
   }
 
   private updatePropInterface(propShape: PropShape) {
+    const getTypeString = (valueType: PropValueType) =>
+      valueType === PropValueType.Record ? "Record<string, any>" : valueType;
     const interfaceName = `${this.componentName}Props`;
     const properties = Object.entries(propShape).map(([key, value]) => ({
       name: key,
-      type: value.type,
-      hasQuestionToken: true,
+      type: getTypeString(value.type),
+      hasQuestionToken: !value.required,
       ...(value.doc && { docs: [value.doc] }),
     }));
     this.studioSourceFileWriter.updateInterface(interfaceName, properties);
@@ -141,6 +143,7 @@ export default class ReactComponentFileWriter {
     cssImports,
     onFileUpdate,
     defaultImports,
+    destructuredProps,
   }: {
     componentTree: ComponentState[];
     fileMetadata?: FileMetadata;
@@ -149,6 +152,7 @@ export default class ReactComponentFileWriter {
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
     defaultImports?: { name: string; moduleSpecifier: string }[];
+    destructuredProps?: string[];
   }): void {
     let defaultExport: VariableDeclaration | FunctionDeclaration;
     try {
@@ -181,7 +185,8 @@ export default class ReactComponentFileWriter {
         this.updatePropInterface(propShape);
         this.studioSourceFileWriter.updateFunctionParameter(
           functionComponent,
-          `${this.componentName}Props`
+          `${this.componentName}Props`,
+          destructuredProps
         );
       }
     }

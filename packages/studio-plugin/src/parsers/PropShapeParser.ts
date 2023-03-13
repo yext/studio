@@ -48,52 +48,65 @@ export default class PropShapeParser {
     onProp?: (propName: string) => boolean
   ): PropShape {
     const propShape: PropShape = {};
-    Object.keys(parsedInterface).forEach((propName) => {
-      const prop = parsedInterface[propName];
-      if (prop.kind !== ParsedInterfaceKind.Simple) {
-        const nestedShape = this.transformParsedInterface(
-          prop.type,
-          interfaceName,
-          onProp
-        );
-        const propMetadata: PropMetadata = {
-          type: PropValueType.Object,
-          shape: nestedShape,
-        };
-        propShape[propName] = propMetadata;
-        return;
-      }
-      const { type, doc, unionValues } = prop;
-      if (onProp && !onProp(propName)) {
-        return;
-      }
-
-      if (!TypeGuards.isPropValueType(type) || type === PropValueType.Object) {
-        throw new Error(
-          `Unrecognized type ${type} in interface ${interfaceName}`
-        );
-      }
-      if (
-        !TypeGuards.isPrimitiveProp(type) &&
-        !this.studioImports.includes(type)
-      ) {
-        throw new Error(
-          `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
-        );
-      }
-      if (unionValues) {
-        propShape[propName] = {
-          type: PropValueType.string,
+    Object.keys(parsedInterface)
+      .filter((propName) => !onProp || onProp?.(propName))
+      .forEach((propName) => {
+        const prop = parsedInterface[propName];
+        if (prop.kind !== ParsedInterfaceKind.Simple) {
+          const nestedShape = this.transformParsedInterface(
+            prop.type,
+            interfaceName,
+            onProp
+          );
+          const propMetadata: PropMetadata = {
+            type: PropValueType.Object,
+            shape: nestedShape,
+          };
+          propShape[propName] = propMetadata;
+          return;
+        }
+        const { type, doc, unionValues } = prop;
+        const sharedProperties = {
           ...(doc && { doc }),
-          unionValues,
+          required: prop.required,
         };
-      } else {
-        propShape[propName] = {
-          type,
-          ...(doc && { doc }),
-        };
-      }
-    });
+        if (type === "Record<string, any>") {
+          propShape[propName] = {
+            type: PropValueType.Record,
+            keyType: "string",
+            valueType: "any",
+            ...sharedProperties,
+          };
+          return;
+        } else if (
+          !TypeGuards.isPropValueType(type) ||
+          type === PropValueType.Object
+        ) {
+          throw new Error(
+            `Unrecognized type ${type} in interface ${interfaceName}`
+          );
+        } else if (type == PropValueType.Record) {
+          throw new Error("Only Records of Record<string, any> are supported.");
+        } else if (
+          !TypeGuards.isPrimitiveProp(type) &&
+          !this.studioImports.includes(type)
+        ) {
+          throw new Error(
+            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
+          );
+        } else if (unionValues) {
+          propShape[propName] = {
+            type: PropValueType.string,
+            unionValues,
+            ...sharedProperties,
+          };
+        } else {
+          propShape[propName] = {
+            type,
+            ...sharedProperties,
+          };
+        }
+      });
     return propShape;
   }
 }

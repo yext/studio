@@ -18,7 +18,7 @@ describe("getComponentMetadata", () => {
       filepath: expect.stringContaining("ComponentFile/SimpleBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
-      propShape: { title: { type: "string" } },
+      propShape: { title: { type: "string", required: false } },
     });
   });
 
@@ -42,10 +42,10 @@ describe("getComponentMetadata", () => {
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Component,
       propShape: {
-        title: { type: PropValueType.string, doc: "jsdoc" },
-        num: { type: PropValueType.number },
-        bool: { type: PropValueType.boolean },
-        bgColor: { type: PropValueType.HexColor },
+        title: { type: PropValueType.string, doc: "jsdoc", required: false },
+        num: { type: PropValueType.number, required: false },
+        bool: { type: PropValueType.boolean, required: false },
+        bgColor: { type: PropValueType.HexColor, required: false },
       },
       initialProps: {
         bgColor: {

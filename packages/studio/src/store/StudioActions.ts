@@ -5,7 +5,9 @@ import {
   MessageID,
   ModuleMetadata,
   ModuleState,
+  PropValueKind,
   PropValues,
+  PropValueType,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
@@ -102,6 +104,16 @@ export default class StudioActions {
       ...componentState,
       parentUUID,
     };
+    if (updatedComponentState.kind === ComponentStateKind.Module) {
+      updatedComponentState.props = {
+        ...updatedComponentState.props,
+        document: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.Record,
+          value: "document",
+        },
+      };
+    }
 
     const tree = this.getComponentTree();
     if (!tree) {

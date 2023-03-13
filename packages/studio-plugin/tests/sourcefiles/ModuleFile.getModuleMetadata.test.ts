@@ -59,6 +59,7 @@ describe("getModuleMetadata", () => {
       propShape: {
         topLevelCardText: {
           type: PropValueType.string,
+          required: false,
         },
       },
       initialProps: {
@@ -127,6 +128,7 @@ describe("getModuleMetadata", () => {
       propShape: {
         topTileLabel: {
           type: PropValueType.string,
+          required: false,
         },
       },
       componentTree: [
@@ -187,6 +189,7 @@ describe("getModuleMetadata", () => {
       propShape: {
         cardText: {
           type: PropValueType.string,
+          required: false,
         },
       },
       componentTree: [

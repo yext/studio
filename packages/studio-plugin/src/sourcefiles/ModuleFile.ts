@@ -12,6 +12,7 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import getImportSpecifier from "../utils/getImportSpecifier";
+import { PropShape } from "../types";
 
 /**
  * ModuleFile is responsible for parsing and updating a single
@@ -88,6 +89,19 @@ export default class ModuleFile {
       componentTree: moduleMetadata.componentTree,
       fileMetadata: moduleMetadata,
       defaultImports,
+      destructuredProps: ModuleFile.calcDestructuredProps(
+        moduleMetadata.propShape
+      ),
     });
+  }
+
+  private static calcDestructuredProps(propShape: PropShape | undefined) {
+    if (!propShape?.hasOwnProperty("document")) {
+      return undefined;
+    }
+    if (Object.keys(propShape).length === 1) {
+      return ["document"];
+    }
+    return ["document", "...props"];
   }
 }

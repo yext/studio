@@ -4,6 +4,7 @@ import Container from "../components/Container";
 
 export interface ContainerWithButtonsProps {
   bannerTitle?: string;
+  document: Record<string, any>;
 }
 
 export default function ContainerWithButtons(props: ContainerWithButtonsProps) {

@@ -24,5 +24,11 @@ module.exports = {
         "@typescript-eslint/no-floating-promises": "off",
       },
     },
+    {
+      files: ["**/modules/*.tsx"],
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+      },
+    },
   ],
 };
