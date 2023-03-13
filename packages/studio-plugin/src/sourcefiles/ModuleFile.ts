@@ -69,24 +69,8 @@ export default class ModuleFile {
     return {
       kind: FileMetadataKind.Module,
       componentTree,
-      ...this.getCommonMetadata(),
+      ...this.fileMetadataParser.parse(),
       filepath: this.studioSourceFileParser.getFilepath(),
-    };
-  }
-
-  private getCommonMetadata(): Pick<
-    ModuleMetadata,
-    "metadataUUID" | "initialProps" | "propShape"
-  > {
-    const { propShape, ...otherMetadata } = this.fileMetadataParser.parse();
-    if (!propShape?.hasOwnProperty("document")) {
-      throw new Error(
-        "All Modules must contain a prop interface with a document prop."
-      );
-    }
-    return {
-      ...otherMetadata,
-      propShape,
     };
   }
 

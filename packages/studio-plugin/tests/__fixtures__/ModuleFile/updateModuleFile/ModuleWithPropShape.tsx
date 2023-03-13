@@ -5,6 +5,6 @@ export interface PanelProps {
   complexBannerText?: string;
 }
 
-export default function Panel(props: PanelProps) {
+export default function Panel() {
   return <ComplexBanner />;
 }

@@ -12,6 +12,6 @@ export const initialProps: PanelProps = {
   complexBannerBool: true,
 };
 
-export default function Panel(props: PanelProps) {
+export default function Panel() {
   return <ComplexBanner />;
 }
