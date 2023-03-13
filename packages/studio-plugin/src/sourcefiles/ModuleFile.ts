@@ -146,8 +146,8 @@ export default class ModuleFile {
     } else if (usesDocument) {
       return ["document"];
     } else if (usesProps) {
-      return ["props"];
+      return "props";
     }
-    return null;
+    return undefined;
   }
 }

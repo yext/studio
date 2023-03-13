@@ -180,13 +180,13 @@ export default class StudioSourceFileWriter {
   updateFunctionParameter(
     functionNode: FunctionDeclaration | ArrowFunction,
     type: string,
-    propArgs?: string[] | null,
+    propArgs?: string[] | string,
     index = 0
   ): void {
     functionNode.getParameters()[index]?.remove();
-    if (propArgs !== null) {
+    if (propArgs) {
       functionNode.insertParameter(index, {
-        name: propArgs ? `{ ${propArgs.join(", ")} }` : "props",
+        name: Array.isArray(propArgs) ? `{ ${propArgs.join(", ")} }` : propArgs,
         type,
       });
     }
