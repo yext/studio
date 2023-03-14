@@ -57,10 +57,8 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
         c.kind === ComponentStateKind.Module &&
         metadata.kind === FileMetadataKind.Module
       ) {
-        return Promise.all(
-          metadata.componentTree.map((c) =>
-            importComponent(c, newLoadedComponents)
-          )
+        return metadata.componentTree.map((c) =>
+          importComponent(c, newLoadedComponents)
         );
       }
       const importedModule = await import(/* @vite-ignore */ metadata.filepath);
