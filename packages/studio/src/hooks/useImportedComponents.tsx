@@ -57,7 +57,7 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
         c.kind === ComponentStateKind.Module &&
         metadata.kind === FileMetadataKind.Module
       ) {
-        await Promise.all(
+        return Promise.all(
           metadata.componentTree.map((c) =>
             importComponent(c, newLoadedComponents)
           )
