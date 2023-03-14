@@ -154,8 +154,7 @@ function renderComponent(
 
 /**
  * Dynamically load files that serve as expression sources for the
- * expressions in prop's value. Currently, Studio only support expression
- * value sourced from props, site settings file, or a Stream document.
+ * expressions in prop's value.
  */
 function useExpressionSources(): ExpressionSources {
   const [expressionSources, setExpressionSources] = useState<ExpressionSources>(
