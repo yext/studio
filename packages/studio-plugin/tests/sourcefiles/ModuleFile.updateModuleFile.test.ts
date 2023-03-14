@@ -1,7 +1,15 @@
 import fs from "fs";
 import { Project } from "ts-morph";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
-import { ComponentStateKind, FileMetadataKind, ModuleMetadata, PropValueKind, PropValues, PropValueType, PropShape } from "../../src/types";
+import {
+  ComponentStateKind,
+  FileMetadataKind,
+  ModuleMetadata,
+  PropValueKind,
+  PropValues,
+  PropValueType,
+  PropShape,
+} from "../../src/types";
 import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { complexBannerComponent } from "../__fixtures__/componentStates";
@@ -50,26 +58,28 @@ describe("updateModuleFile", () => {
       title: {
         kind: PropValueKind.Expression,
         valueType: PropValueType.string,
-        value: '`title - ${document.anything}`'
+        value: "`title - ${document.anything}`",
       },
-      parentNum: {
+      num: {
         kind: PropValueKind.Expression,
         valueType: PropValueType.number,
-        value: 'props.parentNum'
-      }
+        value: "props.parentNum",
+      },
     };
     const propShape: PropShape = {
       document: {
         type: PropValueType.Record,
         recordKey: "string",
         recordValue: "any",
-        required: true
+        required: true,
       },
       parentNum: {
-        type: PropValueType.number
-      }
-    }
-    moduleFile.updateModuleFile(createModuleMetadata(childPropValues, propShape));
+        type: PropValueType.number,
+      },
+    };
+    moduleFile.updateModuleFile(
+      createModuleMetadata(childPropValues, propShape)
+    );
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyModule.tsx"),
       fs.readFileSync(
@@ -80,7 +90,10 @@ describe("updateModuleFile", () => {
   });
 });
 
-function createModuleMetadata(childPropValues: PropValues, propShape: PropShape): ModuleMetadata {
+function createModuleMetadata(
+  childPropValues: PropValues,
+  propShape: PropShape
+): ModuleMetadata {
   return {
     kind: FileMetadataKind.Module,
     componentTree: [
@@ -90,10 +103,10 @@ function createModuleMetadata(childPropValues: PropValues, propShape: PropShape)
         props: childPropValues,
         uuid: "mock-uuid-0",
         metadataUUID: "complexbanner-metadata",
-      }
+      },
     ],
     metadataUUID: "mock-uuid",
     filepath: "mock-filepath",
     propShape,
-  }
+  };
 }

@@ -75,7 +75,7 @@ export default class ComponentTreeHelpers {
     });
     return { directChildren, otherNodes };
   }
-  
+
   /**
    * Checks whether the component tree uses a specific expression source, such
    * as `document` or `props`.
@@ -88,10 +88,10 @@ export default class ComponentTreeHelpers {
           (p): p is ExpressionProp => p.kind === PropValueKind.Expression
         )
       );
-    
+
     // This is used to create the regex: /\${source\..*}/
-    const regexStr = "\\${" + source + "\\..*}"
-    const templateStringRegex = new RegExp(regexStr)
+    const regexStr = "\\${" + source + "\\..*}";
+    const templateStringRegex = new RegExp(regexStr);
 
     return expressionProps.some((e) => {
       return (

@@ -12,13 +12,8 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import getImportSpecifier from "../utils/getImportSpecifier";
-import {
-  ComponentState,
-  ExpressionProp,
-  PropShape,
-  PropValueKind,
-} from "../types";
-import { ComponentTreeHelpers, TypeGuards } from "../utils";
+import { ComponentState } from "../types";
+import { ComponentTreeHelpers } from "../utils";
 
 /**
  * ModuleFile is responsible for parsing and updating a single
@@ -91,23 +86,24 @@ export default class ModuleFile {
         moduleSpecifier: getImportSpecifier(moduleMetadata.filepath, filepath),
       };
     });
-    const propArgs = ModuleFile.calcPropArgs(
-      moduleMetadata.componentTree
-    );
-    console.log({ propArgs })
+    const propArgs = ModuleFile.calcPropArgs(moduleMetadata.componentTree);
     this.reactComponentFileWriter.updateFile({
       componentTree: moduleMetadata.componentTree,
       fileMetadata: moduleMetadata,
       defaultImports,
-      propArgs
+      propArgs,
     });
   }
 
-  private static calcPropArgs(
-    componentTree: ComponentState[]
-  ) {
-    const usesDocument = ComponentTreeHelpers.usesExpressionSource(componentTree, "document");
-    const usesProps = ComponentTreeHelpers.usesExpressionSource(componentTree, "props");
+  private static calcPropArgs(componentTree: ComponentState[]) {
+    const usesDocument = ComponentTreeHelpers.usesExpressionSource(
+      componentTree,
+      "document"
+    );
+    const usesProps = ComponentTreeHelpers.usesExpressionSource(
+      componentTree,
+      "props"
+    );
 
     if (usesDocument && usesProps) {
       return ["document", "...props"];
