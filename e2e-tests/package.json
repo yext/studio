@@ -11,6 +11,6 @@
   "devDependencies": {
     "@playwright/test": "^1.31.2",
     "@yext/studio": "*",
-    "vite": "^4.1.4"
+    "vite": "^4.1.1"
   }
 }
