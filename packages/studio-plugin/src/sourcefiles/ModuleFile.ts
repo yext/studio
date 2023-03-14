@@ -18,7 +18,7 @@ import {
   PropShape,
   PropValueKind,
 } from "../types";
-import { TypeGuards } from "../utils";
+import { ComponentTreeHelpers, TypeGuards } from "../utils";
 
 /**
  * ModuleFile is responsible for parsing and updating a single
@@ -91,44 +91,23 @@ export default class ModuleFile {
         moduleSpecifier: getImportSpecifier(moduleMetadata.filepath, filepath),
       };
     });
+    const propArgs = ModuleFile.calcPropArgs(
+      moduleMetadata.componentTree
+    );
+    console.log({ propArgs })
     this.reactComponentFileWriter.updateFile({
       componentTree: moduleMetadata.componentTree,
       fileMetadata: moduleMetadata,
       defaultImports,
-      propArgs: ModuleFile.calcPropArgs(
-        moduleMetadata.propShape,
-        moduleMetadata.componentTree
-      ),
+      propArgs
     });
   }
 
   private static calcPropArgs(
-    propShape: PropShape | undefined,
     componentTree: ComponentState[]
   ) {
-    if (!propShape?.hasOwnProperty("document")) {
-      return undefined;
-    }
-    const expressionProps: ExpressionProp[] = componentTree
-      .filter(TypeGuards.isStandardOrModuleComponentState)
-      .flatMap((c) =>
-        Object.values(c.props).filter(
-          (p): p is ExpressionProp => p.kind === PropValueKind.Expression
-        )
-      );
-
-    const usesExpressionSource = (source: string) => {
-      return expressionProps.some((e) => {
-        return (
-          e.value === source ||
-          e.value.startsWith(source + ".") ||
-          e.value.match(new RegExp("${document..*}"))
-        );
-      });
-    };
-
-    const usesDocument = usesExpressionSource("document");
-    const usesProps = usesExpressionSource("props");
+    const usesDocument = ComponentTreeHelpers.usesExpressionSource(componentTree, "document");
+    const usesProps = ComponentTreeHelpers.usesExpressionSource(componentTree, "props");
 
     if (usesDocument && usesProps) {
       return ["document", "...props"];

@@ -1,4 +1,5 @@
-import { ComponentState } from "../types";
+import { ComponentState, ExpressionProp, PropValueKind } from "../types";
+import TypeGuards from "./TypeGuards";
 
 /**
  * A static class for housing various util functions related to component state used by Studio.
@@ -73,5 +74,31 @@ export default class ComponentTreeHelpers {
       }
     });
     return { directChildren, otherNodes };
+  }
+  
+  /**
+   * Checks whether the component tree uses a specific expression source, such
+   * as `document` or `props`.
+   */
+  static usesExpressionSource(componentTree: ComponentState[], source: string) {
+    const expressionProps: ExpressionProp[] = componentTree
+      .filter(TypeGuards.isStandardOrModuleComponentState)
+      .flatMap((c) =>
+        Object.values(c.props).filter(
+          (p): p is ExpressionProp => p.kind === PropValueKind.Expression
+        )
+      );
+    
+    // This is used to create the regex: /\${source\..*}/
+    const regexStr = "\\${" + source + "\\..*}"
+    const templateStringRegex = new RegExp(regexStr)
+
+    return expressionProps.some((e) => {
+      return (
+        e.value === source ||
+        e.value.startsWith(source + ".") ||
+        e.value.match(templateStringRegex)
+      );
+    });
   }
 }

@@ -25,8 +25,9 @@ export default function HighlightedPreview() {
     <>
       <ComponentTreePreview
         componentTree={componentTree}
-        props={props}
+        parentProps={props}
         propShape={propShape}
+        isModule={!!moduleStateBeingEdited}
       />
       <Highlighter />
     </>
