@@ -97,7 +97,8 @@ export default class ComponentTreeHelpers {
       return (
         e.value === source ||
         e.value.startsWith(source + ".") ||
-        e.value.match(templateStringRegex)
+        e.value.match(templateStringRegex) ||
+        e.value.includes("${" + source + "}")
       );
     });
   }

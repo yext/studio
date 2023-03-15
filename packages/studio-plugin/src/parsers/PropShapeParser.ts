@@ -49,7 +49,7 @@ export default class PropShapeParser {
   ): PropShape {
     const propShape: PropShape = {};
     Object.keys(parsedInterface)
-      .filter((propName) => !onProp || onProp?.(propName))
+      .filter((propName) => !onProp || onProp(propName))
       .forEach((propName) => {
         const prop = parsedInterface[propName];
         if (prop.kind !== ParsedInterfaceKind.Simple) {
@@ -61,6 +61,7 @@ export default class PropShapeParser {
           const propMetadata: PropMetadata = {
             type: PropValueType.Object,
             shape: nestedShape,
+            required: prop.required,
           };
           propShape[propName] = propMetadata;
           return;

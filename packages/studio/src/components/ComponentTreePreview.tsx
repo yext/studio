@@ -8,7 +8,6 @@ import {
   PropValues,
   ComponentState,
   transformPropValuesToRaw,
-  PropShape,
   FileMetadata,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
@@ -21,9 +20,7 @@ import HighlightingContainer from "./HighlightingContainer";
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   parentProps?: PropValues;
-  propShape?: PropShape;
   renderHighlightingContainer?: boolean;
-  isModule?: boolean;
 }
 
 /**
@@ -120,10 +117,8 @@ function renderComponent(
         <ComponentTreePreview
           componentTree={metadata.componentTree}
           parentProps={c.props}
-          propShape={metadata.propShape}
           renderHighlightingContainer={false}
           key={c.uuid}
-          isModule={true}
         />
       );
     } else if (!UUIDToImportedComponent[c.metadataUUID]) {

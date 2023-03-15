@@ -19,7 +19,7 @@ export type PropMetadata<T extends PropValueType = PropValueType> = (
   | StringUnionMetadata
   | (PropValueType.Record extends T ? RecordMetadata : never)
 ) & {
-  required?: boolean;
+  required: boolean;
 };
 
 type NonUnionMetadata<T> = {

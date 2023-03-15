@@ -60,6 +60,7 @@ describe("getSiteSettings", () => {
       shape: {
         "Global Color Style": {
           type: PropValueType.Object,
+          required: false,
           shape: {
             "Primary Theme": {
               type: PropValueType.HexColor,
