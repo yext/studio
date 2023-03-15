@@ -1,4 +1,4 @@
-import { ComponentStateKind } from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 
 export default function useActiveComponentName() {
@@ -9,9 +9,15 @@ export default function useActiveComponentName() {
   if (!activeState) {
     return undefined;
   }
-  if (activeState.kind === ComponentStateKind.Fragment) {
+  getComponentName(activeState);
+}
+
+export function getComponentName(componentState: ComponentState) {
+  if (componentState.kind === ComponentStateKind.Fragment) {
     return "Fragment";
+  } else if (componentState.kind === ComponentStateKind.Repeater) {
+    return `List (${componentState.repeatedComponent.componentName})`;
   } else {
-    return activeState.componentName;
+    return componentState.componentName;
   }
 }

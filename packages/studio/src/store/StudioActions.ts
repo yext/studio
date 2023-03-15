@@ -6,6 +6,8 @@ import {
   ModuleMetadata,
   ModuleState,
   PropValues,
+  RepeaterState,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
@@ -65,6 +67,32 @@ export default class StudioActions {
         activePageName,
         activeComponentUUID,
         props
+      );
+    }
+  };
+
+  updateRepeaterList = (listField: string) => {
+    const { activeComponentUUID, activePageName, getModuleStateBeingEdited } =
+      this.getPages();
+    if (!activeComponentUUID) {
+      console.error(
+        "Error in updateActiveComponentProps: No active component in this.get()."
+      );
+      return;
+    }
+
+    const moduleStateBeingEdited = getModuleStateBeingEdited();
+    if (moduleStateBeingEdited) {
+      this.getFileMetadatas().setRepeaterListInModule(
+        moduleStateBeingEdited.metadataUUID,
+        activeComponentUUID,
+        listField
+      );
+    } else if (activePageName) {
+      this.getPages().setRepeaterList(
+        activePageName,
+        activeComponentUUID,
+        listField
       );
     }
   };
@@ -134,6 +162,59 @@ export default class StudioActions {
     if (this.getPages().activeComponentUUID === componentUUID) {
       this.getPages().setActiveComponentUUID(undefined);
     }
+  };
+
+  addRepeater = (componentUUID: string) => {
+    const currentComponentTree = this.getComponentTree();
+    if (!currentComponentTree) {
+      return;
+    }
+    const updatedComponentTree = currentComponentTree.flatMap(
+      (componentState) => {
+        if (componentState.uuid !== componentUUID) {
+          return componentState;
+        }
+        if (!TypeGuards.isStandardOrModuleComponentState(componentState)) {
+          throw new Error(
+            "Error in addRepeater: Only components and modules can be repeated."
+          );
+        }
+        const repeaterState: RepeaterState = {
+          kind: ComponentStateKind.Repeater,
+          uuid: componentState.uuid,
+          parentUUID: componentState.parentUUID,
+          repeatedComponent: componentState,
+          listField: "",
+        };
+        return repeaterState;
+      }
+    );
+    this.updateComponentTree(updatedComponentTree);
+  };
+
+  removeRepeater = (componentUUID: string) => {
+    const currentComponentTree = this.getComponentTree();
+    if (!currentComponentTree) {
+      return;
+    }
+    const updatedComponentTree = currentComponentTree.flatMap(
+      (componentState) => {
+        if (componentState.uuid !== componentUUID) {
+          return componentState;
+        }
+        if (componentState.kind !== ComponentStateKind.Repeater) {
+          throw new Error(
+            "Error in removeRepeater: Component is not a Repeater."
+          );
+        }
+        return {
+          ...componentState.repeatedComponent,
+          uuid: componentState.uuid,
+          parentUUID: componentState.parentUUID,
+        };
+      }
+    );
+    this.updateComponentTree(updatedComponentTree);
   };
 
   /**

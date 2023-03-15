@@ -18,6 +18,7 @@ import {
   PropertySignature,
   PropertyAssignment,
   UnionTypeNode,
+  JsxExpression,
 } from "ts-morph";
 import {
   PropValueKind,
@@ -240,7 +241,7 @@ export default class StaticParsingHelpers {
   static parseJsxChild<T>(
     c: JsxChild,
     handleJsxChild: (
-      c: JsxFragment | JsxElement | JsxSelfClosingElement,
+      c: JsxFragment | JsxElement | JsxSelfClosingElement | JsxExpression,
       parent: T | undefined
     ) => T,
     parent?: T
@@ -253,15 +254,13 @@ export default class StaticParsingHelpers {
         );
       }
       return [];
-    } else if (c.isKind(SyntaxKind.JsxExpression)) {
-      throw new Error(
-        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`
-      );
     }
-
     const self: T = handleJsxChild(c, parent);
 
-    if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
+    if (
+      c.isKind(SyntaxKind.JsxSelfClosingElement) ||
+      c.isKind(SyntaxKind.JsxExpression)
+    ) {
       return [self];
     }
 
@@ -270,6 +269,75 @@ export default class StaticParsingHelpers {
       .flatMap((child) => this.parseJsxChild(child, handleJsxChild, self))
       .filter((child): child is T => !!child);
     return [self, ...children];
+  }
+
+  static parseJsxExpression(c: JsxExpression): {
+    selfClosingElement: JsxSelfClosingElement;
+    listField: string;
+  } {
+    const propertyAccess = c.getFirstDescendantByKind(
+      SyntaxKind.PropertyAccessExpression
+    );
+    const finalPropertyAccessIdentifier = propertyAccess?.getLastChildByKind(
+      SyntaxKind.Identifier
+    );
+    if (
+      !propertyAccess ||
+      !finalPropertyAccessIdentifier ||
+      finalPropertyAccessIdentifier.getText() !== "map"
+    ) {
+      throw new Error(
+        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use` +
+          " in page files except for `map` function expressions."
+      );
+    }
+    const listField = TsMorphHelpers.getFirstChildOfKindOrThrow(
+      propertyAccess,
+      SyntaxKind.PropertyAccessExpression,
+      SyntaxKind.Identifier
+    ).getText();
+    const arrowFunction = c.getFirstDescendantByKindOrThrow(
+      SyntaxKind.ArrowFunction
+    );
+    const itemText = arrowFunction
+      .getFirstDescendantByKind(SyntaxKind.SyntaxList)
+      ?.getFirstChildByKind(SyntaxKind.Parameter)
+      ?.getFirstChildByKind(SyntaxKind.Identifier)
+      ?.getText();
+    if (itemText && itemText !== "item") {
+      throw new Error(
+        `Error parsing map expression: name of item being mapped must be "item". Found ${itemText}.`
+      );
+    }
+    const functionBody = TsMorphHelpers.getLastChildOfKindOrThrow(
+      arrowFunction,
+      SyntaxKind.ParenthesizedExpression,
+      SyntaxKind.JsxSelfClosingElement,
+      SyntaxKind.Block
+    );
+    let selfClosingElement: JsxSelfClosingElement;
+    if (functionBody.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      selfClosingElement = functionBody;
+    } else if (functionBody.isKind(SyntaxKind.ParenthesizedExpression)) {
+      const unwrappedExp = this.unwrapParensExpression(functionBody);
+      selfClosingElement = unwrappedExp.getFirstChildByKindOrThrow(
+        SyntaxKind.JsxSelfClosingElement
+      );
+    } else {
+      const returnStatement = functionBody.getFirstDescendantByKindOrThrow(
+        SyntaxKind.ReturnStatement
+      );
+      const parensExpression = returnStatement.getFirstChildByKind(
+        SyntaxKind.ParenthesizedExpression
+      );
+      const jsxNodeWrapper = parensExpression
+        ? this.unwrapParensExpression(parensExpression)
+        : returnStatement;
+      selfClosingElement = jsxNodeWrapper.getFirstChildByKindOrThrow(
+        SyntaxKind.JsxSelfClosingElement
+      );
+    }
+    return { selfClosingElement, listField };
   }
 
   static parseJsxAttributes(

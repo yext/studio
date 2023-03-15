@@ -61,6 +61,11 @@ interface PageSliceActions {
     componentUUID: string,
     props: PropValues
   ) => void;
+  setRepeaterList: (
+    pageName: string,
+    componentUUID: string,
+    listField: string
+  ) => void;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 

@@ -3,7 +3,8 @@ import { PropValues } from "./PropValues";
 export type ComponentState =
   | StandardOrModuleComponentState
   | FragmentState
-  | BuiltInState;
+  | BuiltInState
+  | RepeaterState;
 
 export type StandardOrModuleComponentState =
   | StandardComponentState
@@ -14,7 +15,23 @@ export enum ComponentStateKind {
   Module = "module",
   Fragment = "fragment", // when the component is a React.Fragment,
   BuiltIn = "builtIn", // for built in elements like div and img
+  Repeater = "repeater", // for a list repeater (map function)
 }
+
+export type RepeaterState = {
+  kind: ComponentStateKind.Repeater;
+  /** A stream document field representing the list of items to map over. */
+  listField: string;
+  /** The state for the component being repeated in the map function. */
+  repeatedComponent: Omit<
+    StandardOrModuleComponentState,
+    "uuid" | "parentUUID"
+  >;
+  /** A unique UUID for this specific component instance. */
+  uuid: string;
+  /** The UUID of the parent component in the tree, if one exists. */
+  parentUUID?: string;
+};
 
 export type StandardComponentState = {
   kind: ComponentStateKind.Standard;

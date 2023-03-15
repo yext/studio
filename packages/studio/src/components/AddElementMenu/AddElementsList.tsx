@@ -2,6 +2,7 @@ import {
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
+  StandardOrModuleComponentState,
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import { v4 } from "uuid";
@@ -80,7 +81,7 @@ function Option({
 
   const addElement = useCallback(
     (componentName: string) => {
-      const componentState = {
+      const componentState: StandardOrModuleComponentState = {
         kind:
           metadata.kind === FileMetadataKind.Module
             ? ComponentStateKind.Module

@@ -86,7 +86,34 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           return;
         }
 
-        matchingComponent.props = props;
+        if (matchingComponent.kind === ComponentStateKind.Repeater) {
+          matchingComponent.repeatedComponent.props = props;
+        } else {
+          matchingComponent.props = props;
+        }
+        store.pendingChanges.pagesToUpdate.add(pageName);
+      });
+    },
+    setRepeaterList: (
+      pageName: string,
+      componentUUID: string,
+      listField: string
+    ) => {
+      set((store) => {
+        const components = store.pages[pageName].componentTree;
+        const matchingComponent = components.find(
+          (c) => c.uuid === componentUUID
+        );
+        if (!matchingComponent) {
+          throw new Error("Could not find component.");
+        }
+        if (matchingComponent.kind !== ComponentStateKind.Repeater) {
+          console.error(
+            "Error in setComponentProps: The active component is not a Repeater."
+          );
+          return;
+        }
+        matchingComponent.listField = listField;
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },

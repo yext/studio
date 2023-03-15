@@ -80,7 +80,33 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
           "Cannot update props for BuiltIn or Fragment components."
         );
       }
+      if (componentState.kind === ComponentStateKind.Repeater) {
+        componentState.repeatedComponent.props = props;
+        return;
+      }
       componentState.props = props;
+    });
+  },
+  setRepeaterListInModule: (
+    metadataUUID: string,
+    componentUUID: string,
+    listField: string
+  ) => {
+    set((store) => {
+      const fileMetadata = store.UUIDToFileMetadata[metadataUUID];
+      assertIsModuleMetadata(fileMetadata);
+      const componentState = fileMetadata.componentTree.find(
+        (c) => c.uuid === componentUUID
+      );
+      if (!componentState) {
+        throw new Error(`Could not find componentState ${componentUUID}.`);
+      } else if (componentState.kind !== ComponentStateKind.Repeater) {
+        console.error(
+          "Error in setComponentProps: The active component is not a Repeater."
+        );
+        return;
+      }
+      componentState.listField = listField;
     });
   },
   getComponentStateInsideModule(metadataUUID: string, componentUUID: string) {

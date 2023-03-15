@@ -11,7 +11,10 @@ import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadat
 import PropEditor from "./PropEditor";
 
 export default function PropEditors(props: {
-  activeComponentState: StandardOrModuleComponentState;
+  activeComponentState: Omit<
+    StandardOrModuleComponentState,
+    "uuid" | "parentUUID"
+  >;
   propShape: PropShape;
   propKind: PropValueKind;
   shouldRenderProp?: (propMetadata: PropMetadata) => boolean;

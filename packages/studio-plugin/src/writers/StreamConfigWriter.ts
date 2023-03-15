@@ -41,8 +41,18 @@ export default class StreamConfigWriter {
       if (component.kind === ComponentStateKind.Fragment) {
         return;
       }
-      Object.keys(component.props).forEach((propName) => {
-        const { value, kind } = component.props[propName];
+      if (
+        component.kind === ComponentStateKind.Repeater &&
+        TypeGuards.isStreamsDataExpression(component.listField)
+      ) {
+        streamDataExpressions.add(component.listField);
+      }
+      const props =
+        component.kind === ComponentStateKind.Repeater
+          ? component.repeatedComponent.props
+          : component.props;
+      Object.keys(props).forEach((propName) => {
+        const { value, kind } = props[propName];
         if (kind !== PropValueKind.Expression) {
           return;
         }

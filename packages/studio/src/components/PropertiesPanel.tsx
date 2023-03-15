@@ -32,7 +32,11 @@ export default function PropertiesPanel(): JSX.Element | null {
     <div>
       {renderModuleActions(activeComponentMetadata, activeComponentState)}
       <PropEditors
-        activeComponentState={activeComponentState}
+        activeComponentState={
+          activeComponentState.kind === ComponentStateKind.Repeater
+            ? activeComponentState.repeatedComponent
+            : activeComponentState
+        }
         propShape={propShape}
         propKind={PropValueKind.Literal}
         shouldRenderProp={shouldRenderProp}

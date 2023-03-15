@@ -13,6 +13,7 @@ import {
 } from "@minoru/react-dnd-treeview";
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { useCallback, useMemo, useState } from "react";
+import { getComponentName } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
 
@@ -147,10 +148,7 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
         data: componentState,
-        text:
-          componentState.kind === ComponentStateKind.Fragment
-            ? "Fragment"
-            : componentState.componentName,
+        text: getComponentName(componentState),
       };
       switch (componentState.kind) {
         case ComponentStateKind.Fragment:
@@ -158,6 +156,11 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
           return {
             ...commonData,
             droppable: true,
+          };
+        case ComponentStateKind.Repeater:
+          return {
+            ...commonData,
+            droppable: false,
           };
         case ComponentStateKind.Module:
           return {

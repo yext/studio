@@ -23,7 +23,7 @@ import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 export function getPreviewProps(
   props: PropValues,
   propShape: PropShape,
-  expressionSources: Record<string, Record<string, unknown>>
+  expressionSources: Record<string, unknown>
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
@@ -71,7 +71,7 @@ export function getPreviewProps(
 function getTemplateStringValue(
   templateString: string,
   propType: PropValueType,
-  expressionSources: Record<string, Record<string, unknown>>
+  expressionSources: Record<string, unknown>
 ): string {
   const templateStringWithoutBacktiks = templateString.substring(
     1,
@@ -105,7 +105,7 @@ function getTemplateStringValue(
 function getExpressionValue(
   expression: string,
   propType: PropValueType,
-  expressionSources: Record<string, Record<string, unknown>>
+  expressionSources: Record<string, unknown>
 ): string | number | boolean | null | Record<string, unknown> {
   function getValueFromPath(path: string, parentPath: string) {
     const sourceObject = expressionSources[parentPath];
@@ -143,6 +143,9 @@ function getExpressionValue(
   }
   if (expression.startsWith("props.")) {
     return getValueFromPath(expression, "props");
+  }
+  if (expression.startsWith("item")) {
+    return getValueFromPath(expression, "item");
   }
   return null;
 }

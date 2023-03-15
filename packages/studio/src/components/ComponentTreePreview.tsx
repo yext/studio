@@ -9,6 +9,7 @@ import {
   ComponentState,
   transformPropValuesToRaw,
   PropShape,
+  RepeaterState,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
@@ -16,6 +17,7 @@ import { getPreviewProps } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import HighlightingContainer from "./HighlightingContainer";
+import { get } from "lodash";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
@@ -76,26 +78,50 @@ function useComponentTreeElements(
       } else if (c.kind === ComponentStateKind.BuiltIn) {
         element = c.componentName;
       } else {
-        const metadata = UUIDToFileMetadata[c.metadataUUID];
+        const { metadataUUID, props, componentName } =
+          c.kind === ComponentStateKind.Repeater ? c.repeatedComponent : c;
+        const metadata = UUIDToFileMetadata[metadataUUID];
         if (metadata && metadata.kind === FileMetadataKind.Module) {
+          if (c.kind === ComponentStateKind.Repeater) {
+            return renderListRepeater(c, expressionSources, (_, key) => (
+              <ComponentTreePreview
+                componentTree={metadata.componentTree}
+                props={props}
+                propShape={metadata.propShape}
+                isWithinModule={true}
+                key={key}
+              />
+            ));
+          }
           return (
             <ComponentTreePreview
               componentTree={metadata.componentTree}
-              props={c.props}
+              props={props}
               propShape={metadata.propShape}
               isWithinModule={true}
               key={c.uuid}
             />
           );
-        } else if (!UUIDToImportedComponent[c.metadataUUID]) {
+        } else if (!UUIDToImportedComponent[metadataUUID]) {
           console.warn(
-            `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
+            `Expected to find component loaded for ${componentName} but none found - possibly due to a race condition.`
           );
           return null;
         }
-        element = UUIDToImportedComponent[c.metadataUUID];
+        element = UUIDToImportedComponent[metadataUUID];
       }
 
+      if (c.kind === ComponentStateKind.Repeater) {
+        return renderListRepeater(c, expressionSources, (item, key) => {
+          const previewProps = getPreviewProps(
+            c.repeatedComponent.props,
+            UUIDToFileMetadata[c.repeatedComponent.metadataUUID].propShape ??
+              {},
+            { ...expressionSources, item }
+          );
+          return createElement(element, { ...previewProps, key });
+        });
+      }
       const previewProps = TypeGuards.isStandardOrModuleComponentState(c)
         ? getPreviewProps(
             c.props,
@@ -136,6 +162,21 @@ function useComponentTreeElements(
     componentTree,
     isWithinModule,
   ]);
+}
+
+function renderListRepeater(
+  repeaterState: RepeaterState,
+  expressionSources: Record<string, unknown>,
+  renderRepeatedElement: (item: unknown, key: number | string) => JSX.Element
+): JSX.Element | null {
+  const list = get(expressionSources, repeaterState.listField) as unknown;
+  if (!Array.isArray(list)) {
+    console.warn(
+      `Unable to render list repeater. Expected ${repeaterState.listField} to be an array.`
+    );
+    return null;
+  }
+  return <>{list.map(renderRepeatedElement)}</>;
 }
 
 /**
