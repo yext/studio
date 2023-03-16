@@ -19,8 +19,6 @@ import {
   PropertyAssignment,
   UnionTypeNode,
   JsxExpression,
-  ReturnStatement,
-  ArrowFunction,
 } from "ts-morph";
 import {
   PropValueKind,
@@ -30,6 +28,7 @@ import {
 import { PropShape, SpecialReactProps } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
+import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
 
 export enum ParsedInterfaceKind {
   Simple = "simple",
@@ -292,89 +291,7 @@ export default class StaticParsingHelpers {
           " in page files except for `map` function expressions."
       );
     }
-    return this.parseMapExpression(c);
-  }
-
-  private static parseMapExpression(c: JsxExpression): {
-    selfClosingElement: JsxSelfClosingElement;
-    listExpression: string;
-  } {
-    const arrowFunction = c.getFirstDescendantByKindOrThrow(
-      SyntaxKind.ArrowFunction
-    );
-    const itemText = arrowFunction
-      .getFirstDescendantByKind(SyntaxKind.SyntaxList)
-      ?.getFirstChildByKind(SyntaxKind.Parameter)
-      ?.getFirstChildByKind(SyntaxKind.Identifier)
-      ?.getText();
-    if (itemText && itemText !== "item") {
-      throw new Error(
-        `Error parsing map expression: name of item being mapped must be "item". Found ${itemText}.`
-      );
-    }
-
-    const selfClosingElement = this.parseMapFunctionBody(arrowFunction);
-    const listExpression = this.parseMapListExpression(c);
-
-    return { selfClosingElement, listExpression };
-  }
-
-  private static parseMapFunctionBody(
-    arrowFunction: ArrowFunction
-  ): JsxSelfClosingElement {
-    const functionBody = TsMorphHelpers.getLastChildOfKindOrThrow(
-      arrowFunction,
-      SyntaxKind.ParenthesizedExpression,
-      SyntaxKind.JsxSelfClosingElement,
-      SyntaxKind.Block
-    );
-
-    function getSelfClosingErrorText(
-      exp: ParenthesizedExpression | ReturnStatement
-    ) {
-      return (
-        "Error parsing map expression: function must return a single" +
-        "self-closing JSX element with no children." +
-        `Found ${exp.getText()}.`
-      );
-    }
-
-    let selfClosingElement: JsxSelfClosingElement;
-    if (functionBody.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      selfClosingElement = functionBody;
-    } else if (functionBody.isKind(SyntaxKind.ParenthesizedExpression)) {
-      const unwrappedExp = this.unwrapParensExpression(functionBody);
-      selfClosingElement = unwrappedExp.getFirstChildByKindOrThrow(
-        SyntaxKind.JsxSelfClosingElement,
-        getSelfClosingErrorText(unwrappedExp)
-      );
-    } else {
-      const returnStatement = functionBody.getFirstDescendantByKindOrThrow(
-        SyntaxKind.ReturnStatement
-      );
-      const parensExpression = returnStatement.getFirstChildByKind(
-        SyntaxKind.ParenthesizedExpression
-      );
-      const jsxNodeWrapper = parensExpression
-        ? this.unwrapParensExpression(parensExpression)
-        : returnStatement;
-      selfClosingElement = jsxNodeWrapper.getFirstChildByKindOrThrow(
-        SyntaxKind.JsxSelfClosingElement,
-        getSelfClosingErrorText(jsxNodeWrapper)
-      );
-    }
-    return selfClosingElement;
-  }
-
-  private static parseMapListExpression(c: JsxExpression): string {
-    const propertyAccess = c.getFirstDescendantByKindOrThrow(
-      SyntaxKind.PropertyAccessExpression
-    );
-    return TsMorphHelpers.getFirstChildOfKindOrThrow(
-      propertyAccess,
-      SyntaxKind.PropertyAccessExpression,
-      SyntaxKind.Identifier
-    ).getText();
+    return RepeaterParsingHelpers.parseMapExpression(c);
   }
 
   static parseJsxAttributes(
