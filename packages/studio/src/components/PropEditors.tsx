@@ -70,7 +70,7 @@ export default function PropEditors(props: {
 function renderNoEditableProps(componentName: string) {
   return (
     <div className="text-sm bg-gray-100 p-4 border text-gray-500 rounded-lg text-center mb-2">
-      {`${componentName} has no Editable Properties in this Panel.`}
+      {componentName} has no Editable Properties in this Panel.
     </div>
   );
 }

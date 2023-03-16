@@ -10,6 +10,7 @@ import {
   ExpressionProp,
 } from "@yext/studio-plugin";
 import { get } from "lodash";
+import ExpressionFormatter from "./ExpressionFormatter";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 
 /**
@@ -94,11 +95,7 @@ function getTemplateStringValue(
   expressionSources: ExpressionSources,
   parentProps: PropValues
 ): string {
-  const templateStringWithoutBacktiks = templateString.substring(
-    1,
-    templateString.length - 1
-  );
-  return templateStringWithoutBacktiks.replaceAll(
+  const hydratedString = templateString.replaceAll(
     TEMPLATE_STRING_EXPRESSION_REGEX,
     (...args) => {
       const expressionVal = getExpressionValue(
@@ -113,6 +110,7 @@ function getTemplateStringValue(
       return args[0];
     }
   );
+  return ExpressionFormatter.getTemplateStringDisplayValue(hydratedString);
 }
 
 /**
@@ -152,8 +150,7 @@ function getExpressionValue(
       );
       return null;
     }
-    const newPropValue =
-      (get({ [parentPath]: sourceObject }, path) as unknown) ?? path;
+    const newPropValue = get({ [parentPath]: sourceObject }, path) as unknown;
     const propVal = createPropVal(newPropValue);
     if (!propVal) {
       console.warn(

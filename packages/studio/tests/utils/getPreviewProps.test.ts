@@ -195,6 +195,20 @@ describe("template string literal value handling", () => {
   });
 });
 
+it("converts expressions using streams data into bracket syntax", () => {
+  const transformedProps = transformFooProp("`${document.someField}`");
+  expect(transformedProps).toEqual({
+    foo: "[[someField]]",
+  });
+});
+
+it("applies expression sources for streams data", () => {
+  const transformedProps = transformFooProp("`${document.name}`");
+  expect(transformedProps).toEqual({
+    foo: "office space",
+  });
+});
+
 function transformFooProp(value: string, parentProps: PropValues = {}) {
   return getPreviewProps(
     {
