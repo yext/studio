@@ -8,7 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
-import { mockTree } from "../../__utils__/mockTree";
+import { mockActivePageTree } from "../../__utils__/mockActivePageTree";
 
 const initialTree: ComponentState[] = [
   {
@@ -81,7 +81,7 @@ beforeEach(() => {
 
 describe("adds components to ModuleMetadata when a module is being edited", () => {
   beforeEach(() => {
-    mockTree(
+    mockActivePageTree(
       [
         {
           kind: ComponentStateKind.Module,
@@ -104,7 +104,7 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
 
 describe("adds components to the active PageState when no module is being edited", () => {
   beforeEach(() => {
-    mockTree(initialTree);
+    mockActivePageTree(initialTree);
   });
 
   insertionOrderTestSuite(() => {
