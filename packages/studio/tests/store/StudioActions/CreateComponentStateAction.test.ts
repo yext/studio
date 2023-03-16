@@ -30,16 +30,16 @@ it("creates the expected component state", () => {
 });
 
 describe("isPagesJSRepo behavior", () => {
+  const moduleMetadata: ModuleMetadata = {
+    kind: FileMetadataKind.Module,
+    filepath: "./ModuleLol.tsx",
+    componentTree: [],
+    metadataUUID: "unused",
+  };
   it("adds document prop to modules when isPageJSRepo = true", () => {
     useStudioStore.setState((state) => {
       state.studioConfig.isPagesJSRepo = true;
     });
-    const moduleMetadata: ModuleMetadata = {
-      kind: FileMetadataKind.Module,
-      filepath: "./ModuleLol.tsx",
-      componentTree: [],
-      metadataUUID: "unused",
-    };
     const actualState = useStudioStore
       .getState()
       .actions.createComponentState(moduleMetadata);
@@ -53,6 +53,21 @@ describe("isPagesJSRepo behavior", () => {
             valueType: PropValueType.Record,
           },
         },
+      })
+    );
+  });
+
+  it("doesn't add document prop to modules when isPageJSRepo = false", () => {
+    useStudioStore.setState((state) => {
+      state.studioConfig.isPagesJSRepo = false;
+    });
+    const actualState = useStudioStore
+      .getState()
+      .actions.createComponentState(moduleMetadata);
+
+    expect(actualState).toEqual(
+      expect.objectContaining({
+        props: {},
       })
     );
   });

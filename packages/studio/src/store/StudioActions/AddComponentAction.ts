@@ -1,9 +1,4 @@
-import {
-  ComponentMetadata,
-  ComponentState,
-  ModuleMetadata,
-  TypeGuards,
-} from "@yext/studio-plugin";
+import { ComponentState, FileMetadata, TypeGuards } from "@yext/studio-plugin";
 import StudioActions from "../StudioActions";
 
 export default class AddComponentAction {
@@ -12,10 +7,9 @@ export default class AddComponentAction {
   /**
    * Adds the component to the current active component tree.
    */
-  addComponent = (metadata: ComponentMetadata | ModuleMetadata) => {
-    const updatedComponentState =
-      this.studioActions.createComponentState(metadata);
-    return this.insertComponentState(updatedComponentState);
+  addComponent = (metadata: FileMetadata) => {
+    const componentState = this.studioActions.createComponentState(metadata);
+    return this.insertComponentState(componentState);
   };
 
   /**
@@ -26,13 +20,13 @@ export default class AddComponentAction {
     const activeComponentState = this.studioActions.getActiveComponentState();
     const activeComponentMetadata =
       this.studioActions.getComponentMetadata(activeComponentState);
-    const acceptsChildren = TypeGuards.canAcceptChildren(
+    const activeComponentAcceptsChildren = TypeGuards.canAcceptChildren(
       activeComponentState,
       activeComponentMetadata
     );
     const updatedComponentState = {
       ...componentState,
-      parentUUID: acceptsChildren
+      parentUUID: activeComponentAcceptsChildren
         ? activeComponentState?.uuid
         : activeComponentState?.parentUUID,
     };
@@ -43,7 +37,9 @@ export default class AddComponentAction {
     const activeComponentIndex = tree.findIndex(
       (c) => c.uuid === activeComponentState?.uuid
     );
-    const insertionIndex = acceptsChildren ? 0 : activeComponentIndex + 1;
+    const insertionIndex = activeComponentAcceptsChildren
+      ? 0
+      : activeComponentIndex + 1;
     const updatedTree = [...tree];
     updatedTree.splice(insertionIndex, 0, updatedComponentState);
     return this.studioActions.updateComponentTree(updatedTree);

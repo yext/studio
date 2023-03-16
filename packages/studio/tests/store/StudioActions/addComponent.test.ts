@@ -8,6 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
+import { mockTree } from "../../__utils__/mockTree";
 
 const initialTree: ComponentState[] = [
   {
@@ -103,7 +104,7 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
 
 describe("adds components to the active PageState when no module is being edited", () => {
   beforeEach(() => {
-    mockTree();
+    mockTree(initialTree);
   });
 
   insertionOrderTestSuite(() => {
@@ -127,6 +128,15 @@ function insertionOrderTestSuite(
     props: {},
     metadataUUID: "unused",
   };
+
+  it("puts new component at start when no active component", () => {
+    useStudioStore.getState().actions.addComponent(componentMetadata);
+    expect(getExpectedObject()).toEqual(
+      expect.objectContaining({
+        componentTree: [newComponentState, ...initialTree],
+      })
+    );
+  });
 
   it("puts new component at start if container is active component", () => {
     useStudioStore
@@ -199,21 +209,5 @@ function insertionOrderTestSuite(
         ],
       })
     );
-  });
-}
-
-function mockTree(componentTree = initialTree, moduleUUIDBeingEdited?: string) {
-  mockStore({
-    pages: {
-      moduleUUIDBeingEdited,
-      activePageName: "pagename",
-      pages: {
-        pagename: {
-          componentTree,
-          cssImports: [],
-          filepath: "unused",
-        },
-      },
-    },
   });
 }

@@ -1,8 +1,7 @@
 import {
-  ComponentMetadata,
   ComponentStateKind,
+  FileMetadata,
   FileMetadataKind,
-  ModuleMetadata,
   PropValueKind,
   PropValueType,
   RecordProp,
@@ -16,7 +15,7 @@ export default class CreateComponentStateAction {
   constructor(private getStudioConfig: () => StudioConfigSlice) {}
 
   createComponentState = (
-    metadata: ComponentMetadata | ModuleMetadata
+    metadata: FileMetadata
   ): StandardOrModuleComponentState => {
     const componentName = path.basename(metadata.filepath, ".tsx");
     const componentState: StandardOrModuleComponentState = {
