@@ -1,11 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import {
-  ComponentStateKind,
-  FileMetadataKind,
-  PropValueKind,
-  PropValueType,
-} from "@yext/studio-plugin";
+import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
 import AddElementMenu from "../../src/components/AddElementMenu/AddElementMenu";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockActivePage from "../__utils__/mockActivePage";
@@ -103,13 +98,7 @@ it("can add a module to the tree", async () => {
       componentName: "Mock-Module",
       kind: ComponentStateKind.Module,
       metadataUUID: "modu",
-      props: {
-        document: {
-          kind: PropValueKind.Expression,
-          valueType: PropValueType.Record,
-          value: "document",
-        },
-      },
+      props: {},
       uuid: expect.any(String),
     },
   ]);

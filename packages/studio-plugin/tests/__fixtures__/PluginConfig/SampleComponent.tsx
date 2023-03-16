@@ -1,6 +1,6 @@
 import { PluginConfig } from "../../../src/types";
 
-const Config: PluginConfig = {
+const config: Required<PluginConfig> = {
   name: "@yext/sample-component",
   components: {
     AceComponent: "src/components/AceComponent.tsx",
@@ -9,4 +9,4 @@ const Config: PluginConfig = {
   },
 };
 
-export default Config;
+export default config;

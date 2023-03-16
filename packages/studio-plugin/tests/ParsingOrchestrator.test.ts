@@ -7,10 +7,12 @@ import {
   ComponentStateKind,
   FileMetadataKind,
   PageState,
+  PluginConfig,
   StudioData,
+  UserPaths,
 } from "../src/types";
 import { Project } from "ts-morph";
-import PluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
+import sampleComponentPluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
 import fs from "fs";
 import getLocalDataMapping from "../src/parsers/getLocalDataMapping";
 
@@ -68,8 +70,7 @@ const pageWithModulesState: PageState = {
 };
 
 describe("aggregates data as expected", () => {
-  const tsMorphProject: Project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, []);
+  const orchestrator = createParsingOrchestrator();
   let studioData: StudioData;
 
   beforeAll(() => {
@@ -132,12 +133,7 @@ describe("aggregates data as expected", () => {
   describe("localDataMapping", () => {
     it("aggregates pageNameToPageState as expected when receives a localDataMapping", async () => {
       const localDataMapping = await getLocalDataMapping(userPaths.localData);
-      const orchestrator = new ParsingOrchestrator(
-        tsMorphProject,
-        userPaths,
-        [],
-        localDataMapping
-      );
+      const orchestrator = createParsingOrchestrator({ localDataMapping });
       const studioData = orchestrator.getStudioData();
       expect(studioData.pageNameToPageState).toEqual({
         basicPage: {
@@ -151,10 +147,9 @@ describe("aggregates data as expected", () => {
 });
 
 describe("includes plugins in aggregate data as expected", () => {
-  const tsMorphProject: Project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, [
-    PluginConfig,
-  ]);
+  const orchestrator = createParsingOrchestrator({
+    plugins: [sampleComponentPluginConfig],
+  });
   let studioData: StudioData;
 
   beforeAll(() => {
@@ -191,8 +186,7 @@ it("throws an error when the page imports components from unexpected folders", (
     __dirname,
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
-  const tsMorphProject: Project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(tsMorphProject, userPaths, []);
+  const orchestrator = createParsingOrchestrator({ paths: userPaths });
   expect(() => orchestrator.getStudioData()).toThrow(
     /^Could not get FileMetadata for/
   );
@@ -203,9 +197,7 @@ it("throws when the pages folder does not exist", () => {
     path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
   );
   userPaths.pages = "thisFolderDoesNotExist";
-
-  const tsMorphProject: Project = createTsMorphProject();
-  expect(() => new ParsingOrchestrator(tsMorphProject, userPaths, [])).toThrow(
+  expect(() => createParsingOrchestrator({ paths: userPaths })).toThrow(
     /^The pages directory does not exist/
   );
 });
@@ -216,8 +208,7 @@ describe("reloadFile", () => {
   );
   const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
   const originalFile = fs.readFileSync(modulePath, "utf-8");
-  const project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(project, userPaths, []);
+  const orchestrator = createParsingOrchestrator({ paths: userPaths });
 
   afterEach(() => {
     fs.writeFileSync(modulePath, originalFile);
@@ -260,3 +251,22 @@ describe("reloadFile", () => {
     ]);
   });
 });
+
+function createParsingOrchestrator(opts?: {
+  localDataMapping?: Record<string, string[]>;
+  plugins?: Required<PluginConfig>[];
+  paths?: UserPaths;
+}) {
+  const { localDataMapping, plugins, paths } = opts ?? {};
+  const tsMorphProject: Project = createTsMorphProject();
+  const orchestrator = new ParsingOrchestrator(
+    tsMorphProject,
+    {
+      paths: paths ?? userPaths,
+      plugins: plugins ?? [],
+      isPagesJSRepo: false,
+    },
+    localDataMapping
+  );
+  return orchestrator;
+}

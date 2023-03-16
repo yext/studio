@@ -75,6 +75,7 @@ describe("updateModuleFile", () => {
       },
       parentNum: {
         type: PropValueType.number,
+        required: false,
       },
     };
     moduleFile.updateModuleFile(

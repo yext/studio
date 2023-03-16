@@ -102,4 +102,23 @@ export default class ComponentTreeHelpers {
       );
     });
   }
+
+  /**
+   * Returns all descendants of the given ComponentState within the given tree.
+   */
+  static getDescendants(
+    ancestorState: ComponentState,
+    componentTree: ComponentState[]
+  ) {
+    const descendants = ComponentTreeHelpers.mapComponentTree<ComponentState[]>(
+      componentTree,
+      (componentState, mappedChildren) => [
+        componentState,
+        ...mappedChildren.flat(),
+      ],
+      ancestorState
+    ).flat();
+
+    return descendants;
+  }
 }

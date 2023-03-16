@@ -54,7 +54,11 @@ const moduleMetadata: ModuleMetadata = {
 
 describe("syncFileMetadata", () => {
   const tsMorphProject: Project = createTsMorphProject();
-  const orchestrator = new ParsingOrchestrator(tsMorphProject, paths, []);
+  const orchestrator = new ParsingOrchestrator(tsMorphProject, {
+    paths,
+    plugins: [],
+    isPagesJSRepo: false,
+  });
   const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 
   it("updates user module file based on new state", async () => {

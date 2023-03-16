@@ -9,7 +9,7 @@ type RecursiveRequired<T> = {
     ? RecursiveRequired<T[P]>
     : Required<T[P]>;
 };
-type RequiredStudioConfig = RecursiveRequired<
+export type RequiredStudioConfig = RecursiveRequired<
   Omit<StudioConfig, "plugins"> & {
     plugins: PluginConfig[];
   }

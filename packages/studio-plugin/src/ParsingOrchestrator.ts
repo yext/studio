@@ -15,6 +15,7 @@ import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 import { NpmLookup } from "./utils";
+import { RequiredStudioConfig } from "./parsers/getStudioConfig";
 
 export function createTsMorphProject() {
   return new Project({
@@ -39,15 +40,18 @@ export default class ParsingOrchestrator {
   private siteSettingsFile?: SiteSettingsFile;
   private filepathToPluginComponentData: Record<string, PluginComponentData>;
   private studioData?: StudioData;
+  private paths: UserPaths;
 
   /** All paths are assumed to be absolute. */
   constructor(
     private project: Project,
-    private paths: UserPaths,
-    plugins: PluginConfig[],
+    private studioConfig: RequiredStudioConfig,
     private localDataMapping?: Record<string, string[]>
   ) {
-    this.filepathToPluginComponentData = initFilepathToPluginNames(plugins);
+    this.filepathToPluginComponentData = initFilepathToPluginNames(
+      studioConfig.plugins
+    );
+    this.paths = studioConfig.paths;
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
   }
@@ -158,7 +162,7 @@ export default class ParsingOrchestrator {
       pageNameToPageState,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
-      userPaths: this.paths,
+      studioConfig: this.studioConfig,
     };
   }
 

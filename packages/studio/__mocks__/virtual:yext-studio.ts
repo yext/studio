@@ -5,12 +5,16 @@ const mockFilepath = path.join(__dirname, "../tests/__mocks__");
 const mockStudioData: StudioData = {
   pageNameToPageState: {},
   UUIDToFileMetadata: {},
-  userPaths: {
-    components: mockFilepath,
-    pages: mockFilepath,
-    modules: mockFilepath,
-    siteSettings: mockFilepath,
-    localData: mockFilepath,
+  studioConfig: {
+    paths: {
+      components: mockFilepath,
+      pages: mockFilepath,
+      modules: mockFilepath,
+      siteSettings: mockFilepath,
+      localData: mockFilepath,
+    },
+    isPagesJSRepo: false,
+    plugins: [],
   },
 };
 export default mockStudioData;

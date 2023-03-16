@@ -5,9 +5,7 @@ import {
   MessageID,
   ModuleMetadata,
   ModuleState,
-  PropValueKind,
   PropValues,
-  PropValueType,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
@@ -18,15 +16,25 @@ import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
+import AddComponentAction from "./StudioActions/AddComponentAction";
+import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 
 export default class StudioActions {
+  public addComponent: AddComponentAction["addComponent"];
+  public createComponentState: CreateComponentStateAction["createComponentState"];
+
   constructor(
     private getPages: () => PageSlice,
     private getFileMetadatas: () => FileMetadataSlice,
     private getSiteSettings: () => SiteSettingsSlice,
     private getPreviousSave: () => PreviousSaveSlice,
     private getStudioConfig: () => StudioConfigSlice
-  ) {}
+  ) {
+    this.addComponent = new AddComponentAction(this).addComponent;
+    this.createComponentState = new CreateComponentStateAction(
+      getStudioConfig
+    ).createComponentState;
+  }
 
   getComponentTree = () => {
     const moduleStateBeingEdited = this.getPages().getModuleStateBeingEdited();
@@ -40,8 +48,18 @@ export default class StudioActions {
 
   getActiveComponentState = () => {
     const { activeComponentUUID } = this.getPages();
+    console.log(activeComponentUUID, this.getComponentTree());
     return this.getComponentTree()?.find(
       (component) => component.uuid === activeComponentUUID
+    );
+  };
+
+  getComponentMetadata = (componentState?: ComponentState) => {
+    if (componentState?.kind !== ComponentStateKind.Standard) {
+      return undefined;
+    }
+    return this.getFileMetadatas().getComponentMetadata(
+      componentState.metadataUUID
     );
   };
 
@@ -83,51 +101,6 @@ export default class StudioActions {
     } else if (activePageName) {
       this.getPages().setComponentTreeInPage(activePageName, componentTree);
     }
-  };
-
-  addComponent = (componentState: ComponentState) => {
-    const activeComponentState = this.getActiveComponentState();
-    const activeComponentMetadata =
-      activeComponentState?.kind === ComponentStateKind.Standard
-        ? this.getFileMetadatas().getComponentMetadata(
-            activeComponentState.metadataUUID
-          )
-        : undefined;
-    const activeComponentIsParent =
-      activeComponentMetadata?.acceptsChildren ||
-      activeComponentState?.kind === ComponentStateKind.Fragment ||
-      activeComponentState?.kind === ComponentStateKind.BuiltIn;
-    const parentUUID = activeComponentIsParent
-      ? activeComponentState?.uuid
-      : activeComponentState?.parentUUID;
-    const updatedComponentState = {
-      ...componentState,
-      parentUUID,
-    };
-    if (updatedComponentState.kind === ComponentStateKind.Module) {
-      updatedComponentState.props = {
-        ...updatedComponentState.props,
-        document: {
-          kind: PropValueKind.Expression,
-          valueType: PropValueType.Record,
-          value: "document",
-        },
-      };
-    }
-
-    const tree = this.getComponentTree();
-    if (!tree) {
-      return;
-    }
-    const activeComponentIndex = tree.findIndex(
-      (c) => c.uuid === activeComponentState?.uuid
-    );
-    const insertionIndex = activeComponentIsParent
-      ? 0
-      : activeComponentIndex + 1;
-    const updatedTree = [...tree];
-    updatedTree.splice(insertionIndex, 0, updatedComponentState);
-    return this.updateComponentTree(updatedTree);
   };
 
   removeComponent = (componentUUID: string) => {

@@ -177,7 +177,7 @@ export default class StaticParsingHelpers {
         type: this.parsePropertySignatures(
           typeNode.getChildrenOfKind(SyntaxKind.PropertySignature)
         ),
-        required: p.hasQuestionToken(),
+        required: !p.hasQuestionToken(),
       };
     };
 
@@ -222,7 +222,7 @@ export default class StaticParsingHelpers {
         type: PropValueType.string,
         unionValues,
         ...(jsdoc && { doc: jsdoc }),
-        required: p.hasQuestionToken(),
+        required: !p.hasQuestionToken(),
       };
     };
 

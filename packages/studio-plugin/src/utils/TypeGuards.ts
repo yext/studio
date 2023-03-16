@@ -5,6 +5,7 @@ import {
   SyntaxKind,
 } from "ts-morph";
 import {
+  ComponentMetadata,
   ComponentState,
   ComponentStateKind,
   FileMetadata,
@@ -155,6 +156,17 @@ export default class TypeGuards {
   ): propShape is SiteSettingsShape {
     return Object.values(propShape).every(
       (metadata) => metadata.type !== PropValueType.ReactNode
+    );
+  }
+
+  static canAcceptChildren(
+    state?: ComponentState,
+    metadata?: ComponentMetadata
+  ): boolean {
+    return (
+      metadata?.acceptsChildren ||
+      state?.kind === ComponentStateKind.Fragment ||
+      state?.kind === ComponentStateKind.BuiltIn
     );
   }
 }

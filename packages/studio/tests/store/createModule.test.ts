@@ -1,7 +1,6 @@
 import {
   ComponentStateKind,
   FileMetadataKind,
-  PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -83,15 +82,30 @@ it("adds module metadata to UUIDToFileMetadata", () => {
     ],
     filepath: expect.stringContaining(moduleName + ".tsx"),
     metadataUUID: expect.any(String),
-    propShape: {
-      document: {
-        type: PropValueType.Record,
-        recordKey: "string",
-        recordValue: "any",
-        required: true,
-      },
-    },
+    propShape: {},
   });
+});
+
+it("adds document to prop interface when isPagesJSRepo = true", () => {
+  useStudioStore.setState((state) => {
+    state.studioConfig.isPagesJSRepo = true;
+  });
+  const moduleName = "Module";
+  useStudioStore.getState().createModule(moduleName);
+  const UUIDToFileMetadata =
+    useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
+  expect(Object.values(UUIDToFileMetadata).at(-1)).toEqual(
+    expect.objectContaining({
+      propShape: {
+        document: {
+          type: PropValueType.Record,
+          recordKey: "string",
+          recordValue: "any",
+          required: true,
+        },
+      },
+    })
+  );
 });
 
 it("updates active page state to include new module component", () => {
@@ -111,13 +125,7 @@ it("updates active page state to include new module component", () => {
         parentUUID: "mock-uuid-0",
         componentName: "Module",
         metadataUUID: expect.any(String),
-        props: {
-          document: {
-            kind: PropValueKind.Expression,
-            valueType: PropValueType.Record,
-            value: "document",
-          },
-        },
+        props: {},
       },
       {
         ...searchBarComponent,
@@ -141,9 +149,7 @@ it("sets active component to the new module component", () => {
     parentUUID: "mock-uuid-0",
     componentName: "Module",
     metadataUUID: expect.any(String),
-    props: {
-      document: expect.any(Object),
-    },
+    props: {},
   });
 });
 
