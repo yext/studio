@@ -4,13 +4,14 @@ import {
   ComponentStateKind,
   FileMetadataKind,
   ModuleMetadata,
+  PageState,
 } from "@yext/studio-plugin";
 import DeleteModuleButton from "../../../src/components/ModuleActions/DeleteModuleButton";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
 
 it("can open modal and delete modules", async () => {
-  const basicPageState = {
+  const basicPageState: PageState = {
     componentTree: [
       {
         kind: ComponentStateKind.Module,
