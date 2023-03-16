@@ -228,6 +228,15 @@ export default class ReactComponentFileWriter {
     const pluginNameToComponentNames: Record<string, string[]> = {};
 
     componentTree
+      .map((c) =>
+        c.kind === ComponentStateKind.Repeater
+          ? {
+              ...c.repeatedComponent,
+              uuid: c.uuid,
+              parentUUID: c.parentUUID,
+            }
+          : c
+      )
       .filter(TypeGuards.isStandardOrModuleComponentState)
       .forEach((node) => {
         const metadata = this.getFileMetadataByUUID(node.metadataUUID);
