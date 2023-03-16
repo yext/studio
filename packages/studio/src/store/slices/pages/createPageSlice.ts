@@ -94,10 +94,10 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },
-    setRepeaterList: (
+    setListExpression: (
       pageName: string,
       componentUUID: string,
-      listField: string
+      listExpression: string
     ) => {
       set((store) => {
         const components = store.pages[pageName].componentTree;
@@ -113,7 +113,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           );
           return;
         }
-        matchingComponent.listField = listField;
+        matchingComponent.listExpression = listExpression;
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },

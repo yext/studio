@@ -71,7 +71,7 @@ export default class StudioActions {
     }
   };
 
-  updateRepeaterList = (listField: string) => {
+  updateRepeaterListExpression = (listExpression: string) => {
     const { activeComponentUUID, activePageName, getModuleStateBeingEdited } =
       this.getPages();
     if (!activeComponentUUID) {
@@ -83,16 +83,16 @@ export default class StudioActions {
 
     const moduleStateBeingEdited = getModuleStateBeingEdited();
     if (moduleStateBeingEdited) {
-      this.getFileMetadatas().setRepeaterListInModule(
+      this.getFileMetadatas().setListExpressionInModule(
         moduleStateBeingEdited.metadataUUID,
         activeComponentUUID,
-        listField
+        listExpression
       );
     } else if (activePageName) {
-      this.getPages().setRepeaterList(
+      this.getPages().setListExpression(
         activePageName,
         activeComponentUUID,
-        listField
+        listExpression
       );
     }
   };
@@ -184,7 +184,7 @@ export default class StudioActions {
           uuid: componentState.uuid,
           parentUUID: componentState.parentUUID,
           repeatedComponent: componentState,
-          listField: "",
+          listExpression: "",
         };
         return repeaterState;
       }

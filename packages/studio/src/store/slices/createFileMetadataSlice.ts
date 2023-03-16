@@ -87,10 +87,10 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
       componentState.props = props;
     });
   },
-  setRepeaterListInModule: (
+  setListExpressionInModule: (
     metadataUUID: string,
     componentUUID: string,
-    listField: string
+    listExpression: string
   ) => {
     set((store) => {
       const fileMetadata = store.UUIDToFileMetadata[metadataUUID];
@@ -106,7 +106,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
         );
         return;
       }
-      componentState.listField = listField;
+      componentState.listExpression = listExpression;
     });
   },
   getComponentStateInsideModule(metadataUUID: string, componentUUID: string) {

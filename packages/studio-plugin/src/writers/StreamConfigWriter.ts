@@ -43,9 +43,9 @@ export default class StreamConfigWriter {
       }
       if (
         component.kind === ComponentStateKind.Repeater &&
-        TypeGuards.isStreamsDataExpression(component.listField)
+        TypeGuards.isStreamsDataExpression(component.listExpression)
       ) {
-        streamDataExpressions.add(component.listField);
+        streamDataExpressions.add(component.listExpression);
       }
       const props =
         component.kind === ComponentStateKind.Repeater

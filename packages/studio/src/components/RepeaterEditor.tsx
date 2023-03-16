@@ -17,13 +17,17 @@ export default function RepeaterEditor({
 }: {
   componentState: StandardOrModuleComponentState | RepeaterState;
 }): JSX.Element {
-  const [activeComponentTree, updateRepeaterList, addRepeater, removeRepeater] =
-    useStudioStore((store) => [
-      store.actions.getComponentTree(),
-      store.actions.updateRepeaterList,
-      store.actions.addRepeater,
-      store.actions.removeRepeater,
-    ]);
+  const [
+    activeComponentTree,
+    updateRepeaterListExpression,
+    addRepeater,
+    removeRepeater,
+  ] = useStudioStore((store) => [
+    store.actions.getComponentTree(),
+    store.actions.updateRepeaterListExpression,
+    store.actions.addRepeater,
+    store.actions.removeRepeater,
+  ]);
   const [isChecked, setIsChecked] = useState(
     componentState.kind === ComponentStateKind.Repeater
   );
@@ -43,9 +47,9 @@ export default function RepeaterEditor({
 
   const handleListUpdate = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      updateRepeaterList(e.target.value);
+      updateRepeaterListExpression(e.target.value);
     },
-    [updateRepeaterList]
+    [updateRepeaterListExpression]
   );
 
   const hasChildren = useMemo(
@@ -74,7 +78,7 @@ export default function RepeaterEditor({
             className="border border-gray-300 focus:border-indigo-500 rounded-lg p-2 w-full"
             value={
               componentState.kind === ComponentStateKind.Repeater
-                ? componentState.listField
+                ? componentState.listExpression
                 : ""
             }
           />

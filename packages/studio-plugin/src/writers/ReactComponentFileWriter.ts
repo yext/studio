@@ -66,6 +66,13 @@ export default class ReactComponentFileWriter {
     return propsString;
   }
 
+  private createJsxSelfClosingElement(
+    componentName: string,
+    props: PropValues
+  ) {
+    return `<${componentName} ${this.createProps(props)}/>`;
+  }
+
   private createReturnStatement(
     componentTree: ComponentState[]
   ): WriterFunction {
@@ -75,14 +82,21 @@ export default class ReactComponentFileWriter {
         if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
         } else if (c.kind === ComponentStateKind.Repeater) {
+          const { componentName, props } = c.repeatedComponent;
           return (
-            `{${c.listField}.map(item => ` +
-            `<${c.repeatedComponent.componentName} ` +
-            this.createProps(c.repeatedComponent.props) +
-            `/>)}`
+            `{${c.listExpression}.map((item, index) => ` +
+            this.createJsxSelfClosingElement(componentName, {
+              ...props,
+              key: {
+                kind: PropValueKind.Expression,
+                valueType: PropValueType.string,
+                value: "index",
+              },
+            }) +
+            `)}`
           );
         } else if (children.length === 0) {
-          return `<${c.componentName} ` + this.createProps(c.props) + "/>";
+          return this.createJsxSelfClosingElement(c.componentName, c.props);
         } else {
           return (
             `<${c.componentName} ` +

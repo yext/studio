@@ -11,6 +11,7 @@ export type PropShape<T = PropValueType> = Omit<
 
 export enum SpecialReactProps {
   Children = "children",
+  Key = "key",
 }
 
 export type PropMetadata<T = PropValueType> =

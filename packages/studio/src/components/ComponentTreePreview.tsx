@@ -10,6 +10,7 @@ import {
   transformPropValuesToRaw,
   PropShape,
   RepeaterState,
+  FileMetadata,
 } from "@yext/studio-plugin";
 import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
@@ -81,18 +82,23 @@ function useComponentTreeElements(
         const { metadataUUID, props, componentName } =
           c.kind === ComponentStateKind.Repeater ? c.repeatedComponent : c;
         const metadata = UUIDToFileMetadata[metadataUUID];
-        if (metadata && metadata.kind === FileMetadataKind.Module) {
-          if (c.kind === ComponentStateKind.Repeater) {
-            return renderListRepeater(c, expressionSources, (_, key) => (
-              <ComponentTreePreview
-                componentTree={metadata.componentTree}
-                props={props}
-                propShape={metadata.propShape}
-                isWithinModule={true}
-                key={key}
-              />
-            ));
+        const getImportedElement = () => {
+          const importedComponent = UUIDToImportedComponent[metadataUUID];
+          if (!importedComponent) {
+            console.warn(
+              `Expected to find component loaded for ${componentName} but none found - possibly due to a race condition.`
+            );
           }
+          return importedComponent;
+        };
+        if (c.kind === ComponentStateKind.Repeater) {
+          return renderRepeaterState(
+            c,
+            metadata,
+            expressionSources,
+            getImportedElement
+          );
+        } else if (metadata && metadata.kind === FileMetadataKind.Module) {
           return (
             <ComponentTreePreview
               componentTree={metadata.componentTree}
@@ -102,25 +108,13 @@ function useComponentTreeElements(
               key={c.uuid}
             />
           );
-        } else if (!UUIDToImportedComponent[metadataUUID]) {
-          console.warn(
-            `Expected to find component loaded for ${componentName} but none found - possibly due to a race condition.`
-          );
-          return null;
+        } else {
+          const importedComponent = getImportedElement();
+          if (!importedComponent) {
+            return null;
+          }
+          element = importedComponent;
         }
-        element = UUIDToImportedComponent[metadataUUID];
-      }
-
-      if (c.kind === ComponentStateKind.Repeater) {
-        return renderListRepeater(c, expressionSources, (item, key) => {
-          const previewProps = getPreviewProps(
-            c.repeatedComponent.props,
-            UUIDToFileMetadata[c.repeatedComponent.metadataUUID].propShape ??
-              {},
-            { ...expressionSources, item }
-          );
-          return createElement(element, { ...previewProps, key });
-        });
       }
       const previewProps = TypeGuards.isStandardOrModuleComponentState(c)
         ? getPreviewProps(
@@ -164,15 +158,54 @@ function useComponentTreeElements(
   ]);
 }
 
-function renderListRepeater(
+function renderRepeaterState(
   repeaterState: RepeaterState,
+  metadata: FileMetadata | undefined,
+  expressionSources: Record<string, unknown>,
+  getImportedElement: () => ImportType | undefined
+): JSX.Element | null {
+  const { repeatedComponent, listExpression } = repeaterState;
+
+  let renderRepeatedElement: (
+    item: unknown,
+    key: number | string
+  ) => JSX.Element;
+  if (metadata?.kind === FileMetadataKind.Module) {
+    renderRepeatedElement = (_, key) => (
+      <ComponentTreePreview
+        componentTree={metadata.componentTree}
+        props={repeatedComponent.props}
+        propShape={metadata.propShape}
+        isWithinModule={true}
+        key={key}
+      />
+    );
+  } else {
+    const importedElement = getImportedElement();
+    if (!importedElement) {
+      return null;
+    }
+    renderRepeatedElement = (item, key) => {
+      const previewProps = getPreviewProps(
+        repeatedComponent.props,
+        metadata?.propShape ?? {},
+        { ...expressionSources, item }
+      );
+      return createElement(importedElement, { ...previewProps, key });
+    };
+  }
+  return renderList(listExpression, expressionSources, renderRepeatedElement);
+}
+
+function renderList(
+  listExpression: string,
   expressionSources: Record<string, unknown>,
   renderRepeatedElement: (item: unknown, key: number | string) => JSX.Element
 ): JSX.Element | null {
-  const list = get(expressionSources, repeaterState.listField) as unknown;
+  const list = get(expressionSources, listExpression) as unknown;
   if (!Array.isArray(list)) {
     console.warn(
-      `Unable to render list repeater. Expected ${repeaterState.listField} to be an array.`
+      `Unable to render list repeater. Expected ${listExpression} to be an array.`
     );
     return null;
   }

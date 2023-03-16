@@ -20,8 +20,8 @@ export enum ComponentStateKind {
 
 export type RepeaterState = {
   kind: ComponentStateKind.Repeater;
-  /** A stream document field representing the list of items to map over. */
-  listField: string;
+  /** An expression representing the list of items to map over. */
+  listExpression: string;
   /** The state for the component being repeated in the map function. */
   repeatedComponent: Omit<
     StandardOrModuleComponentState,

@@ -32,10 +32,10 @@ export interface FileMetadataSliceActions {
     componentUUID: string,
     props: PropValues
   ) => void;
-  setRepeaterListInModule: (
+  setListExpressionInModule: (
     metadataUUID: string,
     componentUUID: string,
-    listField: string
+    listExpression: string
   ) => void;
   getComponentStateInsideModule: (
     metadataUUID: string,

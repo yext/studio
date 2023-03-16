@@ -18,8 +18,8 @@ export const config: TemplateConfig = {
 export default function UniversalPage({ document }: TemplateProps) {
   return (
     <div>
-      {document.services.map((item) => (
-        <Banner title={`${item}!`} />
+      {document.services.map((item, index) => (
+        <Banner title={`${item}!`} key={index} />
       ))}
       <Container>
         <Button bgColor="bg-red-100" />
