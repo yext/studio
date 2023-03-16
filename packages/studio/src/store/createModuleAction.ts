@@ -5,7 +5,6 @@ import {
   ComponentStateKind,
   ComponentTreeHelpers,
   FileMetadataKind,
-  ModuleState,
 } from "@yext/studio-plugin";
 import { differenceWith, isEqual } from "lodash";
 import { v4 } from "uuid";
@@ -72,7 +71,7 @@ export default function getCreateModuleAction(
       isEqual
     ).map((c) => {
       if (c.uuid === activeComponentState.uuid) {
-        const newModuleState: ModuleState = {
+        return {
           kind: ComponentStateKind.Module,
           componentName: path.basename(filepath, ".tsx"),
           uuid: moduleComponentUUID,
@@ -80,7 +79,6 @@ export default function getCreateModuleAction(
           metadataUUID,
           parentUUID: c.parentUUID,
         };
-        return newModuleState;
       }
       return c;
     });
