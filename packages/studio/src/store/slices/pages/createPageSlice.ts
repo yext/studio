@@ -3,7 +3,6 @@ import {
   ComponentStateKind,
   ModuleState,
   PageState,
-  PropValues,
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual:yext-studio";
@@ -66,54 +65,20 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
-    setComponentProps: (
+    updateComponentStateInsidePage(
       pageName: string,
       componentUUID: string,
-      props: PropValues
-    ) => {
+      handleUpdate: (c: ComponentState) => void
+    ) {
       set((store) => {
-        const components = store.pages[pageName].componentTree;
-        const matchingComponent = components.find(
+        const pageState = store.pages[pageName];
+        const matchingComponent = pageState.componentTree.find(
           (c) => c.uuid === componentUUID
         );
         if (!matchingComponent) {
-          throw new Error("Could not find component.");
+          throw new Error(`Could not find component ${componentUUID}.`);
         }
-        if (matchingComponent.kind === ComponentStateKind.Fragment) {
-          console.error(
-            "Error in setComponentProps: The active component is a fragment and does not accept props."
-          );
-          return;
-        }
-
-        if (matchingComponent.kind === ComponentStateKind.Repeater) {
-          matchingComponent.repeatedComponent.props = props;
-        } else {
-          matchingComponent.props = props;
-        }
-        store.pendingChanges.pagesToUpdate.add(pageName);
-      });
-    },
-    setListExpression: (
-      pageName: string,
-      componentUUID: string,
-      listExpression: string
-    ) => {
-      set((store) => {
-        const components = store.pages[pageName].componentTree;
-        const matchingComponent = components.find(
-          (c) => c.uuid === componentUUID
-        );
-        if (!matchingComponent) {
-          throw new Error("Could not find component.");
-        }
-        if (matchingComponent.kind !== ComponentStateKind.Repeater) {
-          console.error(
-            "Error in setComponentProps: The active component is not a Repeater."
-          );
-          return;
-        }
-        matchingComponent.listExpression = listExpression;
+        handleUpdate(matchingComponent);
         store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },

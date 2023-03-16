@@ -150,4 +150,6 @@ function getExpressionValue(
   return null;
 }
 
-export type ExpressionSources = Record<string, unknown>;
+export type ExpressionSources = {
+  [key in "document" | "siteSettings" | "props"]?: Record<string, unknown>;
+} & { item?: unknown };

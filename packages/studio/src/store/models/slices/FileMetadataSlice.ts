@@ -3,7 +3,6 @@ import {
   ComponentState,
   FileMetadata,
   ModuleMetadata,
-  PropValues,
 } from "@yext/studio-plugin";
 import { ImportType } from "../ImportType";
 
@@ -27,20 +26,11 @@ export interface FileMetadataSliceActions {
     metadataUUID: string,
     componentTree: ComponentState[]
   ) => void;
-  updateComponentPropsInsideModule: (
+  updateComponentStateInsideModule: (
     metadataUUID: string,
     componentUUID: string,
-    props: PropValues
+    handleUpdate: (c: ComponentState) => void
   ) => void;
-  setListExpressionInModule: (
-    metadataUUID: string,
-    componentUUID: string,
-    listExpression: string
-  ) => void;
-  getComponentStateInsideModule: (
-    metadataUUID: string,
-    componentUUID: string
-  ) => ComponentState;
 }
 
 /**
