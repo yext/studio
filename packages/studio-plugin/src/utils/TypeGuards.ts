@@ -5,7 +5,6 @@ import {
   SyntaxKind,
 } from "ts-morph";
 import {
-  ComponentMetadata,
   ComponentState,
   ComponentStateKind,
   FileMetadata,
@@ -161,10 +160,10 @@ export default class TypeGuards {
 
   static canAcceptChildren(
     state?: ComponentState,
-    metadata?: ComponentMetadata
+    metadata?: FileMetadata
   ): boolean {
     return (
-      metadata?.acceptsChildren ||
+      (metadata && "acceptsChildren" in metadata && metadata.acceptsChildren) ||
       state?.kind === ComponentStateKind.Fragment ||
       state?.kind === ComponentStateKind.BuiltIn
     );

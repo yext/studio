@@ -73,13 +73,9 @@ function Option({
     return store.actions.addComponent;
   });
 
-  const addElement = useCallback(() => {
+  const handleClick = useCallback(() => {
     addComponent(metadata);
   }, [addComponent, metadata]);
-
-  const handleClick = useCallback(() => {
-    addElement();
-  }, [addElement]);
 
   // Prevent users from adding infinite looping modules.
   const isSameAsActiveModule =

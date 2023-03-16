@@ -52,6 +52,7 @@ type FragmentState = {
   kind: ComponentStateKind.Fragment;
   uuid: string;
   parentUUID?: string;
+  metadataUUID?: never;
 };
 
 export type BuiltInState = {
@@ -62,4 +63,5 @@ export type BuiltInState = {
   // eslint-disable-next-line @typescript-eslint/ban-types
   props: {};
   parentUUID?: string;
+  metadataUUID?: never;
 };
