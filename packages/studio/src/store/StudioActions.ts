@@ -48,7 +48,6 @@ export default class StudioActions {
 
   getActiveComponentState = () => {
     const { activeComponentUUID } = this.getPages();
-    console.log(activeComponentUUID, this.getComponentTree());
     return this.getComponentTree()?.find(
       (component) => component.uuid === activeComponentUUID
     );
