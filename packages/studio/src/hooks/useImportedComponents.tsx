@@ -41,10 +41,7 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
       c: ComponentState,
       newLoadedComponents: Record<string, ImportType>
     ) => {
-      if (
-        !TypeGuards.isStandardOrModuleComponentState(c) &&
-        !TypeGuards.isRepeaterState(c)
-      ) {
+      if (!TypeGuards.isEditableComponentState(c)) {
         return null;
       }
       const componentState = TypeGuards.isRepeaterState(c)

@@ -13,10 +13,10 @@ export default function useActiveComponentName() {
   if (!activeState) {
     return undefined;
   }
-  getComponentName(activeState);
+  getComponentDisplayName(activeState);
 }
 
-export function getComponentName(componentState: ComponentState) {
+export function getComponentDisplayName(componentState: ComponentState) {
   if (componentState.kind === ComponentStateKind.Fragment) {
     return "Fragment";
   } else if (TypeGuards.isRepeaterState(componentState)) {

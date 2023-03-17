@@ -1,10 +1,13 @@
 import { PropValues } from "./PropValues";
 
 export type ComponentState =
-  | StandardOrModuleComponentState
+  | EditableComponentState
   | FragmentState
-  | BuiltInState
-  | RepeaterState;
+  | BuiltInState;
+
+export type EditableComponentState =
+  | StandardOrModuleComponentState
+  | RepeaterState
 
 export type StandardOrModuleComponentState =
   | StandardComponentState

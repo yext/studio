@@ -5,7 +5,7 @@ import ComponentKindIcon from "./ComponentKindIcon";
 import { useCallback, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
-import { getComponentName } from "../hooks/useActiveComponentName";
+import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 
 interface ComponentNodeProps {
   /** The ComponentState this node represents in {@link ComponentTree}. */
@@ -72,7 +72,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         <div className="pl-2">
           <ComponentKindIcon componentState={componentState} />
         </div>
-        <span className="pl-1.5">{getComponentName(componentState)}</span>
+        <span className="pl-1.5">{getComponentDisplayName(componentState)}</span>
       </div>
       {isActiveComponent && (
         <RemoveElementButton elementUUID={componentState.uuid} />

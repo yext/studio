@@ -7,6 +7,7 @@ import {
 import {
   ComponentState,
   ComponentStateKind,
+  EditableComponentState,
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
@@ -138,6 +139,15 @@ export default class TypeGuards {
     componentState: ComponentState
   ): componentState is RepeaterState {
     return componentState.kind === ComponentStateKind.Repeater;
+  }
+
+  static isEditableComponentState(
+    componentState: ComponentState
+  ): componentState is EditableComponentState {
+    return (
+      this.isStandardOrModuleComponentState(componentState) ||
+      this.isRepeaterState(componentState)
+    );
   }
 
   static isSiteSettingsValues(

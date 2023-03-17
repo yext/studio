@@ -6,7 +6,6 @@ import {
   FileMetadataKind,
   ModuleMetadata,
   PropValueType,
-  StandardOrModuleComponentState,
 } from "@yext/studio-plugin";
 import { differenceWith, isEqual } from "lodash";
 import { v4 } from "uuid";
@@ -86,7 +85,7 @@ export default function getCreateModuleAction(
       moduleMetadata.metadataUUID,
       moduleMetadata
     );
-    const moduleState: StandardOrModuleComponentState =
+    const moduleState =
       get().actions.createComponentState(moduleMetadata);
     const updatedPageComponentTree: ComponentState[] = differenceWith(
       componentTree,

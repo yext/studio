@@ -1,16 +1,17 @@
 import {
-  RepeaterState,
-  StandardOrModuleComponentState,
+  EditableComponentState,
   TypeGuards,
 } from "@yext/studio-plugin";
 import { useCallback, ChangeEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 
+interface RepeaterEditorProps {
+  componentState: EditableComponentState;
+}
+
 export default function RepeaterEditor({
   componentState,
-}: {
-  componentState: StandardOrModuleComponentState | RepeaterState;
-}): JSX.Element {
+}: RepeaterEditorProps): JSX.Element {
   const [
     activeComponentHasChildren,
     updateRepeaterListExpression,
