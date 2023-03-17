@@ -55,11 +55,6 @@ interface PageSliceActions {
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
-  updateComponentStateInsidePage: (
-    pageName: string,
-    componentUUID: string,
-    handleUpdate: (c: ComponentState) => void
-  ) => void;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 

@@ -42,7 +42,7 @@ export default function ComponentPreview({
       : {};
   }, [componentState, UUIDToFileMetadata, expressionSources]);
 
-  if (componentState.kind === ComponentStateKind.Repeater) {
+  if (TypeGuards.isRepeaterState(componentState)) {
     return (
       <RepeaterPreview
         repeaterState={componentState}

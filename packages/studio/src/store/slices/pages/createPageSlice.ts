@@ -65,23 +65,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
-    updateComponentStateInsidePage(
-      pageName: string,
-      componentUUID: string,
-      handleUpdate: (c: ComponentState) => void
-    ) {
-      set((store) => {
-        const pageState = store.pages[pageName];
-        const matchingComponent = pageState.componentTree.find(
-          (c) => c.uuid === componentUUID
-        );
-        if (!matchingComponent) {
-          throw new Error(`Could not find component ${componentUUID}.`);
-        }
-        handleUpdate(matchingComponent);
-        store.pendingChanges.pagesToUpdate.add(pageName);
-      });
-    },
   };
 
   const activePageActions = {

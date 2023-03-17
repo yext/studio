@@ -6,6 +6,7 @@ import {
   PropValueKind,
   ComponentState,
   FileMetadata,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleEditActions";
@@ -33,7 +34,7 @@ export default function PropertiesPanel(): JSX.Element | null {
       {renderModuleActions(activeComponentMetadata, activeComponentState)}
       <PropEditors
         activeComponentState={
-          activeComponentState.kind === ComponentStateKind.Repeater
+          TypeGuards.isRepeaterState(activeComponentState)
             ? activeComponentState.repeatedComponent
             : activeComponentState
         }

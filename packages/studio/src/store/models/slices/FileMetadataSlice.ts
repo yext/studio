@@ -26,11 +26,6 @@ export interface FileMetadataSliceActions {
     metadataUUID: string,
     componentTree: ComponentState[]
   ) => void;
-  updateComponentStateInsideModule: (
-    metadataUUID: string,
-    componentUUID: string,
-    handleUpdate: (c: ComponentState) => void
-  ) => void;
 }
 
 /**

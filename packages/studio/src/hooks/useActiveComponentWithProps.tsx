@@ -1,4 +1,4 @@
-import { ComponentStateKind, TypeGuards } from "@yext/studio-plugin";
+import { TypeGuards } from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
 export default function useActiveComponentWithProps() {
@@ -13,7 +13,7 @@ export default function useActiveComponentWithProps() {
     !activeComponentState ||
     !(
       TypeGuards.isStandardOrModuleComponentState(activeComponentState) ||
-      activeComponentState.kind === ComponentStateKind.Repeater
+      TypeGuards.isRepeaterState(activeComponentState)
     )
   ) {
     return null;

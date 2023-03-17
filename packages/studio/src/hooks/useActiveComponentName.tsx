@@ -1,4 +1,8 @@
-import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentStateKind,
+  TypeGuards,
+} from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 
 export default function useActiveComponentName() {
@@ -15,7 +19,7 @@ export default function useActiveComponentName() {
 export function getComponentName(componentState: ComponentState) {
   if (componentState.kind === ComponentStateKind.Fragment) {
     return "Fragment";
-  } else if (componentState.kind === ComponentStateKind.Repeater) {
+  } else if (TypeGuards.isRepeaterState(componentState)) {
     return `List (${componentState.repeatedComponent.componentName})`;
   } else {
     return componentState.componentName;

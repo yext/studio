@@ -42,15 +42,14 @@ export default class StreamConfigWriter {
         return;
       }
       if (
-        component.kind === ComponentStateKind.Repeater &&
+        TypeGuards.isRepeaterState(component) &&
         TypeGuards.isStreamsDataExpression(component.listExpression)
       ) {
         streamDataExpressions.add(component.listExpression);
       }
-      const props =
-        component.kind === ComponentStateKind.Repeater
-          ? component.repeatedComponent.props
-          : component.props;
+      const props = TypeGuards.isRepeaterState(component)
+        ? component.repeatedComponent.props
+        : component.props;
       Object.keys(props).forEach((propName) => {
         const { value, kind } = props[propName];
         if (kind !== PropValueKind.Expression) {

@@ -16,6 +16,7 @@ import {
   PropValueKind,
   PropValues,
   PropValueType,
+  RepeaterState,
   SiteSettingsShape,
   SiteSettingsValues,
   StandardOrModuleComponentState,
@@ -131,6 +132,12 @@ export default class TypeGuards {
       componentState.kind === ComponentStateKind.Module ||
       componentState.kind === ComponentStateKind.Standard
     );
+  }
+
+  static isRepeaterState(
+    componentState: ComponentState
+  ): componentState is RepeaterState {
+    return componentState.kind === ComponentStateKind.Repeater;
   }
 
   static isSiteSettingsValues(

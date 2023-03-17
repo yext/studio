@@ -39,7 +39,7 @@ export default class RepeaterActions {
    */
   removeRepeater = (componentUUID: string) => {
     const createNewComponentState = (c: ComponentState) => {
-      if (c.kind !== ComponentStateKind.Repeater) {
+      if (!TypeGuards.isRepeaterState(c)) {
         throw new Error(
           "Error in removeRepeater: Component is not a Repeater."
         );

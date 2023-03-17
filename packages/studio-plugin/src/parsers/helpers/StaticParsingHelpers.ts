@@ -276,16 +276,13 @@ export default class StaticParsingHelpers {
     selfClosingElement: JsxSelfClosingElement;
     listExpression: string;
   } {
-    function isMapExpression() {
-      return (
-        c
-          .getFirstDescendantByKind(SyntaxKind.PropertyAccessExpression)
-          ?.getLastChildByKind(SyntaxKind.Identifier)
-          ?.getText() === "map"
-      );
-    }
+    const isMapExpression =
+      c
+        .getFirstDescendantByKind(SyntaxKind.PropertyAccessExpression)
+        ?.getLastChildByKind(SyntaxKind.Identifier)
+        ?.getText() === "map";
 
-    if (!isMapExpression()) {
+    if (!isMapExpression) {
       throw new Error(
         `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use` +
           " in page files except for `map` function expressions."

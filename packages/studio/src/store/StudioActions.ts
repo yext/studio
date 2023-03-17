@@ -6,6 +6,7 @@ import {
   ModuleMetadata,
   ModuleState,
   PropValues,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
@@ -51,9 +52,15 @@ export default class StudioActions {
     );
   };
 
+  getActiveComponentHasChildren = () => {
+    const { activeComponentUUID } = this.getPages();
+    return this.getComponentTree()?.some(
+      (c) => c.parentUUID === activeComponentUUID
+    );
+  };
+
   updateActiveComponentProps = (props: PropValues) => {
-    const { activeComponentUUID, activePageName, getModuleStateBeingEdited } =
-      this.getPages();
+    const activeComponentUUID = this.getPages().activeComponentUUID;
     if (!activeComponentUUID) {
       console.error(
         "Error in updateActiveComponentProps: No active component in this.get()."
@@ -69,32 +76,20 @@ export default class StudioActions {
           "Error in updateActiveComponentProps: Cannot update props for BuiltIn or Fragment components."
         );
       }
-      if (c.kind === ComponentStateKind.Repeater) {
-        c.repeatedComponent.props = props;
-        return;
+      if (TypeGuards.isRepeaterState(c)) {
+        const updatedState = {
+          ...c,
+          repeatedComponent: { ...c.repeatedComponent, props },
+        };
+        return updatedState;
       }
-      c.props = props;
+      return { ...c, props };
     };
-
-    const moduleStateBeingEdited = getModuleStateBeingEdited();
-    if (moduleStateBeingEdited) {
-      this.getFileMetadatas().updateComponentStateInsideModule(
-        moduleStateBeingEdited.metadataUUID,
-        activeComponentUUID,
-        updateComponentProps
-      );
-    } else if (activePageName) {
-      this.getPages().updateComponentStateInsidePage(
-        activePageName,
-        activeComponentUUID,
-        updateComponentProps
-      );
-    }
+    this.replaceComponentState(activeComponentUUID, updateComponentProps);
   };
 
   updateRepeaterListExpression = (listExpression: string) => {
-    const { activeComponentUUID, activePageName, getModuleStateBeingEdited } =
-      this.getPages();
+    const activeComponentUUID = this.getPages().activeComponentUUID;
     if (!activeComponentUUID) {
       console.error(
         "Error in updateRepeaterListExpression: No active component in this.get()."
@@ -102,29 +97,15 @@ export default class StudioActions {
       return;
     }
     const updateListExpression = (c: ComponentState) => {
-      if (c.kind !== ComponentStateKind.Repeater) {
+      if (!TypeGuards.isRepeaterState(c)) {
         console.error(
           "Error in updateRepeaterListExpression: The active component is not a Repeater."
         );
-        return;
+        return c;
       }
-      c.listExpression = listExpression;
+      return { ...c, listExpression };
     };
-
-    const moduleStateBeingEdited = getModuleStateBeingEdited();
-    if (moduleStateBeingEdited) {
-      this.getFileMetadatas().updateComponentStateInsideModule(
-        moduleStateBeingEdited.metadataUUID,
-        activeComponentUUID,
-        updateListExpression
-      );
-    } else if (activePageName) {
-      this.getPages().updateComponentStateInsidePage(
-        activePageName,
-        activeComponentUUID,
-        updateListExpression
-      );
-    }
+    this.replaceComponentState(activeComponentUUID, updateListExpression);
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {

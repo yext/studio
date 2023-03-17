@@ -81,7 +81,7 @@ export default class ReactComponentFileWriter {
       (c, children): string => {
         if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
-        } else if (c.kind === ComponentStateKind.Repeater) {
+        } else if (TypeGuards.isRepeaterState(c)) {
           const { componentName, props } = c.repeatedComponent;
           return (
             `{${c.listExpression}.map((item, index) => ` +
@@ -229,7 +229,7 @@ export default class ReactComponentFileWriter {
 
     componentTree
       .map((c) =>
-        c.kind === ComponentStateKind.Repeater
+        TypeGuards.isRepeaterState(c)
           ? {
               ...c.repeatedComponent,
               uuid: c.uuid,

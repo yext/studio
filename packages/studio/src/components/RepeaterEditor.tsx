@@ -1,9 +1,9 @@
 import {
-  ComponentStateKind,
   RepeaterState,
   StandardOrModuleComponentState,
+  TypeGuards,
 } from "@yext/studio-plugin";
-import { useCallback, ChangeEvent, useMemo } from "react";
+import { useCallback, ChangeEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 
 export default function RepeaterEditor({
@@ -12,12 +12,12 @@ export default function RepeaterEditor({
   componentState: StandardOrModuleComponentState | RepeaterState;
 }): JSX.Element {
   const [
-    activeComponentTree,
+    activeComponentHasChildren,
     updateRepeaterListExpression,
     addRepeater,
     removeRepeater,
   ] = useStudioStore((store) => [
-    store.actions.getComponentTree(),
+    store.actions.getActiveComponentHasChildren(),
     store.actions.updateRepeaterListExpression,
     store.actions.addRepeater,
     store.actions.removeRepeater,
@@ -39,11 +39,7 @@ export default function RepeaterEditor({
     [updateRepeaterListExpression]
   );
 
-  const isChecked = componentState.kind === ComponentStateKind.Repeater;
-  const hasChildren = useMemo(
-    () => activeComponentTree?.some((c) => c.parentUUID === componentUUID),
-    [activeComponentTree, componentUUID]
-  );
+  const isChecked = TypeGuards.isRepeaterState(componentState);
 
   return (
     <>
@@ -53,7 +49,7 @@ export default function RepeaterEditor({
         <input
           type="checkbox"
           checked={isChecked}
-          disabled={hasChildren}
+          disabled={activeComponentHasChildren}
           onChange={onToggleChange}
         />
       </label>

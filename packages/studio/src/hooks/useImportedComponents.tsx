@@ -41,13 +41,16 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
       c: ComponentState,
       newLoadedComponents: Record<string, ImportType>
     ) => {
-      const componentState =
-        c.kind === ComponentStateKind.Repeater
-          ? { ...c.repeatedComponent, uuid: c.uuid, parentUUID: c.parentUUID }
-          : c;
-      if (!TypeGuards.isStandardOrModuleComponentState(componentState)) {
+      if (
+        !TypeGuards.isStandardOrModuleComponentState(c) &&
+        !TypeGuards.isRepeaterState(c)
+      ) {
         return null;
       }
+      const componentState = TypeGuards.isRepeaterState(c)
+        ? c.repeatedComponent
+        : c;
+
       const { metadataUUID, componentName } = componentState;
       const metadata: FileMetadata | undefined =
         UUIDToFileMetadata[metadataUUID];

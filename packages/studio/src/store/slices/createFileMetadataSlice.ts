@@ -57,23 +57,6 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
       fileMetadata.componentTree = componentTree;
     });
   },
-  updateComponentStateInsideModule(
-    metadataUUID: string,
-    componentUUID: string,
-    handleUpdate: (c: ComponentState) => void
-  ) {
-    set((store) => {
-      const fileMetadata = store.UUIDToFileMetadata[metadataUUID];
-      assertIsModuleMetadata(fileMetadata);
-      const matchingComponent = fileMetadata.componentTree.find(
-        (c) => c.uuid === componentUUID
-      );
-      if (!matchingComponent) {
-        throw new Error(`Could not find component ${componentUUID}.`);
-      }
-      handleUpdate(matchingComponent);
-    });
-  },
 });
 
 function assertIsModuleMetadata(
