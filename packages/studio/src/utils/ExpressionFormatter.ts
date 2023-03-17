@@ -22,8 +22,7 @@ export default class ExpressionFormatter {
   }
 
   /**
-   * Converts `[[field]]` usages into `${document.<field>}` and removes
-   * enclosing backtiks.
+   * Converts `[[field]]` usages into `${document.<field>}`.
    */
   private static convertSquareBracketsToCurlyBraces(value: string) {
     return value.replaceAll(/\[\[(.*?)\]\]/g, (_substring, match) => {

@@ -118,10 +118,12 @@ function useDisplayValue(
 
   const propValueWithDefaulting =
     propValue ?? getPropTypeDefaultValue(propType, propKind);
-  if (
-    propKind === PropValueKind.Expression &&
-    typeof propValueWithDefaulting === "string"
-  ) {
+  if (propKind === PropValueKind.Expression) {
+    if (typeof propValueWithDefaulting !== "string") {
+      throw new Error(
+        `Expression props are only supported for strings. Received: "${propValueWithDefaulting}".`
+      );
+    }
     return ExpressionFormatter.getTemplateStringDisplayValue(
       propValueWithDefaulting
     );
