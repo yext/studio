@@ -1,11 +1,20 @@
+import { TemplateConfig, TemplateProps } from "@yext/pages";
 import { AceComponent } from "@yext/sample-component";
 import Banner from "../components/Banner";
 import Button from "../components/Button";
 import Container from "../components/Container";
 import ContainerWithButtons from "../modules/ContainerWithButtons";
-import siteSettings from "../siteSettings";
 
-export default function UniversalPage() {
+export const config: TemplateConfig = {
+  stream: {
+    $id: "studio-stream-id",
+    filter: {},
+    localization: { locales: ["en"], primary: false },
+    fields: ["address.city"],
+  },
+};
+
+export default function UniversalPage({ document }: TemplateProps) {
   return (
     <div>
       <Banner />
@@ -13,7 +22,10 @@ export default function UniversalPage() {
         <Button bgColor="bg-red-100" />
       </Container>
       <AceComponent text="ace" />
-      <ContainerWithButtons bannerTitle={siteSettings.someText} />
+      <ContainerWithButtons
+        bannerTitle={`${document.address.city}`}
+        document={document}
+      />
       <Banner nestedProp={{ egg: "eggyweggy" }} />
     </div>
   );

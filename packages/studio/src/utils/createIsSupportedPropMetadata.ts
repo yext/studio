@@ -2,17 +2,22 @@ import {
   PropMetadata,
   NestedPropMetadata,
   PropValueType,
+  RecordMetadata,
 } from "@yext/studio-plugin";
 
 /**
  * Generates a typeguard used to ensure that a specific {@link PropMetadata}
- * is not either a {@link PropValueType.ReactNode} or a {@link PropValueType.Object},
- * which are types that we don't support editing via the UI.
+ * is not either a {@link PropValueType.ReactNode}, {@link PropValueType.Object},
+ * or {@link PropValueType.Record}.
+ * These are types that we don't support editing via the UI.
  */
 export default function createIsSupportedPropMetadata(componentName: string) {
   return function isSupportedPropMetadata(
     entry: [string, PropMetadata]
-  ): entry is [string, Exclude<PropMetadata, NestedPropMetadata>] {
+  ): entry is [
+    string,
+    Exclude<PropMetadata, NestedPropMetadata | RecordMetadata>
+  ] {
     const [propName, propMetadata] = entry;
     if (propMetadata.type === PropValueType.ReactNode) {
       console.warn(
@@ -27,6 +32,10 @@ export default function createIsSupportedPropMetadata(componentName: string) {
         `Found ${propName} in component ${componentName} with PropValueType.Object.` +
           " Studio does not support editing nested props."
       );
+      return false;
+    }
+
+    if (propMetadata.type === PropValueType.Record) {
       return false;
     }
 

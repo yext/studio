@@ -157,4 +157,15 @@ export default class TypeGuards {
       (metadata) => metadata.type !== PropValueType.ReactNode
     );
   }
+
+  static canAcceptChildren(
+    state?: ComponentState,
+    metadata?: FileMetadata
+  ): boolean {
+    return (
+      (metadata && "acceptsChildren" in metadata && metadata.acceptsChildren) ||
+      state?.kind === ComponentStateKind.Fragment ||
+      state?.kind === ComponentStateKind.BuiltIn
+    );
+  }
 }

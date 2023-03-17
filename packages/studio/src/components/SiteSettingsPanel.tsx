@@ -62,9 +62,9 @@ function renderSiteSettings(
   );
 
   return sortedShape.map(([propName, propMetadata], index) => {
+    const valueType = propMetadata.type;
     const propVal: LiteralProp<SiteSettingsValues> | undefined =
       siteSettingsValues[propName];
-    const valueType = propMetadata.type;
     if (valueType !== PropValueType.Object) {
       return (
         <SimplePropInput

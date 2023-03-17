@@ -4,9 +4,13 @@ import Container from "../components/Container";
 
 export interface ContainerWithButtonsProps {
   bannerTitle?: string;
+  document: Record<string, any>;
 }
 
-export default function ContainerWithButtons(props: ContainerWithButtonsProps) {
+export default function ContainerWithButtons({
+  document,
+  ...props
+}: ContainerWithButtonsProps) {
   return (
     <Container>
       <Button />
@@ -15,7 +19,7 @@ export default function ContainerWithButtons(props: ContainerWithButtonsProps) {
         bgColor="#FFFFFF"
         bool={false}
         num={12}
-        title={props.bannerTitle}
+        title={`${props.bannerTitle} ${document.address.city}`}
       />
       <Container>
         <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />

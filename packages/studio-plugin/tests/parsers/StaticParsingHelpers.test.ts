@@ -199,6 +199,7 @@ describe("parseInterfaceDeclaration", () => {
         kind: ParsedInterfaceKind.Simple,
         type: PropValueType.string,
         unionValues: ["apple", "pear"],
+        required: true,
       },
     });
   });

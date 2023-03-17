@@ -1,4 +1,5 @@
 import {
+  ComponentMetadata,
   ComponentState,
   ComponentStateKind,
   FileMetadata,
@@ -7,6 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
+import { mockActivePageTree } from "../../__utils__/mockActivePageTree";
 
 const initialTree: ComponentState[] = [
   {
@@ -44,13 +46,6 @@ const initialTree: ComponentState[] = [
     parentUUID: "mock-fragment-uuid",
   },
 ];
-const newComponentState = {
-  kind: ComponentStateKind.Standard,
-  componentName: "AddedComp",
-  uuid: "added-comp",
-  props: {},
-  metadataUUID: "unused",
-};
 
 beforeEach(() => {
   mockStore({
@@ -86,27 +81,18 @@ beforeEach(() => {
 
 describe("adds components to ModuleMetadata when a module is being edited", () => {
   beforeEach(() => {
-    mockStore({
-      pages: {
-        moduleUUIDBeingEdited: "ModuleState.uuid",
-        activePageName: "pagename",
-        pages: {
-          pagename: {
-            componentTree: [
-              {
-                kind: ComponentStateKind.Module,
-                uuid: "ModuleState.uuid",
-                metadataUUID: "StarModuleMetadataUUID",
-                componentName: "StarModule",
-                props: {},
-              },
-            ],
-            cssImports: [],
-            filepath: "unused",
-          },
+    mockActivePageTree(
+      [
+        {
+          kind: ComponentStateKind.Module,
+          uuid: "ModuleState.uuid",
+          metadataUUID: "StarModuleMetadataUUID",
+          componentName: "StarModule",
+          props: {},
         },
-      },
-    });
+      ],
+      "ModuleState.uuid"
+    );
   });
 
   insertionOrderTestSuite(() => {
@@ -118,18 +104,7 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
 
 describe("adds components to the active PageState when no module is being edited", () => {
   beforeEach(() => {
-    mockStore({
-      pages: {
-        activePageName: "pagename",
-        pages: {
-          pagename: {
-            componentTree: initialTree,
-            cssImports: [],
-            filepath: "unused",
-          },
-        },
-      },
-    });
+    mockActivePageTree(initialTree);
   });
 
   insertionOrderTestSuite(() => {
@@ -140,8 +115,22 @@ describe("adds components to the active PageState when no module is being edited
 function insertionOrderTestSuite(
   getExpectedObject: () => PageState | FileMetadata
 ) {
+  const componentMetadata: ComponentMetadata = {
+    kind: FileMetadataKind.Component,
+    filepath: "./blah/AddedComp.tsx",
+    metadataUUID: "unused",
+  };
+
+  const newComponentState: ComponentState = {
+    kind: ComponentStateKind.Standard,
+    componentName: "AddedComp",
+    uuid: expect.any(String),
+    props: {},
+    metadataUUID: "unused",
+  };
+
   it("puts new component at start when no active component", () => {
-    useStudioStore.getState().actions.addComponent(newComponentState);
+    useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [newComponentState, ...initialTree],
@@ -153,7 +142,7 @@ function insertionOrderTestSuite(
     useStudioStore
       .getState()
       .pages.setActiveComponentUUID("mock-container-uuid");
-    useStudioStore.getState().actions.addComponent(newComponentState);
+    useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
@@ -168,7 +157,7 @@ function insertionOrderTestSuite(
     useStudioStore
       .getState()
       .pages.setActiveComponentUUID("mock-component-uuid");
-    useStudioStore.getState().actions.addComponent(newComponentState);
+    useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
@@ -182,7 +171,7 @@ function insertionOrderTestSuite(
 
   it("puts new component directly after module if it is active component", () => {
     useStudioStore.getState().pages.setActiveComponentUUID("mock-module-uuid");
-    useStudioStore.getState().actions.addComponent(newComponentState);
+    useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
@@ -198,7 +187,7 @@ function insertionOrderTestSuite(
     useStudioStore
       .getState()
       .pages.setActiveComponentUUID("mock-fragment-uuid");
-    useStudioStore.getState().actions.addComponent(newComponentState);
+    useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [
@@ -211,7 +200,7 @@ function insertionOrderTestSuite(
 
   it("puts new component at start if built-in component is active component", () => {
     useStudioStore.getState().pages.setActiveComponentUUID("mock-builtin-uuid");
-    useStudioStore.getState().actions.addComponent(newComponentState);
+    useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
         componentTree: [

@@ -5,4 +5,5 @@ import { UserPaths } from "@yext/studio-plugin";
  */
 export default interface StudioConfigSlice {
   paths: UserPaths;
+  isPagesJSRepo: boolean;
 }
