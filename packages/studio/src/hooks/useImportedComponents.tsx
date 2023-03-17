@@ -2,6 +2,7 @@ import { FunctionComponent, useCallback, useEffect, useRef } from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentState,
+  ComponentStateHelpers,
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
@@ -44,9 +45,8 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
       if (!TypeGuards.isEditableComponentState(c)) {
         return null;
       }
-      const componentState = TypeGuards.isRepeaterState(c)
-        ? c.repeatedComponent
-        : c;
+      const componentState =
+        ComponentStateHelpers.extractStandardOrModuleComponentState(c);
 
       const { metadataUUID, componentName } = componentState;
       const metadata: FileMetadata | undefined =

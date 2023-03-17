@@ -2,7 +2,7 @@ import {
   PropValueKind,
   PropMetadata,
   PropValueType,
-  TypeGuards,
+  ComponentStateHelpers,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import PropEditors from "./PropEditors";
@@ -27,11 +27,9 @@ export default function ContentPanel(): JSX.Element | null {
   return (
     <div>
       <PropEditors
-        activeComponentState={
-          TypeGuards.isRepeaterState(activeComponentState)
-            ? activeComponentState.repeatedComponent
-            : activeComponentState
-        }
+        activeComponentState={ComponentStateHelpers.extractStandardOrModuleComponentState(
+          activeComponentState
+        )}
         propShape={propShape}
         propKind={PropValueKind.Expression}
         shouldRenderProp={shouldRenderProp}

@@ -1,4 +1,5 @@
 import { ComponentState, ExpressionProp, PropValueKind } from "../types";
+import ComponentStateHelpers from "./ComponentStateHelpers";
 import TypeGuards from "./TypeGuards";
 
 /**
@@ -84,9 +85,8 @@ export default class ComponentTreeHelpers {
     const expressions: string[] = componentTree
       .filter(TypeGuards.isEditableComponentState)
       .flatMap((c) => {
-        const props = TypeGuards.isRepeaterState(c)
-          ? c.repeatedComponent.props
-          : c.props;
+        const props =
+          ComponentStateHelpers.extractStandardOrModuleComponentState(c).props;
         const expressionPropValues = Object.values(props)
           .filter(
             (p): p is ExpressionProp => p.kind === PropValueKind.Expression
