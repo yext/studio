@@ -145,8 +145,9 @@ export default class TypeGuards {
     componentState: ComponentState
   ): componentState is EditableComponentState {
     return (
-      this.isStandardOrModuleComponentState(componentState) ||
-      this.isRepeaterState(componentState)
+      componentState.kind === ComponentStateKind.Module ||
+      componentState.kind === ComponentStateKind.Standard ||
+      componentState.kind === ComponentStateKind.Repeater
     );
   }
 
