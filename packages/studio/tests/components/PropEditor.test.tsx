@@ -10,7 +10,7 @@ describe("trigger onChange from input interaction", () => {
       <PropEditor
         propKind={PropValueKind.Expression}
         propName="age"
-        propMetadata={{ type: PropValueType.number }}
+        propMetadata={{ type: PropValueType.number, required: false }}
         onPropChange={onPropChange}
       />
     );
@@ -31,7 +31,7 @@ describe("trigger onChange from input interaction", () => {
       <PropEditor
         propKind={PropValueKind.Literal}
         propName="title"
-        propMetadata={{ type: PropValueType.string }}
+        propMetadata={{ type: PropValueType.string, required: false }}
         onPropChange={onPropChange}
       />
     );
@@ -49,7 +49,7 @@ describe("trigger onChange from input interaction", () => {
       <PropEditor
         propKind={PropValueKind.Literal}
         propName="age"
-        propMetadata={{ type: PropValueType.number }}
+        propMetadata={{ type: PropValueType.number, required: false }}
         onPropChange={onPropChange}
       />
     );
@@ -67,7 +67,7 @@ describe("trigger onChange from input interaction", () => {
       <PropEditor
         propKind={PropValueKind.Literal}
         propName="is Yext employee?"
-        propMetadata={{ type: PropValueType.boolean }}
+        propMetadata={{ type: PropValueType.boolean, required: false }}
         onPropChange={onPropChange}
       />
     );
@@ -85,7 +85,7 @@ describe("trigger onChange from input interaction", () => {
       <PropEditor
         propKind={PropValueKind.Literal}
         propName="background color"
-        propMetadata={{ type: PropValueType.HexColor }}
+        propMetadata={{ type: PropValueType.HexColor, required: false }}
         onPropChange={onPropChange}
       />
     );

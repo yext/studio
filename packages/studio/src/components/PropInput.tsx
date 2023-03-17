@@ -48,7 +48,8 @@ export default function PropInput({
         value = e.target.valueAsNumber;
       } else if (propType === PropValueType.boolean) {
         value = e.target.checked;
-      } else handleChange(value);
+      }
+      handleChange(value);
     },
     [handleChange, propType]
   );
