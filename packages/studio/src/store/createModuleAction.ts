@@ -85,8 +85,7 @@ export default function getCreateModuleAction(
       moduleMetadata.metadataUUID,
       moduleMetadata
     );
-    const moduleState =
-      get().actions.createComponentState(moduleMetadata);
+    const moduleState = get().actions.createComponentState(moduleMetadata);
     const updatedPageComponentTree: ComponentState[] = differenceWith(
       componentTree,
       descendants,

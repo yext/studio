@@ -7,7 +7,7 @@ export type ComponentState =
 
 export type EditableComponentState =
   | StandardOrModuleComponentState
-  | RepeaterState
+  | RepeaterState;
 
 export type StandardOrModuleComponentState =
   | StandardComponentState

@@ -1,7 +1,4 @@
-import {
-  EditableComponentState,
-  TypeGuards,
-} from "@yext/studio-plugin";
+import { EditableComponentState, TypeGuards } from "@yext/studio-plugin";
 import { useCallback, ChangeEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 

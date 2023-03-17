@@ -1,8 +1,4 @@
-import {
-  ComponentState,
-  ExpressionProp,
-  PropValueKind,
-} from "../types";
+import { ComponentState, ExpressionProp, PropValueKind } from "../types";
 import TypeGuards from "./TypeGuards";
 
 /**
