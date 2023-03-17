@@ -2,6 +2,8 @@ import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
+import FieldPicker from "./FieldPicker/FieldPicker";
+import useStreamDocument from "../hooks/useStreamDocument";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -29,6 +31,16 @@ export default function PropInput({
   unionValues,
   propKind,
 }: PropInputProps): JSX.Element {
+  const handleChange = useCallback(
+    (value: string | number | boolean) => {
+      if (propKind === PropValueKind.Expression) {
+        value = "`" + value + "`";
+      }
+      onChange(value);
+    },
+    [onChange, propKind]
+  );
+
   const onInputChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       let value: string | number | boolean = e.target.value;
@@ -36,15 +48,19 @@ export default function PropInput({
         value = e.target.valueAsNumber;
       } else if (propType === PropValueType.boolean) {
         value = e.target.checked;
-      } else if (propKind === PropValueKind.Expression) {
-        value = "`" + e.target.value + "`";
-      }
-      onChange(value);
+      } else handleChange(value);
     },
-    [onChange, propType, propKind]
+    [handleChange, propType]
   );
-
   const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
+
+  const appendField = useCallback(
+    (appendedField: string) => {
+      const documentUsage = "${" + appendedField + "}";
+      handleChange(`${displayValue} ${documentUsage}`);
+    },
+    [displayValue, handleChange]
+  );
 
   const onSelectChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -52,6 +68,8 @@ export default function PropInput({
     },
     [onChange]
   );
+
+  const streamDocument = useStreamDocument();
 
   if (unionValues) {
     return (
@@ -79,12 +97,20 @@ export default function PropInput({
       );
     case PropValueType.string:
       return (
-        <input
-          type="text"
-          onChange={onInputChange}
-          className={inputBoxCssClasses}
-          value={displayValue as string}
-        />
+        <div className="relative">
+          <input
+            type="text"
+            onChange={onInputChange}
+            className={inputBoxCssClasses}
+            value={displayValue as string}
+          />
+          <i className="absolute right-0 top-2.5 mr-2 bg-white">
+            <FieldPicker
+              handleFieldSelection={appendField}
+              streamDocument={streamDocument}
+            />
+          </i>
+        </div>
       );
     case PropValueType.boolean:
       return (
