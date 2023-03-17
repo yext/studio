@@ -80,7 +80,7 @@ export default class StudioActions {
     const activeComponentState = this.getActiveComponentState();
     if (!activeComponentState) {
       console.error(
-        "Error in updateActiveComponentProps: No active component state found."
+        "Error in updateActiveComponentProps: No active component found."
       );
       return;
     }
@@ -92,6 +92,7 @@ export default class StudioActions {
         "Error in updateActiveComponentProps: Cannot update props for BuiltIn or Fragment components."
       );
     }
+
     const updatedComponentState = TypeGuards.isRepeaterState(
       activeComponentState
     )
@@ -114,7 +115,7 @@ export default class StudioActions {
     const activeComponentState = this.getActiveComponentState();
     if (!activeComponentState) {
       console.error(
-        "Error in updateRepeaterListExpression: No active component state found."
+        "Error in updateRepeaterListExpression: No active component found."
       );
       return;
     }
@@ -124,6 +125,7 @@ export default class StudioActions {
       );
       return;
     }
+
     const updatedComponentState = { ...activeComponentState, listExpression };
     this.replaceComponentState(
       activeComponentState.uuid,
