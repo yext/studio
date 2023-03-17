@@ -1,4 +1,4 @@
-import { RepeaterState } from "@yext/studio-plugin";
+import { PropValues, RepeaterState } from "@yext/studio-plugin";
 import { get } from "lodash";
 import { useCallback, useMemo } from "react";
 import { ExpressionSources } from "../utils/getPreviewProps";
@@ -7,6 +7,7 @@ import ComponentPreview from "./ComponentPreview";
 interface RepeaterPreviewProps {
   repeaterState: RepeaterState;
   expressionSources: ExpressionSources;
+  parentProps?: PropValues;
 }
 
 /**
@@ -15,6 +16,7 @@ interface RepeaterPreviewProps {
 export default function RepeaterPreview({
   repeaterState,
   expressionSources,
+  parentProps,
 }: RepeaterPreviewProps): JSX.Element | null {
   const { repeatedComponent, listExpression } = repeaterState;
   const repeatedElementState = useMemo(
@@ -39,10 +41,11 @@ export default function RepeaterPreview({
       <ComponentPreview
         componentState={repeatedElementState}
         expressionSources={getExpressionSources(item)}
+        parentProps={parentProps}
         key={key}
       />
     ),
-    [repeatedElementState, getExpressionSources]
+    [repeatedElementState, getExpressionSources, parentProps]
   );
 
   const list = get(expressionSources, listExpression) as unknown;

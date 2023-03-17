@@ -3,7 +3,6 @@ import {
   ComponentStateKind,
   FileMetadataKind,
   PropValues,
-  RepeaterState,
   TypeGuards,
 } from "@yext/studio-plugin";
 import { createElement, Fragment, useMemo } from "react";
@@ -29,32 +28,28 @@ export default function ComponentPreview({
   parentProps,
   childElements = [],
 }: ComponentPreviewProps): JSX.Element | null {
-  const [UUIDToImportedComponent, UUIDToFileMetadata] = useStudioStore(
-    (store) => [
-      store.fileMetadatas.UUIDToImportedComponent,
-      store.fileMetadatas.UUIDToFileMetadata,
-    ]
+  const UUIDToFileMetadata = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToFileMetadata
   );
-  const previewProps = useMemo(() => {
-    return TypeGuards.isStandardOrModuleComponentState(componentState)
-      ? getPreviewProps(
-          componentState.props,
-          UUIDToFileMetadata[componentState.metadataUUID].propShape ?? {},
-          expressionSources,
-          parentProps ?? {}
-        )
-      : {};
-  }, [componentState, UUIDToFileMetadata, expressionSources, parentProps]);
+  const previewProps = usePreviewProps(
+    componentState,
+    expressionSources,
+    parentProps
+  );
+  const element = useElement(componentState, (type) =>
+    createElement(type, previewProps, ...childElements)
+  );
 
   if (TypeGuards.isRepeaterState(componentState)) {
     return (
       <RepeaterPreview
         repeaterState={componentState}
         expressionSources={expressionSources}
+        parentProps={parentProps}
       />
     );
   }
-  if (componentState.kind === ComponentStateKind.Module) {
+  if (TypeGuards.isModuleState(componentState)) {
     const metadata = UUIDToFileMetadata[componentState.metadataUUID];
     if (metadata?.kind === FileMetadataKind.Module) {
       return (
@@ -66,28 +61,53 @@ export default function ComponentPreview({
       );
     }
   }
-  const element = getElement(componentState, UUIDToImportedComponent);
-  if (!element) {
-    return null;
-  }
-  return createElement(element, previewProps, ...childElements);
+  return element;
 }
 
-function getElement(
-  c: Exclude<ComponentState, RepeaterState>,
-  UUIDToImportedComponent: Record<string, ImportType>
-): string | ImportType | undefined {
-  if (c.kind === ComponentStateKind.Fragment) {
-    return Fragment;
-  } else if (c.kind === ComponentStateKind.BuiltIn) {
-    return c.componentName;
-  } else {
-    const importedComponent = UUIDToImportedComponent[c.metadataUUID];
-    if (!importedComponent) {
-      console.warn(
-        `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
-      );
+function useElement(
+  c: ComponentState,
+  createElement: (type: string | ImportType) => JSX.Element
+): JSX.Element | null {
+  const UUIDToImportedComponent = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToImportedComponent
+  );
+
+  const element: string | ImportType | undefined = useMemo(() => {
+    if (TypeGuards.isRepeaterState(c) || TypeGuards.isModuleState(c)) {
+      return undefined;
+    } else if (c.kind === ComponentStateKind.Fragment) {
+      return Fragment;
+    } else if (c.kind === ComponentStateKind.BuiltIn) {
+      return c.componentName;
+    } else {
+      const importedComponent = UUIDToImportedComponent[c.metadataUUID];
+      if (!importedComponent) {
+        console.warn(
+          `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
+        );
+        return undefined;
+      }
+      return importedComponent;
     }
-    return importedComponent;
-  }
+  }, [c, UUIDToImportedComponent]);
+
+  return element ? createElement(element) : null;
+}
+
+function usePreviewProps(
+  c: ComponentState,
+  expressionSources: ExpressionSources,
+  parentProps?: PropValues
+) {
+  const UUIDToFileMetadata = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToFileMetadata
+  );
+  return TypeGuards.isStandardOrModuleComponentState(c)
+    ? getPreviewProps(
+        c.props,
+        UUIDToFileMetadata[c.metadataUUID].propShape ?? {},
+        expressionSources,
+        parentProps ?? {}
+      )
+    : {};
 }
