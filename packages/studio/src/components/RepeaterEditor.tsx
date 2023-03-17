@@ -21,13 +21,12 @@ export default function RepeaterEditor({
     store.actions.removeRepeater,
   ]);
 
-  const componentUUID = componentState.uuid;
   const onToggleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const checked = e.target.checked;
-      checked ? addRepeater(componentUUID) : removeRepeater(componentUUID);
+      checked ? addRepeater(componentState) : removeRepeater(componentState);
     },
-    [addRepeater, removeRepeater, componentUUID]
+    [addRepeater, removeRepeater, componentState]
   );
 
   const handleListUpdate = useCallback(

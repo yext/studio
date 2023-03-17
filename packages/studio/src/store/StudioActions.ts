@@ -77,52 +77,58 @@ export default class StudioActions {
   };
 
   updateActiveComponentProps = (props: PropValues) => {
-    const activeComponentUUID = this.getPages().activeComponentUUID;
-    if (!activeComponentUUID) {
+    const activeComponentState = this.getActiveComponentState();
+    if (!activeComponentState) {
       console.error(
-        "Error in updateActiveComponentProps: No active component in this.get()."
+        "Error in updateActiveComponentProps: No active component state found."
       );
       return;
     }
-    const updateComponentProps = (c: ComponentState) => {
-      if (
-        c.kind === ComponentStateKind.BuiltIn ||
-        c.kind === ComponentStateKind.Fragment
-      ) {
-        throw new Error(
-          "Error in updateActiveComponentProps: Cannot update props for BuiltIn or Fragment components."
-        );
-      }
-      if (TypeGuards.isRepeaterState(c)) {
-        const updatedState = {
-          ...c,
-          repeatedComponent: { ...c.repeatedComponent, props },
-        };
-        return updatedState;
-      }
-      return { ...c, props };
-    };
-    this.replaceComponentState(activeComponentUUID, updateComponentProps);
+    if (
+      activeComponentState.kind === ComponentStateKind.BuiltIn ||
+      activeComponentState.kind === ComponentStateKind.Fragment
+    ) {
+      throw new Error(
+        "Error in updateActiveComponentProps: Cannot update props for BuiltIn or Fragment components."
+      );
+    }
+    const updatedComponentState = TypeGuards.isRepeaterState(
+      activeComponentState
+    )
+      ? {
+          ...activeComponentState,
+          repeatedComponent: {
+            ...activeComponentState.repeatedComponent,
+            props,
+          },
+        }
+      : { ...activeComponentState, props };
+
+    this.replaceComponentState(
+      activeComponentState.uuid,
+      updatedComponentState
+    );
   };
 
   updateRepeaterListExpression = (listExpression: string) => {
-    const activeComponentUUID = this.getPages().activeComponentUUID;
-    if (!activeComponentUUID) {
+    const activeComponentState = this.getActiveComponentState();
+    if (!activeComponentState) {
       console.error(
-        "Error in updateRepeaterListExpression: No active component in this.get()."
+        "Error in updateRepeaterListExpression: No active component state found."
       );
       return;
     }
-    const updateListExpression = (c: ComponentState) => {
-      if (!TypeGuards.isRepeaterState(c)) {
-        console.error(
-          "Error in updateRepeaterListExpression: The active component is not a Repeater."
-        );
-        return c;
-      }
-      return { ...c, listExpression };
-    };
-    this.replaceComponentState(activeComponentUUID, updateListExpression);
+    if (!TypeGuards.isRepeaterState(activeComponentState)) {
+      console.error(
+        "Error in updateRepeaterListExpression: The active component is not a Repeater."
+      );
+      return;
+    }
+    const updatedComponentState = { ...activeComponentState, listExpression };
+    this.replaceComponentState(
+      activeComponentState.uuid,
+      updatedComponentState
+    );
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
@@ -141,7 +147,7 @@ export default class StudioActions {
 
   replaceComponentState = (
     uuidToReplace: string,
-    getNewComponentState: (c: ComponentState) => ComponentState
+    newComponentState: ComponentState
   ) => {
     const currentComponentTree = this.getComponentTree();
     if (!currentComponentTree) {
@@ -149,7 +155,7 @@ export default class StudioActions {
     }
     const updatedComponentTree = currentComponentTree.flatMap((c) => {
       if (c.uuid === uuidToReplace) {
-        return getNewComponentState(c);
+        return newComponentState;
       }
       return c;
     });
