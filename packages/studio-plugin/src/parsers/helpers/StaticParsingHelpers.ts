@@ -40,12 +40,14 @@ export type ParsedInterface = {
     | {
         kind: ParsedInterfaceKind.Simple;
         type: string;
+        required: boolean;
         unionValues?: string[];
         doc?: string;
       }
     | {
         kind: ParsedInterfaceKind.Nested;
         type: ParsedInterface;
+        required: boolean;
       };
 };
 
@@ -177,6 +179,7 @@ export default class StaticParsingHelpers {
         type: this.parsePropertySignatures(
           typeNode.getChildrenOfKind(SyntaxKind.PropertySignature)
         ),
+        required: !p.hasQuestionToken(),
       };
     };
 
@@ -197,6 +200,7 @@ export default class StaticParsingHelpers {
         kind: ParsedInterfaceKind.Simple,
         type,
         ...(jsdoc && { doc: jsdoc }),
+        required: !p.hasQuestionToken(),
       };
     };
 
@@ -220,6 +224,7 @@ export default class StaticParsingHelpers {
         type: PropValueType.string,
         unionValues,
         ...(jsdoc && { doc: jsdoc }),
+        required: !p.hasQuestionToken(),
       };
     };
 

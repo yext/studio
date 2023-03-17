@@ -1,6 +1,6 @@
 import { PropValueType } from "./PropValues";
 
-export type PropShape<T = PropValueType> = Omit<
+export type PropShape<T extends PropValueType = PropValueType> = Omit<
   {
     [propName: string]: PropMetadata<T>;
   },
@@ -14,20 +14,40 @@ export enum SpecialReactProps {
   Key = "key",
 }
 
-export type PropMetadata<T = PropValueType> =
+export type PropMetadata<T extends PropValueType = PropValueType> = (
   | NestedPropMetadata<T>
-  | {
-      type: Exclude<T, PropValueType.Object | PropValueType.string>;
-      doc?: string;
-      unionValues?: never;
-    }
-  | {
-      type: PropValueType.string;
-      doc?: string;
-      unionValues?: string[];
-    };
+  | NonUnionMetadata<T>
+  | StringUnionMetadata
+  | (PropValueType.Record extends T ? RecordMetadata : never)
+) & {
+  required: boolean;
+};
 
-export type NestedPropMetadata<T = PropValueType> = {
+type NonUnionMetadata<T> = {
+  type: Exclude<
+    T,
+    PropValueType.Object | PropValueType.string | PropValueType.Record
+  >;
+  doc?: string;
+  unionValues?: never;
+};
+
+export type RecordMetadata = {
+  type: PropValueType.Record;
+  doc?: string;
+  // Only Record<string, any> is supported.
+  recordKey: "string";
+  recordValue: "any";
+  unionValues?: never;
+};
+
+type StringUnionMetadata = {
+  type: PropValueType.string;
+  doc?: string;
+  unionValues?: string[];
+};
+
+export type NestedPropMetadata<T extends PropValueType = PropValueType> = {
   type: PropValueType.Object;
   doc?: undefined;
   shape: PropShape<T>;

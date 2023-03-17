@@ -35,8 +35,7 @@ export default async function createStudioPlugin(
     : undefined;
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
-    studioConfig.paths,
-    studioConfig.plugins,
+    studioConfig,
     localDataMapping
   );
   const hmrManager = new HmrManager(

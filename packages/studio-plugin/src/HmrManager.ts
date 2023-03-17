@@ -1,4 +1,3 @@
-import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
 import { ViteDevServer } from "vite";
@@ -18,14 +17,14 @@ export default class HmrManager {
    * If the file can be recognized as one of the user's src files,
    * update the StudioData and send a custom HMR event to the frontend.
    */
-  async handleHotUpdate(server: ViteDevServer, filepath: string) {
+  handleHotUpdate(server: ViteDevServer, filepath: string) {
     if (!filepath.startsWith(this.pathToUserProjectRoot)) {
       return;
     }
     this.orchestrator.reloadFile(filepath);
     HmrManager.invalidateStudioData(server);
     const updateType = getHMRUpdateType(filepath, this.userPaths);
-    const data = await this.getPayload(updateType);
+    const data = this.getPayload(updateType);
     server.ws.send({
       type: "custom",
       event: StudioHMRUpdateID,
@@ -45,17 +44,13 @@ export default class HmrManager {
     }
   }
 
-  private async getPayload(
+  private getPayload(
     updateType: StudioHMRPayload["updateType"]
-  ): Promise<StudioHMRPayload> {
+  ): StudioHMRPayload {
     const studioData = this.orchestrator.getStudioData();
-    const studioConfig = await getStudioConfig(this.pathToUserProjectRoot);
     return {
       updateType,
-      studioData: {
-        ...studioData,
-        userPaths: studioConfig.paths,
-      },
+      studioData,
     };
   }
 }

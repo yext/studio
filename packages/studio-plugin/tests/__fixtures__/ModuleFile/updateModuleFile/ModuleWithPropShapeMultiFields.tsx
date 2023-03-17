@@ -7,6 +7,6 @@ export interface PanelProps {
   complexBannerBool?: boolean;
 }
 
-export default function Panel(props: PanelProps) {
+export default function Panel() {
   return <ComplexBanner />;
 }

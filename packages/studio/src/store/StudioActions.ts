@@ -18,10 +18,14 @@ import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
 import RepeaterActions from "./StudioActions/RepeaterActions";
+import AddComponentAction from "./StudioActions/AddComponentAction";
+import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 
 export default class StudioActions {
   public addRepeater: RepeaterActions["addRepeater"];
   public removeRepeater: RepeaterActions["removeRepeater"];
+  public addComponent: AddComponentAction["addComponent"];
+  public createComponentState: CreateComponentStateAction["createComponentState"];
 
   constructor(
     private getPages: () => PageSlice,
@@ -33,6 +37,10 @@ export default class StudioActions {
     const repeaterActions = new RepeaterActions(this);
     this.addRepeater = repeaterActions.addRepeater;
     this.removeRepeater = repeaterActions.removeRepeater;
+    this.addComponent = new AddComponentAction(this).addComponent;
+    this.createComponentState = new CreateComponentStateAction(
+      getStudioConfig
+    ).createComponentState;
   }
 
   getComponentTree = () => {
@@ -56,6 +64,15 @@ export default class StudioActions {
     const { activeComponentUUID } = this.getPages();
     return this.getComponentTree()?.some(
       (c) => c.parentUUID === activeComponentUUID
+    );
+  };
+
+  getComponentMetadata = (componentState?: ComponentState) => {
+    if (componentState?.kind !== ComponentStateKind.Standard) {
+      return undefined;
+    }
+    return this.getFileMetadatas().getComponentMetadata(
+      componentState.metadataUUID
     );
   };
 
@@ -137,41 +154,6 @@ export default class StudioActions {
       return c;
     });
     this.updateComponentTree(updatedComponentTree);
-  };
-
-  addComponent = (componentState: ComponentState) => {
-    const activeComponentState = this.getActiveComponentState();
-    const activeComponentMetadata =
-      activeComponentState?.kind === ComponentStateKind.Standard
-        ? this.getFileMetadatas().getComponentMetadata(
-            activeComponentState.metadataUUID
-          )
-        : undefined;
-    const activeComponentIsParent =
-      activeComponentMetadata?.acceptsChildren ||
-      activeComponentState?.kind === ComponentStateKind.Fragment ||
-      activeComponentState?.kind === ComponentStateKind.BuiltIn;
-    const parentUUID = activeComponentIsParent
-      ? activeComponentState?.uuid
-      : activeComponentState?.parentUUID;
-    const updatedComponentState = {
-      ...componentState,
-      parentUUID,
-    };
-
-    const tree = this.getComponentTree();
-    if (!tree) {
-      return;
-    }
-    const activeComponentIndex = tree.findIndex(
-      (c) => c.uuid === activeComponentState?.uuid
-    );
-    const insertionIndex = activeComponentIsParent
-      ? 0
-      : activeComponentIndex + 1;
-    const updatedTree = [...tree];
-    updatedTree.splice(insertionIndex, 0, updatedComponentState);
-    return this.updateComponentTree(updatedTree);
   };
 
   removeComponent = (componentUUID: string) => {

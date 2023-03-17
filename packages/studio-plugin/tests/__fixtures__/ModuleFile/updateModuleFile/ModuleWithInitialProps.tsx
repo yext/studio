@@ -9,6 +9,6 @@ export const initialProps: PanelProps = {
   complexBannerText: "Hello world!",
 };
 
-export default function Panel(props: PanelProps) {
+export default function Panel() {
   return <ComplexBanner />;
 }

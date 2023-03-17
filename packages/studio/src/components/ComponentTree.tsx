@@ -11,7 +11,7 @@ import {
   RenderParams,
   Tree,
 } from "@minoru/react-dnd-treeview";
-import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
+import { ComponentState, TypeGuards } from "@yext/studio-plugin";
 import { useCallback, useMemo, useState } from "react";
 import { getComponentName } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
@@ -134,53 +134,31 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
 }
 
 function useTree(): NodeModel<ComponentState>[] | undefined {
-  const componentTree = useStudioStore(
-    (store) => store.actions.getComponentTree
-  )();
-
-  const getComponentMetadata = useStudioStore(
-    (store) => store.fileMetadatas.getComponentMetadata
-  );
+  const [componentTree, getFileMetadata] = useStudioStore((store) => {
+    return [
+      store.actions.getComponentTree(),
+      store.fileMetadatas.getFileMetadata,
+    ];
+  });
 
   const tree = useMemo(() => {
     return componentTree?.map((componentState) => {
-      const commonData = {
+      const fileMetadata = componentState?.metadataUUID
+        ? getFileMetadata(componentState.metadataUUID)
+        : undefined;
+      const droppable = TypeGuards.canAcceptChildren(
+        componentState,
+        fileMetadata
+      );
+      return {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
         data: componentState,
         text: getComponentName(componentState),
+        droppable,
       };
-      switch (componentState.kind) {
-        case ComponentStateKind.Fragment:
-        case ComponentStateKind.BuiltIn:
-          return {
-            ...commonData,
-            droppable: true,
-          };
-        case ComponentStateKind.Repeater:
-          return {
-            ...commonData,
-            droppable: false,
-          };
-        case ComponentStateKind.Module:
-          return {
-            ...commonData,
-            droppable: false,
-          };
-        case ComponentStateKind.Standard:
-          const metadata = getComponentMetadata(componentState.metadataUUID);
-
-          return {
-            ...commonData,
-            droppable: metadata.acceptsChildren,
-          };
-        default:
-          throw new Error(
-            `Unhandled ComponentStateKind ${componentState["kind"]}`
-          );
-      }
     });
-  }, [componentTree, getComponentMetadata]);
+  }, [componentTree, getFileMetadata]);
 
   return tree;
 }

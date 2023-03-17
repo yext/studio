@@ -1,11 +1,5 @@
-import {
-  ComponentStateKind,
-  FileMetadata,
-  FileMetadataKind,
-  StandardOrModuleComponentState,
-} from "@yext/studio-plugin";
+import { FileMetadata, FileMetadataKind } from "@yext/studio-plugin";
 import { useCallback } from "react";
-import { v4 } from "uuid";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
@@ -79,25 +73,9 @@ function Option({
     return store.actions.addComponent;
   });
 
-  const addElement = useCallback(
-    (componentName: string) => {
-      const componentState: StandardOrModuleComponentState = {
-        kind:
-          metadata.kind === FileMetadataKind.Module
-            ? ComponentStateKind.Module
-            : ComponentStateKind.Standard,
-        componentName,
-        props: metadata.initialProps ?? {},
-        uuid: v4(),
-        metadataUUID: metadata.metadataUUID,
-      };
-      addComponent(componentState);
-    },
-    [addComponent, metadata.initialProps, metadata.kind, metadata.metadataUUID]
-  );
   const handleClick = useCallback(() => {
-    addElement(componentName);
-  }, [addElement, componentName]);
+    addComponent(metadata);
+  }, [addComponent, metadata]);
 
   // Prevent users from adding infinite looping modules.
   const isSameAsActiveModule =

@@ -2,6 +2,7 @@ import {
   ComponentState,
   ComponentStateKind,
   FileMetadataKind,
+  PropValues,
   RepeaterState,
   TypeGuards,
 } from "@yext/studio-plugin";
@@ -15,6 +16,7 @@ import RepeaterPreview from "./RepeaterPreview";
 interface ComponentPreviewProps {
   componentState: ComponentState;
   expressionSources: ExpressionSources;
+  parentProps?: PropValues;
   childElements?: (JSX.Element | null)[];
 }
 
@@ -24,6 +26,7 @@ interface ComponentPreviewProps {
 export default function ComponentPreview({
   componentState,
   expressionSources,
+  parentProps,
   childElements = [],
 }: ComponentPreviewProps): JSX.Element | null {
   const [UUIDToImportedComponent, UUIDToFileMetadata] = useStudioStore(
@@ -37,10 +40,11 @@ export default function ComponentPreview({
       ? getPreviewProps(
           componentState.props,
           UUIDToFileMetadata[componentState.metadataUUID].propShape ?? {},
-          expressionSources
+          expressionSources,
+          parentProps ?? {}
         )
       : {};
-  }, [componentState, UUIDToFileMetadata, expressionSources]);
+  }, [componentState, UUIDToFileMetadata, expressionSources, parentProps]);
 
   if (TypeGuards.isRepeaterState(componentState)) {
     return (
@@ -56,9 +60,8 @@ export default function ComponentPreview({
       return (
         <ComponentTreePreview
           componentTree={metadata.componentTree}
-          props={componentState.props}
-          propShape={metadata.propShape}
-          isWithinModule={true}
+          parentProps={componentState.props}
+          renderHighlightingContainer={false}
         />
       );
     }

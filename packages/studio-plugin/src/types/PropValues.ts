@@ -8,11 +8,13 @@ export type LiteralProp<T = PropValues> = {
   kind: PropValueKind.Literal;
 } & (NumberProp | StringProp | BooleanProp | HexColorProp | ObjectProp<T>);
 
-export type ExpressionProp = {
-  kind: PropValueKind.Expression;
-  valueType: Exclude<PropValueType, PropValueType.Object>;
-  value: string;
-};
+export type ExpressionProp =
+  | {
+      kind: PropValueKind.Expression;
+      valueType: Exclude<PropValueType, PropValueType.Object>;
+      value: string;
+    }
+  | RecordProp;
 
 export enum PropValueType {
   number = "number",
@@ -21,6 +23,7 @@ export enum PropValueType {
   ReactNode = "ReactNode",
   Object = "Object",
   HexColor = "HexColor",
+  Record = "Record",
 }
 
 export enum PropValueKind {
@@ -44,6 +47,12 @@ export type ObjectProp<T> = {
   kind: PropValueKind.Literal;
   valueType: PropValueType.Object;
   value: T;
+};
+export type RecordProp = {
+  kind: PropValueKind.Expression;
+  valueType: PropValueType.Record;
+  // Records are only supported for stream documents right now.
+  value: "document";
 };
 // Used in component outside Studio to represent a hex color prop in Studio preview.
 export type HexColor = `#${string}`;

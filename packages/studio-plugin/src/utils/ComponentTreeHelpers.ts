@@ -1,4 +1,11 @@
-import { ComponentState } from "../types";
+import {
+  ComponentState,
+  ExpressionProp,
+  PropValueKind,
+  RepeaterState,
+  StandardOrModuleComponentState,
+} from "../types";
+import TypeGuards from "./TypeGuards";
 
 /**
  * A static class for housing various util functions related to component state used by Studio.
@@ -73,5 +80,63 @@ export default class ComponentTreeHelpers {
       }
     });
     return { directChildren, otherNodes };
+  }
+
+  /**
+   * Checks whether the component tree uses a specific expression source, such
+   * as `document` or `props`.
+   */
+  static usesExpressionSource(componentTree: ComponentState[], source: string) {
+    const expressions: string[] = componentTree
+      .filter(
+        (c): c is StandardOrModuleComponentState | RepeaterState =>
+          TypeGuards.isStandardOrModuleComponentState(c) ||
+          TypeGuards.isRepeaterState(c)
+      )
+      .flatMap((c) => {
+        const props = TypeGuards.isRepeaterState(c)
+          ? c.repeatedComponent.props
+          : c.props;
+        const expressionPropValues = Object.values(props)
+          .filter(
+            (p): p is ExpressionProp => p.kind === PropValueKind.Expression
+          )
+          .map((p) => p.value);
+        return TypeGuards.isRepeaterState(c)
+          ? [...expressionPropValues, c.listExpression]
+          : expressionPropValues;
+      });
+
+    // This is used to create the regex: /\${source\..*}/
+    const regexStr = "\\${" + source + "\\..*}";
+    const templateStringRegex = new RegExp(regexStr);
+
+    return expressions.some((e) => {
+      return (
+        e === source ||
+        e.startsWith(source + ".") ||
+        e.match(templateStringRegex) ||
+        e.includes("${" + source + "}")
+      );
+    });
+  }
+
+  /**
+   * Returns all descendants of the given ComponentState within the given tree.
+   */
+  static getDescendants(
+    ancestorState: ComponentState,
+    componentTree: ComponentState[]
+  ) {
+    const descendants = ComponentTreeHelpers.mapComponentTree<ComponentState[]>(
+      componentTree,
+      (componentState, mappedChildren) => [
+        componentState,
+        ...mappedChildren.flat(),
+      ],
+      ancestorState
+    ).flat();
+
+    return descendants;
   }
 }

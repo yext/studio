@@ -2,10 +2,11 @@ import { StudioStore } from "./models/StudioStore";
 import path from "path-browserify";
 import {
   ComponentState,
-  ComponentStateKind,
   ComponentTreeHelpers,
   FileMetadataKind,
-  ModuleState,
+  ModuleMetadata,
+  PropValueType,
+  StandardOrModuleComponentState,
 } from "@yext/studio-plugin";
 import { differenceWith, isEqual } from "lodash";
 import { v4 } from "uuid";
@@ -39,53 +40,69 @@ export default function getCreateModuleAction(
     }
   }
 
+  function createModuleMetadata(
+    filepath: string,
+    descendants: ComponentState[],
+    activeComponentState: ComponentState
+  ): ModuleMetadata {
+    const moduleMetadata: ModuleMetadata = {
+      kind: FileMetadataKind.Module,
+      componentTree: [
+        { ...activeComponentState, parentUUID: undefined },
+        ...descendants,
+      ],
+      metadataUUID: v4(),
+      filepath,
+      propShape: {},
+    };
+    if (get().studioConfig.isPagesJSRepo) {
+      moduleMetadata.propShape = {
+        document: {
+          type: PropValueType.Record,
+          recordKey: "string",
+          recordValue: "any",
+          required: true,
+        },
+      };
+    }
+    return moduleMetadata;
+  }
+
   function createModule(
     filepath: string,
     componentTree: ComponentState[],
     activeComponentState: ComponentState
   ) {
-    const metadataUUID = v4();
-    const childComponentTree = ComponentTreeHelpers.mapComponentTree<
-      ComponentState[]
-    >(
-      componentTree,
-      (componentState, mappedChildren) => [
-        componentState,
-        ...mappedChildren.flat(),
-      ],
-      activeComponentState
-    ).flat();
-    get().fileMetadatas.setFileMetadata(metadataUUID, {
-      kind: FileMetadataKind.Module,
-      componentTree: [
-        { ...activeComponentState, parentUUID: undefined },
-        ...childComponentTree,
-      ],
-      metadataUUID,
+    const descendants = ComponentTreeHelpers.getDescendants(
+      activeComponentState,
+      componentTree
+    );
+    const moduleMetadata: ModuleMetadata = createModuleMetadata(
       filepath,
-      propShape: {},
-    });
-    const moduleComponentUUID = v4();
-    const updatedPageComponentTree = differenceWith(
+      descendants,
+      activeComponentState
+    );
+    get().fileMetadatas.setFileMetadata(
+      moduleMetadata.metadataUUID,
+      moduleMetadata
+    );
+    const moduleState: StandardOrModuleComponentState =
+      get().actions.createComponentState(moduleMetadata);
+    const updatedPageComponentTree: ComponentState[] = differenceWith(
       componentTree,
-      childComponentTree,
+      descendants,
       isEqual
     ).map((c) => {
       if (c.uuid === activeComponentState.uuid) {
-        const newModuleState: ModuleState = {
-          kind: ComponentStateKind.Module,
-          componentName: path.basename(filepath, ".tsx"),
-          uuid: moduleComponentUUID,
-          props: {},
-          metadataUUID,
+        return {
+          ...moduleState,
           parentUUID: c.parentUUID,
         };
-        return newModuleState;
       }
       return c;
     });
     get().actions.updateComponentTree(updatedPageComponentTree);
-    get().pages.setActiveComponentUUID(moduleComponentUUID);
+    get().pages.setActiveComponentUUID(moduleState.uuid);
   }
 
   return (modulePath: string) => {

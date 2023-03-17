@@ -5,10 +5,9 @@ import {
   PropValues,
   ComponentState,
   transformPropValuesToRaw,
-  PropShape,
 } from "@yext/studio-plugin";
 import { useLayoutEffect } from "react";
-import { getPreviewProps } from "../utils/getPreviewProps";
+import { ExpressionSources } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import HighlightingContainer from "./HighlightingContainer";
@@ -16,9 +15,8 @@ import ComponentPreview from "./ComponentPreview";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
-  props?: PropValues;
-  propShape?: PropShape;
-  isWithinModule?: boolean;
+  parentProps?: PropValues;
+  renderHighlightingContainer?: boolean;
 }
 
 /**
@@ -26,16 +24,16 @@ interface ComponentTreePreviewProps {
  */
 export default function ComponentTreePreview({
   componentTree,
-  props,
-  propShape,
-  isWithinModule,
+  parentProps,
+  renderHighlightingContainer = true,
 }: ComponentTreePreviewProps): JSX.Element {
   useImportedComponents(componentTree);
+  const expressionSources = useExpressionSources();
   const elements = useComponentTreeElements(
     componentTree,
-    props,
-    propShape,
-    isWithinModule
+    expressionSources,
+    renderHighlightingContainer,
+    parentProps
   );
   return <>{elements}</>;
 }
@@ -46,14 +44,13 @@ export default function ComponentTreePreview({
  */
 function useComponentTreeElements(
   componentTree: ComponentState[],
-  props?: PropValues,
-  propShape?: PropShape,
-  isWithinModule?: boolean
+  expressionSources: ExpressionSources,
+  renderHighlightingContainer?: boolean,
+  parentProps?: PropValues
 ): (JSX.Element | null)[] | null {
   const UUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
   );
-  const expressionSources = useExpressionSources(props, propShape);
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
     if (Object.keys(UUIDToImportedComponent).length === 0) {
@@ -67,9 +64,10 @@ function useComponentTreeElements(
             componentState={c}
             expressionSources={expressionSources}
             childElements={children}
+            parentProps={parentProps}
           />
         );
-        if (isWithinModule) {
+        if (!renderHighlightingContainer) {
           return (
             <ErrorBoundary key={c.uuid}>{renderedComponent}</ErrorBoundary>
           );
@@ -83,24 +81,21 @@ function useComponentTreeElements(
     );
   }, [
     UUIDToImportedComponent,
-    expressionSources,
     componentTree,
-    isWithinModule,
+    expressionSources,
+    parentProps,
+    renderHighlightingContainer,
   ]);
 }
 
 /**
  * Dynamically load files that serve as expression sources for the
- * expressions in prop's value. Currently, Studio only support expression
- * value sourced from props, site settings file, or a Stream document.
+ * expressions in prop's value.
  */
-function useExpressionSources(
-  props?: PropValues,
-  propShape?: PropShape
-): Record<string, Record<string, unknown>> {
-  const [expressionSources, setExpressionSources] = useState<
-    Record<string, Record<string, unknown>>
-  >({});
+function useExpressionSources(): ExpressionSources {
+  const [expressionSources, setExpressionSources] = useState<ExpressionSources>(
+    {}
+  );
   const [siteSettingValues, activeEntityFile, isModuleBeingEdited] =
     useStudioStore((store) => [
       store.siteSettings.values,
@@ -123,7 +118,7 @@ function useExpressionSources(
   );
 
   useLayoutEffect(() => {
-    if (!activeEntityFile || isModuleBeingEdited) {
+    if (!activeEntityFile) {
       return setExpressionSources((prev) => {
         const { document: _, ...otherSources } = prev;
         return otherSources;
@@ -131,26 +126,14 @@ function useExpressionSources(
     }
     const entityFilepath = `${localDataPath}/${activeEntityFile}`;
     import(/* @vite-ignore */ entityFilepath).then((importedModule) => {
-      setExpressionSources((prev) => ({
-        ...prev,
-        document: importedModule["default"] as Record<string, unknown>,
-      }));
+      setExpressionSources((prev) => {
+        return {
+          ...prev,
+          document: importedModule["default"] as Record<string, unknown>,
+        };
+      });
     });
   }, [activeEntityFile, localDataPath, isModuleBeingEdited]);
-
-  useLayoutEffect(() => {
-    setExpressionSources((prev) => {
-      const { props: _, ...otherSources } = prev;
-      if (!props || !propShape) {
-        return otherSources;
-      }
-      const propsSource = getPreviewProps(props, propShape, otherSources);
-      return {
-        ...otherSources,
-        props: propsSource,
-      };
-    });
-  }, [props, propShape]);
 
   return expressionSources;
 }

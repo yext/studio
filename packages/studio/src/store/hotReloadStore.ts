@@ -29,7 +29,7 @@ function fullSync(studioData: StudioData) {
   syncFileMetadata(studioData);
   syncSiteSettings(studioData);
   useStudioStore.setState((store) => {
-    store.studioConfig.paths = studioData.userPaths;
+    store.studioConfig = studioData.studioConfig;
   });
 }
 

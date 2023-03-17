@@ -21,8 +21,8 @@ describe("getSiteSettings", () => {
     );
     const expectedSiteSettings: SiteSettings = {
       shape: {
-        mySetting: { type: PropValueType.string },
-        isDev: { type: PropValueType.boolean },
+        mySetting: { type: PropValueType.string, required: true },
+        isDev: { type: PropValueType.boolean, required: true },
       },
       values: {
         mySetting: {
@@ -60,9 +60,11 @@ describe("getSiteSettings", () => {
       shape: {
         "Global Color Style": {
           type: PropValueType.Object,
+          required: true,
           shape: {
             "Primary Theme": {
               type: PropValueType.HexColor,
+              required: true,
             },
           },
         },

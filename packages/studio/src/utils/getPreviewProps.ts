@@ -6,6 +6,8 @@ import {
   PropValues,
   PropShape,
   transformPropValuesToRaw,
+  PropVal,
+  ExpressionProp,
 } from "@yext/studio-plugin";
 import { get } from "lodash";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
@@ -23,7 +25,8 @@ import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 export function getPreviewProps(
   props: PropValues,
   propShape: PropShape,
-  expressionSources: ExpressionSources
+  expressionSources: ExpressionSources,
+  parentProps: PropValues
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
@@ -38,25 +41,42 @@ export function getPreviewProps(
       );
       return;
     }
-    const { kind, value, valueType } = props[propName];
-    if (kind === PropValueKind.Expression) {
-      if (TypeGuards.isTemplateString(value)) {
-        transformedProps[propName] = getTemplateStringValue(
-          value,
-          valueType,
-          expressionSources
-        );
-      } else {
-        transformedProps[propName] =
-          getExpressionValue(value, valueType, expressionSources) ?? value;
-      }
-    } else if (valueType === PropValueType.Object) {
-      transformedProps[propName] = transformPropValuesToRaw(value);
+    const propVal = props[propName];
+    if (propVal.kind === PropValueKind.Expression) {
+      transformedProps[propName] = getExpressionPropLiteralValue(
+        propVal,
+        expressionSources,
+        parentProps
+      );
+    } else if (propVal.valueType === PropValueType.Object) {
+      transformedProps[propName] = transformPropValuesToRaw(propVal.value);
     } else {
-      transformedProps[propName] = value;
+      transformedProps[propName] = propVal.value;
     }
   });
   return transformedProps;
+}
+
+/**
+ * Calculates the underlying literal value for an {@link ExpressionProp}.
+ */
+function getExpressionPropLiteralValue(
+  { value, valueType }: ExpressionProp,
+  expressionSources: ExpressionSources,
+  parentProps: PropValues
+) {
+  if (TypeGuards.isTemplateString(value)) {
+    return getTemplateStringValue(
+      value,
+      valueType,
+      expressionSources,
+      parentProps
+    );
+  }
+  return (
+    getExpressionValue(value, valueType, expressionSources, parentProps) ??
+    value
+  );
 }
 
 /**
@@ -71,7 +91,8 @@ export function getPreviewProps(
 function getTemplateStringValue(
   templateString: string,
   propType: PropValueType,
-  expressionSources: ExpressionSources
+  expressionSources: ExpressionSources,
+  parentProps: PropValues
 ): string {
   const templateStringWithoutBacktiks = templateString.substring(
     1,
@@ -83,7 +104,8 @@ function getTemplateStringValue(
       const expressionVal = getExpressionValue(
         args[1],
         propType,
-        expressionSources
+        expressionSources,
+        parentProps
       );
       if (expressionVal !== null) {
         return expressionVal.toString();
@@ -105,34 +127,68 @@ function getTemplateStringValue(
 function getExpressionValue(
   expression: string,
   propType: PropValueType,
-  expressionSources: ExpressionSources
+  expressionSources: ExpressionSources,
+  parentProps: PropValues
 ): string | number | boolean | null | Record<string, unknown> {
-  function getValueFromPath(path: string, parentPath: string) {
+  function createPropVal(value: unknown): PropVal | null {
+    const propVal = {
+      kind: PropValueKind.Literal,
+      valueType: propType,
+      value,
+    };
+    if (!TypeGuards.isValidPropValue(propVal)) {
+      return null;
+    }
+    return propVal;
+  }
+
+  function getValueFromPath(path: string, parentPath: keyof ExpressionSources) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {
       console.warn(
-        `Invalid expression source type: ${parentPath}. Unable to extract the desired data from path: ${path}`
+        `Invalid expression source type: ${parentPath}. ` +
+          `Unable to extract the desired data from path: ${path}`,
+        expressionSources
       );
       return null;
     }
     const newPropValue =
       (get({ [parentPath]: sourceObject }, path) as unknown) ?? path;
-    const propVal = {
-      kind: PropValueKind.Literal,
-      valueType: propType,
-      value: newPropValue,
-    };
-    if (TypeGuards.isValidPropValue(propVal)) {
-      if (propVal.valueType === PropValueType.Object) {
-        return transformPropValuesToRaw(propVal.value);
-      }
-      return propVal.value;
-    } else {
+    const propVal = createPropVal(newPropValue);
+    if (!propVal) {
       console.warn(
-        `Invalid expression prop value: ${newPropValue}. The value extracted from the expression "${path}" does not match with the expected propType ${propType}.`
+        `Invalid expression prop value: ${newPropValue}. ` +
+          `The value extracted from the expression "${path}" ` +
+          `does not match with the expected propType ${propType}.`
       );
       return null;
     }
+
+    if (propVal.valueType === PropValueType.Object) {
+      return transformPropValuesToRaw(propVal.value);
+    }
+    return propVal.value;
+  }
+
+  /** Note that getValueFromProp does not support {@link PropValueType.Object}. */
+  function getValueFromProp(propPath: string) {
+    const propValue: PropVal | undefined = parentProps[propPath];
+    if (!propValue) {
+      console.warn(
+        `Unable to extract the desired prop from path: ${propPath}`,
+        parentProps
+      );
+      return null;
+    }
+    if (propValue.kind === PropValueKind.Expression) {
+      const expressionValue = getExpressionPropLiteralValue(
+        propValue,
+        expressionSources,
+        parentProps
+      );
+      return expressionValue;
+    }
+    return propValue.value;
   }
 
   if (TypeGuards.isSiteSettingsExpression(expression)) {
@@ -142,7 +198,7 @@ function getExpressionValue(
     return getValueFromPath(expression, "document");
   }
   if (expression.startsWith("props.")) {
-    return getValueFromPath(expression, "props");
+    return getValueFromProp(expression.split("props.")[1]);
   }
   if (expression.startsWith("item")) {
     return getValueFromPath(expression, "item");
@@ -151,5 +207,5 @@ function getExpressionValue(
 }
 
 export type ExpressionSources = {
-  [key in "document" | "siteSettings" | "props"]?: Record<string, unknown>;
+  [key in "document" | "siteSettings"]?: Record<string, unknown>;
 } & { item?: unknown };
