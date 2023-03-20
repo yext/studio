@@ -11,12 +11,9 @@ import {
   RenderParams,
   Tree,
 } from "@minoru/react-dnd-treeview";
-import {
-  ComponentState,
-  ComponentStateKind,
-  TypeGuards,
-} from "@yext/studio-plugin";
+import { ComponentState, TypeGuards } from "@yext/studio-plugin";
 import { useCallback, useMemo, useState } from "react";
+import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
 
@@ -157,10 +154,7 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
         id: componentState.uuid,
         parent: componentState.parentUUID ?? ROOT_ID,
         data: componentState,
-        text:
-          componentState.kind === ComponentStateKind.Fragment
-            ? "Fragment"
-            : componentState.componentName,
+        text: getComponentDisplayName(componentState),
         droppable,
       };
     });

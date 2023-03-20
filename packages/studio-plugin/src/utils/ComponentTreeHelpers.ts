@@ -1,4 +1,5 @@
 import { ComponentState, ExpressionProp, PropValueKind } from "../types";
+import ComponentStateHelpers from "./ComponentStateHelpers";
 import TypeGuards from "./TypeGuards";
 
 /**
@@ -81,24 +82,31 @@ export default class ComponentTreeHelpers {
    * as `document` or `props`.
    */
   static usesExpressionSource(componentTree: ComponentState[], source: string) {
-    const expressionProps: ExpressionProp[] = componentTree
-      .filter(TypeGuards.isStandardOrModuleComponentState)
-      .flatMap((c) =>
-        Object.values(c.props).filter(
-          (p): p is ExpressionProp => p.kind === PropValueKind.Expression
-        )
-      );
+    const expressions: string[] = componentTree
+      .filter(TypeGuards.isEditableComponentState)
+      .flatMap((c) => {
+        const props =
+          ComponentStateHelpers.extractStandardOrModuleComponentState(c).props;
+        const expressionPropValues = Object.values(props)
+          .filter(
+            (p): p is ExpressionProp => p.kind === PropValueKind.Expression
+          )
+          .map((p) => p.value);
+        return TypeGuards.isRepeaterState(c)
+          ? [...expressionPropValues, c.listExpression]
+          : expressionPropValues;
+      });
 
     // This is used to create the regex: /\${source\..*}/
     const regexStr = "\\${" + source + "\\..*}";
     const templateStringRegex = new RegExp(regexStr);
 
-    return expressionProps.some((e) => {
+    return expressions.some((e) => {
       return (
-        e.value === source ||
-        e.value.startsWith(source + ".") ||
-        e.value.match(templateStringRegex) ||
-        e.value.includes("${" + source + "}")
+        e === source ||
+        e.startsWith(source + ".") ||
+        e.match(templateStringRegex) ||
+        e.includes("${" + source + "}")
       );
     });
   }

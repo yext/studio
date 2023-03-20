@@ -6,6 +6,8 @@ import {
   ModuleMetadata,
   ModuleState,
   PropValues,
+  RepeaterState,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
@@ -16,10 +18,13 @@ import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
+import RepeaterActions from "./StudioActions/RepeaterActions";
 import AddComponentAction from "./StudioActions/AddComponentAction";
 import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 
 export default class StudioActions {
+  public addRepeater: RepeaterActions["addRepeater"];
+  public removeRepeater: RepeaterActions["removeRepeater"];
   public addComponent: AddComponentAction["addComponent"];
   public createComponentState: CreateComponentStateAction["createComponentState"];
 
@@ -30,6 +35,9 @@ export default class StudioActions {
     private getPreviousSave: () => PreviousSaveSlice,
     private getStudioConfig: () => StudioConfigSlice
   ) {
+    const repeaterActions = new RepeaterActions(this);
+    this.addRepeater = repeaterActions.addRepeater;
+    this.removeRepeater = repeaterActions.removeRepeater;
     this.addComponent = new AddComponentAction(this).addComponent;
     this.createComponentState = new CreateComponentStateAction(
       getStudioConfig
@@ -53,6 +61,13 @@ export default class StudioActions {
     );
   };
 
+  getActiveComponentHasChildren = () => {
+    const { activeComponentUUID } = this.getPages();
+    return this.getComponentTree()?.some(
+      (c) => c.parentUUID === activeComponentUUID
+    );
+  };
+
   getComponentMetadata = (componentState?: ComponentState) => {
     if (componentState?.kind !== ComponentStateKind.Standard) {
       return undefined;
@@ -63,29 +78,46 @@ export default class StudioActions {
   };
 
   updateActiveComponentProps = (props: PropValues) => {
-    const { activeComponentUUID, activePageName, getModuleStateBeingEdited } =
-      this.getPages();
-    if (!activeComponentUUID) {
+    const activeComponentState = this.getActiveComponentState();
+    if (!activeComponentState) {
       console.error(
-        "Error in updateActiveComponentProps: No active component in this.get()."
+        "Error in updateActiveComponentProps: No active component found."
       );
       return;
     }
-
-    const moduleStateBeingEdited = getModuleStateBeingEdited();
-    if (moduleStateBeingEdited) {
-      this.getFileMetadatas().updateComponentPropsInsideModule(
-        moduleStateBeingEdited.metadataUUID,
-        activeComponentUUID,
-        props
-      );
-    } else if (activePageName) {
-      this.getPages().setComponentProps(
-        activePageName,
-        activeComponentUUID,
-        props
+    if (
+      activeComponentState.kind === ComponentStateKind.BuiltIn ||
+      activeComponentState.kind === ComponentStateKind.Fragment
+    ) {
+      throw new Error(
+        "Error in updateActiveComponentProps: Cannot update props for BuiltIn or Fragment components."
       );
     }
+
+    const updatedComponentState = TypeGuards.isRepeaterState(
+      activeComponentState
+    )
+      ? {
+          ...activeComponentState,
+          repeatedComponent: {
+            ...activeComponentState.repeatedComponent,
+            props,
+          },
+        }
+      : { ...activeComponentState, props };
+
+    this.replaceComponentState(
+      activeComponentState.uuid,
+      updatedComponentState
+    );
+  };
+
+  updateRepeaterListExpression = (
+    listExpression: string,
+    repeaterState: RepeaterState
+  ) => {
+    const updatedComponentState = { ...repeaterState, listExpression };
+    this.replaceComponentState(repeaterState.uuid, updatedComponentState);
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
@@ -100,6 +132,23 @@ export default class StudioActions {
     } else if (activePageName) {
       this.getPages().setComponentTreeInPage(activePageName, componentTree);
     }
+  };
+
+  replaceComponentState = (
+    uuidToReplace: string,
+    newComponentState: ComponentState
+  ) => {
+    const currentComponentTree = this.getComponentTree();
+    if (!currentComponentTree) {
+      return;
+    }
+    const updatedComponentTree = currentComponentTree.flatMap((c) => {
+      if (c.uuid === uuidToReplace) {
+        return newComponentState;
+      }
+      return c;
+    });
+    this.updateComponentTree(updatedComponentTree);
   };
 
   removeComponent = (componentUUID: string) => {

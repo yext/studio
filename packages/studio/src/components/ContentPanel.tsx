@@ -2,10 +2,12 @@ import {
   PropValueKind,
   PropMetadata,
   PropValueType,
+  ComponentStateHelpers,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import PropEditors from "./PropEditors";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
+import RepeaterEditor from "./RepeaterEditor";
 
 /**
  * Renders prop editors for the active component selected by the user.
@@ -25,11 +27,15 @@ export default function ContentPanel(): JSX.Element | null {
   return (
     <div>
       <PropEditors
-        activeComponentState={activeComponentState}
+        activeComponentState={ComponentStateHelpers.extractStandardOrModuleComponentState(
+          activeComponentState
+        )}
         propShape={propShape}
         propKind={PropValueKind.Expression}
         shouldRenderProp={shouldRenderProp}
       />
+      <Divider />
+      <RepeaterEditor componentState={activeComponentState} />
       <Divider />
     </div>
   );

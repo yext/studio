@@ -3,7 +3,6 @@ import {
   ModuleMetadata,
   ModuleState,
   PageState,
-  PropValues,
 } from "@yext/studio-plugin";
 import DOMRectProperties from "../DOMRectProperties";
 
@@ -56,11 +55,6 @@ interface PageSliceActions {
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
-  setComponentProps: (
-    pageName: string,
-    componentUUID: string,
-    props: PropValues
-  ) => void;
   setActiveEntityFile: (activeEntityFile?: string) => boolean;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 

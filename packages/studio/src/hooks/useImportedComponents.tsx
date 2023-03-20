@@ -2,6 +2,7 @@ import { FunctionComponent, useCallback, useEffect, useRef } from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentState,
+  ComponentStateHelpers,
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
@@ -41,10 +42,13 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
       c: ComponentState,
       newLoadedComponents: Record<string, ImportType>
     ) => {
-      if (!TypeGuards.isStandardOrModuleComponentState(c)) {
+      if (!TypeGuards.isEditableComponentState(c)) {
         return null;
       }
-      const { metadataUUID, componentName } = c;
+      const componentState =
+        ComponentStateHelpers.extractStandardOrModuleComponentState(c);
+
+      const { metadataUUID, componentName } = componentState;
       const metadata: FileMetadata | undefined =
         UUIDToFileMetadata[metadataUUID];
       if (

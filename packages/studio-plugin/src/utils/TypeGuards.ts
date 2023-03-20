@@ -7,6 +7,7 @@ import {
 import {
   ComponentState,
   ComponentStateKind,
+  EditableComponentState,
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
@@ -16,6 +17,7 @@ import {
   PropValueKind,
   PropValues,
   PropValueType,
+  RepeaterState,
   SiteSettingsShape,
   SiteSettingsValues,
   StandardOrModuleComponentState,
@@ -130,6 +132,22 @@ export default class TypeGuards {
     return (
       componentState.kind === ComponentStateKind.Module ||
       componentState.kind === ComponentStateKind.Standard
+    );
+  }
+
+  static isRepeaterState(
+    componentState: ComponentState
+  ): componentState is RepeaterState {
+    return componentState.kind === ComponentStateKind.Repeater;
+  }
+
+  static isEditableComponentState(
+    componentState: ComponentState
+  ): componentState is EditableComponentState {
+    return (
+      componentState.kind === ComponentStateKind.Module ||
+      componentState.kind === ComponentStateKind.Standard ||
+      componentState.kind === ComponentStateKind.Repeater
     );
   }
 

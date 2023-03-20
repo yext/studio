@@ -7,10 +7,11 @@ import {
 import TypeGuards from "../utils/TypeGuards";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import { PropValueKind } from "../types/PropValues";
-import { ComponentState, ComponentStateKind } from "../types/ComponentState";
+import { ComponentState } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
+import { ComponentStateHelpers } from "../utils";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
@@ -38,11 +39,21 @@ export default class StreamConfigWriter {
   ): Set<StreamsDataExpression> {
     const streamDataExpressions = new Set<StreamsDataExpression>();
     componentTree.forEach((component) => {
-      if (component.kind === ComponentStateKind.Fragment) {
+      if (!TypeGuards.isEditableComponentState(component)) {
         return;
       }
-      Object.keys(component.props).forEach((propName) => {
-        const { value, kind } = component.props[propName];
+      if (
+        TypeGuards.isRepeaterState(component) &&
+        TypeGuards.isStreamsDataExpression(component.listExpression)
+      ) {
+        streamDataExpressions.add(component.listExpression);
+      }
+      const props =
+        ComponentStateHelpers.extractStandardOrModuleComponentState(
+          component
+        ).props;
+      Object.keys(props).forEach((propName) => {
+        const { value, kind } = props[propName];
         if (kind !== PropValueKind.Expression) {
           return;
         }

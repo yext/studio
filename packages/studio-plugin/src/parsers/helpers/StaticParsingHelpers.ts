@@ -18,15 +18,17 @@ import {
   PropertySignature,
   PropertyAssignment,
   UnionTypeNode,
+  JsxExpression,
 } from "ts-morph";
 import {
   PropValueKind,
   PropValues,
   PropValueType,
 } from "../../types/PropValues";
-import { PropShape } from "../../types/PropShape";
+import { PropShape, SpecialReactProps } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
+import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
 
 export enum ParsedInterfaceKind {
   Simple = "simple",
@@ -245,7 +247,7 @@ export default class StaticParsingHelpers {
   static parseJsxChild<T>(
     c: JsxChild,
     handleJsxChild: (
-      c: JsxFragment | JsxElement | JsxSelfClosingElement,
+      c: JsxFragment | JsxElement | JsxSelfClosingElement | JsxExpression,
       parent: T | undefined
     ) => T,
     parent?: T
@@ -258,15 +260,13 @@ export default class StaticParsingHelpers {
         );
       }
       return [];
-    } else if (c.isKind(SyntaxKind.JsxExpression)) {
-      throw new Error(
-        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use in page files.`
-      );
     }
-
     const self: T = handleJsxChild(c, parent);
 
-    if (c.isKind(SyntaxKind.JsxSelfClosingElement)) {
+    if (
+      c.isKind(SyntaxKind.JsxSelfClosingElement) ||
+      c.isKind(SyntaxKind.JsxExpression)
+    ) {
       return [self];
     }
 
@@ -275,6 +275,25 @@ export default class StaticParsingHelpers {
       .flatMap((child) => this.parseJsxChild(child, handleJsxChild, self))
       .filter((child): child is T => !!child);
     return [self, ...children];
+  }
+
+  static parseJsxExpression(c: JsxExpression): {
+    selfClosingElement: JsxSelfClosingElement;
+    listExpression: string;
+  } {
+    const isMapExpression =
+      c
+        .getFirstDescendantByKind(SyntaxKind.PropertyAccessExpression)
+        ?.getLastChildByKind(SyntaxKind.Identifier)
+        ?.getText() === "map";
+
+    if (!isMapExpression) {
+      throw new Error(
+        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use` +
+          " in page files except for `map` function expressions."
+      );
+    }
+    return RepeaterParsingHelpers.parseMapExpression(c);
   }
 
   static parseJsxAttributes(
@@ -297,6 +316,9 @@ export default class StaticParsingHelpers {
           "Could not parse jsx attribute prop name: " +
             jsxAttribute.getFullText()
         );
+      }
+      if (Object.values<string>(SpecialReactProps).includes(propName)) {
+        return;
       }
       const propType = propShape?.[propName]?.type;
       if (!propType) {

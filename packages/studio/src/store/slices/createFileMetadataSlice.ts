@@ -1,11 +1,9 @@
 import {
   ComponentMetadata,
   ComponentState,
-  ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
-  PropValues,
 } from "@yext/studio-plugin";
 import initialStudioData from "virtual:yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
@@ -58,35 +56,6 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
       assertIsModuleMetadata(fileMetadata);
       fileMetadata.componentTree = componentTree;
     });
-  },
-  updateComponentPropsInsideModule(
-    metadataUUID: string,
-    componentUUID: string,
-    props: PropValues
-  ) {
-    set((store) => {
-      const fileMetadata = store.UUIDToFileMetadata[metadataUUID];
-      assertIsModuleMetadata(fileMetadata);
-      const componentState = fileMetadata.componentTree.find(
-        (c) => c.uuid === componentUUID
-      );
-      if (!componentState) {
-        throw new Error(`Could not find componentState ${componentUUID}.`);
-      } else if (
-        componentState.kind === ComponentStateKind.BuiltIn ||
-        componentState.kind === ComponentStateKind.Fragment
-      ) {
-        throw new Error(
-          "Cannot update props for BuiltIn or Fragment components."
-        );
-      }
-      componentState.props = props;
-    });
-  },
-  getComponentStateInsideModule(metadataUUID: string, componentUUID: string) {
-    const fileMetadata = get().UUIDToFileMetadata[metadataUUID];
-    assertIsModuleMetadata(fileMetadata);
-    return fileMetadata.componentTree[componentUUID];
   },
 });
 

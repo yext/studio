@@ -66,6 +66,13 @@ export default class ReactComponentFileWriter {
     return propsString;
   }
 
+  private createJsxSelfClosingElement(
+    componentName: string,
+    props: PropValues
+  ) {
+    return `<${componentName} ${this.createProps(props)}/>`;
+  }
+
   private createReturnStatement(
     componentTree: ComponentState[]
   ): WriterFunction {
@@ -74,8 +81,22 @@ export default class ReactComponentFileWriter {
       (c, children): string => {
         if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
+        } else if (TypeGuards.isRepeaterState(c)) {
+          const { componentName, props } = c.repeatedComponent;
+          return (
+            `{${c.listExpression}.map((item, index) => ` +
+            this.createJsxSelfClosingElement(componentName, {
+              ...props,
+              key: {
+                kind: PropValueKind.Expression,
+                valueType: PropValueType.string,
+                value: "index",
+              },
+            }) +
+            `)}`
+          );
         } else if (children.length === 0) {
-          return `<${c.componentName} ` + this.createProps(c.props) + "/>";
+          return this.createJsxSelfClosingElement(c.componentName, c.props);
         } else {
           return (
             `<${c.componentName} ` +
@@ -212,6 +233,15 @@ export default class ReactComponentFileWriter {
     const pluginNameToComponentNames: Record<string, string[]> = {};
 
     componentTree
+      .map((c) =>
+        TypeGuards.isRepeaterState(c)
+          ? {
+              ...c.repeatedComponent,
+              uuid: c.uuid,
+              parentUUID: c.parentUUID,
+            }
+          : c
+      )
       .filter(TypeGuards.isStandardOrModuleComponentState)
       .forEach((node) => {
         const metadata = this.getFileMetadataByUUID(node.metadataUUID);

@@ -3,7 +3,6 @@ import {
   ComponentStateKind,
   ModuleState,
   PageState,
-  PropValues,
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual:yext-studio";
@@ -64,30 +63,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         if (!isEqual(originalComponentTree, componentTree)) {
           store.pendingChanges.pagesToUpdate.add(pageName);
         }
-      });
-    },
-    setComponentProps: (
-      pageName: string,
-      componentUUID: string,
-      props: PropValues
-    ) => {
-      set((store) => {
-        const components = store.pages[pageName].componentTree;
-        const matchingComponent = components.find(
-          (c) => c.uuid === componentUUID
-        );
-        if (!matchingComponent) {
-          throw new Error("Could not find component.");
-        }
-        if (matchingComponent.kind === ComponentStateKind.Fragment) {
-          console.error(
-            "Error in setComponentProps: The active component is a fragment and does not accept props."
-          );
-          return;
-        }
-
-        matchingComponent.props = props;
-        store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },
   };

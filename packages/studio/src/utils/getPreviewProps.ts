@@ -200,9 +200,12 @@ function getExpressionValue(
   if (expression.startsWith("props.")) {
     return getValueFromProp(expression.split("props.")[1]);
   }
+  if (expression.startsWith("item")) {
+    return getValueFromPath(expression, "item");
+  }
   return null;
 }
 
 export type ExpressionSources = {
   [key in "document" | "siteSettings"]?: Record<string, unknown>;
-};
+} & { item?: unknown };
