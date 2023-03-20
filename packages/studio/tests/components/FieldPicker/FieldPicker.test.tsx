@@ -102,6 +102,7 @@ function renderFieldPicker(handleFieldSelection = jest.fn()) {
     <FieldPicker
       streamDocument={streamDocument}
       handleFieldSelection={handleFieldSelection}
+      fieldType="string"
     />
   );
 }
