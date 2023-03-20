@@ -1,21 +1,17 @@
-import { Fragment, createElement, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import useStudioStore from "../store/useStudioStore";
 import {
   ComponentTreeHelpers,
-  ComponentStateKind,
-  TypeGuards,
-  FileMetadataKind,
   PropValues,
   ComponentState,
   transformPropValuesToRaw,
-  FileMetadata,
 } from "@yext/studio-plugin";
-import { ImportType } from "../store/models/ImportType";
 import { useLayoutEffect } from "react";
-import { ExpressionSources, getPreviewProps } from "../utils/getPreviewProps";
+import { ExpressionSources } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import HighlightingContainer from "./HighlightingContainer";
+import ComponentPreview from "./ComponentPreview";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
@@ -52,28 +48,24 @@ function useComponentTreeElements(
   renderHighlightingContainer?: boolean,
   parentProps?: PropValues
 ): (JSX.Element | null)[] | null {
-  const [UUIDToImportedComponent, UUIDToFileMetadata] = useStudioStore(
-    (store) => [
-      store.fileMetadatas.UUIDToImportedComponent,
-      store.fileMetadatas.UUIDToFileMetadata,
-    ]
+  const UUIDToImportedComponent = useStudioStore(
+    (store) => store.fileMetadatas.UUIDToImportedComponent
   );
   return useMemo(() => {
     // prevent logging errors on initial render before components are imported
     if (Object.keys(UUIDToImportedComponent).length === 0) {
       return null;
     }
-
     return ComponentTreeHelpers.mapComponentTree(
       componentTree,
       (c, children) => {
-        const renderedComponent = renderComponent(
-          c,
-          children,
-          UUIDToFileMetadata,
-          UUIDToImportedComponent,
-          expressionSources,
-          parentProps ?? {}
+        const renderedComponent = (
+          <ComponentPreview
+            componentState={c}
+            expressionSources={expressionSources}
+            childElements={children}
+            parentProps={parentProps}
+          />
         );
         if (!renderHighlightingContainer) {
           return (
@@ -90,61 +82,10 @@ function useComponentTreeElements(
   }, [
     UUIDToImportedComponent,
     componentTree,
-    UUIDToFileMetadata,
     expressionSources,
     parentProps,
     renderHighlightingContainer,
   ]);
-}
-
-function renderComponent(
-  c: ComponentState,
-  children: (JSX.Element | null)[],
-  UUIDToFileMetadata: Record<string, FileMetadata>,
-  UUIDToImportedComponent: Record<string, ImportType>,
-  expressionSources: ExpressionSources,
-  parentProps: PropValues
-) {
-  let element: ImportType | string;
-  if (c.kind === ComponentStateKind.Fragment) {
-    element = Fragment;
-  } else if (c.kind === ComponentStateKind.BuiltIn) {
-    element = c.componentName;
-  } else {
-    const metadata = UUIDToFileMetadata[c.metadataUUID];
-    if (metadata && metadata.kind === FileMetadataKind.Module) {
-      return (
-        <ComponentTreePreview
-          componentTree={metadata.componentTree}
-          parentProps={c.props}
-          renderHighlightingContainer={false}
-          key={c.uuid}
-        />
-      );
-    } else if (!UUIDToImportedComponent[c.metadataUUID]) {
-      console.warn(
-        `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
-      );
-      return null;
-    }
-    element = UUIDToImportedComponent[c.metadataUUID];
-  }
-  const previewProps = TypeGuards.isStandardOrModuleComponentState(c)
-    ? getPreviewProps(
-        c.props,
-        UUIDToFileMetadata[c.metadataUUID].propShape ?? {},
-        expressionSources,
-        parentProps
-      )
-    : {};
-  return createElement(
-    element,
-    {
-      ...previewProps,
-      key: c.uuid,
-    },
-    ...children
-  );
 }
 
 /**
@@ -155,12 +96,13 @@ function useExpressionSources(): ExpressionSources {
   const [expressionSources, setExpressionSources] = useState<ExpressionSources>(
     {}
   );
-  const [siteSettingValues, activeEntityFile, isModuleBeingEdited] =
-    useStudioStore((store) => [
+  const [siteSettingValues, activeEntityFile, localDataPath] = useStudioStore(
+    (store) => [
       store.siteSettings.values,
       store.pages.activeEntityFile,
-      !!store.pages.moduleUUIDBeingEdited,
-    ]);
+      store.studioConfig.paths.localData,
+    ]
+  );
 
   useLayoutEffect(() => {
     const siteSettingsSource = siteSettingValues
@@ -171,10 +113,6 @@ function useExpressionSources(): ExpressionSources {
       siteSettings: siteSettingsSource,
     }));
   }, [siteSettingValues]);
-
-  const localDataPath = useStudioStore(
-    (store) => store.studioConfig.paths.localData
-  );
 
   useLayoutEffect(() => {
     if (!activeEntityFile) {
@@ -192,7 +130,7 @@ function useExpressionSources(): ExpressionSources {
         };
       });
     });
-  }, [activeEntityFile, localDataPath, isModuleBeingEdited]);
+  }, [activeEntityFile, localDataPath]);
 
   return expressionSources;
 }

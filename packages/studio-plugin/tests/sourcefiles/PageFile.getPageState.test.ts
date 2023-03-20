@@ -163,7 +163,8 @@ describe("getPageState", () => {
       const pageFile = createPageFile("jsxExpressionPage");
 
       expect(() => pageFile.getPageState()).toThrowError(
-        'Jsx nodes of kind "JsxExpression" are not supported for direct use in page files.'
+        'Jsx nodes of kind "JsxExpression" are not supported for direct use' +
+          " in page files except for `map` function expressions."
       );
     });
 
@@ -171,7 +172,8 @@ describe("getPageState", () => {
       const pageFile = createPageFile("jsxExpressionPage");
 
       expect(() => pageFile.getPageState()).toThrowError(
-        'Jsx nodes of kind "JsxExpression" are not supported for direct use in page files.'
+        'Jsx nodes of kind "JsxExpression" are not supported for direct use' +
+          " in page files except for `map` function expressions."
       );
     });
 

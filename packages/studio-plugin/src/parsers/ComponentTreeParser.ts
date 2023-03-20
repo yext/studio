@@ -4,11 +4,13 @@ import {
   JsxFragment,
   JsxSelfClosingElement,
   JsxAttributeLike,
+  JsxExpression,
 } from "ts-morph";
 import {
   BuiltInState,
   ComponentState,
   ComponentStateKind,
+  RepeaterState,
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
@@ -58,7 +60,7 @@ export default class ComponentTreeParser {
   }
 
   private parseComponentState(
-    component: JsxFragment | JsxElement | JsxSelfClosingElement,
+    component: JsxFragment | JsxElement | JsxSelfClosingElement | JsxExpression,
     defaultImports: Record<string, string>,
     parent: ComponentState | undefined
   ): ComponentState {
@@ -66,6 +68,20 @@ export default class ComponentTreeParser {
       parentUUID: parent?.uuid,
       uuid: v4(),
     };
+
+    if (component.isKind(SyntaxKind.JsxExpression)) {
+      const { selfClosingElement, listExpression } =
+        StaticParsingHelpers.parseJsxExpression(component);
+      const parsedRepeaterElement = this.parseRepeaterElement(
+        defaultImports,
+        selfClosingElement,
+        listExpression
+      );
+      return {
+        ...commonComponentState,
+        ...parsedRepeaterElement,
+      };
+    }
 
     if (!TypeGuards.isNotFragmentElement(component)) {
       return {
@@ -85,6 +101,33 @@ export default class ComponentTreeParser {
       ...commonComponentState,
       ...parsedElement,
       componentName,
+    };
+  }
+
+  private parseRepeaterElement(
+    defaultImports: Record<string, string>,
+    repeatedComponent: JsxSelfClosingElement,
+    listExpression: string
+  ): Omit<RepeaterState, "uuid" | "parentUUID"> {
+    const componentName =
+      StaticParsingHelpers.parseJsxElementName(repeatedComponent);
+    const parsedRepeatedComponent = this.parseElement(
+      repeatedComponent,
+      componentName,
+      defaultImports
+    );
+    if (parsedRepeatedComponent.kind === ComponentStateKind.BuiltIn) {
+      throw new Error(
+        "Error parsing map expression: repetition of built-in components is not supported."
+      );
+    }
+    return {
+      kind: ComponentStateKind.Repeater,
+      listExpression,
+      repeatedComponent: {
+        ...parsedRepeatedComponent,
+        componentName,
+      },
     };
   }
 

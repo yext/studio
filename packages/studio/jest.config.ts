@@ -3,7 +3,7 @@ import type { Config } from "jest";
 const config: Config = {
   verbose: true,
   collectCoverage: true,
-  collectCoverageFrom: ["src/**", "!src/messaging/**"],
+  collectCoverageFrom: ["src/**", "!src/messaging/**", "!src/main.tsx"],
   resetMocks: true,
   restoreMocks: true,
   testEnvironment: "jsdom",

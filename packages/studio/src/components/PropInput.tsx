@@ -4,6 +4,7 @@ import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 import FieldPicker from "./FieldPicker/FieldPicker";
 import useStreamDocument from "../hooks/useStreamDocument";
+import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -34,7 +35,7 @@ export default function PropInput({
   const handleChange = useCallback(
     (value: string | number | boolean) => {
       if (propKind === PropValueKind.Expression) {
-        value = "`" + value + "`";
+        value = TemplateExpressionFormatter.getRawValue(value);
       }
       onChange(value);
     },
@@ -144,22 +145,15 @@ function useDisplayValue(
 
   const propValueWithDefaulting =
     propValue ?? getPropTypeDefaultValue(propType, propKind);
-  return getDisplayValue(propValueWithDefaulting, propKind);
-}
-
-function getDisplayValue(
-  value: string | number | boolean,
-  kind: PropValueKind
-) {
-  if (kind === PropValueKind.Expression) {
-    if (typeof value !== "string") {
+  if (propKind === PropValueKind.Expression) {
+    if (typeof propValueWithDefaulting !== "string") {
       throw new Error(
-        `Expression props are only supported for strings. Received: "${value}".`
+        `Expression props are only supported for strings. Received: "${propValueWithDefaulting}".`
       );
     }
-    if (value.length >= 2 && value.startsWith("`") && value.endsWith("`")) {
-      return value.slice(1, -1);
-    }
+    return TemplateExpressionFormatter.getTemplateStringDisplayValue(
+      propValueWithDefaulting
+    );
   }
-  return value;
+  return propValueWithDefaulting;
 }

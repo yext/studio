@@ -10,14 +10,16 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     filter: {},
     localization: { locales: ["en"], primary: false },
-    fields: ["address.city"],
+    fields: ["services", "address.city"],
   },
 };
 
 export default function UniversalPage({ document }: TemplateProps) {
   return (
     <div>
-      <Banner />
+      {document.services.map((item, index) => (
+        <Banner title={`${item}!`} key={index} />
+      ))}
       <Container>
         <Button bgColor="bg-red-100" />
       </Container>

@@ -10,6 +10,7 @@ import {
   ExpressionProp,
 } from "@yext/studio-plugin";
 import { get } from "lodash";
+import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 
 /**
@@ -94,11 +95,7 @@ function getTemplateStringValue(
   expressionSources: ExpressionSources,
   parentProps: PropValues
 ): string {
-  const templateStringWithoutBacktiks = templateString.substring(
-    1,
-    templateString.length - 1
-  );
-  return templateStringWithoutBacktiks.replaceAll(
+  const hydratedString = templateString.replaceAll(
     TEMPLATE_STRING_EXPRESSION_REGEX,
     (...args) => {
       const expressionVal = getExpressionValue(
@@ -112,6 +109,9 @@ function getTemplateStringValue(
       }
       return args[0];
     }
+  );
+  return TemplateExpressionFormatter.getTemplateStringDisplayValue(
+    hydratedString
   );
 }
 
@@ -152,8 +152,7 @@ function getExpressionValue(
       );
       return null;
     }
-    const newPropValue =
-      (get({ [parentPath]: sourceObject }, path) as unknown) ?? path;
+    const newPropValue = get({ [parentPath]: sourceObject }, path) as unknown;
     const propVal = createPropVal(newPropValue);
     if (!propVal) {
       console.warn(
@@ -200,9 +199,12 @@ function getExpressionValue(
   if (expression.startsWith("props.")) {
     return getValueFromProp(expression.split("props.")[1]);
   }
+  if (expression.startsWith("item")) {
+    return getValueFromPath(expression, "item");
+  }
   return null;
 }
 
 export type ExpressionSources = {
   [key in "document" | "siteSettings"]?: Record<string, unknown>;
-};
+} & { item?: unknown };

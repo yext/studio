@@ -6,6 +6,7 @@ import {
   PropValueKind,
   ComponentState,
   FileMetadata,
+  ComponentStateHelpers,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleEditActions";
@@ -32,7 +33,9 @@ export default function PropertiesPanel(): JSX.Element | null {
     <div>
       {renderModuleActions(activeComponentMetadata, activeComponentState)}
       <PropEditors
-        activeComponentState={activeComponentState}
+        activeComponentState={ComponentStateHelpers.extractStandardOrModuleComponentState(
+          activeComponentState
+        )}
         propShape={propShape}
         propKind={PropValueKind.Literal}
         shouldRenderProp={shouldRenderProp}

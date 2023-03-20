@@ -11,7 +11,7 @@ export default function useActiveComponentWithProps() {
 
   if (
     !activeComponentState ||
-    !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
+    !TypeGuards.isEditableComponentState(activeComponentState)
   ) {
     return null;
   }
