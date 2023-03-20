@@ -3,8 +3,16 @@ import { ReactComponent as VectorIcon } from "../../icons/vector.svg";
 
 const listStyles: CSSProperties = {
   minWidth: "200px",
-  right: "-1px",
+  right: "1em",
 };
+
+interface FieldDropdownProps {
+  fields: Record<string, unknown>;
+  dataSourcePath: string;
+  visiblePath: string;
+  setVisiblePath: (visiblePath: string) => void;
+  handleFieldSelection: (dataSourcePath: string) => void;
+}
 
 /**
  * Dropdown for the FieldPicker.
@@ -15,16 +23,10 @@ export default function FieldDropdown({
   visiblePath,
   setVisiblePath,
   handleFieldSelection,
-}: {
-  fields: Record<string, unknown>;
-  dataSourcePath: string;
-  visiblePath: string;
-  setVisiblePath: (visiblePath: string) => void;
-  handleFieldSelection: (dataSourcePath: string) => void;
-}) {
+}: FieldDropdownProps) {
   return (
     <ul
-      className="absolute w-max bg-white mt-2 rounded border"
+      className="absolute w-max bg-white mt-2 rounded border z-10 shadow-2xl"
       style={listStyles}
     >
       {Object.keys(fields).map((field) => {
@@ -93,7 +95,6 @@ function Option({
   return (
     <li
       className="hover:bg-gray-100 px-4 py-1 cursor-pointer flex justify-between"
-      key={field}
       onClick={handleClick}
     >
       {field}

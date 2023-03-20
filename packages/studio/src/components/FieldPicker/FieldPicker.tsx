@@ -2,6 +2,7 @@ import { useCallback, useRef, useState, MouseEvent } from "react";
 import FieldDropdown from "./FieldDropdown";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
 import { useRootClose } from "@restart/ui";
+import filterStreamDocument from "../../utils/filterStreamDocument";
 
 /**
  * An icon that when clicked on, opens up a dropdown for selecting
@@ -10,9 +11,11 @@ import { useRootClose } from "@restart/ui";
 export default function FieldPicker({
   handleFieldSelection,
   streamDocument = {},
+  fieldType = "string",
 }: {
   handleFieldSelection: (field: string) => void;
   streamDocument?: Record<string, unknown>;
+  fieldType: "string" | "array";
 }) {
   const [visiblePath, setVisiblePath] = useState<string>("");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,7 +36,7 @@ export default function FieldPicker({
     [visiblePath]
   );
 
-  const filteredDocument = filterStreamDocument(streamDocument);
+  const filteredDocument = filterStreamDocument(fieldType, streamDocument);
 
   return (
     <div ref={containerRef}>
@@ -54,29 +57,4 @@ export default function FieldPicker({
       )}
     </div>
   );
-}
-
-function filterStreamDocument(streamDocument: Record<string, unknown> = {}) {
-  for (const field of Object.keys(streamDocument)) {
-    const value = streamDocument[field];
-    if (field === "__") {
-      delete streamDocument[field];
-    } else if (
-      typeof value === "object" &&
-      !Array.isArray(value) &&
-      value !== null
-    ) {
-      const filteredValue = filterStreamDocument(
-        value as Record<string, unknown>
-      );
-      if (Object.keys(filteredValue).length === 0) {
-        delete streamDocument[field];
-      } else {
-        streamDocument[field] = filteredValue;
-      }
-    } else if (typeof value !== "string") {
-      delete streamDocument[field];
-    }
-  }
-  return streamDocument;
 }

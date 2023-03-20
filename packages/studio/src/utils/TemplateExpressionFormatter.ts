@@ -39,7 +39,7 @@ export default class TemplateExpressionFormatter {
     });
   }
 
-  private static addBackticks(value: string): string {
+  static addBackticks(value: string): string {
     return "`" + value + "`";
   }
 

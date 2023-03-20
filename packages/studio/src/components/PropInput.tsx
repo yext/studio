@@ -2,9 +2,8 @@ import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
-import FieldPicker from "./FieldPicker/FieldPicker";
-import useStreamDocument from "../hooks/useStreamDocument";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
+import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -32,50 +31,41 @@ export default function PropInput({
   unionValues,
   propKind,
 }: PropInputProps): JSX.Element {
-  const handleChange = useCallback(
-    (value: string | number | boolean) => {
-      if (propKind === PropValueKind.Expression) {
-        value = TemplateExpressionFormatter.getRawValue(value);
-      }
-      onChange(value);
-    },
-    [onChange, propKind]
-  );
-
   const onInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      let value: string | number | boolean = e.target.value;
-      if (propType === PropValueType.number) {
-        value = e.target.valueAsNumber;
-      } else if (propType === PropValueType.boolean) {
-        value = e.target.checked;
-      }
-      handleChange(value);
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const getValue = () => {
+        if (e.target instanceof HTMLSelectElement) {
+          return e.target.value;
+        }
+        if (propType === PropValueType.number) {
+          return e.target.valueAsNumber;
+        } else if (propType === PropValueType.boolean) {
+          return e.target.checked;
+        } else if (propKind === PropValueKind.Expression) {
+          return TemplateExpressionFormatter.getRawValue(e.target.value);
+        }
+        return e.target.value;
+      };
+      onChange(getValue());
     },
-    [handleChange, propType]
+    [onChange, propKind, propType]
   );
   const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
 
   const appendField = useCallback(
     (appendedField: string) => {
       const documentUsage = "${" + appendedField + "}";
-      handleChange(`${displayValue} ${documentUsage}`);
+      const appendedValue = displayValue
+        ? `${displayValue} ${documentUsage}`
+        : documentUsage;
+      onChange(TemplateExpressionFormatter.getRawValue(appendedValue));
     },
-    [displayValue, handleChange]
+    [displayValue, onChange]
   );
-
-  const onSelectChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      onChange(e.target.value);
-    },
-    [onChange]
-  );
-
-  const streamDocument = useStreamDocument();
 
   if (unionValues) {
     return (
-      <select onChange={onSelectChange} className={selectCssClasses}>
+      <select onChange={onInputChange} className={selectCssClasses}>
         {unionValues.map((val) => {
           return (
             <option value={val} key={val}>
@@ -99,20 +89,12 @@ export default function PropInput({
       );
     case PropValueType.string:
       return (
-        <div className="relative">
-          <input
-            type="text"
-            onChange={onInputChange}
-            className={inputBoxCssClasses}
-            value={displayValue as string}
-          />
-          <i className="absolute right-0 top-2.5 mr-2 bg-white">
-            <FieldPicker
-              handleFieldSelection={appendField}
-              streamDocument={streamDocument}
-            />
-          </i>
-        </div>
+        <FieldPickerInput
+          onInputChange={onInputChange}
+          onFieldSelection={appendField}
+          displayValue={displayValue as string}
+          fieldType="string"
+        />
       );
     case PropValueType.boolean:
       return (

@@ -1,6 +1,7 @@
 import { EditableComponentState, TypeGuards } from "@yext/studio-plugin";
-import { useCallback, ChangeEvent } from "react";
+import { ChangeEvent, useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
+import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 
 interface RepeaterEditorProps {
   componentState: EditableComponentState;
@@ -27,11 +28,18 @@ export default function RepeaterEditor({
     isChecked ? removeRepeater(componentState) : addRepeater(componentState);
   }, [addRepeater, removeRepeater, componentState, isChecked]);
 
+  const updateListExpression = useCallback(
+    (value: string) => {
+      isChecked && updateRepeaterListExpression(value, componentState);
+    },
+    [componentState, isChecked, updateRepeaterListExpression]
+  );
+
   const handleListUpdate = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      isChecked && updateRepeaterListExpression(e.target.value, componentState);
+      updateListExpression(e.target.value);
     },
-    [updateRepeaterListExpression, componentState, isChecked]
+    [updateListExpression]
   );
 
   return (
@@ -49,11 +57,11 @@ export default function RepeaterEditor({
       {isChecked && (
         <label className="flex flex-col mb-2">
           <span>List Field</span>
-          <input
-            type="text"
-            onChange={handleListUpdate}
-            className="border border-gray-300 focus:border-indigo-500 rounded-lg p-2 w-full"
-            value={componentState.listExpression}
+          <FieldPickerInput
+            displayValue={componentState.listExpression}
+            onInputChange={handleListUpdate}
+            onFieldSelection={updateListExpression}
+            fieldType="array"
           />
         </label>
       )}
