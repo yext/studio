@@ -10,7 +10,7 @@ import {
   ExpressionProp,
 } from "@yext/studio-plugin";
 import { get } from "lodash";
-import ExpressionFormatter from "./ExpressionFormatter";
+import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
 import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 
 /**
@@ -110,7 +110,9 @@ function getTemplateStringValue(
       return args[0];
     }
   );
-  return ExpressionFormatter.getTemplateStringDisplayValue(hydratedString);
+  return TemplateExpressionFormatter.getTemplateStringDisplayValue(
+    hydratedString
+  );
 }
 
 /**

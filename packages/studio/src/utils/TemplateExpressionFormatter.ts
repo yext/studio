@@ -1,15 +1,15 @@
 /**
- * ExpressionFormatter contains various static utility methods
- * for formatting expression strings.
+ * TemplateExpressionFormatter contains various static utility methods
+ * for formatting template expression strings.
  */
-export default class ExpressionFormatter {
+export default class TemplateExpressionFormatter {
   /**
    * Converts curly braces to square brackets where needed,
    * and removes backticks.
    */
   static getTemplateStringDisplayValue(value: string): string {
-    value = this.convertCurlyBracesToSquareBrackets(value);
-    return this.removeBackticks(value);
+    value = this.removeBackticks(value);
+    return this.convertCurlyBracesToSquareBrackets(value);
   }
 
   /**
@@ -40,17 +40,14 @@ export default class ExpressionFormatter {
   }
 
   private static addBackticks(value: string): string {
-    if (this.hasBackticks(value)) {
-      return value;
-    }
     return "`" + value + "`";
   }
 
   private static removeBackticks(value: string): string {
-    if (this.hasBackticks(value)) {
-      return value.slice(1, -1);
+    if (!this.hasBackticks(value)) {
+      throw new Error("Unable to remove backticks from: " + value);
     }
-    return value;
+    return value.slice(1, -1);
   }
 
   private static hasBackticks(value: string): boolean {

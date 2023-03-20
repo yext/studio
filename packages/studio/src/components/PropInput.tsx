@@ -2,7 +2,7 @@ import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
-import ExpressionFormatter from "../utils/ExpressionFormatter";
+import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -38,7 +38,7 @@ export default function PropInput({
       } else if (propType === PropValueType.boolean) {
         value = e.target.checked;
       } else if (propKind === PropValueKind.Expression) {
-        value = ExpressionFormatter.getRawValue(value);
+        value = TemplateExpressionFormatter.getRawValue(value);
       }
       onChange(value);
     },
@@ -124,7 +124,7 @@ function useDisplayValue(
         `Expression props are only supported for strings. Received: "${propValueWithDefaulting}".`
       );
     }
-    return ExpressionFormatter.getTemplateStringDisplayValue(
+    return TemplateExpressionFormatter.getTemplateStringDisplayValue(
       propValueWithDefaulting
     );
   }

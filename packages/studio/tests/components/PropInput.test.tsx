@@ -6,14 +6,7 @@ import userEvent from "@testing-library/user-event";
 
 it("converts brackets into ${document. usages", async () => {
   const onChange = jest.fn();
-  render(
-    <PropInput
-      propType={PropValueType.string}
-      propKind={PropValueKind.Expression}
-      onChange={onChange}
-      propValue="[[address]"
-    />
-  );
+  renderPropInput("`[[address]`", onChange);
   const textbox = screen.getByRole("textbox");
 
   await userEvent.type(textbox, "]");
@@ -21,15 +14,26 @@ it("converts brackets into ${document. usages", async () => {
   expect(onChange).toHaveBeenCalledTimes(1);
 });
 
-it("renders ${document. usages as brackets", async () => {
+it("renders ${document. usages as brackets", () => {
+  renderPropInput("`${document.address}`");
+  const textbox = screen.getByRole("textbox");
+  expect(textbox).toHaveValue("[[address]]");
+});
+
+it("requires backticks for template string expressions", () => {
+  jest.spyOn(console, "error").mockImplementation(jest.fn());
+  expect(() => renderPropInput("${document.without.backticks}")).toThrow(
+    "Unable to remove backticks from: ${document.without.backticks}"
+  );
+});
+
+function renderPropInput(propValue: string, onChange = jest.fn()) {
   render(
     <PropInput
       propType={PropValueType.string}
       propKind={PropValueKind.Expression}
-      onChange={jest.fn()}
-      propValue="`${document.address}`"
+      onChange={onChange}
+      propValue={propValue}
     />
   );
-  const textbox = screen.getByRole("textbox");
-  expect(textbox).toHaveValue("[[address]]");
-});
+}
