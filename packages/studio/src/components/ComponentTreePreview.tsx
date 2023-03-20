@@ -96,12 +96,13 @@ function useExpressionSources(): ExpressionSources {
   const [expressionSources, setExpressionSources] = useState<ExpressionSources>(
     {}
   );
-  const [siteSettingValues, activeEntityFile, isModuleBeingEdited] =
-    useStudioStore((store) => [
+  const [siteSettingValues, activeEntityFile, localDataPath] = useStudioStore(
+    (store) => [
       store.siteSettings.values,
       store.pages.activeEntityFile,
-      !!store.pages.moduleUUIDBeingEdited,
-    ]);
+      store.studioConfig.paths.localData,
+    ]
+  );
 
   useLayoutEffect(() => {
     const siteSettingsSource = siteSettingValues
@@ -112,10 +113,6 @@ function useExpressionSources(): ExpressionSources {
       siteSettings: siteSettingsSource,
     }));
   }, [siteSettingValues]);
-
-  const localDataPath = useStudioStore(
-    (store) => store.studioConfig.paths.localData
-  );
 
   useLayoutEffect(() => {
     if (!activeEntityFile) {
@@ -133,7 +130,7 @@ function useExpressionSources(): ExpressionSources {
         };
       });
     });
-  }, [activeEntityFile, localDataPath, isModuleBeingEdited]);
+  }, [activeEntityFile, localDataPath]);
 
   return expressionSources;
 }
