@@ -21,22 +21,18 @@ export default function RepeaterEditor({
     store.actions.removeRepeater,
   ]);
 
-  const onToggleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const checked = e.target.checked;
-      checked ? addRepeater(componentState) : removeRepeater(componentState);
-    },
-    [addRepeater, removeRepeater, componentState]
-  );
+  const isChecked = TypeGuards.isRepeaterState(componentState);
+
+  const onToggleChange = useCallback(() => {
+    isChecked ? removeRepeater(componentState) : addRepeater(componentState);
+  }, [addRepeater, removeRepeater, componentState, isChecked]);
 
   const handleListUpdate = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      updateRepeaterListExpression(e.target.value);
+      isChecked && updateRepeaterListExpression(e.target.value, componentState);
     },
-    [updateRepeaterListExpression]
+    [updateRepeaterListExpression, componentState, isChecked]
   );
-
-  const isChecked = TypeGuards.isRepeaterState(componentState);
 
   return (
     <>

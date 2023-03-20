@@ -1,8 +1,7 @@
 import {
   ComponentStateKind,
-  EditableComponentState,
   RepeaterState,
-  TypeGuards,
+  StandardOrModuleComponentState,
 } from "@yext/studio-plugin";
 import StudioActions from "../StudioActions";
 
@@ -12,12 +11,7 @@ export default class RepeaterActions {
   /**
    * Turns the standard component or module into a repeater.
    */
-  addRepeater = (componentState: EditableComponentState) => {
-    if (!TypeGuards.isStandardOrModuleComponentState(componentState)) {
-      throw new Error(
-        "Error in addRepeater: Only components and modules can be repeated."
-      );
-    }
+  addRepeater = (componentState: StandardOrModuleComponentState) => {
     const newComponentState: RepeaterState = {
       kind: ComponentStateKind.Repeater,
       uuid: componentState.uuid,
@@ -34,10 +28,7 @@ export default class RepeaterActions {
   /**
    * Turns the repeater component back into a regular component or module.
    */
-  removeRepeater = (componentState: EditableComponentState) => {
-    if (!TypeGuards.isRepeaterState(componentState)) {
-      throw new Error("Error in removeRepeater: Component is not a Repeater.");
-    }
+  removeRepeater = (componentState: RepeaterState) => {
     const newComponentState = {
       ...componentState.repeatedComponent,
       uuid: componentState.uuid,

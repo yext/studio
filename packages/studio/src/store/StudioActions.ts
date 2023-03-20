@@ -6,6 +6,7 @@ import {
   ModuleMetadata,
   ModuleState,
   PropValues,
+  RepeaterState,
   TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
@@ -111,26 +112,12 @@ export default class StudioActions {
     );
   };
 
-  updateRepeaterListExpression = (listExpression: string) => {
-    const activeComponentState = this.getActiveComponentState();
-    if (!activeComponentState) {
-      console.error(
-        "Error in updateRepeaterListExpression: No active component found."
-      );
-      return;
-    }
-    if (!TypeGuards.isRepeaterState(activeComponentState)) {
-      console.error(
-        "Error in updateRepeaterListExpression: The active component is not a Repeater."
-      );
-      return;
-    }
-
-    const updatedComponentState = { ...activeComponentState, listExpression };
-    this.replaceComponentState(
-      activeComponentState.uuid,
-      updatedComponentState
-    );
+  updateRepeaterListExpression = (
+    listExpression: string,
+    repeaterState: RepeaterState
+  ) => {
+    const updatedComponentState = { ...repeaterState, listExpression };
+    this.replaceComponentState(repeaterState.uuid, updatedComponentState);
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
