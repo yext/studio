@@ -8,18 +8,13 @@ const streamDocument = {
   },
   address: {
     city: "Chicago",
-    countryCode: "US",
-    line1: "500 West Madison St.",
-    line2: "Suite 2810",
-    localizedCountryName: "United States",
-    localizedRegionName: "Illinois",
     postalCode: "60661",
     region: "IL",
   },
-  addressHidden: false,
+  bool: false,
   name: "benny",
   profile: {
-    description: "lorem ipsum quicksum pipsum",
+    desc: "lorem ipsum quicksum pipsum",
   },
 };
 
@@ -29,11 +24,11 @@ it("can display available string fields and objects containing string fields", a
   await userEvent.click(
     screen.getByRole("button", { name: "Toggle field picker" })
   );
-  expect(screen.getByText("address")).toBeDefined();
-  expect(screen.getByText("name")).toBeDefined();
-  expect(screen.getByText("profile")).toBeDefined();
+  expect(screen.getByText("Address")).toBeDefined();
+  expect(screen.getByText("Name")).toBeDefined();
+  expect(screen.getByText("Profile")).toBeDefined();
   expect(screen.queryByText("__")).toBeNull();
-  expect(screen.queryByText("addressHidden")).toBeNull();
+  expect(screen.queryByText("Bool")).toBeNull();
 });
 
 it("can display nested fields", async () => {
@@ -41,9 +36,9 @@ it("can display nested fields", async () => {
   await userEvent.click(
     screen.getByRole("button", { name: "Toggle field picker" })
   );
-  expect(screen.queryByText("city")).toBeNull();
-  await userEvent.click(screen.getByText("address"));
-  expect(screen.getByText("city")).toBeDefined();
+  expect(screen.queryByText("City")).toBeNull();
+  await userEvent.click(screen.getByText("Address"));
+  expect(screen.getByText("City")).toBeDefined();
 });
 
 it("can select nested fields", async () => {
@@ -52,12 +47,12 @@ it("can select nested fields", async () => {
   await userEvent.click(
     screen.getByRole("button", { name: "Toggle field picker" })
   );
-  await userEvent.click(screen.getByText("address"));
+  await userEvent.click(screen.getByText("Address"));
   expect(handleFieldSelection).toHaveBeenCalledTimes(0);
-  await userEvent.click(screen.getByText("localizedCountryName"));
+  await userEvent.click(screen.getByText("Postal Code"));
   expect(handleFieldSelection).toHaveBeenCalledTimes(1);
   expect(handleFieldSelection).toHaveBeenCalledWith(
-    "document.address.localizedCountryName"
+    "document.address.postalCode"
   );
 });
 
@@ -78,10 +73,10 @@ it("can collapse a section", async () => {
   await userEvent.click(
     screen.getByRole("button", { name: "Toggle field picker" })
   );
-  await userEvent.click(screen.getByText("address"));
-  expect(screen.getByText("city")).toBeDefined();
-  await userEvent.click(screen.getByText("address"));
-  expect(screen.queryByText("city")).toBeNull();
+  await userEvent.click(screen.getByText("Address"));
+  expect(screen.getByText("City")).toBeDefined();
+  await userEvent.click(screen.getByText("Address"));
+  expect(screen.queryByText("City")).toBeNull();
 });
 
 it("opening one section will collapse unrelated ones", async () => {
@@ -89,12 +84,12 @@ it("opening one section will collapse unrelated ones", async () => {
   await userEvent.click(
     screen.getByRole("button", { name: "Toggle field picker" })
   );
-  await userEvent.click(screen.getByText("address"));
-  expect(screen.getByText("city")).toBeDefined();
-  expect(screen.queryByText("description")).toBeNull();
-  await userEvent.click(screen.getByText("profile"));
-  expect(screen.queryByText("city")).toBeNull();
-  expect(screen.getByText("description")).toBeDefined();
+  await userEvent.click(screen.getByText("Address"));
+  expect(screen.getByText("City")).toBeDefined();
+  expect(screen.queryByText("Desc")).toBeNull();
+  await userEvent.click(screen.getByText("Profile"));
+  expect(screen.queryByText("City")).toBeNull();
+  expect(screen.getByText("Desc")).toBeDefined();
 });
 
 function renderFieldPicker(handleFieldSelection = jest.fn()) {

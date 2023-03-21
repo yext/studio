@@ -1,13 +1,4 @@
-/* eslint-disable react-perf/jsx-no-new-function-as-prop */
-import {
-  useCallback,
-  MouseEvent,
-  CSSProperties,
-  createContext,
-  useContext,
-  MouseEventHandler,
-  PropsWithChildren,
-} from "react";
+import { useCallback, MouseEvent, CSSProperties } from "react";
 import { ReactComponent as VectorIcon } from "../../icons/vector.svg";
 import { startCase } from "lodash";
 
@@ -19,9 +10,9 @@ const listStyles: CSSProperties = {
 interface FieldDropdownProps {
   fieldIdToValue: Record<string, unknown>;
   parentPath: string;
-  expandedPath: string;
-  handleClickNestedField: (fieldId: string) => void;
+  handleNestedObjectSelection: (fieldId: string) => void;
   handleFieldSelection: (fieldId: string) => void;
+  isExpandedFieldId: (fieldId: string) => boolean;
 }
 
 /**
@@ -29,66 +20,71 @@ interface FieldDropdownProps {
  * When an object field is encountered, FieldDropdown will open a child
  * FieldDropdown for rendering the object field.
  */
-export default function FieldDropdown({
-  fieldIdToValue,
-  parentPath,
-  expandedPath,
-  handleClickNestedField,
-  handleFieldSelection,
-}: FieldDropdownProps) {
+export default function FieldDropdown(props: FieldDropdownProps) {
   return (
     <ul
       className="absolute w-max bg-white mt-2 rounded border z-10 shadow-2xl"
       style={listStyles}
     >
-      {Object.entries(fieldIdToValue).map(([currentFieldId, value]) => {
+      {Object.keys(props.fieldIdToValue).map((currentFieldId) => {
         return (
-          <Item>
-          </Item>
+          <Item
+            currentFieldId={currentFieldId}
+            {...props}
+            key={currentFieldId}
+          />
         );
       })}
     </ul>
   );
 }
 
-function Item(props: {
+function Item(props: FieldDropdownProps & { currentFieldId: string }) {
+  const { currentFieldId, fieldIdToValue, parentPath, ...callbacks } = props;
 
-}>) {
+  const {
+    handleNestedObjectSelection,
+    handleFieldSelection,
+    isExpandedFieldId,
+  } = callbacks;
 
+  const value = fieldIdToValue[currentFieldId];
   const isObject =
     typeof value === "object" && !Array.isArray(value) && value !== null;
-  const displayValue = startCase(currentFieldId.split("c_").at(-1));
-  const fullFieldId = parentPath
+  const fieldId = parentPath
     ? `${parentPath}.${currentFieldId}`
     : currentFieldId;
-  const isExpanded = expandedPath.startsWith(fullFieldId);
-  const handleClick = useCallback((e: MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    if (isObject) {
-      handleClickNestedField(fullFieldId);
-    } else {
-      handleFieldSelection(fullFieldId);
-    }
-  }, [])
+
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
+      e.stopPropagation();
+      e.preventDefault();
+      if (isObject) {
+        handleNestedObjectSelection(fieldId);
+      } else {
+        handleFieldSelection(fieldId);
+      }
+    },
+    [fieldId, handleNestedObjectSelection, handleFieldSelection, isObject]
+  );
+
+  const displayValue = startCase(currentFieldId.split("c_").at(-1));
+
   return (
     <li
       className="hover:bg-gray-100 px-4 py-1 cursor-pointer flex justify-between"
       onClick={handleClick}
     >
-
       {displayValue}
-      {isExpanded && (
+      {isObject && (
         <div className="flex items-center pr-2">
           <VectorIcon />
-          {isExpanded && (
+          {isExpandedFieldId(fieldId) && (
             <div className="mt-4">
               <FieldDropdown
                 fieldIdToValue={value as Record<string, unknown>}
-                parentPath={fullFieldId}
-                expandedPath={expandedPath}
-                handleClickNestedField={handleClickNestedField}
-                handleFieldSelection={handleFieldSelection}
+                parentPath={fieldId}
+                {...callbacks}
               />
             </div>
           )}

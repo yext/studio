@@ -1,6 +1,5 @@
-/* eslint-disable react-perf/jsx-no-new-function-as-prop */
-import { useCallback, useRef, useState, MouseEvent, useMemo } from "react";
-import FieldDropdown, { FieldDropdownContext } from "./FieldDropdown";
+import { useCallback, useRef, useState, MouseEvent } from "react";
+import FieldDropdown from "./FieldDropdown";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
 import useRootClose from "@restart/ui/useRootClose";
 import filterStreamDocument from "../../utils/filterStreamDocument";
@@ -21,12 +20,8 @@ export default function FieldPicker({
   const [visiblyExpandedPath, setVisiblyExpandedPath] = useState<string>("");
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const closePicker = useCallback(() => {
-    setVisiblyExpandedPath("");
-  }, []);
-
   useRootClose(containerRef, () => {
-    closePicker();
+    setVisiblyExpandedPath("");
   });
 
   const togglePicker = useCallback(
@@ -36,18 +31,40 @@ export default function FieldPicker({
       if (fieldPickerIsClosed) {
         setVisiblyExpandedPath("document");
       } else {
-        closePicker();
+        setVisiblyExpandedPath("");
       }
     },
-    [visiblyExpandedPath, closePicker]
+    [visiblyExpandedPath]
   );
 
   const filteredDocument = filterStreamDocument(fieldType, streamDocument);
 
-  const handleFieldDropdownSelection = (fieldId: string) => {
-    handleFieldSelection(fieldId);
-    closePicker();
-  };
+  const handleFieldDropdownSelection = useCallback(
+    (fieldId: string) => {
+      handleFieldSelection(fieldId);
+      setVisiblyExpandedPath("");
+    },
+    [handleFieldSelection]
+  );
+
+  const handleNestedObjectSelection = useCallback(
+    (fieldId) => {
+      if (visiblyExpandedPath !== fieldId) {
+        setVisiblyExpandedPath(fieldId);
+      } else {
+        const parentPath = fieldId.substring(0, fieldId.lastIndexOf("."));
+        setVisiblyExpandedPath(parentPath);
+      }
+    },
+    [visiblyExpandedPath]
+  );
+
+  const isExpandedFieldId = useCallback(
+    (fieldId: string) => {
+      return visiblyExpandedPath.startsWith(fieldId);
+    },
+    [visiblyExpandedPath]
+  );
 
   return (
     <div ref={containerRef}>
@@ -60,17 +77,10 @@ export default function FieldPicker({
       {visiblyExpandedPath && streamDocument && (
         <FieldDropdown
           fieldIdToValue={filteredDocument}
-          expandedPath={visiblyExpandedPath}
           parentPath="document"
           handleFieldSelection={handleFieldDropdownSelection}
-          handleClickNestedField={(fieldId) => {
-            if (visiblyExpandedPath !== fieldId) {
-              setVisiblyExpandedPath(fieldId);
-            } else {
-              const parentPath = fieldId.substring(0, fieldId.lastIndexOf("."));
-              setVisiblyExpandedPath(parentPath);
-            }
-          }}
+          handleNestedObjectSelection={handleNestedObjectSelection}
+          isExpandedFieldId={isExpandedFieldId}
         />
       )}
     </div>
