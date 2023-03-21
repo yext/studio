@@ -50,7 +50,7 @@ export default function FieldPicker({
         <FieldDropdown
           fieldIdToValue={filteredDocument}
           expandedPath={expandedPath}
-          dataSourcePath="document"
+          prefix="document"
           handleFieldSelection={handleFieldSelection}
           setExpandedPath={setExpandedPath}
         />

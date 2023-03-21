@@ -9,7 +9,7 @@ const listStyles: CSSProperties = {
 
 interface FieldDropdownProps {
   fieldIdToValue: Record<string, unknown>;
-  dataSourcePath: string;
+  prefix: string;
   expandedPath: string;
   setExpandedPath: (expandedPath: string) => void;
   handleFieldSelection: (dataSourcePath: string) => void;
@@ -22,7 +22,7 @@ interface FieldDropdownProps {
  */
 export default function FieldDropdown({
   fieldIdToValue,
-  dataSourcePath,
+  prefix,
   expandedPath,
   setExpandedPath,
   handleFieldSelection,
@@ -36,9 +36,9 @@ export default function FieldDropdown({
         return (
           <Option
             fieldId={fieldId}
-            fields={fieldIdToValue}
+            fieldIdToValue={fieldIdToValue}
             key={fieldId}
-            dataSourcePath={dataSourcePath}
+            prefix={prefix}
             expandedPath={expandedPath}
             setExpandedPath={setExpandedPath}
             handleFieldSelection={handleFieldSelection}
@@ -51,21 +51,21 @@ export default function FieldDropdown({
 
 function Option({
   fieldId,
-  fields,
-  dataSourcePath,
+  fieldIdToValue,
+  prefix,
   expandedPath,
   setExpandedPath,
   handleFieldSelection,
 }: {
   fieldId: string;
-  fields: Record<string, unknown>;
-  dataSourcePath: string;
+  fieldIdToValue: Record<string, unknown>;
+  prefix: string;
   expandedPath: string;
   setExpandedPath: (expandedPath: string) => void;
   handleFieldSelection: (dataSourcePath: string) => void;
 }) {
-  const value = fields[fieldId];
-  const fieldPath = dataSourcePath ? dataSourcePath + `.${fieldId}` : fieldId;
+  const value = fieldIdToValue[fieldId];
+  const fieldPath = prefix ? prefix + `.${fieldId}` : fieldId;
 
   const isObject =
     typeof value === "object" && !Array.isArray(value) && value !== null;
@@ -78,7 +78,7 @@ function Option({
         if (expandedPath !== fieldPath) {
           setExpandedPath(fieldPath);
         } else {
-          setExpandedPath(dataSourcePath);
+          setExpandedPath(prefix);
         }
       } else {
         handleFieldSelection(fieldPath);
@@ -86,12 +86,12 @@ function Option({
       }
     },
     [
-      dataSourcePath,
-      fieldPath,
-      handleFieldSelection,
       isObject,
-      setExpandedPath,
       expandedPath,
+      fieldPath,
+      setExpandedPath,
+      prefix,
+      handleFieldSelection,
     ]
   );
 
@@ -110,7 +110,7 @@ function Option({
             <div className="mt-4">
               <FieldDropdown
                 fieldIdToValue={value as Record<string, unknown>}
-                dataSourcePath={fieldPath}
+                prefix={fieldPath}
                 expandedPath={expandedPath}
                 setExpandedPath={setExpandedPath}
                 handleFieldSelection={handleFieldSelection}
