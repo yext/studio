@@ -31,7 +31,7 @@ export default function PropInput({
   unionValues,
   propKind,
 }: PropInputProps): JSX.Element {
-  const onInputChange = useCallback(
+  const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const getValue = () => {
         if (e.target instanceof HTMLSelectElement) {
@@ -65,7 +65,7 @@ export default function PropInput({
 
   if (unionValues) {
     return (
-      <select onChange={onInputChange} className={selectCssClasses}>
+      <select onChange={handleChangeEvent} className={selectCssClasses}>
         {unionValues.map((val) => {
           return (
             <option value={val} key={val}>
@@ -82,7 +82,7 @@ export default function PropInput({
       return (
         <input
           type="number"
-          onChange={onInputChange}
+          onChange={handleChangeEvent}
           className={inputBoxCssClasses}
           value={displayValue as number}
         />
@@ -90,7 +90,7 @@ export default function PropInput({
     case PropValueType.string:
       return (
         <FieldPickerInput
-          onInputChange={onInputChange}
+          onInputChange={handleChangeEvent}
           onFieldSelection={appendField}
           displayValue={displayValue as string}
           fieldType="string"
@@ -98,13 +98,16 @@ export default function PropInput({
       );
     case PropValueType.boolean:
       return (
-        <Toggle checked={displayValue as boolean} onToggle={onInputChange} />
+        <Toggle
+          checked={displayValue as boolean}
+          onToggle={handleChangeEvent}
+        />
       );
     case PropValueType.HexColor:
       return (
         <input
           type="color"
-          onChange={onInputChange}
+          onChange={handleChangeEvent}
           value={displayValue as string}
         />
       );
