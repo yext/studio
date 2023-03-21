@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState, MouseEvent } from "react";
 import FieldDropdown from "./FieldDropdown";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
-import { useRootClose } from "@restart/ui";
+import useRootClose from "@restart/ui/useRootClose";
 import filterStreamDocument from "../../utils/filterStreamDocument";
 
 /**

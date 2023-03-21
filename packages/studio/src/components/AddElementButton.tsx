@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { ReactComponent as AddIcon } from "../icons/addcomponent.svg";
-import { useRootClose } from "@restart/ui";
+import useRootClose from "@restart/ui/useRootClose";
 import useStudioStore from "../store/useStudioStore";
 import AddElementMenu from "./AddElementMenu/AddElementMenu";
 
