@@ -77,7 +77,7 @@ function Item(props: FieldDropdownProps & { currentFieldId: string }) {
     >
       {displayValue}
       {isObject && (
-        <div className="flex items-center pr-2">
+        <div className="flex items-center">
           <VectorIcon />
           {isExpandedFieldId(fieldId) && (
             <div className="mt-4">
