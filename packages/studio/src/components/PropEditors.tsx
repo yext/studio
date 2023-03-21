@@ -4,10 +4,12 @@ import {
   PropVal,
   PropValueKind,
   PropMetadata,
+  PropValueType,
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
 import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
+import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import PropEditor from "./PropEditor";
 
 export default function PropEditors(props: {
@@ -35,31 +37,53 @@ export default function PropEditors(props: {
     .filter(createIsSupportedPropMetadata(activeComponentState.componentName))
     .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true);
 
+  if (editableProps.length === 0) {
+    return renderNoEditableProps(activeComponentState.componentName);
+  }
+
   return (
     <>
-      {editableProps.length > 0
-        ? editableProps.map(([propName, propMetadata]) => {
-            const propValue = activeComponentState.props[propName]?.value as
-              | string
-              | number
-              | boolean;
-
-            return (
-              <PropEditor
-                key={propName}
-                onPropChange={updateProps}
-                propKind={propKind}
-                {...{
-                  propName,
-                  propMetadata,
-                  propValue,
-                }}
-              />
-            );
-          })
-        : renderNoEditableProps(activeComponentState.componentName)}
+      {editableProps.map(([propName, propMetadata]) => {
+        return (
+          <PropEditor
+            key={propName}
+            onPropChange={updateProps}
+            propKind={propKind}
+            propName={propName}
+            propMetadata={propMetadata}
+            propValue={getPropValue(
+              activeComponentState.props[propName],
+              propKind
+            )}
+          />
+        );
+      })}
     </>
   );
+}
+
+function getPropValue(
+  propVal: PropVal | undefined,
+  expectedPropKind: PropValueKind
+): string | number | boolean | undefined {
+  if (!propVal) {
+    return undefined;
+  }
+
+  const { value, kind, valueType } = propVal;
+  if (typeof value === "object") {
+    throw new Error(
+      `Unexpected object prop ${JSON.stringify(propVal, null, 2)}`
+    );
+  }
+
+  const shouldConvertLiteralToExpression =
+    expectedPropKind === PropValueKind.Expression &&
+    kind === PropValueKind.Literal;
+  if (shouldConvertLiteralToExpression && valueType === PropValueType.string) {
+    return TemplateExpressionFormatter.addBackticks(value);
+  }
+  return value;
 }
 
 /**

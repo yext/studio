@@ -29,6 +29,7 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
   const propShape: PropShape = {
     titleNode: {
       type: PropValueType.ReactNode,
+      required: false,
     },
   };
   const consoleWarnSpy = jest
@@ -52,9 +53,11 @@ it("does not render a prop editor for component's prop of type Object", () => {
   const propShape: PropShape = {
     objProp: {
       type: PropValueType.Object,
+      required: false,
       shape: {
         title: {
           type: PropValueType.string,
+          required: false,
         },
       },
     },
@@ -83,10 +86,10 @@ const activeComponentMetadata: FileMetadata = {
 };
 
 const propShape: PropShape = {
-  title: { type: PropValueType.string },
-  num: { type: PropValueType.number },
-  bool: { type: PropValueType.boolean },
-  bgColor: { type: PropValueType.HexColor },
+  title: { type: PropValueType.string, required: false },
+  num: { type: PropValueType.number, required: false },
+  bool: { type: PropValueType.boolean, required: false },
+  bgColor: { type: PropValueType.HexColor, required: false },
 };
 
 describe("ComponentStateKind.Component", () => {
@@ -222,3 +225,31 @@ function testStandardOrModuleComponentState(
     expect(getComponentProps()).toEqual(expectedComponentProps);
   });
 }
+
+it("converts string literals to string expressions when propKind = Expression", () => {
+  const props: PropValues = {
+    title: {
+      kind: PropValueKind.Literal,
+      value: "myTitle",
+      valueType: PropValueType.string,
+    },
+  };
+  const propShape: PropShape = {
+    title: {
+      type: PropValueType.string,
+      required: false,
+    },
+  };
+
+  render(
+    <PropEditors
+      activeComponentState={{
+        ...activeComponentState,
+        props,
+      }}
+      propShape={propShape}
+      propKind={PropValueKind.Expression}
+    />
+  );
+  expect(screen.getByText("title")).toBeDefined();
+});
