@@ -45,10 +45,11 @@ export default class StudioActions {
   }
 
   getComponentTree = () => {
-    const moduleStateBeingEdited = this.getPages().getModuleStateBeingEdited();
-    if (moduleStateBeingEdited) {
+    const moduleMetadataUUIDBeingEdited =
+      this.getPages().getModuleMetadataUUIDBeingEdited();
+    if (moduleMetadataUUIDBeingEdited) {
       return this.getFileMetadatas().getModuleMetadata(
-        moduleStateBeingEdited.metadataUUID
+        moduleMetadataUUIDBeingEdited
       ).componentTree;
     }
     return this.getPages().getActivePageState()?.componentTree;
@@ -121,12 +122,13 @@ export default class StudioActions {
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
-    const moduleStateBeingEdited = this.getPages().getModuleStateBeingEdited();
+    const moduleMetadataUUIDBeingEdited =
+      this.getPages().getModuleMetadataUUIDBeingEdited();
     const activePageName = this.getPages().activePageName;
 
-    if (moduleStateBeingEdited) {
+    if (moduleMetadataUUIDBeingEdited) {
       this.getFileMetadatas().setComponentTreeInModule(
-        moduleStateBeingEdited.metadataUUID,
+        moduleMetadataUUIDBeingEdited,
         componentTree
       );
     } else if (activePageName) {

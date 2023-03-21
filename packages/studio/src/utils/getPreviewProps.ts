@@ -26,8 +26,7 @@ import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
 export function getPreviewProps(
   props: PropValues,
   propShape: PropShape,
-  expressionSources: ExpressionSources,
-  parentProps: PropValues
+  expressionSources: ExpressionSources
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
@@ -46,8 +45,7 @@ export function getPreviewProps(
     if (propVal.kind === PropValueKind.Expression) {
       transformedProps[propName] = getExpressionPropLiteralValue(
         propVal,
-        expressionSources,
-        parentProps
+        expressionSources
       );
     } else if (propVal.valueType === PropValueType.Object) {
       transformedProps[propName] = transformPropValuesToRaw(propVal.value);
@@ -63,21 +61,12 @@ export function getPreviewProps(
  */
 function getExpressionPropLiteralValue(
   { value, valueType }: ExpressionProp,
-  expressionSources: ExpressionSources,
-  parentProps: PropValues
+  expressionSources: ExpressionSources
 ) {
   if (TypeGuards.isTemplateString(value)) {
-    return getTemplateStringValue(
-      value,
-      valueType,
-      expressionSources,
-      parentProps
-    );
+    return getTemplateStringValue(value, valueType, expressionSources);
   }
-  return (
-    getExpressionValue(value, valueType, expressionSources, parentProps) ??
-    value
-  );
+  return getExpressionValue(value, valueType, expressionSources) ?? value;
 }
 
 /**
@@ -92,8 +81,7 @@ function getExpressionPropLiteralValue(
 function getTemplateStringValue(
   templateString: string,
   propType: PropValueType,
-  expressionSources: ExpressionSources,
-  parentProps: PropValues
+  expressionSources: ExpressionSources
 ): string {
   const hydratedString = templateString.replaceAll(
     TEMPLATE_STRING_EXPRESSION_REGEX,
@@ -101,8 +89,7 @@ function getTemplateStringValue(
       const expressionVal = getExpressionValue(
         args[1],
         propType,
-        expressionSources,
-        parentProps
+        expressionSources
       );
       if (expressionVal !== null) {
         return expressionVal.toString();
@@ -127,8 +114,7 @@ function getTemplateStringValue(
 function getExpressionValue(
   expression: string,
   propType: PropValueType,
-  expressionSources: ExpressionSources,
-  parentProps: PropValues
+  expressionSources: ExpressionSources
 ): string | number | boolean | null | Record<string, unknown> {
   function createPropVal(value: unknown): PropVal | null {
     const propVal = {
@@ -169,27 +155,6 @@ function getExpressionValue(
     return propVal.value;
   }
 
-  /** Note that getValueFromProp does not support {@link PropValueType.Object}. */
-  function getValueFromProp(propPath: string) {
-    const propValue: PropVal | undefined = parentProps[propPath];
-    if (!propValue) {
-      console.warn(
-        `Unable to extract the desired prop from path: ${propPath}`,
-        parentProps
-      );
-      return null;
-    }
-    if (propValue.kind === PropValueKind.Expression) {
-      const expressionValue = getExpressionPropLiteralValue(
-        propValue,
-        expressionSources,
-        parentProps
-      );
-      return expressionValue;
-    }
-    return propValue.value;
-  }
-
   if (TypeGuards.isSiteSettingsExpression(expression)) {
     return getValueFromPath(expression, "siteSettings");
   }
@@ -197,7 +162,7 @@ function getExpressionValue(
     return getValueFromPath(expression, "document");
   }
   if (expression.startsWith("props.")) {
-    return getValueFromProp(expression.split("props.")[1]);
+    return getValueFromPath(expression, "props");
   }
   if (expression.startsWith("item")) {
     return getValueFromPath(expression, "item");
@@ -206,5 +171,5 @@ function getExpressionValue(
 }
 
 export type ExpressionSources = {
-  [key in "document" | "siteSettings"]?: Record<string, unknown>;
+  [key in "document" | "siteSettings" | "props"]?: Record<string, unknown>;
 } & { item?: unknown };

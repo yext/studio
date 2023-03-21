@@ -1,13 +1,17 @@
-import { ModuleState } from "@yext/studio-plugin";
+import {
+  ComponentStateHelpers,
+  ModuleState,
+  RepeaterState,
+} from "@yext/studio-plugin";
 import { useCallback } from "react";
 import { ReactComponent as EditModuleIcon } from "../../icons/editmodule.svg";
 import useStudioStore from "../../store/useStudioStore";
 import ActionIconWrapper from "./ActionIconWrapper";
 
 export default function EditModuleButton({
-  moduleState,
+  state,
 }: {
-  moduleState: ModuleState;
+  state: ModuleState | RepeaterState;
 }) {
   const [setModuleUUIDBeingEdited, setActiveComponentUUID] = useStudioStore(
     (store) => [
@@ -17,15 +21,17 @@ export default function EditModuleButton({
   );
 
   const handleClick = useCallback(() => {
-    setModuleUUIDBeingEdited(moduleState.uuid);
+    setModuleUUIDBeingEdited(state.uuid);
     setActiveComponentUUID(undefined);
-  }, [moduleState.uuid, setModuleUUIDBeingEdited, setActiveComponentUUID]);
+  }, [state.uuid, setModuleUUIDBeingEdited, setActiveComponentUUID]);
+
+  const moduleName =
+    ComponentStateHelpers.extractStandardOrModuleComponentState(
+      state
+    ).componentName;
 
   return (
-    <button
-      onClick={handleClick}
-      aria-label={`Edit Module ${moduleState.componentName}`}
-    >
+    <button onClick={handleClick} aria-label={`Edit Module ${moduleName}`}>
       <ActionIconWrapper tooltip="Edit">
         <EditModuleIcon />
       </ActionIconWrapper>

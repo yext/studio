@@ -1,8 +1,8 @@
 import {
   ComponentState,
-  ComponentStateKind,
-  ModuleState,
+  ComponentStateHelpers,
   PageState,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual:yext-studio";
@@ -115,6 +115,10 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       return pages[activePageName];
     },
+    getComponentStateInActivePage: (uuid: string) =>
+      get()
+        .getActivePageState()
+        ?.componentTree.find((c) => c.uuid === uuid),
   };
 
   const pageComponentActions = {
@@ -163,19 +167,29 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
   const moduleStateActions: Pick<
     PageSlice,
-    "getModuleStateBeingEdited" | "setModuleUUIDBeingEdited"
+    "getModuleMetadataUUIDBeingEdited" | "setModuleUUIDBeingEdited"
   > = {
-    getModuleStateBeingEdited(): ModuleState | undefined {
-      const activePageState = get().getActivePageState();
-      if (!activePageState) {
+    getModuleMetadataUUIDBeingEdited(): string | undefined {
+      const moduleUUIDBeingEdited = get().moduleUUIDBeingEdited;
+      if (!moduleUUIDBeingEdited) {
         return;
       }
-      const moduleUUIDBeingEdited = get().moduleUUIDBeingEdited;
-      return activePageState.componentTree.find(
-        (c): c is ModuleState =>
-          c.kind === ComponentStateKind.Module &&
-          c.uuid === moduleUUIDBeingEdited
+      const matchingState = get().getComponentStateInActivePage(
+        moduleUUIDBeingEdited
       );
+      if (
+        !matchingState ||
+        !TypeGuards.isEditableComponentState(matchingState)
+      ) {
+        return undefined;
+      }
+      const extractedState =
+        ComponentStateHelpers.extractStandardOrModuleComponentState(
+          matchingState
+        );
+      return TypeGuards.isModuleState(extractedState)
+        ? extractedState.metadataUUID
+        : undefined;
     },
     setModuleUUIDBeingEdited(moduleStateUUID: string | undefined) {
       set((store) => {

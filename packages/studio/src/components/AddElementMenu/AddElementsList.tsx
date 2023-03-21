@@ -66,8 +66,8 @@ function Option({
   activeType: ElementType;
 }) {
   const componentName = path.basename(metadata.filepath, ".tsx");
-  const moduleStateBeingEdited = useStudioStore((store) =>
-    store.pages.getModuleStateBeingEdited()
+  const moduleMetadataUUIDBeingEdited = useStudioStore((store) =>
+    store.pages.getModuleMetadataUUIDBeingEdited()
   );
   const addComponent = useStudioStore((store) => {
     return store.actions.addComponent;
@@ -79,7 +79,7 @@ function Option({
 
   // Prevent users from adding infinite looping modules.
   const isSameAsActiveModule =
-    moduleStateBeingEdited?.metadataUUID === metadata.metadataUUID;
+    moduleMetadataUUIDBeingEdited === metadata.metadataUUID;
 
   return (
     <button

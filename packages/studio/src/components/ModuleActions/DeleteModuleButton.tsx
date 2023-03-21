@@ -29,13 +29,25 @@ export default function DeleteModuleButton({
     (store) => store.fileMetadatas.removeFileMetadata
   );
   const pagesRecord = useStudioStore((store) => store.pages.pages);
+  let isUsedInRepeater = false;
   const moduleUsages = Object.keys(pagesRecord).reduce(
     (usageList, pageName) => {
-      const usageCount = pagesRecord[pageName].componentTree.filter(
-        (c) =>
+      const usageCount = pagesRecord[pageName].componentTree.filter((c) => {
+        if (
           c.kind === ComponentStateKind.Module &&
           c.metadataUUID === metadata.metadataUUID
-      ).length;
+        ) {
+          return true;
+        }
+        if (
+          c.kind === ComponentStateKind.Repeater &&
+          c.repeatedComponent.metadataUUID === metadata.metadataUUID
+        ) {
+          isUsedInRepeater = true;
+          return true;
+        }
+        return false;
+      }).length;
       usageList.push({
         pageName,
         usageCount,
@@ -63,7 +75,7 @@ export default function DeleteModuleButton({
           Deleting this module will remove its status as a module, removing it
           from the Insert panel, and detach all other instances of it across
           your site. This will not delete the page elements themselves.
-          {moduleUsages.length > 0 && "This module is found on:"}
+          {moduleUsages.length > 0 && " This module is found on:"}
         </div>
         {moduleUsages.length > 0 && renderModuleUsages(moduleUsages)}
         <div>Press 'Delete' to confirm this."</div>
@@ -88,13 +100,18 @@ export default function DeleteModuleButton({
     [handleDelete, modalBody]
   );
 
+  const tooltipText = isUsedInRepeater
+    ? "Unable to delete module while it is used in a list anywhere in the site"
+    : "Delete";
+
   return (
     <>
       <ButtonWithModal
         ariaLabel={`Delete Module ${moduleName}`}
         renderModal={renderModal}
+        disabled={isUsedInRepeater}
         buttonContent={
-          <ActionIconWrapper tooltip="Delete">
+          <ActionIconWrapper tooltip={tooltipText} disabled={isUsedInRepeater}>
             <DeleteModuleIcon />
           </ActionIconWrapper>
         }

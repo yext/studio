@@ -51,7 +51,7 @@ it("sets module UUID being edited and resets active component when clicked", asy
     },
   });
 
-  render(<EditModuleButton moduleState={moduleState} />);
+  render(<EditModuleButton state={moduleState} />);
   const editButton = await screen.findByRole("button", {
     name: "Edit Module Star",
   });
