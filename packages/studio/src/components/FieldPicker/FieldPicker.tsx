@@ -17,23 +17,23 @@ export default function FieldPicker({
   streamDocument?: Record<string, unknown>;
   fieldType: "string" | "array";
 }) {
-  const [visiblePath, setVisiblePath] = useState<string>("");
+  const [expandedPath, setExpandedPath] = useState<string>("");
   const containerRef = useRef<HTMLDivElement>(null);
 
   useRootClose(containerRef, () => {
-    setVisiblePath("");
+    setExpandedPath("");
   });
 
   const handleClick = useCallback(
     (e: MouseEvent<SVGSVGElement>) => {
       e.preventDefault();
-      if (visiblePath === "") {
-        setVisiblePath("document");
+      if (expandedPath === "") {
+        setExpandedPath("document");
       } else {
-        setVisiblePath("");
+        setExpandedPath("");
       }
     },
-    [visiblePath]
+    [expandedPath]
   );
 
   const filteredDocument = filterStreamDocument(fieldType, streamDocument);
@@ -46,13 +46,13 @@ export default function FieldPicker({
         className="hover:opacity-100 opacity-50 cursor-pointer"
         aria-label="Toggle field picker"
       />
-      {visiblePath && streamDocument && (
+      {expandedPath && streamDocument && (
         <FieldDropdown
           fields={filteredDocument}
-          visiblePath={visiblePath}
+          expandedPath={expandedPath}
           dataSourcePath="document"
           handleFieldSelection={handleFieldSelection}
-          setVisiblePath={setVisiblePath}
+          setExpandedPath={setExpandedPath}
         />
       )}
     </div>

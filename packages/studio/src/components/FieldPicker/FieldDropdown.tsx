@@ -9,8 +9,8 @@ const listStyles: CSSProperties = {
 interface FieldDropdownProps {
   fields: Record<string, unknown>;
   dataSourcePath: string;
-  visiblePath: string;
-  setVisiblePath: (visiblePath: string) => void;
+  expandedPath: string;
+  setExpandedPath: (expandedPath: string) => void;
   handleFieldSelection: (dataSourcePath: string) => void;
 }
 
@@ -20,8 +20,8 @@ interface FieldDropdownProps {
 export default function FieldDropdown({
   fields,
   dataSourcePath,
-  visiblePath,
-  setVisiblePath,
+  expandedPath,
+  setExpandedPath,
   handleFieldSelection,
 }: FieldDropdownProps) {
   return (
@@ -36,8 +36,8 @@ export default function FieldDropdown({
             fields={fields}
             key={field}
             dataSourcePath={dataSourcePath}
-            visiblePath={visiblePath}
-            setVisiblePath={setVisiblePath}
+            expandedPath={expandedPath}
+            setExpandedPath={setExpandedPath}
             handleFieldSelection={handleFieldSelection}
           />
         );
@@ -50,15 +50,15 @@ function Option({
   field,
   fields,
   dataSourcePath,
-  visiblePath,
-  setVisiblePath,
+  expandedPath,
+  setExpandedPath,
   handleFieldSelection,
 }: {
   field: string;
   fields: Record<string, unknown>;
   dataSourcePath: string;
-  visiblePath: string;
-  setVisiblePath: (visiblePath: string) => void;
+  expandedPath: string;
+  setExpandedPath: (expandedPath: string) => void;
   handleFieldSelection: (dataSourcePath: string) => void;
 }) {
   const value = fields[field];
@@ -72,14 +72,14 @@ function Option({
       e.stopPropagation();
       e.preventDefault();
       if (isObject) {
-        if (visiblePath !== fieldPath) {
-          setVisiblePath(fieldPath);
+        if (expandedPath !== fieldPath) {
+          setExpandedPath(fieldPath);
         } else {
-          setVisiblePath(dataSourcePath);
+          setExpandedPath(dataSourcePath);
         }
       } else {
         handleFieldSelection(fieldPath);
-        setVisiblePath("");
+        setExpandedPath("");
       }
     },
     [
@@ -87,8 +87,8 @@ function Option({
       fieldPath,
       handleFieldSelection,
       isObject,
-      setVisiblePath,
-      visiblePath,
+      setExpandedPath,
+      expandedPath,
     ]
   );
 
@@ -101,13 +101,13 @@ function Option({
       {isObject && (
         <div className="flex items-center pr-2">
           <VectorIcon />
-          {visiblePath.startsWith(fieldPath) && (
+          {expandedPath.startsWith(fieldPath) && (
             <div className="mt-4">
               <FieldDropdown
                 fields={value as Record<string, unknown>}
                 dataSourcePath={fieldPath}
-                visiblePath={visiblePath}
-                setVisiblePath={setVisiblePath}
+                expandedPath={expandedPath}
+                setExpandedPath={setExpandedPath}
                 handleFieldSelection={handleFieldSelection}
               />
             </div>
