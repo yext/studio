@@ -8,7 +8,7 @@ const listStyles: CSSProperties = {
 };
 
 interface FieldDropdownProps {
-  fields: Record<string, unknown>;
+  fieldIdToValue: Record<string, unknown>;
   dataSourcePath: string;
   expandedPath: string;
   setExpandedPath: (expandedPath: string) => void;
@@ -16,10 +16,12 @@ interface FieldDropdownProps {
 }
 
 /**
- * Dropdown for the FieldPicker.
+ * FieldDropdown renders a dropdown for picking stream document fields.
+ * When an object field is encountered, FieldDropdown will open a child
+ * FieldDropdown for rendering the object field.
  */
 export default function FieldDropdown({
-  fields,
+  fieldIdToValue,
   dataSourcePath,
   expandedPath,
   setExpandedPath,
@@ -30,12 +32,12 @@ export default function FieldDropdown({
       className="absolute w-max bg-white mt-2 rounded border z-10 shadow-2xl"
       style={listStyles}
     >
-      {Object.keys(fields).map((field) => {
+      {Object.keys(fieldIdToValue).map((fieldId) => {
         return (
           <Option
-            field={field}
-            fields={fields}
-            key={field}
+            fieldId={fieldId}
+            fields={fieldIdToValue}
+            key={fieldId}
             dataSourcePath={dataSourcePath}
             expandedPath={expandedPath}
             setExpandedPath={setExpandedPath}
@@ -48,22 +50,22 @@ export default function FieldDropdown({
 }
 
 function Option({
-  field,
+  fieldId,
   fields,
   dataSourcePath,
   expandedPath,
   setExpandedPath,
   handleFieldSelection,
 }: {
-  field: string;
+  fieldId: string;
   fields: Record<string, unknown>;
   dataSourcePath: string;
   expandedPath: string;
   setExpandedPath: (expandedPath: string) => void;
   handleFieldSelection: (dataSourcePath: string) => void;
 }) {
-  const value = fields[field];
-  const fieldPath = dataSourcePath ? dataSourcePath + `.${field}` : field;
+  const value = fields[fieldId];
+  const fieldPath = dataSourcePath ? dataSourcePath + `.${fieldId}` : fieldId;
 
   const isObject =
     typeof value === "object" && !Array.isArray(value) && value !== null;
@@ -93,7 +95,7 @@ function Option({
     ]
   );
 
-  const fieldDisplayValue = startCase(field.split("c_").at(-1));
+  const fieldDisplayValue = startCase(fieldId.split("c_").at(-1));
 
   return (
     <li
@@ -107,7 +109,7 @@ function Option({
           {expandedPath.startsWith(fieldPath) && (
             <div className="mt-4">
               <FieldDropdown
-                fields={value as Record<string, unknown>}
+                fieldIdToValue={value as Record<string, unknown>}
                 dataSourcePath={fieldPath}
                 expandedPath={expandedPath}
                 setExpandedPath={setExpandedPath}

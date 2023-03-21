@@ -48,7 +48,7 @@ export default function FieldPicker({
       />
       {expandedPath && streamDocument && (
         <FieldDropdown
-          fields={filteredDocument}
+          fieldIdToValue={filteredDocument}
           expandedPath={expandedPath}
           dataSourcePath="document"
           handleFieldSelection={handleFieldSelection}
