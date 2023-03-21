@@ -32,7 +32,7 @@ export default function FieldPickerInput({
         className={inputBoxCssClasses}
         value={displayValue}
       />
-      <i className="absolute right-0 top-2.5 mr-2 bg-white">
+      <i className="absolute right-0 top-2.5 mr-2 bg-white not-italic">
         <FieldPicker
           fieldType={fieldType}
           handleFieldSelection={onFieldSelection}

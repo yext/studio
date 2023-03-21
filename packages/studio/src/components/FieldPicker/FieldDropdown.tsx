@@ -1,5 +1,6 @@
 import { useCallback, MouseEvent, CSSProperties } from "react";
 import { ReactComponent as VectorIcon } from "../../icons/vector.svg";
+import { startCase } from "lodash";
 
 const listStyles: CSSProperties = {
   minWidth: "200px",
@@ -92,12 +93,14 @@ function Option({
     ]
   );
 
+  const fieldDisplayValue = startCase(field.split("c_").at(-1));
+
   return (
     <li
       className="hover:bg-gray-100 px-4 py-1 cursor-pointer flex justify-between"
       onClick={handleClick}
     >
-      {field}
+      {fieldDisplayValue}
       {isObject && (
         <div className="flex items-center pr-2">
           <VectorIcon />
