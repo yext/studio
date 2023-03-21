@@ -4,7 +4,7 @@ import FieldPicker from "./FieldPicker";
 
 interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
-  onFieldSelection: (field: string) => void;
+  handleFieldSelection: (fieldId: string) => void;
   displayValue: string;
   disabled?: boolean;
   fieldType: "string" | "array";
@@ -18,7 +18,7 @@ const inputBoxCssClasses =
  */
 export default function FieldPickerInput({
   onInputChange,
-  onFieldSelection,
+  handleFieldSelection,
   displayValue,
   fieldType,
 }: FieldPickerInputProps) {
@@ -35,7 +35,7 @@ export default function FieldPickerInput({
       <i className="absolute right-0 top-2.5 mr-2 bg-white not-italic">
         <FieldPicker
           fieldType={fieldType}
-          handleFieldSelection={onFieldSelection}
+          handleFieldSelection={handleFieldSelection}
           streamDocument={streamDocument}
         />
       </i>

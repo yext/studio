@@ -1,4 +1,13 @@
-import { useCallback, MouseEvent, CSSProperties } from "react";
+/* eslint-disable react-perf/jsx-no-new-function-as-prop */
+import {
+  useCallback,
+  MouseEvent,
+  CSSProperties,
+  createContext,
+  useContext,
+  MouseEventHandler,
+  PropsWithChildren,
+} from "react";
 import { ReactComponent as VectorIcon } from "../../icons/vector.svg";
 import { startCase } from "lodash";
 
@@ -9,10 +18,10 @@ const listStyles: CSSProperties = {
 
 interface FieldDropdownProps {
   fieldIdToValue: Record<string, unknown>;
-  prefix: string;
+  parentPath: string;
   expandedPath: string;
-  setExpandedPath: (expandedPath: string) => void;
-  handleFieldSelection: (dataSourcePath: string) => void;
+  handleClickNestedField: (fieldId: string) => void;
+  handleFieldSelection: (fieldId: string) => void;
 }
 
 /**
@@ -22,9 +31,9 @@ interface FieldDropdownProps {
  */
 export default function FieldDropdown({
   fieldIdToValue,
-  prefix,
+  parentPath,
   expandedPath,
-  setExpandedPath,
+  handleClickNestedField,
   handleFieldSelection,
 }: FieldDropdownProps) {
   return (
@@ -32,87 +41,53 @@ export default function FieldDropdown({
       className="absolute w-max bg-white mt-2 rounded border z-10 shadow-2xl"
       style={listStyles}
     >
-      {Object.keys(fieldIdToValue).map((fieldId) => {
+      {Object.entries(fieldIdToValue).map(([currentFieldId, value]) => {
         return (
-          <Option
-            fieldId={fieldId}
-            fieldIdToValue={fieldIdToValue}
-            key={fieldId}
-            prefix={prefix}
-            expandedPath={expandedPath}
-            setExpandedPath={setExpandedPath}
-            handleFieldSelection={handleFieldSelection}
-          />
+          <Item>
+          </Item>
         );
       })}
     </ul>
   );
 }
 
-function Option({
-  fieldId,
-  fieldIdToValue,
-  prefix,
-  expandedPath,
-  setExpandedPath,
-  handleFieldSelection,
-}: {
-  fieldId: string;
-  fieldIdToValue: Record<string, unknown>;
-  prefix: string;
-  expandedPath: string;
-  setExpandedPath: (expandedPath: string) => void;
-  handleFieldSelection: (dataSourcePath: string) => void;
-}) {
-  const value = fieldIdToValue[fieldId];
-  const fieldPath = prefix ? prefix + `.${fieldId}` : fieldId;
+function Item(props: {
+
+}>) {
 
   const isObject =
     typeof value === "object" && !Array.isArray(value) && value !== null;
-
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLLIElement>) => {
-      e.stopPropagation();
-      e.preventDefault();
-      if (isObject) {
-        if (expandedPath !== fieldPath) {
-          setExpandedPath(fieldPath);
-        } else {
-          setExpandedPath(prefix);
-        }
-      } else {
-        handleFieldSelection(fieldPath);
-        setExpandedPath("");
-      }
-    },
-    [
-      isObject,
-      expandedPath,
-      fieldPath,
-      setExpandedPath,
-      prefix,
-      handleFieldSelection,
-    ]
-  );
-
-  const fieldDisplayValue = startCase(fieldId.split("c_").at(-1));
-
+  const displayValue = startCase(currentFieldId.split("c_").at(-1));
+  const fullFieldId = parentPath
+    ? `${parentPath}.${currentFieldId}`
+    : currentFieldId;
+  const isExpanded = expandedPath.startsWith(fullFieldId);
+  const handleClick = useCallback((e: MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (isObject) {
+      handleClickNestedField(fullFieldId);
+    } else {
+      handleFieldSelection(fullFieldId);
+    }
+  }, [])
   return (
     <li
       className="hover:bg-gray-100 px-4 py-1 cursor-pointer flex justify-between"
       onClick={handleClick}
     >
-      {fieldDisplayValue}
-      {isObject && (
+
+      {displayValue}
+      {isExpanded && (
         <div className="flex items-center pr-2">
           <VectorIcon />
-          {expandedPath.startsWith(fieldPath) && (
+          {isExpanded && (
             <div className="mt-4">
               <FieldDropdown
                 fieldIdToValue={value as Record<string, unknown>}
-                prefix={fieldPath}
+                parentPath={fullFieldId}
                 expandedPath={expandedPath}
-                setExpandedPath={setExpandedPath}
+                handleClickNestedField={handleClickNestedField}
                 handleFieldSelection={handleFieldSelection}
               />
             </div>

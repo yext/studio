@@ -60,7 +60,7 @@ export default function RepeaterEditor({
           <FieldPickerInput
             displayValue={componentState.listExpression}
             onInputChange={handleListUpdate}
-            onFieldSelection={updateListExpression}
+            handleFieldSelection={updateListExpression}
             fieldType="array"
           />
         </label>

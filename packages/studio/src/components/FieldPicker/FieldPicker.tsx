@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState, MouseEvent } from "react";
-import FieldDropdown from "./FieldDropdown";
+/* eslint-disable react-perf/jsx-no-new-function-as-prop */
+import { useCallback, useRef, useState, MouseEvent, useMemo } from "react";
+import FieldDropdown, { FieldDropdownContext } from "./FieldDropdown";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
 import useRootClose from "@restart/ui/useRootClose";
 import filterStreamDocument from "../../utils/filterStreamDocument";
@@ -13,46 +14,63 @@ export default function FieldPicker({
   streamDocument = {},
   fieldType = "string",
 }: {
-  handleFieldSelection: (field: string) => void;
+  handleFieldSelection: (fieldId: string) => void;
   streamDocument?: Record<string, unknown>;
   fieldType: "string" | "array";
 }) {
-  const [expandedPath, setExpandedPath] = useState<string>("");
+  const [visiblyExpandedPath, setVisiblyExpandedPath] = useState<string>("");
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const closePicker = useCallback(() => {
+    setVisiblyExpandedPath("");
+  }, []);
+
   useRootClose(containerRef, () => {
-    setExpandedPath("");
+    closePicker();
   });
 
-  const handleClick = useCallback(
+  const togglePicker = useCallback(
     (e: MouseEvent<SVGSVGElement>) => {
       e.preventDefault();
-      if (expandedPath === "") {
-        setExpandedPath("document");
+      const fieldPickerIsClosed = visiblyExpandedPath === "";
+      if (fieldPickerIsClosed) {
+        setVisiblyExpandedPath("document");
       } else {
-        setExpandedPath("");
+        closePicker();
       }
     },
-    [expandedPath]
+    [visiblyExpandedPath, closePicker]
   );
 
   const filteredDocument = filterStreamDocument(fieldType, streamDocument);
+
+  const handleFieldDropdownSelection = (fieldId: string) => {
+    handleFieldSelection(fieldId);
+    closePicker();
+  };
 
   return (
     <div ref={containerRef}>
       <EmbedIcon
         role="button"
-        onClick={handleClick}
+        onClick={togglePicker}
         className="hover:opacity-100 opacity-50 cursor-pointer"
         aria-label="Toggle field picker"
       />
-      {expandedPath && streamDocument && (
+      {visiblyExpandedPath && streamDocument && (
         <FieldDropdown
           fieldIdToValue={filteredDocument}
-          expandedPath={expandedPath}
-          prefix="document"
-          handleFieldSelection={handleFieldSelection}
-          setExpandedPath={setExpandedPath}
+          expandedPath={visiblyExpandedPath}
+          parentPath="document"
+          handleFieldSelection={handleFieldDropdownSelection}
+          handleClickNestedField={(fieldId) => {
+            if (visiblyExpandedPath !== fieldId) {
+              setVisiblyExpandedPath(fieldId);
+            } else {
+              const parentPath = fieldId.substring(0, fieldId.lastIndexOf("."));
+              setVisiblyExpandedPath(parentPath);
+            }
+          }}
         />
       )}
     </div>

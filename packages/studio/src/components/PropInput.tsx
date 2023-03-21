@@ -53,8 +53,8 @@ export default function PropInput({
   const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
 
   const appendField = useCallback(
-    (appendedField: string) => {
-      const documentUsage = "${" + appendedField + "}";
+    (fieldId: string) => {
+      const documentUsage = "${" + fieldId + "}";
       const appendedValue = displayValue
         ? `${displayValue} ${documentUsage}`
         : documentUsage;
@@ -91,7 +91,7 @@ export default function PropInput({
       return (
         <FieldPickerInput
           onInputChange={handleChangeEvent}
-          onFieldSelection={appendField}
+          handleFieldSelection={appendField}
           displayValue={displayValue as string}
           fieldType="string"
         />
