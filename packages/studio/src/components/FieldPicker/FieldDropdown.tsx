@@ -26,22 +26,15 @@ export default function FieldDropdown(props: FieldDropdownProps) {
       className="absolute w-max bg-white mt-2 rounded border z-10 shadow-2xl"
       style={listStyles}
     >
-      {Object.keys(props.fieldIdToValue).map((currentFieldId) => {
-        return (
-          <Item
-            currentFieldId={currentFieldId}
-            {...props}
-            key={currentFieldId}
-          />
-        );
+      {Object.keys(props.fieldIdToValue).map((subfieldId) => {
+        return <Item subfieldId={subfieldId} {...props} key={subfieldId} />;
       })}
     </ul>
   );
 }
 
-function Item(props: FieldDropdownProps & { currentFieldId: string }) {
-  const { currentFieldId, fieldIdToValue, parentFieldPath, ...callbacks } =
-    props;
+function Item(props: FieldDropdownProps & { subfieldId: string }) {
+  const { subfieldId, fieldIdToValue, parentFieldPath, ...callbacks } = props;
 
   const {
     handleNestedObjectSelection,
@@ -49,13 +42,11 @@ function Item(props: FieldDropdownProps & { currentFieldId: string }) {
     isExpandedFieldId,
   } = callbacks;
 
-  const value = fieldIdToValue[currentFieldId];
+  const value = fieldIdToValue[subfieldId];
   const isObject =
     typeof value === "object" && !Array.isArray(value) && value !== null;
   const fieldId =
-    parentFieldPath === ""
-      ? currentFieldId
-      : `${parentFieldPath}.${currentFieldId}`;
+    parentFieldPath === "" ? subfieldId : `${parentFieldPath}.${subfieldId}`;
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
@@ -70,7 +61,7 @@ function Item(props: FieldDropdownProps & { currentFieldId: string }) {
     [fieldId, handleNestedObjectSelection, handleFieldSelection, isObject]
   );
 
-  const displayValue = startCase(currentFieldId.split("c_").at(-1));
+  const displayValue = startCase(subfieldId.split("c_").at(-1));
 
   return (
     <li
