@@ -46,11 +46,8 @@ export default function DeleteModuleButton({
   const moduleUsages = Object.keys(pagesRecord).reduce(
     (usageList, pageName) => {
       const usageCount = pagesRecord[pageName].componentTree
-        .map((c) =>
-          TypeGuards.isRepeaterState(c)
-            ? ComponentStateHelpers.extractStandardOrModuleComponentState(c)
-            : c
-        )
+        .filter(TypeGuards.isEditableComponentState)
+        .map(ComponentStateHelpers.extractStandardOrModuleComponentState)
         .filter(
           (c) =>
             c.kind === ComponentStateKind.Module &&
