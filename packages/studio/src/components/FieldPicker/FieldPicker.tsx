@@ -48,7 +48,7 @@ export default function FieldPicker({
   );
 
   const handleNestedObjectSelection = useCallback(
-    (fieldId) => {
+    (fieldId: string) => {
       if (visiblyExpandedPath !== fieldId) {
         setVisiblyExpandedPath(fieldId);
       } else {
