@@ -54,8 +54,8 @@ function Item(props: FieldDropdownProps & { currentFieldId: string }) {
     typeof value === "object" && !Array.isArray(value) && value !== null;
   const fieldId =
     parentFieldPath === ""
-      ? `${parentFieldPath}.${currentFieldId}`
-      : currentFieldId;
+      ? currentFieldId
+      : `${parentFieldPath}.${currentFieldId}`;
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
