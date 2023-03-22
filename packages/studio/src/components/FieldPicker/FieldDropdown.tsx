@@ -9,7 +9,7 @@ const listStyles: CSSProperties = {
 
 interface FieldDropdownProps {
   fieldIdToValue: Record<string, unknown>;
-  parentPath: string;
+  parentFieldPath: string;
   handleNestedObjectSelection: (fieldId: string) => void;
   handleFieldSelection: (fieldId: string) => void;
   isExpandedFieldId: (fieldId: string) => boolean;
@@ -40,7 +40,8 @@ export default function FieldDropdown(props: FieldDropdownProps) {
 }
 
 function Item(props: FieldDropdownProps & { currentFieldId: string }) {
-  const { currentFieldId, fieldIdToValue, parentPath, ...callbacks } = props;
+  const { currentFieldId, fieldIdToValue, parentFieldPath, ...callbacks } =
+    props;
 
   const {
     handleNestedObjectSelection,
@@ -51,9 +52,10 @@ function Item(props: FieldDropdownProps & { currentFieldId: string }) {
   const value = fieldIdToValue[currentFieldId];
   const isObject =
     typeof value === "object" && !Array.isArray(value) && value !== null;
-  const fieldId = parentPath
-    ? `${parentPath}.${currentFieldId}`
-    : currentFieldId;
+  const fieldId =
+    parentFieldPath === ""
+      ? `${parentFieldPath}.${currentFieldId}`
+      : currentFieldId;
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
@@ -83,7 +85,7 @@ function Item(props: FieldDropdownProps & { currentFieldId: string }) {
             <div className="mt-4">
               <FieldDropdown
                 fieldIdToValue={value as Record<string, unknown>}
-                parentPath={fieldId}
+                parentFieldPath={fieldId}
                 {...callbacks}
               />
             </div>

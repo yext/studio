@@ -10,11 +10,11 @@ import filterStreamDocument from "../../utils/filterStreamDocument";
  */
 export default function FieldPicker({
   handleFieldSelection,
-  streamDocument = {},
+  streamDocument,
   fieldType = "string",
 }: {
   handleFieldSelection: (fieldId: string) => void;
-  streamDocument?: Record<string, unknown>;
+  streamDocument: Record<string, unknown>;
   fieldType: "string" | "array";
 }) {
   const [visiblyExpandedPath, setVisiblyExpandedPath] = useState<string>("");
@@ -52,8 +52,8 @@ export default function FieldPicker({
       if (visiblyExpandedPath !== fieldId) {
         setVisiblyExpandedPath(fieldId);
       } else {
-        const parentPath = fieldId.substring(0, fieldId.lastIndexOf("."));
-        setVisiblyExpandedPath(parentPath);
+        const parentFieldPath = fieldId.substring(0, fieldId.lastIndexOf("."));
+        setVisiblyExpandedPath(parentFieldPath);
       }
     },
     [visiblyExpandedPath]
@@ -74,10 +74,10 @@ export default function FieldPicker({
         className="hover:opacity-100 opacity-50 cursor-pointer"
         aria-label="Toggle field picker"
       />
-      {visiblyExpandedPath && streamDocument && (
+      {visiblyExpandedPath && (
         <FieldDropdown
           fieldIdToValue={filteredDocument}
-          parentPath="document"
+          parentFieldPath="document"
           handleFieldSelection={handleFieldDropdownSelection}
           handleNestedObjectSelection={handleNestedObjectSelection}
           isExpandedFieldId={isExpandedFieldId}

@@ -6,7 +6,6 @@ interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
   handleFieldSelection: (fieldId: string) => void;
   displayValue: string;
-  disabled?: boolean;
   fieldType: "string" | "array";
 }
 
@@ -33,11 +32,13 @@ export default function FieldPickerInput({
         value={displayValue}
       />
       <i className="absolute right-0 top-2.5 mr-2 bg-white not-italic">
-        <FieldPicker
-          fieldType={fieldType}
-          handleFieldSelection={handleFieldSelection}
-          streamDocument={streamDocument}
-        />
+        {streamDocument && (
+          <FieldPicker
+            fieldType={fieldType}
+            handleFieldSelection={handleFieldSelection}
+            streamDocument={streamDocument}
+          />
+        )}
       </i>
     </div>
   );
