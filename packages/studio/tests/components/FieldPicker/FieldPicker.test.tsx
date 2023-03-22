@@ -16,6 +16,7 @@ const streamDocument = {
   profile: {
     desc: "lorem ipsum quicksum pipsum",
   },
+  c_myCustomField: "my custom field",
 };
 
 it("can display available string fields and objects containing string fields", async () => {
@@ -29,6 +30,7 @@ it("can display available string fields and objects containing string fields", a
   expect(screen.getByText("Profile")).toBeDefined();
   expect(screen.queryByText("__")).toBeNull();
   expect(screen.queryByText("Bool")).toBeNull();
+  expect(screen.getByText("My Custom Field")).toBeDefined();
 });
 
 it("can display nested fields", async () => {
