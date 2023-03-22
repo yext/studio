@@ -10,7 +10,7 @@ interface FieldPickerInputProps {
 }
 
 const inputBoxCssClasses =
-  "border border-gray-300 focus:border-indigo-500 rounded-lg p-2 w-full";
+  "border border-gray-300 focus:border-indigo-500 rounded-lg py-2 pl-2 pr-8 w-full";
 
 /**
  * FieldPickerInput is a a text input element combined with a FieldPicker.

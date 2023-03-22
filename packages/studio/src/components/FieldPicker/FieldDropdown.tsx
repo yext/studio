@@ -9,10 +9,10 @@ const listStyles: CSSProperties = {
 
 interface FieldDropdownProps {
   fieldIdToValue: Record<string, unknown>;
-  parentFieldPath: string;
+  parentFieldId?: string;
   handleNestedObjectSelection: (fieldId: string) => void;
   handleFieldSelection: (fieldId: string) => void;
-  isExpandedFieldId: (fieldId: string) => boolean;
+  isExpandedFieldId: (fieldId: string) => boolean | undefined;
 }
 
 /**
@@ -21,6 +21,11 @@ interface FieldDropdownProps {
  * FieldDropdown for rendering the object field.
  */
 export default function FieldDropdown(props: FieldDropdownProps) {
+  const { parentFieldId, isExpandedFieldId } = props;
+  if (parentFieldId && !isExpandedFieldId(parentFieldId)) {
+    return null;
+  }
+
   return (
     <ul
       className="absolute w-max bg-white mt-2 rounded border z-10 shadow-2xl"
@@ -34,19 +39,13 @@ export default function FieldDropdown(props: FieldDropdownProps) {
 }
 
 function Item(props: FieldDropdownProps & { subfieldId: string }) {
-  const { subfieldId, fieldIdToValue, parentFieldPath, ...callbacks } = props;
-
-  const {
-    handleNestedObjectSelection,
-    handleFieldSelection,
-    isExpandedFieldId,
-  } = callbacks;
+  const { subfieldId, fieldIdToValue, parentFieldId, ...callbacks } = props;
+  const { handleNestedObjectSelection, handleFieldSelection } = callbacks;
 
   const value = fieldIdToValue[subfieldId];
   const isObject =
     typeof value === "object" && !Array.isArray(value) && value !== null;
-  const fieldId =
-    parentFieldPath === "" ? subfieldId : `${parentFieldPath}.${subfieldId}`;
+  const fieldId = parentFieldId ? `${parentFieldId}.${subfieldId}` : subfieldId;
 
   const handleClick = useCallback(
     (e: MouseEvent) => {
@@ -72,15 +71,13 @@ function Item(props: FieldDropdownProps & { subfieldId: string }) {
       {isObject && (
         <div className="flex items-center">
           <VectorIcon />
-          {isExpandedFieldId(fieldId) && (
-            <div className="mt-4">
-              <FieldDropdown
-                fieldIdToValue={value as Record<string, unknown>}
-                parentFieldPath={fieldId}
-                {...callbacks}
-              />
-            </div>
-          )}
+          <div className="mt-4">
+            <FieldDropdown
+              fieldIdToValue={value as Record<string, unknown>}
+              parentFieldId={fieldId}
+              {...callbacks}
+            />
+          </div>
         </div>
       )}
     </li>

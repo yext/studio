@@ -17,53 +17,53 @@ export default function FieldPicker({
   streamDocument: Record<string, unknown>;
   fieldType: "string" | "array";
 }) {
-  const [visiblyExpandedPath, setVisiblyExpandedPath] = useState<string>("");
+  const [expandedFieldId, setExpandedFieldId] = useState<string | null>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useRootClose(containerRef, () => {
-    setVisiblyExpandedPath("");
+    setExpandedFieldId(undefined);
   });
 
+  const fieldPickerIsClosed = expandedFieldId === undefined;
   const togglePicker = useCallback(
     (e: MouseEvent<SVGSVGElement>) => {
       e.preventDefault();
-      const fieldPickerIsClosed = visiblyExpandedPath === "";
       if (fieldPickerIsClosed) {
-        setVisiblyExpandedPath("document");
+        setExpandedFieldId("");
       } else {
-        setVisiblyExpandedPath("");
+        setExpandedFieldId(undefined);
       }
     },
-    [visiblyExpandedPath]
+    [fieldPickerIsClosed]
   );
 
   const filteredDocument = filterStreamDocument(fieldType, streamDocument);
 
   const handleFieldDropdownSelection = useCallback(
     (fieldId: string) => {
-      handleFieldSelection(fieldId);
-      setVisiblyExpandedPath("");
+      handleFieldSelection(`document.${fieldId}`);
+      setExpandedFieldId(undefined);
     },
     [handleFieldSelection]
   );
 
   const handleNestedObjectSelection = useCallback(
     (fieldId: string) => {
-      if (visiblyExpandedPath !== fieldId) {
-        setVisiblyExpandedPath(fieldId);
+      if (expandedFieldId !== fieldId) {
+        setExpandedFieldId(fieldId);
       } else {
-        const parentFieldPath = fieldId.substring(0, fieldId.lastIndexOf("."));
-        setVisiblyExpandedPath(parentFieldPath);
+        const parentFieldId = fieldId.substring(0, fieldId.lastIndexOf("."));
+        setExpandedFieldId(parentFieldId);
       }
     },
-    [visiblyExpandedPath]
+    [expandedFieldId]
   );
 
   const isExpandedFieldId = useCallback(
     (fieldId: string) => {
-      return visiblyExpandedPath.startsWith(fieldId);
+      return !!expandedFieldId?.startsWith(fieldId);
     },
-    [visiblyExpandedPath]
+    [expandedFieldId]
   );
 
   return (
@@ -74,10 +74,9 @@ export default function FieldPicker({
         className="hover:opacity-100 opacity-50 cursor-pointer"
         aria-label="Toggle field picker"
       />
-      {visiblyExpandedPath && (
+      {expandedFieldId !== undefined && (
         <FieldDropdown
           fieldIdToValue={filteredDocument}
-          parentFieldPath="document"
           handleFieldSelection={handleFieldDropdownSelection}
           handleNestedObjectSelection={handleNestedObjectSelection}
           isExpandedFieldId={isExpandedFieldId}
