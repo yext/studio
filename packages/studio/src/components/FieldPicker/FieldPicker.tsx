@@ -17,7 +17,7 @@ export default function FieldPicker({
   streamDocument: Record<string, unknown>;
   fieldType: "string" | "array";
 }) {
-  const [expandedFieldId, setExpandedFieldId] = useState<string | null>();
+  const [expandedFieldId, setExpandedFieldId] = useState<string>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useRootClose(containerRef, () => {
@@ -74,7 +74,7 @@ export default function FieldPicker({
         className="hover:opacity-100 opacity-50 cursor-pointer"
         aria-label="Toggle field picker"
       />
-      {expandedFieldId !== undefined && (
+      {!fieldPickerIsClosed && (
         <FieldDropdown
           fieldIdToValue={filteredDocument}
           handleFieldSelection={handleFieldDropdownSelection}

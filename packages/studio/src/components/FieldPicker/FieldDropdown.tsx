@@ -12,7 +12,7 @@ interface FieldDropdownProps {
   parentFieldId?: string;
   handleNestedObjectSelection: (fieldId: string) => void;
   handleFieldSelection: (fieldId: string) => void;
-  isExpandedFieldId: (fieldId: string) => boolean | undefined;
+  isExpandedFieldId: (fieldId: string) => boolean;
 }
 
 /**
