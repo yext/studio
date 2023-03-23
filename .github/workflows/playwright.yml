@@ -13,7 +13,7 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build
-      - run: npx playwright install --with-deps
+      - run: npx playwright install
       - run: npm i
       - name: Run Playwright
         run: npm run playwright
