@@ -3,6 +3,7 @@ import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
+import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -30,33 +31,41 @@ export default function PropInput({
   unionValues,
   propKind,
 }: PropInputProps): JSX.Element {
-  const onInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      let value: string | number | boolean = e.target.value;
-      if (propType === PropValueType.number) {
-        value = e.target.valueAsNumber;
-      } else if (propType === PropValueType.boolean) {
-        value = e.target.checked;
-      } else if (propKind === PropValueKind.Expression) {
-        value = TemplateExpressionFormatter.getRawValue(value);
-      }
-      onChange(value);
+  const handleChangeEvent = useCallback(
+    (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const getValue = () => {
+        if (e.target instanceof HTMLSelectElement) {
+          return e.target.value;
+        }
+        if (propType === PropValueType.number) {
+          return e.target.valueAsNumber;
+        } else if (propType === PropValueType.boolean) {
+          return e.target.checked;
+        } else if (propKind === PropValueKind.Expression) {
+          return TemplateExpressionFormatter.getRawValue(e.target.value);
+        }
+        return e.target.value;
+      };
+      onChange(getValue());
     },
-    [onChange, propType, propKind]
+    [onChange, propKind, propType]
   );
-
   const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
 
-  const onSelectChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      onChange(e.target.value);
+  const appendField = useCallback(
+    (fieldId: string) => {
+      const documentUsage = "${" + fieldId + "}";
+      const appendedValue = displayValue
+        ? `${displayValue} ${documentUsage}`
+        : documentUsage;
+      onChange(TemplateExpressionFormatter.getRawValue(appendedValue));
     },
-    [onChange]
+    [displayValue, onChange]
   );
 
   if (unionValues) {
     return (
-      <select onChange={onSelectChange} className={selectCssClasses}>
+      <select onChange={handleChangeEvent} className={selectCssClasses}>
         {unionValues.map((val) => {
           return (
             <option value={val} key={val}>
@@ -73,29 +82,32 @@ export default function PropInput({
       return (
         <input
           type="number"
-          onChange={onInputChange}
+          onChange={handleChangeEvent}
           className={inputBoxCssClasses}
           value={displayValue as number}
         />
       );
     case PropValueType.string:
       return (
-        <input
-          type="text"
-          onChange={onInputChange}
-          className={inputBoxCssClasses}
-          value={displayValue as string}
+        <FieldPickerInput
+          onInputChange={handleChangeEvent}
+          handleFieldSelection={appendField}
+          displayValue={displayValue as string}
+          fieldType="string"
         />
       );
     case PropValueType.boolean:
       return (
-        <Toggle checked={displayValue as boolean} onToggle={onInputChange} />
+        <Toggle
+          checked={displayValue as boolean}
+          onToggle={handleChangeEvent}
+        />
       );
     case PropValueType.HexColor:
       return (
         <input
           type="color"
-          onChange={onInputChange}
+          onChange={handleChangeEvent}
           value={displayValue as string}
         />
       );
