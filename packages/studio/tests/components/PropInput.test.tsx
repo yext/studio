@@ -22,23 +22,25 @@ it("renders ${document. usages as brackets", () => {
 
 it("requires backticks for template string expressions", () => {
   jest.spyOn(console, "error").mockImplementation(jest.fn());
-  expect(() => renderExpressionPropInput("${document.without.backticks}")).toThrow(
-    "Unable to remove backticks from: ${document.without.backticks}"
-  );
+  expect(() =>
+    renderExpressionPropInput("${document.without.backticks}")
+  ).toThrow("Unable to remove backticks from: ${document.without.backticks}");
 });
 
 it("correctly renders String Union Prop", () => {
   render(
     <PropInput
       propType={PropValueType.string}
-      propValue='c'
+      propValue="c"
       propKind={PropValueKind.Literal}
       onChange={jest.fn()}
-      unionValues={['a', 'b', 'c']}
+      unionValues={["a", "b", "c"]}
     />
   );
-  expect((screen.getByRole('option', { name: 'c' }) as HTMLOptionElement).selected).toBe(true);
-  expect(screen.getAllByRole('option').length).toBe(3);
+  expect(
+    (screen.getByRole("option", { name: "c" }) as HTMLOptionElement).selected
+  ).toBe(true);
+  expect(screen.getAllByRole("option").length).toBe(3);
 });
 
 function renderExpressionPropInput(propValue: string, onChange = jest.fn()) {
