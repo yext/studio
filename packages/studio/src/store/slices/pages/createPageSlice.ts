@@ -129,14 +129,11 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       set({ activeComponentRect: rect });
     },
     getActiveComponentState: () => {
-      const { activeComponentUUID, getActivePageState } = get();
-      const activePageState = getActivePageState();
-      if (!activeComponentUUID || !activePageState) {
+      const { activeComponentUUID, getComponentStateInActivePage } = get();
+      if (!activeComponentUUID) {
         return undefined;
       }
-      return activePageState.componentTree.find(
-        (component) => component.uuid === activeComponentUUID
-      );
+      return getComponentStateInActivePage(activeComponentUUID);
     },
   };
 
