@@ -1,12 +1,12 @@
 import {
   FileMetadataKind,
-  ComponentStateKind,
   PropMetadata,
   PropValueType,
   PropValueKind,
   ComponentState,
   FileMetadata,
   ComponentStateHelpers,
+  TypeGuards,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleEditActions";
@@ -55,14 +55,14 @@ export default function PropertiesPanel(): JSX.Element | null {
 function renderModuleActions(metadata: FileMetadata, state: ComponentState) {
   const isModule =
     metadata.kind === FileMetadataKind.Module &&
-    state.kind === ComponentStateKind.Module;
+    (TypeGuards.isModuleState(state) || TypeGuards.isRepeaterState(state));
 
   return (
     <div className="flex px-2 mb-6">
       <span className="font-medium">Module Actions</span>
       <div className="flex grow justify-evenly">
         {isModule ? (
-          <ModuleEditActions metadata={metadata} moduleState={state} />
+          <ModuleEditActions metadata={metadata} state={state} />
         ) : (
           <CreateModuleButton />
         )}

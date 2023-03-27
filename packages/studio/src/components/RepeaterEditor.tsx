@@ -1,7 +1,11 @@
 import { EditableComponentState, TypeGuards } from "@yext/studio-plugin";
-import { ChangeEvent, useCallback } from "react";
+import { useCallback, ChangeEvent } from "react";
+import { Tooltip } from "react-tooltip";
 import useStudioStore from "../store/useStudioStore";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
+import Toggle from "./common/Toggle";
+
+const tooltipAnchorID = "YextStudio-listRepeaterToggle";
 
 interface RepeaterEditorProps {
   componentState: EditableComponentState;
@@ -24,7 +28,7 @@ export default function RepeaterEditor({
 
   const isChecked = TypeGuards.isRepeaterState(componentState);
 
-  const onToggleChange = useCallback(() => {
+  const onToggle = useCallback(() => {
     isChecked ? removeRepeater(componentState) : addRepeater(componentState);
   }, [addRepeater, removeRepeater, componentState, isChecked]);
 
@@ -47,12 +51,18 @@ export default function RepeaterEditor({
       <div className="font-bold pb-2">Repeaters</div>
       <label className="flex mb-2">
         <span className="w-1/2">List</span>
-        <input
-          type="checkbox"
+        <Toggle
+          id={tooltipAnchorID}
           checked={isChecked}
           disabled={activeComponentHasChildren}
-          onChange={onToggleChange}
+          onToggle={onToggle}
         />
+        {activeComponentHasChildren && (
+          <Tooltip
+            anchorId={tooltipAnchorID}
+            content="Unable to list a container with children"
+          />
+        )}
       </label>
       {isChecked && (
         <label className="flex flex-col mb-2">

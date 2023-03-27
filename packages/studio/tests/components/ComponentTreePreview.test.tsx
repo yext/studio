@@ -14,12 +14,13 @@ import {
   mockStoreNestedComponentState,
   mockUUIDToFileMetadata,
 } from "../__fixtures__/mockStoreNestedComponents";
+import { ExpressionSources } from "../../src/utils/getPreviewProps";
 
 const moduleMetadata: ModuleMetadata = {
   kind: FileMetadataKind.Module,
   metadataUUID: "panel-metadata-uuid",
   propShape: {
-    text: { type: PropValueType.string },
+    text: { type: PropValueType.string, required: false },
   },
   filepath: path.resolve(__dirname, "../__mocks__/Panel.tsx"),
   componentTree: [
@@ -158,6 +159,15 @@ const mockStoreWithPropExpression: MockStudioStore = {
   },
 };
 
+const expressionSources: ExpressionSources = {
+  siteSettings: {
+    apiKey: "mock-api-key",
+  },
+  document: {
+    employeeCount: 123,
+  },
+};
+
 beforeEach(() => {
   jest.spyOn(console, "warn").mockImplementation();
 });
@@ -167,6 +177,7 @@ it("renders component tree with nested Component(s)", async () => {
   render(
     <ComponentTreePreview
       componentTree={getPageState(mockStoreNestedComponentState).componentTree}
+      expressionSources={expressionSources}
     />
   );
   const container1 = await screen.findByText(/Container 1/);
@@ -184,6 +195,7 @@ it("renders component tree with Module component type", async () => {
   render(
     <ComponentTreePreview
       componentTree={getPageState(mockStoreModuleState).componentTree}
+      expressionSources={expressionSources}
     />
   );
   const panel = await screen.findByText(/This is Panel module/);
@@ -197,6 +209,10 @@ it("renders component with transformed props", async () => {
   render(
     <ComponentTreePreview
       componentTree={getPageState(mockStoreWithPropExpression).componentTree}
+      expressionSources={{
+        ...expressionSources,
+        siteSettings: { apiKey: "mock-api-key", someText: "mock-text" },
+      }}
     />
   );
   const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
@@ -257,6 +273,10 @@ it("can render component using nested siteSettings expression", async () => {
   render(
     <ComponentTreePreview
       componentTree={getPageState(mockState).componentTree}
+      expressionSources={{
+        ...expressionSources,
+        siteSettings: { "Global Colors": { primary: "#AABBCC" } },
+      }}
     />
   );
   const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
@@ -303,6 +323,7 @@ it("can render component using prop of PropValueType.Object", async () => {
   render(
     <ComponentTreePreview
       componentTree={getPageState(mockState).componentTree}
+      expressionSources={expressionSources}
     />
   );
   const nestedPropUsage = await screen.findByText(/eggyweggy/);

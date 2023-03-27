@@ -1,12 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
-import {
-  ComponentTreeHelpers,
-  PropValues,
-  ComponentState,
-  transformPropValuesToRaw,
-} from "@yext/studio-plugin";
-import { useLayoutEffect } from "react";
+import { ComponentTreeHelpers, ComponentState } from "@yext/studio-plugin";
 import { ExpressionSources } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
@@ -15,7 +9,7 @@ import ComponentPreview from "./ComponentPreview";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
-  parentProps?: PropValues;
+  expressionSources: ExpressionSources;
   renderHighlightingContainer?: boolean;
 }
 
@@ -24,16 +18,14 @@ interface ComponentTreePreviewProps {
  */
 export default function ComponentTreePreview({
   componentTree,
-  parentProps,
+  expressionSources,
   renderHighlightingContainer = true,
 }: ComponentTreePreviewProps): JSX.Element {
   useImportedComponents(componentTree);
-  const expressionSources = useExpressionSources();
   const elements = useComponentTreeElements(
     componentTree,
     expressionSources,
-    renderHighlightingContainer,
-    parentProps
+    renderHighlightingContainer
   );
   return <>{elements}</>;
 }
@@ -45,8 +37,7 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   expressionSources: ExpressionSources,
-  renderHighlightingContainer?: boolean,
-  parentProps?: PropValues
+  renderHighlightingContainer?: boolean
 ): (JSX.Element | null)[] | null {
   const UUIDToImportedComponent = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
@@ -64,7 +55,6 @@ function useComponentTreeElements(
             componentState={c}
             expressionSources={expressionSources}
             childElements={children}
-            parentProps={parentProps}
           />
         );
         if (!renderHighlightingContainer) {
@@ -83,54 +73,6 @@ function useComponentTreeElements(
     UUIDToImportedComponent,
     componentTree,
     expressionSources,
-    parentProps,
     renderHighlightingContainer,
   ]);
-}
-
-/**
- * Dynamically load files that serve as expression sources for the
- * expressions in prop's value.
- */
-function useExpressionSources(): ExpressionSources {
-  const [expressionSources, setExpressionSources] = useState<ExpressionSources>(
-    {}
-  );
-  const [siteSettingValues, activeEntityFile, localDataPath] = useStudioStore(
-    (store) => [
-      store.siteSettings.values,
-      store.pages.activeEntityFile,
-      store.studioConfig.paths.localData,
-    ]
-  );
-
-  useLayoutEffect(() => {
-    const siteSettingsSource = siteSettingValues
-      ? transformPropValuesToRaw(siteSettingValues)
-      : {};
-    setExpressionSources((prev) => ({
-      ...prev,
-      siteSettings: siteSettingsSource,
-    }));
-  }, [siteSettingValues]);
-
-  useLayoutEffect(() => {
-    if (!activeEntityFile) {
-      return setExpressionSources((prev) => {
-        const { document: _, ...otherSources } = prev;
-        return otherSources;
-      });
-    }
-    const entityFilepath = `${localDataPath}/${activeEntityFile}`;
-    import(/* @vite-ignore */ entityFilepath).then((importedModule) => {
-      setExpressionSources((prev) => {
-        return {
-          ...prev,
-          document: importedModule["default"] as Record<string, unknown>,
-        };
-      });
-    });
-  }, [activeEntityFile, localDataPath]);
-
-  return expressionSources;
 }

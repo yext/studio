@@ -1,9 +1,4 @@
-import {
-  ComponentState,
-  ComponentStateKind,
-  ModuleState,
-  PageState,
-} from "@yext/studio-plugin";
+import { ComponentState, PageState } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual:yext-studio";
 import DOMRectProperties from "../../models/DOMRectProperties";
@@ -161,22 +156,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const moduleStateActions: Pick<
-    PageSlice,
-    "getModuleStateBeingEdited" | "setModuleUUIDBeingEdited"
-  > = {
-    getModuleStateBeingEdited(): ModuleState | undefined {
-      const activePageState = get().getActivePageState();
-      if (!activePageState) {
-        return;
-      }
-      const moduleUUIDBeingEdited = get().moduleUUIDBeingEdited;
-      return activePageState.componentTree.find(
-        (c): c is ModuleState =>
-          c.kind === ComponentStateKind.Module &&
-          c.uuid === moduleUUIDBeingEdited
-      );
-    },
+  const moduleStateActions: Pick<PageSlice, "setModuleUUIDBeingEdited"> = {
     setModuleUUIDBeingEdited(moduleStateUUID: string | undefined) {
       set((store) => {
         store.moduleUUIDBeingEdited = moduleStateUUID;

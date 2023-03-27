@@ -1,9 +1,4 @@
-import {
-  ComponentState,
-  ModuleMetadata,
-  ModuleState,
-  PageState,
-} from "@yext/studio-plugin";
+import { ComponentState, ModuleMetadata, PageState } from "@yext/studio-plugin";
 import DOMRectProperties from "../DOMRectProperties";
 
 export interface PagesRecord {
@@ -51,7 +46,6 @@ interface PageSliceActions {
     pageName: string,
     componentTree: ComponentState[]
   ) => void;
-  getModuleStateBeingEdited: () => ModuleState | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;

@@ -3,7 +3,12 @@ import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";
 import { useCallback, useMemo } from "react";
-import { ComponentStateKind, ModuleMetadata } from "@yext/studio-plugin";
+import {
+  ComponentStateHelpers,
+  ComponentStateKind,
+  ModuleMetadata,
+  TypeGuards,
+} from "@yext/studio-plugin";
 import Modal from "../common/Modal";
 import path from "path-browserify";
 import useStudioStore from "../../store/useStudioStore";
@@ -29,13 +34,25 @@ export default function DeleteModuleButton({
     (store) => store.fileMetadatas.removeFileMetadata
   );
   const pagesRecord = useStudioStore((store) => store.pages.pages);
+
+  const isUsedInRepeater = Object.values(pagesRecord).some((pageState) =>
+    pageState.componentTree.some(
+      (c) =>
+        TypeGuards.isRepeaterState(c) &&
+        c.repeatedComponent.metadataUUID === metadata.metadataUUID
+    )
+  );
+
   const moduleUsages = Object.keys(pagesRecord).reduce(
     (usageList, pageName) => {
-      const usageCount = pagesRecord[pageName].componentTree.filter(
-        (c) =>
-          c.kind === ComponentStateKind.Module &&
-          c.metadataUUID === metadata.metadataUUID
-      ).length;
+      const usageCount = pagesRecord[pageName].componentTree
+        .filter(TypeGuards.isEditableComponentState)
+        .map(ComponentStateHelpers.extractStandardOrModuleComponentState)
+        .filter(
+          (c) =>
+            c.kind === ComponentStateKind.Module &&
+            c.metadataUUID === metadata.metadataUUID
+        ).length;
       usageList.push({
         pageName,
         usageCount,
@@ -63,7 +80,7 @@ export default function DeleteModuleButton({
           Deleting this module will remove its status as a module, removing it
           from the Insert panel, and detach all other instances of it across
           your site. This will not delete the page elements themselves.
-          {moduleUsages.length > 0 && "This module is found on:"}
+          {moduleUsages.length > 0 && " This module is found on:"}
         </div>
         {moduleUsages.length > 0 && renderModuleUsages(moduleUsages)}
         <div>Press 'Delete' to confirm this."</div>
@@ -88,13 +105,18 @@ export default function DeleteModuleButton({
     [handleDelete, modalBody]
   );
 
+  const tooltipText = isUsedInRepeater
+    ? "Unable to delete module while it is used in a list anywhere in the site"
+    : "Delete";
+
   return (
     <>
       <ButtonWithModal
         ariaLabel={`Delete Module ${moduleName}`}
         renderModal={renderModal}
+        disabled={isUsedInRepeater}
         buttonContent={
-          <ActionIconWrapper tooltip="Delete">
+          <ActionIconWrapper tooltip={tooltipText} disabled={isUsedInRepeater}>
             <DeleteModuleIcon />
           </ActionIconWrapper>
         }

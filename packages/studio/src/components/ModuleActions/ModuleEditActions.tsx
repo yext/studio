@@ -1,4 +1,8 @@
-import { ModuleMetadata, ModuleState } from "@yext/studio-plugin";
+import {
+  ModuleState,
+  ModuleMetadata,
+  RepeaterState,
+} from "@yext/studio-plugin";
 import DeleteModuleButton from "./DeleteModuleButton";
 import DetachModuleButton from "./DetachModuleButton";
 import EditModuleButton from "./EditModuleButton";
@@ -8,15 +12,15 @@ import EditModuleButton from "./EditModuleButton";
  */
 export default function ModuleEditActions({
   metadata,
-  moduleState,
+  state,
 }: {
   metadata: ModuleMetadata;
-  moduleState: ModuleState;
+  state: ModuleState | RepeaterState;
 }) {
   return (
     <>
-      <EditModuleButton moduleState={moduleState} />
-      <DetachModuleButton moduleState={moduleState} metadata={metadata} />
+      <EditModuleButton state={state} />
+      <DetachModuleButton state={state} metadata={metadata} />
       <DeleteModuleButton metadata={metadata} />
     </>
   );

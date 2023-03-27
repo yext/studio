@@ -25,6 +25,18 @@ const expressionSources = {
 const propShape: PropShape = {
   foo: {
     type: PropValueType.string,
+    required: false,
+  },
+};
+
+const parentPropShape: PropShape = {
+  title: {
+    type: PropValueType.string,
+    required: false,
+  },
+  parentExpression: {
+    type: PropValueType.string,
+    required: false,
   },
 };
 
@@ -50,16 +62,18 @@ it("returns value as is for prop of type Literal", () => {
     {
       foo: {
         type: PropValueType.string,
+        required: false,
       },
       bar: {
         type: PropValueType.string,
+        required: false,
       },
       buzz: {
         type: PropValueType.string,
+        required: false,
       },
     },
-    expressionSources,
-    {}
+    expressionSources
   );
   expect(transformedProps).toEqual({
     foo: "hello world",
@@ -74,10 +88,10 @@ it("uses default value for props with unspecified/undefined value", () => {
     {
       bgColor: {
         type: PropValueType.HexColor,
+        required: false,
       },
     },
-    expressionSources,
-    {}
+    expressionSources
   );
   expect(transformedProps).toEqual({
     bgColor: "#FFFFFF",
@@ -226,7 +240,9 @@ function transformFooProp(value: string, parentProps: PropValues = {}) {
       },
     },
     propShape,
-    expressionSources,
-    parentProps
+    {
+      ...expressionSources,
+      props: getPreviewProps(parentProps, parentPropShape, expressionSources),
+    }
   );
 }

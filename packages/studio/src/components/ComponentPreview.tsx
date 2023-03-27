@@ -2,21 +2,21 @@ import {
   ComponentState,
   ComponentStateKind,
   FileMetadataKind,
-  PropValues,
   TypeGuards,
 } from "@yext/studio-plugin";
 import { createElement, Fragment, useMemo } from "react";
+import usePreviewProps from "../hooks/usePreviewProps";
 import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
-import { ExpressionSources, getPreviewProps } from "../utils/getPreviewProps";
+import { ExpressionSources } from "../utils/getPreviewProps";
 import ComponentTreePreview from "./ComponentTreePreview";
 import RepeaterPreview from "./RepeaterPreview";
 
 interface ComponentPreviewProps {
   componentState: ComponentState;
   expressionSources: ExpressionSources;
-  parentProps?: PropValues;
   childElements?: (JSX.Element | null)[];
+  parentItem?: unknown;
 }
 
 /**
@@ -25,8 +25,8 @@ interface ComponentPreviewProps {
 export default function ComponentPreview({
   componentState,
   expressionSources,
-  parentProps,
   childElements = [],
+  parentItem,
 }: ComponentPreviewProps): JSX.Element | null {
   const UUIDToFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.UUIDToFileMetadata
@@ -34,32 +34,39 @@ export default function ComponentPreview({
   const previewProps = usePreviewProps(
     componentState,
     expressionSources,
-    parentProps
+    parentItem
   );
   const element = useElement(componentState, (type) =>
     createElement(type, previewProps, ...childElements)
   );
 
-  if (TypeGuards.isRepeaterState(componentState)) {
-    return (
-      <RepeaterPreview
-        repeaterState={componentState}
-        expressionSources={expressionSources}
-        parentProps={parentProps}
-      />
-    );
-  }
+  const moduleExpressionSources = useMemo(
+    () => ({
+      ...expressionSources,
+      props: previewProps,
+    }),
+    [expressionSources, previewProps]
+  );
+
   if (TypeGuards.isModuleState(componentState)) {
     const metadata = UUIDToFileMetadata[componentState.metadataUUID];
     if (metadata?.kind === FileMetadataKind.Module) {
       return (
         <ComponentTreePreview
           componentTree={metadata.componentTree}
-          parentProps={componentState.props}
+          expressionSources={moduleExpressionSources}
           renderHighlightingContainer={false}
         />
       );
     }
+  }
+  if (TypeGuards.isRepeaterState(componentState)) {
+    return (
+      <RepeaterPreview
+        repeaterState={componentState}
+        expressionSources={expressionSources}
+      />
+    );
   }
   return element;
 }
@@ -92,22 +99,4 @@ function useElement(
   }, [c, UUIDToImportedComponent]);
 
   return element ? createElement(element) : null;
-}
-
-function usePreviewProps(
-  c: ComponentState,
-  expressionSources: ExpressionSources,
-  parentProps?: PropValues
-) {
-  const UUIDToFileMetadata = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToFileMetadata
-  );
-  return TypeGuards.isStandardOrModuleComponentState(c)
-    ? getPreviewProps(
-        c.props,
-        UUIDToFileMetadata[c.metadataUUID].propShape ?? {},
-        expressionSources,
-        parentProps ?? {}
-      )
-    : {};
 }

@@ -13,6 +13,7 @@ interface ButtonWithModalProps {
   renderModal: renderModalFunction;
   buttonClassName?: string;
   ariaLabel?: string;
+  disabled?: boolean;
 }
 
 export default function ButtonWithModal({
@@ -20,6 +21,7 @@ export default function ButtonWithModal({
   renderModal,
   buttonClassName,
   ariaLabel,
+  disabled = false,
 }: ButtonWithModalProps) {
   const [showModal, setShowModal] = useState<boolean>(false);
 
@@ -37,6 +39,7 @@ export default function ButtonWithModal({
         onClick={handleButtonClick}
         className={buttonClassName}
         aria-label={ariaLabel}
+        disabled={disabled}
       >
         {buttonContent}
       </button>

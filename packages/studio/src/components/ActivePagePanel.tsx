@@ -14,19 +14,24 @@ import RemovePageButton from "./RemovePageButton";
  * modules in the component tree of the active page.
  */
 export default function ActivePagePanel(): JSX.Element {
-  const {
+  const [
     pages,
     setActivePage,
     activePageName,
     setModuleUUIDBeingEdited,
-    getModuleStateBeingEdited,
-  } = useStudioStore((store) => store.pages);
+    moduleUUIDBeingEdited,
+  ] = useStudioStore((store) => [
+    store.pages.pages,
+    store.pages.setActivePage,
+    store.pages.activePageName,
+    store.pages.setModuleUUIDBeingEdited,
+    store.pages.moduleUUIDBeingEdited,
+  ]);
   const pageNames = useMemo(() => {
     const names = Object.keys(pages);
     names.sort();
     return names;
   }, [pages]);
-  const moduleStateBeingEdited = getModuleStateBeingEdited();
 
   const renderPageList = useCallback(
     (pageNames: string[]) => {
@@ -34,7 +39,7 @@ export default function ActivePagePanel(): JSX.Element {
         <ul className="flex flex-col pb-2 items-stretch">
           {pageNames.map((pageName) => {
             const isActivePage =
-              activePageName === pageName && !moduleStateBeingEdited;
+              activePageName === pageName && !moduleUUIDBeingEdited;
             const checkClasses = classNames({
               invisible: !isActivePage,
             });
@@ -63,7 +68,7 @@ export default function ActivePagePanel(): JSX.Element {
     },
     [
       activePageName,
-      moduleStateBeingEdited,
+      moduleUUIDBeingEdited,
       setActivePage,
       setModuleUUIDBeingEdited,
     ]
