@@ -3,7 +3,7 @@ import { studioTest } from "./infra/studioTest.js";
 import fs from "fs";
 
 const expectedPage = fs.readFileSync(
-  "./tests/__fixtures__/add-element-expected-page.tsx",
+  "./tests/__fixtures__/add-element-page.tsx",
   "utf-8"
 );
 
