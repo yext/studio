@@ -8,17 +8,17 @@ import { ComponentStateHelpers, TypeGuards } from "@yext/studio-plugin";
 import { get } from "lodash";
 
 export default function HighlightedPreview() {
-  const [componentTree, moduleUUIDBeingEdited, getComponentStateInActivePage] =
+  const [componentTree, moduleUUIDBeingEdited, getComponentState] =
     useStudioStore((store) => [
       store.actions.getComponentTree(),
       store.pages.moduleUUIDBeingEdited,
-      store.pages.getComponentStateInActivePage,
+      store.actions.getComponentState,
     ]);
 
   const pageExpressionSources = usePageExpressionSources();
 
   const state = moduleUUIDBeingEdited
-    ? getComponentStateInActivePage(moduleUUIDBeingEdited)
+    ? getComponentState(componentTree, moduleUUIDBeingEdited)
     : undefined;
   const list =
     state && TypeGuards.isRepeaterState(state)

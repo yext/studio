@@ -46,8 +46,6 @@ interface PageSliceActions {
     pageName: string,
     componentTree: ComponentState[]
   ) => void;
-  getComponentStateInActivePage: (uuid: string) => ComponentState | undefined;
-  getModuleMetadataUUIDBeingEdited: () => string | undefined;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;

@@ -1,9 +1,4 @@
-import {
-  ComponentState,
-  ComponentStateHelpers,
-  PageState,
-  TypeGuards,
-} from "@yext/studio-plugin";
+import { ComponentState, PageState } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual:yext-studio";
 import DOMRectProperties from "../../models/DOMRectProperties";
@@ -115,10 +110,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       return pages[activePageName];
     },
-    getComponentStateInActivePage: (uuid: string) =>
-      get()
-        .getActivePageState()
-        ?.componentTree.find((c) => c.uuid === uuid),
   };
 
   const pageComponentActions = {
@@ -129,11 +120,14 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       set({ activeComponentRect: rect });
     },
     getActiveComponentState: () => {
-      const { activeComponentUUID, getComponentStateInActivePage } = get();
-      if (!activeComponentUUID) {
+      const { activeComponentUUID, getActivePageState } = get();
+      const activePageState = getActivePageState();
+      if (!activeComponentUUID || !activePageState) {
         return undefined;
       }
-      return getComponentStateInActivePage(activeComponentUUID);
+      return activePageState.componentTree.find(
+        (component) => component.uuid === activeComponentUUID
+      );
     },
   };
 
@@ -162,32 +156,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const moduleStateActions: Pick<
-    PageSlice,
-    "getModuleMetadataUUIDBeingEdited" | "setModuleUUIDBeingEdited"
-  > = {
-    getModuleMetadataUUIDBeingEdited(): string | undefined {
-      const moduleUUIDBeingEdited = get().moduleUUIDBeingEdited;
-      if (!moduleUUIDBeingEdited) {
-        return;
-      }
-      const matchingState = get().getComponentStateInActivePage(
-        moduleUUIDBeingEdited
-      );
-      if (
-        !matchingState ||
-        !TypeGuards.isEditableComponentState(matchingState)
-      ) {
-        return undefined;
-      }
-      const extractedState =
-        ComponentStateHelpers.extractStandardOrModuleComponentState(
-          matchingState
-        );
-      return TypeGuards.isModuleState(extractedState)
-        ? extractedState.metadataUUID
-        : undefined;
-    },
+  const moduleStateActions: Pick<PageSlice, "setModuleUUIDBeingEdited"> = {
     setModuleUUIDBeingEdited(moduleStateUUID: string | undefined) {
       set((store) => {
         store.moduleUUIDBeingEdited = moduleStateUUID;

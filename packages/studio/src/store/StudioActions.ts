@@ -45,21 +45,19 @@ export default class StudioActions {
   }
 
   getComponentTree = () => {
-    const moduleMetadataUUIDBeingEdited =
-      this.getPages().getModuleMetadataUUIDBeingEdited();
-    if (moduleMetadataUUIDBeingEdited) {
-      return this.getFileMetadatas().getModuleMetadata(
-        moduleMetadataUUIDBeingEdited
-      ).componentTree;
-    }
-    return this.getPages().getActivePageState()?.componentTree;
+    const moduleMetadataBeingEdited = this.getModuleMetadataBeingEdited();
+    return moduleMetadataBeingEdited
+      ? moduleMetadataBeingEdited.componentTree
+      : this.getPages().getActivePageState()?.componentTree;
+  };
+
+  getComponentState = (componentTree?: ComponentState[], uuid?: string) => {
+    return componentTree?.find((component) => component.uuid === uuid);
   };
 
   getActiveComponentState = () => {
-    const { activeComponentUUID } = this.getPages();
-    return this.getComponentTree()?.find(
-      (component) => component.uuid === activeComponentUUID
-    );
+    const activeComponentUUID = this.getPages().activeComponentUUID;
+    return this.getComponentState(this.getComponentTree(), activeComponentUUID);
   };
 
   getActiveComponentHasChildren = () => {
@@ -76,6 +74,18 @@ export default class StudioActions {
     return this.getFileMetadatas().getComponentMetadata(
       componentState.metadataUUID
     );
+  };
+
+  getModuleMetadataBeingEdited = () => {
+    const { moduleUUIDBeingEdited, getActivePageState } = this.getPages();
+    const state = this.getComponentState(
+      getActivePageState()?.componentTree,
+      moduleUUIDBeingEdited
+    );
+    if (!state || !TypeGuards.isModuleState(state)) {
+      return undefined;
+    }
+    return this.getFileMetadatas().getModuleMetadata(state.metadataUUID);
   };
 
   updateActiveComponentProps = (props: PropValues) => {
@@ -122,13 +132,12 @@ export default class StudioActions {
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
-    const moduleMetadataUUIDBeingEdited =
-      this.getPages().getModuleMetadataUUIDBeingEdited();
+    const moduleMetadataBeingEdited = this.getModuleMetadataBeingEdited();
     const activePageName = this.getPages().activePageName;
 
-    if (moduleMetadataUUIDBeingEdited) {
+    if (moduleMetadataBeingEdited) {
       this.getFileMetadatas().setComponentTreeInModule(
-        moduleMetadataUUIDBeingEdited,
+        moduleMetadataBeingEdited.metadataUUID,
         componentTree
       );
     } else if (activePageName) {
