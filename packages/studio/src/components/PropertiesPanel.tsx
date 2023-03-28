@@ -37,7 +37,7 @@ export default function PropertiesPanel(): JSX.Element | null {
           activeComponentState
         )}
         propShape={propShape}
-        propKind={PropValueKind.Literal}
+        getPropValueKind={getPropValueKind}
         shouldRenderProp={shouldRenderProp}
       />
       <Divider />
@@ -73,4 +73,8 @@ function renderModuleActions(metadata: FileMetadata, state: ComponentState) {
 
 function shouldRenderProp(metadata: PropMetadata) {
   return metadata.type !== PropValueType.string;
+}
+
+export function getPropValueKind(): PropValueKind {
+  return PropValueKind.Literal;
 }

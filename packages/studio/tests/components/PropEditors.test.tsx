@@ -39,7 +39,7 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
     <PropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
-      propKind={PropValueKind.Literal}
+      getPropValueKind={() => PropValueKind.Literal}
     />
   );
   expect(screen.queryByText("titleNode")).toBeNull();
@@ -69,7 +69,7 @@ it("does not render a prop editor for component's prop of type Object", () => {
     <PropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
-      propKind={PropValueKind.Literal}
+      getPropValueKind={() => PropValueKind.Literal}
     />
   );
   expect(screen.queryByText("objProp")).toBeNull();
@@ -139,7 +139,7 @@ function testStandardOrModuleComponentState(
       <PropEditors
         activeComponentState={state}
         propShape={propShape}
-        propKind={PropValueKind.Literal}
+        getPropValueKind={() => PropValueKind.Literal}
         shouldRenderProp={() => false}
       />
     );
@@ -158,7 +158,7 @@ function testStandardOrModuleComponentState(
       <PropEditors
         activeComponentState={state}
         propShape={propShape}
-        propKind={PropValueKind.Literal}
+        getPropValueKind={() => PropValueKind.Literal}
       />
     );
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
@@ -182,7 +182,7 @@ function testStandardOrModuleComponentState(
         <PropEditors
           activeComponentState={activeComponentState}
           propShape={activeComponentMetadata.propShape}
-          propKind={PropValueKind.Literal}
+          getPropValueKind={() => PropValueKind.Literal}
         />
       );
     }
@@ -248,7 +248,7 @@ it("converts string literals to string expressions when propKind = Expression", 
         props,
       }}
       propShape={propShape}
-      propKind={PropValueKind.Expression}
+      getPropValueKind={() => PropValueKind.Expression}
     />
   );
   expect(screen.getByText("title")).toBeDefined();

@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 
 it("converts brackets into ${document. usages", async () => {
   const onChange = jest.fn();
-  renderPropInput("`[[address]`", onChange);
+  renderExpressionPropInput("`[[address]`", onChange);
   const textbox = screen.getByRole("textbox");
 
   await userEvent.type(textbox, "]");
@@ -15,19 +15,41 @@ it("converts brackets into ${document. usages", async () => {
 });
 
 it("renders ${document. usages as brackets", () => {
-  renderPropInput("`${document.address}`");
+  renderExpressionPropInput("`${document.address}`");
   const textbox = screen.getByRole("textbox");
   expect(textbox).toHaveValue("[[address]]");
 });
 
 it("requires backticks for template string expressions", () => {
   jest.spyOn(console, "error").mockImplementation(jest.fn());
-  expect(() => renderPropInput("${document.without.backticks}")).toThrow(
-    "Unable to remove backticks from: ${document.without.backticks}"
-  );
+  expect(() =>
+    renderExpressionPropInput("${document.without.backticks}")
+  ).toThrow("Unable to remove backticks from: ${document.without.backticks}");
 });
 
-function renderPropInput(propValue: string, onChange = jest.fn()) {
+it("correctly renders String Union Prop", () => {
+  render(
+    <PropInput
+      propType={PropValueType.string}
+      propValue="c"
+      propKind={PropValueKind.Literal}
+      onChange={jest.fn()}
+      unionValues={["a", "b", "c"]}
+    />
+  );
+  expect(
+    (screen.getByRole("option", { name: "c" }) as HTMLOptionElement).selected
+  ).toBe(true);
+  expect(
+    (screen.getByRole("option", { name: "a" }) as HTMLOptionElement).selected
+  ).toBe(false);
+  expect(
+    (screen.getByRole("option", { name: "b" }) as HTMLOptionElement).selected
+  ).toBe(false);
+  expect(screen.getAllByRole("option").length).toBe(3);
+});
+
+function renderExpressionPropInput(propValue: string, onChange = jest.fn()) {
   render(
     <PropInput
       propType={PropValueType.string}

@@ -31,7 +31,7 @@ export default function ContentPanel(): JSX.Element | null {
           activeComponentState
         )}
         propShape={propShape}
-        propKind={PropValueKind.Expression}
+        getPropValueKind={getPropValueKind}
         shouldRenderProp={shouldRenderProp}
       />
       <Divider />
@@ -43,4 +43,10 @@ export default function ContentPanel(): JSX.Element | null {
 
 function shouldRenderProp(metadata: PropMetadata) {
   return metadata.type === PropValueType.string;
+}
+
+export function getPropValueKind(metadata: PropMetadata): PropValueKind {
+  return Object.hasOwn(metadata, "unionValues")
+    ? PropValueKind.Literal
+    : PropValueKind.Expression;
 }
