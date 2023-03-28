@@ -45,7 +45,7 @@ function shouldRenderProp(metadata: PropMetadata) {
   return metadata.type === PropValueType.string;
 }
 
-function getPropValueKind(metadata: PropMetadata): PropValueKind {
+export function getPropValueKind(metadata: PropMetadata): PropValueKind {
   return Object.hasOwn(metadata, "unionValues")
     ? PropValueKind.Literal
     : PropValueKind.Expression;
