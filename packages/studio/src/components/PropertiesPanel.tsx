@@ -75,6 +75,6 @@ function shouldRenderProp(metadata: PropMetadata) {
   return metadata.type !== PropValueType.string;
 }
 
-export function getPropValueKind(metadata: PropMetadata): PropValueKind {
-  return metadata.required ? PropValueKind.Literal : PropValueKind.Expression;
+export function getPropValueKind(): PropValueKind {
+  return PropValueKind.Literal;
 }
