@@ -66,12 +66,10 @@ export default function PropInput({
   if (unionValues) {
     return (
       <select onChange={handleChangeEvent} className={selectCssClasses}>
-        {[
-          propValue as string,
-          ...unionValues.filter((val) => val !== propValue),
-        ].map((val) => {
+        {unionValues.map((val) => {
+          const isCurrentlySelectedVal = val === (propValue as string);
           return (
-            <option value={val} key={val}>
+            <option selected={isCurrentlySelectedVal} value={val} key={val}>
               {val}
             </option>
           );

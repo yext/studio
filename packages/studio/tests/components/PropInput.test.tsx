@@ -40,6 +40,12 @@ it("correctly renders String Union Prop", () => {
   expect(
     (screen.getByRole("option", { name: "c" }) as HTMLOptionElement).selected
   ).toBe(true);
+  expect(
+    (screen.getByRole("option", { name: "a" }) as HTMLOptionElement).selected
+  ).toBe(false);
+  expect(
+    (screen.getByRole("option", { name: "b" }) as HTMLOptionElement).selected
+  ).toBe(false);
   expect(screen.getAllByRole("option").length).toBe(3);
 });
 
