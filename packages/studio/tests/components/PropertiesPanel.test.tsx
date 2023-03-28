@@ -4,10 +4,13 @@ import {
   FileMetadataKind,
   ModuleMetadata,
   ModuleState,
+  PropValueKind,
   StandardComponentState,
 } from "@yext/studio-plugin";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
-import PropertiesPanel from "../../src/components/PropertiesPanel";
+import PropertiesPanel, {
+  getPropValueKind,
+} from "../../src/components/PropertiesPanel";
 import { render, screen } from "@testing-library/react";
 
 it("does not render prop editor(s) for fragment component", () => {
@@ -78,4 +81,8 @@ it("renders Module Actions for Active Module", () => {
   screen.getByRole("button", { name: "Edit Module Test" });
   screen.getByRole("button", { name: "Detach Module Test" });
   screen.getByRole("button", { name: "Delete Module file" });
+});
+
+it("getPropValueKind works as expected", () => {
+  expect(getPropValueKind()).toBe(PropValueKind.Literal);
 });
