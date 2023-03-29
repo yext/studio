@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FieldPicker from "../../../src/components/FieldPicker/FieldPicker";
 
-const streamDocument = {
+const entityData = {
   __: {
     templateType: "JS",
   },
@@ -97,7 +97,7 @@ it("opening one section will collapse unrelated ones", async () => {
 function renderFieldPicker(handleFieldSelection = jest.fn()) {
   render(
     <FieldPicker
-      streamDocument={streamDocument}
+      entityData={entityData}
       handleFieldSelection={handleFieldSelection}
       fieldType="string"
     />

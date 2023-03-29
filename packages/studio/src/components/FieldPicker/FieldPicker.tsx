@@ -2,19 +2,19 @@ import { useCallback, useRef, useState, MouseEvent } from "react";
 import FieldDropdown from "./FieldDropdown";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
 import useRootClose from "@restart/ui/useRootClose";
-import filterStreamDocument from "../../utils/filterStreamDocument";
+import filterEntityData from "../../utils/filterEntityData";
 
 /**
  * An icon that when clicked on, opens up a dropdown for selecting
- * stream document fields.
+ * entity data fields.
  */
 export default function FieldPicker({
   handleFieldSelection,
-  streamDocument,
+  entityData,
   fieldType = "string",
 }: {
   handleFieldSelection: (fieldId: string) => void;
-  streamDocument: Record<string, unknown>;
+  entityData: Record<string, unknown>;
   fieldType: "string" | "array";
 }) {
   const [expandedFieldId, setExpandedFieldId] = useState<string>();
@@ -37,7 +37,7 @@ export default function FieldPicker({
     [fieldPickerIsClosed]
   );
 
-  const filteredDocument = filterStreamDocument(fieldType, streamDocument);
+  const filteredData = filterEntityData(fieldType, entityData);
 
   const handleFieldDropdownSelection = useCallback(
     (fieldId: string) => {
@@ -76,7 +76,7 @@ export default function FieldPicker({
       />
       {!fieldPickerIsClosed && (
         <FieldDropdown
-          fieldIdToValue={filteredDocument}
+          fieldIdToValue={filteredData}
           handleFieldSelection={handleFieldDropdownSelection}
           handleNestedObjectSelection={handleNestedObjectSelection}
           isExpandedFieldId={isExpandedFieldId}

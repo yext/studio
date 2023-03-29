@@ -1,5 +1,6 @@
 import { ComponentState, PageState } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
+import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
 import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
@@ -13,7 +14,7 @@ const firstPageEntry = Object.entries(
 const initialStates: PageSliceStates = {
   pages: initialStudioData.pageNameToPageState,
   activePageName: firstPageEntry?.[0],
-  activeEntityFile: firstPageEntry?.[1]?.["entityFiles"]?.[0],
+  activeEntityFile: undefined,
   activeComponentUUID: undefined,
   activeComponentRect: undefined,
   pendingChanges: {
@@ -42,6 +43,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         delete store.pages[pageName];
         if (pageName === store.activePageName) {
           get().setActivePage(undefined);
+          store.activeEntityFile = undefined;
+          store.activeEntityData = undefined;
         }
         const { pagesToRemove, pagesToUpdate } = store.pendingChanges;
         pagesToUpdate.delete(pageName);
@@ -64,45 +67,15 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
   const activePageActions = {
     setActivePage: (activePageName: string | undefined) => {
-      if (activePageName === undefined) {
-        set({
-          activePageName,
-          activeComponentUUID: undefined,
-          activeEntityFile: undefined,
-        });
-      } else {
-        const activePageState = get().pages[activePageName];
-        if (activePageState) {
-          set({
-            activePageName,
-            activeComponentUUID: undefined,
-            activeEntityFile: activePageState.entityFiles?.[0],
-          });
-        } else {
-          console.error(
-            `Error in setActivePage: Page "${activePageName}" is not found in Store. Unable to set it as active page.`
-          );
-        }
+      if (activePageName !== undefined && !get().pages[activePageName]) {
+        throw new Error(
+          `Page "${activePageName}" is not found in Store. Unable to set it as active page.`
+        );
       }
+
+      get().setActiveComponentUUID(undefined);
+      set({ activePageName });
     },
-    setActivePageState: (pageState: PageState) =>
-      set((store) => {
-        if (!store.activePageName) {
-          console.error(
-            "Tried to setActivePageState when activePageName was undefined"
-          );
-          return;
-        }
-        if (
-          !pageState.componentTree.some(
-            (component) => component.uuid === store.activeComponentUUID
-          )
-        ) {
-          store.activeComponentUUID = undefined;
-        }
-        store.pages[store.activePageName] = pageState;
-        store.pendingChanges.pagesToUpdate.add(store.activePageName);
-      }),
     getActivePageState: () => {
       const { pages, activePageName } = get();
       if (!activePageName) {
@@ -131,28 +104,34 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const activeEntityFileActions = {
-    setActiveEntityFile: (activeEntityFile?: string): boolean => {
+  const activeEntityFileActions: Pick<PageSlice, "setActiveEntityFile"> = {
+    setActiveEntityFile: async (
+      parentFolder: string,
+      activeEntityFile?: string
+    ): Promise<void> => {
       if (!activeEntityFile) {
-        set({ activeEntityFile: undefined });
-        return true;
+        set({
+          activeEntityFile: undefined,
+          activeEntityData: undefined,
+        });
+        return;
       }
-      const activePageName = get().activePageName;
-      if (!activePageName) {
-        console.error(
-          `Error setting active entity file: no active page selected.`
+
+      const activePageState = get().getActivePageState();
+      if (!activePageState) {
+        throw new Error(`Error setting active entity file: no active page.`);
+      }
+
+      const acceptedEntityFiles = activePageState.entityFiles;
+      if (!acceptedEntityFiles?.includes(activeEntityFile)) {
+        throw new Error(
+          `"${activeEntityFile}" is not an accepted entity file for this page.`
         );
-        return false;
       }
-      if (get().pages[activePageName].entityFiles?.includes(activeEntityFile)) {
-        set({ activeEntityFile });
-        return true;
-      }
-      console.error(
-        "Error setting active entity file:" +
-          ` "${activeEntityFile}" is not an entity file for this page.`
-      );
-      return false;
+      const activeEntityData = (
+        await import(/* @vite-ignore */ path.join(parentFolder, activeEntityFile))
+      ).default;
+      set({ activeEntityFile, activeEntityData });
     },
   };
 

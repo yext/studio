@@ -3,7 +3,7 @@ import useStudioStore from "../store/useStudioStore";
 import usePreviewProps from "../hooks/usePreviewProps";
 import ComponentTreePreview from "./ComponentTreePreview";
 import Highlighter from "./Highlighter";
-import usePageExpressionSources from "../hooks/usePageExpressionSources";
+import useRawSiteSettings from "../hooks/useRawSiteSettings";
 import { ComponentStateHelpers, TypeGuards } from "@yext/studio-plugin";
 import { get } from "lodash";
 
@@ -57,4 +57,20 @@ export default function HighlightedPreview() {
       <Highlighter />
     </>
   );
+}
+
+function usePageExpressionSources() {
+  const activeEntityData = useStudioStore(
+    (store) => store.pages.activeEntityData
+  );
+  const rawSiteSettings = useRawSiteSettings();
+  const pageExpressionSources = useMemo(
+    () => ({
+      document: activeEntityData,
+      siteSettings: rawSiteSettings,
+    }),
+    [activeEntityData, rawSiteSettings]
+  );
+
+  return pageExpressionSources;
 }

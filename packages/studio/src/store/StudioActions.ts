@@ -21,12 +21,14 @@ import StudioConfigSlice from "./models/slices/StudioConfigSlice";
 import RepeaterActions from "./StudioActions/RepeaterActions";
 import AddComponentAction from "./StudioActions/AddComponentAction";
 import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
+import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
 
 export default class StudioActions {
   public addRepeater: RepeaterActions["addRepeater"];
   public removeRepeater: RepeaterActions["removeRepeater"];
   public addComponent: AddComponentAction["addComponent"];
   public createComponentState: CreateComponentStateAction["createComponentState"];
+  public updateActivePage: UpdateActivePageAction["updateActivePage"];
 
   constructor(
     private getPages: () => PageSlice,
@@ -42,6 +44,10 @@ export default class StudioActions {
     this.createComponentState = new CreateComponentStateAction(
       getStudioConfig
     ).createComponentState;
+    this.updateActivePage = new UpdateActivePageAction(
+      getPages,
+      getStudioConfig
+    ).updateActivePage;
   }
 
   getComponentTree = () => {
@@ -266,6 +272,6 @@ export default class StudioActions {
       cssImports: [],
       filepath,
     });
-    this.getPages().setActivePage(pageName);
+    this.updateActivePage(pageName);
   };
 }

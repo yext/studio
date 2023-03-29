@@ -14,6 +14,8 @@ export interface PageSliceStates {
   activeComponentUUID?: string;
   /** The entity file whose data is seeding the active preview page. */
   activeEntityFile?: string;
+  /** The data for the entity file seeding the active preview page. */
+  activeEntityData?: Record<string, unknown>;
   /** The DOMRect of the active component, for highlighting purposes. */
   activeComponentRect?: DOMRectProperties;
   /**
@@ -40,7 +42,6 @@ interface PageSliceActions {
   removePage: (filepath: string) => void;
 
   setActivePage: (pageName: string | undefined) => void;
-  setActivePageState: (pageState: PageState) => void;
   getActivePageState: () => PageState | undefined;
   setComponentTreeInPage: (
     pageName: string,
@@ -49,8 +50,11 @@ interface PageSliceActions {
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
-  setActiveEntityFile: (activeEntityFile?: string) => boolean;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
+  setActiveEntityFile: (
+    parentFolder: string,
+    activeEntityFile?: string
+  ) => Promise<void>;
 
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }

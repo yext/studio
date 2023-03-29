@@ -1,19 +1,19 @@
 /**
- * Filters a given stream document down to fields that match a certain type.
+ * Filters the given entity data down to fields that match a certain type.
  * When fieldType is "array", all item types are supported.
  */
-export default function filterStreamDocument(
+export default function filterEntityData(
   fieldType: "string" | "array",
-  streamDocument: Record<string, unknown> = {}
+  entityData: Record<string, unknown> = {}
 ): Record<string, unknown> {
-  const filteredEntries = Object.entries(streamDocument)
+  const filteredEntries = Object.entries(entityData)
     .filter(([field]) => field !== "__")
     .map(([field, value]) => {
       const isObjectField =
         typeof value === "object" && !Array.isArray(value) && value !== null;
 
       if (isObjectField) {
-        const filteredSubObject = filterStreamDocument(
+        const filteredSubObject = filterEntityData(
           fieldType,
           value as Record<string, unknown>
         );

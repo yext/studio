@@ -16,6 +16,7 @@ import getCreateModuleAction from "./createModuleAction";
 import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
+import setInitialAsyncState from "./setInitialEntityFile";
 
 enableMapSet();
 
@@ -71,4 +72,7 @@ const useStudioStore = create<StudioStore>()(
   )
 );
 
+setInitialAsyncState(useStudioStore);
+
+export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;

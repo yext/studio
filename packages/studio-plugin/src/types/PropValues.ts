@@ -51,7 +51,7 @@ export type ObjectProp<T> = {
 export type RecordProp = {
   kind: PropValueKind.Expression;
   valueType: PropValueType.Record;
-  // Records are only supported for stream documents right now.
+  // Records are only supported for entity data right now.
   value: "document";
 };
 // Used in component outside Studio to represent a hex color prop in Studio preview.
