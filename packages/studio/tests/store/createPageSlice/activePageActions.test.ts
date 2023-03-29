@@ -29,7 +29,7 @@ describe("PageSlice", () => {
     });
 
     it("updates activePageName using setActivePage", () => {
-      useStudioStore.getState().actions.updateActivePage("vertical");
+      useStudioStore.getState().pages.setActivePage("vertical");
       const activePageName = useStudioStore.getState().pages.activePageName;
       expect(activePageName).toEqual("vertical");
     });
@@ -40,17 +40,16 @@ describe("PageSlice", () => {
         activePageName: "universal",
         activeComponentUUID: "searchbar-uuid",
       });
-      useStudioStore.getState().actions.updateActivePage("vertical");
+      useStudioStore.getState().pages.setActivePage("vertical");
       const activeComponentUUID =
         useStudioStore.getState().pages.activeComponentUUID;
       expect(activeComponentUUID).toBeUndefined();
     });
 
-    it("throws an error when using setActivePage for a page not found in store", async () => {
-      const updatePagePromise = useStudioStore
-        .getState()
-        .actions.updateActivePage("location");
-      await expect(updatePagePromise).rejects.toThrow(
+    it("throws an error when using setActivePage for a page not found in store", () => {
+      const setPage = () =>
+        useStudioStore.getState().pages.setActivePage("location");
+      expect(setPage).toThrow(
         'Page "location" is not found in Store. Unable to set it as active page.'
       );
       const activePageName = useStudioStore.getState().pages.activePageName;
