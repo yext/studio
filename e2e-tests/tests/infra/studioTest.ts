@@ -8,13 +8,18 @@ type Fixtures = {
 };
 
 const initialState = {
-  pages: Object.fromEntries(
-    fs.readdirSync("./src/pages", "utf-8").map((pagepath) => {
-      const pathFromRoot = path.join("./src/pages", pagepath);
+  pages: getInitialDirState("./src/pages"),
+  components: getInitialDirState("./src/components"),
+};
+
+function getInitialDirState(dirPath: string) {
+  return Object.fromEntries(
+    fs.readdirSync(dirPath, "utf-8").map((filename) => {
+      const pathFromRoot = path.join(dirPath, filename);
       return [pathFromRoot, fs.readFileSync(pathFromRoot, "utf-8")];
     })
-  ),
-};
+  );
+}
 
 /**
  * studioTest extends the base playwright test by providing a StudioPage Page Object Model,
@@ -28,13 +33,20 @@ export const studioTest = base.extend<Fixtures>({
       // Run the test.
       await use(studioPage);
     } finally {
-      fs.readdirSync("./src/pages", "utf-8").forEach((pagepath) => {
-        const pathFromRoot = path.join("./src/pages", pagepath);
-        fs.unlinkSync(pathFromRoot);
-      });
-      Object.entries(initialState.pages).forEach(([pathFromRoot, contents]) => {
-        fs.writeFileSync(pathFromRoot, contents);
-      });
+      unlinkDir("./src/pages");
+      unlinkDir("./src/components");
+      Object.values(initialState).forEach((slice) =>
+        Object.entries(slice).forEach(([pathFromRoot, contents]) =>
+          fs.writeFileSync(pathFromRoot, contents)
+        )
+      );
     }
   },
 });
+
+function unlinkDir(dirPath: string) {
+  fs.readdirSync(dirPath, "utf-8").forEach((filename) => {
+    const pathFromRoot = path.join(dirPath, filename);
+    fs.unlinkSync(pathFromRoot);
+  });
+}

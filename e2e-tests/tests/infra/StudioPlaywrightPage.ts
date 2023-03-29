@@ -70,6 +70,7 @@ export default class StudioPlaywrightPage {
         name: `Add ${elementName} Element`,
       })
       .click();
+    await this.addElementButton.click();
   }
 
   async save() {
