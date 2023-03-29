@@ -15,11 +15,11 @@ studioTest(
   "can update initial props of a component and see UI is updated via HMR",
   async ({ page, studioPage }) => {
     const num0Previews = page.getByText("0");
-    const falsePreviews = page.getByText("false");
-    const titlePreviews = page.getByText("initial title");
-    const truePreviews = page.getByText("true");
-    const num5Previews = page.getByText("5");
     const num1Previews = page.getByText("1");
+    const num5Previews = page.getByText("5");
+    const falsePreviews = page.getByText("false");
+    const truePreviews = page.getByText("true");
+    const titlePreviews = page.getByText("initial title");
 
     await expect(num0Previews).toHaveCount(1);
     await expect(falsePreviews).toHaveCount(1);
