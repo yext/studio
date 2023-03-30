@@ -32,7 +32,7 @@ const config: PlaywrightTestConfig = {
      */
     timeout: 5000,
     toHaveScreenshot: {
-      threshold: 0.05,
+      threshold: 0.01,
       maxDiffPixelRatio: 0.01,
     },
   },

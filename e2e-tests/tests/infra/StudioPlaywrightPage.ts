@@ -73,6 +73,21 @@ export default class StudioPlaywrightPage {
     await this.addElementButton.click();
   }
 
+  async setActiveComponent(
+    componentName: string,
+    componentIndex = 0
+  ) {
+    const components = await this.page.getByText(componentName).all();
+    const component = components[componentIndex];
+    await component.click();
+  }
+
+  async getStringPropValue(propName: string) {
+    await this.page.getByRole("button", { name: "Content" }).click();
+    const input = this.page.getByRole("textbox", { name: propName });
+    return input.getAttribute("value");
+  }
+
   async save() {
     await this.saveButton.click();
     await expect(() => expect(this.successToast).toHaveCount(1)).toPass({

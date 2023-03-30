@@ -3,7 +3,7 @@ export interface ButtonProps {
 }
 
 export const initialProps: ButtonProps = {
-  id: "foo",
+  id: "bar",
 };
 
 export default function Button(props: ButtonProps) {
