@@ -73,10 +73,7 @@ export default class StudioPlaywrightPage {
     await this.addElementButton.click();
   }
 
-  async setActiveComponent(
-    componentName: string,
-    componentIndex = 0
-  ) {
+  async setActiveComponent(componentName: string, componentIndex = 0) {
     const components = await this.page.getByText(componentName).all();
     const component = components[componentIndex];
     await component.click();
