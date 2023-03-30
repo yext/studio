@@ -9,6 +9,7 @@ export default class UpdateActivePageAction {
 
   updateActivePage = async (activePageName?: string): Promise<void> => {
     this.getPageSlice().setActivePage(activePageName);
+    this.getPageSlice().setModuleUUIDBeingEdited(undefined);
     const activePageState = this.getPageSlice().getActivePageState();
     // Any file is fine so pick the first one.
     const anyAcceptedEntityFile = activePageState?.entityFiles?.[0];
