@@ -21,8 +21,9 @@ studioTest(
     await expect(buttonPreviews).toHaveCount(1);
     await expect(page).toHaveScreenshot();
 
-    await studioPage.setActiveComponent("Button", 0);
-    expect(await studioPage.getStringPropValue("id")).toEqual("foo");
+    expect(
+      await studioPage.getComponentStringPropValue("id", "Button", 0)
+    ).toEqual("foo");
     await expect(page).toHaveScreenshot();
 
     fs.writeFileSync("./src/components/Button.tsx", updatedComponent);
@@ -31,8 +32,9 @@ studioTest(
     await expect(buttonPreviews).toHaveCount(2);
     await expect(page).toHaveScreenshot();
 
-    await studioPage.setActiveComponent("Button", 1);
-    expect(await studioPage.getStringPropValue("id")).toEqual("bar");
+    expect(
+      await studioPage.getComponentStringPropValue("id", "Button", 1)
+    ).toEqual("bar");
     await expect(page).toHaveScreenshot();
 
     await studioPage.save();

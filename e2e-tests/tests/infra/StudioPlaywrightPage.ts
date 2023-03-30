@@ -79,7 +79,12 @@ export default class StudioPlaywrightPage {
     await component.click();
   }
 
-  async getStringPropValue(propName: string) {
+  async getComponentStringPropValue(
+    propName: string,
+    componentName: string,
+    componentIndex?: number
+  ) {
+    await this.setActiveComponent(componentName, componentIndex);
     await this.page.getByRole("button", { name: "Content" }).click();
     const input = this.page.getByRole("textbox", { name: propName });
     return input.getAttribute("value");
