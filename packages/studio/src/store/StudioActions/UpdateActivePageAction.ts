@@ -1,6 +1,10 @@
 import PageSlice from "../models/slices/PageSlice";
 import StudioConfigSlice from "../models/slices/StudioConfigSlice";
 
+/**
+ * UpdateActivePageAction is responsible for updating the current active page,
+ * and any associated side effects with that.
+ */
 export default class UpdateActivePageAction {
   constructor(
     private getPageSlice: () => PageSlice,
