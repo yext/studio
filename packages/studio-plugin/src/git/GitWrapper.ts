@@ -1,12 +1,12 @@
-import { SimpleGit, simpleGit } from "simple-git";
+import { SimpleGit } from "simple-git";
 import { GitData } from "../types";
 
 export default class GitWrapper {
   private git: SimpleGit;
   private gitData?: GitData;
 
-  constructor() {
-    this.git = simpleGit();
+  constructor(git: SimpleGit) {
+    this.git = git;
   }
 
   async deploy() {

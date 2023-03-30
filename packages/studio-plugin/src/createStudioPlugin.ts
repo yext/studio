@@ -1,4 +1,5 @@
 import { ConfigEnv, Plugin } from "vite";
+import { simpleGit } from "simple-git";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator, {
   createTsMorphProject,
@@ -25,7 +26,7 @@ export default async function createStudioPlugin(
     .default;
   const pathToUserProjectRoot = process.cwd();
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
-  const gitWrapper = new GitWrapper();
+  const gitWrapper = new GitWrapper(simpleGit());
   await gitWrapper.refreshData();
 
   /** The ts-morph Project instance for the entire app. */
