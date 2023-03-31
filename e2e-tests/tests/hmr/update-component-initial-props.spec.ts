@@ -22,8 +22,8 @@ studioTest(
     await expect(page).toHaveScreenshot();
 
     expect(
-      await studioPage.getComponentStringPropValue("id", "Button", 0)
-    ).toEqual("foo");
+      await studioPage.getComponentStringPropValue("className", "Button", 0)
+    ).toEqual("px-2");
     await expect(page).toHaveScreenshot();
 
     fs.writeFileSync("./src/components/Button.tsx", updatedComponent);
@@ -33,8 +33,8 @@ studioTest(
     await expect(page).toHaveScreenshot();
 
     expect(
-      await studioPage.getComponentStringPropValue("id", "Button", 1)
-    ).toEqual("bar");
+      await studioPage.getComponentStringPropValue("className", "Button", 1)
+    ).toEqual("px-4");
     await expect(page).toHaveScreenshot();
 
     await studioPage.save();

@@ -5,8 +5,8 @@ import Container from "../components/Container";
 export default function UniversalPage() {
   return (
     <>
-      <Button id="foo" />
-      <Button id="bar" />
+      <Button className="px-2" />
+      <Button className="px-4" />
       <div>
         <Container>
           <Banner />

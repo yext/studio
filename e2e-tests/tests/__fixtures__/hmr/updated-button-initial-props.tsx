@@ -1,11 +1,11 @@
 export interface ButtonProps {
-  id?: string;
+  className?: string;
 }
 
 export const initialProps: ButtonProps = {
-  id: "bar",
+  className: "px-4",
 };
 
 export default function Button(props: ButtonProps) {
-  return <button id={props.id}>{`Press me!`}</button>;
+  return <button className={props.className}>{`Press me!`}</button>;
 }
