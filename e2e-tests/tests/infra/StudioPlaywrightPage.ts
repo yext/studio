@@ -79,7 +79,7 @@ export default class StudioPlaywrightPage {
     await component.click();
   }
 
-  async getComponentStringPropValue(
+  async getStringPropValue(
     propName: string,
     componentName: string,
     componentIndex?: number

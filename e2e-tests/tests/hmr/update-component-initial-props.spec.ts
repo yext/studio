@@ -22,7 +22,7 @@ studioTest(
     await expect(page).toHaveScreenshot();
 
     expect(
-      await studioPage.getComponentStringPropValue("className", "Button", 0)
+      await studioPage.getStringPropValue("className", "Button", 0)
     ).toEqual("px-2");
     await expect(page).toHaveScreenshot();
 
@@ -33,7 +33,7 @@ studioTest(
     await expect(page).toHaveScreenshot();
 
     expect(
-      await studioPage.getComponentStringPropValue("className", "Button", 1)
+      await studioPage.getStringPropValue("className", "Button", 1)
     ).toEqual("px-4");
     await expect(page).toHaveScreenshot();
 
