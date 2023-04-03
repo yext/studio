@@ -7,16 +7,16 @@ import type { UseStudioStore } from "./useStudioStore";
  * Therefore in order to set the initial activeEntityData, which requires
  * a dynamic import, we must set it outside of the store on startup.
  */
-export default function setInitialEntityFile(
+export default async function setInitialEntityFile(
   useStudioStore: UseStudioStore
-): void {
+): Promise<void> {
   const pageSlice = useStudioStore.getState().pages;
   const activePageState = pageSlice.getActivePageState();
   const firstAcceptedEntityFile = activePageState?.entityFiles?.[0];
   if (firstAcceptedEntityFile) {
     const localDataFolder =
       useStudioStore.getState().studioConfig.paths.localData;
-    void pageSlice.setActiveEntityFile(
+    await pageSlice.setActiveEntityFile(
       localDataFolder,
       firstAcceptedEntityFile
     );

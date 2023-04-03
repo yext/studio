@@ -109,7 +109,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       parentFolder: string,
       activeEntityFile?: string
     ): Promise<void> => {
-      if (!activeEntityFile) {
+      if (activeEntityFile === undefined) {
         set({
           activeEntityFile: undefined,
           activeEntityData: undefined,

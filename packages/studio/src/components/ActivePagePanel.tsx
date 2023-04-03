@@ -30,7 +30,8 @@ export default function ActivePagePanel(): JSX.Element {
 
   const renderPage = useCallback(
     (pageName: string) => {
-      const isActivePage = activePageName === pageName;
+      const isActivePage =
+        !moduleUUIDBeingEdited && activePageName === pageName;
       const checkClasses = classNames({
         invisible: !isActivePage,
       });
@@ -53,7 +54,7 @@ export default function ActivePagePanel(): JSX.Element {
         </li>
       );
     },
-    [activePageName, updateActivePage]
+    [activePageName, moduleUUIDBeingEdited, updateActivePage]
   );
 
   return (
@@ -62,11 +63,9 @@ export default function ActivePagePanel(): JSX.Element {
         Pages
         <AddPageButton />
       </div>
-      {!moduleUUIDBeingEdited && (
-        <ul className="flex flex-col pb-2 items-stretch">
-          {pageNames.map(renderPage)}
-        </ul>
-      )}
+      <ul className="flex flex-col pb-2 items-stretch">
+        {pageNames.map(renderPage)}
+      </ul>
       <Divider />
       <div className="font-bold">Layers</div>
       <ComponentTree />
