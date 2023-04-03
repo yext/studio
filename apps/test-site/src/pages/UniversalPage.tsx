@@ -25,7 +25,7 @@ export default function UniversalPage({ document }: TemplateProps) {
       </Container>
       <AceComponent text="ace" />
       <ContainerWithButtons
-        bannerTitle={`${document.address.city}`}
+        bannerTitle={document.address.city}
         document={document}
       />
       <Banner nestedProp={{ egg: "eggyweggy" }} />
