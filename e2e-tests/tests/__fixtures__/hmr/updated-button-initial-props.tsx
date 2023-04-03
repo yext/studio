@@ -7,5 +7,5 @@ export const initialProps: ButtonProps = {
 };
 
 export default function Button(props: ButtonProps) {
-  return <button className={props.className}>{`Press me!`}</button>;
+  return <button className={props.className}>Press me!</button>;
 }
