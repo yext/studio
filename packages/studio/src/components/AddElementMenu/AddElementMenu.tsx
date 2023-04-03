@@ -51,13 +51,10 @@ function ElementTypeButton(props: {
   handleClick: (type: ElementType) => void;
 }) {
   const { isActiveType, elementType, handleClick } = props;
-  const className = classNames(
-    "px-2 py-2 mx-2 flex items-center border-b-2",
-    {
-      "border-blue-600": isActiveType,
-      "border-transparent": !isActiveType,
-    }
-  );
+  const className = classNames("px-2 py-2 mx-2 flex items-center border-b-2", {
+    "border-blue-600": isActiveType,
+    "border-transparent": !isActiveType,
+  });
   const onClick = useCallback(() => {
     handleClick(ElementType[elementType]);
   }, [elementType, handleClick]);
