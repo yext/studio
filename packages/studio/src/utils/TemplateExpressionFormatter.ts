@@ -1,3 +1,5 @@
+import { PropVal, PropValueKind, PropValueType } from "@yext/studio-plugin";
+
 /**
  * TemplateExpressionFormatter contains various static utility methods
  * for formatting template expression strings.
@@ -52,5 +54,17 @@ export default class TemplateExpressionFormatter {
 
   static hasBackticks(value: string): boolean {
     return value.length >= 2 && value.startsWith("`") && value.endsWith("`");
+  }
+
+  static isNonTemplateStringExpression({
+    kind,
+    value,
+    valueType,
+  }: PropVal): boolean {
+    return (
+      kind === PropValueKind.Expression &&
+      valueType === PropValueType.string &&
+      !this.hasBackticks(value)
+    );
   }
 }
