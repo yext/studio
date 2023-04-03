@@ -1,6 +1,5 @@
 import { useState } from "react";
 import AddElementsList from "./AddElementsList";
-import classNames from "classnames";
 import { useCallback } from "react";
 import renderIconForType from "../common/renderIconForType";
 
@@ -51,15 +50,15 @@ function ElementTypeButton(props: {
   handleClick: (type: ElementType) => void;
 }) {
   const { isActiveType, elementType, handleClick } = props;
-  const className = classNames("px-2 py-2 mx-2 flex items-center border-b-2", {
-    "border-blue-600": isActiveType,
-    "border-transparent": !isActiveType,
-  });
   const onClick = useCallback(() => {
     handleClick(ElementType[elementType]);
   }, [elementType, handleClick]);
   return (
-    <button className={className} onClick={onClick} disabled={isActiveType}>
+    <button
+      className="p-2 mx-2 flex items-center border-b-2 border-transparent disabled:border-blue-600"
+      onClick={onClick}
+      disabled={isActiveType}
+    >
       <span className="mr-2 pt-0.5">{renderIconForType(elementType)}</span>
       <span>{elementType}</span>
     </button>
