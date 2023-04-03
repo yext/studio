@@ -62,8 +62,11 @@ export default class StudioPlaywrightPage {
     await this.addElementButton.click();
     await expect(this.page).toHaveScreenshot();
 
-    await this.page.getByText(category).click();
-    await expect(this.page).toHaveScreenshot();
+    const categoryButton = this.page.getByRole("button", { name: category });
+    if (await categoryButton.isEnabled()) {
+      await categoryButton.click();
+      await expect(this.page).toHaveScreenshot();
+    }
 
     await this.page
       .getByRole("button", {

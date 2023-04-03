@@ -52,7 +52,7 @@ function ElementTypeButton(props: {
 }) {
   const { isActiveType, elementType, handleClick } = props;
   const className = classNames(
-    "px-2 py-2 mx-2 flex items-center cursor-pointer border-b-2",
+    "px-2 py-2 mx-2 flex items-center border-b-2",
     {
       "border-blue-600": isActiveType,
       "border-transparent": !isActiveType,
@@ -62,9 +62,9 @@ function ElementTypeButton(props: {
     handleClick(ElementType[elementType]);
   }, [elementType, handleClick]);
   return (
-    <div className={className} onClick={onClick}>
+    <button className={className} onClick={onClick} disabled={isActiveType}>
       <span className="mr-2 pt-0.5">{renderIconForType(elementType)}</span>
       <span>{elementType}</span>
-    </div>
+    </button>
   );
 }
