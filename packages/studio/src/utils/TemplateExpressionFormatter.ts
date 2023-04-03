@@ -50,7 +50,7 @@ export default class TemplateExpressionFormatter {
     return value.slice(1, -1);
   }
 
-  private static hasBackticks(value: string): boolean {
+  static hasBackticks(value: string): boolean {
     return value.length >= 2 && value.startsWith("`") && value.endsWith("`");
   }
 }

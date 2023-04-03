@@ -253,3 +253,33 @@ it("converts string literals to string expressions when propKind = Expression", 
   );
   expect(screen.getByText("title")).toBeDefined();
 });
+
+it("converts non-template string expressions to template literals", () => {
+  const props: PropValues = {
+    title: {
+      kind: PropValueKind.Expression,
+      value: "siteSettings.siteName",
+      valueType: PropValueType.string,
+    },
+  };
+  const propShape: PropShape = {
+    title: {
+      type: PropValueType.string,
+      required: false,
+    },
+  };
+
+  render(
+    <PropEditors
+      activeComponentState={{
+        ...activeComponentState,
+        props,
+      }}
+      propShape={propShape}
+      getPropValueKind={() => PropValueKind.Expression}
+    />
+  );
+  expect(screen.getByText("title")).toBeDefined();
+  // eslint-disable-next-line no-template-curly-in-string
+  expect(screen.getByRole("textbox")).toHaveValue("${siteSettings.siteName}");
+});

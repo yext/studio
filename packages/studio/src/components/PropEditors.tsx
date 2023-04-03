@@ -83,6 +83,15 @@ function getPropValue(
     );
   }
 
+  const shouldConvertExpressionToTemplate =
+    expectedPropKind === PropValueKind.Expression &&
+    kind === PropValueKind.Expression &&
+    valueType === PropValueType.string &&
+    !TemplateExpressionFormatter.hasBackticks(value);
+  if (shouldConvertExpressionToTemplate) {
+    return TemplateExpressionFormatter.addBackticks("${" + value + "}");
+  }
+
   const shouldConvertLiteralToExpression =
     expectedPropKind === PropValueKind.Expression &&
     kind === PropValueKind.Literal;
