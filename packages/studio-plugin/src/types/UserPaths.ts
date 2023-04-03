@@ -11,6 +11,6 @@ export interface UserPaths {
   modules: string;
   /** The absolute path to the file with the user's site settings. */
   siteSettings: string;
-  /** The absolute path to the directory with stream documents. */
+  /** The absolute path to the directory with local entity data. */
   localData: string;
 }

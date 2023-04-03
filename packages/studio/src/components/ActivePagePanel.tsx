@@ -14,64 +14,47 @@ import RemovePageButton from "./RemovePageButton";
  * modules in the component tree of the active page.
  */
 export default function ActivePagePanel(): JSX.Element {
-  const [
-    pages,
-    setActivePage,
-    activePageName,
-    setModuleUUIDBeingEdited,
-    moduleUUIDBeingEdited,
-  ] = useStudioStore((store) => [
-    store.pages.pages,
-    store.pages.setActivePage,
-    store.pages.activePageName,
-    store.pages.setModuleUUIDBeingEdited,
-    store.pages.moduleUUIDBeingEdited,
-  ]);
+  const [pages, updateActivePage, activePageName, moduleUUIDBeingEdited] =
+    useStudioStore((store) => [
+      store.pages.pages,
+      store.actions.updateActivePage,
+      store.pages.activePageName,
+      store.pages.moduleUUIDBeingEdited,
+    ]);
+
   const pageNames = useMemo(() => {
     const names = Object.keys(pages);
     names.sort();
     return names;
   }, [pages]);
 
-  const renderPageList = useCallback(
-    (pageNames: string[]) => {
+  const renderPage = useCallback(
+    (pageName: string) => {
+      const isActivePage =
+        !moduleUUIDBeingEdited && activePageName === pageName;
+      const checkClasses = classNames({
+        invisible: !isActivePage,
+      });
+      function handleSelectPage() {
+        updateActivePage(pageName);
+      }
       return (
-        <ul className="flex flex-col pb-2 items-stretch">
-          {pageNames.map((pageName) => {
-            const isActivePage =
-              activePageName === pageName && !moduleUUIDBeingEdited;
-            const checkClasses = classNames({
-              invisible: !isActivePage,
-            });
-            function handleSelectPage() {
-              setActivePage(pageName);
-              setModuleUUIDBeingEdited(undefined);
-            }
-            return (
-              <li key={pageName} className="flex justify-between pb-4 px-2">
-                <div className="flex items-center">
-                  <Check className={checkClasses} />
-                  <button
-                    disabled={isActivePage}
-                    onClick={handleSelectPage}
-                    className="ml-2"
-                  >
-                    {pageName}
-                  </button>
-                </div>
-                <RemovePageButton pageName={pageName} />
-              </li>
-            );
-          })}
-        </ul>
+        <li key={pageName} className="flex justify-between pb-4 px-2">
+          <div className="flex items-center">
+            <Check className={checkClasses} />
+            <button
+              disabled={isActivePage}
+              onClick={handleSelectPage}
+              className="ml-2"
+            >
+              {pageName}
+            </button>
+          </div>
+          <RemovePageButton pageName={pageName} />
+        </li>
       );
     },
-    [
-      activePageName,
-      moduleUUIDBeingEdited,
-      setActivePage,
-      setModuleUUIDBeingEdited,
-    ]
+    [activePageName, moduleUUIDBeingEdited, updateActivePage]
   );
 
   return (
@@ -80,7 +63,9 @@ export default function ActivePagePanel(): JSX.Element {
         Pages
         <AddPageButton />
       </div>
-      {renderPageList(pageNames)}
+      <ul className="flex flex-col pb-2 items-stretch">
+        {pageNames.map(renderPage)}
+      </ul>
       <Divider />
       <div className="font-bold">Layers</div>
       <ComponentTree />

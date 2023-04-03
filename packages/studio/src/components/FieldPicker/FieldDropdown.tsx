@@ -16,7 +16,7 @@ interface FieldDropdownProps {
 }
 
 /**
- * FieldDropdown renders a dropdown for picking stream document fields.
+ * FieldDropdown renders a dropdown for picking entity data fields.
  * When an object field is encountered, FieldDropdown will open a child
  * FieldDropdown for rendering the object field.
  */

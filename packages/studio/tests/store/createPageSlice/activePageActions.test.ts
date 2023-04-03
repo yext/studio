@@ -1,11 +1,9 @@
 import useStudioStore from "../../../src/store/useStudioStore";
-import { PageState } from "@yext/studio-plugin";
 import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import {
   searchBarComponent,
   resultsComponent,
-  buttonComponent,
 } from "../../__fixtures__/componentStates";
 
 const pages: PagesRecord = {
@@ -18,7 +16,6 @@ const pages: PagesRecord = {
     componentTree: [resultsComponent],
     cssImports: [],
     filepath: "mock-filepath",
-    entityFiles: ["mock-entityFile"],
   },
 };
 
@@ -49,88 +46,14 @@ describe("PageSlice", () => {
       expect(activeComponentUUID).toBeUndefined();
     });
 
-    it("updates activeEntityFile when setActivePage is used", () => {
-      useStudioStore.getState().pages.setActivePage("vertical");
-      const activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
-      expect(activeEntityFile).toEqual("mock-entityFile");
-    });
-
-    it("logs an error when using setActivePage for a page not found in store", () => {
-      const consoleErrorSpy = jest
-        .spyOn(global.console, "error")
-        .mockImplementation();
-      useStudioStore.getState().pages.setActivePage("location");
+    it("throws an error when using setActivePage for a page not found in store", () => {
+      const setPage = () =>
+        useStudioStore.getState().pages.setActivePage("location");
+      expect(setPage).toThrow(
+        'Page "location" is not found in Store. Unable to set it as active page.'
+      );
       const activePageName = useStudioStore.getState().pages.activePageName;
       expect(activePageName).toEqual("universal");
-      expect(consoleErrorSpy).toBeCalledWith(
-        'Error in setActivePage: Page "location" is not found in Store. Unable to set it as active page.'
-      );
-    });
-
-    it("updates existing active page's state using setActivePageState", () => {
-      const newActivePageState: PageState = {
-        componentTree: [buttonComponent],
-        cssImports: ["app.css"],
-        filepath: "mock-filepath",
-      };
-      useStudioStore.getState().pages.setActivePageState(newActivePageState);
-      const actualPages = useStudioStore.getState().pages.pages;
-      expect(actualPages).toEqual({
-        universal: newActivePageState,
-        vertical: pages["vertical"],
-      });
-    });
-
-    it("updates pagesToUpdate when setActivePageState is used", () => {
-      const newActivePageState: PageState = {
-        componentTree: [buttonComponent],
-        cssImports: ["app.css"],
-        filepath: "mock-filepath",
-      };
-      useStudioStore.getState().pages.setActivePageState(newActivePageState);
-      const pagesToUpdate =
-        useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
-      expect(pagesToUpdate).toEqual(new Set<string>(["universal"]));
-    });
-
-    it("resets active component uuid when it's remove from page state using setActivePageState", () => {
-      mockPageSliceStates({
-        pages,
-        activePageName: "universal",
-        activeComponentUUID: "searchbar-uuid",
-      });
-      const newActivePageState: PageState = {
-        componentTree: [buttonComponent],
-        cssImports: ["app.css"],
-        filepath: "mock-filepath",
-      };
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-        "searchbar-uuid"
-      );
-      useStudioStore.getState().pages.setActivePageState(newActivePageState);
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-        undefined
-      );
-    });
-
-    it("maintains active component uuid when it's still in page state using setActivePageState", () => {
-      mockPageSliceStates({
-        pages,
-        activePageName: "universal",
-        activeComponentUUID: "searchbar-uuid",
-      });
-      const newActivePageState: PageState = {
-        componentTree: [searchBarComponent, buttonComponent],
-        cssImports: ["app.css"],
-        filepath: "mock-filepath",
-      };
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-        "searchbar-uuid"
-      );
-      useStudioStore.getState().pages.setActivePageState(newActivePageState);
-      expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-        "searchbar-uuid"
-      );
     });
 
     it("returns active page's state using getActivePageState", () => {
@@ -149,18 +72,6 @@ describe("PageSlice", () => {
         activePageName: undefined,
       });
       consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-    });
-
-    it("setActivePageState", () => {
-      useStudioStore.getState().pages.setActivePageState({
-        componentTree: [],
-        cssImports: [],
-        filepath: "mock-filepath",
-      });
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "Tried to setActivePageState when activePageName was undefined"
-      );
     });
 
     it("getActivePageState", () => {

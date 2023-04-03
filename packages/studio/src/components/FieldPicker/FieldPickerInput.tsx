@@ -1,5 +1,5 @@
 import { ChangeEventHandler } from "react";
-import useStreamDocument from "../../hooks/useStreamDocument";
+import useStudioStore from "../../store/useStudioStore";
 import FieldPicker from "./FieldPicker";
 
 interface FieldPickerInputProps {
@@ -21,7 +21,7 @@ export default function FieldPickerInput({
   displayValue,
   fieldType,
 }: FieldPickerInputProps) {
-  const streamDocument = useStreamDocument();
+  const entityData = useStudioStore((store) => store.pages.activeEntityData);
 
   return (
     <div className="relative">
@@ -32,11 +32,11 @@ export default function FieldPickerInput({
         value={displayValue}
       />
       <i className="absolute right-0 top-2.5 mr-2 bg-white not-italic">
-        {streamDocument && (
+        {entityData && (
           <FieldPicker
             fieldType={fieldType}
             handleFieldSelection={handleFieldSelection}
-            streamDocument={streamDocument}
+            entityData={entityData}
           />
         )}
       </i>

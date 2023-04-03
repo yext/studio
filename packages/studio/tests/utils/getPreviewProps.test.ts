@@ -13,13 +13,13 @@ const siteSettings = {
   isDevMode: true,
 };
 
-const streamDocument = {
+const entityData = {
   name: "office space",
 };
 
 const expressionSources = {
   siteSettings,
-  document: streamDocument,
+  document: entityData,
 };
 
 const propShape: PropShape = {
@@ -113,10 +113,10 @@ it("logs a warning when transformed value type doesn't match from the expected t
 });
 
 describe("expression value handling", () => {
-  it("returns transformed value sourced from stream document", () => {
+  it("returns transformed value sourced from entity data", () => {
     const transformedProps = transformFooProp("document.name");
     expect(transformedProps).toEqual({
-      foo: streamDocument.name,
+      foo: entityData.name,
     });
   });
 

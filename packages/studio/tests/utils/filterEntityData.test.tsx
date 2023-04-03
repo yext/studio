@@ -1,7 +1,7 @@
-import filterStreamDocument from "../../src/utils/filterStreamDocument";
+import filterEntityData from "../../src/utils/filterEntityData";
 
 it("can filter by fieldType = array", () => {
-  const streamDocument = {
+  const entityData = {
     str: "stringy",
     arr: ["an arr"],
     nestedObj: {
@@ -15,7 +15,7 @@ it("can filter by fieldType = array", () => {
     },
   };
 
-  expect(filterStreamDocument("array", streamDocument)).toEqual({
+  expect(filterEntityData("array", entityData)).toEqual({
     arr: ["an arr"],
     nestedObj: {
       nestedArr: ["hey"],
