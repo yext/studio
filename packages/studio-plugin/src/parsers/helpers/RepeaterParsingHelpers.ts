@@ -53,8 +53,8 @@ export default class RepeaterParsingHelpers {
     ) {
       return (
         "Error parsing map expression: function must return a single" +
-        "self-closing JSX element with no children." +
-        `Found ${exp.getText()}.`
+        " self-closing JSX element with no children." +
+        ` Found ${exp.getText()}.`
       );
     }
 

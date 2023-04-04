@@ -110,7 +110,9 @@ export default class ReactComponentFileWriter {
     );
     const joinedElements = elements.join("\n");
     const wrappedElements =
-      elements.length > 1 ? `<>${joinedElements}</>` : joinedElements;
+      elements.length > 1 || TypeGuards.isRepeaterState(componentTree[0])
+        ? `<>${joinedElements}</>`
+        : joinedElements;
     return Writers.returnStatement(wrappedElements);
   }
 

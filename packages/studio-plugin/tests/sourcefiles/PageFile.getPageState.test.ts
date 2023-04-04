@@ -17,10 +17,10 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   let propShape: PropShape = {};
   if (filepath?.includes("ComplexBanner")) {
     propShape = {
-      title: { type: PropValueType.string, doc: "jsdoc" },
-      num: { type: PropValueType.number },
-      bool: { type: PropValueType.boolean },
-      bgColor: { type: PropValueType.HexColor },
+      title: { type: PropValueType.string, doc: "jsdoc", required: false },
+      num: { type: PropValueType.number, required: false },
+      bool: { type: PropValueType.boolean, required: false },
+      bgColor: { type: PropValueType.HexColor, required: false },
     };
   } else if (filepath?.includes("NestedBanner")) {
     propShape = {};
@@ -91,6 +91,23 @@ describe("getPageState", () => {
     );
   });
 
+  it("correctly parses page with repeater", () => {
+    const pageFile = createPageFile("repeaterPage");
+    const result = pageFile.getPageState();
+
+    expect(result.componentTree).toContainEqual({
+      kind: ComponentStateKind.Repeater,
+      uuid: "mock-uuid-1",
+      parentUUID: "mock-uuid-0",
+      listExpression: "document.services",
+      repeatedComponent: {
+        ...componentTree[1],
+        uuid: undefined,
+        parentUUID: undefined,
+      },
+    });
+  });
+
   it("correctly parses page with nested banner components", () => {
     const pageFile = createPageFile("nestedBannerPage");
     const result = pageFile.getPageState();
@@ -159,7 +176,7 @@ describe("getPageState", () => {
       );
     });
 
-    it("throws an error when a JsxExpression is found on the page", () => {
+    it("throws an error when a non-map JsxExpression is found on the page", () => {
       const pageFile = createPageFile("jsxExpressionPage");
 
       expect(() => pageFile.getPageState()).toThrowError(
@@ -168,12 +185,11 @@ describe("getPageState", () => {
       );
     });
 
-    it("throws an error when a JsxExpression is found on the page", () => {
-      const pageFile = createPageFile("jsxExpressionPage");
+    it("throws an error when a Repeater tries to repeat a built-in component", () => {
+      const pageFile = createPageFile("builtInRepeaterPage");
 
       expect(() => pageFile.getPageState()).toThrowError(
-        'Jsx nodes of kind "JsxExpression" are not supported for direct use' +
-          " in page files except for `map` function expressions."
+        "Error parsing map expression: repetition of built-in components is not supported."
       );
     });
 
