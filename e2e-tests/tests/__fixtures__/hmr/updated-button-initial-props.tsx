@@ -3,7 +3,7 @@ export interface ButtonProps {
 }
 
 export const initialProps: ButtonProps = {
-  className: "px-2",
+  className: "px-4",
 };
 
 export default function Button(props: ButtonProps) {

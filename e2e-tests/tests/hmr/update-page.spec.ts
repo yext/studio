@@ -3,7 +3,7 @@ import { studioTest } from "../infra/studioTest.js";
 import fs from "fs";
 
 const updatedPage = fs.readFileSync(
-  "./tests/__fixtures__/hmr-updated-page.tsx",
+  "./tests/__fixtures__/hmr/updated-universal-page.tsx",
   "utf-8"
 );
 

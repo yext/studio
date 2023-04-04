@@ -62,14 +62,35 @@ export default class StudioPlaywrightPage {
     await this.addElementButton.click();
     await expect(this.page).toHaveScreenshot();
 
-    await this.page.getByText(category).click();
-    await expect(this.page).toHaveScreenshot();
+    const categoryButton = this.page.getByRole("button", { name: category });
+    if (await categoryButton.isEnabled()) {
+      await categoryButton.click();
+      await expect(this.page).toHaveScreenshot();
+    }
 
     await this.page
       .getByRole("button", {
         name: `Add ${elementName} Element`,
       })
       .click();
+    await this.addElementButton.click();
+  }
+
+  async setActiveComponent(componentName: string, componentIndex = 0) {
+    const components = await this.page.getByText(componentName).all();
+    const component = components[componentIndex];
+    await component.click();
+  }
+
+  async getStringPropValue(
+    propName: string,
+    componentName: string,
+    componentIndex?: number
+  ) {
+    await this.setActiveComponent(componentName, componentIndex);
+    await this.page.getByRole("button", { name: "Content" }).click();
+    const input = this.page.getByRole("textbox", { name: propName });
+    return input.getAttribute("value");
   }
 
   async save() {

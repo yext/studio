@@ -84,6 +84,7 @@ function Option<T extends string>({
       key={option}
       onClick={onClickCallback}
       className={isSelected ? cssClasses?.selectedOption : cssClasses?.option}
+      aria-label={option}
     >
       {icon && <div className="mr-2">{icon}</div>}
     </button>
