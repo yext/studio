@@ -66,11 +66,8 @@ export default class StudioActions {
     return this.getComponentState(this.getComponentTree(), activeComponentUUID);
   };
 
-  getActiveComponentHasChildren = () => {
-    const { activeComponentUUID } = this.getPages();
-    return this.getComponentTree()?.some(
-      (c) => c.parentUUID === activeComponentUUID
-    );
+  getComponentHasChildren = (uuid: string) => {
+    return this.getComponentTree()?.some((c) => c.parentUUID === uuid);
   };
 
   getComponentMetadata = (componentState?: ComponentState) => {
