@@ -1,4 +1,8 @@
-import { ComponentStateKind } from "../../src/types/ComponentState";
+import {
+  StandardComponentState,
+  ComponentStateKind,
+  RepeaterState,
+} from "../../src/types/ComponentState";
 import {
   getComponentPath,
   getModulePath,
@@ -27,10 +31,12 @@ const propShapeMultiFields: PropShape = {
   complexBannerText: {
     type: PropValueType.string,
     doc: "some banner title!",
+    required: false,
   },
   complexBannerBool: {
     type: PropValueType.boolean,
     doc: "some boolean to toggle",
+    required: false,
   },
 };
 
@@ -62,7 +68,7 @@ describe("updateFile", () => {
     it("adds top-level sibling component", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const filepath = getPagePath("updatePageFile/PageWithAComponent");
-      const commonComplexBannerState = {
+      const commonComplexBannerState: Omit<StandardComponentState, "uuid"> = {
         kind: ComponentStateKind.Standard,
         componentName: "ComplexBanner",
         props: {},
@@ -109,6 +115,35 @@ describe("updateFile", () => {
           getPagePath("updatePageFile/PageWithNestedComponents"),
           "utf-8"
         )
+      );
+    });
+
+    it("can write repeater component", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const repeaterState: RepeaterState = {
+        kind: ComponentStateKind.Repeater,
+        uuid: "mock-uuid-0",
+        listExpression: "document.services",
+        repeatedComponent: {
+          kind: ComponentStateKind.Standard,
+          componentName: "ComplexBanner",
+          props: {},
+          metadataUUID: "mock-metadata-uuid",
+        },
+      };
+
+      const filepath = getPagePath("updatePageFile/PageWithAComponent");
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "IndexPage"
+      ).updateFile({
+        componentTree: [repeaterState],
+        cssImports: [],
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithAComponent.tsx"),
+        fs.readFileSync(getPagePath("updatePageFile/PageWithRepeater"), "utf-8")
       );
     });
 
@@ -276,6 +311,7 @@ describe("updateFile", () => {
             complexBannerText: {
               type: PropValueType.string,
               doc: "title for complex banner",
+              required: false,
             },
           },
           componentTree: [complexBannerComponent],
@@ -333,6 +369,7 @@ describe("updateFile", () => {
             complexBannerText: {
               type: PropValueType.string,
               doc: "title for complex banner",
+              required: false,
             },
           },
           initialProps: {

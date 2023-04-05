@@ -1,3 +1,4 @@
 tests/__fixtures__/PageFile/noReturnParenthesesPage.tsx
+tests/__fixtures__/PageFile/repeaterPage.tsx
 lib/
 coverage/

@@ -1,6 +1,6 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../../src/types/PropShape";
-import { PropValueType } from "../../src/types/PropValues";
+import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import StaticParsingHelpers, {
   ParsedInterfaceKind,
 } from "../../src/parsers/helpers/StaticParsingHelpers";
@@ -53,8 +53,26 @@ describe("parseObjectLiteral", () => {
 
 describe("parseJsxAttributes", () => {
   const propShape: PropShape = {
-    title: { type: PropValueType.string, doc: "jsdoc" },
+    title: { type: PropValueType.string, doc: "jsdoc", required: false },
   };
+
+  it("skips special React props", () => {
+    const { sourceFile } = createTestSourceFile(
+      `function Test() { return <Banner title="Name" key={1} />; }`
+    );
+    const jsxAttributes = sourceFile
+      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+      .getAttributes();
+    expect(
+      StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
+    ).toEqual({
+      title: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.string,
+        value: "Name",
+      },
+    });
+  });
 
   it("throws an error if a prop type isn't found", () => {
     const { sourceFile } = createTestSourceFile(
