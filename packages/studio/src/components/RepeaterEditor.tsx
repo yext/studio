@@ -15,12 +15,12 @@ export default function RepeaterEditor({
   componentState,
 }: RepeaterEditorProps): JSX.Element {
   const [
-    activeComponentHasChildren,
+    hasChildren,
     updateRepeaterListExpression,
     addRepeater,
     removeRepeater,
   ] = useStudioStore((store) => [
-    store.actions.getActiveComponentHasChildren(),
+    store.actions.getComponentHasChildren(componentState.uuid),
     store.actions.updateRepeaterListExpression,
     store.actions.addRepeater,
     store.actions.removeRepeater,
@@ -54,10 +54,10 @@ export default function RepeaterEditor({
         <Toggle
           id={tooltipAnchorID}
           checked={isChecked}
-          disabled={activeComponentHasChildren}
+          disabled={hasChildren}
           onToggle={onToggle}
         />
-        {activeComponentHasChildren && (
+        {hasChildren && (
           <Tooltip
             anchorId={tooltipAnchorID}
             content="Unable to list a container with children"

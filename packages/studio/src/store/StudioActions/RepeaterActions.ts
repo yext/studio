@@ -12,11 +12,12 @@ export default class RepeaterActions {
    * Turns the standard component or module into a repeater.
    */
   addRepeater = (componentState: StandardOrModuleComponentState) => {
+    const { uuid, parentUUID, ...remainingComponentState } = componentState;
     const newComponentState: RepeaterState = {
       kind: ComponentStateKind.Repeater,
-      uuid: componentState.uuid,
-      parentUUID: componentState.parentUUID,
-      repeatedComponent: componentState,
+      uuid,
+      parentUUID,
+      repeatedComponent: remainingComponentState,
       listExpression: "",
     };
     this.studioActions.replaceComponentState(

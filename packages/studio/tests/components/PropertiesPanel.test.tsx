@@ -12,6 +12,7 @@ import PropertiesPanel, {
   getPropValueKind,
 } from "../../src/components/PropertiesPanel";
 import { render, screen } from "@testing-library/react";
+import { mockRepeaterActiveComponent } from "../__utils__/mockRepeaterActiveComponent";
 
 it("does not render prop editor(s) for fragment component", () => {
   mockStoreActiveComponent({
@@ -85,4 +86,36 @@ it("renders Module Actions for Active Module", () => {
 
 it("getPropValueKind works as expected", () => {
   expect(getPropValueKind()).toBe(PropValueKind.Literal);
+});
+
+describe("Repeaters", () => {
+  it("renders repeated component's props", () => {
+    mockRepeaterActiveComponent();
+    render(<PropertiesPanel />);
+    screen.getByText("num");
+    expect(screen.getByRole("spinbutton")).toHaveValue(5);
+  });
+
+  it("renders Create Module button for a repeated component", () => {
+    mockRepeaterActiveComponent();
+    render(<PropertiesPanel />);
+    expect(screen.getAllByRole("button")).toHaveLength(1);
+    screen.getByRole("button", { name: "Create Module" });
+  });
+
+  it("renders Module Actions for a repeated module", () => {
+    mockRepeaterActiveComponent(true);
+    render(<PropertiesPanel />);
+    expect(screen.getAllByRole("button")).toHaveLength(3);
+    const editButton = screen.getByRole("button", { name: "Edit Module Mod" });
+    expect(editButton).toBeEnabled();
+    const detachButton = screen.getByRole("button", {
+      name: "Detach Module Mod",
+    });
+    expect(detachButton).toBeDisabled();
+    const deleteButton = screen.getByRole("button", {
+      name: "Delete Module file",
+    });
+    expect(deleteButton).toBeDisabled();
+  });
 });

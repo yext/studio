@@ -3,7 +3,11 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import { getPropValueKind } from "../../src/components/ContentPanel";
+import { render, screen } from "@testing-library/react";
+import ContentPanel, {
+  getPropValueKind,
+} from "../../src/components/ContentPanel";
+import { mockRepeaterActiveComponent } from "../__utils__/mockRepeaterActiveComponent";
 
 describe("getPropValueKind works as expected", () => {
   it("returns Literal for string union prop", () => {
@@ -24,4 +28,11 @@ describe("getPropValueKind works as expected", () => {
 
     expect(getPropValueKind(stringMetadata)).toBe(PropValueKind.Expression);
   });
+});
+
+it("renders repeated component's props for a Repeater", () => {
+  mockRepeaterActiveComponent();
+  render(<ContentPanel />);
+  screen.getByText("text");
+  expect(screen.getAllByRole("textbox")[0]).toHaveValue("test");
 });
