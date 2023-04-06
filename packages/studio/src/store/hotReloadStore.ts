@@ -1,5 +1,6 @@
 import { StudioData, StudioHMRPayload } from "@yext/studio-plugin";
 import useStudioStore from "./useStudioStore";
+import removeTopLevelFragments from "../utils/removeTopLevelFragments";
 
 /**
  * A handler for custom Studio HMR events.
@@ -34,16 +35,21 @@ function fullSync(studioData: StudioData) {
 }
 
 function syncFileMetadata(studioData: StudioData) {
+  const UUIDToFileMetadata = removeTopLevelFragments(
+    studioData.UUIDToFileMetadata
+  );
   useStudioStore.setState((store) => {
-    store.fileMetadatas.UUIDToFileMetadata = studioData.UUIDToFileMetadata;
-    store.previousSave.fileMetadatas.UUIDToFileMetadata =
-      studioData.UUIDToFileMetadata;
+    store.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
+    store.previousSave.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
   });
 }
 
 function syncPages(studioData: StudioData) {
+  const pageNameToPageState = removeTopLevelFragments(
+    studioData.pageNameToPageState
+  );
   useStudioStore.setState((store) => {
-    store.pages.pages = studioData.pageNameToPageState;
+    store.pages.pages = pageNameToPageState;
     store.pages.pendingChanges.pagesToRemove = new Set();
     store.pages.pendingChanges.pagesToUpdate = new Set();
     store.pages.activeComponentUUID = undefined;

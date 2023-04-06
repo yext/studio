@@ -6,13 +6,14 @@ import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
+import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
 )?.[0];
 
 const initialStates: PageSliceStates = {
-  pages: initialStudioData.pageNameToPageState,
+  pages: removeTopLevelFragments(initialStudioData.pageNameToPageState),
   activePageName: firstPageEntry?.[0],
   activeEntityFile: undefined,
   activeComponentUUID: undefined,

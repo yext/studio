@@ -16,7 +16,7 @@ export const config: TemplateConfig = {
 
 export default function UniversalPage({ document }: TemplateProps) {
   return (
-    <div>
+    <>
       {document.services.map((item, index) => (
         <Banner title={`${item}!`} key={index} />
       ))}
@@ -29,6 +29,6 @@ export default function UniversalPage({ document }: TemplateProps) {
         document={document}
       />
       <Banner nestedProp={{ egg: "eggyweggy" }} />
-    </div>
+    </>
   );
 }
