@@ -17,6 +17,13 @@ it("removes top level fragments from a PageState record", () => {
     metadataUUID: "banner-metadata-uuid",
     parentUUID: "fragment-uuid",
   };
+
+  const childFragment: ComponentState = {
+    kind: ComponentStateKind.Fragment,
+    uuid: "child-fragment-uuid",
+    parentUUID: "fragment-uuid",
+  };
+
   const page: PageState = {
     cssImports: [],
     entityFiles: [],
@@ -27,6 +34,7 @@ it("removes top level fragments from a PageState record", () => {
         uuid: "fragment-uuid",
       },
       childComponent,
+      childFragment,
     ],
   };
 
@@ -35,6 +43,10 @@ it("removes top level fragments from a PageState record", () => {
   expect(updatedPageRecord.MyPage.componentTree).toEqual([
     {
       ...childComponent,
+      parentUUID: undefined,
+    },
+    {
+      ...childFragment,
       parentUUID: undefined,
     },
   ]);
