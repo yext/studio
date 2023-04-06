@@ -8,16 +8,16 @@ import {
 } from "@yext/studio-plugin";
 import removeTopLevelFragments from "../../src/utils/removeTopLevelFragments";
 
-it("removes top level fragments from a PageState record", () => {
-  const childComponent: StandardComponentState = {
-    kind: ComponentStateKind.Standard,
-    uuid: "child-of-fragment",
-    componentName: "Banner",
-    props: {},
-    metadataUUID: "banner-metadata-uuid",
-    parentUUID: "fragment-uuid",
-  };
+const childComponent: StandardComponentState = {
+  kind: ComponentStateKind.Standard,
+  uuid: "child-of-fragment",
+  componentName: "Banner",
+  props: {},
+  metadataUUID: "banner-metadata-uuid",
+  parentUUID: "fragment-uuid",
+};
 
+it("removes top level fragments from a PageState record", () => {
   const childFragment: ComponentState = {
     kind: ComponentStateKind.Fragment,
     uuid: "child-fragment-uuid",
@@ -53,14 +53,6 @@ it("removes top level fragments from a PageState record", () => {
 });
 
 it("removes top level fragments from a FileMetadata record", () => {
-  const childComponent: StandardComponentState = {
-    kind: ComponentStateKind.Standard,
-    uuid: "child-of-fragment",
-    componentName: "Banner",
-    props: {},
-    metadataUUID: "banner-metadata-uuid",
-    parentUUID: "fragment-uuid",
-  };
   const componentTree: ComponentState[] = [
     {
       kind: ComponentStateKind.Fragment,
