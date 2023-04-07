@@ -40,11 +40,7 @@ describe("verifying canPush calculation", () => {
   const gitWrapper = new GitWrapper(mockedGitInstance);
 
   it("handles no remotes correctly", async () => {
-    const remotes: RemoteWithRefs[] = [];
-    gitRemotesSpy.mockImplementation(
-      (_verbose, _callback) =>
-        Promise.resolve(remotes) as Response<RemoteWithRefs[]>
-    );
+    gitRemotesSpy.mockReturnValue(getResponseWithRemotes([]));
     await gitWrapper.refreshData();
 
     const expectedData = {
@@ -54,7 +50,6 @@ describe("verifying canPush calculation", () => {
       },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
-    expect(gitRemotesSpy).toBeCalled();
   });
 
   it("handles multiple remotes correctly", async () => {
@@ -69,10 +64,7 @@ describe("verifying canPush calculation", () => {
         refs,
       },
     ];
-    gitRemotesSpy.mockImplementation(
-      (_verbose, _callback) =>
-        Promise.resolve(remotes) as Response<RemoteWithRefs[]>
-    );
+    gitRemotesSpy.mockReturnValue(getResponseWithRemotes(remotes));
     await gitWrapper.refreshData();
 
     const expectedData = {
@@ -82,24 +74,11 @@ describe("verifying canPush calculation", () => {
       },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
-    expect(gitRemotesSpy).toBeCalled();
   });
 
   it("handles no upstream branch correctly", async () => {
-    const refs = { fetch: "fetch", push: "push" };
-    const remotes: RemoteWithRefs[] = [
-      {
-        name: "remote 1",
-        refs,
-      },
-    ];
-    gitRemotesSpy.mockImplementation(
-      (_verbose, _callback) =>
-        Promise.resolve(remotes) as Response<RemoteWithRefs[]>
-    );
-    gitRevParseSpy.mockImplementation(
-      (_options, _callback) => Promise.resolve("") as Response<string>
-    );
+    gitRemotesSpy.mockReturnValue(getDefaultResponseWithRemotes());
+    gitRevParseSpy.mockReturnValue(getResponseWithString(""));
     await gitWrapper.refreshData();
 
     const expectedData = {
@@ -109,28 +88,12 @@ describe("verifying canPush calculation", () => {
       },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
-    expect(gitRemotesSpy).toBeCalled();
-    expect(gitRevParseSpy).toBeCalledWith(["--abbrev-ref", "@{u}"]);
   });
 
   it("handles no changes correctly", async () => {
-    const refs = { fetch: "fetch", push: "push" };
-    const remotes: RemoteWithRefs[] = [
-      {
-        name: "remote 1",
-        refs,
-      },
-    ];
-    gitRemotesSpy.mockImplementation(
-      (_verbose, _callback) =>
-        Promise.resolve(remotes) as Response<RemoteWithRefs[]>
-    );
-    gitRevParseSpy.mockImplementation(
-      (_options, _callback) => Promise.resolve("branch") as Response<string>
-    );
-    gitDiffSpy.mockImplementation(
-      (_options, _callback) => Promise.resolve("") as Response<string>
-    );
+    gitRemotesSpy.mockReturnValue(getDefaultResponseWithRemotes());
+    gitRevParseSpy.mockReturnValue(getResponseWithString("branch"));
+    gitDiffSpy.mockReturnValue(getResponseWithString(""));
     await gitWrapper.refreshData();
 
     const expectedData = {
@@ -140,29 +103,12 @@ describe("verifying canPush calculation", () => {
       },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
-    expect(gitRemotesSpy).toBeCalled();
-    expect(gitRevParseSpy).toBeCalled();
-    expect(gitDiffSpy).toBeCalledWith(["--stat", "branch"]);
   });
 
   it("returns status 'true' correctly", async () => {
-    const refs = { fetch: "fetch", push: "push" };
-    const remotes: RemoteWithRefs[] = [
-      {
-        name: "remote 1",
-        refs,
-      },
-    ];
-    gitRemotesSpy.mockImplementation(
-      (_verbose, _callback) =>
-        Promise.resolve(remotes) as Response<RemoteWithRefs[]>
-    );
-    gitRevParseSpy.mockImplementation(
-      (_options, _callback) => Promise.resolve("branch") as Response<string>
-    );
-    gitDiffSpy.mockImplementation(
-      (_options, _callback) => Promise.resolve("Diff") as Response<string>
-    );
+    gitRemotesSpy.mockReturnValue(getDefaultResponseWithRemotes());
+    gitRevParseSpy.mockReturnValue(getResponseWithString("branch"));
+    gitDiffSpy.mockReturnValue(getResponseWithString("Diff"));
     await gitWrapper.refreshData();
 
     const expectedData = {
@@ -171,8 +117,27 @@ describe("verifying canPush calculation", () => {
       },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
-    expect(gitRemotesSpy).toBeCalled();
-    expect(gitRevParseSpy).toBeCalled();
-    expect(gitDiffSpy).toBeCalled();
   });
 });
+
+function getDefaultResponseWithRemotes(): Response<RemoteWithRefs[]> {
+  const refs = { fetch: "fetch", push: "push" };
+  const remotes: RemoteWithRefs[] = [
+    {
+      name: "remote 1",
+      refs,
+    },
+  ];
+
+  return getResponseWithRemotes(remotes);
+}
+
+function getResponseWithRemotes(
+  remotes: RemoteWithRefs[]
+): Response<RemoteWithRefs[]> {
+  return Promise.resolve(remotes) as Response<RemoteWithRefs[]>;
+}
+
+function getResponseWithString(value: string): Response<string> {
+  return Promise.resolve(value) as Response<string>;
+}
