@@ -10,7 +10,7 @@ export default class GitWrapper {
   }
 
   async deploy() {
-    await this.git.add("-A");
+    await this.git.add(".");
     await this.git.commit("Yext Studio Commit");
     await this.git.push();
   }

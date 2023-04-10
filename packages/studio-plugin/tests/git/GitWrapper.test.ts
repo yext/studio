@@ -26,7 +26,7 @@ it("invokes Git commands correctly on deploy", async () => {
 
   await gitWrapper.deploy();
 
-  expect(gitAddSpy).toBeCalledWith("-A");
+  expect(gitAddSpy).toBeCalledWith(".");
   expect(gitCommitSpy).toBeCalledWith("Yext Studio Commit");
   expect(gitPushSpy).toBeCalled();
 });

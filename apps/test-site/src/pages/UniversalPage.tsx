@@ -24,7 +24,6 @@ export default function UniversalPage({ document }: TemplateProps) {
         <Button bgColor="bg-red-100" />
       </Container>
       <AceComponent text="ace" />
-      <Banner bgColor="#abcdef" num={5} bool={true} title="initial title" />
       <ContainerWithButtons
         bannerTitle={document.address.city}
         document={document}

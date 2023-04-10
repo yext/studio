@@ -22,7 +22,7 @@ export default async function setupGitBranch(
   let originalRef = await git.revparse(["HEAD"]);
   const hasChanges = !!(await git.status(["--porcelain"]));
   if (hasChanges) {
-    await git.add(["-A"]);
+    await git.add("-A");
     originalRef = (
       await git.commit(
         "Preserving uncommitted changes before running e2e-tests"
