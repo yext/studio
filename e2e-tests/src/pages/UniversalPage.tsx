@@ -3,13 +3,10 @@ import Container from "../components/Container";
 
 export default function UniversalPage() {
   return (
-    <>
-      <Container />
-      <div>
-        <Container>
-          <Banner />
-        </Container>
-      </div>
-    </>
+    <div>
+      <Container>
+        <Banner />
+      </Container>
+    </div>
   );
 }
