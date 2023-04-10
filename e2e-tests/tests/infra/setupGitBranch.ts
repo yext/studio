@@ -1,15 +1,7 @@
-import path from "path";
-import { fileURLToPath } from "url";
-import { dirname } from "path";
-
 import simpleGit from "simple-git";
 import { execSync } from "child_process"
 import { TestInfo } from "@playwright/test";
 const git = simpleGit();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const e2eSrcPath = path.resolve(__dirname, "../../src/*");
 
 /**
  * Wraps the given test run method with a bespoke git branch, which will be
