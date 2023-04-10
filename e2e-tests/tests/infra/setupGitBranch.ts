@@ -16,14 +16,18 @@ const e2eSrcPath = path.resolve(__dirname, "../../src/*");
  */
 export default async function setupGitBranch(
   testInfo: TestInfo,
+  createRemote: boolean,
   run: () => Promise<void>
 ) {
   const originalBranch = await git.revparse(["--abbrev-ref", "HEAD"]);
+  console.log('original branch', originalBranch)
   const testFile = testInfo.file.split("/").at(-1);
   const testBranch = `e2e-test_${testFile}_${Date.now()}`;
   console.log("checking out", testBranch);
   await git.checkout(["-b", testBranch]);
-  await git.push(["-u", "origin", "HEAD"]);
+  if (createRemote) {
+    await git.push(["-u", "origin", "HEAD"]);
+  }
 
   try {
     await run();
@@ -32,9 +36,9 @@ export default async function setupGitBranch(
     await git.commit(testInfo.title);
     await git.checkout(originalBranch);
 
-    await Promise.all([
-      git.branch(["-D", testBranch]),
-      git.push(["--delete", "origin", testBranch]),
-    ]);
+    // await Promise.all([
+    //   git.branch(["-D", testBranch]),
+    //   createRemote && git.push(["--delete", "origin", testBranch]),
+    // ]);
   }
 }
