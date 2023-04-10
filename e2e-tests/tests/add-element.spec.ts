@@ -7,16 +7,13 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest.only(
-  "can add a container component",
-  async ({ page, studioPage }) => {
-    const previews = page.getByText("I'm a container:");
-    await expect(previews).toHaveCount(1);
-    await studioPage.addElement("Container", "Containers");
-    await expect(previews).toHaveCount(2);
-    await expect(page).toHaveScreenshot();
-    await studioPage.saveButton.click();
-    await expect("./src/pages/UniversalPage.tsx").toHaveContents(expectedPage);
-    await expect(page).toHaveScreenshot();
-  }
-);
+studioTest("can add a container component", async ({ page, studioPage }) => {
+  const previews = page.getByText("I'm a container:");
+  await expect(previews).toHaveCount(1);
+  await studioPage.addElement("Container", "Containers");
+  await expect(previews).toHaveCount(2);
+  await expect(page).toHaveScreenshot();
+  await studioPage.saveButton.click();
+  await expect("./src/pages/UniversalPage.tsx").toHaveContents(expectedPage);
+  await expect(page).toHaveScreenshot();
+});

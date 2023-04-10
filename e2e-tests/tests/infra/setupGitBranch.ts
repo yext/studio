@@ -1,9 +1,8 @@
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-
 import simpleGit from "simple-git";
-import { execSync } from "child_process"
+import { execSync } from "child_process";
 import { TestInfo } from "@playwright/test";
 const git = simpleGit();
 
@@ -20,18 +19,18 @@ export default async function setupGitBranch(
   createRemote: boolean,
   run: () => Promise<void>
 ) {
-  const originalBranch = execSync('git branch --show-current').toString().trim();
+  const originalBranch = execSync("git branch --show-current")
+    .toString()
+    .trim();
   let originalRef = await git.revparse(["HEAD"]);
-  const uncommittedChanges = execSync('git status --porcelain').toString().trim();
-  console.log({ uncommittedChanges })
+  const uncommittedChanges = execSync("git status --porcelain")
+    .toString()
+    .trim();
   if (uncommittedChanges) {
     await git.add("-A");
-    await git.commit(
-      "Preserving uncommitted changes before running e2e-tests"
-    )
+    await git.commit("Preserving uncommitted changes before running e2e-tests");
     originalRef = await git.revparse(["HEAD"]);
   }
-  console.log("original branch", originalRef);
   const testFile = testInfo.file.split("/").at(-1);
   const testBranch = `e2e-test_${testFile}_${Date.now()}`;
   await git.checkout(["-b", testBranch]);
@@ -42,17 +41,15 @@ export default async function setupGitBranch(
   try {
     await run();
   } finally {
-    // console.log("e2esrcpath", e2eSrcPath);
     await git.add([e2eSrcPath]);
     await git.commit(testInfo.title);
     if (originalBranch) {
-      await git.checkout(originalBranch) 
+      await git.checkout(originalBranch);
     } else {
       await git.checkout(originalRef);
     }
 
     if (uncommittedChanges) {
-      console.log('resetting to HEAD^')
       await git.reset(["HEAD^"]);
     }
     await Promise.all([
