@@ -47,7 +47,7 @@ export default async function setupGitBranch(
     // await git.commit(testInfo.title);
     await git.checkout(originalRef);
     if (hasChanges) {
-      await git.reset(["--soft", "HEAD^"]);
+      await git.reset(["HEAD^"]);
     }
     await Promise.all([
       git.branch(["-D", testBranch]),
