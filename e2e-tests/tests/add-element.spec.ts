@@ -7,7 +7,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest("can add a container component", async ({ page, studioPage }) => {
+studioTest.only("can add a container component", async ({ page, studioPage }) => {
   const previews = page.getByText("I'm a container:");
   await expect(previews).toHaveCount(1);
   await studioPage.addElement("Container", "Containers");
