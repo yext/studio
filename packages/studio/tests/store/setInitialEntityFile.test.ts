@@ -40,5 +40,6 @@ it("sets the initial entity file", async () => {
   );
   expect(useStudioStore.getState().pages.activeEntityData).toEqual({
     employeeCount: 123,
+    favs: ["cat", "dog", "sleep"],
   });
 });
