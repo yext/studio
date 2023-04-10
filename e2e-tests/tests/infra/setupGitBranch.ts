@@ -19,15 +19,19 @@ export default async function setupGitBranch(
   createRemote: boolean,
   run: () => Promise<void>
 ) {
-  let originalRef = await git.revparse(['HEAD'])
-  const hasChanges = !!(await git.status(["--porcelain"]))
+  let originalRef = await git.revparse(["HEAD"]);
+  const hasChanges = !!(await git.status(["--porcelain"]));
   if (hasChanges) {
-    await git.add(['-A'])
-    originalRef = (await git.commit('Preserving uncommitted changes before running e2e-tests')).commit
+    await git.add(["-A"]);
+    originalRef = (
+      await git.commit(
+        "Preserving uncommitted changes before running e2e-tests"
+      )
+    ).commit;
   }
   const originalBranch = await git.revparse(["--abbrev-ref", "HEAD"]);
-  console.log('original branch', originalBranch, originalRef)
-  console.log('uncommited change')
+  console.log("original branch", originalBranch, originalRef);
+  console.log("uncommited change");
   const testFile = testInfo.file.split("/").at(-1);
   const testBranch = `e2e-test_${testFile}_${Date.now()}`;
   await git.checkout(["-b", testBranch]);
@@ -38,11 +42,13 @@ export default async function setupGitBranch(
   try {
     await run();
   } finally {
+    console.log("e2esrcpath", e2eSrcPath);
     await git.add(e2eSrcPath);
     await git.commit(testInfo.title);
     await git.checkout(originalRef);
-    if (hasChanges)
-    await git.reset(['--soft', 'HEAD^'])
+    if (hasChanges) {
+      await git.reset(["--soft", "HEAD^"]);
+    }
     await Promise.all([
       git.branch(["-D", testBranch]),
       createRemote && git.push(["--delete", "origin", testBranch]),

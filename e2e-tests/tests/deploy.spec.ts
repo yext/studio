@@ -2,7 +2,7 @@ import { expect } from "@playwright/test";
 import { studioTest } from "./infra/studioTest.js";
 
 studioTest.use({
-  createRemote: true
+  createRemote: true,
 });
 
 studioTest("can deploy changes", async ({ page, studioPage }) => {

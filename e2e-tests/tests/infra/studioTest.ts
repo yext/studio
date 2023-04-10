@@ -11,7 +11,7 @@ type Fixtures = {
    * Whether the test branch should be pushed to the remote.
    * If true, the remote branch will be cleaned up at the end of the testrun.
    */
-  createRemote: boolean
+  createRemote: boolean;
 };
 
 /**
