@@ -27,6 +27,7 @@ export default async function setupGitBranch(
   }
   const originalBranch = await git.revparse(["--abbrev-ref", "HEAD"]);
   console.log('original branch', originalBranch, originalRef)
+  console.log('uncommited change')
   const testFile = testInfo.file.split("/").at(-1);
   const testBranch = `e2e-test_${testFile}_${Date.now()}`;
   await git.checkout(["-b", testBranch]);
