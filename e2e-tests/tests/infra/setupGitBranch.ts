@@ -43,7 +43,7 @@ export default async function setupGitBranch(
     await run();
   } finally {
     console.log("e2esrcpath", e2eSrcPath);
-    await git.add(e2eSrcPath);
+    await git.add([e2eSrcPath]);
     await git.commit(testInfo.title);
     await git.checkout(originalRef);
     if (hasChanges) {
