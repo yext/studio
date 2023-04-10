@@ -26,11 +26,10 @@ export default async function setupGitBranch(
   console.log({ uncommittedChanges })
   if (uncommittedChanges) {
     await git.add("-A");
-    originalRef = (
-      await git.commit(
-        "Preserving uncommitted changes before running e2e-tests"
-      )
-    ).commit;
+    await git.commit(
+      "Preserving uncommitted changes before running e2e-tests"
+    )
+    originalRef = await git.revparse(["HEAD"]);
   }
   console.log("original branch", originalRef);
   const testFile = testInfo.file.split("/").at(-1);
