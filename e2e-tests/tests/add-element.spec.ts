@@ -13,7 +13,7 @@ studioTest("can add a container component", async ({ page, studioPage }) => {
   await studioPage.addElement("Container", "Containers");
   await expect(previews).toHaveCount(2);
   await expect(page).toHaveScreenshot();
-  await studioPage.save();
+  await studioPage.saveButton.click();
   await expect("./src/pages/UniversalPage.tsx").toHaveContents(expectedPage);
   await expect(page).toHaveScreenshot();
 });

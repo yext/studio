@@ -17,7 +17,7 @@ studioTest(
     fs.writeFileSync("./src/pages/UniversalPage.tsx", updatedPage);
     await expect(containerPreviews).toHaveCount(0);
     await expect(buttonPreviews).toHaveCount(2);
-    await expect(studioPage.saveButton).toBeDisabled();
+    await expect(studioPage.saveButton.button).toBeDisabled();
     await expect(page).toHaveScreenshot();
   }
 );

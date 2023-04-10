@@ -1,25 +1,51 @@
 import { test as base } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
-import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import simpleGit from "simple-git";
+
+const git = simpleGit();
+let originalBranchName: string;
+let testBranchName: string;
+const branchesToDelete: string[] = [];
+
+base.beforeAll(async () => {
+  originalBranchName = await git.revparse(["--abbrev-ref", "HEAD"]);
+});
+
+base.beforeEach(async ({}, testInfo) => {
+  const testFile = testInfo.file.split("/").at(-1);
+  testBranchName = `e2e-test_${testFile}_${Date.now()}`;
+  console.log("checking out", testBranchName);
+  await git.checkout(["-b", testBranchName]);
+  await git.push(["-u", "origin", "HEAD"]);
+  branchesToDelete.push(testBranchName);
+});
+
+base.afterEach(async ({}, testInfo) => {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+  const e2eSrcPath = path.resolve(__dirname, "../../src/*");
+  await git.add(e2eSrcPath);
+  await git.commit(testInfo.title);
+  await git.checkout(originalBranchName);
+});
+
+base.afterAll(async () => {
+  await Promise.all(
+    branchesToDelete.flatMap((branchName) => {
+      return [
+        git.branch(["-D", branchName]),
+        git.push(["--delete", "origin", branchName]),
+      ];
+    })
+  );
+});
 
 type Fixtures = {
   studioPage: StudioPlaywrightPage;
 };
-
-const initialState = {
-  pages: getInitialDirState("./src/pages"),
-  components: getInitialDirState("./src/components"),
-};
-
-function getInitialDirState(dirPath: string) {
-  return Object.fromEntries(
-    fs.readdirSync(dirPath, "utf-8").map((filename) => {
-      const pathFromRoot = path.join(dirPath, filename);
-      return [pathFromRoot, fs.readFileSync(pathFromRoot, "utf-8")];
-    })
-  );
-}
 
 /**
  * studioTest extends the base playwright test by providing a StudioPage Page Object Model,
@@ -27,26 +53,8 @@ function getInitialDirState(dirPath: string) {
  */
 export const studioTest = base.extend<Fixtures>({
   studioPage: async ({ page }, use) => {
-    try {
-      await page.goto("./");
-      const studioPage = new StudioPlaywrightPage(page);
-      // Run the test.
-      await use(studioPage);
-    } finally {
-      unlinkDir("./src/pages");
-      unlinkDir("./src/components");
-      Object.values(initialState).forEach((slice) =>
-        Object.entries(slice).forEach(([pathFromRoot, contents]) =>
-          fs.writeFileSync(pathFromRoot, contents)
-        )
-      );
-    }
+    await page.goto("./");
+    const studioPage = new StudioPlaywrightPage(page);
+    await use(studioPage);
   },
 });
-
-function unlinkDir(dirPath: string) {
-  fs.readdirSync(dirPath, "utf-8").forEach((filename) => {
-    const pathFromRoot = path.join(dirPath, filename);
-    fs.unlinkSync(pathFromRoot);
-  });
-}
