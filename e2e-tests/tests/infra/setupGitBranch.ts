@@ -22,8 +22,9 @@ export default async function setupGitBranch(
 ) {
   const originalBranch = execSync('git branch --show-current').toString().trim();
   let originalRef = await git.revparse(["HEAD"]);
-  const hasChanges = !!(await git.status(["--porcelain"]));
-  if (hasChanges) {
+  const uncommittedChanges = execSync('git status --porcelain').toString().trim();
+  console.log({ uncommittedChanges })
+  if (uncommittedChanges) {
     await git.add("-A");
     originalRef = (
       await git.commit(
@@ -51,7 +52,8 @@ export default async function setupGitBranch(
       await git.checkout(originalRef);
     }
 
-    if (hasChanges) {
+    if (uncommittedChanges) {
+      console.log('resetting to HEAD^')
       await git.reset(["HEAD^"]);
     }
     await Promise.all([
