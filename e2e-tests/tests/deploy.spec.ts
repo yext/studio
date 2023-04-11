@@ -23,7 +23,11 @@ studioTest("can deploy changes", async ({ page, studioPage }) => {
   expect(commitMsg).toEqual("Yext Studio Commit\n");
 });
 
+/**
+ * Gets the numbers of commits between the current remote branch and the given ref.
+ */
 async function getNumCommitsFromRef(ref: string): Promise<number> {
-  const rawOutput = await git.raw(["rev-list", `${ref}..`, "--count"]);
+  const branchName = (await git.raw(["branch", "--show-current"])).trim();
+  const rawOutput = await git.raw(["rev-list", `${ref}..origin/${branchName}`, "--count"]);
   return parseInt(rawOutput.trim());
 }
