@@ -28,6 +28,10 @@ studioTest("can deploy changes", async ({ page, studioPage }) => {
  */
 async function getNumCommitsFromRef(ref: string): Promise<number> {
   const branchName = (await git.raw(["branch", "--show-current"])).trim();
-  const rawOutput = await git.raw(["rev-list", `${ref}..origin/${branchName}`, "--count"]);
+  const rawOutput = await git.raw([
+    "rev-list",
+    `${ref}..origin/${branchName}`,
+    "--count",
+  ]);
   return parseInt(rawOutput.trim());
 }
