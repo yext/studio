@@ -1,17 +1,14 @@
 import { Locator, Page, expect } from "@playwright/test";
+import ToastActionButton from "./ToastActionButton.js";
 
 export default class StudioPlaywrightPage {
-  readonly saveButton: Locator;
   readonly addPageButton: Locator;
   readonly pagesPanel: Locator;
   readonly addElementButton: Locator;
-  readonly successToast: Locator;
+  readonly saveButton: ToastActionButton;
+  readonly deployButton: ToastActionButton;
 
   constructor(private page: Page) {
-    this.saveButton = page.getByRole("button", {
-      name: "Save Changes to Repository",
-    });
-
     this.addPageButton = page.getByRole("button", {
       name: "Add Page",
     });
@@ -22,9 +19,17 @@ export default class StudioPlaywrightPage {
       name: "Open Add Element Menu",
     });
 
-    this.successToast = page
-      .getByRole("alert")
-      .filter({ hasText: "Changes saved successfully." });
+    this.saveButton = new ToastActionButton(
+      this.page,
+      "Changes saved successfully.",
+      "Save Changes to Repository"
+    );
+
+    this.deployButton = new ToastActionButton(
+      this.page,
+      "Deployed successfully.",
+      "Deploy Changes to Repository"
+    );
   }
 
   async addPage(pageName: string) {
@@ -91,14 +96,5 @@ export default class StudioPlaywrightPage {
     await this.page.getByRole("button", { name: "Content" }).click();
     const input = this.page.getByRole("textbox", { name: propName });
     return input.getAttribute("value");
-  }
-
-  async save() {
-    await this.saveButton.click();
-    await expect(() => expect(this.successToast).toHaveCount(1)).toPass({
-      timeout: 15_000,
-    });
-    await this.successToast.click();
-    await expect(this.successToast).toHaveCount(0);
   }
 }

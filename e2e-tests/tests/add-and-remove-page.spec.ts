@@ -9,7 +9,7 @@ studioTest(
     await expect(pageInTree).toHaveCount(1);
     await studioPage.removePage("UniversalPage");
     await expect(pageInTree).toHaveCount(0);
-    await studioPage.save();
+    await studioPage.saveButton.click();
     expect(fs.existsSync("./src/pages/UniversalPage.tsx")).toBeFalsy();
     await expect(page).toHaveScreenshot();
 
@@ -21,7 +21,7 @@ studioTest(
     await studioPage.addPage("UniversalPage");
     await expect(pageInTree).toHaveCount(1);
     await expect(page).toHaveScreenshot();
-    await studioPage.save();
+    await studioPage.saveButton.click();
     const expectedPagePath = "./src/pages/UniversalPage.tsx";
     const expectedPage = "export default function UniversalPage() {}";
     await expect(expectedPagePath).toHaveContents(expectedPage);

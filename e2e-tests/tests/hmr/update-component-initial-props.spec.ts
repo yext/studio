@@ -37,7 +37,7 @@ studioTest(
     ).toEqual("px-4");
     await expect(page).toHaveScreenshot();
 
-    await studioPage.save();
+    await studioPage.saveButton.click();
     await expect("./src/pages/UniversalPage.tsx").toHaveContents(expectedPage);
     await expect(page).toHaveScreenshot();
   }
