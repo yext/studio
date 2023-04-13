@@ -20,7 +20,7 @@ export default function usePreviewProps(
       c && TypeGuards.isStandardOrModuleComponentState(c)
         ? getPreviewProps(
             c.props,
-            getFileMetadata(c.metadataUUID).propShape ?? {},
+            getFileMetadata(c.metadataUUID)?.propShape ?? {},
             {
               ...expressionSources,
               ...(parentItem !== undefined && { item: parentItem }),

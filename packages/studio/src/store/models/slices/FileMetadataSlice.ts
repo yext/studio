@@ -15,7 +15,7 @@ export interface FileMetadataSliceStates {
 
 export interface FileMetadataSliceActions {
   setFileMetadata: (metadataUUID: string, fileMetadata: FileMetadata) => void;
-  getFileMetadata: (metadataUUID: string) => FileMetadata;
+  getFileMetadata: (metadataUUID: string) => FileMetadata | undefined;
   getModuleMetadata: (metadataUUID: string) => ModuleMetadata;
   removeFileMetadata: (metadataUUID: string) => void;
   getComponentMetadata: (metadataUUID: string) => ComponentMetadata;

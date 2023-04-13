@@ -69,15 +69,6 @@ export class FileSystemWriter {
       }
     });
 
-    const getModuleMetadata = (metadataUUID: string): ModuleMetadata => {
-      const metadata = updatedUUIDToFileMetadata[metadataUUID];
-      if (metadata?.kind !== FileMetadataKind.Module) {
-        console.error(metadataUUID, updatedUUIDToFileMetadata)
-        throw new Error("Expected ModuleMetadata");
-      }
-      return metadata;
-    };
-
     const modulesToUpdate = new Set(
       Object.keys(updatedUUIDToFileMetadata).filter((metadataUUID) => {
         const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID]
@@ -87,13 +78,16 @@ export class FileSystemWriter {
           UUIDToFileMetadata[metadataUUID])
       })
     );
-    const getName = (m: ModuleMetadata) => m.filepath.split('/').at(-1)
-    const sortedModules = [...modulesToUpdate].map(m => getModuleMetadata(m)).sort((a, b) => {
-      return getName(a)?.localeCompare(getName(b) ?? '') ?? 0
-    })
-    console.log(sortedModules.map(getName))
-    for (const moduleMetadata of sortedModules) {
-      console.log('writing', moduleMetadata.filepath.split('/').at(-1))
+
+    for (const moduleMetadataUUID of modulesToUpdate) {
+      const getModuleMetadata = (metadataUUID: string): ModuleMetadata => {
+        const metadata = updatedUUIDToFileMetadata[metadataUUID];
+        if (metadata?.kind !== FileMetadataKind.Module) {
+          throw new Error("Expected ModuleMetadata");
+        }
+        return metadata;
+      };
+      const moduleMetadata = getModuleMetadata(moduleMetadataUUID);
       const moduleDependencies = moduleMetadata.componentTree.filter(
         TypeGuards.isModuleState
       ).map(m => getModuleMetadata(m.metadataUUID).filepath);
