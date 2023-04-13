@@ -11,6 +11,7 @@ import { Project } from "ts-morph";
 import lodash from "lodash";
 import path from "path";
 import { TypeGuards } from "../utils";
+import areEqualFileMetadata from "../utils/areEqualFileMetadata";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
@@ -39,17 +40,15 @@ export class FileSystemWriter {
   /**
    * Update the module file's content based on provided module metadata.
    *
-   * @param filepath - path of the module file to update
    * @param moduleMetadata - the updated metadata for the module file
    * @param moduleDependencies - the filepaths of any depended upon modules
    */
   writeToModuleFile(
-    filepath: string,
     moduleMetadata: ModuleMetadata,
     moduleDependencies?: string[]
   ): void {
     FileSystemWriter.openFile(moduleMetadata.filepath);
-    const moduleFile = this.orchestrator.getModuleFile(filepath);
+    const moduleFile = this.orchestrator.getModuleFile(moduleMetadata.filepath);
     moduleFile.updateModuleFile(moduleMetadata, moduleDependencies);
   }
 
@@ -73,6 +72,7 @@ export class FileSystemWriter {
     const getModuleMetadata = (metadataUUID: string): ModuleMetadata => {
       const metadata = updatedUUIDToFileMetadata[metadataUUID];
       if (metadata?.kind !== FileMetadataKind.Module) {
+        console.error(metadataUUID, updatedUUIDToFileMetadata)
         throw new Error("Expected ModuleMetadata");
       }
       return metadata;
@@ -80,43 +80,24 @@ export class FileSystemWriter {
 
     const modulesToUpdate = new Set(
       Object.keys(updatedUUIDToFileMetadata).filter((metadataUUID) => {
-        const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID];
-        if (updatedMetadata.kind !== FileMetadataKind.Module) {
-          return false;
-        }
-        const originalMetadata = UUIDToFileMetadata[metadataUUID];
-        if (lodash.isEqual(originalMetadata, updatedMetadata)) {
-          return false;
-        }
-        return true;
+        const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID]
+        const isModule = updatedMetadata.kind === FileMetadataKind.Module
+        return isModule && !areEqualFileMetadata(
+          updatedMetadata,
+          UUIDToFileMetadata[metadataUUID])
       })
     );
-    let maxLoopsRemaining = modulesToUpdate.size;
-    while (modulesToUpdate.size > 0 && maxLoopsRemaining-- > 0) {
-      for (const metadataUUID of modulesToUpdate.values()) {
-        const moduleMetadata = getModuleMetadata(metadataUUID);
-        const moduleDependencies = moduleMetadata.componentTree.filter(
-          TypeGuards.isModuleState
-        );
-        const numUnresolvedModuleDeps = moduleDependencies.filter((m) => {
-          return modulesToUpdate.has(m.metadataUUID);
-        }).length;
-
-        if (numUnresolvedModuleDeps > 0) {
-          continue;
-        }
-
-        const moduleDependencyPaths = moduleDependencies.map((c) => {
-          return getModuleMetadata(c.metadataUUID).filepath;
-        });
-        this.writeToModuleFile(
-          moduleMetadata.filepath,
-          moduleMetadata,
-          moduleDependencyPaths
-        );
-        this.orchestrator.reloadFile(moduleMetadata.filepath);
-        modulesToUpdate.delete(metadataUUID);
-      }
+    const getName = (m: ModuleMetadata) => m.filepath.split('/').at(-1)
+    const sortedModules = [...modulesToUpdate].map(m => getModuleMetadata(m)).sort((a, b) => {
+      return getName(a)?.localeCompare(getName(b) ?? '') ?? 0
+    })
+    console.log(sortedModules.map(getName))
+    for (const moduleMetadata of sortedModules) {
+      console.log('writing', moduleMetadata.filepath.split('/').at(-1))
+      const moduleDependencies = moduleMetadata.componentTree.filter(
+        TypeGuards.isModuleState
+      ).map(m => getModuleMetadata(m.metadataUUID).filepath);
+      this.writeToModuleFile(moduleMetadata, moduleDependencies);
     }
   }
 

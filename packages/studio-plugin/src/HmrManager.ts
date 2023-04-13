@@ -18,6 +18,7 @@ export default class HmrManager {
    * update the StudioData and send a custom HMR event to the frontend.
    */
   handleHotUpdate(server: ViteDevServer, filepath: string) {
+    console.log('hmr manager handle hot update', filepath)
     if (!filepath.startsWith(this.pathToUserProjectRoot)) {
       return;
     }
