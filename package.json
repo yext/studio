@@ -12,7 +12,7 @@
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
     "autofix": "npx prettier --write --cache . && npx eslint --cache --fix .",
-    "test": "turbo run test --parallel",
+    "test": "turbo run test",
     "playwright": "npm run playwright -w=e2e-tests"
   },
   "devDependencies": {
