@@ -10,7 +10,7 @@ const config: Config = {
   transformIgnorePatterns: ["node_modules/(?!react-tooltip/.*)"],
   setupFilesAfterEnv: ["<rootDir>/tests/__setup__/setup-env.ts"],
   transform: {
-    "^.+\\.(t|j)sx?$": "babel-jest",
+    "\\.[jt]sx?$": "babel-jest",
     "\\.svg$": "<rootDir>/tests/__setup__/svgTransformer.cjs",
   },
 };
