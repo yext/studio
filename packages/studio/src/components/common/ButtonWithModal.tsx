@@ -5,7 +5,7 @@ import InputModal from "./InputModal";
 type ModalType = typeof Modal | typeof InputModal;
 export type renderModalFunction = (
   isOpen: boolean,
-  handleClose: () => void
+  handleClose: () => void | Promise<void>
 ) => ReactElement<Parameters<ModalType>, ModalType>;
 
 interface ButtonWithModalProps {

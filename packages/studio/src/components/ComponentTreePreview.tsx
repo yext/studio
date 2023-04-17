@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { ComponentTreeHelpers, ComponentState } from "@yext/studio-plugin";
 import { ExpressionSources } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
-import useImportedComponents from "../hooks/useImportedComponents";
 import HighlightingContainer from "./HighlightingContainer";
 import ComponentPreview from "./ComponentPreview";
 
@@ -20,7 +19,6 @@ export default function ComponentTreePreview({
   expressionSources,
   renderHighlightingContainer = true,
 }: ComponentTreePreviewProps): JSX.Element {
-  useImportedComponents(componentTree);
   const elements = useComponentTreeElements(
     componentTree,
     expressionSources,

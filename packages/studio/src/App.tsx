@@ -3,8 +3,15 @@ import ActivePagePanel from "./components/ActivePagePanel";
 import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
 import HighlightedPreview from "./components/HighlightedPreview";
+import useImportedComponents from "./hooks/useImportedComponents";
+import useStudioStore from "./store/useStudioStore";
 
 export default function App() {
+  const componentTree = useStudioStore((store) =>
+    store.actions.getComponentTree()
+  );
+  void useImportedComponents(componentTree);
+
   return (
     <div className="App">
       <Toast />

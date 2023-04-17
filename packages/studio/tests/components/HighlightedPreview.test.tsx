@@ -1,4 +1,4 @@
-import { within, screen, render } from "@testing-library/react";
+import { within, screen, render, renderHook } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import HighlightedPreview from "../../src/components/HighlightedPreview";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -16,6 +16,7 @@ import {
   PropValueType,
   RepeaterState,
 } from "@yext/studio-plugin";
+import useImportedComponents from "../../src/hooks/useImportedComponents";
 
 const moduleState: ModuleState = {
   kind: ComponentStateKind.Module,
@@ -46,7 +47,7 @@ describe("renders preview", () => {
   it("renders component tree with nested Component(s)", async () => {
     await mockPreviewState(nestedComponentTree);
     render(<HighlightedPreview />);
-    const container1 = await screen.findByTestId(/Container 1/);
+    const container1 = await screen.findByText(/Container 1/);
     const container2 = await within(container1).findByText(/Container 2/);
     const banner1 = await within(container1).findByText(/Banner 1/);
     const banner2 = await within(container2).findByText(/Banner 2/);
@@ -186,6 +187,7 @@ describe("renders preview", () => {
     ];
     await mockPreviewState(tree);
     render(<HighlightedPreview />);
+    await new Promise((r) => setTimeout(r, 1000));
     const catItemProp = await screen.findByText(/cat/);
     expect(catItemProp).toBeDefined();
     const dogItemProp = await screen.findByText(/dog/);
@@ -201,8 +203,8 @@ it("clicking a component in the preview updates the activeComponentUUID", async 
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     undefined
   );
+  await new Promise((resolve) => setTimeout(resolve, 1500));
   const container1 = await screen.findByText(/Container 1/);
-  screen.debug();
   await userEvent.click(container1);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     "container-uuid"
@@ -256,4 +258,5 @@ async function mockPreviewState(componentTree: ComponentState[]) {
     },
   });
   await useStudioStore.getState().actions.updateActivePage("universalPage");
+  await renderHook(() => useImportedComponents(componentTree)).result.current;
 }

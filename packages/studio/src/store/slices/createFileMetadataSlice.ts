@@ -8,7 +8,6 @@ import {
 import initialStudioData from "virtual:yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { SliceCreator } from "../models/utils";
-import { ImportType } from "../models/ImportType";
 import removeTopLevelFragments from "../../utils/removeTopLevelFragments";
 
 const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
@@ -47,9 +46,15 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     assertIsModuleMetadata(fileMetadata);
     return fileMetadata;
   },
-  setUUIDToImportedComponent: (
-    importedComponents: Record<string, ImportType>
-  ) => set({ UUIDToImportedComponent: importedComponents }),
+  setImportedComponent(uuid, importedComponent) {
+    set((store) => {
+      if (!importedComponent) {
+        delete store.UUIDToFileMetadata[uuid];
+      } else {
+        store.UUIDToImportedComponent[uuid] = importedComponent;
+      }
+    });
+  },
   setComponentTreeInModule(
     metadataUUID: string,
     componentTree: ComponentState[]

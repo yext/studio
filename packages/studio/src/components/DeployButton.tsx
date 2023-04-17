@@ -14,9 +14,9 @@ export default function DeployButton() {
   const [deployInProgress, setDeployInProgress] = useState(false);
   const hasChanges = useHasChanges();
 
-  const handleClick = useCallback(async () => {
+  const handleClick = useCallback(() => {
     setDeployInProgress(true);
-    await deploy();
+    void deploy();
   }, [deploy, setDeployInProgress]);
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function DeployButton() {
   return (
     <button
       className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600 hover:bg-blue-500"
-      onClick={void handleClick}
+      onClick={handleClick}
       disabled={isDisabled}
       aria-label="Deploy Changes to Repository"
     >
