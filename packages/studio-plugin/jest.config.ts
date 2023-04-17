@@ -1,5 +1,4 @@
 import type { Config } from "jest";
-import { compilerOptions } from "./tsconfig.json";
 
 const config: Config = {
   verbose: true,
@@ -8,18 +7,7 @@ const config: Config = {
   resetMocks: true,
   restoreMocks: true,
   transform: {
-    // ts-jest does not support dynamic imports with the second argument.
-    "getLocalDataMapping.ts": "babel-jest",
-    "\\.[jt]sx?$": [
-      "ts-jest",
-      {
-        useESM: true,
-        tsconfig: {
-          ...compilerOptions,
-          allowJs: true,
-        },
-      },
-    ],
-  },
+    "^.+\\.(t|j)sx?$": "@swc/jest"
+  }
 };
 export default config;

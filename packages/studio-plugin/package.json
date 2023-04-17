@@ -20,7 +20,8 @@
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.json",
     "build": "rm -rf lib && tsc -p tsconfig.json",
-    "test": "jest --coverage=false"
+    "test": "jest --coverage=false",
+    "typecheck-jest": "npx tsc -p tsconfig.jest.json"
   },
   "dependencies": {
     "@yext/pages": "^1.0.0-beta.14",
