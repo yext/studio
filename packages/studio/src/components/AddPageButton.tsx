@@ -15,7 +15,7 @@ export default function AddPageButton(): JSX.Element {
   const handleModalSave = useCallback(
     (pageName: string) => {
       try {
-        createPage(pageName);
+        void createPage(pageName);
         return true;
       } catch (err: unknown) {
         if (err instanceof Error) {

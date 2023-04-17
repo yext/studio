@@ -82,7 +82,7 @@ export default function useImportedComponents(componentTree: ComponentState[]) {
     const componentImportPromises = componentTree.flatMap((c) =>
       importComponent(c, newLoadedComponents)
     );
-    Promise.all(componentImportPromises).then(() => {
+    void Promise.all(componentImportPromises).then(() => {
       const newState = {
         ...UUIDToImportedComponentRef.current,
         ...newLoadedComponents,

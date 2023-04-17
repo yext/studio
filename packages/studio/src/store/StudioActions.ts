@@ -255,7 +255,7 @@ export default class StudioActions {
     };
   };
 
-  createPage = (pageName: string) => {
+  createPage = async (pageName: string) => {
     if (!pageName) {
       throw new Error("Error adding page: a pageName is required.");
     }
@@ -269,6 +269,6 @@ export default class StudioActions {
       cssImports: [],
       filepath,
     });
-    this.updateActivePage(pageName);
+    await this.updateActivePage(pageName);
   };
 }

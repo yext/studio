@@ -1,26 +1,25 @@
 import { studioTest } from "./infra/studioTest.js";
+import { expect } from "@playwright/test";
 
-studioTest("can create new nested modules", async ({ page, studioPage }) => {
-  // create a new module
-    // click a component inside a container
-      // createModule() helper
-        // click the properties tab
-        // click create module
-        // enter a name for the module
-    // click the Save button
-  // check that the component tree updates
-    // check that the module name appears with the purple icon
-  // take a screenshot
-  // create a second module that includes the new module
-    // click the container for the previously created module
-    // createModule()
-    // save()
-  // check the component tree
-    // check that the module name appears with the purple icon
-  // take a screenshot
-  // hit save
-  // screenshot
-  // refresh the page
-  // check the tree
-  // screenshot
-});
+studioTest.only(
+  "can create new nested modules",
+  async ({ page, studioPage }) => {
+    await studioPage.setActiveComponent("Banner");
+    await studioPage.createModule("InnerModule");
+    await expect(page.getByText("InnerModule")).toHaveCount(2);
+    await expect(page).toHaveScreenshot();
+
+    await studioPage.setActiveComponent("Container");
+    await studioPage.createModule("OuterModule");
+    await expect(page.getByText("OuterModule")).toHaveCount(2);
+    await expect(page.getByText("InnerModule")).toHaveCount(0);
+    await expect(page).toHaveScreenshot();
+
+    await studioPage.saveButton.click();
+    await expect(page).toHaveScreenshot();
+    await page.reload();
+    await expect(page.getByText("OuterModule")).toHaveCount(1);
+    await expect(page.getByText("InnerModule")).toHaveCount(0);
+    await expect(page).toHaveScreenshot();
+  }
+);

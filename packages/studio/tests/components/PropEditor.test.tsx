@@ -79,7 +79,7 @@ describe("trigger onChange from input interaction", () => {
     });
   });
 
-  it("constructs HexColor PropVal on select", async () => {
+  it("constructs HexColor PropVal on select", () => {
     const onPropChange = jest.fn();
     render(
       <PropEditor

@@ -13,5 +13,6 @@
     "sourceMap": true,
     "jsx": "react-jsx",
     "target": "ESNext"
-  }
+  },
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js"]
 }

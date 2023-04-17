@@ -31,7 +31,7 @@ describe("active entity file actions", () => {
     let activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
     expect(activeEntityFile).toEqual("entityFile.json");
 
-    useStudioStore
+    await useStudioStore
       .getState()
       .pages.setActiveEntityFile(localDataFolder, undefined);
     activeEntityFile = useStudioStore.getState().pages.activeEntityFile;

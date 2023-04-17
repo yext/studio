@@ -1,5 +1,4 @@
 import {
-  ComponentState,
   EditableComponentState,
   StandardOrModuleComponentState,
 } from "../types";

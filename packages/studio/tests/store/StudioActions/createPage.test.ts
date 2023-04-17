@@ -10,15 +10,15 @@ it("gives an error for an empty string pagename", () => {
   expect(action).toThrow("Error adding page: a pageName is required.");
 });
 
-it("adds the new page name to pagesToUpdate", () => {
-  useStudioStore.getState().actions.createPage("test");
+it("adds the new page name to pagesToUpdate", async () => {
+  await useStudioStore.getState().actions.createPage("test");
   const pagesToUpdate =
     useStudioStore.getState().pages.pendingChanges.pagesToUpdate;
   expect(pagesToUpdate).toEqual(new Set(["test"]));
 });
 
-it("adds a page to pages and updates the active page to the new one", () => {
-  useStudioStore.getState().actions.createPage("test");
+it("adds a page to pages and updates the active page to the new one", async () => {
+  await useStudioStore.getState().actions.createPage("test");
   const pagesRecord = useStudioStore.getState().pages.pages;
   expect(pagesRecord).toEqual({
     test: {

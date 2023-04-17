@@ -25,7 +25,7 @@ const tabIcons = {
  * Used for editing the active component's props or site settings.
  */
 export default function EditorSidebar(): JSX.Element {
-  const [selectedTab, setTab] = useState<Tab>(Tab.Properties);
+  const [selectedTab, setTab] = useState<Tab>(Tab.Content);
 
   return (
     <div className="w-1/4 px-4">

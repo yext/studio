@@ -7,7 +7,7 @@ export interface ContainerProps {
 
 export default function Container(props: ContainerProps) {
   return (
-    <div>
+    <div data-testid={props.text}>
       {props.text}
       {props.children}
     </div>

@@ -1,11 +1,11 @@
 import { useMemo } from "react";
-import useStudioStore from "../store/useStudioStore";
 import { ComponentTreeHelpers, ComponentState } from "@yext/studio-plugin";
 import { ExpressionSources } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import HighlightingContainer from "./HighlightingContainer";
 import ComponentPreview from "./ComponentPreview";
+import useStudioStore from "../store/useStudioStore";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
@@ -39,14 +39,11 @@ function useComponentTreeElements(
   expressionSources: ExpressionSources,
   renderHighlightingContainer?: boolean
 ): (JSX.Element | null)[] | null {
-  const UUIDToImportedComponent = useStudioStore(
+  const bob = useStudioStore(
     (store) => store.fileMetadatas.UUIDToImportedComponent
   );
+
   return useMemo(() => {
-    // prevent logging errors on initial render before components are imported
-    if (Object.keys(UUIDToImportedComponent).length === 0) {
-      return null;
-    }
     return ComponentTreeHelpers.mapComponentTree(
       componentTree,
       (c, children) => {
@@ -69,10 +66,5 @@ function useComponentTreeElements(
         );
       }
     );
-  }, [
-    UUIDToImportedComponent,
-    componentTree,
-    expressionSources,
-    renderHighlightingContainer,
-  ]);
+  }, [componentTree, expressionSources, renderHighlightingContainer, bob]);
 }

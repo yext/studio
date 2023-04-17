@@ -9,7 +9,7 @@ import createStudioPlugin from "@yext/studio-plugin";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 
-export default defineConfig(async (args: ConfigEnv): Promise<UserConfig> => {
+export default defineConfig((args: ConfigEnv): UserConfig => {
   return {
     root: __dirname,
     server: {

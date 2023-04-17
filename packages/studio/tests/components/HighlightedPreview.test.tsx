@@ -1,4 +1,4 @@
-import { within, screen, render } from "@testing-library/react";
+import { within, screen, render, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import HighlightedPreview from "../../src/components/HighlightedPreview";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -44,9 +44,9 @@ beforeEach(() => {
 
 describe("renders preview", () => {
   it("renders component tree with nested Component(s)", async () => {
-    mockPreviewState(nestedComponentTree);
+    await mockPreviewState(nestedComponentTree);
     render(<HighlightedPreview />);
-    const container1 = await screen.findByText(/Container 1/);
+    const container1 = await screen.findByTestId(/Container 1/);
     const container2 = await within(container1).findByText(/Container 2/);
     const banner1 = await within(container1).findByText(/Banner 1/);
     const banner2 = await within(container2).findByText(/Banner 2/);
@@ -58,7 +58,7 @@ describe("renders preview", () => {
 
   it("renders component tree with Module component type", async () => {
     const tree = [moduleState];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const panel = await screen.findByText(/This is Panel module/);
     const banner = await screen.findByText(/This is Banner/);
@@ -68,7 +68,7 @@ describe("renders preview", () => {
 
   it("renders component tree with Repeater component over a module", async () => {
     const tree = [repeaterState];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const panels = await screen.findAllByText(/This is Panel module/);
     const banners = await screen.findAllByText(/This is Banner/);
@@ -78,7 +78,7 @@ describe("renders preview", () => {
 
   it("does not render Repeater if list expression is not found", async () => {
     const tree = [{ ...repeaterState, listExpression: "document.services" }];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const panels = screen.queryByText(/This is Panel module/);
     const banners = screen.queryByText(/This is Banner/);
@@ -114,7 +114,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
     expect(siteSettingsExpressionProp).toBeDefined();
@@ -137,7 +137,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
     expect(siteSettingsExpressionProp).toBeDefined();
@@ -162,7 +162,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const nestedPropUsage = await screen.findByText(/eggyweggy/);
     expect(nestedPropUsage).toBeDefined();
@@ -184,7 +184,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const catItemProp = await screen.findByText(/cat/);
     expect(catItemProp).toBeDefined();
@@ -195,13 +195,16 @@ describe("renders preview", () => {
   });
 });
 
-it("clicking a component in the preview updates the activeComponentUUID", async () => {
-  mockPreviewState(nestedComponentTree);
-  render(<HighlightedPreview />);
+it.only("clicking a component in the preview updates the activeComponentUUID", async () => {
+  await mockPreviewState(nestedComponentTree);
+  render(
+    <HighlightedPreview />
+  );
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     undefined
   );
   const container1 = await screen.findByText(/Container 1/);
+  screen.debug();
   await userEvent.click(container1);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     "container-uuid"
@@ -213,7 +216,7 @@ it("clicking a component in the preview updates the activeComponentUUID", async 
   );
 });
 
-function mockPreviewState(componentTree: ComponentState[]) {
+async function mockPreviewState(componentTree: ComponentState[]) {
   mockStore({
     pages: {
       pages: {
@@ -254,5 +257,5 @@ function mockPreviewState(componentTree: ComponentState[]) {
       },
     },
   });
-  useStudioStore.getState().actions.updateActivePage("universalPage");
+  await useStudioStore.getState().actions.updateActivePage("universalPage");
 }

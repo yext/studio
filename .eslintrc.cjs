@@ -6,6 +6,7 @@ module.exports = {
     "**/build",
     "packages/studio-plugin/tests/__fixtures__/**/*.tsx",
     ".eslintrc.cjs",
+    "**/coverage",
   ],
   parserOptions: {
     project: ["tsconfig.json"],
@@ -18,10 +19,11 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["**/*.test.*"],
+      files: ["**/*.{test,stories}.*"],
       rules: {
-        "@typescript-eslint/require-await": "off",
-        "@typescript-eslint/no-floating-promises": "off",
+        "react-perf/jsx-no-new-array-as-prop": "off",
+        "react-perf/jsx-no-new-function-as-prop": "off",
+        "react-perf/jsx-no-new-object-as-prop": "off",
       },
     },
     {

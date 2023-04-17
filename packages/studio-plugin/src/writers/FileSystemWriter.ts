@@ -8,7 +8,6 @@ import {
 } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
-import lodash from "lodash";
 import path from "path";
 import { TypeGuards } from "../utils";
 import areEqualFileMetadata from "../utils/areEqualFileMetadata";
@@ -71,11 +70,15 @@ export class FileSystemWriter {
 
     const modulesToUpdate = new Set(
       Object.keys(updatedUUIDToFileMetadata).filter((metadataUUID) => {
-        const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID]
-        const isModule = updatedMetadata.kind === FileMetadataKind.Module
-        return isModule && !areEqualFileMetadata(
-          updatedMetadata,
-          UUIDToFileMetadata[metadataUUID])
+        const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID];
+        const isModule = updatedMetadata.kind === FileMetadataKind.Module;
+        return (
+          isModule &&
+          !areEqualFileMetadata(
+            updatedMetadata,
+            UUIDToFileMetadata[metadataUUID]
+          )
+        );
       })
     );
 
@@ -88,9 +91,9 @@ export class FileSystemWriter {
         return metadata;
       };
       const moduleMetadata = getModuleMetadata(moduleMetadataUUID);
-      const moduleDependencies = moduleMetadata.componentTree.filter(
-        TypeGuards.isModuleState
-      ).map(m => getModuleMetadata(m.metadataUUID).filepath);
+      const moduleDependencies = moduleMetadata.componentTree
+        .filter(TypeGuards.isModuleState)
+        .map((m) => getModuleMetadata(m.metadataUUID).filepath);
       this.writeToModuleFile(moduleMetadata, moduleDependencies);
     }
   }
