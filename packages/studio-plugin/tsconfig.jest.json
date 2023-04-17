@@ -3,5 +3,6 @@
   "compilerOptions": {
     "noEmit": true
   },
-  "include": ["tests", "!test/__fixtures__/**/*.tsx"]
+  "include": ["tests"],
+  "exclude": ["tests/__fixtures__/**/*.tsx"]
 }
