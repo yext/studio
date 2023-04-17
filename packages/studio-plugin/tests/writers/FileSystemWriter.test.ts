@@ -69,7 +69,7 @@ describe("syncFileMetadata", () => {
     fileWriter.writeToModuleFile(moduleMetadata);
 
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("NewModule.tsx"),
+      expect.stringContaining("UpdatedModule.tsx"),
       fs.readFileSync(path.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
     );
   });
@@ -88,13 +88,10 @@ describe("syncFileMetadata", () => {
       .spyOn(fs, "openSync")
       .mockImplementationOnce(jest.fn());
 
-    fileWriter.writeToModuleFile(
-      path.join(paths.modules, "NewModule.tsx"),
-      moduleMetadata
-    );
+    fileWriter.writeToModuleFile(moduleMetadata);
 
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("NewModule.tsx"),
+      expect.stringContaining("UpdatedModule.tsx"),
       fs.readFileSync(moduleFilepath, "utf-8")
     );
     expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.modules, {
