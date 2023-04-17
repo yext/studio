@@ -49,6 +49,7 @@ export class FileSystemWriter {
     FileSystemWriter.openFile(moduleMetadata.filepath);
     const moduleFile = this.orchestrator.getModuleFile(moduleMetadata.filepath);
     moduleFile.updateModuleFile(moduleMetadata, moduleDependencies);
+    this.orchestrator.reloadFile(moduleMetadata.filepath);
   }
 
   writeToSiteSettings(siteSettingsValues: SiteSettingsValues): void {

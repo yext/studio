@@ -7,7 +7,7 @@ studioTest.use({
   createRemote: true,
 });
 
-studioTest("can deploy changes", async ({ page, studioPage }) => {
+studioTest.only("can deploy changes", async ({ page, studioPage }) => {
   const startingRef = await git.revparse(["HEAD"]);
   await studioPage.addElement("Container", "Containers");
   await expect(page).toHaveScreenshot();

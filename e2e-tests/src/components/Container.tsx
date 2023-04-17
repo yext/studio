@@ -5,5 +5,9 @@ export interface ContainerProps {
 }
 
 export default function Container(props: ContainerProps) {
-  return <div>I'm a container: {props.children}</div>;
+  return (
+    <div className="p-2 text-lg border-4 border-red-600">
+      I'm a container: {props.children}
+    </div>
+  );
 }
