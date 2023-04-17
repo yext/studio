@@ -20,7 +20,7 @@
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.json",
     "build": "rm -rf lib && tsc -p tsconfig.json",
-    "test": "jest --coverage=false",
+    "test": "jest",
     "typecheck-jest": "npx tsc -p tsconfig.jest.json"
   },
   "dependencies": {
