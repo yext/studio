@@ -105,12 +105,15 @@ it("calls removeRepeater when disabling toggle", async () => {
 });
 
 it("calls updateRepeaterListExpression when updating list field input", async () => {
+  jest.useFakeTimers();
   const updateListSpy = jest
     .spyOn(useStudioStore.getState().actions, "updateRepeaterListExpression")
     .mockImplementation();
   render(<RepeaterEditor componentState={repeaterState} />);
   const input = screen.getByRole("textbox");
-  await userEvent.type(input, "s");
+  userEvent.type(input, "s");
+  await screen.findByDisplayValue("myLists");
+  jest.advanceTimersByTime(500); //debounce time
   expect(updateListSpy).toBeCalledTimes(1);
   expect(updateListSpy).toBeCalledWith("myLists", repeaterState);
 });

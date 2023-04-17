@@ -7,7 +7,12 @@ import classNames from "classnames";
  * Buttons for undo and redo actions.
  */
 export default function UndoRedo(): JSX.Element {
-  const { undo, redo, pastStates, futureStates } = useTemporalStore();
+  const [undo, redo, pastStates, futureStates] = useTemporalStore((store) => [
+    store.undo,
+    store.redo,
+    store.pastStates,
+    store.futureStates,
+  ]);
 
   const handleUndo = useCallback(() => {
     undo();

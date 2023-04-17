@@ -1,9 +1,11 @@
 import { EditableComponentState, TypeGuards } from "@yext/studio-plugin";
-import { useCallback, ChangeEvent } from "react";
+import { useCallback, ChangeEvent, useState, useMemo } from "react";
 import { Tooltip } from "react-tooltip";
 import useStudioStore from "../store/useStudioStore";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 import Toggle from "./common/Toggle";
+import { debounce } from "lodash";
+import { useHasTemporalChange } from "../hooks/useHasTemporalChange";
 
 const tooltipAnchorID = "YextStudio-listRepeaterToggle";
 
@@ -27,16 +29,29 @@ export default function RepeaterEditor({
   ]);
 
   const isChecked = TypeGuards.isRepeaterState(componentState);
+  const [listInputValue, setListInputValue] = useState(
+    isChecked ? componentState.listExpression : ""
+  );
+  const hasTemporalChange = useHasTemporalChange();
+  if (hasTemporalChange && isChecked) {
+    setListInputValue(componentState.listExpression);
+  }
 
   const onToggle = useCallback(() => {
     isChecked ? removeRepeater(componentState) : addRepeater(componentState);
+    setListInputValue("");
   }, [addRepeater, removeRepeater, componentState, isChecked]);
 
+  const debouncedUpdateRepeaterList = useMemo(
+    () => debounce(updateRepeaterListExpression, 500),
+    [updateRepeaterListExpression]
+  );
   const updateListExpression = useCallback(
     (value: string) => {
-      isChecked && updateRepeaterListExpression(value, componentState);
+      isChecked && debouncedUpdateRepeaterList(value, componentState);
+      setListInputValue(value);
     },
-    [componentState, isChecked, updateRepeaterListExpression]
+    [componentState, isChecked, debouncedUpdateRepeaterList]
   );
 
   const handleListUpdate = useCallback(
@@ -68,7 +83,7 @@ export default function RepeaterEditor({
         <label className="flex flex-col mb-2">
           <span>List Field</span>
           <FieldPickerInput
-            displayValue={componentState.listExpression}
+            displayValue={listInputValue}
             onInputChange={handleListUpdate}
             handleFieldSelection={updateListExpression}
             fieldType="array"

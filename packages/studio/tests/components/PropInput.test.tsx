@@ -5,11 +5,14 @@ import PropInput from "../../src/components/PropInput";
 import userEvent from "@testing-library/user-event";
 
 it("converts brackets into ${document. usages", async () => {
+  jest.useFakeTimers();
   const onChange = jest.fn();
   renderExpressionPropInput("`[[address]`", onChange);
   const textbox = screen.getByRole("textbox");
 
-  await userEvent.type(textbox, "]");
+  userEvent.type(textbox, "]");
+  await screen.findByDisplayValue("[[address]]");
+  jest.advanceTimersByTime(500); //debounce time
   expect(onChange).toHaveBeenCalledWith("`${document.address}`");
   expect(onChange).toHaveBeenCalledTimes(1);
 });

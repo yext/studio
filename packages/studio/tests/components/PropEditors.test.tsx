@@ -1,4 +1,10 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import PropEditors from "../../src/components/PropEditors";
 import {
   ComponentState,
@@ -168,6 +174,7 @@ function testStandardOrModuleComponentState(
   });
 
   it(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, async () => {
+    jest.useFakeTimers();
     function PropEditorsWithActiveState() {
       const { activeComponentMetadata, activeComponentState } =
         useActiveComponent();
@@ -193,13 +200,25 @@ function testStandardOrModuleComponentState(
           .getState()
           .actions.getActiveComponentState() as StandardOrModuleComponentState
       ).props;
-    await userEvent.type(screen.getByLabelText("title"), "test!");
-    await userEvent.type(screen.getByLabelText("num"), "10");
-    await userEvent.click(screen.getByLabelText("bool"));
-    // userEvent doesn't support interaction with input of type "color"
+
+    userEvent.type(screen.getByLabelText("title"), "test!");
+    await screen.findByDisplayValue("test!");
+    act(() => jest.advanceTimersByTime(500)); //debounce time
+
+    userEvent.type(screen.getByLabelText("num"), "10");
+    await screen.findByDisplayValue("10");
+    act(() => jest.advanceTimersByTime(500)); //debounce time
+
+    userEvent.click(screen.getByLabelText("bool"));
+    await waitFor(() => expect(screen.getByRole("checkbox")).toBeChecked());
+    act(() => jest.advanceTimersByTime(500)); //debounce time
+
     fireEvent.input(screen.getByLabelText("bgColor"), {
       target: { value: "#abcdef" },
     });
+    await screen.findByDisplayValue("#abcdef");
+    act(() => jest.advanceTimersByTime(500)); //debounce time
+
     const expectedComponentProps: PropValues = {
       title: {
         kind: PropValueKind.Literal,

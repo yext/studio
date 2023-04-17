@@ -3,7 +3,7 @@ import { withLenses, lens } from "@dhmk/zustand-lens";
 import { immer } from "zustand/middleware/immer";
 import { enableMapSet } from "immer";
 import { temporal } from "zundo";
-import { throttle, isEqual } from "lodash";
+import { isEqual } from "lodash";
 
 import { StudioStore } from "./models/StudioStore";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
@@ -25,14 +25,24 @@ enableMapSet();
  */
 function storeMiddlewares(
   storeCreator: StateCreator<StudioStore, [["zustand/immer", never]]>
-): ReturnType<typeof temporal<StudioStore, [], [["zustand/immer", never]]>> {
+): ReturnType<
+  typeof temporal<
+    StudioStore,
+    [],
+    [["zustand/immer", never]],
+    Omit<StudioStore, "previousSave">
+  >
+> {
   return temporal(immer(storeCreator), {
     equality: (currStore, pastStore) =>
       isEqual(
         getUserUpdatableStore(currStore),
         getUserUpdatableStore(pastStore)
       ),
-    handleSet: (handleSet) => throttle(handleSet, 500),
+    partialize: (state) => {
+      const { previousSave: _, ...remainingState } = state;
+      return remainingState;
+    },
   });
 }
 
