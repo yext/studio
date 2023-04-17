@@ -18,11 +18,11 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
   let propShape: PropShape = {};
   if (filepath?.endsWith("Card.tsx")) {
     propShape = {
-      text: { type: PropValueType.string },
+      text: { type: PropValueType.string, required: false },
     };
   } else if (filepath?.endsWith("Tile.tsx")) {
     propShape = {
-      label: { type: PropValueType.string },
+      label: { type: PropValueType.string, required: false },
     };
   }
   return {

@@ -17,8 +17,11 @@
     "types": [
       "vite/client",
       "@yext/studio-plugin/virtual-module",
-      "vite-plugin-svgr/client"
-    ]
+      "vite-plugin-svgr/client",
+      "jest",
+      "testing-library__jest-dom"
+    ],
+    "allowJs": false
   },
   "include": ["src", "types.ts"]
 }

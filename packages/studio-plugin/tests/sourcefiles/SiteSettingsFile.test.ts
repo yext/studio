@@ -1,7 +1,5 @@
-import { PropValueKind, PropValueType } from "../../src/types";
-import SiteSettingsFile, {
-  SiteSettings,
-} from "../../src/sourcefiles/SiteSettingsFile";
+import { PropValueKind, PropValueType, SiteSettings } from "../../src/types";
+import SiteSettingsFile from "../../src/sourcefiles/SiteSettingsFile";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { getSiteSettingsPath } from "../__utils__/getFixturePath";
 import fs from "fs";

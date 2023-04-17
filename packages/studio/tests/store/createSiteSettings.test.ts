@@ -6,6 +6,7 @@ const siteSettingsShape: SiteSettingSliceStates["shape"] = {
   apiKey: {
     type: PropValueType.string,
     doc: "api key to power the site",
+    required: false,
   },
 };
 const siteSettingsValue: SiteSettingSliceStates["values"] = {

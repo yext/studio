@@ -1,4 +1,5 @@
 import type { Config } from "jest";
+import { compilerOptions } from "./tsconfig.json";
 
 const config: Config = {
   verbose: true,
@@ -10,8 +11,17 @@ const config: Config = {
   transformIgnorePatterns: ["node_modules/(?!react-tooltip/.*)"],
   setupFilesAfterEnv: ["<rootDir>/tests/__setup__/setup-env.ts"],
   transform: {
-    "\\.[jt]sx?$": "babel-jest",
     "\\.svg$": "<rootDir>/tests/__setup__/svgTransformer.cjs",
+    "^.+\\.m?[tj]sx?$": [
+      "ts-jest",
+      {
+        useESM: true,
+        tsconfig: {
+          ...compilerOptions,
+          allowJs: true,
+        },
+      },
+    ],
   },
 };
 export default config;
