@@ -1,4 +1,4 @@
-import { within, screen, render, fireEvent } from "@testing-library/react";
+import { within, screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import HighlightedPreview from "../../src/components/HighlightedPreview";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -195,11 +195,9 @@ describe("renders preview", () => {
   });
 });
 
-it.only("clicking a component in the preview updates the activeComponentUUID", async () => {
+it("clicking a component in the preview updates the activeComponentUUID", async () => {
   await mockPreviewState(nestedComponentTree);
-  render(
-    <HighlightedPreview />
-  );
+  render(<HighlightedPreview />);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     undefined
   );

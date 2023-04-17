@@ -107,5 +107,42 @@ export const nestedComponentTree: ComponentState[] = [
     },
     uuid: "container-uuid",
     metadataUUID: "container-metadata-uuid",
-  }
+  },
+  {
+    ...componentState,
+    props: {
+      title: {
+        kind: PropValueKind.Literal,
+        value: "Banner 1",
+        valueType: PropValueType.string,
+      },
+    },
+    parentUUID: "container-uuid",
+  },
+  {
+    kind: ComponentStateKind.Standard,
+    componentName: "Container",
+    props: {
+      text: {
+        kind: PropValueKind.Literal,
+        value: "Container 2",
+        valueType: PropValueType.string,
+      },
+    },
+    uuid: "container-uuid-2",
+    metadataUUID: "container-metadata-uuid",
+    parentUUID: "container-uuid",
+  },
+  {
+    ...componentState,
+    props: {
+      title: {
+        kind: PropValueKind.Literal,
+        value: "Banner 2",
+        valueType: PropValueType.string,
+      },
+    },
+    uuid: "banner-uuid-2",
+    parentUUID: "container-uuid-2",
+  },
 ];

@@ -5,7 +5,6 @@ import ErrorBoundary from "./common/ErrorBoundary";
 import useImportedComponents from "../hooks/useImportedComponents";
 import HighlightingContainer from "./HighlightingContainer";
 import ComponentPreview from "./ComponentPreview";
-import useStudioStore from "../store/useStudioStore";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
@@ -39,10 +38,6 @@ function useComponentTreeElements(
   expressionSources: ExpressionSources,
   renderHighlightingContainer?: boolean
 ): (JSX.Element | null)[] | null {
-  const bob = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToImportedComponent
-  );
-
   return useMemo(() => {
     return ComponentTreeHelpers.mapComponentTree(
       componentTree,
@@ -66,5 +61,5 @@ function useComponentTreeElements(
         );
       }
     );
-  }, [componentTree, expressionSources, renderHighlightingContainer, bob]);
+  }, [componentTree, expressionSources, renderHighlightingContainer]);
 }

@@ -58,7 +58,6 @@ class HighlightingClass extends Component<HighlightingProps> {
   }
 
   highlightSelf = (e?: Event) => {
-    console.log("~~~HIGLIGHT SELF ~~~~")
     e?.stopImmediatePropagation();
     const childNode = findDOMNode(this);
     if (!(childNode instanceof HTMLElement)) {
@@ -78,19 +77,11 @@ class HighlightingClass extends Component<HighlightingProps> {
     if (!childNode || !(childNode instanceof HTMLElement)) {
       return;
     }
-    console.log('attach')
     childNode.addEventListener("click", this.highlightSelf);
-    childNode.addEventListener("click", () => console.log('baloney'));
     this.resizeObserver.observe(document.body);
   }
 
-  componentDidMount(): void {
-    console.log('mount')
-    this.attachListenerToChild();
-  }
-
   componentDidUpdate(): void {
-    console.log('did update')
     this.attachListenerToChild();
     if (this.props.uuid === this.props.activeComponentUUID) {
       this.highlightSelf();
