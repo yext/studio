@@ -20,32 +20,26 @@ import { FunctionComponent } from "react";
 export default class ImportComponentAction {
   constructor(private getFileMetadataSlice: () => FileMetadataSlice) {}
 
-  importComponent = async (
-    c: ComponentState,
-    alreadyImportedComponents = new Set<string>()
-  ): Promise<void> => {
+  importComponent = async (c: ComponentState): Promise<void> => {
     if (!TypeGuards.isEditableComponentState(c)) {
       return;
     }
 
     const componentState =
       ComponentStateHelpers.extractStandardOrModuleComponentState(c);
-    await this.importStandardOrModuleComponentState(
-      componentState,
-      alreadyImportedComponents
-    );
+    await this.importStandardOrModuleComponentState(componentState);
   };
 
   private importStandardOrModuleComponentState = async (
-    componentState: StandardOrModuleComponentState,
-    alreadyImportedComponents: Set<string>
+    componentState: StandardOrModuleComponentState
   ) => {
     const { metadataUUID, componentName } = componentState;
-    if (alreadyImportedComponents.has(metadataUUID)) {
+    const { getFileMetadata, UUIDToImportedComponent } =
+      this.getFileMetadataSlice();
+    if (UUIDToImportedComponent.hasOwnProperty(metadataUUID)) {
       return;
     }
 
-    const { getFileMetadata } = this.getFileMetadataSlice();
     const metadata: FileMetadata | undefined = getFileMetadata(metadataUUID);
     if (!metadata) {
       return;
@@ -56,9 +50,7 @@ export default class ImportComponentAction {
       metadata.kind === FileMetadataKind.Module
     ) {
       await Promise.all(
-        metadata.componentTree.map((c) =>
-          this.importComponent(c, alreadyImportedComponents)
-        )
+        metadata.componentTree.map((c) => this.importComponent(c))
       );
       return;
     }
@@ -73,7 +65,6 @@ export default class ImportComponentAction {
         metadataUUID,
         functionComponent
       );
-      alreadyImportedComponents.add(metadataUUID);
     }
   };
 }

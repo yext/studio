@@ -187,7 +187,6 @@ describe("renders preview", () => {
     ];
     await mockPreviewState(tree);
     render(<HighlightedPreview />);
-    await new Promise((r) => setTimeout(r, 1000));
     const catItemProp = await screen.findByText(/cat/);
     expect(catItemProp).toBeDefined();
     const dogItemProp = await screen.findByText(/dog/);
