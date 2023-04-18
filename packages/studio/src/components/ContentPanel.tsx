@@ -35,10 +35,7 @@ export default function ContentPanel(): JSX.Element | null {
         shouldRenderProp={shouldRenderProp}
       />
       <Divider />
-      <RepeaterEditor
-        key={activeComponentState.uuid}
-        componentState={activeComponentState}
-      />
+      <RepeaterEditor componentState={activeComponentState} />
       <Divider />
     </div>
   );

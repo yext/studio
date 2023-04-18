@@ -1,17 +1,9 @@
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
-import {
-  ChangeEvent,
-  useCallback,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
-import { debounce } from "lodash";
-import { useHasTemporalChange } from "../hooks/useHasTemporalChange";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -34,25 +26,11 @@ const selectCssClasses =
  */
 export default function PropInput({
   propType,
-  propValue: propValueInStore,
+  propValue,
   onChange,
   unionValues,
   propKind,
 }: PropInputProps): JSX.Element {
-  const [propValue, setPropValue] = useState(propValueInStore);
-  const hasTemporalChange = useHasTemporalChange();
-  if (hasTemporalChange) {
-    setPropValue(propValueInStore);
-  }
-
-  const debouncedOnChange = useMemo(() => {
-    const debouncedFunc = debounce(onChange, 500);
-    return (value: string | number | boolean) => {
-      debouncedFunc(value);
-      setPropValue(value);
-    };
-  }, [onChange]);
-
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const getValue = () => {
@@ -68,16 +46,11 @@ export default function PropInput({
         }
         return e.target.value;
       };
-      debouncedOnChange(getValue());
+      onChange(getValue());
     },
-    [propKind, propType, debouncedOnChange]
+    [propKind, propType, onChange]
   );
-  const displayValue = useDisplayValue(
-    propValue,
-    propType,
-    propKind,
-    debouncedOnChange
-  );
+  const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
 
   const appendField = useCallback(
     (fieldId: string) => {
@@ -85,9 +58,9 @@ export default function PropInput({
       const appendedValue = displayValue
         ? `${displayValue} ${documentUsage}`
         : documentUsage;
-      debouncedOnChange(TemplateExpressionFormatter.getRawValue(appendedValue));
+      onChange(TemplateExpressionFormatter.getRawValue(appendedValue));
     },
-    [displayValue, debouncedOnChange]
+    [displayValue, onChange]
   );
 
   if (unionValues) {

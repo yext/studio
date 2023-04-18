@@ -4,7 +4,7 @@ import SiteSettingSlice from "./models/slices/SiteSettingsSlice";
 import { StudioStore } from "./models/StudioStore";
 
 type UserUpdatableStore = {
-  siteSettings: Pick<SiteSettingSlice, "shape" | "values">;
+  siteSettings: Pick<SiteSettingSlice, "values">;
   fileMetadatas: Pick<FileMetadataSlice, "UUIDToFileMetadata">;
   pages: Pick<
     PageSlice,
@@ -19,13 +19,12 @@ type UserUpdatableStore = {
  * components and the {@link PreviousSaveSlice}.
  */
 export function getUserUpdatableStore(store: StudioStore): UserUpdatableStore {
-  const { shape, values } = store.siteSettings;
+  const { values } = store.siteSettings;
   const { UUIDToFileMetadata } = store.fileMetadatas;
   const { pages, activePageName, activeComponentUUID, moduleUUIDBeingEdited } =
     store.pages;
   return {
     siteSettings: {
-      shape,
       values,
     },
     fileMetadatas: {

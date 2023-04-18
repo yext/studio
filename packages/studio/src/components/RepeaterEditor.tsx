@@ -1,11 +1,10 @@
 import { EditableComponentState, TypeGuards } from "@yext/studio-plugin";
-import { useCallback, ChangeEvent, useState, useMemo } from "react";
+import { useCallback, ChangeEvent } from "react";
 import { Tooltip } from "react-tooltip";
 import useStudioStore from "../store/useStudioStore";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 import Toggle from "./common/Toggle";
-import { debounce } from "lodash";
-import { useHasTemporalChange } from "../hooks/useHasTemporalChange";
+import DebouncedInput from "./DebouncedInput";
 
 const tooltipAnchorID = "YextStudio-listRepeaterToggle";
 
@@ -29,36 +28,16 @@ export default function RepeaterEditor({
   ]);
 
   const isChecked = TypeGuards.isRepeaterState(componentState);
-  const [listInputValue, setListInputValue] = useState(
-    isChecked ? componentState.listExpression : ""
-  );
-  const hasTemporalChange = useHasTemporalChange();
-  if (hasTemporalChange && isChecked) {
-    setListInputValue(componentState.listExpression);
-  }
 
   const onToggle = useCallback(() => {
     isChecked ? removeRepeater(componentState) : addRepeater(componentState);
-    setListInputValue("");
   }, [addRepeater, removeRepeater, componentState, isChecked]);
 
-  const debouncedUpdateRepeaterList = useMemo(
-    () => debounce(updateRepeaterListExpression, 500),
-    [updateRepeaterListExpression]
-  );
   const updateListExpression = useCallback(
     (value: string) => {
-      isChecked && debouncedUpdateRepeaterList(value, componentState);
-      setListInputValue(value);
+      isChecked && updateRepeaterListExpression(value, componentState);
     },
-    [componentState, isChecked, debouncedUpdateRepeaterList]
-  );
-
-  const handleListUpdate = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      updateListExpression(e.target.value);
-    },
-    [updateListExpression]
+    [componentState, isChecked, updateRepeaterListExpression]
   );
 
   return (
@@ -82,14 +61,28 @@ export default function RepeaterEditor({
       {isChecked && (
         <label className="flex flex-col mb-2">
           <span>List Field</span>
-          <FieldPickerInput
-            displayValue={listInputValue}
-            onInputChange={handleListUpdate}
-            handleFieldSelection={updateListExpression}
-            fieldType="array"
+          <DebouncedInput
+            value={componentState.listExpression}
+            onChange={updateListExpression}
+            renderInput={renderListInput}
           />
         </label>
       )}
     </>
+  );
+}
+
+function renderListInput(handleChange: (val: string) => void, value = "") {
+  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
+    handleChange(e.target.value);
+  }
+
+  return (
+    <FieldPickerInput
+      displayValue={value}
+      onInputChange={handleInputChange}
+      handleFieldSelection={handleChange}
+      fieldType="array"
+    />
   );
 }

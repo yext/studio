@@ -17,6 +17,7 @@ import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import setInitialAsyncState from "./setInitialEntityFile";
+import { TemporalStudioStore } from "./useTemporalStore";
 
 enableMapSet();
 
@@ -30,7 +31,7 @@ function storeMiddlewares(
     StudioStore,
     [],
     [["zustand/immer", never]],
-    Omit<StudioStore, "previousSave">
+    TemporalStudioStore
   >
 > {
   return temporal(immer(storeCreator), {
