@@ -1,9 +1,9 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { useHasTemporalChange } from "../hooks/useHasTemporalChange";
-import useStudioStore from "../store/useStudioStore";
+import { useHasActiveComponentChange } from "../hooks/useHasActiveComponentChange";
 
-interface DebouncedInputProps<T = string | number | boolean> {
+interface DebouncedInputProps<T> {
   value?: T;
   onChange: (value: T) => void;
   renderInput: (onChange: (value: T) => void, value?: T) => JSX.Element;
@@ -16,16 +16,10 @@ export default function DebouncedInput<T>({
 }: DebouncedInputProps<T>): JSX.Element {
   const [inputValue, setInputValue] = useState(value);
   const hasTemporalChange = useHasTemporalChange();
-  const activeComponentUUID = useStudioStore().pages.activeComponentUUID;
-  if (hasTemporalChange) {
+  const hasActiveComponentChange = useHasActiveComponentChange();
+  if (hasTemporalChange || hasActiveComponentChange) {
     setInputValue(value);
   }
-
-  useEffect(() => {
-    if (activeComponentUUID) {
-      setInputValue(value);
-    }
-  }, [activeComponentUUID]);
 
   const handleChange = useMemo(() => {
     const debouncedOnChange = debounce(onChange, 500);
