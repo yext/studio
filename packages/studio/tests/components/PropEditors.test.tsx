@@ -201,6 +201,13 @@ function testStandardOrModuleComponentState(
 
     beforeEach(() => {
       jest.useFakeTimers();
+      mockStoreActiveComponent({
+        activeComponent: state,
+        activeComponentMetadata: {
+          ...metadata,
+          propShape,
+        },
+      });
     });
 
     it("string prop", async () => {
