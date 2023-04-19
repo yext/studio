@@ -9,6 +9,9 @@ interface DebouncedInputProps<T> {
   renderInput: (onChange: (value: T) => void, value?: T) => JSX.Element;
 }
 
+/**
+ * Handles the debouncing for changes made to an input element's value.
+ */
 export default function DebouncedInput<T>({
   value,
   onChange,
