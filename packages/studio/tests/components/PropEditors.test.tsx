@@ -198,11 +198,36 @@ function testStandardOrModuleComponentState(
           .getState()
           .actions.getActiveComponentState() as StandardOrModuleComponentState
       ).props;
+    const activeComponent: ComponentState = {
+      ...state,
+      props: {
+        title: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.string,
+          value: "",
+        },
+        num: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.number,
+          value: 0,
+        },
+        bool: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.boolean,
+          value: false,
+        },
+        bgColor: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.HexColor,
+          value: "#ffffff",
+        },
+      },
+    };
 
     beforeEach(() => {
       jest.useFakeTimers();
       mockStoreActiveComponent({
-        activeComponent: state,
+        activeComponent: activeComponent,
         activeComponentMetadata: {
           ...metadata,
           propShape,
@@ -218,9 +243,9 @@ function testStandardOrModuleComponentState(
       act(() => jest.advanceTimersByTime(500)); //debounce time
 
       expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
         title: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.string,
+          ...activeComponent.props.title,
           value: "test!",
         },
       });
@@ -234,9 +259,9 @@ function testStandardOrModuleComponentState(
       act(() => jest.advanceTimersByTime(500)); //debounce time
 
       expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
         num: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.number,
+          ...activeComponent.props.num,
           value: 10,
         },
       });
@@ -250,9 +275,9 @@ function testStandardOrModuleComponentState(
       act(() => jest.advanceTimersByTime(500)); //debounce time
 
       expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
         bool: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.boolean,
+          ...activeComponent.props.bool,
           value: true,
         },
       });
@@ -268,9 +293,9 @@ function testStandardOrModuleComponentState(
       act(() => jest.advanceTimersByTime(500)); //debounce time
 
       expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
         bgColor: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.HexColor,
+          ...activeComponent.props.bgColor,
           value: "#abcdef",
         },
       });
