@@ -30,7 +30,7 @@ it("enables the button when there are pending page changes", async () => {
   expect(saveButton).toBeDisabled();
 });
 
-it("enables the button when there are pending SiteSettingsValues changes", async () => {
+it("enables the button when there are pending SiteSettingsValues changes", () => {
   mockStore({
     previousSave: {
       siteSettings: {
@@ -60,7 +60,7 @@ it("enables the button when there are pending SiteSettingsValues changes", async
   expect(saveButton).not.toBeDisabled();
 });
 
-it("disables the button when there are no pending changes", async () => {
+it("disables the button when there are no pending changes", () => {
   mockStore({
     previousSave: {
       siteSettings: {

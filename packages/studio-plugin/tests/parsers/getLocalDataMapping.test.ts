@@ -3,7 +3,7 @@ import path from "path";
 
 it("throws when localData's mapping.json file doesn't exist", async () => {
   const localDataMappingPromise = getLocalDataMapping("thisFolderDoesNotExist");
-  expect(localDataMappingPromise).rejects.toThrow(
+  await expect(localDataMappingPromise).rejects.toThrow(
     /^The localData's mapping.json does not exist/
   );
 });

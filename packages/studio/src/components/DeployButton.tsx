@@ -14,9 +14,9 @@ export default function DeployButton() {
   const [deployInProgress, setDeployInProgress] = useState(false);
   const hasChanges = useHasChanges();
 
-  const handleClick = useCallback(async () => {
+  const handleClick = useCallback(() => {
     setDeployInProgress(true);
-    await deploy();
+    void deploy();
   }, [deploy, setDeployInProgress]);
 
   useEffect(() => {

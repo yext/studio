@@ -17,7 +17,10 @@ export const initialProps: BannerProps = {
 
 export default function Banner(props: BannerProps) {
   return (
-    <div style={{ backgroundColor: props.bgColor }}>
+    <div
+      style={{ backgroundColor: props.bgColor }}
+      className="p-2 text-lg border-4 border-blue-600"
+    >
       {props.title}
       {`${props.bool}`}
       {props.num}

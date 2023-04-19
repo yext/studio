@@ -55,8 +55,8 @@ beforeEach(() => {
   });
 });
 
-it("does not render when there is no active page state", () => {
-  useStudioStore.getState().actions.updateActivePage(undefined);
+it("does not render when there is no active page state", async () => {
+  await useStudioStore.getState().actions.updateActivePage(undefined);
   render(<CreateModuleButton />);
   expect(screen.queryByRole("button")).toBeNull();
 });

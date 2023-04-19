@@ -8,7 +8,6 @@ import {
 import initialStudioData from "virtual:yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { SliceCreator } from "../models/utils";
-import { ImportType } from "../models/ImportType";
 import removeTopLevelFragments from "../../utils/removeTopLevelFragments";
 
 const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
@@ -47,9 +46,11 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     assertIsModuleMetadata(fileMetadata);
     return fileMetadata;
   },
-  setUUIDToImportedComponent: (
-    importedComponents: Record<string, ImportType>
-  ) => set({ UUIDToImportedComponent: importedComponents }),
+  setImportedComponent(uuid, importedComponent) {
+    set((store) => {
+      store.UUIDToImportedComponent[uuid] = importedComponent;
+    });
+  },
   setComponentTreeInModule(
     metadataUUID: string,
     componentTree: ComponentState[]
@@ -63,9 +64,9 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
 });
 
 function assertIsModuleMetadata(
-  fileMetadata: FileMetadata
+  fileMetadata?: FileMetadata
 ): asserts fileMetadata is ModuleMetadata {
-  if (fileMetadata.kind !== FileMetadataKind.Module) {
+  if (fileMetadata?.kind !== FileMetadataKind.Module) {
     throw new Error(
       `Expected a ModuleMetadata, instead received ${JSON.stringify(
         fileMetadata,
@@ -77,9 +78,9 @@ function assertIsModuleMetadata(
 }
 
 function assertIsComponentMetadata(
-  fileMetadata: FileMetadata
+  fileMetadata?: FileMetadata
 ): asserts fileMetadata is ComponentMetadata {
-  if (fileMetadata.kind !== FileMetadataKind.Component) {
+  if (fileMetadata?.kind !== FileMetadataKind.Component) {
     throw new Error(
       `Expected a ComponentMetadata, instead received ${JSON.stringify(
         fileMetadata,

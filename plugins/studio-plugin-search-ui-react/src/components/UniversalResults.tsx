@@ -1,3 +1,4 @@
+/* eslint-disable react-perf/jsx-no-new-object-as-prop */
 import { UniversalResults as UnwrappedUniversalResults } from "@yext/search-ui-react";
 
 export default function UniversalResults() {

@@ -23,7 +23,7 @@ studioTest(
 
     expect(
       await studioPage.getStringPropValue("className", "Button", 0)
-    ).toEqual("px-2");
+    ).toEqual("px-4 py-2 text-lg border-4 border-green-500");
     await expect(page).toHaveScreenshot();
 
     fs.writeFileSync("./src/components/Button.tsx", updatedComponent);
