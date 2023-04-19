@@ -21,7 +21,6 @@ import { ComponentTreeHelpers } from "../utils";
  */
 export default class ModuleFile {
   private studioSourceFileParser: StudioSourceFileParser;
-  private componentName: string;
   private fileMetadataParser: FileMetadataParser;
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
@@ -33,13 +32,15 @@ export default class ModuleFile {
     project: Project
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
-    this.componentName = this.getComponentName();
     this.fileMetadataParser = new FileMetadataParser(
-      this.componentName,
       this.studioSourceFileParser
     );
+    const componentName = path.basename(
+      this.studioSourceFileParser.getFilepath(),
+      ".tsx"
+    );
     this.reactComponentFileWriter = new ReactComponentFileWriter(
-      this.componentName,
+      componentName,
       new StudioSourceFileWriter(filepath, project),
       this.studioSourceFileParser,
       getFileMetadataByUUID
@@ -48,10 +49,6 @@ export default class ModuleFile {
       this.studioSourceFileParser,
       getFileMetadata
     );
-  }
-
-  private getComponentName(): string {
-    return path.basename(this.studioSourceFileParser.getFilepath(), ".tsx");
   }
 
   getModuleMetadata(): ModuleMetadata {

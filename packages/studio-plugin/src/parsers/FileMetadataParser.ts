@@ -1,10 +1,11 @@
 import { PropShape } from "../types/PropShape";
 import { PropValues } from "../types/PropValues";
 import PropValuesParser from "./PropValuesParser";
-import PropShapeParser from "./PropShapeParser";
+import TypeNodeParser from "./TypeNodeParser";
 import { FileMetadata } from "../types";
 import { v4 } from "uuid";
 import StudioSourceFileParser from "./StudioSourceFileParser";
+import PropInterfaceNameParser from "./PropInterfaceNameParser";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for
@@ -12,14 +13,15 @@ import StudioSourceFileParser from "./StudioSourceFileParser";
  */
 export default class FileMetadataParser {
   private propValuesParser: PropValuesParser;
-  private propShapeParser: PropShapeParser;
+  private typeNodeParser: TypeNodeParser;
+  private propInterfaceNameParser: PropInterfaceNameParser;
 
-  constructor(
-    private componentName: string,
-    studioSourceFileParser: StudioSourceFileParser
-  ) {
+  constructor(studioSourceFileParser: StudioSourceFileParser) {
     this.propValuesParser = new PropValuesParser(studioSourceFileParser);
-    this.propShapeParser = new PropShapeParser(studioSourceFileParser);
+    this.typeNodeParser = new TypeNodeParser(studioSourceFileParser);
+    this.propInterfaceNameParser = new PropInterfaceNameParser(
+      studioSourceFileParser
+    );
   }
 
   /**
@@ -33,6 +35,7 @@ export default class FileMetadataParser {
   ): Pick<FileMetadata, "initialProps" | "propShape" | "metadataUUID"> {
     const propShape = this.parsePropShape(onProp);
     const initialProps = this.parseInitialProps(propShape);
+
     return {
       propShape,
       ...(initialProps && { initialProps }),
@@ -58,6 +61,11 @@ export default class FileMetadataParser {
    * @returns shape of the component's props
    */
   private parsePropShape(onProp?: (propName: string) => boolean): PropShape {
-    return this.propShapeParser.parsePropShape(onProp);
+    const interfaceName = this.propInterfaceNameParser.parsePropInterfaceName();
+    if (interfaceName === undefined) {
+      return {};
+    }
+
+    return this.typeNodeParser.parseType(interfaceName, onProp);
   }
 }

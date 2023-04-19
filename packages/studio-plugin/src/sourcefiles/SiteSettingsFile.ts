@@ -1,6 +1,6 @@
 import { Project } from "ts-morph";
 import { PropShape } from "../types";
-import PropShapeParser from "../parsers/PropShapeParser";
+import TypeNodeParser from "../parsers/TypeNodeParser";
 import PropValuesParser from "../parsers/PropValuesParser";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
@@ -15,18 +15,19 @@ import { TypeGuards } from "../utils";
 export default class SiteSettingsFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private studioSourceFileWriter: StudioSourceFileWriter;
-  private propShapeParser: PropShapeParser;
+  private typeNodeParser: TypeNodeParser;
   private propValuesParser: PropValuesParser;
 
   constructor(filepath: string, project: Project) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.studioSourceFileWriter = new StudioSourceFileWriter(filepath, project);
     this.propValuesParser = new PropValuesParser(this.studioSourceFileParser);
-    this.propShapeParser = new PropShapeParser(this.studioSourceFileParser);
+    this.typeNodeParser = new TypeNodeParser(this.studioSourceFileParser);
   }
 
   getSiteSettings(): SiteSettings {
-    const siteSettingsShape: PropShape = this.propShapeParser.parsePropShape();
+    const siteSettingsShape: PropShape =
+      this.typeNodeParser.parseType("SiteSettings");
     const values = this.propValuesParser.parsePropValues(siteSettingsShape);
     if (!values) {
       throw new Error("No default export found for site settings");

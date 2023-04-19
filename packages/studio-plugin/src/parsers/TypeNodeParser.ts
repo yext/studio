@@ -9,9 +9,9 @@ import {
 import { PropValueType } from "../types";
 
 /**
- * PropShapeParser is a class for parsing a typescript interface into a PropShape.
+ * TypeNodeParser is a class for parsing a typescript interface.
  */
-export default class PropShapeParser {
+export default class TypeNodeParser {
   private studioImports: string[];
 
   constructor(private studioSourceFileParser: StudioSourceFileParser) {
@@ -26,8 +26,12 @@ export default class PropShapeParser {
    * @param onProp - A function to execute when iterating through each field in the prop interface
    * @returns shape of the component's props
    */
-  parsePropShape(onProp?: (propName: string) => boolean): PropShape {
-    const parsedInterface = this.studioSourceFileParser.parsePropInterface();
+  parseType(
+    interfaceName: string,
+    onProp?: (propName: string) => boolean
+  ): PropShape {
+    const parsedInterface =
+      this.studioSourceFileParser.parsePropInterface(interfaceName);
     if (!parsedInterface) {
       return {};
     }
