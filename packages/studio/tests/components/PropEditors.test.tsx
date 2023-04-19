@@ -173,8 +173,7 @@ function testStandardOrModuleComponentState(
     expect(screen.getByLabelText("bgColor")).toHaveAttribute("type", "color");
   });
 
-  it(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, async () => {
-    jest.useFakeTimers();
+  describe(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, () => {
     function PropEditorsWithActiveState() {
       const { activeComponentMetadata, activeComponentState } =
         useActiveComponent();
@@ -193,7 +192,6 @@ function testStandardOrModuleComponentState(
         />
       );
     }
-    render(<PropEditorsWithActiveState />);
     const getComponentProps = () =>
       (
         useStudioStore
@@ -201,47 +199,75 @@ function testStandardOrModuleComponentState(
           .actions.getActiveComponentState() as StandardOrModuleComponentState
       ).props;
 
-    userEvent.type(screen.getByLabelText("title"), "test!");
-    await screen.findByDisplayValue("test!");
-    act(() => jest.advanceTimersByTime(500)); //debounce time
-
-    userEvent.type(screen.getByLabelText("num"), "10");
-    await screen.findByDisplayValue("10");
-    act(() => jest.advanceTimersByTime(500)); //debounce time
-
-    userEvent.click(screen.getByLabelText("bool"));
-    await waitFor(() => expect(screen.getByRole("checkbox")).toBeChecked());
-    act(() => jest.advanceTimersByTime(500)); //debounce time
-
-    fireEvent.input(screen.getByLabelText("bgColor"), {
-      target: { value: "#abcdef" },
+    beforeEach(() => {
+      jest.useFakeTimers();
     });
-    await screen.findByDisplayValue("#abcdef");
-    act(() => jest.advanceTimersByTime(500)); //debounce time
 
-    const expectedComponentProps: PropValues = {
-      title: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.string,
-        value: "test!",
-      },
-      num: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.number,
-        value: 10,
-      },
-      bool: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.boolean,
-        value: true,
-      },
-      bgColor: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.HexColor,
-        value: "#abcdef",
-      },
-    };
-    expect(getComponentProps()).toEqual(expectedComponentProps);
+    it("string prop", async () => {
+      render(<PropEditorsWithActiveState />);
+
+      userEvent.type(screen.getByLabelText("title"), "test!");
+      await screen.findByDisplayValue("test!");
+      act(() => jest.advanceTimersByTime(500)); //debounce time
+
+      expect(getComponentProps()).toEqual({
+        title: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.string,
+          value: "test!",
+        },
+      });
+    });
+
+    it("number prop", async () => {
+      render(<PropEditorsWithActiveState />);
+
+      userEvent.type(screen.getByLabelText("num"), "10");
+      await screen.findByDisplayValue("10");
+      act(() => jest.advanceTimersByTime(500)); //debounce time
+
+      expect(getComponentProps()).toEqual({
+        num: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.number,
+          value: 10,
+        },
+      });
+    });
+
+    it("boolean prop", async () => {
+      render(<PropEditorsWithActiveState />);
+
+      userEvent.click(screen.getByLabelText("bool"));
+      await waitFor(() => expect(screen.getByRole("checkbox")).toBeChecked());
+      act(() => jest.advanceTimersByTime(500)); //debounce time
+
+      expect(getComponentProps()).toEqual({
+        bool: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.boolean,
+          value: true,
+        },
+      });
+    });
+
+    it("hex color prop", async () => {
+      render(<PropEditorsWithActiveState />);
+
+      fireEvent.input(screen.getByLabelText("bgColor"), {
+        target: { value: "#abcdef" },
+      });
+      await screen.findByDisplayValue("#abcdef");
+      act(() => jest.advanceTimersByTime(500)); //debounce time
+
+      expect(getComponentProps()).toEqual({
+        bgColor: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.HexColor,
+          value: "#abcdef",
+        },
+      });
+    });
   });
 }
 

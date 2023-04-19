@@ -64,7 +64,7 @@ export default function RepeaterEditor({
           <DebouncedInput
             value={componentState.listExpression}
             onChange={updateListExpression}
-            renderInput={renderListInput}
+            renderInput={ListInput}
           />
         </label>
       )}
@@ -72,10 +72,13 @@ export default function RepeaterEditor({
   );
 }
 
-function renderListInput(handleChange: (val: string) => void, value = "") {
-  function handleInputChange(e: ChangeEvent<HTMLInputElement>) {
-    handleChange(e.target.value);
-  }
+function ListInput(handleChange: (val: string) => void, value = "") {
+  const handleInputChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      handleChange(e.target.value);
+    },
+    [handleChange]
+  );
 
   return (
     <FieldPickerInput
