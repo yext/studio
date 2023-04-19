@@ -17,7 +17,7 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     const inputValue = "doc.age";
-    userEvent.type(screen.getByLabelText("age"), inputValue);
+    void userEvent.type(screen.getByLabelText("age"), inputValue);
     await screen.findByDisplayValue("doc.age");
     jest.advanceTimersByTime(500); //debounce time
     expect(onPropChange).toBeCalledWith("age", {
@@ -37,7 +37,7 @@ describe("trigger onChange from input interaction", () => {
         onPropChange={onPropChange}
       />
     );
-    userEvent.type(screen.getByLabelText("title"), "y");
+    void userEvent.type(screen.getByLabelText("title"), "y");
     await screen.findByDisplayValue("y");
     jest.advanceTimersByTime(500); //debounce time
     expect(onPropChange).toBeCalledWith("title", {
@@ -57,7 +57,7 @@ describe("trigger onChange from input interaction", () => {
         onPropChange={onPropChange}
       />
     );
-    userEvent.type(screen.getByLabelText("age"), "4");
+    void userEvent.type(screen.getByLabelText("age"), "4");
     await screen.findByDisplayValue("4");
     jest.advanceTimersByTime(500); //debounce time
     expect(onPropChange).toBeCalledWith("age", {
@@ -77,7 +77,7 @@ describe("trigger onChange from input interaction", () => {
         onPropChange={onPropChange}
       />
     );
-    userEvent.click(screen.getByLabelText("is Yext employee?"));
+    void userEvent.click(screen.getByLabelText("is Yext employee?"));
     await waitFor(() => expect(screen.getByRole("checkbox")).toBeChecked());
     jest.advanceTimersByTime(500); //debounce time
     expect(onPropChange).toBeCalledWith("is Yext employee?", {
@@ -87,7 +87,7 @@ describe("trigger onChange from input interaction", () => {
     });
   });
 
-  it("constructs HexColor PropVal on select", () => {
+  it("constructs HexColor PropVal on select", async () => {
     const onPropChange = jest.fn();
     render(
       <PropEditor

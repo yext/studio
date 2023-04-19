@@ -111,7 +111,7 @@ it("calls updateRepeaterListExpression when updating list field input", async ()
     .mockImplementation();
   render(<RepeaterEditor componentState={repeaterState} />);
   const input = screen.getByRole("textbox");
-  userEvent.type(input, "s");
+  void userEvent.type(input, "s");
   await screen.findByDisplayValue("myLists");
   jest.advanceTimersByTime(500); //debounce time
   expect(updateListSpy).toBeCalledTimes(1);

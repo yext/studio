@@ -238,7 +238,7 @@ function testStandardOrModuleComponentState(
     it("string prop", async () => {
       render(<PropEditorsWithActiveState />);
 
-      userEvent.type(screen.getByLabelText("title"), "test!");
+      void userEvent.type(screen.getByLabelText("title"), "test!");
       await screen.findByDisplayValue("test!");
       act(() => jest.advanceTimersByTime(500)); //debounce time
 
@@ -254,7 +254,7 @@ function testStandardOrModuleComponentState(
     it("number prop", async () => {
       render(<PropEditorsWithActiveState />);
 
-      userEvent.type(screen.getByLabelText("num"), "10");
+      void userEvent.type(screen.getByLabelText("num"), "10");
       await screen.findByDisplayValue("10");
       act(() => jest.advanceTimersByTime(500)); //debounce time
 
@@ -270,7 +270,7 @@ function testStandardOrModuleComponentState(
     it("boolean prop", async () => {
       render(<PropEditorsWithActiveState />);
 
-      userEvent.click(screen.getByLabelText("bool"));
+      void userEvent.click(screen.getByLabelText("bool"));
       await waitFor(() => expect(screen.getByRole("checkbox")).toBeChecked());
       act(() => jest.advanceTimersByTime(500)); //debounce time
 
