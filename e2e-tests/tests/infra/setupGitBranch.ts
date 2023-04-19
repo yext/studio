@@ -81,6 +81,7 @@ async function restoreGitState(
   testInfo: TestInfo,
   initialData: InitialGitData
 ) {
+  const postTestRef = await git.revparse(["HEAD"]);
   const { originalBranch, originalRef, uncommittedChanges } = initialData;
   // Commit any changes in e2e-tests/src, so that they will be removed
   // when the repo is reset to its original commit.
@@ -95,4 +96,5 @@ async function restoreGitState(
   if (uncommittedChanges) {
     await git.reset(["HEAD^"]);
   }
+  await git.raw(["checkout", postTestRef, "--", "__screenshots__"]);
 }

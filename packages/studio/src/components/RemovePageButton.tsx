@@ -20,9 +20,9 @@ export default function RemovePageButton({
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      function handleConfirm() {
+      async function handleConfirm() {
         removePage(pageName);
-        handleClose();
+        await handleClose();
       }
       return (
         <Modal

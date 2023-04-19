@@ -86,7 +86,7 @@ export default class PropShapeParser {
           throw new Error(
             `Unrecognized type ${type} in interface ${interfaceName}`
           );
-        } else if (type == PropValueType.Record) {
+        } else if (type === PropValueType.Record) {
           throw new Error("Only Records of Record<string, any> are supported.");
         } else if (
           !TypeGuards.isPrimitiveProp(type) &&

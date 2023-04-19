@@ -86,13 +86,14 @@ it("removeFileMetadata can remove a module metadata", () => {
   expect(UUIDToFileMetadata).toEqual({});
 });
 
-it("updates UUIDToImportedComponent using setUUIDToImportedComponent", () => {
+it("updates UUIDToImportedComponent using setImportedComponent", () => {
+  const importedComponent = () => <div>hello world</div>;
   const newImportedComponents = {
-    universalPage: () => <div>hello world</div>,
+    Banner: importedComponent,
   };
   useStudioStore
     .getState()
-    .fileMetadatas.setUUIDToImportedComponent(newImportedComponents);
+    .fileMetadatas.setImportedComponent("Banner", importedComponent);
   const UUIDToImportedComponent =
     useStudioStore.getState().fileMetadatas.UUIDToImportedComponent;
   expect(UUIDToImportedComponent).toEqual(newImportedComponents);

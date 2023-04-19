@@ -66,7 +66,7 @@ describe("updatePageFile", () => {
     );
   });
 
-  it("updates user page file based on new state", async () => {
+  it("updates user page file based on new state", () => {
     jest.spyOn(fs, "existsSync").mockImplementation(() => true);
     const fsWriteFileSyncSpy = jest
       .spyOn(fs, "writeFileSync")
@@ -83,7 +83,7 @@ describe("updatePageFile", () => {
     );
   });
 
-  it("creates a new page file and add a page component based on new state", async () => {
+  it("creates a new page file and add a page component based on new state", () => {
     jest.spyOn(fs, "existsSync").mockImplementation(() => false);
     const fsMkdirSyncSpy = jest.spyOn(fs, "mkdirSync").mockImplementation();
     const fsOpenSyncSpy = jest

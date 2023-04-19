@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-useless-constructor */
 import typescript, { Extension } from "typescript";
 import { NpmLookup } from "../../src/utils";
 

@@ -5,7 +5,7 @@ import Container from "../components/Container";
 export default function UniversalPage() {
   return (
     <>
-      <Button className="px-2" />
+      <Button className="px-4 py-2 text-lg border-4 border-green-500" />
       <Button className="px-4" />
       <div>
         <Container>

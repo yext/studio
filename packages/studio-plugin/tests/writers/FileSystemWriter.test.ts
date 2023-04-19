@@ -61,23 +61,20 @@ describe("syncFileMetadata", () => {
   });
   const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 
-  it("updates user module file based on new state", async () => {
+  it("updates user module file based on new state", () => {
     const fsWriteFileSyncSpy = jest
       .spyOn(fs, "writeFileSync")
       .mockImplementation();
 
-    fileWriter.writeToModuleFile(
-      path.join(paths.modules, "NewModule.tsx"),
-      moduleMetadata
-    );
+    fileWriter.writeToModuleFile(moduleMetadata);
 
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("NewModule.tsx"),
+      expect.stringContaining("UpdatedModule.tsx"),
       fs.readFileSync(path.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
     );
   });
 
-  it("creates a new module file and adds a component based on new state", async () => {
+  it("creates a new module file and adds a component based on new state", () => {
     const moduleFilepath = path.join(paths.modules, "UpdatedModule.tsx");
 
     jest.spyOn(fs, "existsSync").mockImplementation(() => false);
@@ -91,13 +88,10 @@ describe("syncFileMetadata", () => {
       .spyOn(fs, "openSync")
       .mockImplementationOnce(jest.fn());
 
-    fileWriter.writeToModuleFile(
-      path.join(paths.modules, "NewModule.tsx"),
-      moduleMetadata
-    );
+    fileWriter.writeToModuleFile(moduleMetadata);
 
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("NewModule.tsx"),
+      expect.stringContaining("UpdatedModule.tsx"),
       fs.readFileSync(moduleFilepath, "utf-8")
     );
     expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.modules, {

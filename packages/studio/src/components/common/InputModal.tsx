@@ -6,8 +6,8 @@ interface InputModalProps {
   title: string;
   description: string;
   errorMessage: string;
-  handleClose: () => void;
-  handleSave: (input: string) => boolean;
+  handleClose: () => void | Promise<void>;
+  handleSave: (input: string) => boolean | Promise<boolean>;
 }
 
 export default function InputModal({
@@ -21,15 +21,15 @@ export default function InputModal({
   const [isValidInput, setIsValidInput] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback(async () => {
     setInputValue("");
     setIsValidInput(false);
-    customHandleClose();
+    await customHandleClose();
   }, [customHandleClose, setInputValue, setIsValidInput]);
 
-  const handleSave = useCallback(() => {
-    if (customHandleSave(inputValue)) {
-      handleClose();
+  const handleSave = useCallback(async () => {
+    if (await customHandleSave(inputValue)) {
+      await handleClose();
     } else {
       setIsValidInput(false);
     }

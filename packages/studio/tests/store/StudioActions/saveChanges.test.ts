@@ -36,9 +36,9 @@ beforeEach(() => {
   });
 });
 
-it("sends pending changes to server to update files", () => {
+it("sends pending changes to server to update files", async () => {
   const sendMessageSpy = jest.spyOn(sendMessageModule, "default");
-  useStudioStore.getState().actions.saveChanges();
+  await useStudioStore.getState().actions.saveChanges();
   expect(sendMessageSpy).toBeCalledTimes(1);
   expect(sendMessageSpy).toBeCalledWith(MessageID.SaveChanges, {
     pageNameToPageState: mockPages,
@@ -53,8 +53,8 @@ it("sends pending changes to server to update files", () => {
   });
 });
 
-it("resets pending changes on successful response from server after saving changes", () => {
-  useStudioStore.getState().actions.saveChanges();
+it("resets pending changes on successful response from server after saving changes", async () => {
+  await useStudioStore.getState().actions.saveChanges();
   expect(useStudioStore.getState().pages.pendingChanges).toEqual({
     pagesToRemove: new Set(),
     pagesToUpdate: new Set(),

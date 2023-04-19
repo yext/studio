@@ -6,7 +6,7 @@ it("can unwrap parens and ignore extra logic around repeated JSX", () => {
   const { sourceFile } = createTestSourceFile(
     `function Test() {
       return (<>{myList.map((item, index) => {
-        console.log();
+        window.performance.mark(index);
         return ((<Banner key={index} />));
       })}</>)
     }`

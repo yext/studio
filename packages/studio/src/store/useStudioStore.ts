@@ -72,7 +72,7 @@ const useStudioStore = create<StudioStore>()(
   )
 );
 
-setInitialAsyncState(useStudioStore);
+void setInitialAsyncState(useStudioStore);
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;

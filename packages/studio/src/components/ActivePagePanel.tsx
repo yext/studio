@@ -36,7 +36,7 @@ export default function ActivePagePanel(): JSX.Element {
         invisible: !isActivePage,
       });
       function handleSelectPage() {
-        updateActivePage(pageName);
+        void updateActivePage(pageName);
       }
       return (
         <li key={pageName} className="flex justify-between pb-4 px-2">
