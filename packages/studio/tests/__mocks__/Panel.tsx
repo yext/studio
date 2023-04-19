@@ -7,6 +7,7 @@ export interface PanelProps {
 export default function Panel(props: PanelProps) {
   return (
     <>
+      Im a panel lol
       <Banner title={props.text} />
       <Banner title="This is Banner" />
     </>

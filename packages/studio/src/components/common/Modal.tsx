@@ -7,8 +7,8 @@ interface ModalProps {
   title: string;
   body: JSX.Element;
   errorMessage?: string;
-  handleClose: () => void;
-  handleConfirm: () => void;
+  handleClose: () => void | Promise<void>;
+  handleConfirm: () => void | Promise<void>;
   isConfirmButtonDisabled?: boolean;
   confirmButtonText?: string;
   confirmButtonEnabledColor?: string;

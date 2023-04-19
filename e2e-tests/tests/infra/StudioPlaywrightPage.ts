@@ -35,11 +35,14 @@ export default class StudioPlaywrightPage {
   async addPage(pageName: string) {
     await this.addPageButton.click();
     await expect(this.page).toHaveScreenshot();
+    await this.typeIntoModal("Add Page Modal", pageName);
+  }
 
+  private async typeIntoModal(modalName: string, text: string) {
     const modal = this.page.getByRole("dialog", {
-      name: "Add Page Modal",
+      name: modalName,
     });
-    await modal.getByRole("textbox").type(pageName);
+    await modal.getByRole("textbox").type(text);
     await modal.getByText("Save").click();
   }
 
@@ -96,5 +99,14 @@ export default class StudioPlaywrightPage {
     await this.page.getByRole("button", { name: "Content" }).click();
     const input = this.page.getByRole("textbox", { name: propName });
     return input.getAttribute("value");
+  }
+
+  /**
+   * Turns the current active component into a module.
+   */
+  async createModule(moduleName: string) {
+    await this.page.getByRole("button", { name: "Properties" }).click();
+    await this.page.getByRole("button", { name: "Create Module" }).click();
+    await this.typeIntoModal("Create Module Modal", moduleName);
   }
 }

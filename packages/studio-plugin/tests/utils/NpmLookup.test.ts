@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-mocks-import */
 import path from "path";
 import process from "process";
 import MockNpmLookup from "../__mocks__/MockNpmLookup";

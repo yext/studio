@@ -21,7 +21,7 @@ export default function UniversalPage({ document }: TemplateProps) {
         <Banner title={`${item}!`} key={index} />
       ))}
       <Container>
-        <Button bgColor="bg-red-100" />
+        <Button />
       </Container>
       <AceComponent text="ace" />
       <ContainerWithButtons

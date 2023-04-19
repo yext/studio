@@ -1,4 +1,4 @@
-import { within, screen, render } from "@testing-library/react";
+import { within, screen, render, renderHook } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import HighlightedPreview from "../../src/components/HighlightedPreview";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -16,6 +16,7 @@ import {
   PropValueType,
   RepeaterState,
 } from "@yext/studio-plugin";
+import useImportedComponents from "../../src/hooks/useImportedComponents";
 
 const moduleState: ModuleState = {
   kind: ComponentStateKind.Module,
@@ -44,7 +45,7 @@ beforeEach(() => {
 
 describe("renders preview", () => {
   it("renders component tree with nested Component(s)", async () => {
-    mockPreviewState(nestedComponentTree);
+    await mockPreviewState(nestedComponentTree);
     render(<HighlightedPreview />);
     const container1 = await screen.findByText(/Container 1/);
     const container2 = await within(container1).findByText(/Container 2/);
@@ -58,7 +59,7 @@ describe("renders preview", () => {
 
   it("renders component tree with Module component type", async () => {
     const tree = [moduleState];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const panel = await screen.findByText(/This is Panel module/);
     const banner = await screen.findByText(/This is Banner/);
@@ -68,7 +69,7 @@ describe("renders preview", () => {
 
   it("renders component tree with Repeater component over a module", async () => {
     const tree = [repeaterState];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const panels = await screen.findAllByText(/This is Panel module/);
     const banners = await screen.findAllByText(/This is Banner/);
@@ -78,7 +79,7 @@ describe("renders preview", () => {
 
   it("does not render Repeater if list expression is not found", async () => {
     const tree = [{ ...repeaterState, listExpression: "document.services" }];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const panels = screen.queryByText(/This is Panel module/);
     const banners = screen.queryByText(/This is Banner/);
@@ -114,7 +115,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
     expect(siteSettingsExpressionProp).toBeDefined();
@@ -137,7 +138,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
     expect(siteSettingsExpressionProp).toBeDefined();
@@ -162,7 +163,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const nestedPropUsage = await screen.findByText(/eggyweggy/);
     expect(nestedPropUsage).toBeDefined();
@@ -184,7 +185,7 @@ describe("renders preview", () => {
         },
       },
     ];
-    mockPreviewState(tree);
+    await mockPreviewState(tree);
     render(<HighlightedPreview />);
     const catItemProp = await screen.findByText(/cat/);
     expect(catItemProp).toBeDefined();
@@ -196,7 +197,7 @@ describe("renders preview", () => {
 });
 
 it("clicking a component in the preview updates the activeComponentUUID", async () => {
-  mockPreviewState(nestedComponentTree);
+  await mockPreviewState(nestedComponentTree);
   render(<HighlightedPreview />);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     undefined
@@ -213,7 +214,7 @@ it("clicking a component in the preview updates the activeComponentUUID", async 
   );
 });
 
-function mockPreviewState(componentTree: ComponentState[]) {
+async function mockPreviewState(componentTree: ComponentState[]) {
   mockStore({
     pages: {
       pages: {
@@ -254,5 +255,6 @@ function mockPreviewState(componentTree: ComponentState[]) {
       },
     },
   });
-  useStudioStore.getState().actions.updateActivePage("universalPage");
+  await useStudioStore.getState().actions.updateActivePage("universalPage");
+  await renderHook(() => useImportedComponents(componentTree)).result.current;
 }

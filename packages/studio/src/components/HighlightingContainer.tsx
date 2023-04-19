@@ -48,7 +48,7 @@ type HighlightingProps = PropsWithChildren<{
 class HighlightingClass extends Component<HighlightingProps> {
   private resizeObserver: ResizeObserver;
 
-  constructor(props) {
+  constructor(props: HighlightingProps) {
     super(props);
     this.resizeObserver = new ResizeObserver(() => {
       if (this.props.uuid === this.props.activeComponentUUID) {
@@ -72,7 +72,7 @@ class HighlightingClass extends Component<HighlightingProps> {
     }
   };
 
-  componentDidMount(): void {
+  private attachListenerToChild() {
     const childNode = findDOMNode(this);
     if (!childNode || !(childNode instanceof HTMLElement)) {
       return;
@@ -82,6 +82,7 @@ class HighlightingClass extends Component<HighlightingProps> {
   }
 
   componentDidUpdate(): void {
+    this.attachListenerToChild();
     if (this.props.uuid === this.props.activeComponentUUID) {
       this.highlightSelf();
     }
