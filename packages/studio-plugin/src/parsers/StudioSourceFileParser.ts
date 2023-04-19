@@ -7,6 +7,8 @@ import {
   ObjectLiteralExpression,
   Identifier,
   ArrayLiteralExpression,
+  InterfaceDeclaration,
+  ParameterDeclaration,
 } from "ts-morph";
 import StaticParsingHelpers, {
   ParsedInterface,
@@ -137,10 +139,20 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
-  parseInterface(interfaceName: string): ParsedInterface | undefined {
+  parsePropInterface(): ParsedInterface | undefined {
+    const defaultExport = this.getDefaultExport();
+    if (!defaultExport?.isKind(SyntaxKind.FunctionDeclaration)) {
+      throw new Error("Expected a function for component at: " + this.filepath);
+    }
+    const firstParam: ParameterDeclaration | undefined =
+      defaultExport.getParameters()[0];
+    if (!firstParam) {
+      return;
+    }
+    const interfaceName = firstParam.getType().getText();
     const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
     if (!interfaceDeclaration) {
-      return undefined;
+      return;
     }
     return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
   }

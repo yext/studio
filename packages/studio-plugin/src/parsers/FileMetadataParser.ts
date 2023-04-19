@@ -58,9 +58,6 @@ export default class FileMetadataParser {
    * @returns shape of the component's props
    */
   private parsePropShape(onProp?: (propName: string) => boolean): PropShape {
-    return this.propShapeParser.parsePropShape(
-      `${this.componentName}Props`,
-      onProp
-    );
+    return this.propShapeParser.parsePropShape(onProp);
   }
 }

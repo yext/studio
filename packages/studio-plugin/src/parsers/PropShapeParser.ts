@@ -26,25 +26,16 @@ export default class PropShapeParser {
    * @param onProp - A function to execute when iterating through each field in the prop interface
    * @returns shape of the component's props
    */
-  parsePropShape(
-    interfaceName: string,
-    onProp?: (propName: string) => boolean
-  ): PropShape {
-    const parsedInterface =
-      this.studioSourceFileParser.parseInterface(interfaceName);
+  parsePropShape(onProp?: (propName: string) => boolean): PropShape {
+    const parsedInterface = this.studioSourceFileParser.parsePropInterface();
     if (!parsedInterface) {
       return {};
     }
-    return this.transformParsedInterface(
-      parsedInterface,
-      interfaceName,
-      onProp
-    );
+    return this.transformParsedInterface(parsedInterface, onProp);
   }
 
   private transformParsedInterface(
     parsedInterface: ParsedInterface,
-    interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
     const propShape: PropShape = {};
@@ -53,11 +44,7 @@ export default class PropShapeParser {
       .forEach((propName) => {
         const prop = parsedInterface[propName];
         if (prop.kind !== ParsedInterfaceKind.Simple) {
-          const nestedShape = this.transformParsedInterface(
-            prop.type,
-            interfaceName,
-            onProp
-          );
+          const nestedShape = this.transformParsedInterface(prop.type, onProp);
           const propMetadata: PropMetadata = {
             type: PropValueType.Object,
             shape: nestedShape,
@@ -84,7 +71,7 @@ export default class PropShapeParser {
           type === PropValueType.Object
         ) {
           throw new Error(
-            `Unrecognized type ${type} in interface ${interfaceName}`
+            `Unrecognized type ${type} in prop interface for ${this.studioSourceFileParser.getFilepath()}`
           );
         } else if (type === PropValueType.Record) {
           throw new Error("Only Records of Record<string, any> are supported.");
@@ -93,7 +80,7 @@ export default class PropShapeParser {
           !this.studioImports.includes(type)
         ) {
           throw new Error(
-            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
+            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${this.studioSourceFileParser.getFilepath()}.`
           );
         } else if (unionValues) {
           propShape[propName] = {
