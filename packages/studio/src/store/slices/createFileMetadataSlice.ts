@@ -48,11 +48,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   },
   setImportedComponent(uuid, importedComponent) {
     set((store) => {
-      if (!importedComponent) {
-        delete store.UUIDToImportedComponent[uuid];
-      } else {
-        store.UUIDToImportedComponent[uuid] = importedComponent;
-      }
+      store.UUIDToImportedComponent[uuid] = importedComponent;
     });
   },
   setComponentTreeInModule(

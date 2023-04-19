@@ -98,20 +98,6 @@ it("updates UUIDToImportedComponent using setImportedComponent", () => {
   expect(UUIDToImportedComponent).toEqual(newImportedComponents);
 });
 
-it("can delete components in UUIDToImportedComponent using setImportedComponent", () => {
-  mockStore({
-    fileMetadatas: {
-      UUIDToImportedComponent: {
-        Banner: () => <div>Banner</div>,
-      },
-    },
-  });
-  useStudioStore.getState().fileMetadatas.setImportedComponent("Banner");
-  const UUIDToImportedComponent =
-    useStudioStore.getState().fileMetadatas.UUIDToImportedComponent;
-  expect(UUIDToImportedComponent).toEqual({});
-});
-
 function setInitialState(initialState: Partial<FileMetadataSliceStates>): void {
   const baseState: FileMetadataSliceStates = {
     UUIDToFileMetadata: {},

@@ -202,7 +202,6 @@ it("clicking a component in the preview updates the activeComponentUUID", async 
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     undefined
   );
-  await new Promise((resolve) => setTimeout(resolve, 1500));
   const container1 = await screen.findByText(/Container 1/);
   await userEvent.click(container1);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(

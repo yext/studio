@@ -19,7 +19,7 @@ export interface FileMetadataSliceActions {
   getModuleMetadata: (metadataUUID: string) => ModuleMetadata;
   removeFileMetadata: (metadataUUID: string) => void;
   getComponentMetadata: (metadataUUID: string) => ComponentMetadata;
-  setImportedComponent: (uuid: string, importedComponent?: ImportType) => void;
+  setImportedComponent: (uuid: string, importedComponent: ImportType) => void;
   setComponentTreeInModule: (
     metadataUUID: string,
     componentTree: ComponentState[]
