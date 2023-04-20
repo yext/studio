@@ -34,7 +34,7 @@ export default class InterfaceParsingHelper {
     return this.parsePropertySignatures(interfaceDeclaration.getProperties());
   }
 
-  static parsePropertySignatures(
+  private static parsePropertySignatures(
     propertySignatures: PropertySignature[]
   ): ParsedInterface {
     const parsedInterface: ParsedInterface = {};
