@@ -1,9 +1,7 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import PropEditor from "../../src/components/PropEditor";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
-
-jest.useFakeTimers();
 
 describe("trigger onChange from input interaction", () => {
   it("constructs expression PropVal type", async () => {
@@ -17,13 +15,13 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     const inputValue = "doc.age";
-    void userEvent.type(screen.getByLabelText("age"), inputValue);
-    await screen.findByDisplayValue("doc.age");
-    jest.advanceTimersByTime(500); //debounce time
-    expect(onPropChange).toBeCalledWith("age", {
-      kind: PropValueKind.Expression,
-      valueType: PropValueType.number,
-      value: "`" + inputValue + "`",
+    await userEvent.type(screen.getByLabelText("age"), inputValue);
+    Array.from(inputValue).forEach((char) => {
+      expect(onPropChange).toBeCalledWith("age", {
+        kind: PropValueKind.Expression,
+        valueType: PropValueType.number,
+        value: "`" + char + "`",
+      });
     });
   });
 
@@ -37,9 +35,7 @@ describe("trigger onChange from input interaction", () => {
         onPropChange={onPropChange}
       />
     );
-    void userEvent.type(screen.getByLabelText("title"), "y");
-    await screen.findByDisplayValue("y");
-    jest.advanceTimersByTime(500); //debounce time
+    await userEvent.type(screen.getByLabelText("title"), "y");
     expect(onPropChange).toBeCalledWith("title", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.string,
@@ -57,9 +53,7 @@ describe("trigger onChange from input interaction", () => {
         onPropChange={onPropChange}
       />
     );
-    void userEvent.type(screen.getByLabelText("age"), "4");
-    await screen.findByDisplayValue("4");
-    jest.advanceTimersByTime(500); //debounce time
+    await userEvent.type(screen.getByLabelText("age"), "4");
     expect(onPropChange).toBeCalledWith("age", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.number,
@@ -77,9 +71,7 @@ describe("trigger onChange from input interaction", () => {
         onPropChange={onPropChange}
       />
     );
-    void userEvent.click(screen.getByLabelText("is Yext employee?"));
-    await waitFor(() => expect(screen.getByRole("checkbox")).toBeChecked());
-    jest.advanceTimersByTime(500); //debounce time
+    await userEvent.click(screen.getByLabelText("is Yext employee?"));
     expect(onPropChange).toBeCalledWith("is Yext employee?", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.boolean,
@@ -88,6 +80,7 @@ describe("trigger onChange from input interaction", () => {
   });
 
   it("constructs HexColor PropVal on select", async () => {
+    jest.useFakeTimers();
     const onPropChange = jest.fn();
     render(
       <PropEditor
@@ -102,11 +95,12 @@ describe("trigger onChange from input interaction", () => {
       target: { value: "#abcdef" },
     });
     await screen.findByDisplayValue("#abcdef");
-    jest.advanceTimersByTime(500); //debounce time
+    jest.advanceTimersByTime(100); //debounce time
     expect(onPropChange).toBeCalledWith("background color", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.HexColor,
       value: "#abcdef",
     });
   });
+  jest.useRealTimers();
 });

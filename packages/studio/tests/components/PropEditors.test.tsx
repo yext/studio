@@ -1,10 +1,4 @@
-import {
-  act,
-  fireEvent,
-  render,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import PropEditors from "../../src/components/PropEditors";
 import {
   ComponentState,
@@ -225,7 +219,6 @@ function testStandardOrModuleComponentState(
     };
 
     beforeEach(() => {
-      jest.useFakeTimers();
       mockStoreActiveComponent({
         activeComponent: activeComponent,
         activeComponentMetadata: {
@@ -237,11 +230,7 @@ function testStandardOrModuleComponentState(
 
     it("string prop", async () => {
       render(<PropEditorsWithActiveState />);
-
-      void userEvent.type(screen.getByLabelText("title"), "test!");
-      await screen.findByDisplayValue("test!");
-      act(() => jest.advanceTimersByTime(500)); //debounce time
-
+      await userEvent.type(screen.getByLabelText("title"), "test!");
       expect(getComponentProps()).toEqual({
         ...activeComponent.props,
         title: {
@@ -253,11 +242,7 @@ function testStandardOrModuleComponentState(
 
     it("number prop", async () => {
       render(<PropEditorsWithActiveState />);
-
-      void userEvent.type(screen.getByLabelText("num"), "10");
-      await screen.findByDisplayValue("10");
-      act(() => jest.advanceTimersByTime(500)); //debounce time
-
+      await userEvent.type(screen.getByLabelText("num"), "10");
       expect(getComponentProps()).toEqual({
         ...activeComponent.props,
         num: {
@@ -269,11 +254,7 @@ function testStandardOrModuleComponentState(
 
     it("boolean prop", async () => {
       render(<PropEditorsWithActiveState />);
-
-      void userEvent.click(screen.getByLabelText("bool"));
-      await waitFor(() => expect(screen.getByRole("checkbox")).toBeChecked());
-      act(() => jest.advanceTimersByTime(500)); //debounce time
-
+      await userEvent.click(screen.getByLabelText("bool"));
       expect(getComponentProps()).toEqual({
         ...activeComponent.props,
         bool: {
@@ -284,13 +265,14 @@ function testStandardOrModuleComponentState(
     });
 
     it("hex color prop", async () => {
+      jest.useFakeTimers();
       render(<PropEditorsWithActiveState />);
 
       fireEvent.input(screen.getByLabelText("bgColor"), {
         target: { value: "#abcdef" },
       });
       await screen.findByDisplayValue("#abcdef");
-      act(() => jest.advanceTimersByTime(500)); //debounce time
+      act(() => jest.advanceTimersByTime(100)); //debounce time
 
       expect(getComponentProps()).toEqual({
         ...activeComponent.props,
@@ -299,6 +281,7 @@ function testStandardOrModuleComponentState(
           value: "#abcdef",
         },
       });
+      jest.useRealTimers();
     });
   });
 }

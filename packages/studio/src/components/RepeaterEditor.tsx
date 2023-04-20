@@ -4,7 +4,6 @@ import { Tooltip } from "react-tooltip";
 import useStudioStore from "../store/useStudioStore";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 import Toggle from "./common/Toggle";
-import DebouncedInput from "./DebouncedInput";
 
 const tooltipAnchorID = "YextStudio-listRepeaterToggle";
 
@@ -40,6 +39,13 @@ export default function RepeaterEditor({
     [componentState, isChecked, updateRepeaterListExpression]
   );
 
+  const handleListUpdate = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      updateListExpression(e.target.value);
+    },
+    [updateListExpression]
+  );
+
   return (
     <>
       <div className="font-bold pb-2">Repeaters</div>
@@ -61,31 +67,14 @@ export default function RepeaterEditor({
       {isChecked && (
         <label className="flex flex-col mb-2">
           <span>List Field</span>
-          <DebouncedInput
-            value={componentState.listExpression}
-            onChange={updateListExpression}
-            renderInput={ListInput}
+          <FieldPickerInput
+            displayValue={componentState.listExpression}
+            onInputChange={handleListUpdate}
+            handleFieldSelection={updateListExpression}
+            fieldType="array"
           />
         </label>
       )}
     </>
-  );
-}
-
-function ListInput(handleChange: (val: string) => void, value = "") {
-  const handleInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      handleChange(e.target.value);
-    },
-    [handleChange]
-  );
-
-  return (
-    <FieldPickerInput
-      displayValue={value}
-      onInputChange={handleInputChange}
-      handleFieldSelection={handleChange}
-      fieldType="array"
-    />
   );
 }

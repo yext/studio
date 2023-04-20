@@ -3,20 +3,22 @@ import { debounce } from "lodash";
 import useStudioStore from "../store/useStudioStore";
 import useTemporalStore from "../store/useTemporalStore";
 
-interface DebouncedInputProps<T> {
-  value?: T;
-  onChange: (value: T) => void;
-  renderInput: (onChange: (value: T) => void, value?: T) => JSX.Element;
+interface DebouncedInputProps<T, E> {
+  value: T;
+  onChange: (e: E) => void;
+  convertChangeToValue: (e: E) => T;
+  renderInput: (onChange: (e: E) => void, value: T) => JSX.Element;
 }
 
 /**
  * Handles the debouncing for changes made to an input element's value.
  */
-export default function DebouncedInput<T>({
+export default function DebouncedInput<T, E>({
   value,
   onChange,
+  convertChangeToValue,
   renderInput,
-}: DebouncedInputProps<T>): JSX.Element {
+}: DebouncedInputProps<T, E>): JSX.Element {
   const [inputValue, setInputValue] = useState(value);
   const hasTemporalChange = useHasTemporalChange();
   const hasActiveComponentChange = useHasActiveComponentChange();
@@ -27,12 +29,12 @@ export default function DebouncedInput<T>({
   }, [hasActiveComponentChange, hasTemporalChange, value]);
 
   const handleChange = useMemo(() => {
-    const debouncedOnChange = debounce(onChange, 500);
-    return (val: T) => {
-      debouncedOnChange(val);
-      setInputValue(val);
+    const debouncedOnChange = debounce(onChange, 100);
+    return (e: E) => {
+      debouncedOnChange(e);
+      setInputValue(convertChangeToValue(e));
     };
-  }, [onChange]);
+  }, [onChange, convertChangeToValue]);
 
   return renderInput(handleChange, inputValue);
 }

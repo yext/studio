@@ -13,7 +13,6 @@ import React, { useCallback } from "react";
 import { startCase } from "lodash";
 import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
-import DebouncedInput from "./DebouncedInput";
 
 /**
  * SiteSettingsPanel renders an editor for SiteSettings.
@@ -162,31 +161,15 @@ function SimplePropInput(props: {
     [propName, updateValues, valueType]
   );
 
-  const renderPropInput = useCallback(
-    (
-      onChange: (val: string | number | boolean) => void,
-      val?: string | number | boolean
-    ) => {
-      return (
-        <PropInput
-          propType={valueType}
-          propValue={val}
-          onChange={onChange}
-          unionValues={unionValues}
-          propKind={PropValueKind.Literal}
-        />
-      );
-    },
-    [valueType, unionValues]
-  );
-
   return (
     <label id={propName} className="flex flex-col mb-2">
       <span>{startCase(propName)}</span>
-      <DebouncedInput
-        value={value}
+      <PropInput
+        propType={valueType}
+        propValue={value}
         onChange={handleUpdate}
-        renderInput={renderPropInput}
+        unionValues={unionValues}
+        propKind={PropValueKind.Literal}
       />
     </label>
   );

@@ -1,6 +1,8 @@
-import { ChangeEventHandler } from "react";
+import { ChangeEventHandler, useCallback, useMemo } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import FieldPicker from "./FieldPicker";
+import useTemporalStore from "../../store/useTemporalStore";
+import { debounce } from "lodash";
 
 interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
@@ -22,12 +24,13 @@ export default function FieldPickerInput({
   fieldType,
 }: FieldPickerInputProps) {
   const entityData = useStudioStore((store) => store.pages.activeEntityData);
+  const onChange = useTemporalDebouncedFunc(onInputChange);
 
   return (
     <div className="relative">
       <input
         type="text"
-        onChange={onInputChange}
+        onChange={onChange}
         className={inputBoxCssClasses}
         value={displayValue}
       />
@@ -41,5 +44,26 @@ export default function FieldPickerInput({
         )}
       </i>
     </div>
+  );
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function useTemporalDebouncedFunc<P extends Array<any>, R>(
+  func: (...args: P) => R
+): typeof func {
+  const [pause, resume] = useTemporalStore((store) => [
+    store.pause,
+    store.resume,
+  ]);
+  const debouncedResume = useMemo(() => debounce(resume, 500), [resume]);
+
+  return useCallback(
+    (...args: P): R => {
+      const val = func(...args);
+      pause();
+      debouncedResume();
+      return val;
+    },
+    [func, debouncedResume, pause]
   );
 }

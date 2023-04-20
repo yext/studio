@@ -4,6 +4,7 @@ import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
+import DebouncedInput from "./DebouncedInput";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -48,7 +49,7 @@ export default function PropInput({
       };
       onChange(getValue());
     },
-    [propKind, propType, onChange]
+    [onChange, propKind, propType]
   );
   const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
 
@@ -109,8 +110,7 @@ export default function PropInput({
       );
     case PropValueType.HexColor:
       return (
-        <input
-          type="color"
+        <ColorPicker
           onChange={handleChangeEvent}
           value={displayValue as string}
         />
@@ -118,6 +118,34 @@ export default function PropInput({
     default:
       return <div>Unknown PropValueType {propType}.</div>;
   }
+}
+
+function ColorPicker({
+  onChange,
+  value,
+}: {
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  value: string;
+}) {
+  const convertEventToValue = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => e.target.value,
+    []
+  );
+  const renderInput = useCallback(
+    (handleChange: (e: ChangeEvent<HTMLInputElement>) => void, val: string) => (
+      <input type="color" onChange={handleChange} value={val} />
+    ),
+    []
+  );
+
+  return (
+    <DebouncedInput
+      onChange={onChange}
+      convertChangeToValue={convertEventToValue}
+      renderInput={renderInput}
+      value={value}
+    />
+  );
 }
 
 function useDisplayValue(

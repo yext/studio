@@ -100,7 +100,7 @@ it("can edit site settings", async () => {
     target: { value: "#abcdef" },
   });
   await screen.findByDisplayValue("#abcdef");
-  jest.advanceTimersByTime(500); //debounce time
+  jest.advanceTimersByTime(100); //debounce time
   expect(setValues).toHaveBeenCalledTimes(1);
   expect(setValues).toHaveBeenCalledWith({
     ...values,
@@ -120,4 +120,5 @@ it("can edit site settings", async () => {
       },
     },
   });
+  jest.useRealTimers();
 });
