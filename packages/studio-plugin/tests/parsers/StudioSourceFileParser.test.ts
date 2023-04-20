@@ -72,12 +72,12 @@ describe("getDefaultExport", () => {
 });
 
 describe("parsePropInterface", () => {
-  it.only("can parse stuff", () => {
+  it("can parse a component's prop interface", () => {
     const parser = createParser(
       `export default function MyComponent(props: MyProps) {};
       interface MyProps { myNum: number }`
     );
-    expect(parser.parsePropInterface()).toEqual({
+    expect(parser.parseInterface("MyProps")).toEqual({
       myNum: {
         kind: ParsedInterfaceKind.Simple,
         type: "number",

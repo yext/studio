@@ -137,7 +137,7 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
-  parsePropInterface(interfaceName: string): ParsedInterface | undefined {
+  parseInterface(interfaceName: string): ParsedInterface | undefined {
     const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
     if (!interfaceDeclaration) {
       return;

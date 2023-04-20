@@ -31,7 +31,7 @@ export default class TypeNodeParser {
     onProp?: (propName: string) => boolean
   ): PropShape {
     const parsedInterface =
-      this.studioSourceFileParser.parsePropInterface(interfaceName);
+      this.studioSourceFileParser.parseInterface(interfaceName);
     if (!parsedInterface) {
       return {};
     }
