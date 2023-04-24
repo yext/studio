@@ -27,7 +27,7 @@ export default class SiteSettingsFile {
 
   getSiteSettings(): SiteSettings {
     const siteSettingsShape: PropShape =
-      this.propShapeParser.parsePropShape("SiteSettings");
+      this.propShapeParser.parseShape("SiteSettings");
     const values = this.propValuesParser.parsePropValues(siteSettingsShape);
     if (!values) {
       throw new Error("No default export found for site settings");

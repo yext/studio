@@ -21,12 +21,9 @@ export default class PropShapeParser {
   }
 
   /**
-   * Get shape of the component's props, defined through an interface `${componentName}Props`.
-   *
-   * @param onProp - A function to execute when iterating through each field in the prop interface
-   * @returns shape of the component's props
+   * Get the shape of a specific interface.
    */
-  parsePropShape(
+  parseShape(
     interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
@@ -84,7 +81,7 @@ export default class PropShapeParser {
           type === PropValueType.Object
         ) {
           throw new Error(
-            `Unrecognized type ${type} in interface ${interfaceName}`
+            `Unrecognized type ${type} in interface ${interfaceName} within ${this.studioSourceFileParser.getFilepath()}`
           );
         } else if (type === PropValueType.Record) {
           throw new Error("Only Records of Record<string, any> are supported.");
@@ -93,7 +90,7 @@ export default class PropShapeParser {
           !this.studioImports.includes(type)
         ) {
           throw new Error(
-            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${interfaceName}.`
+            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface ${interfaceName} within ${this.studioSourceFileParser.getFilepath()}.`
           );
         } else if (unionValues) {
           propShape[propName] = {
