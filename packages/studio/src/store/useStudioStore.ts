@@ -2,14 +2,11 @@ import { create, StateCreator } from "zustand";
 import { withLenses, lens } from "@dhmk/zustand-lens";
 import { immer } from "zustand/middleware/immer";
 import { enableMapSet } from "immer";
-import { temporal } from "zundo";
-import { isEqual } from "lodash";
 
 import { StudioStore } from "./models/StudioStore";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
 import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
-import { getUserUpdatableStore } from "./utils";
 import { MessageID } from "@yext/studio-plugin";
 import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
@@ -17,7 +14,7 @@ import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import setInitialAsyncState from "./setInitialEntityFile";
-import { TemporalStudioStore } from "./useTemporalStore";
+import { addZundoMiddleware } from "./zundoMiddleware";
 
 enableMapSet();
 
@@ -26,25 +23,8 @@ enableMapSet();
  */
 function storeMiddlewares(
   storeCreator: StateCreator<StudioStore, [["zustand/immer", never]]>
-): ReturnType<
-  typeof temporal<
-    StudioStore,
-    [],
-    [["zustand/immer", never]],
-    TemporalStudioStore
-  >
-> {
-  return temporal(immer(storeCreator), {
-    equality: (currStore, pastStore) =>
-      isEqual(
-        getUserUpdatableStore(currStore),
-        getUserUpdatableStore(pastStore)
-      ),
-    partialize: (state) => {
-      const { previousSave: _, ...remainingState } = state;
-      return remainingState;
-    },
-  });
+) {
+  return addZundoMiddleware(immer(storeCreator));
 }
 
 /**
