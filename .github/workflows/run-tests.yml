@@ -22,7 +22,7 @@ jobs:
       - run: npm rebuild
       - run: npm run build
 
-  test_build:
+  typecheck_jest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
