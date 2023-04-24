@@ -11,17 +11,21 @@ import mockStore from "../__utils__/mockStore";
 const shape: SiteSettingsShape = {
   "Global Colors": {
     type: PropValueType.Object,
+    required: false,
     shape: {
       primary: {
         type: PropValueType.HexColor,
+        required: false,
       },
       secondary: {
         type: PropValueType.HexColor,
+        required: false,
       },
     },
   },
   experienceKey: {
     type: PropValueType.string,
+    required: false,
   },
 } as const;
 const values: SiteSettingsValues = {
@@ -69,6 +73,7 @@ it("can render even when optional settings are not specified", () => {
         ...shape,
         optionalString: {
           type: PropValueType.string,
+          required: false,
         },
       },
       values,

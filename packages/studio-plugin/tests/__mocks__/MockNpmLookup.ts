@@ -2,6 +2,8 @@
 import typescript, { Extension } from "typescript";
 import { NpmLookup } from "../../src/utils";
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export default class MockNpmLookup extends NpmLookup {
   constructor(moduleName: string) {
     super(moduleName);
