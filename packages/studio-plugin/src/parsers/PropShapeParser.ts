@@ -2,11 +2,11 @@ import { PropMetadata, PropShape } from "../types/PropShape";
 import TypeGuards from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
+import { PropValueType } from "../types";
 import {
   ParsedInterface,
   ParsedInterfaceKind,
-} from "./helpers/StaticParsingHelpers";
-import { PropValueType } from "../types";
+} from "./helpers/InterfaceParsingHelper";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
