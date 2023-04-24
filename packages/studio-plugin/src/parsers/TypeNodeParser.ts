@@ -75,7 +75,7 @@ export default class TypeNodeParser {
           type === PropValueType.Object
         ) {
           throw new Error(
-            `Unrecognized type ${type} in prop interface for ${this.studioSourceFileParser.getFilepath()}`
+            `Unrecognized type ${type} in ${this.studioSourceFileParser.getFilepath()}`
           );
         } else if (type === PropValueType.Record) {
           throw new Error("Only Records of Record<string, any> are supported.");
