@@ -32,11 +32,16 @@ export default class TypeNodeParser {
     if (!parsedInterface) {
       return {};
     }
-    return this.transformParsedInterface(parsedInterface, onProp);
+    return this.transformParsedInterface(
+      parsedInterface,
+      interfaceName,
+      onProp
+    );
   }
 
   private transformParsedInterface(
     parsedInterface: ParsedInterface,
+    interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
     const propShape: PropShape = {};
@@ -45,7 +50,11 @@ export default class TypeNodeParser {
       .forEach((propName) => {
         const prop = parsedInterface[propName];
         if (prop.kind !== ParsedInterfaceKind.Simple) {
-          const nestedShape = this.transformParsedInterface(prop.type, onProp);
+          const nestedShape = this.transformParsedInterface(
+            prop.type,
+            interfaceName,
+            onProp
+          );
           const propMetadata: PropMetadata = {
             type: PropValueType.Object,
             shape: nestedShape,
@@ -72,7 +81,7 @@ export default class TypeNodeParser {
           type === PropValueType.Object
         ) {
           throw new Error(
-            `Unrecognized type ${type} in ${this.studioSourceFileParser.getFilepath()}`
+            `Unrecognized type ${type} in interface ${interfaceName} within ${this.studioSourceFileParser.getFilepath()}`
           );
         } else if (type === PropValueType.Record) {
           throw new Error("Only Records of Record<string, any> are supported.");
@@ -81,7 +90,7 @@ export default class TypeNodeParser {
           !this.studioImports.includes(type)
         ) {
           throw new Error(
-            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface for ${this.studioSourceFileParser.getFilepath()}.`
+            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface ${interfaceName} within ${this.studioSourceFileParser.getFilepath()}.`
           );
         } else if (unionValues) {
           propShape[propName] = {

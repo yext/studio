@@ -1,5 +1,6 @@
-import { ParameterDeclaration, SyntaxKind } from "ts-morph";
+import { SyntaxKind } from "ts-morph";
 import StudioSourceFileParser from "./StudioSourceFileParser";
+import TsMorphHelpers from "./helpers/TsMorphHelpers";
 
 export default class PropInterfaceNameParser {
   constructor(private sourceFileParser: StudioSourceFileParser) {}
@@ -8,15 +9,7 @@ export default class PropInterfaceNameParser {
    * Parses the interface name for the component's props.
    */
   parsePropInterfaceName(): string | undefined {
-    const defaultExport =
-      this.sourceFileParser.getDefaultExportReactComponent();
-    if (!defaultExport?.isKind(SyntaxKind.FunctionDeclaration)) {
-      throw new Error(
-        "Expected a function for component at: " +
-          this.sourceFileParser.getFilepath()
-      );
-    }
-    const parameters: ParameterDeclaration[] = defaultExport.getParameters();
+    const parameters = this.getParameters();
     if (parameters.length > 1) {
       throw new Error(
         "Function components may contain at most one parameter, found " +
@@ -30,5 +23,19 @@ export default class PropInterfaceNameParser {
     }
 
     return firstParam.getTypeNodeOrThrow().getText();
+  }
+
+  private getParameters() {
+    const defaultExport =
+      this.sourceFileParser.getDefaultExportReactComponent();
+    if (defaultExport.isKind(SyntaxKind.VariableDeclaration)) {
+      const functionNode = TsMorphHelpers.getFirstChildOfKindOrThrow(
+        defaultExport,
+        SyntaxKind.ArrowFunction,
+        SyntaxKind.FunctionExpression
+      );
+      return functionNode.getParameters();
+    }
+    return defaultExport.getParameters();
   }
 }
