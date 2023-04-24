@@ -4,40 +4,41 @@ import {
   SyntaxKind,
   TypeNode,
   UnionTypeNode,
+  TypeLiteralNode,
 } from "ts-morph";
 import { PropValueType } from "../../types";
 import StaticParsingHelpers from "./StaticParsingHelpers";
 
-export type ParsedInterface = {
+export type ParsedShape = {
   [key: string]:
     | {
-        kind: ParsedInterfaceKind.Simple;
+        kind: ParsedShapeKind.Simple;
         type: string;
         required: boolean;
         unionValues?: string[];
         doc?: string;
       }
     | {
-        kind: ParsedInterfaceKind.Nested;
-        type: ParsedInterface;
+        kind: ParsedShapeKind.Nested;
+        type: ParsedShape;
         required: boolean;
       };
 };
 
-export enum ParsedInterfaceKind {
+export enum ParsedShapeKind {
   Simple = "simple",
   Nested = "nested",
 }
 
-export default class InterfaceParsingHelper {
-  static parseInterfaceDeclaration(interfaceDeclaration: InterfaceDeclaration) {
-    return this.parsePropertySignatures(interfaceDeclaration.getProperties());
+export default class ShapeParsingHelper {
+  static parseShape(shapeDeclaration: InterfaceDeclaration | TypeLiteralNode) {
+    return this.parsePropertySignatures(shapeDeclaration.getProperties());
   }
 
   private static parsePropertySignatures(
     propertySignatures: PropertySignature[]
-  ): ParsedInterface {
-    const parsedInterface: ParsedInterface = {};
+  ): ParsedShape {
+    const parsedShape: ParsedShape = {};
 
     const parsePropertySignature = (p: PropertySignature) => {
       const typeNode = p.getTypeNode();
@@ -53,14 +54,14 @@ export default class InterfaceParsingHelper {
 
     propertySignatures.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
-      parsedInterface[propertyName] = parsePropertySignature(p);
+      parsedShape[propertyName] = parsePropertySignature(p);
     });
-    return parsedInterface;
+    return parsedShape;
   }
 
   private static handleNestedType(typeNode: TypeNode, p: PropertySignature) {
     return {
-      kind: ParsedInterfaceKind.Nested,
+      kind: ParsedShapeKind.Nested,
       type: this.parsePropertySignatures(
         typeNode.getChildrenOfKind(SyntaxKind.PropertySignature)
       ),
@@ -78,7 +79,7 @@ export default class InterfaceParsingHelper {
 
     const jsdoc = this.getJsDocs(p);
     return {
-      kind: ParsedInterfaceKind.Simple,
+      kind: ParsedShapeKind.Simple,
       type,
       ...(jsdoc && { doc: jsdoc }),
       required: !p.hasQuestionToken(),
@@ -102,7 +103,7 @@ export default class InterfaceParsingHelper {
 
     const jsdoc = this.getJsDocs(p);
     return {
-      kind: ParsedInterfaceKind.Simple,
+      kind: ParsedShapeKind.Simple,
       type: PropValueType.string,
       unionValues,
       ...(jsdoc && { doc: jsdoc }),

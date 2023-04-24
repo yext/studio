@@ -3,10 +3,7 @@ import TypeGuards from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import { PropValueType } from "../types";
-import {
-  ParsedInterface,
-  ParsedInterfaceKind,
-} from "./helpers/InterfaceParsingHelper";
+import { ParsedShape, ParsedShapeKind } from "./helpers/ShapeParsingHelper";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
@@ -21,27 +18,22 @@ export default class PropShapeParser {
   }
 
   /**
-   * Get the shape of a specific interface.
+   * Get the shape of a specific type or interface.
    */
   parseShape(
-    interfaceName: string,
+    identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const parsedInterface =
-      this.studioSourceFileParser.parseInterface(interfaceName);
-    if (!parsedInterface) {
+    const parsedShape = this.studioSourceFileParser.parseShape(identifier);
+    if (!parsedShape) {
       return {};
     }
-    return this.transformParsedInterface(
-      parsedInterface,
-      interfaceName,
-      onProp
-    );
+    return this.transformParsedInterface(parsedShape, identifier, onProp);
   }
 
   private transformParsedInterface(
-    parsedInterface: ParsedInterface,
-    interfaceName: string,
+    parsedInterface: ParsedShape,
+    identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
     const propShape: PropShape = {};
@@ -49,10 +41,10 @@ export default class PropShapeParser {
       .filter((propName) => !onProp || onProp(propName))
       .forEach((propName) => {
         const prop = parsedInterface[propName];
-        if (prop.kind !== ParsedInterfaceKind.Simple) {
+        if (prop.kind !== ParsedShapeKind.Simple) {
           const nestedShape = this.transformParsedInterface(
             prop.type,
-            interfaceName,
+            identifier,
             onProp
           );
           const propMetadata: PropMetadata = {
@@ -81,7 +73,7 @@ export default class PropShapeParser {
           type === PropValueType.Object
         ) {
           throw new Error(
-            `Unrecognized type ${type} in interface ${interfaceName} within ${this.studioSourceFileParser.getFilepath()}`
+            `Unrecognized type ${type} in ${identifier} within ${this.studioSourceFileParser.getFilepath()}`
           );
         } else if (type === PropValueType.Record) {
           throw new Error("Only Records of Record<string, any> are supported.");
@@ -90,7 +82,7 @@ export default class PropShapeParser {
           !this.studioImports.includes(type)
         ) {
           throw new Error(
-            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in interface ${interfaceName} within ${this.studioSourceFileParser.getFilepath()}.`
+            `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in ${identifier} within ${this.studioSourceFileParser.getFilepath()}.`
           );
         } else if (unionValues) {
           propShape[propName] = {
