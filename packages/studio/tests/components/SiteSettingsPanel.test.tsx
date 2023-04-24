@@ -22,7 +22,6 @@ const shape: SiteSettingsShape = {
         required: false,
       },
     },
-    required: false,
   },
   experienceKey: {
     type: PropValueType.string,
