@@ -7,6 +7,7 @@ export default class ComponentParamParser {
 
   /**
    * Parses the interface name for the component's props.
+   * @throws
    */
   parseParamName(): string | undefined {
     const parameters = this.getParameters();
