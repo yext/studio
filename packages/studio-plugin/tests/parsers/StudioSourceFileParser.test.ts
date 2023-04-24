@@ -2,7 +2,7 @@ import { SyntaxKind } from "ts-morph";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
-import { ParsedInterfaceKind } from "../../src/parsers/helpers/StaticParsingHelpers";
+import { ParsedInterfaceKind } from "../../src/parsers/helpers/InterfaceParsingHelper";
 
 describe("parseExportedObjectLiteral", () => {
   it("throws when the variable is not an ObjectLiteralExpression", () => {
