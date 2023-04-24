@@ -142,7 +142,7 @@ export default class StudioSourceFileParser {
   parseInterface(interfaceName: string): ParsedInterface | undefined {
     const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
     if (!interfaceDeclaration) {
-      return undefined;
+      return;
     }
     return InterfaceParsingHelper.parseInterfaceDeclaration(
       interfaceDeclaration

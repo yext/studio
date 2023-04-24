@@ -1,11 +1,11 @@
 import ComplexBanner from "../../ComponentFile/ComplexBanner";
 
-export interface PanelProps {
+export interface EmptyModuleProps {
   document: Record<string, any>;
   parentNum?: number;
 }
 
-export default function Panel({ document, ...props }: PanelProps) {
+export default function Panel({ document, ...props }: EmptyModuleProps) {
   return (
     <ComplexBanner
       title={`title - ${document.anything}`}
