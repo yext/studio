@@ -9,9 +9,9 @@ import {
 } from "./helpers/InterfaceParsingHelper";
 
 /**
- * TypeNodeParser is a class for parsing a typescript interface.
+ * PropShapeParser is a class for parsing a typescript interface into a PropShape.
  */
-export default class TypeNodeParser {
+export default class PropShapeParser {
   private studioImports: string[];
 
   constructor(private studioSourceFileParser: StudioSourceFileParser) {
@@ -23,7 +23,7 @@ export default class TypeNodeParser {
   /**
    * Get the shape of a specific interface.
    */
-  parseType(
+  parseShape(
     interfaceName: string,
     onProp?: (propName: string) => boolean
   ): PropShape {

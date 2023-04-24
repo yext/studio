@@ -1,11 +1,11 @@
 import { PropShape } from "../types/PropShape";
 import { PropValues } from "../types/PropValues";
 import PropValuesParser from "./PropValuesParser";
-import TypeNodeParser from "./TypeNodeParser";
+import PropShapeParser from "./PropShapeParser";
 import { FileMetadata } from "../types";
 import { v4 } from "uuid";
 import StudioSourceFileParser from "./StudioSourceFileParser";
-import PropInterfaceNameParser from "./PropInterfaceNameParser";
+import ComponentParamParser from "./ComponentParamParser";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for
@@ -13,13 +13,13 @@ import PropInterfaceNameParser from "./PropInterfaceNameParser";
  */
 export default class FileMetadataParser {
   private propValuesParser: PropValuesParser;
-  private typeNodeParser: TypeNodeParser;
-  private propInterfaceNameParser: PropInterfaceNameParser;
+  private propShapeParser: PropShapeParser;
+  private componentParamParser: ComponentParamParser;
 
   constructor(studioSourceFileParser: StudioSourceFileParser) {
     this.propValuesParser = new PropValuesParser(studioSourceFileParser);
-    this.typeNodeParser = new TypeNodeParser(studioSourceFileParser);
-    this.propInterfaceNameParser = new PropInterfaceNameParser(
+    this.propShapeParser = new PropShapeParser(studioSourceFileParser);
+    this.componentParamParser = new ComponentParamParser(
       studioSourceFileParser
     );
   }
@@ -61,11 +61,11 @@ export default class FileMetadataParser {
    * @returns shape of the component's props
    */
   private parsePropShape(onProp?: (propName: string) => boolean): PropShape {
-    const interfaceName = this.propInterfaceNameParser.parsePropInterfaceName();
+    const interfaceName = this.componentParamParser.parseParamName();
     if (interfaceName === undefined) {
       return {};
     }
 
-    return this.typeNodeParser.parseType(interfaceName, onProp);
+    return this.propShapeParser.parseShape(interfaceName, onProp);
   }
 }

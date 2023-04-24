@@ -1,4 +1,4 @@
-import PropInterfaceNameParser from "../../src/parsers/PropInterfaceNameParser";
+import ComponentParamParser from "../../src/parsers/ComponentParamParser";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 
@@ -17,7 +17,7 @@ describe("can parse the prop interface name for a component", () => {
     // eslint-disable-next-line jest/valid-title
     it(title, () => {
       const parser = createParser(cases[title]);
-      expect(parser.parsePropInterfaceName()).toEqual("MyProps");
+      expect(parser.parseParamName()).toEqual("MyProps");
     });
   });
 });
@@ -25,7 +25,7 @@ describe("can parse the prop interface name for a component", () => {
 describe("error cases", () => {
   it("does not support anonymous arrow function exports", () => {
     const parser = createParser("export default (props: MyProps) => {};");
-    expect(() => parser.parsePropInterfaceName()).toThrow(
+    expect(() => parser.parseParamName()).toThrow(
       /Could not find a child of kind/
     );
   });
@@ -34,8 +34,8 @@ describe("error cases", () => {
     const parser = createParser(
       "export default function MyComp(first: First, second: Second) => {};"
     );
-    expect(() => parser.parsePropInterfaceName()).toThrow(
-      /Function components may contain at most one parameter, found 2/
+    expect(() => parser.parseParamName()).toThrow(
+      /Functional components may contain at most one parameter, found 2/
     );
   });
 });
@@ -43,5 +43,5 @@ describe("error cases", () => {
 function createParser(code: string) {
   const { project } = createTestSourceFile(code);
   const sourceFileParser = new StudioSourceFileParser("test.tsx", project);
-  return new PropInterfaceNameParser(sourceFileParser);
+  return new ComponentParamParser(sourceFileParser);
 }

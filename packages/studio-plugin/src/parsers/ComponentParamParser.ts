@@ -2,17 +2,17 @@ import { SyntaxKind } from "ts-morph";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import TsMorphHelpers from "./helpers/TsMorphHelpers";
 
-export default class PropInterfaceNameParser {
+export default class ComponentParamParser {
   constructor(private sourceFileParser: StudioSourceFileParser) {}
 
   /**
    * Parses the interface name for the component's props.
    */
-  parsePropInterfaceName(): string | undefined {
+  parseParamName(): string | undefined {
     const parameters = this.getParameters();
     if (parameters.length > 1) {
       throw new Error(
-        "Function components may contain at most one parameter, found " +
+        "Functional components may contain at most one parameter, found " +
           `${parameters.length} at ${this.sourceFileParser.getFilepath()}`
       );
     }
