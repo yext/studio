@@ -1,9 +1,13 @@
-import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
+import {
+  ComponentStateKind,
+  FileMetadataKind,
+  PageState,
+} from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
 
 it("can delete a module and detach all of its instances across multiple pages", () => {
-  const basicPageState = {
+  const basicPageState: PageState = {
     componentTree: [
       {
         kind: ComponentStateKind.Module,

@@ -9,11 +9,13 @@ import {
   ArrayLiteralExpression,
 } from "ts-morph";
 import StaticParsingHelpers, {
-  ParsedInterface,
   ParsedObjectLiteral,
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
+import InterfaceParsingHelper, {
+  ParsedInterface,
+} from "./helpers/InterfaceParsingHelper";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -140,9 +142,11 @@ export default class StudioSourceFileParser {
   parseInterface(interfaceName: string): ParsedInterface | undefined {
     const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
     if (!interfaceDeclaration) {
-      return undefined;
+      return;
     }
-    return StaticParsingHelpers.parseInterfaceDeclaration(interfaceDeclaration);
+    return InterfaceParsingHelper.parseInterfaceDeclaration(
+      interfaceDeclaration
+    );
   }
 
   /**

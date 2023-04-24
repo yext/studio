@@ -11,6 +11,7 @@ import mockStore from "../__utils__/mockStore";
 const shape: SiteSettingsShape = {
   "Global Colors": {
     type: PropValueType.Object,
+    required: false,
     shape: {
       primary: {
         type: PropValueType.HexColor,
@@ -25,7 +26,7 @@ const shape: SiteSettingsShape = {
   },
   experienceKey: {
     type: PropValueType.string,
-    required: true,
+    required: false,
   },
 } as const;
 const values: SiteSettingsValues = {

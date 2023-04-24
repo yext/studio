@@ -1,4 +1,3 @@
-import path from "path";
 import { ComponentMetadata } from "../types/ComponentMetadata";
 import { SpecialReactProps } from "../types/PropShape";
 import { FileMetadataKind } from "../types/FileMetadata";
@@ -12,14 +11,11 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
  */
 export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
-  private componentName: string;
   private fileMetadataParser: FileMetadataParser;
 
   constructor(filepath: string, project: Project, private pluginName?: string) {
-    this.componentName = path.basename(filepath, ".tsx");
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
-      this.componentName,
       this.studioSourceFileParser
     );
   }

@@ -11,7 +11,7 @@ export type MockStudioStore = {
 export default function mockStore(state: MockStudioStore) {
   useStudioStore.setState({
     ...useStudioStore.getState(),
-    ...state,
+    ...(state as StudioStore),
     fileMetadatas: {
       ...useStudioStore.getState().fileMetadatas,
       ...state.fileMetadatas,

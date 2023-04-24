@@ -16,6 +16,7 @@ const componentMetadata: ComponentMetadata = {
     myText: {
       type: PropValueType.string,
       doc: "a random string",
+      required: false,
     },
   },
 };

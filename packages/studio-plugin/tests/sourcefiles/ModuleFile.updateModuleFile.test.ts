@@ -23,10 +23,6 @@ describe("updateModuleFile", () => {
   let moduleFile: ModuleFile;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    jest
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .spyOn(ModuleFile.prototype as any, "getComponentName")
-      .mockImplementation(() => "Panel");
     tsMorphProject = createTsMorphProject();
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     moduleFile = new ModuleFile(
