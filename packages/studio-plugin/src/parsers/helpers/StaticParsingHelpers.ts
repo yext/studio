@@ -4,7 +4,6 @@ import {
   Expression,
   Identifier,
   ImportDeclaration,
-  InterfaceDeclaration,
   JsxAttributeLike,
   JsxChild,
   JsxElement,
@@ -14,42 +13,15 @@ import {
   ObjectLiteralExpression,
   ParenthesizedExpression,
   SyntaxKind,
-  TypeNode,
   PropertySignature,
   PropertyAssignment,
-  UnionTypeNode,
   JsxExpression,
 } from "ts-morph";
-import {
-  PropValueKind,
-  PropValues,
-  PropValueType,
-} from "../../types/PropValues";
+import { PropValueKind, PropValues } from "../../types/PropValues";
 import { PropShape, SpecialReactProps } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
-
-export enum ParsedInterfaceKind {
-  Simple = "simple",
-  Nested = "nested",
-}
-
-export type ParsedInterface = {
-  [key: string]:
-    | {
-        kind: ParsedInterfaceKind.Simple;
-        type: string;
-        required: boolean;
-        unionValues?: string[];
-        doc?: string;
-      }
-    | {
-        kind: ParsedInterfaceKind.Nested;
-        type: ParsedInterface;
-        required: boolean;
-      };
-};
 
 export type ParsedObjectLiteral = {
   [key: string]:
@@ -149,99 +121,8 @@ export default class StaticParsingHelpers {
     };
   }
 
-  static parseInterfaceDeclaration(
-    interfaceDeclaration: InterfaceDeclaration
-  ): ParsedInterface {
-    return this.parsePropertySignatures(interfaceDeclaration.getProperties());
-  }
-
-  private static getEscapedName(
-    p: PropertySignature | PropertyAssignment
-  ): string {
+  static getEscapedName(p: PropertySignature | PropertyAssignment): string {
     return p.getSymbolOrThrow().getEscapedName();
-  }
-
-  private static getJsDocs(propertySignature: PropertySignature) {
-    const docs = propertySignature.getStructure().docs;
-    return docs
-      ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
-      .join("\n");
-  }
-
-  private static parsePropertySignatures(
-    propertySignatures: PropertySignature[]
-  ): ParsedInterface {
-    const parsedInterface: ParsedInterface = {};
-
-    const handleNestedType = (typeNode: TypeNode, p: PropertySignature) => {
-      parsedInterface[this.getEscapedName(p)] = {
-        kind: ParsedInterfaceKind.Nested,
-        type: this.parsePropertySignatures(
-          typeNode.getChildrenOfKind(SyntaxKind.PropertySignature)
-        ),
-        required: !p.hasQuestionToken(),
-      };
-    };
-
-    const handleSimplePropertySignature = (p: PropertySignature) => {
-      const { name: propName, type } = p.getStructure();
-      if (typeof type !== "string") {
-        console.error(
-          "Unable to parse prop:",
-          propName,
-          "in PropertySignature:",
-          p.getFullText()
-        );
-        return;
-      }
-
-      const jsdoc = this.getJsDocs(p);
-      parsedInterface[this.getEscapedName(p)] = {
-        kind: ParsedInterfaceKind.Simple,
-        type,
-        ...(jsdoc && { doc: jsdoc }),
-        required: !p.hasQuestionToken(),
-      };
-    };
-
-    const handleUnionType = (
-      p: PropertySignature,
-      unionType: UnionTypeNode
-    ) => {
-      const unionValues = unionType.getTypeNodes().map((n) => {
-        const firstChild = n.getFirstChild();
-        if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
-          throw new Error(
-            `Union types only support strings. Found a ${firstChild?.getKindName()} ` +
-              `within "${this.getEscapedName(p)}".`
-          );
-        }
-        return firstChild.getLiteralText();
-      });
-      const jsdoc = this.getJsDocs(p);
-      parsedInterface[this.getEscapedName(p)] = {
-        kind: ParsedInterfaceKind.Simple,
-        type: PropValueType.string,
-        unionValues,
-        ...(jsdoc && { doc: jsdoc }),
-        required: !p.hasQuestionToken(),
-      };
-    };
-
-    propertySignatures.forEach((p) => {
-      const typeNode = p.getTypeNode();
-      if (typeNode?.isKind(SyntaxKind.TypeLiteral)) {
-        handleNestedType(typeNode, p);
-        return;
-      }
-      const unionType = p.getFirstChildByKind(SyntaxKind.UnionType);
-      if (unionType) {
-        handleUnionType(p, unionType);
-      } else {
-        handleSimplePropertySignature(p);
-      }
-    });
-    return parsedInterface;
   }
 
   static parseJsxChild<T>(
