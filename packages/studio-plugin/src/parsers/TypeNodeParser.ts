@@ -21,10 +21,7 @@ export default class TypeNodeParser {
   }
 
   /**
-   * Get shape of the component's props, defined through an interface `${componentName}Props`.
-   *
-   * @param onProp - A function to execute when iterating through each field in the prop interface
-   * @returns shape of the component's props
+   * Get the shape of a specific interface.
    */
   parseType(
     interfaceName: string,
