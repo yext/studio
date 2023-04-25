@@ -2,7 +2,7 @@ import { SyntaxKind } from "ts-morph";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
-import { ParsedInterfaceKind } from "../../src/parsers/helpers/InterfaceParsingHelper";
+import { ParsedShapeKind } from "../../src/parsers/helpers/ShapeParsingHelper";
 
 describe("parseExportedObjectLiteral", () => {
   it("throws when the variable is not an ObjectLiteralExpression", () => {
@@ -71,16 +71,30 @@ describe("getDefaultExport", () => {
   });
 });
 
-describe("parsePropInterface", () => {
-  it("can parse a component's prop interface", () => {
+describe("parseShape", () => {
+  it("can parse a component's prop shape defined with an interface", () => {
     const parser = createParser(
       `export default function MyComponent(props: MyProps) {};
       interface MyProps { myNum: number }`
     );
-    expect(parser.parseInterface("MyProps")).toEqual({
+    expect(parser.parseShape("MyProps")).toEqual({
       myNum: {
-        kind: ParsedInterfaceKind.Simple,
+        kind: ParsedShapeKind.Simple,
         type: "number",
+        required: true,
+      },
+    });
+  });
+
+  it("can parse a component's prop shape defined with a type", () => {
+    const parser = createParser(
+      `export default function MyComponent(props: MyProps) {};
+      type MyProps = { myBool: boolean }`
+    );
+    expect(parser.parseShape("MyProps")).toEqual({
+      myBool: {
+        kind: ParsedShapeKind.Simple,
+        type: "boolean",
         required: true,
       },
     });
