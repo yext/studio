@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import PropEditors from "../../src/components/PropEditors";
 import {
   ComponentState,
@@ -167,7 +167,7 @@ function testStandardOrModuleComponentState(
     expect(screen.getByLabelText("bgColor")).toHaveAttribute("type", "color");
   });
 
-  it(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, async () => {
+  describe(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, () => {
     function PropEditorsWithActiveState() {
       const { activeComponentMetadata, activeComponentState } =
         useActiveComponent();
@@ -186,43 +186,103 @@ function testStandardOrModuleComponentState(
         />
       );
     }
-    render(<PropEditorsWithActiveState />);
     const getComponentProps = () =>
       (
         useStudioStore
           .getState()
           .actions.getActiveComponentState() as StandardOrModuleComponentState
       ).props;
-    await userEvent.type(screen.getByLabelText("title"), "test!");
-    await userEvent.type(screen.getByLabelText("num"), "10");
-    await userEvent.click(screen.getByLabelText("bool"));
-    // userEvent doesn't support interaction with input of type "color"
-    fireEvent.input(screen.getByLabelText("bgColor"), {
-      target: { value: "#abcdef" },
-    });
-    const expectedComponentProps: PropValues = {
-      title: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.string,
-        value: "test!",
-      },
-      num: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.number,
-        value: 10,
-      },
-      bool: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.boolean,
-        value: true,
-      },
-      bgColor: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.HexColor,
-        value: "#abcdef",
+    const activeComponent: ComponentState = {
+      ...state,
+      props: {
+        title: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.string,
+          value: "",
+        },
+        num: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.number,
+          value: 0,
+        },
+        bool: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.boolean,
+          value: false,
+        },
+        bgColor: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.HexColor,
+          value: "#ffffff",
+        },
       },
     };
-    expect(getComponentProps()).toEqual(expectedComponentProps);
+
+    beforeEach(() => {
+      mockStoreActiveComponent({
+        activeComponent: activeComponent,
+        activeComponentMetadata: {
+          ...metadata,
+          propShape,
+        },
+      });
+    });
+
+    it("string prop", async () => {
+      render(<PropEditorsWithActiveState />);
+      await userEvent.type(screen.getByLabelText("title"), "test!");
+      expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
+        title: {
+          ...activeComponent.props.title,
+          value: "test!",
+        },
+      });
+    });
+
+    it("number prop", async () => {
+      render(<PropEditorsWithActiveState />);
+      await userEvent.type(screen.getByLabelText("num"), "10");
+      expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
+        num: {
+          ...activeComponent.props.num,
+          value: 10,
+        },
+      });
+    });
+
+    it("boolean prop", async () => {
+      render(<PropEditorsWithActiveState />);
+      await userEvent.click(screen.getByLabelText("bool"));
+      expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
+        bool: {
+          ...activeComponent.props.bool,
+          value: true,
+        },
+      });
+    });
+
+    it("hex color prop", async () => {
+      jest.useFakeTimers();
+      render(<PropEditorsWithActiveState />);
+
+      fireEvent.input(screen.getByLabelText("bgColor"), {
+        target: { value: "#abcdef" },
+      });
+      await screen.findByDisplayValue("#abcdef");
+      act(() => jest.advanceTimersByTime(100)); //debounce time
+
+      expect(getComponentProps()).toEqual({
+        ...activeComponent.props,
+        bgColor: {
+          ...activeComponent.props.bgColor,
+          value: "#abcdef",
+        },
+      });
+      jest.useRealTimers();
+    });
   });
 }
 

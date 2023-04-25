@@ -11,7 +11,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev --parallel",
-    "autofix": "npx prettier --write --cache . && npx eslint --cache --fix .",
+    "autofix": "npx prettier --write --cache . && npx eslint --cache --fix --max-warnings=0 .",
     "test": "turbo run test --parallel",
     "playwright": "npm run playwright -w=e2e-tests",
     "typecheck-jest": "turbo run typecheck-jest"

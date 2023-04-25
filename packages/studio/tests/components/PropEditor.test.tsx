@@ -79,7 +79,8 @@ describe("trigger onChange from input interaction", () => {
     });
   });
 
-  it("constructs HexColor PropVal on select", () => {
+  it("constructs HexColor PropVal on select", async () => {
+    jest.useFakeTimers();
     const onPropChange = jest.fn();
     render(
       <PropEditor
@@ -93,10 +94,13 @@ describe("trigger onChange from input interaction", () => {
     fireEvent.input(screen.getByLabelText("background color"), {
       target: { value: "#abcdef" },
     });
+    await screen.findByDisplayValue("#abcdef");
+    jest.advanceTimersByTime(100); //debounce time
     expect(onPropChange).toBeCalledWith("background color", {
       kind: PropValueKind.Literal,
       valueType: PropValueType.HexColor,
       value: "#abcdef",
     });
   });
+  jest.useRealTimers();
 });

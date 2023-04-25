@@ -1,6 +1,7 @@
 import { ChangeEventHandler } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import FieldPicker from "./FieldPicker";
+import { useFuncWithZundoBatching } from "../../hooks/useFuncWithZundoBatching";
 
 interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
@@ -22,12 +23,13 @@ export default function FieldPickerInput({
   fieldType,
 }: FieldPickerInputProps) {
   const entityData = useStudioStore((store) => store.pages.activeEntityData);
+  const onChange = useFuncWithZundoBatching(onInputChange);
 
   return (
     <div className="relative">
       <input
         type="text"
-        onChange={onInputChange}
+        onChange={onChange}
         className={inputBoxCssClasses}
         value={displayValue}
       />
