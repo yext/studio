@@ -5,6 +5,7 @@ export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
   readonly pagesPanel: Locator;
   readonly addElementButton: Locator;
+  readonly removeElementButton: Locator;
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
 
@@ -17,6 +18,10 @@ export default class StudioPlaywrightPage {
 
     this.addElementButton = page.getByRole("button", {
       name: "Open Add Element Menu",
+    });
+
+    this.removeElementButton = page.getByRole("button", {
+      name: "Remove Element",
     });
 
     this.saveButton = new ToastActionButton(
@@ -82,6 +87,11 @@ export default class StudioPlaywrightPage {
       })
       .click();
     await this.addElementButton.click();
+  }
+
+  async removeElement(elementName: string, index?: number) {
+    await this.setActiveComponent(elementName, index);
+    await this.removeElementButton.click();
   }
 
   async setActiveComponent(componentName: string, componentIndex = 0) {
