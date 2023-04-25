@@ -1,6 +1,8 @@
 import { ChangeEventHandler } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import FieldPicker from "./FieldPicker";
+import filterEntityData from "../../utils/filterEntityData";
+import classNames from "classnames";
 
 interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
@@ -8,9 +10,6 @@ interface FieldPickerInputProps {
   displayValue: string;
   fieldType: "string" | "array";
 }
-
-const inputBoxCssClasses =
-  "border border-gray-300 focus:border-indigo-500 rounded-lg py-2 pl-2 pr-8 w-full";
 
 /**
  * FieldPickerInput is a a text input element combined with a FieldPicker.
@@ -22,6 +21,12 @@ export default function FieldPickerInput({
   fieldType,
 }: FieldPickerInputProps) {
   const entityData = useStudioStore((store) => store.pages.activeEntityData);
+  const filteredData = filterEntityData(fieldType, entityData);
+  const hasFilteredData = Object.keys(filteredData).length > 0;
+  const inputBoxCssClasses = classNames(
+    "border border-gray-300 focus:border-indigo-500 rounded-lg py-2 pl-2 w-full",
+    hasFilteredData ? "pr-8" : "pr-2"
+  );
 
   return (
     <div className="relative">
@@ -31,15 +36,14 @@ export default function FieldPickerInput({
         className={inputBoxCssClasses}
         value={displayValue}
       />
-      <i className="absolute right-0 top-2.5 mr-2 bg-white not-italic">
-        {entityData && (
+      {hasFilteredData && (
+        <i className="absolute right-0 top-2.5 mr-2 bg-white not-italic">
           <FieldPicker
-            fieldType={fieldType}
             handleFieldSelection={handleFieldSelection}
-            entityData={entityData}
+            filteredEntityData={filteredData}
           />
-        )}
-      </i>
+        </i>
+      )}
     </div>
   );
 }

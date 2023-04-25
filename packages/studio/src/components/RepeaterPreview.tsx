@@ -41,7 +41,8 @@ export default function RepeaterPreview({
   const list = get(expressionSources, listExpression) as unknown;
   if (!Array.isArray(list)) {
     console.warn(
-      `Unable to render list repeater. Expected ${listExpression} to be an array.`
+      `Unable to render list repeater. Expected "${listExpression}" to reference an array in `,
+      expressionSources
     );
     return null;
   }
