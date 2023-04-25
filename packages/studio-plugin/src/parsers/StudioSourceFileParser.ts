@@ -14,6 +14,7 @@ import StaticParsingHelpers, {
 import path from "path";
 import vm from "vm";
 import ShapeParsingHelper, { ParsedShape } from "./helpers/ShapeParsingHelper";
+import { NpmLookup } from "../utils";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -44,7 +45,7 @@ export default class StudioSourceFileParser {
     return importPathToImportNames;
   }
 
-  parseDefaultImports(): Record<string, string> {
+  private parseDefaultImports(): Record<string, string> {
     const importPathToImportName: Record<string, string> = {};
 
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
@@ -137,7 +138,37 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
+  private getImportSourceForIdentifier(identifer: string) {
+    const namedImports = this.parseNamedImports();
+    for (const importSource of Object.keys(namedImports)) {
+      if (namedImports[importSource].includes(identifer)) {
+        return importSource;
+      }
+    }
+    const defaultImports = this.parseDefaultImports();
+    for (const importSource of Object.keys(defaultImports)) {
+      if (defaultImports[importSource] === identifer) {
+        return importSource;
+      }
+    }
+  }
+
+  private parseImportedShape(identifier: string, importSource: string) {
+    if (importSource.startsWith(".")) {
+      importSource = path.resolve(path.dirname(this.filepath), importSource);
+    }
+    const typesFile = new NpmLookup(importSource).getResolvedFilepath();
+    return new StudioSourceFileParser(
+      typesFile,
+      this.sourceFile.getProject()
+    ).parseShape(identifier);
+  }
+
   parseShape(identifier: string): ParsedShape | undefined {
+    const importSource = this.getImportSourceForIdentifier(identifier);
+    if (importSource) {
+      return this.parseImportedShape(identifier, importSource);
+    }
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
     const typeLiteral = this.sourceFile
       .getTypeAlias(identifier)

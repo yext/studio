@@ -3,6 +3,7 @@ import { AceComponent } from "@yext/sample-component";
 import Banner from "../components/Banner";
 import Button from "../components/Button";
 import Container from "../components/Container";
+import Cta from "../components/Cta";
 import ContainerWithButtons from "../modules/ContainerWithButtons";
 
 export const config: TemplateConfig = {
@@ -17,6 +18,7 @@ export const config: TemplateConfig = {
 export default function UniversalPage({ document }: TemplateProps) {
   return (
     <>
+      <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
       {document.services.map((item, index) => (
         <Banner title={`${item}!`} key={index} />
       ))}
@@ -28,7 +30,7 @@ export default function UniversalPage({ document }: TemplateProps) {
         bannerTitle={document.address.city}
         document={document}
       />
-      <Banner nestedProp={{ egg: "eggyweggy" }} />
+      <Banner nestedProp={{ egg: "eggyweggy" }} title="" />
     </>
   );
 }

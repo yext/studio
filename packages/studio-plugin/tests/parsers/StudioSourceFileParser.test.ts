@@ -3,6 +3,7 @@ import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
 import { ParsedShapeKind } from "../../src/parsers/helpers/ShapeParsingHelper";
+import path from "path";
 
 describe("parseExportedObjectLiteral", () => {
   it("throws when the variable is not an ObjectLiteralExpression", () => {
@@ -99,9 +100,49 @@ describe("parseShape", () => {
       },
     });
   });
+
+  it("can parse an interface imported from a file", () => {
+    const parser = createParser(
+      `import { SimpleBannerProps } from "../__fixtures__/ComponentFile/SimpleBanner";`
+    );
+    expect(parser.parseShape("SimpleBannerProps")).toEqual({
+      title: {
+        kind: ParsedShapeKind.Simple,
+        type: "string",
+        required: false,
+      },
+    });
+  });
+
+  it("can parse an interface imported from an external package", () => {
+    const parser = createParser(
+      `import { CtaData } from "@yext/search-ui-react";`
+    );
+    expect(parser.parseShape("CtaData")).toEqual({
+      label: {
+        doc: "The display label for the CTA element.",
+        kind: ParsedShapeKind.Simple,
+        required: true,
+        type: "string",
+      },
+      link: {
+        doc: "The CTA link source.",
+        kind: ParsedShapeKind.Simple,
+        required: true,
+        type: "string",
+      },
+      linkType: {
+        doc: "The CTA link type (e.g. URL, Phone, Email, Other).",
+        kind: ParsedShapeKind.Simple,
+        required: true,
+        type: "string",
+      },
+    });
+  });
 });
 
 function createParser(sourceCode: string) {
-  const { project } = createTestSourceFile(sourceCode);
-  return new StudioSourceFileParser("test.tsx", project);
+  const filepath = path.resolve(__dirname, "test.tsx");
+  const { project } = createTestSourceFile(sourceCode, filepath);
+  return new StudioSourceFileParser(filepath, project);
 }

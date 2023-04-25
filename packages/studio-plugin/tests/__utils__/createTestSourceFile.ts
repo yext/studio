@@ -1,10 +1,13 @@
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 
-export default function createTestSourceFile(code: string) {
+export default function createTestSourceFile(
+  code: string,
+  filepath = "test.tsx"
+) {
   const p = createTsMorphProject();
-  p.createSourceFile("test.tsx", code);
+  p.createSourceFile(filepath, code);
   return {
-    sourceFile: p.getSourceFileOrThrow("test.tsx"),
+    sourceFile: p.getSourceFileOrThrow(filepath),
     project: p,
   };
 }
