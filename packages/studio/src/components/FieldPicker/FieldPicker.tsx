@@ -2,7 +2,6 @@ import { useCallback, useRef, useState, MouseEvent } from "react";
 import FieldDropdown from "./FieldDropdown";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
 import useRootClose from "@restart/ui/useRootClose";
-import filterEntityData from "../../utils/filterEntityData";
 
 /**
  * An icon that when clicked on, opens up a dropdown for selecting
@@ -10,12 +9,10 @@ import filterEntityData from "../../utils/filterEntityData";
  */
 export default function FieldPicker({
   handleFieldSelection,
-  entityData,
-  fieldType = "string",
+  filteredEntityData,
 }: {
   handleFieldSelection: (fieldId: string) => void;
-  entityData: Record<string, unknown>;
-  fieldType: "string" | "array";
+  filteredEntityData: Record<string, unknown>;
 }) {
   const [expandedFieldId, setExpandedFieldId] = useState<string>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -36,8 +33,6 @@ export default function FieldPicker({
     },
     [fieldPickerIsClosed]
   );
-
-  const filteredData = filterEntityData(fieldType, entityData);
 
   const handleFieldDropdownSelection = useCallback(
     (fieldId: string) => {
@@ -76,7 +71,7 @@ export default function FieldPicker({
       />
       {!fieldPickerIsClosed && (
         <FieldDropdown
-          fieldIdToValue={filteredData}
+          fieldIdToValue={filteredEntityData}
           handleFieldSelection={handleFieldDropdownSelection}
           handleNestedObjectSelection={handleNestedObjectSelection}
           isExpandedFieldId={isExpandedFieldId}

@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FieldPicker from "../../../src/components/FieldPicker/FieldPicker";
+import filterEntityData from "../../../src/utils/filterEntityData";
 
 const entityData = {
   __: {
@@ -97,9 +98,8 @@ it("opening one section will collapse unrelated ones", async () => {
 function renderFieldPicker(handleFieldSelection = jest.fn()) {
   render(
     <FieldPicker
-      entityData={entityData}
+      filteredEntityData={filterEntityData("string", entityData)}
       handleFieldSelection={handleFieldSelection}
-      fieldType="string"
     />
   );
 }
