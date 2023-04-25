@@ -47,8 +47,9 @@ describe("Undo/redo", () => {
   });
 
   it("redoes single state update when redo is clicked", async () => {
-    useTemporalStore().undo();
-    useTemporalStore().undo();
+    const undo = useTemporalStore((store) => store.undo);
+    undo();
+    undo();
     render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activePageName).toBeUndefined();
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();

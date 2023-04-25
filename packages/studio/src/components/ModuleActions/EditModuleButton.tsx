@@ -21,8 +21,8 @@ export default function EditModuleButton({
   );
 
   const handleClick = useCallback(() => {
-    setModuleUUIDBeingEdited(state.uuid);
     setActiveComponentUUID(undefined);
+    setModuleUUIDBeingEdited(state.uuid);
   }, [state.uuid, setModuleUUIDBeingEdited, setActiveComponentUUID]);
 
   const moduleName =

@@ -4,6 +4,7 @@ import Toggle from "./common/Toggle";
 import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
+import ColorPicker from "./common/ColorPicker";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropValueType;
@@ -109,8 +110,7 @@ export default function PropInput({
       );
     case PropValueType.HexColor:
       return (
-        <input
-          type="color"
+        <ColorPicker
           onChange={handleChangeEvent}
           value={displayValue as string}
         />

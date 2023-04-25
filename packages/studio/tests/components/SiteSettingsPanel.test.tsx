@@ -83,7 +83,8 @@ it("can render even when optional settings are not specified", () => {
   expect(screen.getByText("Global Colors")).toBeDefined();
 });
 
-it("can edit site settings", () => {
+it("can edit site settings", async () => {
+  jest.useFakeTimers();
   const setValues = jest.fn();
   mockStore({
     siteSettings: {
@@ -98,6 +99,8 @@ it("can edit site settings", () => {
   fireEvent.input(colorInput, {
     target: { value: "#abcdef" },
   });
+  await screen.findByDisplayValue("#abcdef");
+  jest.advanceTimersByTime(100); //debounce time
   expect(setValues).toHaveBeenCalledTimes(1);
   expect(setValues).toHaveBeenCalledWith({
     ...values,
@@ -117,4 +120,5 @@ it("can edit site settings", () => {
       },
     },
   });
+  jest.useRealTimers();
 });

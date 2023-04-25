@@ -52,7 +52,7 @@ export default function PropEditors(props: {
         const propKind = getPropValueKind(propMetadata);
         return (
           <PropEditor
-            key={propName}
+            key={`${activeComponentState.uuid}-${propName}`}
             onPropChange={updateProps}
             propKind={propKind}
             propName={propName}

@@ -13,9 +13,7 @@ import StaticParsingHelpers, {
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
-import InterfaceParsingHelper, {
-  ParsedInterface,
-} from "./helpers/InterfaceParsingHelper";
+import ShapeParsingHelper, { ParsedShape } from "./helpers/ShapeParsingHelper";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -139,14 +137,16 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
-  parseInterface(interfaceName: string): ParsedInterface | undefined {
-    const interfaceDeclaration = this.sourceFile.getInterface(interfaceName);
-    if (!interfaceDeclaration) {
+  parseShape(identifier: string): ParsedShape | undefined {
+    const interfaceDeclaration = this.sourceFile.getInterface(identifier);
+    const typeLiteral = this.sourceFile
+      .getTypeAlias(identifier)
+      ?.getFirstChildByKind(SyntaxKind.TypeLiteral);
+    const shapeNode = interfaceDeclaration ?? typeLiteral;
+    if (!shapeNode) {
       return;
     }
-    return InterfaceParsingHelper.parseInterfaceDeclaration(
-      interfaceDeclaration
-    );
+    return ShapeParsingHelper.parseShape(shapeNode);
   }
 
   /**

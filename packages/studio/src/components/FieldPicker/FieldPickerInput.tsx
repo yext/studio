@@ -1,6 +1,7 @@
 import { ChangeEventHandler } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import FieldPicker from "./FieldPicker";
+import { useFuncWithZundoBatching } from "../../hooks/useFuncWithZundoBatching";
 import filterEntityData from "../../utils/filterEntityData";
 import classNames from "classnames";
 
@@ -28,11 +29,13 @@ export default function FieldPickerInput({
     hasFilteredData ? "pr-8" : "pr-2"
   );
 
+  const onChange = useFuncWithZundoBatching(onInputChange);
+
   return (
     <div className="relative">
       <input
         type="text"
-        onChange={onInputChange}
+        onChange={onChange}
         className={inputBoxCssClasses}
         value={displayValue}
       />

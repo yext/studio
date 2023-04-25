@@ -47,10 +47,10 @@ export const createStore = (createState?: any) => {
   return store;
 };
 
-export const useStore = (temporalStore) => {
-  const { clear } = temporalStore.getState();
-  storeResetFns.add(clear);
-  return temporalStore.getState();
+export const useStore = (temporalStore, selector) => {
+  const state = temporalStore.getState();
+  storeResetFns.add(state.clear);
+  return selector(state);
 };
 
 // Reset all stores after each test run
