@@ -14,6 +14,7 @@ import StaticParsingHelpers, {
 import path from "path";
 import vm from "vm";
 import ShapeParsingHelper, { ParsedShape } from "./helpers/ShapeParsingHelper";
+import { NpmLookup } from "../utils";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -44,7 +45,7 @@ export default class StudioSourceFileParser {
     return importPathToImportNames;
   }
 
-  parseDefaultImports(): Record<string, string> {
+  private parseDefaultImports(): Record<string, string> {
     const importPathToImportName: Record<string, string> = {};
 
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
@@ -137,16 +138,78 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
+  private getImportSourceForIdentifier(identifier: string) {
+    const namedImports = this.parseNamedImports();
+    for (const importSource of Object.keys(namedImports)) {
+      if (namedImports[importSource].includes(identifier)) {
+        return {
+          importSource,
+          isDefault: false,
+        };
+      }
+    }
+    const defaultImports = this.parseDefaultImports();
+    for (const importSource of Object.keys(defaultImports)) {
+      if (defaultImports[importSource] === identifier) {
+        return {
+          importSource,
+          isDefault: true,
+        };
+      }
+    }
+  }
+
+  private parseImportedShape(
+    identifier: string,
+    importSource: string,
+    isDefault: boolean
+  ) {
+    if (importSource.startsWith(".")) {
+      importSource = path.resolve(path.dirname(this.filepath), importSource);
+    }
+    const typesFile = new NpmLookup(importSource).getResolvedFilepath();
+    const parserForImportSource = new StudioSourceFileParser(
+      typesFile,
+      this.sourceFile.getProject()
+    );
+
+    if (isDefault) {
+      const exportAssignment = parserForImportSource.sourceFile
+        .getDefaultExportSymbolOrThrow()
+        .getDeclarations()[0];
+      if (!exportAssignment.isKind(SyntaxKind.ExportAssignment)) {
+        throw new Error(
+          `Expected an ExportAssignment node for "${exportAssignment.getText()}"`
+        );
+      }
+      identifier = exportAssignment
+        .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
+        .getText();
+    }
+    return parserForImportSource.parseShape(identifier);
+  }
+
+  /**
+   * Parses the type or interface with the given name.
+   */
   parseShape(identifier: string): ParsedShape | undefined {
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
     const typeLiteral = this.sourceFile
       .getTypeAlias(identifier)
       ?.getFirstChildByKind(SyntaxKind.TypeLiteral);
     const shapeNode = interfaceDeclaration ?? typeLiteral;
-    if (!shapeNode) {
-      return;
+    if (shapeNode) {
+      return ShapeParsingHelper.parseShape(shapeNode);
     }
-    return ShapeParsingHelper.parseShape(shapeNode);
+
+    const importData = this.getImportSourceForIdentifier(identifier);
+    if (importData) {
+      return this.parseImportedShape(
+        identifier,
+        importData.importSource,
+        importData.isDefault
+      );
+    }
   }
 
   /**
@@ -182,7 +245,7 @@ export default class StudioSourceFileParser {
    * There is full support for default exports defined directly as function
    * declarations. But, for exports defined as assignments, support is restricted
    * as follows:
-   * - If there is only a single identifer (e.g. `export default Identifier;`),
+   * - If there is only a single identifier (e.g. `export default Identifier;`),
    *   it will look for and return the declaration for that identifier.
    * - If an identifier does not have a corresponding variable or function
    *   declaration, it will throw an error.

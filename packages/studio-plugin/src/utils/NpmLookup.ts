@@ -6,14 +6,16 @@ import typescript, { ModuleResolutionHost } from "typescript";
 const { resolveModuleName } = typescript;
 
 /**
- * NpmLookup is a class for retrieving information on an installed node module
+ * NpmLookup is a class for retrieving information on an import.
  */
 export default class NpmLookup {
   private rootPath: string;
+  private resolvedFilepath: string;
 
   constructor(private moduleName: string) {
     const { resolvedModule, root } = this.resolveModuleName();
     this.rootPath = this.setRootPath(resolvedModule, root);
+    this.resolvedFilepath = path.join(root, resolvedModule.resolvedFileName);
   }
 
   private resolveModuleName(root = process.cwd()): {
@@ -58,6 +60,10 @@ export default class NpmLookup {
     const stripPathToEntryNameFromPath =
       resolvedModule.resolvedFileName.replace(pathToEntry, "");
     return path.join(root, stripPathToEntryNameFromPath);
+  }
+
+  getResolvedFilepath(): string {
+    return this.resolvedFilepath;
   }
 
   getRootPath(): string {
