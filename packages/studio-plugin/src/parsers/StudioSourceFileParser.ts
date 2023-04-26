@@ -174,7 +174,7 @@ export default class StudioSourceFileParser {
     );
 
     if (isDefault) {
-      const exportAssignment = this.sourceFile
+      const exportAssignment = parserForImportSource.sourceFile
         .getDefaultExportSymbolOrThrow()
         .getDeclarations()[0];
       if (!exportAssignment.isKind(SyntaxKind.ExportAssignment)) {
