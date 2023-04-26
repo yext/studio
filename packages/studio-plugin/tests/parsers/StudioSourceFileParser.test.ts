@@ -166,3 +166,14 @@ function createParser(sourceCode: string) {
   const { project } = createTestSourceFile(sourceCode, filepath);
   return new StudioSourceFileParser(filepath, project);
 }
+
+describe("parseNamedImports", () => {
+  it("does not support aliased imports", () => {
+    const parser = createParser(
+      `import { TheirType as MyAlias } from "aPackage";`
+    );
+    expect(parser.parseNamedImports()).toEqual({
+      aPackage: ["TheirType"],
+    });
+  });
+});
