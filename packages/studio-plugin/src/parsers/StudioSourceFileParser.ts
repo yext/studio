@@ -166,18 +166,18 @@ export default class StudioSourceFileParser {
 
   parseShape(identifier: string): ParsedShape | undefined {
     const importSource = this.getImportSourceForIdentifier(identifier);
-    if (importSource) {
-      return this.parseImportedShape(identifier, importSource);
+    if (!importSource) {
+      const interfaceDeclaration = this.sourceFile.getInterface(identifier);
+      const typeLiteral = this.sourceFile
+        .getTypeAlias(identifier)
+        ?.getFirstChildByKind(SyntaxKind.TypeLiteral);
+      const shapeNode = interfaceDeclaration ?? typeLiteral;
+      if (!shapeNode) {
+        return;
+      }
+      return ShapeParsingHelper.parseShape(shapeNode);
     }
-    const interfaceDeclaration = this.sourceFile.getInterface(identifier);
-    const typeLiteral = this.sourceFile
-      .getTypeAlias(identifier)
-      ?.getFirstChildByKind(SyntaxKind.TypeLiteral);
-    const shapeNode = interfaceDeclaration ?? typeLiteral;
-    if (!shapeNode) {
-      return;
-    }
-    return ShapeParsingHelper.parseShape(shapeNode);
+    return this.parseImportedShape(identifier, importSource);
   }
 
   /**
