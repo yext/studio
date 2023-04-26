@@ -103,7 +103,7 @@ describe("parseShape", () => {
 
   it("can parse an interface imported from a file", () => {
     const parser = createParser(
-      `import { SimpleBannerProps } from "../__fixtures__/ComponentFile/SimpleBanner";`
+      `import { SimpleBannerProps } from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
     expect(parser.parseShape("SimpleBannerProps")).toEqual({
       title: {
@@ -142,7 +142,7 @@ describe("parseShape", () => {
 
   it("can parse a type imported from a file", () => {
     const parser = createParser(
-      `import { TitleType } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
+      `import { TitleType } from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
     expect(parser.parseShape("TitleType")).toEqual({
       title: {
@@ -153,11 +153,38 @@ describe("parseShape", () => {
     });
   });
 
+  it("can parse a default imported type", () => {
+    const parser = createParser(
+      `import ExportedType from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
+    );
+    expect(parser.parseShape("ExportedType")).toEqual({
+      title: {
+        kind: ParsedShapeKind.Simple,
+        required: false,
+        type: "string",
+      },
+    });
+  });
+
   it("does not handle importing a type under an alias", () => {
     const parser = createParser(
-      `import { TitleType as MyProps } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
+      `import {  } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
     );
     expect(parser.parseShape("MyProps")).toBeUndefined();
+  });
+
+  it("can parse an interface with the same name as an import before aliasing", () => {
+    const parser = createParser(
+      `import { Props as Alias } from "aPackage";
+      export interface Props { title: string }`
+    );
+    expect(parser.parseShape("Props")).toEqual({
+      title: {
+        kind: ParsedShapeKind.Simple,
+        required: true,
+        type: "string",
+      },
+    });
   });
 });
 

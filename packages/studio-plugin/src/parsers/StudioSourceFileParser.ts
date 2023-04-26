@@ -138,46 +138,87 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
-  private getImportSourceForIdentifier(identifer: string) {
+  private getImportSourceForIdentifier(identifier: string) {
     const namedImports = this.parseNamedImports();
     for (const importSource of Object.keys(namedImports)) {
-      if (namedImports[importSource].includes(identifer)) {
-        return importSource;
+      if (namedImports[importSource].includes(identifier)) {
+        return {
+          importSource,
+          isDefault: false,
+        };
       }
     }
     const defaultImports = this.parseDefaultImports();
     for (const importSource of Object.keys(defaultImports)) {
-      if (defaultImports[importSource] === identifer) {
-        return importSource;
+      if (defaultImports[importSource] === identifier) {
+        return {
+          importSource,
+          isDefault: true,
+        };
       }
     }
   }
 
-  private parseImportedShape(identifier: string, importSource: string) {
+  getDefaultExportName() {
+    const exportAssignment = this.sourceFile
+      .getDefaultExportSymbolOrThrow()
+      .getDeclarations()[0];
+    if (!exportAssignment.isKind(SyntaxKind.ExportAssignment)) {
+      throw new Error(
+        `Expected an ExportAssignment node for "${exportAssignment.getText()}"`
+      );
+    }
+    return exportAssignment
+      .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
+      .getText();
+  }
+
+  private parseImportedShape(
+    identifier: string,
+    importSource: string,
+    isDefault: boolean
+  ) {
     if (importSource.startsWith(".")) {
       importSource = path.resolve(path.dirname(this.filepath), importSource);
     }
     const typesFile = new NpmLookup(importSource).getResolvedFilepath();
-    return new StudioSourceFileParser(
+    const parserForImportSource = new StudioSourceFileParser(
       typesFile,
       this.sourceFile.getProject()
-    ).parseShape(identifier);
+    );
+    if (isDefault) {
+      identifier = parserForImportSource.getDefaultExportName();
+    }
+    return parserForImportSource.parseShape(identifier);
   }
 
+  /**
+   * Parses the type or interface with the given name.
+   *
+   * @throws
+   */
   parseShape(identifier: string): ParsedShape | undefined {
-    const importSource = this.getImportSourceForIdentifier(identifier);
-    if (!importSource) {
-      const interfaceDeclaration = this.sourceFile.getInterface(identifier);
-      const typeLiteral = this.sourceFile
-        .getTypeAlias(identifier)
-        ?.getFirstChildByKind(SyntaxKind.TypeLiteral);
-      const shapeNode = interfaceDeclaration ?? typeLiteral;
-      if (!shapeNode) {
-        return;
-      }
+    const interfaceDeclaration = this.sourceFile.getInterface(identifier);
+    const typeLiteral = this.sourceFile
+      .getTypeAlias(identifier)
+      ?.getFirstChildByKind(SyntaxKind.TypeLiteral);
+    const shapeNode = interfaceDeclaration ?? typeLiteral;
+    if (shapeNode) {
       return ShapeParsingHelper.parseShape(shapeNode);
     }
-    return this.parseImportedShape(identifier, importSource);
+
+    const importData = this.getImportSourceForIdentifier(identifier);
+    if (importData) {
+      return this.parseImportedShape(
+        identifier,
+        importData.importSource,
+        importData.isDefault
+      );
+    }
+
+    throw new Error(
+      `Could not find type or interface "${identifier}" in ${this.filepath}`
+    );
   }
 
   /**
@@ -213,7 +254,7 @@ export default class StudioSourceFileParser {
    * There is full support for default exports defined directly as function
    * declarations. But, for exports defined as assignments, support is restricted
    * as follows:
-   * - If there is only a single identifer (e.g. `export default Identifier;`),
+   * - If there is only a single identifier (e.g. `export default Identifier;`),
    *   it will look for and return the declaration for that identifier.
    * - If an identifier does not have a corresponding variable or function
    *   declaration, it will throw an error.
