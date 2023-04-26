@@ -194,8 +194,6 @@ export default class StudioSourceFileParser {
 
   /**
    * Parses the type or interface with the given name.
-   *
-   * @throws
    */
   parseShape(identifier: string): ParsedShape | undefined {
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
@@ -215,10 +213,6 @@ export default class StudioSourceFileParser {
         importData.isDefault
       );
     }
-
-    throw new Error(
-      `Could not find type or interface "${identifier}" in ${this.filepath}`
-    );
   }
 
   /**
