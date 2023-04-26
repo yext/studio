@@ -168,7 +168,7 @@ describe("parseShape", () => {
 
   it("does not handle importing a type under an alias", () => {
     const parser = createParser(
-      `import {  } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
+      `import { TitleType as MyProps } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
     );
     expect(parser.parseShape("MyProps")).toBeUndefined();
   });

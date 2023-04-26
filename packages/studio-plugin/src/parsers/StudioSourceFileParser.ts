@@ -159,20 +159,6 @@ export default class StudioSourceFileParser {
     }
   }
 
-  getDefaultExportName() {
-    const exportAssignment = this.sourceFile
-      .getDefaultExportSymbolOrThrow()
-      .getDeclarations()[0];
-    if (!exportAssignment.isKind(SyntaxKind.ExportAssignment)) {
-      throw new Error(
-        `Expected an ExportAssignment node for "${exportAssignment.getText()}"`
-      );
-    }
-    return exportAssignment
-      .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
-      .getText();
-  }
-
   private parseImportedShape(
     identifier: string,
     importSource: string,
@@ -186,8 +172,19 @@ export default class StudioSourceFileParser {
       typesFile,
       this.sourceFile.getProject()
     );
+
     if (isDefault) {
-      identifier = parserForImportSource.getDefaultExportName();
+      const exportAssignment = this.sourceFile
+        .getDefaultExportSymbolOrThrow()
+        .getDeclarations()[0];
+      if (!exportAssignment.isKind(SyntaxKind.ExportAssignment)) {
+        throw new Error(
+          `Expected an ExportAssignment node for "${exportAssignment.getText()}"`
+        );
+      }
+      identifier = exportAssignment
+        .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
+        .getText();
     }
     return parserForImportSource.parseShape(identifier);
   }
