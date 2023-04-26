@@ -139,6 +139,26 @@ describe("parseShape", () => {
       },
     });
   });
+
+  it("can parse a type imported from a file", () => {
+    const parser = createParser(
+      `import { TitleType } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
+    );
+    expect(parser.parseShape("TitleType")).toEqual({
+      title: {
+        kind: ParsedShapeKind.Simple,
+        required: false,
+        type: "string",
+      },
+    });
+  });
+
+  it("does not handle importing a type under an alias", () => {
+    const parser = createParser(
+      `import { TitleType as MyProps } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
+    );
+    expect(parser.parseShape("MyProps")).toBeUndefined();
+  });
 });
 
 function createParser(sourceCode: string) {
