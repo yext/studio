@@ -73,12 +73,33 @@ describe("getDefaultExport", () => {
 });
 
 describe("parseShape", () => {
+  const ctaDataShape = {
+    label: {
+      doc: "The display label for the CTA element.",
+      kind: ParsedShapeKind.Simple,
+      required: true,
+      type: "string",
+    },
+    link: {
+      doc: "The CTA link source.",
+      kind: ParsedShapeKind.Simple,
+      required: true,
+      type: "string",
+    },
+    linkType: {
+      doc: "The CTA link type (e.g. URL, Phone, Email, Other).",
+      kind: ParsedShapeKind.Simple,
+      required: true,
+      type: "string",
+    },
+  };
+
   it("can parse a component's prop shape defined with an interface", () => {
     const parser = createParser(
       `export default function MyComponent(props: MyProps) {};
       interface MyProps { myNum: number }`
     );
-    expect(parser.parseShape("MyProps")).toEqual({
+    expect(parser.parseShape("MyProps")?.type).toEqual({
       myNum: {
         kind: ParsedShapeKind.Simple,
         type: "number",
@@ -92,7 +113,7 @@ describe("parseShape", () => {
       `export default function MyComponent(props: MyProps) {};
       type MyProps = { myBool: boolean }`
     );
-    expect(parser.parseShape("MyProps")).toEqual({
+    expect(parser.parseShape("MyProps")?.type).toEqual({
       myBool: {
         kind: ParsedShapeKind.Simple,
         type: "boolean",
@@ -105,7 +126,7 @@ describe("parseShape", () => {
     const parser = createParser(
       `import { SimpleBannerProps } from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
-    expect(parser.parseShape("SimpleBannerProps")).toEqual({
+    expect(parser.parseShape("SimpleBannerProps")?.type).toEqual({
       title: {
         kind: ParsedShapeKind.Simple,
         type: "string",
@@ -118,33 +139,14 @@ describe("parseShape", () => {
     const parser = createParser(
       `import { CtaData } from "@yext/search-ui-react";`
     );
-    expect(parser.parseShape("CtaData")).toEqual({
-      label: {
-        doc: "The display label for the CTA element.",
-        kind: ParsedShapeKind.Simple,
-        required: true,
-        type: "string",
-      },
-      link: {
-        doc: "The CTA link source.",
-        kind: ParsedShapeKind.Simple,
-        required: true,
-        type: "string",
-      },
-      linkType: {
-        doc: "The CTA link type (e.g. URL, Phone, Email, Other).",
-        kind: ParsedShapeKind.Simple,
-        required: true,
-        type: "string",
-      },
-    });
+    expect(parser.parseShape("CtaData")?.type).toEqual(ctaDataShape);
   });
 
   it("can parse a type imported from a file", () => {
     const parser = createParser(
       `import { TitleType } from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
-    expect(parser.parseShape("TitleType")).toEqual({
+    expect(parser.parseShape("TitleType")?.type).toEqual({
       title: {
         kind: ParsedShapeKind.Simple,
         required: false,
@@ -157,7 +159,7 @@ describe("parseShape", () => {
     const parser = createParser(
       `import ExportedType from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
-    expect(parser.parseShape("ExportedType")).toEqual({
+    expect(parser.parseShape("ExportedType")?.type).toEqual({
       title: {
         kind: ParsedShapeKind.Simple,
         required: false,
@@ -170,7 +172,7 @@ describe("parseShape", () => {
     const parser = createParser(
       `import { TitleType as MyProps } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
     );
-    expect(parser.parseShape("MyProps")).toBeUndefined();
+    expect(parser.parseShape("MyProps")?.type).toBeUndefined();
   });
 
   it("can parse an interface with the same name as an import before aliasing", () => {
@@ -178,11 +180,76 @@ describe("parseShape", () => {
       `import { Props as Alias } from "aPackage";
       export interface Props { title: string }`
     );
-    expect(parser.parseShape("Props")).toEqual({
+    expect(parser.parseShape("Props")?.type).toEqual({
       title: {
         kind: ParsedShapeKind.Simple,
         required: true,
         type: "string",
+      },
+    });
+  });
+
+  it("can parse a type with a property imported from an external package", () => {
+    const parser = createParser(
+      `import { CtaData } from "@yext/search-ui-react";
+      export type Props = { cta?: CtaData }`
+    );
+    expect(parser.parseShape("Props")?.type).toEqual({
+      cta: {
+        kind: ParsedShapeKind.Nested,
+        required: false,
+        type: ctaDataShape,
+      },
+    });
+  });
+
+  it("can parse an interface with sub-properties from internal and external sources", () => {
+    const parser = createParser(
+      `import { ApplyFiltersButtonProps } from "@yext/search-ui-react";
+      import { MyString } from "../__fixtures__/StudioSourceFileParser/exportedTypes";
+      type ButtonData = ApplyFiltersButtonProps;
+      type Num = number;
+      export interface Props { data?: { button: ButtonData, title: MyString, num: Num } }`
+    );
+    expect(parser.parseShape("Props")?.type).toEqual({
+      data: {
+        kind: ParsedShapeKind.Nested,
+        required: false,
+        type: {
+          button: {
+            kind: ParsedShapeKind.Nested,
+            required: true,
+            type: {
+              label: {
+                kind: ParsedShapeKind.Simple,
+                required: false,
+                type: "string",
+                doc: "The label for the button, defaults to 'Apply Filters'",
+              },
+              customCssClasses: {
+                kind: ParsedShapeKind.Nested,
+                required: false,
+                type: {
+                  button: {
+                    kind: ParsedShapeKind.Simple,
+                    required: false,
+                    type: "string",
+                  },
+                },
+              },
+            },
+          },
+          title: {
+            kind: ParsedShapeKind.Simple,
+            required: true,
+            type: "string",
+          },
+          num: {
+            kind: ParsedShapeKind.Simple,
+            required: true,
+            type: "number",
+          },
+        },
       },
     });
   });

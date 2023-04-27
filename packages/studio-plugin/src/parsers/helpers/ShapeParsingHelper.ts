@@ -2,28 +2,31 @@ import {
   InterfaceDeclaration,
   PropertySignature,
   SyntaxKind,
-  TypeNode,
   UnionTypeNode,
   TypeLiteralNode,
+  TypeAliasDeclaration,
 } from "ts-morph";
 import { PropValueType } from "../../types";
 import StaticParsingHelpers from "./StaticParsingHelpers";
+import { TypeGuards } from "../../utils";
 
-export type ParsedShape = {
-  [key: string]:
-    | {
-        kind: ParsedShapeKind.Simple;
-        type: string;
-        required: boolean;
-        unionValues?: string[];
-        doc?: string;
-      }
-    | {
-        kind: ParsedShapeKind.Nested;
-        type: ParsedShape;
-        required: boolean;
-      };
+export type ParsedShape = SimpleParsedShape | NestedParsedShape;
+
+type SimpleParsedShape = {
+  kind: ParsedShapeKind.Simple;
+  type: string;
+  required: boolean;
+  unionValues?: string[];
+  doc?: string;
 };
+
+type NestedParsedShape = {
+  kind: ParsedShapeKind.Nested;
+  type: NestedParsedShapeType;
+  required: boolean;
+};
+
+export type NestedParsedShapeType = { [key: string]: ParsedShape };
 
 export enum ParsedShapeKind {
   Simple = "simple",
@@ -31,84 +34,104 @@ export enum ParsedShapeKind {
 }
 
 export default class ShapeParsingHelper {
-  static parseShape(shapeDeclaration: InterfaceDeclaration | TypeLiteralNode) {
-    return this.parsePropertySignatures(shapeDeclaration.getProperties());
-  }
-
-  private static parsePropertySignatures(
-    propertySignatures: PropertySignature[]
+  static parseShape(
+    shapeNode: InterfaceDeclaration | TypeAliasDeclaration | PropertySignature,
+    parseExternalShape: (
+      identifier: string,
+      required: boolean,
+      jsDoc?: string
+    ) => ParsedShape | undefined,
+    required: boolean,
+    jsDoc?: string
   ): ParsedShape {
-    const parsedShape: ParsedShape = {};
-
-    const parsePropertySignature = (p: PropertySignature) => {
-      const typeNode = p.getTypeNode();
-      if (typeNode?.isKind(SyntaxKind.TypeLiteral)) {
-        return this.handleNestedType(typeNode, p);
-      }
-      const unionType = p.getFirstChildByKind(SyntaxKind.UnionType);
-      if (unionType) {
-        return this.handleUnionType(p, unionType);
-      }
-      return this.handleSimplePropertySignature(p);
-    };
-
-    propertySignatures.forEach((p) => {
-      const propertyName = StaticParsingHelpers.getEscapedName(p);
-      parsedShape[propertyName] = parsePropertySignature(p);
-    });
-    return parsedShape;
-  }
-
-  private static handleNestedType(typeNode: TypeNode, p: PropertySignature) {
-    return {
-      kind: ParsedShapeKind.Nested,
-      type: this.parsePropertySignatures(
-        typeNode.getChildrenOfKind(SyntaxKind.PropertySignature)
-      ),
-      required: !p.hasQuestionToken(),
-    } as const;
-  }
-
-  private static handleSimplePropertySignature(p: PropertySignature) {
-    const { name: propName, type } = p.getStructure();
-    if (typeof type !== "string") {
-      throw new Error(
-        `Unable to parse prop: ${propName} in PropertySignature: ${p.getFullText()}`
-      );
+    if (shapeNode.isKind(SyntaxKind.InterfaceDeclaration)) {
+      return this.handleNestedType(shapeNode, parseExternalShape, required);
     }
 
-    const jsdoc = this.getJsDocs(p);
+    const typeLiteral = shapeNode.getFirstChildByKind(SyntaxKind.TypeLiteral);
+    if (typeLiteral) {
+      return this.handleNestedType(typeLiteral, parseExternalShape, required);
+    }
+
+    const name = StaticParsingHelpers.getEscapedName(shapeNode);
+    const unionType = shapeNode.getFirstChildByKind(SyntaxKind.UnionType);
+    if (unionType) {
+      return this.handleUnionType(unionType, name, required, jsDoc);
+    }
+
+    const { type } = shapeNode.getStructure();
+    if (typeof type !== "string") {
+      throw new Error(
+        `Unable to parse ${name} in node: ${shapeNode.getFullText()}`
+      );
+    }
+    if (!TypeGuards.isPropValueType(type)) {
+      const externalShape = parseExternalShape(type, required, jsDoc);
+      if (externalShape) {
+        return externalShape;
+      }
+    }
+
     return {
       kind: ParsedShapeKind.Simple,
       type,
-      ...(jsdoc && { doc: jsdoc }),
-      required: !p.hasQuestionToken(),
-    } as const;
+      ...(jsDoc && { doc: jsDoc }),
+      required,
+    };
+  }
+
+  private static handleNestedType(
+    shapeDeclaration: InterfaceDeclaration | TypeLiteralNode,
+    parseExternalShape: (
+      identifier: string,
+      required: boolean,
+      jsDoc?: string
+    ) => ParsedShape | undefined,
+    required: boolean
+  ): NestedParsedShape {
+    const properties = shapeDeclaration.getProperties();
+    const nestedParsedShapeType: NestedParsedShapeType = {};
+
+    properties.forEach((p) => {
+      const propertyName = StaticParsingHelpers.getEscapedName(p);
+      nestedParsedShapeType[propertyName] = this.parseShape(
+        p,
+        parseExternalShape,
+        !p.hasQuestionToken(),
+        this.getJsDocs(p)
+      );
+    });
+    return {
+      kind: ParsedShapeKind.Nested,
+      type: nestedParsedShapeType,
+      required,
+    };
   }
 
   private static handleUnionType(
-    p: PropertySignature,
-    unionType: UnionTypeNode
-  ) {
+    unionType: UnionTypeNode,
+    name: string,
+    required: boolean,
+    jsDoc?: string
+  ): SimpleParsedShape {
     const unionValues = unionType.getTypeNodes().map((n) => {
       const firstChild = n.getFirstChild();
       if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
         throw new Error(
           `Union types only support strings. Found a ${firstChild?.getKindName()} ` +
-            `within "${StaticParsingHelpers.getEscapedName(p)}".`
+            `within "${name}".`
         );
       }
       return firstChild.getLiteralText();
     });
 
-    const jsdoc = this.getJsDocs(p);
     return {
       kind: ParsedShapeKind.Simple,
       type: PropValueType.string,
       unionValues,
-      ...(jsdoc && { doc: jsdoc }),
-      required: !p.hasQuestionToken(),
-    } as const;
+      ...(jsDoc && { doc: jsDoc }),
+      required,
+    };
   }
 
   private static getJsDocs(propertySignature: PropertySignature) {

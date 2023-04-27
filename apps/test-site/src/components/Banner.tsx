@@ -1,24 +1,23 @@
 import { HexColor } from "@yext/studio";
+import { NestedProp } from "../types/exportedTypes";
 
-export interface BannerProps {
+export interface BannerData {
   /** banner's title */
   title?: string;
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
-  nestedProp?: {
-    egg?: string;
-  };
+  nestedProp?: NestedProp;
 }
 
-export const initialProps: BannerProps = {
+export const initialProps: BannerData = {
   bgColor: "#abcdef",
   num: 5,
   bool: true,
   title: "initial title",
 };
 
-export default function Banner(props: BannerProps) {
+export default function Banner(props: BannerData) {
   return (
     <div style={{ backgroundColor: props.bgColor }}>
       <p>{props.title}</p>

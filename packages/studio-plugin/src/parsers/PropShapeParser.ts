@@ -3,7 +3,11 @@ import TypeGuards from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import { PropValueType } from "../types";
-import { ParsedShape, ParsedShapeKind } from "./helpers/ShapeParsingHelper";
+import {
+  NestedParsedShapeType,
+  ParsedShape,
+  ParsedShapeKind,
+} from "./helpers/ShapeParsingHelper";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
@@ -28,26 +32,29 @@ export default class PropShapeParser {
     if (!parsedShape) {
       return {};
     }
-    return this.toPropShape(parsedShape, identifier, onProp);
+    if (parsedShape.kind === ParsedShapeKind.Simple) {
+      throw new Error(`Error parsing ${identifier}: Expected object.`);
+    }
+    return this.toPropShape(parsedShape.type, identifier, onProp);
   }
 
   private toPropShape(
-    rawShape: ParsedShape,
+    rawProps: NestedParsedShapeType,
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
     const propShape: PropShape = {};
-    Object.keys(rawShape)
+    Object.keys(rawProps)
       .filter((propName) => !onProp || onProp(propName))
       .forEach((propName) => {
-        const rawProp = rawShape[propName];
+        const rawProp = rawProps[propName];
         propShape[propName] = this.toPropMetadata(rawProp, identifier, onProp);
       });
     return propShape;
   }
 
   private toPropMetadata(
-    rawProp: ParsedShape[string],
+    rawProp: ParsedShape,
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropMetadata {

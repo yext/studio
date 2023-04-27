@@ -5,6 +5,8 @@ import ShapeParsingHelper, {
 } from "../../src/parsers/helpers/ShapeParsingHelper";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 
+const externalShapeParser = jest.fn();
+
 it("can parse a string union type", () => {
   const { sourceFile } = createTestSourceFile(
     `export interface MyProps {
@@ -14,8 +16,12 @@ it("can parse a string union type", () => {
   const interfaceDeclaration = sourceFile.getFirstDescendantByKindOrThrow(
     SyntaxKind.InterfaceDeclaration
   );
-  const parsedShape = ShapeParsingHelper.parseShape(interfaceDeclaration);
-  expect(parsedShape).toEqual({
+  const parsedShape = ShapeParsingHelper.parseShape(
+    interfaceDeclaration,
+    externalShapeParser,
+    true
+  );
+  expect(parsedShape.type).toEqual({
     fruit: {
       kind: ParsedShapeKind.Simple,
       type: PropValueType.string,
@@ -35,7 +41,11 @@ it("errors for unions of non strings", () => {
     SyntaxKind.InterfaceDeclaration
   );
   expect(() =>
-    ShapeParsingHelper.parseShape(interfaceDeclaration)
+    ShapeParsingHelper.parseShape(
+      interfaceDeclaration,
+      externalShapeParser,
+      true
+    )
   ).toThrowError(
     'Union types only support strings. Found a NumericLiteral within "fruit".'
   );
@@ -47,11 +57,15 @@ it("can parse a type literal", () => {
       fruit: string
   }`
   );
-  const typeLiteral = sourceFile.getFirstDescendantByKindOrThrow(
-    SyntaxKind.TypeLiteral
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
   );
-  const parsedShape = ShapeParsingHelper.parseShape(typeLiteral);
-  expect(parsedShape).toEqual({
+  const parsedShape = ShapeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser,
+    true
+  );
+  expect(parsedShape.type).toEqual({
     fruit: {
       kind: ParsedShapeKind.Simple,
       type: "string",
