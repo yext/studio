@@ -193,6 +193,84 @@ describe("updatePageFile", () => {
       );
     });
 
+    it("dedupes stream document paths", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const pageFile = new PageFile(
+        getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
+        throwIfCalled,
+        jest.fn(),
+        tsMorphProject
+      );
+      pageFile.updatePageFile(
+        {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.arrayIndex[0]",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid-0",
+            },
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-1",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.arrayIndex[1]",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid-1",
+            },
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-2",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.objectField.attr1",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid-2",
+            },
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-3",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.objectField.attr2",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid-3",
+            },
+          ],
+          cssImports: [],
+          filepath: "mock-filepath",
+        },
+        { updateStreamConfig: true }
+      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithStreamConfigMultipleFields.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithStreamConfigArrayAndObjectField"),
+          "utf-8"
+        )
+      );
+    });
+
     it("preserves 'slug' field for PagesJS PageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = new PageFile(

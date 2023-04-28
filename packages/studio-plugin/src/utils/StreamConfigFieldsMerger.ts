@@ -27,7 +27,7 @@ export const NON_CONFIGURABLE_STREAM_PROPERTIES = [
 /**
  * The strategy for merging fields in a PagesJS Stream Config. This strategy overwrites all
  * existing fields, except for 'slug' (if present). Additionally, any top-level Stream
- * Config attributes are filtered out of the returned fields.
+ * Config attributes are filtered out of the returned fields. De-duplication is also performed.
  *
  * @param existingFields - The existing 'fields' attribute in the Config.
  * @param newFields - The new fields.
@@ -42,7 +42,7 @@ const pagesJSFieldsMerger: StreamConfigFieldsMerger = (
   );
   existingFields.includes("slug") && mergedFields.push("slug");
 
-  return mergedFields;
+  return [...new Set(mergedFields)];
 };
 
 export default pagesJSFieldsMerger;

@@ -92,8 +92,10 @@ export default class StreamConfigWriter {
 
     const currentFields = currentTemplateConfig?.stream?.fields || [];
     const newFields = [...usedDocumentPaths]
-      // Stream config's fields do not allow specifying an index of a field.
-      .map((documentPath) => documentPath.split("document.")[1].split("[")[0]);
+      // Stream config's fields do not allow specifying an index or sub-field of a field.
+      .map((documentPath) => /^document\.([^[.]+)/.exec(documentPath))
+      .filter((matchResults) => matchResults && matchResults.length >= 2)
+      .map((matchResults) => (matchResults as RegExpExecArray)[1]);
 
     return {
       ...currentTemplateConfig,
