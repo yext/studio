@@ -37,13 +37,12 @@ const pagesJSFieldsMerger: StreamConfigFieldsMerger = (
   existingFields: string[],
   newFields: string[]
 ): string[] => {
-  let mergedFields = newFields.filter(
+  const mergedFields = newFields.filter(
     (documentPath) => !NON_CONFIGURABLE_STREAM_PROPERTIES.includes(documentPath)
   );
   existingFields.includes("slug") && mergedFields.push("slug");
-  mergedFields = [...new Set(mergedFields)];
 
-  return mergedFields;
+  return [...new Set(mergedFields)];
 };
 
 export default pagesJSFieldsMerger;

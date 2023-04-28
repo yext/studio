@@ -6,7 +6,7 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     filter: {},
     localization: { locales: ["en"], primary: false },
-    fields: ["arrayIndex"],
+    fields: ["arrayIndex", "objectField"],
   },
 };
 
@@ -15,6 +15,8 @@ export default function IndexPage({ document }: TemplateProps) {
     <>
       <ComplexBanner title={document.arrayIndex[0]} />
       <ComplexBanner title={document.arrayIndex[1]} />
+      <ComplexBanner title={document.objectField.attr1} />
+      <ComplexBanner title={document.objectField.attr2} />
     </>
   );
 }

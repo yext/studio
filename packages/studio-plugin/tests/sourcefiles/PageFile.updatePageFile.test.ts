@@ -230,6 +230,32 @@ describe("updatePageFile", () => {
               },
               metadataUUID: "mock-metadata-uuid-1",
             },
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-2",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.objectField.attr1",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid-2",
+            },
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-3",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.objectField.attr2",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid-3",
+            },
           ],
           cssImports: [],
           filepath: "mock-filepath",
@@ -239,7 +265,7 @@ describe("updatePageFile", () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithStreamConfigMultipleFields.tsx"),
         fs.readFileSync(
-          getPagePath("updatePageFile/PageWithStreamConfigArrayField"),
+          getPagePath("updatePageFile/PageWithStreamConfigArrayAndObjectField"),
           "utf-8"
         )
       );
