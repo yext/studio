@@ -57,7 +57,7 @@ export default class ModuleFile {
     const componentTreeResult = this.componentTreeParser.parseComponentTree(
       absPathDefaultImports
     );
-    
+
     if (componentTreeResult.isOk) {
       return {
         kind: FileMetadataKind.Module,
