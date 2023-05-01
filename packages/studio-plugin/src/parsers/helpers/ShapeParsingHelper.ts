@@ -95,17 +95,17 @@ export default class ShapeParsingHelper {
     const { type, unionValues } = parsedType;
     return typeof type === "string"
       ? {
-        kind: ParsedShapeKind.Simple,
-        type,
-        unionValues,
-        required,
-        ...doc && { doc },
-      }
+          kind: ParsedShapeKind.Simple,
+          type,
+          unionValues,
+          required,
+          ...(doc && { doc }),
+        }
       : {
-        kind: ParsedShapeKind.Nested,
-        type,
-        required
-      };
+          kind: ParsedShapeKind.Nested,
+          type,
+          required,
+        };
   }
 
   private static handleObjectType(
