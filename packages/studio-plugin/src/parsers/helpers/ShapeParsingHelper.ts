@@ -24,9 +24,12 @@ type NestedParsedShape = {
   kind: ParsedShapeKind.Nested;
   type: NestedParsedShapeType;
   required: boolean;
+  unionValues?: never;
 };
 
 export type NestedParsedShapeType = { [key: string]: ParsedShape };
+
+type ParsedTypeData = Pick<ParsedShape, "type" | "unionValues">;
 
 export enum ParsedShapeKind {
   Simple = "simple",
@@ -35,7 +38,7 @@ export enum ParsedShapeKind {
 
 export default class ShapeParsingHelper {
   static parseShape(
-    shapeNode: InterfaceDeclaration | TypeAliasDeclaration | PropertySignature,
+    shapeNode: InterfaceDeclaration | TypeAliasDeclaration,
     parseExternalShape: (
       identifier: string,
       required: boolean,
@@ -44,19 +47,29 @@ export default class ShapeParsingHelper {
     required: boolean,
     jsDoc?: string
   ): ParsedShape {
+    const parsedTypeData = this.parseTypeNode(shapeNode, (identifier) =>
+      parseExternalShape(identifier, required, jsDoc)
+    );
+    return this.toParsedShape(parsedTypeData, required, jsDoc);
+  }
+
+  private static parseTypeNode(
+    shapeNode: InterfaceDeclaration | TypeAliasDeclaration | PropertySignature,
+    parseExternalShape: (identifier: string) => ParsedTypeData | undefined
+  ): ParsedTypeData {
     if (shapeNode.isKind(SyntaxKind.InterfaceDeclaration)) {
-      return this.handleNestedType(shapeNode, parseExternalShape, required);
+      return this.handleObjectType(shapeNode, parseExternalShape);
     }
 
     const typeLiteral = shapeNode.getFirstChildByKind(SyntaxKind.TypeLiteral);
     if (typeLiteral) {
-      return this.handleNestedType(typeLiteral, parseExternalShape, required);
+      return this.handleObjectType(typeLiteral, parseExternalShape);
     }
 
     const name = StaticParsingHelpers.getEscapedName(shapeNode);
     const unionType = shapeNode.getFirstChildByKind(SyntaxKind.UnionType);
     if (unionType) {
-      return this.handleUnionType(unionType, name, required, jsDoc);
+      return this.handleUnionType(unionType, name);
     }
 
     const { type } = shapeNode.getStructure();
@@ -66,54 +79,58 @@ export default class ShapeParsingHelper {
       );
     }
     if (!TypeGuards.isPropValueType(type)) {
-      const externalShape = parseExternalShape(type, required, jsDoc);
+      const externalShape = parseExternalShape(type);
       if (externalShape) {
         return externalShape;
       }
     }
-
-    return {
-      kind: ParsedShapeKind.Simple,
-      type,
-      ...(jsDoc && { doc: jsDoc }),
-      required,
-    };
+    return { type };
   }
 
-  private static handleNestedType(
+  private static toParsedShape(
+    parsedType: ParsedTypeData,
+    required: boolean,
+    doc?: string
+  ): ParsedShape {
+    const { type, unionValues } = parsedType;
+    return typeof type === "string"
+      ? {
+        kind: ParsedShapeKind.Simple,
+        type,
+        unionValues,
+        required,
+        ...doc && { doc },
+      }
+      : {
+        kind: ParsedShapeKind.Nested,
+        type,
+        required
+      };
+  }
+
+  private static handleObjectType(
     shapeDeclaration: InterfaceDeclaration | TypeLiteralNode,
-    parseExternalShape: (
-      identifier: string,
-      required: boolean,
-      jsDoc?: string
-    ) => ParsedShape | undefined,
-    required: boolean
-  ): NestedParsedShape {
+    parseExternalShape: (identifier: string) => ParsedTypeData | undefined
+  ): ParsedTypeData {
     const properties = shapeDeclaration.getProperties();
     const nestedParsedShapeType: NestedParsedShapeType = {};
 
     properties.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
-      nestedParsedShapeType[propertyName] = this.parseShape(
-        p,
-        parseExternalShape,
+      const parsedType = this.parseTypeNode(p, parseExternalShape);
+      nestedParsedShapeType[propertyName] = this.toParsedShape(
+        parsedType,
         !p.hasQuestionToken(),
         this.getJsDocs(p)
       );
     });
-    return {
-      kind: ParsedShapeKind.Nested,
-      type: nestedParsedShapeType,
-      required,
-    };
+    return { type: nestedParsedShapeType };
   }
 
   private static handleUnionType(
     unionType: UnionTypeNode,
-    name: string,
-    required: boolean,
-    jsDoc?: string
-  ): SimpleParsedShape {
+    name: string
+  ): ParsedTypeData {
     const unionValues = unionType.getTypeNodes().map((n) => {
       const firstChild = n.getFirstChild();
       if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
@@ -126,11 +143,8 @@ export default class ShapeParsingHelper {
     });
 
     return {
-      kind: ParsedShapeKind.Simple,
       type: PropValueType.string,
       unionValues,
-      ...(jsDoc && { doc: jsDoc }),
-      required,
     };
   }
 

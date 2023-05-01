@@ -194,18 +194,18 @@ export default class StudioSourceFileParser {
   /**
    * Parses the type or interface with the given name.
    */
-  parseShape(
+  parseShape = (
     identifier: string,
     required = true,
     jsDoc?: string
-  ): ParsedShape | undefined {
+  ): ParsedShape | undefined => {
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
     const typeAliasDeclaration = this.sourceFile.getTypeAlias(identifier);
     const shapeDeclaration = interfaceDeclaration ?? typeAliasDeclaration;
     if (shapeDeclaration) {
       return ShapeParsingHelper.parseShape(
         shapeDeclaration,
-        this.parseShape.bind(this),
+        this.parseShape,
         required,
         jsDoc
       );
@@ -221,7 +221,7 @@ export default class StudioSourceFileParser {
         jsDoc
       );
     }
-  }
+  };
 
   /**
    * Returns the default exported node, if one exists.
