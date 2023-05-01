@@ -13,7 +13,10 @@ import StaticParsingHelpers, {
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
-import ShapeParsingHelper, { ParsedShape } from "./helpers/ShapeParsingHelper";
+import ShapeParsingHelper, {
+  ParsedTypeKind,
+  ParsedType,
+} from "./helpers/ShapeParsingHelper";
 import { NpmLookup } from "../utils";
 
 /**
@@ -159,12 +162,10 @@ export default class StudioSourceFileParser {
     }
   }
 
-  private parseImportedShape(
+  private parseImportedTypeReference(
     identifier: string,
     importSource: string,
-    isDefault: boolean,
-    required: boolean,
-    jsDoc?: string
+    isDefault: boolean
   ) {
     if (importSource.startsWith(".")) {
       importSource = path.resolve(path.dirname(this.filepath), importSource);
@@ -188,40 +189,57 @@ export default class StudioSourceFileParser {
         .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
         .getText();
     }
-    return parserForImportSource.parseShape(identifier, required, jsDoc);
+    return parserForImportSource.parseTypeReference(identifier);
   }
 
   /**
    * Parses the type or interface with the given name.
    */
-  parseShape = (
-    identifier: string,
-    required = true,
-    jsDoc?: string
-  ): ParsedShape | undefined => {
+  parseTypeReference = (identifier: string): ParsedType | undefined => {
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
     const typeAliasDeclaration = this.sourceFile.getTypeAlias(identifier);
-    const shapeDeclaration = interfaceDeclaration ?? typeAliasDeclaration;
-    if (shapeDeclaration) {
-      return ShapeParsingHelper.parseShape(
-        shapeDeclaration,
-        this.parseShape,
-        required,
-        jsDoc
+    const typeLiteral = typeAliasDeclaration?.getFirstChildByKind(
+      SyntaxKind.TypeLiteral
+    );
+    const shapeNode = interfaceDeclaration ?? typeLiteral;
+    if (shapeNode) {
+      const parsedShape = ShapeParsingHelper.parseShape(
+        shapeNode,
+        (identifier: string) => {
+          const parsedTypeReference: ParsedType | undefined =
+            this.parseTypeReference(identifier);
+          if (!parsedTypeReference) {
+            throw new Error(`Could not parse TypeReference "${identifier}".`);
+          }
+          return parsedTypeReference;
+        }
       );
+      return {
+        kind: ParsedTypeKind.Object,
+        type: parsedShape,
+      };
     }
 
+    const type = typeAliasDeclaration?.getStructure().type;
+    if (type === "string" || type === "boolean" || type === "number") {
+      return {
+        kind: ParsedTypeKind.Simple,
+        type,
+      };
+    }
+    return this.parseImportedIdentifier(type?.toString() ?? identifier);
+  };
+
+  private parseImportedIdentifier(identifier: string) {
     const importData = this.getImportSourceForIdentifier(identifier);
     if (importData) {
-      return this.parseImportedShape(
+      return this.parseImportedTypeReference(
         identifier,
         importData.importSource,
-        importData.isDefault,
-        required,
-        jsDoc
+        importData.isDefault
       );
     }
-  };
+  }
 
   /**
    * Returns the default exported node, if one exists.

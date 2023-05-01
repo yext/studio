@@ -1,7 +1,7 @@
 import { SyntaxKind } from "ts-morph";
 import { PropValueType } from "../../lib";
 import ShapeParsingHelper, {
-  ParsedShapeKind,
+  ParsedTypeKind,
 } from "../../src/parsers/helpers/ShapeParsingHelper";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 
@@ -18,12 +18,11 @@ it("can parse a string union type", () => {
   );
   const parsedShape = ShapeParsingHelper.parseShape(
     interfaceDeclaration,
-    externalShapeParser,
-    true
+    externalShapeParser
   );
-  expect(parsedShape.type).toEqual({
+  expect(parsedShape).toEqual({
     fruit: {
-      kind: ParsedShapeKind.Simple,
+      kind: ParsedTypeKind.Simple,
       type: PropValueType.string,
       unionValues: ["apple", "pear"],
       required: true,
@@ -41,11 +40,7 @@ it("errors for unions of non strings", () => {
     SyntaxKind.InterfaceDeclaration
   );
   expect(() =>
-    ShapeParsingHelper.parseShape(
-      interfaceDeclaration,
-      externalShapeParser,
-      true
-    )
+    ShapeParsingHelper.parseShape(interfaceDeclaration, externalShapeParser)
   ).toThrowError(
     'Union types only support strings. Found a NumericLiteral within "fruit".'
   );
@@ -58,16 +53,15 @@ it("can parse a type literal", () => {
   }`
   );
   const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
-    SyntaxKind.TypeAliasDeclaration
+    SyntaxKind.TypeLiteral
   );
   const parsedShape = ShapeParsingHelper.parseShape(
     typeAlias,
-    externalShapeParser,
-    true
+    externalShapeParser
   );
-  expect(parsedShape.type).toEqual({
+  expect(parsedShape).toEqual({
     fruit: {
-      kind: ParsedShapeKind.Simple,
+      kind: ParsedTypeKind.Simple,
       type: "string",
       required: true,
     },

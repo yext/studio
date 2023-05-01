@@ -137,7 +137,7 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("UnrecognizedPropBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(() => componentFile.getComponentMetadata()).toThrowError(
-      /^Unrecognized type/
+      /^Could not parse TypeReference "GleebGlarble420PowerRangersChainsawManRaven/
     );
   });
 
@@ -145,7 +145,7 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("PrimitivePropsBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(() => componentFile.getComponentMetadata()).toThrowError(
-      "Error parsing PrimitiveProps: Expected object."
+      /^Expected a ParsedTypeKind.Object for "PrimitiveProps"/
     );
   });
 });

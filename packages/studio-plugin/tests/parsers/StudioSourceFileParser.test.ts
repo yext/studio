@@ -2,7 +2,7 @@ import { SyntaxKind } from "ts-morph";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
-import { ParsedShapeKind } from "../../src/parsers/helpers/ShapeParsingHelper";
+import { ParsedTypeKind } from "../../src/parsers/helpers/ShapeParsingHelper";
 import path from "path";
 
 describe("parseExportedObjectLiteral", () => {
@@ -76,19 +76,19 @@ describe("parseShape", () => {
   const ctaDataShape = {
     label: {
       doc: "The display label for the CTA element.",
-      kind: ParsedShapeKind.Simple,
+      kind: ParsedTypeKind.Simple,
       required: true,
       type: "string",
     },
     link: {
       doc: "The CTA link source.",
-      kind: ParsedShapeKind.Simple,
+      kind: ParsedTypeKind.Simple,
       required: true,
       type: "string",
     },
     linkType: {
       doc: "The CTA link type (e.g. URL, Phone, Email, Other).",
-      kind: ParsedShapeKind.Simple,
+      kind: ParsedTypeKind.Simple,
       required: true,
       type: "string",
     },
@@ -99,9 +99,9 @@ describe("parseShape", () => {
       `export default function MyComponent(props: MyProps) {};
       interface MyProps { myNum: number }`
     );
-    expect(parser.parseShape("MyProps")?.type).toEqual({
+    expect(parser.parseTypeReference("MyProps")?.type).toEqual({
       myNum: {
-        kind: ParsedShapeKind.Simple,
+        kind: ParsedTypeKind.Simple,
         type: "number",
         required: true,
       },
@@ -113,9 +113,9 @@ describe("parseShape", () => {
       `export default function MyComponent(props: MyProps) {};
       type MyProps = { myBool: boolean }`
     );
-    expect(parser.parseShape("MyProps")?.type).toEqual({
+    expect(parser.parseTypeReference("MyProps")?.type).toEqual({
       myBool: {
-        kind: ParsedShapeKind.Simple,
+        kind: ParsedTypeKind.Simple,
         type: "boolean",
         required: true,
       },
@@ -126,9 +126,9 @@ describe("parseShape", () => {
     const parser = createParser(
       `import { SimpleBannerProps } from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
-    expect(parser.parseShape("SimpleBannerProps")?.type).toEqual({
+    expect(parser.parseTypeReference("SimpleBannerProps")?.type).toEqual({
       title: {
-        kind: ParsedShapeKind.Simple,
+        kind: ParsedTypeKind.Simple,
         type: "string",
         required: false,
       },
@@ -139,16 +139,16 @@ describe("parseShape", () => {
     const parser = createParser(
       `import { CtaData } from "@yext/search-ui-react";`
     );
-    expect(parser.parseShape("CtaData")?.type).toEqual(ctaDataShape);
+    expect(parser.parseTypeReference("CtaData")?.type).toEqual(ctaDataShape);
   });
 
   it("can parse a type imported from a file", () => {
     const parser = createParser(
       `import { TitleType } from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
-    expect(parser.parseShape("TitleType")?.type).toEqual({
+    expect(parser.parseTypeReference("TitleType")?.type).toEqual({
       title: {
-        kind: ParsedShapeKind.Simple,
+        kind: ParsedTypeKind.Simple,
         required: false,
         type: "string",
       },
@@ -159,9 +159,9 @@ describe("parseShape", () => {
     const parser = createParser(
       `import ExportedType from "../__fixtures__/StudioSourceFileParser/exportedTypes";`
     );
-    expect(parser.parseShape("ExportedType")?.type).toEqual({
+    expect(parser.parseTypeReference("ExportedType")?.type).toEqual({
       title: {
-        kind: ParsedShapeKind.Simple,
+        kind: ParsedTypeKind.Simple,
         required: false,
         type: "string",
       },
@@ -172,7 +172,7 @@ describe("parseShape", () => {
     const parser = createParser(
       `import { TitleType as MyProps } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
     );
-    expect(parser.parseShape("MyProps")?.type).toBeUndefined();
+    expect(parser.parseTypeReference("MyProps")?.type).toBeUndefined();
   });
 
   it("can parse an interface with the same name as an import before aliasing", () => {
@@ -180,9 +180,9 @@ describe("parseShape", () => {
       `import { Props as Alias } from "aPackage";
       export interface Props { title: string }`
     );
-    expect(parser.parseShape("Props")?.type).toEqual({
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
       title: {
-        kind: ParsedShapeKind.Simple,
+        kind: ParsedTypeKind.Simple,
         required: true,
         type: "string",
       },
@@ -194,9 +194,9 @@ describe("parseShape", () => {
       `import { CtaData } from "@yext/search-ui-react";
       export type Props = { cta?: CtaData }`
     );
-    expect(parser.parseShape("Props")?.type).toEqual({
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
       cta: {
-        kind: ParsedShapeKind.Nested,
+        kind: ParsedTypeKind.Object,
         required: false,
         type: ctaDataShape,
       },
@@ -211,25 +211,25 @@ describe("parseShape", () => {
     );
     expect(parser.parseShape("Props")?.type).toEqual({
       data: {
-        kind: ParsedShapeKind.Nested,
+        kind: ParsedTypeKind.Nested,
         required: false,
         type: {
           button: {
-            kind: ParsedShapeKind.Nested,
+            kind: ParsedTypeKind.Nested,
             required: true,
             type: {
               label: {
-                kind: ParsedShapeKind.Simple,
+                kind: ParsedTypeKind.Simple,
                 required: false,
                 type: "string",
                 doc: "The label for the button, defaults to 'Apply Filters'",
               },
               customCssClasses: {
-                kind: ParsedShapeKind.Nested,
+                kind: ParsedTypeKind.Nested,
                 required: false,
                 type: {
                   button: {
-                    kind: ParsedShapeKind.Simple,
+                    kind: ParsedTypeKind.Simple,
                     required: false,
                     type: "string",
                   },
@@ -247,13 +247,13 @@ describe("parseShape", () => {
       `type Num = number;
       export interface Props { data?: { num: Num } }`
     );
-    expect(parser.parseShape("Props")?.type).toEqual({
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
       data: {
-        kind: ParsedShapeKind.Nested,
+        kind: ParsedTypeKind.Object,
         required: false,
         type: {
           num: {
-            kind: ParsedShapeKind.Simple,
+            kind: ParsedTypeKind.Simple,
             required: true,
             type: "number",
           },
@@ -267,18 +267,26 @@ describe("parseShape", () => {
       `import { MyString } from "../__fixtures__/StudioSourceFileParser/exportedTypes";
       export interface Props { data?: { title: MyString } }`
     );
-    expect(parser.parseShape("Props")?.type).toEqual({
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
       data: {
-        kind: ParsedShapeKind.Nested,
+        kind: ParsedTypeKind.Object,
         required: false,
         type: {
           title: {
-            kind: ParsedShapeKind.Simple,
+            kind: ParsedTypeKind.Simple,
             required: true,
             type: "string",
           },
         },
       },
+    });
+  });
+
+  it("can parse a type that is a StringLiteral", () => {
+    const parser = createParser(`export type MyString = string;`);
+    expect(parser.parseTypeReference("MyString")).toEqual({
+      kind: ParsedTypeKind.Simple,
+      type: "string",
     });
   });
 });

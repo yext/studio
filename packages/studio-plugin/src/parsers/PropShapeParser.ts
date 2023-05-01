@@ -4,9 +4,9 @@ import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import { PropValueType } from "../types";
 import {
-  NestedParsedShapeType,
+  ParsedProperty,
+  ParsedTypeKind,
   ParsedShape,
-  ParsedShapeKind,
 } from "./helpers/ShapeParsingHelper";
 
 /**
@@ -28,18 +28,21 @@ export default class PropShapeParser {
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const parsedShape = this.studioSourceFileParser.parseShape(identifier);
-    if (!parsedShape) {
+    const parsedType =
+      this.studioSourceFileParser.parseTypeReference(identifier);
+    if (!parsedType) {
       return {};
     }
-    if (parsedShape.kind === ParsedShapeKind.Simple) {
-      throw new Error(`Error parsing ${identifier}: Expected object.`);
+    if (parsedType.kind !== ParsedTypeKind.Object) {
+      throw new Error(
+        `Expected a ParsedTypeKind.Object for "${identifier}", received "${parsedType.kind}".`
+      );
     }
-    return this.toPropShape(parsedShape.type, identifier, onProp);
+    return this.toPropShape(parsedType.type, identifier, onProp);
   }
 
   private toPropShape(
-    rawProps: NestedParsedShapeType,
+    rawProps: ParsedShape,
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
@@ -54,11 +57,11 @@ export default class PropShapeParser {
   }
 
   private toPropMetadata(
-    rawProp: ParsedShape,
+    rawProp: ParsedProperty,
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropMetadata {
-    if (rawProp.kind !== ParsedShapeKind.Simple) {
+    if (rawProp.kind !== ParsedTypeKind.Simple) {
       const nestedShape = this.toPropShape(rawProp.type, identifier, onProp);
       const propMetadata: PropMetadata = {
         type: PropValueType.Object,
