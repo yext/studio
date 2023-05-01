@@ -13,7 +13,7 @@ import StaticParsingHelpers, {
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
-import ShapeParsingHelper, { ParsedShape } from "./helpers/ShapeParsingHelper";
+import ObjectTypeParsingHelper, { ParsedType } from "./helpers/ShapeParsingHelper";
 import { NpmLookup } from "../utils";
 
 /**
@@ -163,8 +163,6 @@ export default class StudioSourceFileParser {
     identifier: string,
     importSource: string,
     isDefault: boolean,
-    required: boolean,
-    jsDoc?: string
   ) {
     if (importSource.startsWith(".")) {
       importSource = path.resolve(path.dirname(this.filepath), importSource);
@@ -188,26 +186,29 @@ export default class StudioSourceFileParser {
         .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
         .getText();
     }
-    return parserForImportSource.parseShape(identifier, required, jsDoc);
+    return parserForImportSource.parseTypeReference(identifier);
   }
 
   /**
    * Parses the type or interface with the given name.
    */
-  parseShape = (
+  parseTypeReference = (
     identifier: string,
-    required = true,
-    jsDoc?: string
-  ): ParsedShape | undefined => {
+  ): ParsedType | undefined => {
+    console.log('parseShape', identifier)
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
     const typeAliasDeclaration = this.sourceFile.getTypeAlias(identifier);
     const shapeDeclaration = interfaceDeclaration ?? typeAliasDeclaration;
     if (shapeDeclaration) {
-      return ShapeParsingHelper.parseShape(
+      return ObjectTypeParsingHelper.parseShape(
         shapeDeclaration,
-        this.parseShape,
-        required,
-        jsDoc
+        (identifier) => {
+          const parsedType = this.parseTypeReference(identifier)
+          if (!parsedType) {
+            throw new Error(`Unable to parse type "${identifier}".`)
+          }
+          return parsedType;
+        }
       );
     }
 
@@ -217,8 +218,6 @@ export default class StudioSourceFileParser {
         identifier,
         importData.importSource,
         importData.isDefault,
-        required,
-        jsDoc
       );
     }
   };
