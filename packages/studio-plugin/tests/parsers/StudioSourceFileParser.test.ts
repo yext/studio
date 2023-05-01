@@ -194,7 +194,7 @@ describe("parseShape", () => {
       `import { CtaData } from "@yext/search-ui-react";
       export type Props = { cta?: CtaData }`
     );
-    expect(parser.parseShape("Props")?.type).toEqual({
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
       cta: {
         kind: ParsedTypeKind.Object,
         required: false,
@@ -282,11 +282,19 @@ describe("parseShape", () => {
     });
   });
 
-  it.only("can parse a type that is a Record<string, any>", () => {
-    const parser = createParser(`export interface MyProps { document: Record<string, any>; }`);
+  it("can parse a type that is a Record<string, any>", () => {
+    const parser = createParser(
+      `export interface MyProps { document: Record<string, any>; }`
+    );
     expect(parser.parseTypeReference("MyProps")).toEqual({
-      kind: 'simple',
-      type: "Record<string, any>",
+      kind: ParsedTypeKind.Object,
+      type: {
+        document: {
+          kind: ParsedTypeKind.Simple,
+          required: true,
+          type: "Record<string, any>",
+        },
+      },
     });
   });
 });

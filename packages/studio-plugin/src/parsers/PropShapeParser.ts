@@ -28,11 +28,12 @@ export default class PropShapeParser {
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const parsedShape = this.studioSourceFileParser.parseTypeReference(identifier);
+    const parsedShape =
+      this.studioSourceFileParser.parseTypeReference(identifier);
     if (!parsedShape) {
       return {};
     }
-    if (parsedShape.kind === ParsedTypeKind.Simple) {
+    if (parsedShape.kind !== ParsedTypeKind.Object) {
       throw new Error(`Error parsing ${identifier}: Expected object.`);
     }
     return this.toPropShape(parsedShape.type, identifier, onProp);

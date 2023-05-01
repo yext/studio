@@ -13,7 +13,9 @@ import StaticParsingHelpers, {
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
-import ObjectTypeParsingHelper, { ParsedType } from "./helpers/ShapeParsingHelper";
+import TypeNodeParsingHelper, {
+  ParsedType,
+} from "./helpers/ShapeParsingHelper";
 import { NpmLookup } from "../utils";
 
 /**
@@ -162,7 +164,7 @@ export default class StudioSourceFileParser {
   private parseImportedShape(
     identifier: string,
     importSource: string,
-    isDefault: boolean,
+    isDefault: boolean
   ) {
     if (importSource.startsWith(".")) {
       importSource = path.resolve(path.dirname(this.filepath), importSource);
@@ -192,23 +194,14 @@ export default class StudioSourceFileParser {
   /**
    * Parses the type or interface with the given name.
    */
-  parseTypeReference = (
-    identifier: string,
-  ): ParsedType | undefined => {
-    console.log('parseShape', identifier)
+  parseTypeReference = (identifier: string): ParsedType | undefined => {
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
     const typeAliasDeclaration = this.sourceFile.getTypeAlias(identifier);
     const shapeDeclaration = interfaceDeclaration ?? typeAliasDeclaration;
     if (shapeDeclaration) {
-      return ObjectTypeParsingHelper.parseShape(
+      return TypeNodeParsingHelper.parseShape(
         shapeDeclaration,
-        (identifier) => {
-          const parsedType = this.parseTypeReference(identifier)
-          if (!parsedType) {
-            throw new Error(`Unable to parse type "${identifier}".`)
-          }
-          return parsedType;
-        }
+        this.parseTypeReference
       );
     }
 
@@ -217,7 +210,7 @@ export default class StudioSourceFileParser {
       return this.parseImportedShape(
         identifier,
         importData.importSource,
-        importData.isDefault,
+        importData.isDefault
       );
     }
   };

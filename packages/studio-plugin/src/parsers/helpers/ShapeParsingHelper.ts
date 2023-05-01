@@ -26,35 +26,30 @@ type ObjectParsedType = {
 
 export type ParsedShape = { [key: string]: ParsedType & ParsedProperty };
 
-export type ParsedProperty = ParsedType & PropertyMetadata
+export type ParsedProperty = ParsedType & PropertyMetadata;
 
 type PropertyMetadata = {
-  doc?: string,
-  required: boolean
-}
+  doc?: string;
+  required: boolean;
+};
 
 export enum ParsedTypeKind {
   Simple = "simple",
   Object = "object",
 }
 
-export default class ObjectTypeParsingHelper {
+export default class TypeNodeParsingHelper {
   static parseShape(
     shapeNode: InterfaceDeclaration | TypeAliasDeclaration,
-    parseTypeReference: (
-      identifier: string,
-    ) => ParsedType,
-  ): ObjectParsedType {
+    parseTypeReference: (identifier: string) => ParsedType | undefined
+  ): ParsedType {
     const parsedType = this.parseTypeNode(shapeNode, parseTypeReference);
-    if (parsedType.kind !== ParsedTypeKind.Object) {
-      throw new Error(`Expected a ParsedTypeKind.Object, received "${parsedType.kind}"`)
-    }
-    return parsedType
+    return parsedType;
   }
 
   private static parseTypeNode(
     typeNode: InterfaceDeclaration | TypeAliasDeclaration | PropertySignature,
-    parseTypeReference: (identifier: string) => ParsedType
+    parseTypeReference: (identifier: string) => ParsedType | undefined
   ): ParsedType {
     if (typeNode.isKind(SyntaxKind.InterfaceDeclaration)) {
       return this.handleObjectType(typeNode, parseTypeReference);
@@ -83,9 +78,10 @@ export default class ObjectTypeParsingHelper {
         return externalShape;
       }
     }
+
     return {
       kind: ParsedTypeKind.Simple,
-      type
+      type,
     };
   }
 
@@ -112,7 +108,7 @@ export default class ObjectTypeParsingHelper {
 
   private static handleObjectType(
     shapeDeclaration: InterfaceDeclaration | TypeLiteralNode,
-    parseTypeReference: (identifier: string) => ParsedType
+    parseTypeReference: (identifier: string) => ParsedType | undefined
   ): ObjectParsedType {
     const properties = shapeDeclaration.getProperties();
     const parsedShape: ParsedShape = {};
@@ -128,7 +124,7 @@ export default class ObjectTypeParsingHelper {
     });
     return {
       kind: ParsedTypeKind.Object,
-      type: parsedShape
+      type: parsedShape,
     };
   }
 
