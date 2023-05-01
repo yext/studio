@@ -209,13 +209,13 @@ describe("parseShape", () => {
       type ButtonData = ApplyFiltersButtonProps;
       export interface Props { data?: { button: ButtonData } }`
     );
-    expect(parser.parseShape("Props")?.type).toEqual({
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
       data: {
-        kind: ParsedTypeKind.Nested,
+        kind: ParsedTypeKind.Object,
         required: false,
         type: {
           button: {
-            kind: ParsedTypeKind.Nested,
+            kind: ParsedTypeKind.Object,
             required: true,
             type: {
               label: {
@@ -225,7 +225,7 @@ describe("parseShape", () => {
                 doc: "The label for the button, defaults to 'Apply Filters'",
               },
               customCssClasses: {
-                kind: ParsedTypeKind.Nested,
+                kind: ParsedTypeKind.Object,
                 required: false,
                 type: {
                   button: {
