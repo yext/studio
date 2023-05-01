@@ -152,7 +152,14 @@ export default class ParsingOrchestrator {
     const siteSettings = this.getSiteSettings();
     const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(
       (prev, curr) => {
-        prev[curr] = this.pageNameToPageFile[curr].getPageState();
+        const pageStateResult = this.pageNameToPageFile[curr].getPageState();
+
+        if (pageStateResult.isOk) {
+          prev[curr] = pageStateResult.value;
+        } else {
+          console.error(pageStateResult.error.message);
+        }
+
         return prev;
       },
       {}
