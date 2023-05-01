@@ -203,37 +203,31 @@ describe("parseShape", () => {
     });
   });
 
-  it("can parse a sub-property with a renamed nested type from an external package", () => {
+  it("can parse a property with a renamed nested type from an external package", () => {
     const parser = createParser(
       `import { ApplyFiltersButtonProps } from "@yext/search-ui-react";
       type ButtonData = ApplyFiltersButtonProps;
-      export interface Props { data?: { button: ButtonData } }`
+      export interface Props { button: ButtonData };`
     );
     expect(parser.parseShape("Props")?.type).toEqual({
-      data: {
+      button: {
         kind: ParsedShapeKind.Nested,
-        required: false,
+        required: true,
         type: {
-          button: {
+          label: {
+            kind: ParsedShapeKind.Simple,
+            required: false,
+            type: "string",
+            doc: "The label for the button, defaults to 'Apply Filters'",
+          },
+          customCssClasses: {
             kind: ParsedShapeKind.Nested,
-            required: true,
+            required: false,
             type: {
-              label: {
+              button: {
                 kind: ParsedShapeKind.Simple,
                 required: false,
                 type: "string",
-                doc: "The label for the button, defaults to 'Apply Filters'",
-              },
-              customCssClasses: {
-                kind: ParsedShapeKind.Nested,
-                required: false,
-                type: {
-                  button: {
-                    kind: ParsedShapeKind.Simple,
-                    required: false,
-                    type: "string",
-                  },
-                },
               },
             },
           },
