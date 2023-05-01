@@ -203,13 +203,11 @@ describe("parseShape", () => {
     });
   });
 
-  it("can parse an interface with sub-properties from internal and external sources", () => {
+  it("can parse a sub-property with a renamed nested type from an external package", () => {
     const parser = createParser(
       `import { ApplyFiltersButtonProps } from "@yext/search-ui-react";
-      import { MyString } from "../__fixtures__/StudioSourceFileParser/exportedTypes";
       type ButtonData = ApplyFiltersButtonProps;
-      type Num = number;
-      export interface Props { data?: { button: ButtonData, title: MyString, num: Num } }`
+      export interface Props { data?: { button: ButtonData } }`
     );
     expect(parser.parseShape("Props")?.type).toEqual({
       data: {
@@ -239,15 +237,45 @@ describe("parseShape", () => {
               },
             },
           },
-          title: {
-            kind: ParsedShapeKind.Simple,
-            required: true,
-            type: "string",
-          },
+        },
+      },
+    });
+  });
+
+  it("can parse an interface with primitive sub-property type in same file", () => {
+    const parser = createParser(
+      `type Num = number;
+      export interface Props { data?: { num: Num } }`
+    );
+    expect(parser.parseShape("Props")?.type).toEqual({
+      data: {
+        kind: ParsedShapeKind.Nested,
+        required: false,
+        type: {
           num: {
             kind: ParsedShapeKind.Simple,
             required: true,
             type: "number",
+          },
+        },
+      },
+    });
+  });
+
+  it("can parse an interface with sub-property type from other file", () => {
+    const parser = createParser(
+      `import { MyString } from "../__fixtures__/StudioSourceFileParser/exportedTypes";
+      export interface Props { data?: { title: MyString } }`
+    );
+    expect(parser.parseShape("Props")?.type).toEqual({
+      data: {
+        kind: ParsedShapeKind.Nested,
+        required: false,
+        type: {
+          title: {
+            kind: ParsedShapeKind.Simple,
+            required: true,
+            type: "string",
           },
         },
       },
