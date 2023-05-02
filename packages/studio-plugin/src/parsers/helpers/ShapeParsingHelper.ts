@@ -89,19 +89,22 @@ export default class TypeNodeParsingHelper {
     doc?: string
   ): ParsedProperty {
     const { type, unionValues } = parsedType;
+    const commonData = {
+      required,
+      ...(doc && { doc }),
+    };
+
     return typeof type === "string"
       ? {
           kind: ParsedTypeKind.Simple,
           type,
           ...(unionValues && { unionValues }),
-          required,
-          ...(doc && { doc }),
+          ...commonData,
         }
       : {
           kind: ParsedTypeKind.Object,
           type,
-          required,
-          ...(doc && { doc }),
+          ...commonData,
         };
   }
 
