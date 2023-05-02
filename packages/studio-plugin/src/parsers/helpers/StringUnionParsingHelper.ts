@@ -1,4 +1,4 @@
-import { UnionTypeNode, SyntaxKind, LiteralTypeNode } from "ts-morph";
+import { UnionTypeNode, SyntaxKind, LiteralTypeNode, TypeNode } from "ts-morph";
 import { ParsedType, ParsedTypeKind } from "./TypeNodeParsingHelper";
 
 export default class StringUnionParsingHelper {
@@ -11,26 +11,33 @@ export default class StringUnionParsingHelper {
       if (n.isKind(SyntaxKind.LiteralType)) {
         return this.handleLiteralType(n, name);
       } else if (n.isKind(SyntaxKind.TypeReference)) {
-        const identifier = n.getText();
-        const parsedType = parseTypeReference(identifier);
-        if (
-          parsedType?.kind !== ParsedTypeKind.Simple ||
-          parsedType.unionValues === undefined
-        ) {
-          throw new Error(
-            `Expected a union value for "${name}", received ${JSON.stringify(
-              parsedType,
-              null,
-              2
-            )}`
-          );
-        }
-        return parsedType.unionValues;
+        return this.handleTypeReference(n, parseTypeReference);
       }
       throw new Error(
         `Unexpected node kind ${n.getKindName()} while parsing string union "${name}".`
       );
     });
+  }
+
+  private static handleTypeReference(
+    n: TypeNode,
+    parseTypeReference: (identifier: string) => ParsedType | undefined
+  ) {
+    const identifier = n.getText();
+    const parsedType = parseTypeReference(identifier);
+    if (!parsedType || parsedType.kind === ParsedTypeKind.Object) {
+      throw new Error(
+        `Expected a union value for "${identifier}", received ${JSON.stringify(
+          parsedType,
+          null,
+          2
+        )}`
+      );
+    }
+    if (parsedType.kind === ParsedTypeKind.Literal) {
+      return [parsedType.type];
+    }
+    return parsedType.unionValues ?? [];
   }
 
   private static handleLiteralType(node: LiteralTypeNode, name: string) {

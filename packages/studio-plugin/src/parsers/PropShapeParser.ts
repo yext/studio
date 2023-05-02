@@ -59,7 +59,7 @@ export default class PropShapeParser {
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropMetadata {
-    if (rawProp.kind !== ParsedTypeKind.Simple) {
+    if (rawProp.kind === ParsedTypeKind.Object) {
       const nestedShape = this.toPropShape(rawProp.type, identifier, onProp);
       const propMetadata: PropMetadata = {
         type: PropValueType.Object,

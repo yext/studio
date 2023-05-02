@@ -311,6 +311,19 @@ describe("parseShape", () => {
       unionValues: ["yuzu", "apple", "pear"],
     });
   });
+
+  it("can parse a string union with a type reference to a string literal", () => {
+    const parser = createParser(
+      `import { Orange } from "../__fixtures__/StudioSourceFileParser/stringUnions.ts";
+      export type Citrus = 'yuzu' | Orange
+      `
+    );
+    expect(parser.parseTypeReference("Citrus")).toEqual({
+      kind: ParsedTypeKind.Simple,
+      type: "string",
+      unionValues: ["yuzu", "orange"],
+    });
+  });
 });
 
 function createParser(sourceCode: string) {

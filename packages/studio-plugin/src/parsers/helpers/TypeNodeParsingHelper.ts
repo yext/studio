@@ -10,7 +10,7 @@ import StaticParsingHelpers from "./StaticParsingHelpers";
 import { TypeGuards } from "../../utils";
 import StringUnionParsingHelper from "./StringUnionParsingHelper";
 
-export type ParsedType = SimpleParsedType | ObjectParsedType;
+export type ParsedType = SimpleParsedType | ObjectParsedType | LiteralType;
 
 export type SimpleParsedType = {
   kind: ParsedTypeKind.Simple;
@@ -24,6 +24,12 @@ type ObjectParsedType = {
   unionValues?: never;
 };
 
+type LiteralType = {
+  kind: ParsedTypeKind.Literal;
+  type: string;
+  unionValues?: never;
+};
+
 export type ParsedShape = { [key: string]: ParsedProperty };
 
 export type ParsedProperty = ParsedType & {
@@ -34,6 +40,7 @@ export type ParsedProperty = ParsedType & {
 export enum ParsedTypeKind {
   Simple = "simple",
   Object = "object",
+  Literal = "literal",
 }
 
 export default class TypeNodeParsingHelper {
@@ -56,6 +63,20 @@ export default class TypeNodeParsingHelper {
     const typeLiteral = typeNode.getFirstChildByKind(SyntaxKind.TypeLiteral);
     if (typeLiteral) {
       return this.handleObjectType(typeLiteral, parseTypeReference);
+    }
+
+    const literalType = typeNode.getFirstChildByKind(SyntaxKind.LiteralType);
+    if (literalType) {
+      const literal = literalType.getLiteral();
+      if (!literal.isKind(SyntaxKind.StringLiteral)) {
+        throw new Error(
+          `Only string literals are supported within type nodes. Found ${literalType.getText()}`
+        );
+      }
+      return {
+        kind: ParsedTypeKind.Literal,
+        type: literal.getLiteralValue(),
+      };
     }
 
     const name = StaticParsingHelpers.getEscapedName(typeNode);
