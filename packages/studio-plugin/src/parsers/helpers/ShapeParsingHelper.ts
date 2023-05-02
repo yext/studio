@@ -24,11 +24,9 @@ type ObjectParsedType = {
   unionValues?: never;
 };
 
-export type ParsedShape = { [key: string]: ParsedType & ParsedProperty };
+export type ParsedShape = { [key: string]: ParsedProperty };
 
-export type ParsedProperty = ParsedType & PropertyMetadata;
-
-type PropertyMetadata = {
+export type ParsedProperty = ParsedType & {
   doc?: string;
   required: boolean;
 };
@@ -73,9 +71,9 @@ export default class TypeNodeParsingHelper {
       );
     }
     if (!TypeGuards.isPropValueType(type)) {
-      const externalShape = parseTypeReference(type);
-      if (externalShape) {
-        return externalShape;
+      const externalParsedType = parseTypeReference(type);
+      if (externalParsedType) {
+        return externalParsedType;
       }
     }
 
@@ -95,7 +93,7 @@ export default class TypeNodeParsingHelper {
       ? {
           kind: ParsedTypeKind.Simple,
           type,
-          unionValues,
+          ...(unionValues && { unionValues }),
           required,
           ...(doc && { doc }),
         }
@@ -103,6 +101,7 @@ export default class TypeNodeParsingHelper {
           kind: ParsedTypeKind.Object,
           type,
           required,
+          ...(doc && { doc }),
         };
   }
 

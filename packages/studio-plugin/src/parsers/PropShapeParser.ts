@@ -28,15 +28,15 @@ export default class PropShapeParser {
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const parsedShape =
+    const parsedType =
       this.studioSourceFileParser.parseTypeReference(identifier);
-    if (!parsedShape) {
+    if (!parsedType) {
       return {};
     }
-    if (parsedShape.kind !== ParsedTypeKind.Object) {
+    if (parsedType.kind !== ParsedTypeKind.Object) {
       throw new Error(`Error parsing ${identifier}: Expected object.`);
     }
-    return this.toPropShape(parsedShape.type, identifier, onProp);
+    return this.toPropShape(parsedType.type, identifier, onProp);
   }
 
   private toPropShape(
