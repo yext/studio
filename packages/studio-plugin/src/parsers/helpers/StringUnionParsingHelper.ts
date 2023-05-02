@@ -44,7 +44,7 @@ export default class StringUnionParsingHelper {
     const firstChild = node.getFirstChildOrThrow();
     if (!firstChild.isKind(SyntaxKind.StringLiteral)) {
       throw new Error(
-        `Union types only support strings. Found a ${firstChild?.getKindName()} ` +
+        `Union types only support strings. Found a ${firstChild.getKindName()} ` +
           `within "${name}".`
       );
     }
