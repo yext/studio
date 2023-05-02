@@ -13,7 +13,9 @@ import StaticParsingHelpers, {
 } from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
-import ShapeParsingHelper, { ParsedShape } from "./helpers/ShapeParsingHelper";
+import TypeNodeParsingHelper, {
+  ParsedType,
+} from "./helpers/TypeNodeParsingHelper";
 import { NpmLookup } from "../utils";
 
 /**
@@ -186,20 +188,21 @@ export default class StudioSourceFileParser {
         .getFirstDescendantByKindOrThrow(SyntaxKind.Identifier)
         .getText();
     }
-    return parserForImportSource.parseShape(identifier);
+    return parserForImportSource.parseTypeReference(identifier);
   }
 
   /**
    * Parses the type or interface with the given name.
    */
-  parseShape(identifier: string): ParsedShape | undefined {
+  parseTypeReference = (identifier: string): ParsedType | undefined => {
     const interfaceDeclaration = this.sourceFile.getInterface(identifier);
-    const typeLiteral = this.sourceFile
-      .getTypeAlias(identifier)
-      ?.getFirstChildByKind(SyntaxKind.TypeLiteral);
-    const shapeNode = interfaceDeclaration ?? typeLiteral;
-    if (shapeNode) {
-      return ShapeParsingHelper.parseShape(shapeNode);
+    const typeAliasDeclaration = this.sourceFile.getTypeAlias(identifier);
+    const shapeDeclaration = interfaceDeclaration ?? typeAliasDeclaration;
+    if (shapeDeclaration) {
+      return TypeNodeParsingHelper.parseShape(
+        shapeDeclaration,
+        this.parseTypeReference
+      );
     }
 
     const importData = this.getImportSourceForIdentifier(identifier);
@@ -210,7 +213,7 @@ export default class StudioSourceFileParser {
         importData.isDefault
       );
     }
-  }
+  };
 
   /**
    * Returns the default exported node, if one exists.

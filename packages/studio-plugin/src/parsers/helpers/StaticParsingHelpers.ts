@@ -16,6 +16,7 @@ import {
   PropertySignature,
   PropertyAssignment,
   JsxExpression,
+  TypeAliasDeclaration,
 } from "ts-morph";
 import { PropValueKind, PropValues } from "../../types/PropValues";
 import { PropShape, SpecialReactProps } from "../../types/PropShape";
@@ -121,7 +122,9 @@ export default class StaticParsingHelpers {
     };
   }
 
-  static getEscapedName(p: PropertySignature | PropertyAssignment): string {
+  static getEscapedName(
+    p: PropertySignature | PropertyAssignment | TypeAliasDeclaration
+  ): string {
     return p.getSymbolOrThrow().getEscapedName();
   }
 

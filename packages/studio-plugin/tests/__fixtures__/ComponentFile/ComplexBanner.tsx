@@ -1,4 +1,5 @@
 import { HexColor } from "@yext/studio";
+import { CtaData } from "@yext/search-ui-react";
 import "./index.css";
 
 export interface ComplexBannerProps {
@@ -7,6 +8,7 @@ export interface ComplexBannerProps {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
+  cta?: CtaData;
 }
 
 export const initialProps: ComplexBannerProps = {
@@ -14,6 +16,11 @@ export const initialProps: ComplexBannerProps = {
   num: 5,
   bool: false,
   title: "initial title",
+  cta: {
+    label: "LABEL",
+    link: "LINK",
+    linkType: "LINKTYPE",
+  },
 };
 
 export default function ComplexBanner(props: ComplexBannerProps) {
@@ -21,6 +28,7 @@ export default function ComplexBanner(props: ComplexBannerProps) {
     <div style={{ backgroundColor: props.bgColor }}>
       {props.title}
       {props.bool}
+      {props.cta?.label}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { GleebGlarble420PowerRangersChainsawManRaven } from "@yext/studio";
+import { GleebGlarble420PowerRangersChainsawManRaven } from "@yext/search-ui-react";
 
 export interface UnrecognizedPropBannerProps {
   bgColor: GleebGlarble420PowerRangersChainsawManRaven;

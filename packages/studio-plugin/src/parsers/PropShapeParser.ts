@@ -3,7 +3,11 @@ import TypeGuards from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import { PropValueType } from "../types";
-import { ParsedShape, ParsedShapeKind } from "./helpers/ShapeParsingHelper";
+import {
+  ParsedProperty,
+  ParsedShape,
+  ParsedTypeKind,
+} from "./helpers/TypeNodeParsingHelper";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
@@ -24,34 +28,38 @@ export default class PropShapeParser {
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
-    const parsedShape = this.studioSourceFileParser.parseShape(identifier);
-    if (!parsedShape) {
+    const parsedType =
+      this.studioSourceFileParser.parseTypeReference(identifier);
+    if (!parsedType) {
       return {};
     }
-    return this.toPropShape(parsedShape, identifier, onProp);
+    if (parsedType.kind !== ParsedTypeKind.Object) {
+      throw new Error(`Error parsing ${identifier}: Expected object.`);
+    }
+    return this.toPropShape(parsedType.type, identifier, onProp);
   }
 
   private toPropShape(
-    rawShape: ParsedShape,
+    rawProps: ParsedShape,
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropShape {
     const propShape: PropShape = {};
-    Object.keys(rawShape)
+    Object.keys(rawProps)
       .filter((propName) => !onProp || onProp(propName))
       .forEach((propName) => {
-        const rawProp = rawShape[propName];
+        const rawProp = rawProps[propName];
         propShape[propName] = this.toPropMetadata(rawProp, identifier, onProp);
       });
     return propShape;
   }
 
   private toPropMetadata(
-    rawProp: ParsedShape[string],
+    rawProp: ParsedProperty,
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropMetadata {
-    if (rawProp.kind !== ParsedShapeKind.Simple) {
+    if (rawProp.kind !== ParsedTypeKind.Simple) {
       const nestedShape = this.toPropShape(rawProp.type, identifier, onProp);
       const propMetadata: PropMetadata = {
         type: PropValueType.Object,
