@@ -15,7 +15,7 @@ import path from "path";
 import vm from "vm";
 import TypeNodeParsingHelper, {
   ParsedType,
-} from "./helpers/ShapeParsingHelper";
+} from "./helpers/TypeNodeParsingHelper";
 import { NpmLookup } from "../utils";
 
 /**
