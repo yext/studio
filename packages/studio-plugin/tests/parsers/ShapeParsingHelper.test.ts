@@ -1,7 +1,7 @@
 import { SyntaxKind } from "ts-morph";
 import { PropValueType } from "../../lib";
-import ShapeParsingHelper, {
-  ParsedShapeKind,
+import TypeNodeParsingHelper, {
+  ParsedTypeKind,
 } from "../../src/parsers/helpers/ShapeParsingHelper";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 
@@ -16,14 +16,13 @@ it("can parse a string union type", () => {
   const interfaceDeclaration = sourceFile.getFirstDescendantByKindOrThrow(
     SyntaxKind.InterfaceDeclaration
   );
-  const parsedShape = ShapeParsingHelper.parseShape(
+  const parsedShape = TypeNodeParsingHelper.parseShape(
     interfaceDeclaration,
-    externalShapeParser,
-    true
+    externalShapeParser
   );
   expect(parsedShape.type).toEqual({
     fruit: {
-      kind: ParsedShapeKind.Simple,
+      kind: ParsedTypeKind.Simple,
       type: PropValueType.string,
       unionValues: ["apple", "pear"],
       required: true,
@@ -41,11 +40,7 @@ it("errors for unions of non strings", () => {
     SyntaxKind.InterfaceDeclaration
   );
   expect(() =>
-    ShapeParsingHelper.parseShape(
-      interfaceDeclaration,
-      externalShapeParser,
-      true
-    )
+    TypeNodeParsingHelper.parseShape(interfaceDeclaration, externalShapeParser)
   ).toThrowError(
     'Union types only support strings. Found a NumericLiteral within "fruit".'
   );
@@ -60,16 +55,49 @@ it("can parse a type literal", () => {
   const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
     SyntaxKind.TypeAliasDeclaration
   );
-  const parsedShape = ShapeParsingHelper.parseShape(
+  const parsedShape = TypeNodeParsingHelper.parseShape(
     typeAlias,
-    externalShapeParser,
-    true
+    externalShapeParser
   );
   expect(parsedShape.type).toEqual({
     fruit: {
-      kind: ParsedShapeKind.Simple,
+      kind: ParsedTypeKind.Simple,
       type: "string",
       required: true,
+    },
+  });
+});
+
+it("can parse an object property", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** the hello prop */
+      hello: {
+        /** the world sub-property */
+        world: string
+      }
+  }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    hello: {
+      kind: ParsedTypeKind.Object,
+      required: true,
+      doc: "the hello prop",
+      type: {
+        world: {
+          doc: "the world sub-property",
+          kind: ParsedTypeKind.Simple,
+          required: true,
+          type: "string",
+        },
+      },
     },
   });
 });
