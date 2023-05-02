@@ -1,5 +1,5 @@
 import { SyntaxKind, ParameterDeclaration } from "ts-morph";
-import { Result } from "true-myth";
+import { Result, Maybe } from "true-myth";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import TsMorphHelpers from "./helpers/TsMorphHelpers";
 import { ParsingError, ParsingErrorType } from "../types/errors/ParsingError";
@@ -10,7 +10,7 @@ export default class ComponentParamParser {
   /**
    * Parses the interface name for the component's props.
    */
-  parseParamName(): Result<string | undefined, ParsingError> {
+  parseParamName(): Result<Maybe<string>, ParsingError> {
     const parameters = this.getParameters();
     if (parameters.length > 1) {
       return Result.err({
@@ -23,10 +23,13 @@ export default class ComponentParamParser {
 
     const firstParam = parameters[0];
     if (!firstParam) {
-      return Result.ok(undefined);
+      return Result.ok(Maybe.nothing());
     }
 
-    return this.getNameFromDeclaration(firstParam);
+    const getNameResult = this.getNameFromDeclaration(firstParam);
+    return getNameResult.isOk
+      ? Result.ok(Maybe.of(getNameResult.value))
+      : Result.err(getNameResult.error);
   }
 
   private getParameters() {

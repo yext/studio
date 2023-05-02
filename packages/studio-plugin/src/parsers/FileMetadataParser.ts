@@ -65,13 +65,15 @@ export default class FileMetadataParser {
 
     if (interfaceNameResult.isOk) {
       const interfaceName = interfaceNameResult.value;
-      if (interfaceName === undefined) {
-        return {};
-      }
+      let propShape;
+      interfaceName.mapOrElse(
+        () => (propShape = {}),
+        (name) => (propShape = this.propShapeParser.parseShape(name, onProp))
+      );
 
-      return this.propShapeParser.parseShape(interfaceName, onProp);
+      return propShape;
+    } else {
+      throw new Error(interfaceNameResult.error.message);
     }
-
-    throw new Error(interfaceNameResult.error.message);
   }
 }

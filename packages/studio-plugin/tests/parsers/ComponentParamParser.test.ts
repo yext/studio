@@ -18,10 +18,16 @@ describe("can parse the prop interface name for a component", () => {
     // eslint-disable-next-line jest/valid-title
     it(title, () => {
       const parser = createParser(cases[title]);
-      expect(parser.parseParamName().toJSON()).toEqual({
-        variant: "Ok",
-        value: "MyProps",
-      });
+      const parseParamNameResult = parser.parseParamName();
+      expect(parseParamNameResult.isOk).toBe(true);
+      parseParamNameResult.map((paramName) =>
+        paramName.mapOrElse(
+          () => {
+            throw new Error("Prop Name should be present");
+          },
+          (name) => expect(name).toBe("MyProps")
+        )
+      );
     });
   });
 });
