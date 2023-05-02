@@ -54,16 +54,20 @@ export default class ModuleFile {
   getModuleMetadata(): ModuleMetadata {
     const absPathDefaultImports =
       this.studioSourceFileParser.getAbsPathDefaultImports();
-    const componentTree = this.componentTreeParser.parseComponentTree(
+    const componentTreeResult = this.componentTreeParser.parseComponentTree(
       absPathDefaultImports
     );
 
-    return {
-      kind: FileMetadataKind.Module,
-      componentTree,
-      ...this.fileMetadataParser.parse(),
-      filepath: this.studioSourceFileParser.getFilepath(),
-    };
+    if (componentTreeResult.isOk) {
+      return {
+        kind: FileMetadataKind.Module,
+        componentTree: componentTreeResult.value,
+        ...this.fileMetadataParser.parse(),
+        filepath: this.studioSourceFileParser.getFilepath(),
+      };
+    }
+
+    throw new Error(componentTreeResult.error.message);
   }
 
   /**

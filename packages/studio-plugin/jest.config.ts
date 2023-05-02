@@ -6,5 +6,6 @@ const config: Config = {
   collectCoverageFrom: ["src/**", "!src/types/**", "!src/index.ts"],
   resetMocks: true,
   restoreMocks: true,
+  transformIgnorePatterns: ["node_modules/(?!true-myth)"],
 };
 export default config;

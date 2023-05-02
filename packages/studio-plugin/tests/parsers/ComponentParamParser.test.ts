@@ -1,5 +1,6 @@
 import ComponentParamParser from "../../src/parsers/ComponentParamParser";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
+import { ParsingErrorType } from "../../src/types/errors/ParsingError";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 
 describe("can parse the prop interface name for a component", () => {
@@ -17,7 +18,10 @@ describe("can parse the prop interface name for a component", () => {
     // eslint-disable-next-line jest/valid-title
     it(title, () => {
       const parser = createParser(cases[title]);
-      expect(parser.parseParamName()).toEqual("MyProps");
+      expect(parser.parseParamName().toJSON()).toEqual({
+        variant: "Ok",
+        value: "MyProps",
+      });
     });
   });
 });
@@ -34,9 +38,15 @@ describe("error cases", () => {
     const parser = createParser(
       "export default function MyComp(first: First, second: Second) => {};"
     );
-    expect(() => parser.parseParamName()).toThrow(
-      /Functional components may contain at most one parameter, found 2/
-    );
+
+    expect(parser.parseParamName().toJSON()).toEqual({
+      variant: "Err",
+      error: {
+        type: ParsingErrorType.InvalidComponentSignature,
+        message:
+          "Functional components may contain at most one parameter, found 2 at test.tsx",
+      },
+    });
   });
 });
 

@@ -6,6 +6,7 @@ import {
   JsxAttributeLike,
   JsxExpression,
 } from "ts-morph";
+import { Result } from "true-myth";
 import {
   BuiltInState,
   ComponentState,
@@ -19,6 +20,7 @@ import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
 import ParsingOrchestrator from "../ParsingOrchestrator";
+import { ParsingError, ParsingErrorType } from "../types/errors/ParsingError";
 
 export type GetFileMetadata = ParsingOrchestrator["getFileMetadata"];
 
@@ -28,14 +30,16 @@ export default class ComponentTreeParser {
     private getFileMetadata: GetFileMetadata
   ) {}
 
-  parseComponentTree(defaultImports: Record<string, string>): ComponentState[] {
+  parseComponentTree(
+    defaultImports: Record<string, string>
+  ): Result<ComponentState[], ParsingError> {
     const defaultExport =
       this.studioSourceFileParser.getDefaultExportReactComponent();
     const returnStatement = defaultExport.getFirstDescendantByKind(
       SyntaxKind.ReturnStatement
     );
     if (!returnStatement) {
-      return [];
+      return Result.ok([]);
     }
     const JsxNodeWrapper =
       returnStatement.getFirstChildByKind(SyntaxKind.ParenthesizedExpression) ??
@@ -47,15 +51,18 @@ export default class ComponentTreeParser {
         n.isKind(SyntaxKind.JsxSelfClosingElement)
     );
     if (!topLevelJsxNode) {
-      throw new Error(
-        "Unable to find top-level JSX element or JSX fragment type" +
-          ` in the default export at path: "${this.studioSourceFileParser.getFilepath()}"`
-      );
+      return Result.err({
+        type: ParsingErrorType.MissingTopLevelJSXNode,
+        message:
+          "Unable to find top-level JSX element or JSX fragment type" +
+          ` in the default export at path: "${this.studioSourceFileParser.getFilepath()}"`,
+      });
     }
 
-    return StaticParsingHelpers.parseJsxChild(
-      topLevelJsxNode,
-      (child, parent) => this.parseComponentState(child, defaultImports, parent)
+    return Result.ok(
+      StaticParsingHelpers.parseJsxChild(topLevelJsxNode, (child, parent) =>
+        this.parseComponentState(child, defaultImports, parent)
+      )
     );
   }
 

@@ -72,18 +72,24 @@ export default class PageFile {
   }
 
   getPageState(): PageState {
-    const componentTree = this.componentTreeParser.parseComponentTree({
+    const componentTreeResult = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
       ...this.pluginFilepathToComponentName,
     });
-    const cssImports = this.studioSourceFileParser.parseCssImports();
-    const filepath = this.studioSourceFileParser.getFilepath();
-    return {
-      componentTree,
-      cssImports,
-      filepath,
-      entityFiles: this.entityFiles,
-    };
+
+    if (componentTreeResult.isOk) {
+      const cssImports = this.studioSourceFileParser.parseCssImports();
+      const filepath = this.studioSourceFileParser.getFilepath();
+
+      return {
+        componentTree: componentTreeResult.value,
+        cssImports,
+        filepath,
+        entityFiles: this.entityFiles,
+      };
+    }
+
+    throw new Error(componentTreeResult.error.message);
   }
 
   /**
