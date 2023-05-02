@@ -68,7 +68,7 @@ it("can parse a type literal", () => {
   });
 });
 
-it.only("can parse an object property", () => {
+it("can parse an object property", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
       /** the hello prop */

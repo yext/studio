@@ -225,6 +225,7 @@ describe("parseShape", () => {
                 doc: "The label for the button, defaults to 'Apply Filters'",
               },
               customCssClasses: {
+                doc: "CSS classes for customizing the component styling.",
                 kind: ParsedTypeKind.Object,
                 required: false,
                 type: {
