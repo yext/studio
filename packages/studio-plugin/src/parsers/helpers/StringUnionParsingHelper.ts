@@ -22,7 +22,7 @@ export default class StringUnionParsingHelper {
   private static handleTypeReference(
     n: TypeNode,
     parseTypeReference: (identifier: string) => ParsedType | undefined
-  ) {
+  ): string[] | string {
     const identifier = n.getText();
     const parsedType = parseTypeReference(identifier);
     if (!parsedType || parsedType.kind === ParsedTypeKind.Object) {
@@ -34,10 +34,14 @@ export default class StringUnionParsingHelper {
         )}`
       );
     }
-    if (parsedType.kind === ParsedTypeKind.Literal) {
-      return [parsedType.type];
+    if (parsedType.kind === ParsedTypeKind.StringLiteral) {
+      return parsedType.type;
     }
-    return parsedType.unionValues ?? [];
+    const { unionValues } = parsedType;
+    if (!unionValues) {
+      throw new Error(`No union values found when parsing "${identifier}"`);
+    }
+    return unionValues;
   }
 
   private static handleLiteralType(node: LiteralTypeNode, name: string) {

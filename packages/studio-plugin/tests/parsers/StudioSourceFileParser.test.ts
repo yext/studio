@@ -324,6 +324,23 @@ describe("parseShape", () => {
       unionValues: ["yuzu", "orange"],
     });
   });
+
+  it("can parse a string literal sub-property", () => {
+    const parser = createParser(
+      `type Props = {
+        obj: {
+          subprop: 'my literal'
+        }
+      }`
+    );
+    expect(parser.parseTypeReference("Props")?.type["obj"].type).toEqual({
+      subprop: {
+        kind: ParsedTypeKind.StringLiteral,
+        required: true,
+        type: "my literal",
+      },
+    });
+  });
 });
 
 function createParser(sourceCode: string) {

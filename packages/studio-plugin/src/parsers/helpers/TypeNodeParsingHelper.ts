@@ -10,7 +10,10 @@ import StaticParsingHelpers from "./StaticParsingHelpers";
 import { TypeGuards } from "../../utils";
 import StringUnionParsingHelper from "./StringUnionParsingHelper";
 
-export type ParsedType = SimpleParsedType | ObjectParsedType | LiteralType;
+export type ParsedType =
+  | SimpleParsedType
+  | ObjectParsedType
+  | StringLiteralType;
 
 export type SimpleParsedType = {
   kind: ParsedTypeKind.Simple;
@@ -24,8 +27,8 @@ type ObjectParsedType = {
   unionValues?: never;
 };
 
-type LiteralType = {
-  kind: ParsedTypeKind.Literal;
+type StringLiteralType = {
+  kind: ParsedTypeKind.StringLiteral;
   type: string;
   unionValues?: never;
 };
@@ -40,7 +43,7 @@ export type ParsedProperty = ParsedType & {
 export enum ParsedTypeKind {
   Simple = "simple",
   Object = "object",
-  Literal = "literal",
+  StringLiteral = "stringLiteral",
 }
 
 export default class TypeNodeParsingHelper {
@@ -74,7 +77,7 @@ export default class TypeNodeParsingHelper {
         );
       }
       return {
-        kind: ParsedTypeKind.Literal,
+        kind: ParsedTypeKind.StringLiteral,
         type: literal.getLiteralValue(),
       };
     }
@@ -113,31 +116,6 @@ export default class TypeNodeParsingHelper {
     };
   }
 
-  private static toParsedProperty(
-    parsedType: ParsedType,
-    required: boolean,
-    doc?: string
-  ): ParsedProperty {
-    const { type, unionValues } = parsedType;
-    const commonData = {
-      required,
-      ...(doc && { doc }),
-    };
-
-    return typeof type === "string"
-      ? {
-          kind: ParsedTypeKind.Simple,
-          type,
-          ...(unionValues && { unionValues }),
-          ...commonData,
-        }
-      : {
-          kind: ParsedTypeKind.Object,
-          type,
-          ...commonData,
-        };
-  }
-
   private static handleObjectType(
     shapeDeclaration: InterfaceDeclaration | TypeLiteralNode,
     parseTypeReference: (identifier: string) => ParsedType | undefined
@@ -148,11 +126,12 @@ export default class TypeNodeParsingHelper {
     properties.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
       const parsedType = this.parseTypeNode(p, parseTypeReference);
-      parsedShape[propertyName] = this.toParsedProperty(
-        parsedType,
-        !p.hasQuestionToken(),
-        this.getJsDocs(p)
-      );
+      const doc = this.getJsDocs(p);
+      parsedShape[propertyName] = {
+        ...parsedType,
+        required: !p.hasQuestionToken(),
+        ...(doc && { doc }),
+      };
     });
     return {
       kind: ParsedTypeKind.Object,
