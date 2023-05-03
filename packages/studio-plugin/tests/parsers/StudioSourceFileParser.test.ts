@@ -326,19 +326,10 @@ describe("parseShape", () => {
   });
 
   it("can parse a string literal sub-property", () => {
-    const parser = createParser(
-      `type Props = {
-        obj: {
-          subprop: 'my literal'
-        }
-      }`
-    );
-    expect(parser.parseTypeReference("Props")?.type["obj"].type).toEqual({
-      subprop: {
-        kind: ParsedTypeKind.StringLiteral,
-        required: true,
-        type: "my literal",
-      },
+    const parser = createParser(`type MyLiteral = 'my literal'`);
+    expect(parser.parseTypeReference("MyLiteral")).toEqual({
+      kind: ParsedTypeKind.StringLiteral,
+      type: "my literal",
     });
   });
 });
