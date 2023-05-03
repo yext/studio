@@ -52,7 +52,7 @@ export default class ComponentTreeParser {
     );
     if (!topLevelJsxNode) {
       return Result.err({
-        type: ParsingErrorType.MissingTopLevelJSXNode,
+        name: ParsingErrorType.MissingTopLevelJSXNode,
         message:
           "Unable to find top-level JSX element or JSX fragment type" +
           ` in the default export at path: "${this.studioSourceFileParser.getFilepath()}"`,

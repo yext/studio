@@ -48,7 +48,7 @@ describe("error cases", () => {
     expect(parser.parseParamName().toJSON()).toEqual({
       variant: "Err",
       error: {
-        type: ParsingErrorType.InvalidComponentSignature,
+        name: ParsingErrorType.InvalidComponentSignature,
         message:
           "Functional components may contain at most one parameter, found 2 at test.tsx",
       },

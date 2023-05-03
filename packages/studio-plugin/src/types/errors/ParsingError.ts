@@ -1,14 +1,13 @@
 export enum ParsingErrorType {
-  MissingTopLevelJSXNode,
-  ComponentPropParsingFailure,
-  InvalidComponentSignature,
+  MissingTopLevelJSXNode = "MissingTopLevelJSXNode",
+  ComponentPropParsingFailure = "ComponentPropParsingFailure",
+  InvalidComponentSignature = "InvalidComponentSignature",
 }
 
 /**
  * An interface representing errors that occur during the parsing of Components,
  * their Prop interfaces, or Component Trees.
  */
-export interface ParsingError {
-  type: ParsingErrorType;
-  message: string;
+export interface ParsingError extends Error {
+  name: `${ParsingErrorType}`;
 }

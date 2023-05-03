@@ -14,7 +14,7 @@ export default class ComponentParamParser {
     const parameters = this.getParameters();
     if (parameters.length > 1) {
       return Result.err({
-        type: ParsingErrorType.InvalidComponentSignature,
+        name: ParsingErrorType.InvalidComponentSignature,
         message:
           "Functional components may contain at most one parameter, found " +
           `${parameters.length} at ${this.sourceFileParser.getFilepath()}`,
@@ -54,7 +54,8 @@ export default class ComponentParamParser {
       return Result.ok(name);
     } catch (err) {
       return Result.err({
-        type: ParsingErrorType.ComponentPropParsingFailure,
+        ...(err as Error),
+        name: ParsingErrorType.ComponentPropParsingFailure,
         message: `Failed to parse Component Prop in ${this.sourceFileParser.getFilepath()}`,
       });
     }

@@ -64,7 +64,7 @@ export default class FileMetadataParser {
     const interfaceNameResult = this.componentParamParser.parseParamName();
 
     if (interfaceNameResult.isErr) {
-      throw new Error(interfaceNameResult.error.message);
+      throw interfaceNameResult.error;
     } else {
       const interfaceName = interfaceNameResult.value;
       let propShape;
