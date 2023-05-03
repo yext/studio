@@ -159,6 +159,7 @@ export default class ParsingOrchestrator {
           prev[curr] = pageStateResult.value;
         } else {
           console.error(`Failed to get PageState for ${curr}`);
+          console.error(pageStateResult.error);
         }
 
         return prev;
