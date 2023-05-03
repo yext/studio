@@ -325,7 +325,7 @@ describe("parseShape", () => {
     });
   });
 
-  it("can parse a string literal sub-property", () => {
+  it("can parse a string literal", () => {
     const parser = createParser(`type MyLiteral = 'my literal'`);
     expect(parser.parseTypeReference("MyLiteral")).toEqual({
       kind: ParsedTypeKind.StringLiteral,
