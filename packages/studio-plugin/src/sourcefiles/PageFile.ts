@@ -89,7 +89,12 @@ export default class PageFile {
         entityFiles: this.entityFiles,
       });
     } catch (err) {
-      return Result.err({ ...(err as Error), name: "FailedToParsePageState" });
+      return err instanceof Error
+        ? Result.err({ ...err, name: "FailedToParsePageState" })
+        : Result.err({
+            name: "FailedToParsePageState",
+            message: "Failed to parse PageState",
+          });
     }
   }
 

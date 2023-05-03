@@ -157,6 +157,8 @@ export default class ParsingOrchestrator {
         // TODO(SLAP-2686): Confirm behavior for failure case with Product.
         if (pageStateResult.isOk) {
           prev[curr] = pageStateResult.value;
+        } else {
+          console.error(`Failed to get PageState for ${curr}`);
         }
 
         return prev;
