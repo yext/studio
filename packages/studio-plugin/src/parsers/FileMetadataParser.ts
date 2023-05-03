@@ -63,7 +63,9 @@ export default class FileMetadataParser {
   private parsePropShape(onProp?: (propName: string) => boolean): PropShape {
     const interfaceNameResult = this.componentParamParser.parseParamName();
 
-    if (interfaceNameResult.isOk) {
+    if (interfaceNameResult.isErr) {
+      throw new Error(interfaceNameResult.error.message);
+    } else {
       const interfaceName = interfaceNameResult.value;
       let propShape;
       interfaceName.mapOrElse(
@@ -72,8 +74,6 @@ export default class FileMetadataParser {
       );
 
       return propShape;
-    } else {
-      throw new Error(interfaceNameResult.error.message);
     }
   }
 }
