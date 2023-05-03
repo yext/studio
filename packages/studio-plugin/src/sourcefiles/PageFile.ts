@@ -90,7 +90,12 @@ export default class PageFile {
       });
     } catch (err) {
       return err instanceof Error
-        ? Result.err({ message: err.message, stack: err.stack, cause: err.cause, name: "FailedToParsePageState" })
+        ? Result.err({
+            message: err.message,
+            stack: err.stack,
+            cause: err.cause,
+            name: "FailedToParsePageState",
+          })
         : Result.err({
             name: "FailedToParsePageState",
             message: "Failed to parse PageState",
