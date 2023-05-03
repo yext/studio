@@ -152,7 +152,13 @@ export default class ParsingOrchestrator {
     const siteSettings = this.getSiteSettings();
     const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(
       (prev, curr) => {
-        prev[curr] = this.pageNameToPageFile[curr].getPageState();
+        const pageStateResult = this.pageNameToPageFile[curr].getPageState();
+
+        // TODO(SLAP-2686): Confirm behavior for failure case with Product.
+        if (pageStateResult.isOk) {
+          prev[curr] = pageStateResult.value;
+        }
+
         return prev;
       },
       {}

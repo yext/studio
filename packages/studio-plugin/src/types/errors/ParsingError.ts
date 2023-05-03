@@ -1,7 +1,5 @@
 export enum ParsingErrorType {
-  MissingTopLevelJSXNode = "MissingTopLevelJSXNode",
-  ComponentPropParsingFailure = "ComponentPropParsingFailure",
-  InvalidComponentSignature = "InvalidComponentSignature",
+  FailedToParsePageState = "FailedToParsePageState",
 }
 
 /**

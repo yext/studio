@@ -61,18 +61,11 @@ export default class FileMetadataParser {
    * @returns shape of the component's props
    */
   private parsePropShape(onProp?: (propName: string) => boolean): PropShape {
-    const interfaceNameResult = this.componentParamParser.parseParamName();
-
-    if (interfaceNameResult.isErr) {
-      throw interfaceNameResult.error;
+    const interfaceName = this.componentParamParser.parseParamName();
+    if (interfaceName === undefined) {
+      return {};
     }
-    const interfaceName = interfaceNameResult.value;
-    let propShape;
-    interfaceName.mapOrElse(
-      () => (propShape = {}),
-      (name) => (propShape = this.propShapeParser.parseShape(name, onProp))
-    );
 
-    return propShape;
+    return this.propShapeParser.parseShape(interfaceName, onProp);
   }
 }

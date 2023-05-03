@@ -1,4 +1,5 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
+import { Result } from "true-myth";
 import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
 import ReactComponentFileWriter, {
@@ -11,6 +12,7 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
+import { ParsingError } from "../types/errors/ParsingError";
 
 /**
  * Configuration options to the page file's update process
@@ -71,25 +73,24 @@ export default class PageFile {
     }, {});
   }
 
-  getPageState(): PageState {
-    const componentTreeResult = this.componentTreeParser.parseComponentTree({
-      ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-      ...this.pluginFilepathToComponentName,
-    });
-
-    if (componentTreeResult.isOk) {
+  getPageState(): Result<PageState, ParsingError> {
+    try {
+      const componentTree = this.componentTreeParser.parseComponentTree({
+        ...this.studioSourceFileParser.getAbsPathDefaultImports(),
+        ...this.pluginFilepathToComponentName,
+      });
       const cssImports = this.studioSourceFileParser.parseCssImports();
       const filepath = this.studioSourceFileParser.getFilepath();
 
-      return {
-        componentTree: componentTreeResult.value,
+      return Result.ok({
+        componentTree,
         cssImports,
         filepath,
         entityFiles: this.entityFiles,
-      };
+      });
+    } catch (err) {
+      return Result.err({ ...(err as Error), name: "FailedToParsePageState" });
     }
-
-    throw new Error(componentTreeResult.error.message);
   }
 
   /**
