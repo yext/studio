@@ -12,7 +12,7 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
-import { ParsingError } from "../types/errors/ParsingError";
+import { ParsingError, ParsingErrorKind } from "../types/errors/ParsingError";
 
 /**
  * Configuration options to the page file's update process
@@ -89,17 +89,11 @@ export default class PageFile {
         entityFiles: this.entityFiles,
       });
     } catch (err) {
-      return err instanceof Error
-        ? Result.err({
-            message: err.message,
-            stack: err.stack,
-            cause: err.cause,
-            name: "FailedToParsePageState",
-          })
-        : Result.err({
-            name: "FailedToParsePageState",
-            message: "Failed to parse PageState",
-          });
+      return Result.err({
+        kind: ParsingErrorKind.FailedToParsePageState,
+        cause: err,
+        message: "Failed to parse PageState",
+      });
     }
   }
 

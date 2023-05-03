@@ -1,4 +1,4 @@
-export enum ParsingErrorType {
+export enum ParsingErrorKind {
   FailedToParsePageState = "FailedToParsePageState",
 }
 
@@ -6,6 +6,9 @@ export enum ParsingErrorType {
  * An interface representing errors that occur during the parsing of Components,
  * their Prop interfaces, or Component Trees.
  */
-export interface ParsingError extends Error {
-  name: `${ParsingErrorType}`;
+export interface ParsingError {
+  kind: `${ParsingErrorKind}`;
+  message: string;
+  /** The originally thrown value. */
+  cause: unknown;
 }
