@@ -2,17 +2,20 @@ import {
   InterfaceDeclaration,
   PropertySignature,
   SyntaxKind,
-  UnionTypeNode,
   TypeLiteralNode,
   TypeAliasDeclaration,
 } from "ts-morph";
 import { PropValueType } from "../../types";
 import StaticParsingHelpers from "./StaticParsingHelpers";
 import { TypeGuards } from "../../utils";
+import StringUnionParsingHelper from "./StringUnionParsingHelper";
 
-export type ParsedType = SimpleParsedType | ObjectParsedType;
+export type ParsedType =
+  | SimpleParsedType
+  | ObjectParsedType
+  | StringLiteralType;
 
-type SimpleParsedType = {
+export type SimpleParsedType = {
   kind: ParsedTypeKind.Simple;
   type: string;
   unionValues?: string[];
@@ -21,6 +24,12 @@ type SimpleParsedType = {
 type ObjectParsedType = {
   kind: ParsedTypeKind.Object;
   type: ParsedShape;
+  unionValues?: never;
+};
+
+type StringLiteralType = {
+  kind: ParsedTypeKind.StringLiteral;
+  type: string;
   unionValues?: never;
 };
 
@@ -34,6 +43,7 @@ export type ParsedProperty = ParsedType & {
 export enum ParsedTypeKind {
   Simple = "simple",
   Object = "object",
+  StringLiteral = "stringLiteral",
 }
 
 export default class TypeNodeParsingHelper {
@@ -58,10 +68,33 @@ export default class TypeNodeParsingHelper {
       return this.handleObjectType(typeLiteral, parseTypeReference);
     }
 
+    const literalType = typeNode.getFirstChildByKind(SyntaxKind.LiteralType);
+    if (literalType) {
+      const literal = literalType.getLiteral();
+      if (!literal.isKind(SyntaxKind.StringLiteral)) {
+        throw new Error(
+          `Only string literals are supported within type nodes. Found ${literalType.getText()}`
+        );
+      }
+      return {
+        kind: ParsedTypeKind.StringLiteral,
+        type: literal.getLiteralValue(),
+      };
+    }
+
     const name = StaticParsingHelpers.getEscapedName(typeNode);
     const unionType = typeNode.getFirstChildByKind(SyntaxKind.UnionType);
     if (unionType) {
-      return this.handleUnionType(unionType, name);
+      const unionValues = StringUnionParsingHelper.parseStringUnion(
+        unionType,
+        name,
+        parseTypeReference
+      );
+      return {
+        kind: ParsedTypeKind.Simple,
+        type: PropValueType.string,
+        unionValues,
+      };
     }
 
     const type = typeNode.getStructure().type?.toString();
@@ -83,31 +116,6 @@ export default class TypeNodeParsingHelper {
     };
   }
 
-  private static toParsedProperty(
-    parsedType: ParsedType,
-    required: boolean,
-    doc?: string
-  ): ParsedProperty {
-    const { type, unionValues } = parsedType;
-    const commonData = {
-      required,
-      ...(doc && { doc }),
-    };
-
-    return typeof type === "string"
-      ? {
-          kind: ParsedTypeKind.Simple,
-          type,
-          ...(unionValues && { unionValues }),
-          ...commonData,
-        }
-      : {
-          kind: ParsedTypeKind.Object,
-          type,
-          ...commonData,
-        };
-  }
-
   private static handleObjectType(
     shapeDeclaration: InterfaceDeclaration | TypeLiteralNode,
     parseTypeReference: (identifier: string) => ParsedType | undefined
@@ -118,37 +126,16 @@ export default class TypeNodeParsingHelper {
     properties.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
       const parsedType = this.parseTypeNode(p, parseTypeReference);
-      parsedShape[propertyName] = this.toParsedProperty(
-        parsedType,
-        !p.hasQuestionToken(),
-        this.getJsDocs(p)
-      );
+      const doc = this.getJsDocs(p);
+      parsedShape[propertyName] = {
+        ...parsedType,
+        required: !p.hasQuestionToken(),
+        ...(doc && { doc }),
+      };
     });
     return {
       kind: ParsedTypeKind.Object,
       type: parsedShape,
-    };
-  }
-
-  private static handleUnionType(
-    unionType: UnionTypeNode,
-    name: string
-  ): SimpleParsedType {
-    const unionValues = unionType.getTypeNodes().map((n) => {
-      const firstChild = n.getFirstChild();
-      if (!firstChild?.isKind(SyntaxKind.StringLiteral)) {
-        throw new Error(
-          `Union types only support strings. Found a ${firstChild?.getKindName()} ` +
-            `within "${name}".`
-        );
-      }
-      return firstChild.getLiteralText();
-    });
-
-    return {
-      kind: ParsedTypeKind.Simple,
-      type: PropValueType.string,
-      unionValues,
     };
   }
 

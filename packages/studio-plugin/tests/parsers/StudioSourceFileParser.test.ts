@@ -298,6 +298,40 @@ describe("parseShape", () => {
       },
     });
   });
+
+  it("can parse a string union that includes another string union", () => {
+    const parser = createParser(
+      `import { AppleOrPear } from "../__fixtures__/StudioSourceFileParser/stringUnions.ts";
+      export type Fruits = 'yuzu' | AppleOrPear
+      `
+    );
+    expect(parser.parseTypeReference("Fruits")).toEqual({
+      kind: ParsedTypeKind.Simple,
+      type: "string",
+      unionValues: ["yuzu", "apple", "pear"],
+    });
+  });
+
+  it("can parse a string union with a type reference to a string literal", () => {
+    const parser = createParser(
+      `import { Orange } from "../__fixtures__/StudioSourceFileParser/stringUnions.ts";
+      export type Citrus = 'yuzu' | Orange
+      `
+    );
+    expect(parser.parseTypeReference("Citrus")).toEqual({
+      kind: ParsedTypeKind.Simple,
+      type: "string",
+      unionValues: ["yuzu", "orange"],
+    });
+  });
+
+  it("can parse a string literal", () => {
+    const parser = createParser(`type MyLiteral = 'my literal'`);
+    expect(parser.parseTypeReference("MyLiteral")).toEqual({
+      kind: ParsedTypeKind.StringLiteral,
+      type: "my literal",
+    });
+  });
 });
 
 function createParser(sourceCode: string) {
