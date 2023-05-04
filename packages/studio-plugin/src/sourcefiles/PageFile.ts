@@ -12,7 +12,7 @@ import ComponentTreeParser, {
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
 import GetPathWriter from "../writers/GetPathWriter";
-import GetPathParser from "../parsers/GetPathParser";
+import PagesJsStateParser from "../parsers/PagesJsStateParser";
 
 /**
  * Configuration options to the page file's update process
@@ -28,7 +28,7 @@ interface UpdatePageFileOptions {
  */
 export default class PageFile {
   private studioSourceFileParser: StudioSourceFileParser;
-  private getPathParser: GetPathParser;
+  private pagesJsStateParser: PagesJsStateParser;
   private getPathWriter: GetPathWriter;
   private streamConfigWriter: StreamConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
@@ -40,8 +40,9 @@ export default class PageFile {
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
+    isPagesJSRepo: boolean,
     filepathToPluginNames: Record<string, PluginComponentData> = {},
-    private entityFiles?: string[]
+    entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     const pageComponentName = path.basename(
@@ -52,7 +53,11 @@ export default class PageFile {
       filepath,
       project
     );
-    this.getPathParser = new GetPathParser(this.studioSourceFileParser);
+    this.pagesJsStateParser = new PagesJsStateParser(
+      this.studioSourceFileParser,
+      isPagesJSRepo,
+      entityFiles
+    );
     this.getPathWriter = new GetPathWriter(
       studioSourceFileWriter,
       this.studioSourceFileParser
@@ -80,24 +85,20 @@ export default class PageFile {
     }, {});
   }
 
-  getPageState(isPagesJSRepo = false): PageState {
+  getPageState(): PageState {
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
       ...this.pluginFilepathToComponentName,
     });
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();
-    const getPathValue =
-      isPagesJSRepo && this.getPathParser.parseGetPathValue();
+    const pagesJsState = this.pagesJsStateParser.getPagesJsState();
     return {
       componentTree,
       cssImports,
       filepath,
-      ...((getPathValue || this.entityFiles) && {
-        pagesJS: {
-          ...(this.entityFiles && { entityFiles: this.entityFiles }),
-          ...(getPathValue && { getPathValue }),
-        },
+      ...(pagesJsState && {
+        pagesJS: pagesJsState,
       }),
     };
   }

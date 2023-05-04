@@ -71,6 +71,7 @@ export default class ParsingOrchestrator {
       this.getFileMetadata,
       this.getFileMetadataByUUID,
       this.project,
+      this.studioConfig.isPagesJSRepo,
       this.filepathToPluginComponentData,
       pageEntityFiles
     );
@@ -152,9 +153,7 @@ export default class ParsingOrchestrator {
     const siteSettings = this.getSiteSettings();
     const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(
       (prev, curr) => {
-        prev[curr] = this.pageNameToPageFile[curr].getPageState(
-          this.studioConfig.isPagesJSRepo
-        );
+        prev[curr] = this.pageNameToPageFile[curr].getPageState();
         return prev;
       },
       {}

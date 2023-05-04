@@ -34,12 +34,13 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   };
 }
 
-function createPageFile(pageName: string): PageFile {
+function createPageFile(pageName: string, isPagesJSRepo = false): PageFile {
   return new PageFile(
     getPagePath(pageName),
     mockGetFileMetadata,
     jest.fn(),
-    createTsMorphProject()
+    createTsMorphProject(),
+    isPagesJSRepo
   );
 }
 
@@ -146,8 +147,8 @@ describe("getPageState", () => {
   });
 
   it("correctly gets getPathValue", () => {
-    const pageFile = createPageFile("shortFragmentSyntaxPage");
-    const result = pageFile.getPageState(true);
+    const pageFile = createPageFile("shortFragmentSyntaxPage", true);
+    const result = pageFile.getPageState();
 
     expect(result.pagesJS?.getPathValue).toEqual("index.html");
   });

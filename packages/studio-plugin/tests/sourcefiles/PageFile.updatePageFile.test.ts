@@ -341,6 +341,7 @@ function createPageFile(pageName: string, project: Project) {
     getPagePath(`updatePageFile/${pageName}`),
     throwIfCalled,
     jest.fn(),
-    project
+    project,
+    false
   );
 }
