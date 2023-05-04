@@ -1,9 +1,9 @@
 import { SyntaxKind } from "ts-morph";
-import { PropValueType } from "../../lib";
 import ShapeParsingHelper, {
   ParsedShapeKind,
 } from "../../src/parsers/helpers/ShapeParsingHelper";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
+import { PropValueType } from "../../src/types";
 
 it("can parse a string union type", () => {
   const { sourceFile } = createTestSourceFile(

@@ -10,6 +10,6 @@
     "**/*.d.ts"
   ],
   "compilerOptions": {
-    "types": ["jest", "./__setup__/setup-env.ts"]
+    "types": ["jest", "./__setup__/setup-env.ts", "node"]
   }
 }
