@@ -7,6 +7,7 @@ module.exports = {
     "packages/studio-plugin/tests/__fixtures__/**/*.tsx",
     ".eslintrc.cjs",
     "**/coverage",
+    "*.d.ts",
   ],
   parserOptions: {
     project: ["tsconfig.json"],

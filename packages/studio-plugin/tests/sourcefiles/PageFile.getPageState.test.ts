@@ -10,6 +10,7 @@ import {
 } from "../__fixtures__/componentStates";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { mockUUID } from "../__utils__/spies";
+import { assertIsOk } from "../__utils__/asserts";
 
 jest.mock("uuid");
 
@@ -53,21 +54,33 @@ describe("getPageState", () => {
     const pageFile = createPageFile("reactFragmentPage");
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual([
+      fragmentComponent,
+      ...componentTree,
+    ]);
   });
 
   it("correctly parses page with top-level Fragment", () => {
     const pageFile = createPageFile("fragmentPage");
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual([
+      fragmentComponent,
+      ...componentTree,
+    ]);
   });
 
   it("correctly parses page with top-level Fragment in short syntax", () => {
     const pageFile = createPageFile("shortFragmentSyntaxPage");
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([fragmentComponent, ...componentTree]);
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual([
+      fragmentComponent,
+      ...componentTree,
+    ]);
   });
 
   it("correctly parses page with top-level div component and logs warning", () => {
@@ -77,7 +90,8 @@ describe("getPageState", () => {
     const pageFile = createPageFile("divPage");
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual([
       {
         kind: ComponentStateKind.BuiltIn,
         componentName: "div",
@@ -96,7 +110,8 @@ describe("getPageState", () => {
     const pageFile = createPageFile("repeaterPage");
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toContainEqual({
+    assertIsOk(result);
+    expect(result.value.componentTree).toContainEqual({
       kind: ComponentStateKind.Repeater,
       uuid: "mock-uuid-1",
       parentUUID: "mock-uuid-0",
@@ -113,14 +128,16 @@ describe("getPageState", () => {
     const pageFile = createPageFile("nestedBannerPage");
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual(nestedBannerComponentTree);
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual(nestedBannerComponentTree);
   });
 
   it("correctly parses page with variable statement and no parentheses around return statement", () => {
     const pageFile = createPageFile("noReturnParenthesesPage");
     const result = pageFile.getPageState();
 
-    expect(result.componentTree).toEqual([
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual([
       fragmentComponent,
       {
         ...componentTree[1],
@@ -133,7 +150,8 @@ describe("getPageState", () => {
     const pageFile = createPageFile("shortFragmentSyntaxPage");
     const result = pageFile.getPageState();
 
-    expect(result.cssImports).toEqual([
+    assertIsOk(result);
+    expect(result.value.cssImports).toEqual([
       "./index.css",
       "@yext/search-ui-react/index.css",
     ]);
@@ -143,7 +161,10 @@ describe("getPageState", () => {
     const pageFile = createPageFile("shortFragmentSyntaxPage");
     const result = pageFile.getPageState();
 
-    expect(result.filepath).toEqual(getPagePath("shortFragmentSyntaxPage"));
+    assertIsOk(result);
+    expect(result.value.filepath).toEqual(
+      getPagePath("shortFragmentSyntaxPage")
+    );
   });
 
   it("correctly gets getPathValue", () => {
@@ -156,14 +177,15 @@ describe("getPageState", () => {
   it("returns empty component tree when parses a page without return statement", () => {
     const pageFile = createPageFile("noReturnStatementPage");
     const result = pageFile.getPageState();
-    expect(result.componentTree).toEqual([]);
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual([]);
   });
 
   describe("throws errors", () => {
     it("throws an error when the return statement has no top-level Jsx node", () => {
       const pageFile = createPageFile("noTopLevelJsxPage");
 
-      expect(() => pageFile.getPageState()).toThrowError(
+      expect(pageFile.getPageState()).toHaveErrorMessage(
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
     });
@@ -171,23 +193,22 @@ describe("getPageState", () => {
     it("throws an error when a JsxSpreadAttribute is found on the page", () => {
       const pageFile = createPageFile("jsxSpreadAttributePage");
 
-      expect(() => pageFile.getPageState()).toThrowError(
+      expect(pageFile.getPageState()).toHaveErrorMessage(
         "Error parsing `{...props}`: JsxSpreadAttribute is not currently supported."
       );
     });
 
     it("throws an error when JsxText is found on the page", () => {
       const pageFile = createPageFile("jsxTextPage");
-
-      expect(() => pageFile.getPageState()).toThrowError(
-        'Found JsxText with content "\n      Text\n      ". JsxText is not currently supported.'
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        'Found JsxText with content "Text". JsxText is not currently supported.'
       );
     });
 
     it("throws an error when a non-map JsxExpression is found on the page", () => {
       const pageFile = createPageFile("jsxExpressionPage");
 
-      expect(() => pageFile.getPageState()).toThrowError(
+      expect(pageFile.getPageState()).toHaveErrorMessage(
         'Jsx nodes of kind "JsxExpression" are not supported for direct use' +
           " in page files except for `map` function expressions."
       );
@@ -196,7 +217,7 @@ describe("getPageState", () => {
     it("throws an error when a Repeater tries to repeat a built-in component", () => {
       const pageFile = createPageFile("builtInRepeaterPage");
 
-      expect(() => pageFile.getPageState()).toThrowError(
+      expect(pageFile.getPageState()).toHaveErrorMessage(
         "Error parsing map expression: repetition of built-in components is not supported."
       );
     });
@@ -204,7 +225,7 @@ describe("getPageState", () => {
     it("throws when an ObjectLiteralExpression is returned by the page", () => {
       const pageFile = createPageFile("returnsObject");
 
-      expect(() => pageFile.getPageState()).toThrowError(
+      expect(pageFile.getPageState()).toHaveErrorMessage(
         /^Unable to find top-level JSX element or JSX fragment/
       );
     });
@@ -212,7 +233,7 @@ describe("getPageState", () => {
     it("throws when an ArrayLiteralExpression is returned by the page", () => {
       const pageFile = createPageFile("returnsArray");
 
-      expect(() => pageFile.getPageState()).toThrowError(
+      expect(pageFile.getPageState()).toHaveErrorMessage(
         /^Unable to find top-level JSX element or JSX fragment/
       );
     });
