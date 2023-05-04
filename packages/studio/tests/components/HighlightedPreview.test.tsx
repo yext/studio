@@ -221,8 +221,10 @@ async function mockPreviewState(componentTree: ComponentState[]) {
         universalPage: {
           componentTree,
           cssImports: [],
-          entityFiles: ["entityFile.json"],
           filepath: "mock/file/path",
+          pagesJS: {
+            entityFiles: ["entityFile.json"],
+          }
         },
       },
     },

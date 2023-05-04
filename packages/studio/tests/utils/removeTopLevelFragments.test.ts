@@ -26,7 +26,6 @@ it("removes top level fragments from a PageState record", () => {
 
   const page: PageState = {
     cssImports: [],
-    entityFiles: [],
     filepath: "/unused",
     componentTree: [
       {

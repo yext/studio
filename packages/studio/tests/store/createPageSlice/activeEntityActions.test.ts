@@ -10,8 +10,10 @@ describe("active entity file actions", () => {
       Universal: {
         componentTree: [searchBarComponent],
         cssImports: [],
-        entityFiles: ["file1.json", "entityFile.json"],
         filepath: "some/file/path",
+        pagesJS: {
+          entityFiles: ["file1.json", "entityFile.json"],
+        },
       },
     },
     activePageName: "Universal",

@@ -11,6 +11,8 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
+import GetPathWriter from "../writers/GetPathWriter";
+import GetPathParser from "../parsers/GetPathParser";
 
 /**
  * Configuration options to the page file's update process
@@ -26,6 +28,8 @@ interface UpdatePageFileOptions {
  */
 export default class PageFile {
   private studioSourceFileParser: StudioSourceFileParser;
+  private getPathParser: GetPathParser;
+  private getPathWriter: GetPathWriter;
   private streamConfigWriter: StreamConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
@@ -47,6 +51,11 @@ export default class PageFile {
     const studioSourceFileWriter = new StudioSourceFileWriter(
       filepath,
       project
+    );
+    this.getPathParser = new GetPathParser(this.studioSourceFileParser);
+    this.getPathWriter = new GetPathWriter(
+      studioSourceFileWriter,
+      this.studioSourceFileParser
     );
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
@@ -71,18 +80,25 @@ export default class PageFile {
     }, {});
   }
 
-  getPageState(): PageState {
+  getPageState(isPagesJSRepo = false): PageState {
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
       ...this.pluginFilepathToComponentName,
     });
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();
+    const getPathValue =
+      isPagesJSRepo && this.getPathParser.parseGetPathValue();
     return {
       componentTree,
       cssImports,
       filepath,
-      entityFiles: this.entityFiles,
+      ...((getPathValue || this.entityFiles) && {
+        pagesJS: {
+          ...(this.entityFiles && { entityFiles: this.entityFiles }),
+          ...(getPathValue && { getPathValue }),
+        },
+      }),
     };
   }
 
@@ -101,6 +117,10 @@ export default class PageFile {
     const onFileUpdate = (
       pageComponent: FunctionDeclaration | ArrowFunction
     ) => {
+      const getPathValue = updatedPageState.pagesJS?.getPathValue;
+      if (getPathValue) {
+        this.getPathWriter.updateGetPath(getPathValue);
+      }
       if (options.updateStreamConfig) {
         const hasStreamConfig = this.streamConfigWriter.updateStreamConfig(
           updatedPageState.componentTree

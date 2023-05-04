@@ -7,6 +7,7 @@ import {
   ObjectLiteralExpression,
   Identifier,
   ArrayLiteralExpression,
+  ArrowFunction,
 } from "ts-morph";
 import StaticParsingHelpers, {
   ParsedObjectLiteral,
@@ -279,5 +280,16 @@ export default class StudioSourceFileParser {
       );
     }
     return defaultExport;
+  }
+
+  getFunctionNode(
+    funcName: string
+  ): FunctionDeclaration | ArrowFunction | undefined {
+    return (
+      this.sourceFile.getFunction(funcName) ??
+      this.sourceFile
+        .getVariableDeclaration(funcName)
+        ?.getFirstChildByKind(SyntaxKind.ArrowFunction)
+    );
   }
 }

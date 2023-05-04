@@ -9,8 +9,15 @@ import { streamConfigMultipleFieldsComponentTree } from "../__fixtures__/compone
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import { PageState } from "../../src/types/PageState";
 
 jest.mock("uuid");
+
+const basicPageState: PageState = {
+  componentTree: [],
+  cssImports: [],
+  filepath: "mock-filepath",
+};
 
 describe("updatePageFile", () => {
   let tsMorphProject: Project;
@@ -21,13 +28,9 @@ describe("updatePageFile", () => {
 
   it("updates page component based on PageState's component tree", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-    const pageFile = new PageFile(
-      getPagePath("updatePageFile/EmptyPage"),
-      throwIfCalled,
-      jest.fn(),
-      tsMorphProject
-    );
+    const pageFile = createPageFile("EmptyPage", tsMorphProject);
     pageFile.updatePageFile({
+      ...basicPageState,
       componentTree: [
         {
           kind: ComponentStateKind.Standard,
@@ -37,8 +40,6 @@ describe("updatePageFile", () => {
           metadataUUID: "mock-metadata-uuid",
         },
       ],
-      cssImports: [],
-      filepath: "mock-filepath",
     });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyPage.tsx"),
@@ -53,14 +54,10 @@ describe("updatePageFile", () => {
 
     it("adds template config variable when it is not already defined", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const pageFile = new PageFile(
-        getPagePath("updatePageFile/PageWithAComponent"),
-        throwIfCalled,
-        jest.fn(),
-        tsMorphProject
-      );
+      const pageFile = createPageFile("PageWithAComponent", tsMorphProject);
       pageFile.updatePageFile(
         {
+          ...basicPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -76,8 +73,6 @@ describe("updatePageFile", () => {
               metadataUUID: "mock-metadata-uuid",
             },
           ],
-          cssImports: [],
-          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -92,14 +87,10 @@ describe("updatePageFile", () => {
 
     it("does not add stream config if it is not already defined and no document paths are used", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const pageFile = new PageFile(
-        getPagePath("updatePageFile/PageWithAComponent"),
-        throwIfCalled,
-        jest.fn(),
-        tsMorphProject
-      );
+      const pageFile = createPageFile("PageWithAComponent", tsMorphProject);
       pageFile.updatePageFile(
         {
+          ...basicPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -115,8 +106,6 @@ describe("updatePageFile", () => {
               metadataUUID: "mock-metadata-uuid",
             },
           ],
-          cssImports: [],
-          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -131,17 +120,11 @@ describe("updatePageFile", () => {
 
     it("adds new stream document paths used in new page state", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const pageFile = new PageFile(
-        getPagePath("updatePageFile/EmptyPage"),
-        throwIfCalled,
-        jest.fn(),
-        tsMorphProject
-      );
+      const pageFile = createPageFile("EmptyPage", tsMorphProject);
       pageFile.updatePageFile(
         {
+          ...basicPageState,
           componentTree: streamConfigMultipleFieldsComponentTree,
-          cssImports: [],
-          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -156,14 +139,13 @@ describe("updatePageFile", () => {
 
     it("removes unused stream document paths", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const pageFile = new PageFile(
-        getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
-        throwIfCalled,
-        jest.fn(),
+      const pageFile = createPageFile(
+        "PageWithStreamConfigMultipleFields",
         tsMorphProject
       );
       pageFile.updatePageFile(
         {
+          ...basicPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -179,8 +161,6 @@ describe("updatePageFile", () => {
               metadataUUID: "mock-metadata-uuid",
             },
           ],
-          cssImports: [],
-          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -195,14 +175,13 @@ describe("updatePageFile", () => {
 
     it("dedupes stream document paths", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const pageFile = new PageFile(
-        getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
-        throwIfCalled,
-        jest.fn(),
+      const pageFile = createPageFile(
+        "PageWithStreamConfigMultipleFields",
         tsMorphProject
       );
       pageFile.updatePageFile(
         {
+          ...basicPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -257,8 +236,6 @@ describe("updatePageFile", () => {
               metadataUUID: "mock-metadata-uuid-3",
             },
           ],
-          cssImports: [],
-          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -273,14 +250,13 @@ describe("updatePageFile", () => {
 
     it("preserves 'slug' field for PagesJS PageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const pageFile = new PageFile(
-        getPagePath("updatePageFile/EmptyPageWithStreamConfigSlugField"),
-        throwIfCalled,
-        jest.fn(),
+      const pageFile = createPageFile(
+        "EmptyPageWithStreamConfigSlugField",
         tsMorphProject
       );
       pageFile.updatePageFile(
         {
+          ...basicPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -296,8 +272,6 @@ describe("updatePageFile", () => {
               metadataUUID: "mock-metadata-uuid",
             },
           ],
-          cssImports: [],
-          filepath: "mock-filepath",
         },
         { updateStreamConfig: true }
       );
@@ -310,4 +284,63 @@ describe("updatePageFile", () => {
       );
     });
   });
+
+  describe("getPath", () => {
+    it("adds new getPath function when there is none", () => {
+      const pageFile = createPageFile("EmptyPage", tsMorphProject);
+      pageFile.updatePageFile({
+        ...basicPageState,
+        pagesJS: {
+          getPathValue: "index.html",
+        },
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(getPagePath("updatePageFile/PageWithGetPath"), "utf-8")
+      );
+    });
+
+    it("updates existing getPath function's return value", () => {
+      const pageFile = createPageFile("PageWithGetPath", tsMorphProject);
+      pageFile.updatePageFile({
+        ...basicPageState,
+        pagesJS: {
+          getPathValue: "static.html",
+        },
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithGetPath.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithModifiedGetPath"),
+          "utf-8"
+        )
+      );
+    });
+
+    it("does not modify getPath if getPathValue is undefined", () => {
+      const pageFile = createPageFile("PageWithComplexGetPath", tsMorphProject);
+      pageFile.updatePageFile({
+        ...basicPageState,
+        pagesJS: {
+          entityFiles: ["mock-entity-file"],
+        },
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithComplexGetPath.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithComplexGetPath"),
+          "utf-8"
+        )
+      );
+    });
+  });
 });
+
+function createPageFile(pageName: string, project: Project) {
+  return new PageFile(
+    getPagePath(`updatePageFile/${pageName}`),
+    throwIfCalled,
+    jest.fn(),
+    project
+  );
+}
