@@ -1,4 +1,5 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
+import { Result } from "true-myth";
 import { PageState } from "../types";
 import StreamConfigWriter from "../writers/StreamConfigWriter";
 import ReactComponentFileWriter, {
@@ -11,6 +12,7 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
+import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 
 /**
  * Configuration options to the page file's update process
@@ -71,19 +73,32 @@ export default class PageFile {
     }, {});
   }
 
-  getPageState(): PageState {
-    const componentTree = this.componentTreeParser.parseComponentTree({
-      ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-      ...this.pluginFilepathToComponentName,
-    });
-    const cssImports = this.studioSourceFileParser.parseCssImports();
-    const filepath = this.studioSourceFileParser.getFilepath();
-    return {
-      componentTree,
-      cssImports,
-      filepath,
-      entityFiles: this.entityFiles,
-    };
+  getPageState(): Result<PageState, ParsingError> {
+    try {
+      const componentTree = this.componentTreeParser.parseComponentTree({
+        ...this.studioSourceFileParser.getAbsPathDefaultImports(),
+        ...this.pluginFilepathToComponentName,
+      });
+      const cssImports = this.studioSourceFileParser.parseCssImports();
+      const filepath = this.studioSourceFileParser.getFilepath();
+
+      return Result.ok({
+        componentTree,
+        cssImports,
+        filepath,
+        entityFiles: this.entityFiles,
+      });
+    } catch (err: unknown) {
+      if (!(err instanceof Error)) {
+        throw err;
+      }
+
+      return Result.err({
+        kind: ParsingErrorKind.FailedToParsePageState,
+        stack: err.stack,
+        message: err.message,
+      });
+    }
   }
 
   /**

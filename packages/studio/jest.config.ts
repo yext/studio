@@ -7,7 +7,7 @@ const config: Config = {
   resetMocks: true,
   restoreMocks: true,
   testEnvironment: "jsdom",
-  transformIgnorePatterns: ["node_modules/(?!react-tooltip/.*)"],
+  transformIgnorePatterns: ["node_modules/(?!react-tooltip|true-myth)"],
   setupFilesAfterEnv: ["<rootDir>/tests/__setup__/setup-env.ts"],
   transform: {
     "\\.[jt]sx?$": "babel-jest",

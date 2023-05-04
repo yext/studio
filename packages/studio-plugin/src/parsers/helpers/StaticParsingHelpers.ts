@@ -140,7 +140,9 @@ export default class StaticParsingHelpers {
     if (c.isKind(SyntaxKind.JsxText)) {
       if (c.getLiteralText().trim().length) {
         throw new Error(
-          `Found JsxText with content "${c.getLiteralText()}". JsxText is not currently supported.`
+          `Found JsxText with content "${c
+            .getLiteralText()
+            .trim()}". JsxText is not currently supported.`
         );
       }
       return [];
