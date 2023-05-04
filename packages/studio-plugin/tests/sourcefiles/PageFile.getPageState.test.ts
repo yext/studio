@@ -171,7 +171,8 @@ describe("getPageState", () => {
     const pageFile = createPageFile("shortFragmentSyntaxPage", true);
     const result = pageFile.getPageState();
 
-    expect(result.pagesJS?.getPathValue).toEqual("index.html");
+    assertIsOk(result);
+    expect(result.value.pagesJS?.getPathValue).toEqual("index.html");
   });
 
   it("returns empty component tree when parses a page without return statement", () => {
