@@ -9,6 +9,5 @@ export enum ParsingErrorKind {
 export interface ParsingError {
   kind: `${ParsingErrorKind}`;
   message: string;
-  /** The originally thrown value. */
-  cause: unknown;
+  stack?: string;
 }

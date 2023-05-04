@@ -3,7 +3,7 @@ export {};
 declare global {
   namespace jest {
     interface Matchers<R> {
-      toHaveErrorCause(expected: string | RegExp): R;
+      toHaveErrorMessage(expected: string | RegExp): R;
     }
   }
 }

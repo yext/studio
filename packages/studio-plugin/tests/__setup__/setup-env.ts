@@ -1,8 +1,8 @@
 import { Result } from "true-myth";
 import { printReceived, printExpected } from "jest-matcher-utils";
 
-function toHaveErrorCause(
-  actual: Result<unknown, { cause: Error }>,
+function toHaveErrorMessage(
+  actual: Result<unknown, { message: string }>,
   expected: string | RegExp
 ) {
   if (!actual.isErr) {
@@ -15,7 +15,7 @@ function toHaveErrorCause(
     };
   }
 
-  const actualErrorMessage = actual.error.cause.message;
+  const actualErrorMessage = actual.error.message;
   const pass = !!actualErrorMessage.match(expected);
 
   if (!pass) {
@@ -35,5 +35,5 @@ function toHaveErrorCause(
 }
 
 expect.extend({
-  toHaveErrorCause,
+  toHaveErrorMessage,
 });

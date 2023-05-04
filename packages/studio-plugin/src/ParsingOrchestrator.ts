@@ -16,6 +16,7 @@ import { Project } from "ts-morph";
 import typescript from "typescript";
 import { NpmLookup } from "./utils";
 import { RequiredStudioConfig } from "./parsers/getStudioConfig";
+import prettyPrintError from "./errors/prettyPrintError";
 
 export function createTsMorphProject() {
   return new Project({
@@ -158,9 +159,9 @@ export default class ParsingOrchestrator {
         if (pageStateResult.isOk) {
           prev[curr] = pageStateResult.value;
         } else {
-          console.error(
+          prettyPrintError(
             `Failed to get PageState for "${curr}"`,
-            pageStateResult.error.cause
+            pageStateResult.error.message
           );
         }
 
