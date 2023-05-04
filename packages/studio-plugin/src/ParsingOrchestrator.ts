@@ -159,7 +159,7 @@ export default class ParsingOrchestrator {
         if (pageStateResult.isOk) {
           prev[curr] = pageStateResult.value;
         } else {
-          prettyPrintError(
+          void prettyPrintError(
             `Failed to get PageState for "${curr}"`,
             pageStateResult.error.message
           );
