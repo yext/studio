@@ -6,6 +6,10 @@
     "parsers",
     "writers",
     "sourcefiles",
-    "*.test.ts"
-  ]
+    "*.test.ts",
+    "**/*.d.ts"
+  ],
+  "compilerOptions": {
+    "types": ["jest", "./__setup__/setup-env.ts", "node"]
+  }
 }

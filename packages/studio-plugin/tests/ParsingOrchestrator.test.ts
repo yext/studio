@@ -15,6 +15,9 @@ import { Project } from "ts-morph";
 import sampleComponentPluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
 import fs from "fs";
 import getLocalDataMapping from "../src/parsers/getLocalDataMapping";
+import prettyPrintError from "../src/errors/prettyPrintError";
+
+jest.mock("../src/errors/prettyPrintError");
 
 const mockGetPathToModuleResponse = path.join(
   process.cwd(),
@@ -186,9 +189,11 @@ it("throws an error when the page imports components from unexpected folders", (
     __dirname,
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
-  const orchestrator = createParsingOrchestrator({ paths: userPaths });
-  expect(() => orchestrator.getStudioData()).toThrow(
-    /^Could not get FileMetadata for/
+  createParsingOrchestrator({ paths: userPaths }).getStudioData();
+  expect(prettyPrintError).toHaveBeenCalledTimes(2);
+  expect(prettyPrintError).toHaveBeenCalledWith(
+    expect.stringMatching(/^Failed to get PageState/),
+    expect.stringMatching(/^Could not get FileMetadata for/)
   );
 });
 
