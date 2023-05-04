@@ -191,13 +191,13 @@ it("throws an error when the page imports components from unexpected folders", (
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
   createParsingOrchestrator({ paths: userPaths }).getStudioData();
-  expect(consoleErrorSpy).toHaveBeenCalledTimes(2)
+  expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
   expect(consoleErrorSpy.mock.calls[0][1].message).toMatch(
     /^Could not get FileMetadata for/
-  )
+  );
   expect(consoleErrorSpy.mock.calls[1][1].message).toMatch(
     /^Could not get FileMetadata for/
-  )
+  );
 });
 
 it("throws when the pages folder does not exist", () => {
