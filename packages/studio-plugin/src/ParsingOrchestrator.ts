@@ -14,7 +14,7 @@ import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
-import { NpmLookup } from "./utils";
+import NpmLookup from "./parsers/helpers/NpmLookup";
 import { RequiredStudioConfig } from "./parsers/getStudioConfig";
 import prettyPrintError from "./errors/prettyPrintError";
 
@@ -159,9 +159,9 @@ export default class ParsingOrchestrator {
         if (pageStateResult.isOk) {
           prev[curr] = pageStateResult.value;
         } else {
-          void prettyPrintError(
+          prettyPrintError(
             `Failed to get PageState for "${curr}"`,
-            pageStateResult.error.message
+            pageStateResult.error.stack
           );
         }
 

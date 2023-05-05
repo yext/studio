@@ -334,6 +334,13 @@ describe("parseShape", () => {
   });
 });
 
+it("checkForSyntaxErrors throws when a tsx file has a syntax error", () => {
+  const parser = createParser(`const Banner = () => <div>Banner Text<div>`);
+  expect(() => parser.checkForSyntaxErrors()).toThrowError(
+    /test.tsx: Unexpected token \(1:42/
+  );
+});
+
 function createParser(sourceCode: string) {
   const filepath = path.resolve(__dirname, "test.tsx");
   const { project } = createTestSourceFile(sourceCode, filepath);

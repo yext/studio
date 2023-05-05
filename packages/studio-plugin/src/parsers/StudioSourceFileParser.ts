@@ -16,7 +16,8 @@ import vm from "vm";
 import TypeNodeParsingHelper, {
   ParsedType,
 } from "./helpers/TypeNodeParsingHelper";
-import { NpmLookup } from "../utils";
+import { parseSync as babelParseSync } from "@babel/core";
+import NpmLookup from "./helpers/NpmLookup";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -34,6 +35,17 @@ export default class StudioSourceFileParser {
 
   getFilepath() {
     return this.filepath;
+  }
+
+  checkForSyntaxErrors() {
+    babelParseSync(this.sourceFile.getFullText(), {
+      filename: this.filepath,
+      presets: [
+        ["@babel/preset-env", { targets: { node: "current" } }],
+        "@babel/preset-typescript",
+        ["@babel/preset-react", { runtime: "automatic" }],
+      ],
+    });
   }
 
   parseNamedImports(): Record<string, string[]> {

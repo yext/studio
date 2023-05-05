@@ -5,7 +5,7 @@ import {
   searchForWorkspaceRoot,
   UserConfig,
 } from "vite";
-import createStudioPlugin from "@yext/studio-plugin";
+import createStudioPlugin from "@yext/studio-plugin/src/createStudioPlugin";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 
