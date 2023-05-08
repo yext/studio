@@ -8,10 +8,12 @@ jest.mock("virtual:yext-studio", () => {
   const mockStudioData: StudioData = {
     pageNameToPageState: {
       UniversalPage: {
-        entityFiles: ["entityFile.json"],
         componentTree: [],
         cssImports: [],
         filepath: "filepath to page",
+        pagesJS: {
+          entityFiles: ["entityFile.json"],
+        },
       },
     },
     UUIDToFileMetadata: {},

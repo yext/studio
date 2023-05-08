@@ -12,7 +12,7 @@ it("updates the active page and sets the entity file", async () => {
       activePageName: "FirstPage",
       pages: {
         FirstPage: page,
-        OtherPage: { ...page, entityFiles: ["entityFile.json"] },
+        OtherPage: { ...page, pagesJS: { entityFiles: ["entityFile.json"] } },
       },
     },
   });
