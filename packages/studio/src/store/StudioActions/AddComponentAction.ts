@@ -1,5 +1,6 @@
 import { ComponentState, FileMetadata, TypeGuards } from "@yext/studio-plugin";
 import StudioActions from "../StudioActions";
+import { ErrorFileMetadata } from "@yext/studio-plugin/lib/types/ErrorFileMetadata";
 
 export default class AddComponentAction {
   constructor(private studioActions: StudioActions) {}
@@ -7,7 +8,7 @@ export default class AddComponentAction {
   /**
    * Adds the component to the current active component tree.
    */
-  addComponent = (metadata: FileMetadata) => {
+  addComponent = (metadata: Exclude<FileMetadata, ErrorFileMetadata>) => {
     const componentState = this.studioActions.createComponentState(metadata);
     return this.insertComponentState(componentState);
   };

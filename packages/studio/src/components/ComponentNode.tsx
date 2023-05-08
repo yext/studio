@@ -1,4 +1,4 @@
-import { ComponentState } from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
@@ -8,7 +8,7 @@ import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 
 interface ComponentNodeProps {
-  /** The ComponentState this node represents in {@link ComponentTree}. */
+  /** The ComponentState this node represents in a ComponentTree. */
   componentState: ComponentState;
   /** The depth of this node inside ComponentTree.*/
   depth: number;
@@ -21,7 +21,7 @@ interface ComponentNodeProps {
 }
 
 /**
- * ComponentNode is a single node in {@link ComponentTree}.
+ * ComponentNode is a single node in a ComponentTree;
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
@@ -55,6 +55,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     {
       "bg-blue-100": isActiveComponent,
       "hover:bg-gray-100": !isActiveComponent,
+      "text-red-500": componentState.kind === ComponentStateKind.Error,
     }
   );
 

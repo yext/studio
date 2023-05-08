@@ -3,7 +3,8 @@ import { PropValues } from "./PropValues";
 export type ComponentState =
   | EditableComponentState
   | FragmentState
-  | BuiltInState;
+  | BuiltInState
+  | ErrorComponentState;
 
 export type EditableComponentState =
   | StandardOrModuleComponentState
@@ -19,6 +20,7 @@ export enum ComponentStateKind {
   Fragment = "fragment", // when the component is a React.Fragment,
   BuiltIn = "builtIn", // for built in elements like div and img
   Repeater = "repeater", // for a list repeater (map function)
+  Error = "error",
 }
 
 export type StandardComponentState = {
@@ -85,4 +87,14 @@ export type BuiltInState = {
   props: {};
   parentUUID?: string;
   metadataUUID?: never;
+};
+
+export type ErrorComponentState = {
+  kind: ComponentStateKind.Error;
+  componentName: string;
+  uuid: string;
+  metadataUUID: string;
+  parentUUID?: string;
+  fullText: string;
+  message: string;
 };

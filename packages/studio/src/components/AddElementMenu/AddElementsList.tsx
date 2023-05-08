@@ -1,9 +1,15 @@
-import { FileMetadata, FileMetadataKind } from "@yext/studio-plugin";
+import {
+  ComponentMetadata,
+  FileMetadata,
+  FileMetadataKind,
+  ModuleMetadata,
+} from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
 import renderIconForType from "../common/renderIconForType";
+import { ErrorFileMetadata } from "@yext/studio-plugin/lib/types/ErrorFileMetadata";
 
 /**
  * The list of available, addable elements for the current activeType.
@@ -18,14 +24,14 @@ export default function AddElementsList({
   });
 
   const addableElements = Object.values(UUIDToFileMetadata).filter(
-    (metadata) => {
+    (metadata): metadata is ComponentMetadata | ModuleMetadata => {
       if (activeType === ElementType.Components) {
         return (
           metadata.kind === FileMetadataKind.Component &&
           !metadata.acceptsChildren
         );
       } else if (activeType === ElementType.Containers) {
-        return (
+        return !!(
           metadata.kind === FileMetadataKind.Component &&
           metadata.acceptsChildren
         );
@@ -62,7 +68,7 @@ function Option({
   metadata,
   activeType,
 }: {
-  metadata: FileMetadata;
+  metadata: Exclude<FileMetadata, ErrorFileMetadata>;
   activeType: ElementType;
 }) {
   const componentName = path.basename(metadata.filepath, ".tsx");

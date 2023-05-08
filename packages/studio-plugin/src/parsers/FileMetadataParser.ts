@@ -6,6 +6,7 @@ import { FileMetadata } from "../types";
 import { v4 } from "uuid";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import ComponentParamParser from "./ComponentParamParser";
+import { ErrorFileMetadata } from "../types/ErrorFileMetadata";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for
@@ -32,7 +33,10 @@ export default class FileMetadataParser {
    */
   parse(
     onProp?: (propName: string) => boolean
-  ): Pick<FileMetadata, "initialProps" | "propShape" | "metadataUUID"> {
+  ): Pick<
+    Exclude<FileMetadata, ErrorFileMetadata>,
+    "initialProps" | "propShape" | "metadataUUID"
+  > {
     const propShape = this.parsePropShape(onProp);
     const initialProps = this.parseInitialProps(propShape);
 

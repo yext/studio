@@ -4,6 +4,9 @@ import { FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
+import tryUsingResult from "../errors/tryUsingResult";
+import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
+import { Result } from "true-myth";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -20,7 +23,15 @@ export default class ComponentFile {
     );
   }
 
-  getComponentMetadata(): ComponentMetadata {
+  getComponentMetadata(): Result<ComponentMetadata, ParsingError> {
+    return tryUsingResult(
+      ParsingErrorKind.FailedToParseComponentMetadata,
+      `Failed to get ComponentMetadata for "${this.studioSourceFileParser.getFilepath()}"`,
+      this._getComponentMetadata
+    );
+  }
+
+  private _getComponentMetadata = (): ComponentMetadata => {
     let acceptsChildren = false;
     const onProp = (propName: string): boolean => {
       if (propName === SpecialReactProps.Children) {
@@ -38,5 +49,5 @@ export default class ComponentFile {
       filepath,
       pluginName: this.pluginName,
     };
-  }
+  };
 }

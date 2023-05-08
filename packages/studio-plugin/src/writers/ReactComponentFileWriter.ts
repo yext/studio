@@ -21,6 +21,7 @@ import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { transformPropValuesToRaw } from "../utils";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import { TypeGuards } from "../utils";
+import { ErrorFileMetadata } from "../types/ErrorFileMetadata";
 
 export type GetFileMetadataByUUID =
   ParsingOrchestrator["getFileMetadataByUUID"];
@@ -79,7 +80,9 @@ export default class ReactComponentFileWriter {
     const elements = ComponentTreeHelpers.mapComponentTree<string>(
       componentTree,
       (c, children): string => {
-        if (c.kind === ComponentStateKind.Fragment) {
+        if (c.kind === ComponentStateKind.Error) {
+          return c.fullText;
+        } else if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
         } else if (TypeGuards.isRepeaterState(c)) {
           const { componentName, props } = c.repeatedComponent;
@@ -169,7 +172,7 @@ export default class ReactComponentFileWriter {
     propArgs,
   }: {
     componentTree: ComponentState[];
-    fileMetadata?: FileMetadata;
+    fileMetadata?: Exclude<FileMetadata, ErrorFileMetadata>;
     cssImports?: string[];
     onFileUpdate?: (
       functionComponent: FunctionDeclaration | ArrowFunction

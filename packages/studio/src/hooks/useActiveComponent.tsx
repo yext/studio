@@ -2,15 +2,17 @@ import {
   ComponentState,
   ComponentStateKind,
   FileMetadata,
+  FileMetadataKind,
   TypeGuards,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
+import { ErrorFileMetadata } from "@yext/studio-plugin/lib/types/ErrorFileMetadata";
 
 /**
  * Returns the current activeComponentState and its corresponding activeComponentMetadata.
  */
 export default function useActiveComponent(): {
-  activeComponentMetadata?: FileMetadata;
+  activeComponentMetadata?: Exclude<FileMetadata, ErrorFileMetadata>;
   activeComponentState?: ComponentState;
 } {
   return useStudioStore((store) => {
@@ -24,6 +26,9 @@ export default function useActiveComponent(): {
             activeComponentState.repeatedComponent.metadataUUID
           )
         : undefined;
+    if (activeComponentMetadata?.kind === FileMetadataKind.Error) {
+      throw new Error(`ErrorFileMetadata cannot be the active component`);
+    }
     return {
       activeComponentMetadata,
       activeComponentState,

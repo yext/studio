@@ -1,5 +1,6 @@
 export enum ParsingErrorKind {
   FailedToParsePageState = "FailedToParsePageState",
+  FailedToParseComponentMetadata = "FailedToParseComponentMetadata",
 }
 
 /**

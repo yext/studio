@@ -6,6 +6,7 @@ import {
   SiteSettingsValues,
   SiteSettings,
   PluginConfig,
+  FileMetadataKind,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -17,6 +18,7 @@ import typescript from "typescript";
 import NpmLookup from "./parsers/helpers/NpmLookup";
 import { RequiredStudioConfig } from "./parsers/getStudioConfig";
 import prettyPrintError from "./errors/prettyPrintError";
+import { v4 } from "uuid";
 
 export function createTsMorphProject() {
   return new Project({
@@ -98,7 +100,7 @@ export default class ParsingOrchestrator {
     ).reduce((prev, curr) => {
       prev[curr.metadataUUID] = curr;
       return prev;
-    }, {});
+    }, {} as Record<string, FileMetadata>);
     return UUIDToFileMetadata;
   }
 
@@ -158,11 +160,6 @@ export default class ParsingOrchestrator {
         // TODO(SLAP-2686): Confirm behavior for failure case with Product.
         if (pageStateResult.isOk) {
           prev[curr] = pageStateResult.value;
-        } else {
-          prettyPrintError(
-            `Failed to get PageState for "${curr}"`,
-            pageStateResult.error.stack
-          );
         }
 
         return prev;
@@ -217,7 +214,17 @@ export default class ParsingOrchestrator {
     }
     if (absPath.startsWith(this.paths.components)) {
       const componentFile = new ComponentFile(absPath, this.project);
-      return componentFile.getComponentMetadata();
+      const result = componentFile.getComponentMetadata();
+      if (result.isErr) {
+        return {
+          kind: FileMetadataKind.Error,
+          intendedKind: FileMetadataKind.Component,
+          metadataUUID: v4(),
+          message: result.error.message,
+          filepath: absPath,
+        };
+      }
+      return result.value;
     }
     if (absPath.startsWith(this.paths.modules)) {
       const moduleFile = this.getModuleFile(absPath);
@@ -230,7 +237,17 @@ export default class ParsingOrchestrator {
         this.project,
         plugin.moduleName
       );
-      return componentFile.getComponentMetadata();
+      const result = componentFile.getComponentMetadata();
+      if (result.isErr) {
+        return {
+          kind: FileMetadataKind.Error,
+          intendedKind: FileMetadataKind.Component,
+          metadataUUID: v4(),
+          message: result.error.message,
+          filepath: absPath,
+        };
+      }
+      return result.value;
     }
     const { modules, components } = this.paths;
     throw new Error(
@@ -243,7 +260,9 @@ export default class ParsingOrchestrator {
     metadataUUID: string
   ): FileMetadata | undefined => {
     return Object.values(this.filepathToFileMetadata).find(
-      (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
+      (fileMetadata): fileMetadata is FileMetadata =>
+        fileMetadata.metadataUUID === metadataUUID &&
+        fileMetadata.kind !== FileMetadataKind.Error
     );
   };
 

@@ -10,6 +10,7 @@ import {
   BuiltInState,
   ComponentState,
   ComponentStateKind,
+  ErrorComponentState,
   RepeaterState,
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
@@ -108,7 +109,7 @@ export default class ComponentTreeParser {
     defaultImports: Record<string, string>,
     repeatedComponent: JsxSelfClosingElement,
     listExpression: string
-  ): Omit<RepeaterState, "uuid" | "parentUUID"> {
+  ): Omit<RepeaterState, "uuid" | "parentUUID"> | ErrorComponentState {
     const componentName =
       StaticParsingHelpers.parseJsxElementName(repeatedComponent);
     const parsedRepeatedComponent = this.parseElement(
@@ -120,6 +121,12 @@ export default class ComponentTreeParser {
       throw new Error(
         "Error parsing map expression: repetition of built-in components is not supported."
       );
+    }
+    if (parsedRepeatedComponent.kind === ComponentStateKind.Error) {
+      return {
+        ...parsedRepeatedComponent,
+        componentName,
+      };
     }
     return {
       kind: ComponentStateKind.Repeater,
@@ -137,7 +144,8 @@ export default class ComponentTreeParser {
     defaultImports: Record<string, string>
   ):
     | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
-    | Pick<BuiltInState, "kind" | "props"> {
+    | Pick<BuiltInState, "kind" | "props">
+    | Omit<ErrorComponentState, "componentName"> {
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
     )
@@ -162,6 +170,15 @@ export default class ComponentTreeParser {
     }
 
     const fileMetadata = this.getFileMetadata(filepath);
+    if (fileMetadata.kind === FileMetadataKind.Error) {
+      return {
+        kind: ComponentStateKind.Error,
+        metadataUUID: fileMetadata.metadataUUID,
+        uuid: v4(),
+        fullText: component.getFullText(),
+        message: fileMetadata.message,
+      };
+    }
     const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;
 
     const componentStateKind =

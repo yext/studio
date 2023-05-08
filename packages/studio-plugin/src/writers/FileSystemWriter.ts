@@ -72,6 +72,10 @@ export class FileSystemWriter {
     const modulesToUpdate = new Set(
       Object.keys(updatedUUIDToFileMetadata).filter((metadataUUID) => {
         const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID];
+        if (updatedMetadata.kind === FileMetadataKind.Error) {
+          return false;
+        }
+
         const isModule = updatedMetadata.kind === FileMetadataKind.Module;
         return (
           isModule &&

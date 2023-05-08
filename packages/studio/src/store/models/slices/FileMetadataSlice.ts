@@ -5,6 +5,7 @@ import {
   ModuleMetadata,
 } from "@yext/studio-plugin";
 import { ImportType } from "../ImportType";
+import { ErrorFileMetadata } from "@yext/studio-plugin/lib/types/ErrorFileMetadata";
 
 export interface FileMetadataSliceStates {
   /** Metadata of all components and modules that can be used in Studio. */
@@ -14,7 +15,10 @@ export interface FileMetadataSliceStates {
 }
 
 export interface FileMetadataSliceActions {
-  setFileMetadata: (metadataUUID: string, fileMetadata: FileMetadata) => void;
+  setFileMetadata: (
+    metadataUUID: string,
+    fileMetadata: Exclude<FileMetadata, ErrorFileMetadata>
+  ) => void;
   getFileMetadata: (metadataUUID: string) => FileMetadata | undefined;
   getModuleMetadata: (metadataUUID: string) => ModuleMetadata;
   removeFileMetadata: (metadataUUID: string) => void;

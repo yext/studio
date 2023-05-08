@@ -13,6 +13,7 @@ import ComponentTreeParser, {
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
+import tryUsingResult from "../errors/tryUsingResult";
 
 /**
  * Configuration options to the page file's update process
@@ -74,33 +75,29 @@ export default class PageFile {
   }
 
   getPageState(): Result<PageState, ParsingError> {
-    try {
-      this.studioSourceFileParser.checkForSyntaxErrors();
-      const componentTree = this.componentTreeParser.parseComponentTree({
-        ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-        ...this.pluginFilepathToComponentName,
-      });
-      const cssImports = this.studioSourceFileParser.parseCssImports();
-      const filepath = this.studioSourceFileParser.getFilepath();
-
-      return Result.ok({
-        componentTree,
-        cssImports,
-        filepath,
-        entityFiles: this.entityFiles,
-      });
-    } catch (err: unknown) {
-      if (!(err instanceof Error)) {
-        throw err;
-      }
-
-      return Result.err({
-        kind: ParsingErrorKind.FailedToParsePageState,
-        stack: err.stack,
-        message: err.message,
-      });
-    }
+    return tryUsingResult(
+      ParsingErrorKind.FailedToParsePageState,
+      `Failed to get PageState for "${this.studioSourceFileParser.getFilepath()}"`,
+      this._getPageState
+    );
   }
+
+  private _getPageState = (): PageState => {
+    this.studioSourceFileParser.checkForSyntaxErrors();
+    const componentTree = this.componentTreeParser.parseComponentTree({
+      ...this.studioSourceFileParser.getAbsPathDefaultImports(),
+      ...this.pluginFilepathToComponentName,
+    });
+    const cssImports = this.studioSourceFileParser.parseCssImports();
+    const filepath = this.studioSourceFileParser.getFilepath();
+
+    return {
+      componentTree,
+      cssImports,
+      filepath,
+      entityFiles: this.entityFiles,
+    };
+  };
 
   /**
    * Update page file by mutating the source file based on the page's updated state.
