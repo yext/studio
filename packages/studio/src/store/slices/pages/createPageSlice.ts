@@ -14,6 +14,7 @@ const firstPageEntry = Object.entries(
 
 const initialStates: PageSliceStates = {
   pages: removeTopLevelFragments(initialStudioData.pageNameToPageState),
+  errorPages: initialStudioData.pageNameToErrorPageState,
   activePageName: firstPageEntry?.[0],
   activeEntityFile: undefined,
   activeComponentUUID: undefined,

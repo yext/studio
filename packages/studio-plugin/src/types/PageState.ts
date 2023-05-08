@@ -10,3 +10,7 @@ export type PageState = {
    */
   entityFiles?: string[];
 };
+
+export type ErrorPageState = {
+  message: string;
+};

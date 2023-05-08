@@ -1,4 +1,9 @@
-import { ComponentState, ModuleMetadata, PageState } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ErrorPageState,
+  ModuleMetadata,
+  PageState,
+} from "@yext/studio-plugin";
 import DOMRectProperties from "../DOMRectProperties";
 
 export interface PagesRecord {
@@ -8,6 +13,8 @@ export interface PagesRecord {
 export interface PageSliceStates {
   /** All constructed pages that can be preview in Studio. */
   pages: PagesRecord;
+  /** All pages that cannot be previewed in Studio due to some parsing error. */
+  errorPages: Record<string, ErrorPageState>;
   /** The name of the current page display in Studio. */
   activePageName: string | undefined;
   /** The uuid of the current component display in Studio. */
