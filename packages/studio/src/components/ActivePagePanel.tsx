@@ -1,6 +1,3 @@
-import ComponentTree from "./ComponentTree";
-import Divider from "./common/Divider";
-import AddPageButton from "./AddPageButton";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Check } from "../icons/check.svg";
 import classNames from "classnames";
@@ -27,34 +24,29 @@ export default function ActivePagePanel(): JSX.Element {
   }, [pages]);
 
   return (
-    <div className="flex flex-col w-1/4 px-4">
-      <div className="flex flex-row font-bold py-4 pr-2 justify-between items-center">
-        Pages
-        <AddPageButton />
-      </div>
-      <ul className="flex flex-col pb-2 items-stretch">
-        {pageNames.map((pageName) => (
-          <PageItem pageName={pageName} key={pageName} />
-        ))}
-        {Object.keys(errorPages).map((pageName) => {
-          const anchorId = `ErrorPageState-${pageName}`
-          return (
-            <ListItem key={pageName} additionalClassNames="text-red-300">
-              <div className="flex items-center" id={anchorId}>
-                <Tooltip anchorId={anchorId} content={errorPages[pageName].message} className="max-w-md text-xs"/>
-                <Check className="invisible" />
-                <button disabled={true} className="ml-2">
-                  {pageName}
-                </button>
-              </div>
-            </ListItem>
-          );
-        })}
-      </ul>
-      <Divider />
-      <div className="font-bold">Layers</div>
-      <ComponentTree />
-    </div>
+    <ul className="flex flex-col pb-2 items-stretch">
+      {pageNames.map((pageName) => (
+        <PageItem pageName={pageName} key={pageName} />
+      ))}
+      {Object.keys(errorPages).map((pageName) => {
+        const anchorId = `ErrorPageState-${pageName}`;
+        return (
+          <ListItem key={pageName} additionalClassNames="text-red-300">
+            <div className="flex items-center" id={anchorId}>
+              <Tooltip
+                anchorId={anchorId}
+                content={errorPages[pageName].message}
+                className="max-w-md text-xs"
+              />
+              <Check className="invisible" />
+              <button disabled={true} className="ml-2">
+                {pageName}
+              </button>
+            </div>
+          </ListItem>
+        );
+      })}
+    </ul>
   );
 }
 
