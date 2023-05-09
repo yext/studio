@@ -32,6 +32,7 @@ export default class ComponentFile {
   }
 
   private _getComponentMetadata = (): ComponentMetadata => {
+    this.studioSourceFileParser.checkForSyntaxErrors();
     let acceptsChildren = false;
     const onProp = (propName: string): boolean => {
       if (propName === SpecialReactProps.Children) {
