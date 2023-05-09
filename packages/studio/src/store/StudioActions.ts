@@ -260,9 +260,13 @@ export default class StudioActions {
     };
   };
 
-  createPage = async (pageName: string) => {
+  createPage = async (pageName: string, getPathValue?: string) => {
     if (!pageName) {
       throw new Error("Error adding page: a pageName is required.");
+    }
+    const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
+    if (isPagesJSRepo && !getPathValue) {
+      throw new Error("Error adding page: a getPath value is required.");
     }
     const pagesPath = this.getStudioConfig().paths.pages;
     const filepath = path.join(pagesPath, pageName + ".tsx");
@@ -273,6 +277,7 @@ export default class StudioActions {
       componentTree: [],
       cssImports: [],
       filepath,
+      ...(isPagesJSRepo && { pagesJS: { getPathValue } }),
     });
     await this.updateActivePage(pageName);
   };

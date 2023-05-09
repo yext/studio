@@ -18,7 +18,7 @@ beforeEach(() => {
   });
 });
 
-it("closes the modal when a page name is successfully added", async () => {
+it("closes the modal when a page name is added in a non-PagesJS repo", async () => {
   const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
   render(<AddPageButton />);
   const addPageButton = screen.getByRole("button");
@@ -31,6 +31,35 @@ it("closes the modal when a page name is successfully added", async () => {
     componentTree: [],
     cssImports: [],
     filepath: expect.stringContaining("test.tsx"),
+  });
+  expect(screen.queryByText("Save")).toBeNull();
+});
+
+it("closes the modal when page name and url are added in PagesJS repo", async () => {
+  const originalStudioConfig = useStudioStore.getState().studioConfig;
+  mockStore({ studioConfig: { ...originalStudioConfig, isPagesJSRepo: true } });
+  const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
+  render(<AddPageButton />);
+
+  const addPageButton = screen.getByRole("button");
+  await userEvent.click(addPageButton);
+  const nameTextbox = screen.getByRole("textbox", {
+    name: "Give the page a name:",
+  });
+  await userEvent.type(nameTextbox, "test");
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  expect(saveButton).toBeDisabled();
+  const urlTextbox = screen.getByRole("textbox", {
+    name: "Specify the URL slug:",
+  });
+  await userEvent.type(urlTextbox, "testing");
+  await userEvent.click(saveButton);
+
+  expect(addPageSpy).toBeCalledWith("test", {
+    componentTree: [],
+    cssImports: [],
+    filepath: expect.stringContaining("test.tsx"),
+    pagesJS: { getPathValue: "testing" },
   });
   expect(screen.queryByText("Save")).toBeNull();
 });

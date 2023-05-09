@@ -1,8 +1,13 @@
-import InputModal from "./common/InputModal";
+import FormModal from "./common/FormModal";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Plus } from "../icons/plus.svg";
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+
+type AddPageForm = {
+  pageName: string;
+  url?: string;
+};
 
 /**
  * Renders a button for adding new pages to the store. When the button is
@@ -11,11 +16,22 @@ import { useCallback, useState } from "react";
 export default function AddPageButton(): JSX.Element {
   const createPage = useStudioStore((store) => store.actions.createPage);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const isPagesJSRepo = useStudioStore(
+    (store) => store.studioConfig.isPagesJSRepo
+  );
+
+  const formDescriptions: AddPageForm = useMemo(
+    () => ({
+      pageName: "Give the page a name:",
+      ...(isPagesJSRepo && { url: "Specify the URL slug:" }),
+    }),
+    [isPagesJSRepo]
+  );
 
   const handleModalSave = useCallback(
-    async (pageName: string) => {
+    async (form: AddPageForm) => {
       try {
-        await createPage(pageName);
+        await createPage(form.pageName, form.url);
         return true;
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -32,17 +48,17 @@ export default function AddPageButton(): JSX.Element {
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       return (
-        <InputModal
+        <FormModal
           isOpen={isOpen}
           title="Add Page"
-          description="Give the page a name:"
+          formDescriptions={formDescriptions}
           errorMessage={errorMessage}
           handleClose={handleClose}
           handleSave={handleModalSave}
         />
       );
     },
-    [errorMessage, handleModalSave]
+    [errorMessage, handleModalSave, formDescriptions]
   );
 
   return (
