@@ -1,73 +1,118 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import Modal from "./Modal";
 
-interface InputModalProps {
+type Form = {
+  [field: string]: string;
+};
+
+interface FormModalProps<T extends Form> {
   isOpen: boolean;
   title: string;
-  description: string;
+  formDescriptions: T;
   errorMessage: string;
   handleClose: () => void | Promise<void>;
-  handleSave: (input: string) => boolean | Promise<boolean>;
+  handleSave: (form: T) => boolean | Promise<boolean>;
 }
 
-export default function InputModal({
+export default function FormModal<T extends Form>({
   isOpen,
   title,
-  description,
+  formDescriptions,
   errorMessage,
   handleClose: customHandleClose,
   handleSave: customHandleSave,
-}: InputModalProps) {
-  const [isValidInput, setIsValidInput] = useState<boolean>(false);
-  const [inputValue, setInputValue] = useState<string>("");
+}: FormModalProps<T>) {
+  const [isValidForm, setIsValidForm] = useState<boolean>(false);
+  const [formValue, setFormValue] = useState<T>(resetForm(formDescriptions));
 
   const handleClose = useCallback(async () => {
-    setInputValue("");
-    setIsValidInput(false);
+    setFormValue((prev) => resetForm(prev));
+    setIsValidForm(true);
     await customHandleClose();
-  }, [customHandleClose, setInputValue, setIsValidInput]);
+  }, [customHandleClose]);
 
   const handleSave = useCallback(async () => {
-    if (await customHandleSave(inputValue)) {
+    if (await customHandleSave(formValue)) {
       await handleClose();
     } else {
-      setIsValidInput(false);
+      setIsValidForm(false);
     }
-  }, [inputValue, customHandleSave, handleClose]);
+  }, [formValue, customHandleSave, handleClose]);
 
-  const handleInputChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const value = e.target.value.trim();
-      setInputValue(value);
-      setIsValidInput(value.length > 0);
-    },
-    [setInputValue, setIsValidInput]
-  );
+  const updateFormField = useCallback((field: string, value: string) => {
+    setFormValue((prev) => ({ ...prev, [field]: value }));
+    setIsValidForm(true);
+  }, []);
 
   const modalBodyContent = useMemo(() => {
     return (
       <>
-        <div>{description}</div>
-        <input
-          type="text"
-          className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
-          value={inputValue}
-          onChange={handleInputChange}
-        />
+        {Object.entries(formValue).map(([field, val]) => (
+          <FormField
+            key={field}
+            field={field}
+            description={formDescriptions[field]}
+            value={val}
+            updateFormField={updateFormField}
+          />
+        ))}
       </>
     );
-  }, [description, handleInputChange, inputValue]);
+  }, [formDescriptions, formValue, updateFormField]);
 
   return (
     <Modal
       isOpen={isOpen}
       title={title}
-      errorMessage={!isValidInput && inputValue ? errorMessage : undefined}
+      errorMessage={!isValidForm ? errorMessage : undefined}
       handleClose={handleClose}
       handleConfirm={handleSave}
       body={modalBodyContent}
       confirmButtonText="Save"
-      isConfirmButtonDisabled={!isValidInput}
+      isConfirmButtonDisabled={!isValidForm || !getIsFormFilled(formValue)}
     />
+  );
+}
+
+function resetForm<T extends Form>(form: T): T {
+  const entries = Object.keys(form).map((field) => [field, ""]);
+  return Object.fromEntries(entries);
+}
+
+function getIsFormFilled(form: Form): boolean {
+  return Object.values(form).every((val) => val);
+}
+
+function FormField({
+  field,
+  description,
+  value,
+  updateFormField,
+}: {
+  field: string;
+  description: string;
+  value: string;
+  updateFormField: (field: string, value: string) => void;
+}): JSX.Element {
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value.trim();
+      updateFormField(field, value);
+    },
+    [field, updateFormField]
+  );
+  const inputId = `${field}-input`;
+
+  return (
+    <>
+      <label htmlFor={inputId}>{description}</label>
+      <input
+        id={inputId}
+        type="text"
+        className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
+        value={value}
+        onChange={handleChange}
+      />
+    </>
   );
 }

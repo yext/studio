@@ -1,8 +1,8 @@
 import { ReactElement, useCallback, useState } from "react";
 import Modal from "./Modal";
-import InputModal from "./InputModal";
+import FormModal from "./InputModal";
 
-type ModalType = typeof Modal | typeof InputModal;
+type ModalType = typeof Modal | typeof FormModal;
 export type renderModalFunction = (
   isOpen: boolean,
   handleClose: () => void | Promise<void>
