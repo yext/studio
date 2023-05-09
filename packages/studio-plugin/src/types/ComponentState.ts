@@ -20,7 +20,7 @@ export enum ComponentStateKind {
   Fragment = "fragment", // when the component is a React.Fragment,
   BuiltIn = "builtIn", // for built in elements like div and img
   Repeater = "repeater", // for a list repeater (map function)
-  Error = "error",
+  Error = "error", // when the component file could not be parsed
 }
 
 export type StandardComponentState = {
