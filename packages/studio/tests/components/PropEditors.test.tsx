@@ -16,6 +16,7 @@ import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import useActiveComponent from "../../src/hooks/useActiveComponent";
+import { ErrorFileMetadata } from "@yext/studio-plugin/lib/types/ErrorFileMetadata";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -119,7 +120,7 @@ describe("ComponentStateKind.Module", () => {
 
 function testStandardOrModuleComponentState(
   state: StandardOrModuleComponentState,
-  metadata: FileMetadata
+  metadata: Exclude<FileMetadata, ErrorFileMetadata>
 ) {
   const componentKindLabel =
     state.kind === ComponentStateKind.Standard ? "component" : "module";
