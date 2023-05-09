@@ -1,4 +1,4 @@
-import { TemplateConfig, TemplateProps } from "@yext/pages";
+import { GetPath, TemplateConfig, TemplateProps } from "@yext/pages";
 import { AceComponent } from "@yext/sample-component";
 import Banner from "../components/Banner";
 import Button from "../components/Button";
@@ -11,8 +11,11 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     filter: {},
     localization: { locales: ["en"], primary: false },
-    fields: ["services", "address.city"],
+    fields: ["services", "address"],
   },
+};
+export const getPath: GetPath<TemplateProps> = ({ document }) => {
+  return document.slug;
 };
 
 export default function UniversalPage({ document }: TemplateProps) {
