@@ -17,7 +17,6 @@ import { Project } from "ts-morph";
 import typescript from "typescript";
 import NpmLookup from "./parsers/helpers/NpmLookup";
 import { RequiredStudioConfig } from "./parsers/getStudioConfig";
-import prettyPrintError from "./errors/prettyPrintError";
 import { v4 } from "uuid";
 
 export function createTsMorphProject() {
