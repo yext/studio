@@ -104,12 +104,15 @@ export default class PageFile {
     });
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();
+    const pagesJsState = this.pagesJsStateParser.getPagesJsState();
 
     return {
       componentTree,
       cssImports,
       filepath,
-      entityFiles: this.entityFiles,
+      ...(pagesJsState && {
+        pagesJS: pagesJsState,
+      }),
     };
   };
 
