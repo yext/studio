@@ -26,7 +26,7 @@ const mockGetPathToModuleResponse = path.join(
 const mockGetPathToModule = jest
   .fn()
   .mockReturnValue(mockGetPathToModuleResponse);
-jest.mock("../src/utils/NpmLookup", () => {
+jest.mock("../src/parsers/helpers/NpmLookup", () => {
   return jest.fn().mockImplementation(() => {
     return { getRootPath: mockGetPathToModule };
   });
@@ -196,7 +196,7 @@ it("throws an error when the page imports components from unexpected folders", (
   expect(prettyPrintError).toHaveBeenCalledTimes(2);
   expect(prettyPrintError).toHaveBeenCalledWith(
     expect.stringMatching(/^Failed to get PageState/),
-    expect.stringMatching(/^Could not get FileMetadata for/)
+    expect.stringMatching(/^Error: Could not get FileMetadata for/)
   );
 });
 

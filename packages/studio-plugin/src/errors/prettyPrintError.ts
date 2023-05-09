@@ -1,7 +1,12 @@
-export default async function prettyPrintError(header: string, reason: string) {
-  const colors = (await import("colors")).default;
+import colors from "colors";
+
+export default function prettyPrintError(header: string, stack?: string) {
   console.error(colors.bgRed(header));
-  console.group();
-  console.error(colors.red(reason));
-  console.groupEnd();
+  if (stack) {
+    console.group();
+    const stackMessage =
+      stack.length >= 1200 ? stack.slice(0, 1200).trim() : stack;
+    console.error(colors.red(stackMessage));
+    console.groupEnd();
+  }
 }

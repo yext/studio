@@ -10,6 +10,11 @@
       "import": "./lib/index.js",
       "require": "./lib/index.js"
     },
+    "./src/createStudioPlugin": {
+      "types": "./lib/createStudioPlugin.d.ts",
+      "import": "./lib/createStudioPlugin.js",
+      "require": "./lib/createStudioPlugin.js"
+    },
     "./virtual-module": {
       "types": "./virtual-module.d.ts"
     }
@@ -24,6 +29,7 @@
     "typecheck-jest": "npx tsc -p tsconfig.jest.json"
   },
   "dependencies": {
+    "@babel/parser": "^7.21.8",
     "@yext/pages": "^1.0.0-beta.14",
     "colors": "^1.4.0",
     "prettier": "^2.8.1",

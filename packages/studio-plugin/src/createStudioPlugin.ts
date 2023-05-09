@@ -12,6 +12,10 @@ import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
 import HmrManager from "./HmrManager";
+import getLocalDataMapping from "./parsers/getLocalDataMapping";
+import openBrowser from "react-dev-utils/openBrowser";
+import { readdirSync, existsSync, lstatSync } from "fs";
+import path from "path";
 
 /**
  * Handles server-client communication.
@@ -22,8 +26,6 @@ import HmrManager from "./HmrManager";
 export default async function createStudioPlugin(
   args: ConfigEnv
 ): Promise<Plugin> {
-  const getLocalDataMapping = (await import("./parsers/getLocalDataMapping"))
-    .default;
   const pathToUserProjectRoot = process.cwd();
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
   const gitWrapper = new GitWrapper(simpleGit());
@@ -53,13 +55,6 @@ export default async function createStudioPlugin(
       studioConfig.isPagesJSRepo
     )
   );
-
-  // We have to use a dynamic import here - if we use a regular import,
-  // Vite will import deps like react-dev-utils in the browser.
-  // This causes an error to be thrown regarding `process` not being defined.
-  const { default: openBrowser } = await import("react-dev-utils/openBrowser");
-  const { readdirSync, existsSync, lstatSync } = await import("fs");
-  const path = await import("path");
 
   return {
     name: "yext-studio-vite-plugin",
