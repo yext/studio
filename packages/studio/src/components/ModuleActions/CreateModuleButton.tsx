@@ -1,4 +1,4 @@
-import FormModal from "../common/InputModal";
+import FormModal from "../common/FormModal";
 import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";

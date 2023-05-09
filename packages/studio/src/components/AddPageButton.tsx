@@ -1,4 +1,4 @@
-import FormModal from "./common/InputModal";
+import FormModal from "./common/FormModal";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Plus } from "../icons/plus.svg";

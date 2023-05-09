@@ -1,6 +1,6 @@
 import { ReactElement, useCallback, useState } from "react";
 import Modal from "./Modal";
-import FormModal from "./InputModal";
+import FormModal from "./FormModal";
 
 type ModalType = typeof Modal | typeof FormModal;
 export type renderModalFunction = (
