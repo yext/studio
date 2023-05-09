@@ -16,7 +16,7 @@ export default class UpdateActivePageAction {
     this.getPageSlice().setModuleUUIDBeingEdited(undefined);
     const activePageState = this.getPageSlice().getActivePageState();
     // Any file is fine so pick the first one.
-    const anyAcceptedEntityFile = activePageState?.entityFiles?.[0];
+    const anyAcceptedEntityFile = activePageState?.pagesJS?.entityFiles?.[0];
     const localDataFolder = this.getStudioConfigSlice().paths.localData;
     await this.getPageSlice().setActiveEntityFile(
       localDataFolder,

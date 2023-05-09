@@ -1,6 +1,7 @@
 import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import {
+  PAGESJS_TEMPLATE_PROPS_TYPE,
   PAGES_PACKAGE_NAME,
   TEMPLATE_STRING_EXPRESSION_REGEX,
 } from "../constants";
@@ -15,7 +16,6 @@ import { ComponentStateHelpers } from "../utils";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
-const STREAM_PAGE_PROPS_TYPE = "TemplateProps";
 
 /**
  * StreamConfigWriter is a class for housing data
@@ -150,14 +150,14 @@ export default class StreamConfigWriter {
   addStreamImport(): void {
     this.studioSourceFileWriter.addFileImport({
       source: PAGES_PACKAGE_NAME,
-      namedImports: [STREAM_CONFIG_VARIABLE_TYPE, STREAM_PAGE_PROPS_TYPE],
+      namedImports: [STREAM_CONFIG_VARIABLE_TYPE, PAGESJS_TEMPLATE_PROPS_TYPE],
     });
   }
 
   addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
     this.studioSourceFileWriter.updateFunctionParameter(
       componentFunction,
-      STREAM_PAGE_PROPS_TYPE,
+      PAGESJS_TEMPLATE_PROPS_TYPE,
       ["document"]
     );
   }
