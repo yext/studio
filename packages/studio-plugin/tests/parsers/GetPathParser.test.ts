@@ -46,16 +46,6 @@ describe("parseGetPathValue", () => {
       expect(parser.parseGetPathValue()).toBeUndefined();
     });
 
-    it("returns undefined if no getPath function is found", () => {
-      const parser = createParser('const path = () => "index.html";');
-      expect(parser.parseGetPathValue()).toBeUndefined();
-    });
-
-    it("returns undefined if getPath variable is not a function", () => {
-      const parser = createParser('const getPath = "index.html";');
-      expect(parser.parseGetPathValue()).toBeUndefined();
-    });
-
     it("returns undefined if there is no single, top-level return statement", () => {
       const parser = createParser(
         `const getPath = ({ document }) => {
@@ -67,6 +57,22 @@ describe("parseGetPathValue", () => {
         };`
       );
       expect(parser.parseGetPathValue()).toBeUndefined();
+    });
+  });
+
+  describe("error cases", () => {
+    it("throws an error if no getPath variable is found", () => {
+      const parser = createParser('const path = () => "index.html";');
+      expect(() => parser.parseGetPathValue()).toThrowError(
+        "Error parsing getPath value: no getPath function found."
+      );
+    });
+
+    it("throws an error if getPath variable is not a function", () => {
+      const parser = createParser('const getPath = "index.html";');
+      expect(() => parser.parseGetPathValue()).toThrowError(
+        "Error parsing getPath value: no getPath function found."
+      );
     });
   });
 });

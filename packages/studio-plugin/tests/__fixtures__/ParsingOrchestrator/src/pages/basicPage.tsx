@@ -1,5 +1,7 @@
 import Card from "../components/Card";
 
+export const getPath = () => "index.html";
+
 export default function IndexPage() {
   return (
     <div>

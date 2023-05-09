@@ -133,7 +133,7 @@ describe("aggregates data as expected", () => {
     });
   });
 
-  describe("localDataMapping", () => {
+  describe("PagesJS state", () => {
     it("aggregates pageNameToPageState as expected when receives a localDataMapping", async () => {
       const localDataMapping = await getLocalDataMapping(userPaths.localData);
       const orchestrator = createParsingOrchestrator({
@@ -144,9 +144,15 @@ describe("aggregates data as expected", () => {
       expect(studioData.pageNameToPageState).toEqual({
         basicPage: {
           ...basicPageState,
-          pagesJS: { entityFiles: ["basicpage-stream.json"] },
+          pagesJS: {
+            entityFiles: ["basicpage-stream.json"],
+            getPathValue: "index.html",
+          },
         },
-        pageWithModules: pageWithModulesState,
+        pageWithModules: {
+          ...pageWithModulesState,
+          pagesJS: { getPathValue: "modules.html" },
+        },
       });
     });
   });

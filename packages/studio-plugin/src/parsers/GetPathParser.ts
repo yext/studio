@@ -27,12 +27,15 @@ export default class GetPathParser {
 
   /**
    * If a getPath function is defined and a single, top-level, string literal
-   * is returned from it, returns that string literal.
+   * is returned from it, returns that string literal. If a getPath function is
+   * not defined, an error is thrown.
    */
   getReturnStringLiteral(): StringLiteral | undefined {
     const getPathFunction = this.findGetPathFunction();
     if (!getPathFunction) {
-      return;
+      throw new Error(
+        "Error parsing getPath value: no getPath function found."
+      );
     }
     if (getPathFunction.isKind(SyntaxKind.FunctionDeclaration)) {
       const block = getPathFunction.getFirstChildByKind(SyntaxKind.Block);
