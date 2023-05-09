@@ -12,6 +12,8 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
 import { PluginComponentData } from "../ParsingOrchestrator";
+import GetPathWriter from "../writers/GetPathWriter";
+import PagesJsStateParser from "../parsers/PagesJsStateParser";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import tryUsingResult from "../errors/tryUsingResult";
 
@@ -29,6 +31,8 @@ interface UpdatePageFileOptions {
  */
 export default class PageFile {
   private studioSourceFileParser: StudioSourceFileParser;
+  private pagesJsStateParser: PagesJsStateParser;
+  private getPathWriter: GetPathWriter;
   private streamConfigWriter: StreamConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
@@ -39,8 +43,9 @@ export default class PageFile {
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
+    isPagesJSRepo: boolean,
     filepathToPluginNames: Record<string, PluginComponentData> = {},
-    private entityFiles?: string[]
+    entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     const pageComponentName = path.basename(
@@ -50,6 +55,15 @@ export default class PageFile {
     const studioSourceFileWriter = new StudioSourceFileWriter(
       filepath,
       project
+    );
+    this.pagesJsStateParser = new PagesJsStateParser(
+      this.studioSourceFileParser,
+      isPagesJSRepo,
+      entityFiles
+    );
+    this.getPathWriter = new GetPathWriter(
+      studioSourceFileWriter,
+      this.studioSourceFileParser
     );
     this.streamConfigWriter = new StreamConfigWriter(
       studioSourceFileWriter,
@@ -114,6 +128,10 @@ export default class PageFile {
     const onFileUpdate = (
       pageComponent: FunctionDeclaration | ArrowFunction
     ) => {
+      const getPathValue = updatedPageState.pagesJS?.getPathValue;
+      if (getPathValue) {
+        this.getPathWriter.updateGetPath(getPathValue);
+      }
       if (options.updateStreamConfig) {
         const hasStreamConfig = this.streamConfigWriter.updateStreamConfig(
           updatedPageState.componentTree

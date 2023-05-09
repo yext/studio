@@ -1,10 +1,16 @@
-import InputModal from "../common/InputModal";
+import FormModal from "../common/FormModal";
 import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";
 import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useState } from "react";
 import { ComponentStateKind } from "@yext/studio-plugin";
+
+type CreateModuleForm = { modulePath: string };
+
+const formDescriptions: CreateModuleForm = {
+  modulePath: "Give the module a name:",
+};
 
 /**
  * Renders a button for creating a module.
@@ -17,9 +23,9 @@ export default function CreateModuleButton(): JSX.Element | null {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const handleModalSave = useCallback(
-    (modulePath: string) => {
+    (form: CreateModuleForm) => {
       try {
-        createModule(modulePath);
+        createModule(form.modulePath);
         return true;
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -36,10 +42,10 @@ export default function CreateModuleButton(): JSX.Element | null {
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       return (
-        <InputModal
+        <FormModal
           isOpen={isOpen}
           title="Create Module"
-          description="Give the module a name:"
+          formDescriptions={formDescriptions}
           errorMessage={errorMessage}
           handleClose={handleClose}
           handleSave={handleModalSave}

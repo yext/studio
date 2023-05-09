@@ -123,7 +123,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         throw new Error(`Error setting active entity file: no active page.`);
       }
 
-      const acceptedEntityFiles = activePageState.entityFiles;
+      const acceptedEntityFiles = activePageState.pagesJS?.entityFiles;
       if (!acceptedEntityFiles?.includes(activeEntityFile)) {
         throw new Error(
           `"${activeEntityFile}" is not an accepted entity file for this page.`

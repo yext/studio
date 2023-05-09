@@ -136,12 +136,15 @@ describe("aggregates data as expected", () => {
   describe("localDataMapping", () => {
     it("aggregates pageNameToPageState as expected when receives a localDataMapping", async () => {
       const localDataMapping = await getLocalDataMapping(userPaths.localData);
-      const orchestrator = createParsingOrchestrator({ localDataMapping });
+      const orchestrator = createParsingOrchestrator({
+        localDataMapping,
+        isPagesJS: true,
+      });
       const studioData = orchestrator.getStudioData();
       expect(studioData.pageNameToPageState).toEqual({
         basicPage: {
           ...basicPageState,
-          entityFiles: ["basicpage-stream.json"],
+          pagesJS: { entityFiles: ["basicpage-stream.json"] },
         },
         pageWithModules: pageWithModulesState,
       });
@@ -261,15 +264,16 @@ function createParsingOrchestrator(opts?: {
   localDataMapping?: Record<string, string[]>;
   plugins?: Required<PluginConfig>[];
   paths?: UserPaths;
+  isPagesJS?: boolean;
 }) {
-  const { localDataMapping, plugins, paths } = opts ?? {};
+  const { localDataMapping, plugins, paths, isPagesJS } = opts ?? {};
   const tsMorphProject: Project = createTsMorphProject();
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     {
       paths: paths ?? userPaths,
       plugins: plugins ?? [],
-      isPagesJSRepo: false,
+      isPagesJSRepo: isPagesJS ?? false,
     },
     localDataMapping
   );
