@@ -8,7 +8,6 @@ module.exports = {
     ".eslintrc.cjs",
     "**/coverage",
     "*.d.ts",
-    "apps/test-site/src/pages/ErrorPage.tsx",
   ],
   parserOptions: {
     project: ["tsconfig.json"],
