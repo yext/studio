@@ -26,24 +26,12 @@ export default function ActivePagePanel(): JSX.Element {
       {pageNames.map((pageName) => (
         <PageItem pageName={pageName} key={pageName} />
       ))}
-      {Object.keys(errorPages).map((pageName) => {
-        const anchorId = `ErrorPageState-${pageName}`;
-        return (
-          <ListItem key={pageName} additionalClassNames="text-red-300">
-            <div className="flex items-center" id={anchorId}>
-              <Tooltip
-                anchorId={anchorId}
-                content={errorPages[pageName].message}
-                className="max-w-md text-xs"
-              />
-              <Check className="invisible" />
-              <button disabled={true} className="ml-2">
-                {pageName}
-              </button>
-            </div>
-          </ListItem>
-        );
-      })}
+      {Object.keys(errorPages).map((pageName) => (
+        <ErrorPageItem
+          pageName={pageName}
+          errorMessage={errorPages[pageName].message}
+        />
+      ))}
     </ul>
   );
 }
@@ -77,6 +65,27 @@ function PageItem({ pageName }: { pageName: string }) {
         </button>
       </div>
       <RemovePageButton pageName={pageName} />
+    </ListItem>
+  );
+}
+
+function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
+  const { pageName, errorMessage } = props;
+  const anchorId = `ErrorPageState-${pageName}`;
+
+  return (
+    <ListItem key={pageName} additionalClassNames="text-red-300">
+      <div className="flex items-center" id={anchorId}>
+        <Tooltip
+          anchorId={anchorId}
+          content={errorMessage}
+          className="max-w-md text-xs"
+        />
+        <Check className="invisible" />
+        <button disabled={true} className="ml-2">
+          {pageName}
+        </button>
+      </div>
     </ListItem>
   );
 }
