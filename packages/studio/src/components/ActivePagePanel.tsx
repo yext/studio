@@ -82,9 +82,9 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
           className="max-w-md text-xs"
         />
         <Check className="invisible" />
-        <button disabled={true} className="ml-2">
+        <div className="ml-2">
           {pageName}
-        </button>
+        </div>
       </div>
     </ListItem>
   );
