@@ -73,12 +73,10 @@ export default class ComponentTreeParser {
     if (component.isKind(SyntaxKind.JsxExpression)) {
       const { selfClosingElement, listExpression } =
         StaticParsingHelpers.parseJsxExpression(component);
-      const fullText = component.getFullText();
       const parsedRepeaterElement = this.parseRepeaterElement(
         defaultImports,
         selfClosingElement,
         listExpression,
-        fullText
       );
       return {
         ...commonComponentState,
@@ -111,8 +109,7 @@ export default class ComponentTreeParser {
     defaultImports: Record<string, string>,
     repeatedComponent: JsxSelfClosingElement,
     listExpression: string,
-    fullText: string
-  ): Omit<RepeaterState, "uuid" | "parentUUID"> | ErrorComponentState {
+  ): Omit<RepeaterState, "uuid" | "parentUUID"> {
     const componentName =
       StaticParsingHelpers.parseJsxElementName(repeatedComponent);
     const parsedRepeatedComponent = this.parseElement(
@@ -124,13 +121,6 @@ export default class ComponentTreeParser {
       throw new Error(
         "Error parsing map expression: repetition of built-in components is not supported."
       );
-    }
-    if (parsedRepeatedComponent.kind === ComponentStateKind.Error) {
-      return {
-        ...parsedRepeatedComponent,
-        componentName,
-        fullText
-      };
     }
     return {
       kind: ComponentStateKind.Repeater,

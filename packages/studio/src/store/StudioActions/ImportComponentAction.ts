@@ -27,6 +27,9 @@ export default class ImportComponentAction {
 
     const componentState =
       ComponentStateHelpers.extractStandardOrModuleComponentState(c);
+    if (componentState.kind === ComponentStateKind.Error) {
+      return;
+    }
     await this.importStandardOrModuleComponentState(componentState);
   };
 

@@ -5,6 +5,7 @@ import {
   PropValueKind,
   PropMetadata,
   PropValueType,
+  ErrorComponentState,
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
@@ -13,7 +14,7 @@ import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import PropEditor from "./PropEditor";
 
 export default function PropEditors(props: {
-  activeComponentState: StandardOrModuleComponentState;
+  activeComponentState: StandardOrModuleComponentState | ErrorComponentState;
   propShape: PropShape;
   getPropValueKind: (metadata: PropMetadata) => PropValueKind;
   shouldRenderProp?: (propMetadata: PropMetadata) => boolean;

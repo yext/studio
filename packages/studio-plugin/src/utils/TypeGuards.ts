@@ -127,7 +127,7 @@ export default class TypeGuards {
   }
 
   static isStandardOrModuleComponentState(
-    componentState: ComponentState
+    componentState: ComponentState | RepeaterState
   ): componentState is StandardOrModuleComponentState {
     return (
       componentState.kind === ComponentStateKind.Module ||

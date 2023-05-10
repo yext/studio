@@ -1,5 +1,6 @@
 import {
   EditableComponentState,
+  ErrorComponentState,
   StandardOrModuleComponentState,
 } from "../types";
 import TypeGuards from "./TypeGuards";
@@ -15,7 +16,7 @@ export default class ComponentStateHelpers {
    */
   static extractStandardOrModuleComponentState(
     c: EditableComponentState
-  ): StandardOrModuleComponentState {
+  ): StandardOrModuleComponentState | ErrorComponentState {
     return TypeGuards.isStandardOrModuleComponentState(c)
       ? c
       : {

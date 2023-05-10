@@ -59,11 +59,15 @@ export type RepeaterState = {
   kind: ComponentStateKind.Repeater;
   /** An expression representing the list of items to map over. */
   listExpression: string;
-  /** The state for the component being repeated in the map function. */
+  /**
+   * The state for the component being repeated in the map function.
+   * TypeScript has issues with the spread operator if StandardOrModuleComponentState
+   * and ErrorComponentState are combined into a union.
+   **/
   repeatedComponent: Omit<
     StandardOrModuleComponentState,
     "uuid" | "parentUUID"
-  >;
+  > | Omit<ErrorComponentState, "uuid" | "parentUUID">;
   /** A unique UUID for this specific component instance. */
   uuid: string;
   /** The UUID of the parent component in the tree, if one exists. */
@@ -92,15 +96,10 @@ export type BuiltInState = {
 export type ErrorComponentState = {
   kind: ComponentStateKind.Error;
   componentName: string;
+  props: PropValues;
   uuid: string;
   metadataUUID: string;
   parentUUID?: string;
   fullText: string;
   message: string;
-  /**
-   * ErrorComponentStates do not support props since we're unable to
-   * get the underlying type even if props are specified.
-   **/
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  props: {};
 };

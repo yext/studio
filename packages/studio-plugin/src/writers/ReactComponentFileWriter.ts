@@ -10,11 +10,14 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
+  ErrorComponentState,
   ModuleMetadata,
   PropShape,
   PropValueKind,
   PropValues,
   PropValueType,
+  RepeaterState,
+  StandardOrModuleComponentState,
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
@@ -237,15 +240,18 @@ export default class ReactComponentFileWriter {
     const pluginNameToComponentNames: Record<string, string[]> = {};
 
     componentTree
-      .map((c) =>
-        TypeGuards.isRepeaterState(c)
-          ? {
-              ...c.repeatedComponent,
-              uuid: c.uuid,
-              parentUUID: c.parentUUID,
-            }
-          : c
-      )
+      .map((c) => {
+        if (!TypeGuards.isRepeaterState(c)) {
+          return c;
+        }
+
+        const { repeatedComponent, uuid, parentUUID } = c;
+        return {
+          ...repeatedComponent,
+          uuid,
+          parentUUID,
+        }
+      })
       .filter(TypeGuards.isStandardOrModuleComponentState)
       .forEach((node) => {
         const metadata = this.getFileMetadataByUUID(node.metadataUUID);
