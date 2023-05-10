@@ -4,7 +4,8 @@ module.exports = {
   ignorePatterns: [
     "**/lib",
     "**/build",
-    "packages/studio-plugin/tests/__fixtures__/**/*.(js|tsx)",
+    "packages/studio-plugin/tests/__fixtures__/**/*.tsx",
+    "packages/studio-plugin/tests/__fixtures__/StudioConfigs/malformed/studio.config.js",
     ".eslintrc.cjs",
     "**/coverage",
     "*.d.ts",
