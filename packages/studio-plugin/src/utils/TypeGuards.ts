@@ -29,6 +29,7 @@ import {
   StreamsDataExpression,
   TemplateStringExpression,
 } from "../types/Expression";
+import { StudioError } from "../errors/StudioError";
 
 type PrimitivePropValueType =
   | PropValueType.number
@@ -184,6 +185,15 @@ export default class TypeGuards {
       (metadata && "acceptsChildren" in metadata && metadata.acceptsChildren) ||
       state?.kind === ComponentStateKind.Fragment ||
       state?.kind === ComponentStateKind.BuiltIn
+    );
+  }
+
+  static isStudioError(err: unknown): err is StudioError<unknown> {
+    const expectedProperties = ["kind", "message"];
+    return (
+      !!err &&
+      typeof err === "object" &&
+      expectedProperties.every((prop) => prop in err)
     );
   }
 }

@@ -1,3 +1,5 @@
+import { IOErrorKind } from "../../src/errors/FileIOError";
+import { ParsingErrorKind } from "../../src/errors/ParsingError";
 import getStudioConfig from "../../src/parsers/getStudioConfig";
 import path from "path";
 
@@ -17,7 +19,7 @@ it("returns default config when studio config file is not found", async () => {
 });
 
 it("returns user studio config merge with default config for unspecified fields", async () => {
-  const projectRoot = path.resolve(__dirname, "../__fixtures__");
+  const projectRoot = path.resolve(__dirname, "../__fixtures__/StudioConfigs");
   const studioConfig = await getStudioConfig(projectRoot);
   expect(studioConfig).toEqual({
     isPagesJSRepo: false,
@@ -33,7 +35,10 @@ it("returns user studio config merge with default config for unspecified fields"
 });
 
 it("returns user studio config merge with multiple plugin import methods", async () => {
-  const projectRoot = path.resolve(__dirname, "../__fixtures__/PluginConfig");
+  const projectRoot = path.resolve(
+    __dirname,
+    "../__fixtures__/StudioConfigs/plugins"
+  );
   const studioConfig = await getStudioConfig(projectRoot);
   expect(studioConfig).toEqual({
     isPagesJSRepo: false,
@@ -54,5 +59,43 @@ it("returns user studio config merge with multiple plugin import methods", async
         components: ["src/components/BevComponent.tsx"],
       },
     ],
+  });
+});
+
+it("throws FileIOErorr when user's studio config fails to import", async () => {
+  const projectRoot = path.resolve(
+    __dirname,
+    "../__fixtures__/StudioConfigs/malformed"
+  );
+
+  let thrownError;
+  try {
+    await getStudioConfig(projectRoot);
+  } catch (err) {
+    thrownError = err;
+  }
+
+  expect(thrownError).toEqual({
+    kind: IOErrorKind.FailedToImportFile,
+    message: `Failed to import module at ${projectRoot}/studio.config.js`,
+  });
+});
+
+it("throws ParsingError when user's studio config is not a default export", async () => {
+  const projectRoot = path.resolve(
+    __dirname,
+    "../__fixtures__/StudioConfigs/malformed/missing-default"
+  );
+
+  let thrownError;
+  try {
+    await getStudioConfig(projectRoot);
+  } catch (err) {
+    thrownError = err;
+  }
+
+  expect(thrownError).toEqual({
+    kind: ParsingErrorKind.InvalidStudioConfig,
+    message: "Studio Config must be a default export",
   });
 });

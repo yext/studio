@@ -12,7 +12,7 @@ import {
   UserPaths,
 } from "../src/types";
 import { Project } from "ts-morph";
-import sampleComponentPluginConfig from "./__fixtures__/PluginConfig/SampleComponent";
+import sampleComponentPluginConfig from "./__fixtures__/StudioConfigs/plugins/SampleComponent";
 import fs from "fs";
 import getLocalDataMapping from "../src/parsers/getLocalDataMapping";
 import prettyPrintError from "../src/errors/prettyPrintError";
@@ -21,7 +21,7 @@ jest.mock("../src/errors/prettyPrintError");
 
 const mockGetPathToModuleResponse = path.join(
   process.cwd(),
-  "tests/__fixtures__/PluginConfig"
+  "tests/__fixtures__/StudioConfigs/plugins"
 );
 const mockGetPathToModule = jest
   .fn()
