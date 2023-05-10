@@ -12,9 +12,7 @@ it("displays ErrorPageStates in the ActivePagePanel with correct tooltips", () =
   });
   render(<ActivePagePanel />);
   expect(screen.getByText("ErrorPage")).toBeTruthy();
-  expect(
-    screen.getByText(
-      "This message is the reason the page could not be rendered"
-    )
-  ).toBeTruthy();
+  expect(screen.getByRole("tooltip")).toHaveTextContent(
+    "This message is the reason the page could not be rendered"
+  );
 });

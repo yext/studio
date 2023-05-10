@@ -28,6 +28,7 @@ export default function ActivePagePanel(): JSX.Element {
       ))}
       {Object.keys(errorPages).map((pageName) => (
         <ErrorPageItem
+          key={pageName}
           pageName={pageName}
           errorMessage={errorPages[pageName].message}
         />
@@ -74,17 +75,15 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
   const anchorId = `ErrorPageState-${pageName}`;
 
   return (
-    <ListItem key={pageName} additionalClassNames="text-red-300">
+    <ListItem additionalClassNames="text-red-300">
       <div className="flex items-center" id={anchorId}>
         <Tooltip
           anchorId={anchorId}
           content={errorMessage}
-          className="max-w-md text-xs"
+          className="max-w-lg text-xs"
         />
         <Check className="invisible" />
-        <div className="ml-2">
-          {pageName}
-        </div>
+        <div className="ml-2">{pageName}</div>
       </div>
     </ListItem>
   );
