@@ -215,7 +215,11 @@ export default class ParsingOrchestrator {
 
     const plugin = this.filepathToPluginComponentData[absPath];
     if (absPath.startsWith(this.paths.components) || plugin?.moduleName) {
-      const componentFile = new ComponentFile(absPath, this.project, plugin?.moduleName);
+      const componentFile = new ComponentFile(
+        absPath,
+        this.project,
+        plugin?.moduleName
+      );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
         return {
@@ -245,8 +249,7 @@ export default class ParsingOrchestrator {
     metadataUUID: string
   ): FileMetadata | undefined => {
     return Object.values(this.filepathToFileMetadata).find(
-      (fileMetadata) =>
-        fileMetadata.metadataUUID === metadataUUID
+      (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
     );
   };
 

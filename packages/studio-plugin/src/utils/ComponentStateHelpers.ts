@@ -28,7 +28,9 @@ export default class ComponentStateHelpers {
         };
   }
 
-  static extractRepeatedState(c: ComponentState): Exclude<ComponentState, RepeaterState> {
+  static extractRepeatedState(
+    c: ComponentState
+  ): Exclude<ComponentState, RepeaterState> {
     return TypeGuards.isRepeaterState(c)
       ? {
           ...c.repeatedComponent,

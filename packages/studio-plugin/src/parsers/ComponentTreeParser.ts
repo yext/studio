@@ -76,7 +76,7 @@ export default class ComponentTreeParser {
       const parsedRepeaterElement = this.parseRepeaterElement(
         defaultImports,
         selfClosingElement,
-        listExpression,
+        listExpression
       );
       return {
         ...commonComponentState,
@@ -108,7 +108,7 @@ export default class ComponentTreeParser {
   private parseRepeaterElement(
     defaultImports: Record<string, string>,
     repeatedComponent: JsxSelfClosingElement,
-    listExpression: string,
+    listExpression: string
   ): Omit<RepeaterState, "uuid" | "parentUUID"> {
     const componentName =
       StaticParsingHelpers.parseJsxElementName(repeatedComponent);
@@ -165,16 +165,17 @@ export default class ComponentTreeParser {
 
     const fileMetadata = this.getFileMetadata(filepath);
     if (fileMetadata.kind === FileMetadataKind.Error) {
-      const props: Record<string, TypelessPropVal> = {}
-      attributes.forEach(attribute => {
+      const props: Record<string, TypelessPropVal> = {};
+      attributes.forEach((attribute) => {
         if (attribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
           throw new Error(
             `Error parsing \`${attribute.getText()}\`:` +
               " JsxSpreadAttribute is not currently supported."
           );
         }
-        props[StaticParsingHelpers.parseJsxAttributeName(attribute)] = StaticParsingHelpers.parseJsxAttribute(attribute)
-      })
+        props[StaticParsingHelpers.parseJsxAttributeName(attribute)] =
+          StaticParsingHelpers.parseJsxAttribute(attribute);
+      });
 
       return {
         kind: ComponentStateKind.Error,

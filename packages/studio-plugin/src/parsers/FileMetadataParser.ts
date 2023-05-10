@@ -5,7 +5,7 @@ import PropShapeParser from "./PropShapeParser";
 import { v4 } from "uuid";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import ComponentParamParser from "./ComponentParamParser";
-import { ValidFileMetadata } from '../types/FileMetadata';
+import { ValidFileMetadata } from "../types/FileMetadata";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for
@@ -32,10 +32,7 @@ export default class FileMetadataParser {
    */
   parse(
     onProp?: (propName: string) => boolean
-  ): Pick<
-    ValidFileMetadata,
-    "initialProps" | "propShape" | "metadataUUID"
-  > {
+  ): Pick<ValidFileMetadata, "initialProps" | "propShape" | "metadataUUID"> {
     const propShape = this.parsePropShape(onProp);
     const initialProps = this.parseInitialProps(propShape);
 

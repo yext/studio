@@ -19,12 +19,15 @@ import {
   TypeAliasDeclaration,
   JsxAttribute,
 } from "ts-morph";
-import { PropValueKind, PropValues, TypelessPropVal } from "../../types/PropValues";
+import {
+  PropValueKind,
+  PropValues,
+  TypelessPropVal,
+} from "../../types/PropValues";
 import { PropShape, SpecialReactProps } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
-import { PropVal, PropValueType } from '../../types';
 
 export type ParsedObjectLiteral = {
   [key: string]:
@@ -212,8 +215,8 @@ export default class StaticParsingHelpers {
       }
       const propValue = {
         ...this.parseJsxAttribute(jsxAttribute),
-        valueType: propType
-      }
+        valueType: propType,
+      };
       if (!TypeGuards.isValidPropValue(propValue)) {
         throw new Error(
           "Invalid prop value: " + JSON.stringify(propValue, null, 2)
@@ -230,8 +233,7 @@ export default class StaticParsingHelpers {
       ?.getText();
     if (!propName) {
       throw new Error(
-        "Could not parse jsx attribute prop name: " +
-          jsxAttribute.getFullText()
+        "Could not parse jsx attribute prop name: " + jsxAttribute.getFullText()
       );
     }
     return propName;
@@ -242,10 +244,12 @@ export default class StaticParsingHelpers {
       jsxAttribute.getInitializerOrThrow()
     );
     if (isExpression) {
-      if (typeof value !== 'string') {
-        throw new Error(`Expected a string for expression prop ${jsxAttribute.getText()}.`)
+      if (typeof value !== "string") {
+        throw new Error(
+          `Expected a string for expression prop ${jsxAttribute.getText()}.`
+        );
       }
-      return { value, kind: PropValueKind.Expression}
+      return { value, kind: PropValueKind.Expression };
     }
     return {
       value,

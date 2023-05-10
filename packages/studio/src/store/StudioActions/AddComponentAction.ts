@@ -1,4 +1,8 @@
-import { ComponentState, TypeGuards, ValidFileMetadata } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  TypeGuards,
+  ValidFileMetadata,
+} from "@yext/studio-plugin";
 import StudioActions from "../StudioActions";
 
 export default class AddComponentAction {

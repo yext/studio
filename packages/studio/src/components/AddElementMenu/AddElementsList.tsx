@@ -1,7 +1,4 @@
-import {
-  FileMetadataKind,
-  ValidFileMetadata
-} from "@yext/studio-plugin";
+import { FileMetadataKind, ValidFileMetadata } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";

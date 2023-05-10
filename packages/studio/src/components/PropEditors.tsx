@@ -5,7 +5,6 @@ import {
   PropValueKind,
   PropMetadata,
   PropValueType,
-  ErrorComponentState,
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";

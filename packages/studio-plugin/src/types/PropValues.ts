@@ -1,11 +1,13 @@
-import { ParsedObjectLiteral } from '../parsers/helpers/StaticParsingHelpers';
+import { ParsedObjectLiteral } from "../parsers/helpers/StaticParsingHelpers";
 
 export type PropValues = {
   [propName: string]: PropVal;
 };
 
 export type PropVal = LiteralProp | ExpressionProp;
-export type TypelessPropVal = Omit<LiteralProp<ParsedObjectLiteral>, 'valueType'> | Omit<ExpressionProp, 'valueType'>;
+export type TypelessPropVal =
+  | Omit<LiteralProp<ParsedObjectLiteral>, "valueType">
+  | Omit<ExpressionProp, "valueType">;
 
 export type LiteralProp<T = PropValues> = {
   kind: PropValueKind.Literal;

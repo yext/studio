@@ -25,8 +25,12 @@ export default function PropertiesPanel(): JSX.Element | null {
   if (!activeComponentWithProps) {
     return null;
   }
-  const { activeComponentMetadata, activeComponentState, extractedComponentState, propShape } =
-    activeComponentWithProps;
+  const {
+    activeComponentMetadata,
+    activeComponentState,
+    extractedComponentState,
+    propShape,
+  } = activeComponentWithProps;
 
   return (
     <div>

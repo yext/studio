@@ -10,14 +10,11 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
-  ErrorComponentState,
   ModuleMetadata,
   PropShape,
   PropValueKind,
   PropValues,
   PropValueType,
-  RepeaterState,
-  StandardOrModuleComponentState,
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
@@ -250,7 +247,7 @@ export default class ReactComponentFileWriter {
           ...repeatedComponent,
           uuid,
           parentUUID,
-        }
+        };
       })
       .filter(TypeGuards.isStandardOrModuleComponentState)
       .forEach((node) => {

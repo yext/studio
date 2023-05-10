@@ -1,4 +1,4 @@
-import { ExpressionProp, LiteralProp, PropValueKind, PropValues, TypelessPropVal } from "./PropValues";
+import { PropValues, TypelessPropVal } from "./PropValues";
 
 export type ComponentState =
   | EditableComponentState
@@ -64,10 +64,9 @@ export type RepeaterState = {
    * TypeScript has issues with the spread operator if StandardOrModuleComponentState
    * and ErrorComponentState are combined into a union.
    **/
-  repeatedComponent: Omit<
-    StandardOrModuleComponentState,
-    "uuid" | "parentUUID"
-  > | Omit<ErrorComponentState, "uuid" | "parentUUID">;
+  repeatedComponent:
+    | Omit<StandardOrModuleComponentState, "uuid" | "parentUUID">
+    | Omit<ErrorComponentState, "uuid" | "parentUUID">;
   /** A unique UUID for this specific component instance. */
   uuid: string;
   /** The UUID of the parent component in the tree, if one exists. */

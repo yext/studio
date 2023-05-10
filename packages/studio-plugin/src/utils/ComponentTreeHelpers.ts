@@ -1,4 +1,10 @@
-import { ComponentState, ExpressionProp, PropValueKind } from "../types";
+import {
+  ComponentState,
+  ComponentStateKind,
+  ExpressionProp,
+  PropValueKind,
+  TypelessPropVal,
+} from "../types";
 import ComponentStateHelpers from "./ComponentStateHelpers";
 import TypeGuards from "./TypeGuards";
 
@@ -82,20 +88,23 @@ export default class ComponentTreeHelpers {
    * as `document` or `props`.
    */
   static usesExpressionSource(componentTree: ComponentState[], source: string) {
-    const expressions: string[] = componentTree
-      .filter(TypeGuards.isEditableComponentState)
-      .flatMap((c) => {
-        const props =
-          ComponentStateHelpers.extractStandardOrModuleComponentState(c).props;
-        const expressionPropValues = Object.values(props)
-          .filter(
-            (p): p is ExpressionProp => p.kind === PropValueKind.Expression
-          )
-          .map((p) => p.value);
-        return TypeGuards.isRepeaterState(c)
-          ? [...expressionPropValues, c.listExpression]
-          : expressionPropValues;
-      });
+    const expressions: string[] = componentTree.flatMap((c) => {
+      if (c.kind === ComponentStateKind.Error) {
+        return this.getExpressionUsagesFromProps(c.props);
+      }
+
+      if (!TypeGuards.isEditableComponentState(c)) {
+        return [];
+      }
+
+      const props =
+        ComponentStateHelpers.extractStandardOrModuleComponentState(c).props;
+      const expressionPropValues = this.getExpressionUsagesFromProps(props);
+
+      return TypeGuards.isRepeaterState(c)
+        ? [...expressionPropValues, c.listExpression]
+        : expressionPropValues;
+    });
 
     // This is used to create the regex: /\${source\..*}/
     const regexStr = "\\${" + source + "\\..*}";
@@ -109,6 +118,14 @@ export default class ComponentTreeHelpers {
         e.includes("${" + source + "}")
       );
     });
+  }
+
+  private static getExpressionUsagesFromProps(
+    props: Record<string, TypelessPropVal>
+  ) {
+    return Object.values(props)
+      .filter((p): p is ExpressionProp => p.kind === PropValueKind.Expression)
+      .map((p) => p.value);
   }
 
   /**
