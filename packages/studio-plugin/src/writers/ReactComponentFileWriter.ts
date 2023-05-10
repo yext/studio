@@ -11,6 +11,8 @@ import {
   ComponentState,
   ComponentStateKind,
   FileMetadata,
+  FileMetadataKind,
+  ModuleMetadata,
   PropShape,
   PropValueKind,
   PropValues,
@@ -165,14 +167,14 @@ export default class ReactComponentFileWriter {
    */
   updateFile({
     componentTree,
-    fileMetadata,
+    moduleMetadata,
     cssImports,
     onFileUpdate,
     defaultImports,
     propArgs,
   }: {
     componentTree: ComponentState[];
-    fileMetadata?: Exclude<FileMetadata, ErrorFileMetadata>;
+    moduleMetadata?: ModuleMetadata;
     cssImports?: string[];
     onFileUpdate?: (
       functionComponent: FunctionDeclaration | ArrowFunction
@@ -202,8 +204,8 @@ export default class ReactComponentFileWriter {
       : defaultExport;
 
     onFileUpdate?.(functionComponent);
-    if (fileMetadata) {
-      const { initialProps, propShape } = fileMetadata;
+    if (moduleMetadata) {
+      const { initialProps, propShape } = moduleMetadata;
       if (initialProps) {
         this.updateInitialProps(initialProps);
       }

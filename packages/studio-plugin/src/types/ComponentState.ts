@@ -97,4 +97,10 @@ export type ErrorComponentState = {
   parentUUID?: string;
   fullText: string;
   message: string;
+  /**
+   * ErrorComponentStates do not support props since we're unable to
+   * get the underlying type even if props are specified.
+   **/
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  props: {};
 };

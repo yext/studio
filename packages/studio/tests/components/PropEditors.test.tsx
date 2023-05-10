@@ -11,12 +11,12 @@ import {
   PropValueType,
   StandardOrModuleComponentState,
   TypeGuards,
+  ValidFileMetadata,
 } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import useActiveComponent from "../../src/hooks/useActiveComponent";
-import { ErrorFileMetadata } from "@yext/studio-plugin/lib/types/ErrorFileMetadata";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -120,7 +120,7 @@ describe("ComponentStateKind.Module", () => {
 
 function testStandardOrModuleComponentState(
   state: StandardOrModuleComponentState,
-  metadata: Exclude<FileMetadata, ErrorFileMetadata>
+  metadata: ValidFileMetadata
 ) {
   const componentKindLabel =
     state.kind === ComponentStateKind.Standard ? "component" : "module";
@@ -173,6 +173,7 @@ function testStandardOrModuleComponentState(
       const { activeComponentMetadata, activeComponentState } =
         useActiveComponent();
       if (
+        activeComponentMetadata?.kind === FileMetadataKind.Error ||
         !activeComponentMetadata?.propShape ||
         !activeComponentState ||
         !TypeGuards.isStandardOrModuleComponentState(activeComponentState)

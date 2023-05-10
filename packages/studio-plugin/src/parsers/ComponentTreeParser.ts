@@ -177,6 +177,7 @@ export default class ComponentTreeParser {
         uuid: v4(),
         fullText: component.getFullText(),
         message: fileMetadata.message,
+        props: {}
       };
     }
     const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;

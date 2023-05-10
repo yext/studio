@@ -1,11 +1,11 @@
-import { TypeGuards } from "@yext/studio-plugin";
+import { FileMetadataKind, TypeGuards } from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
 export default function useActiveComponentWithProps() {
   const { activeComponentMetadata, activeComponentState } =
     useActiveComponent();
 
-  if (!activeComponentMetadata?.propShape) {
+  if (activeComponentMetadata?.kind === FileMetadataKind.Error || !activeComponentMetadata?.propShape) {
     return null;
   }
 

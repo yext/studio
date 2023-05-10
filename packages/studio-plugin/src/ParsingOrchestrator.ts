@@ -212,8 +212,10 @@ export default class ParsingOrchestrator {
     if (this.filepathToFileMetadata[absPath]) {
       return this.filepathToFileMetadata[absPath];
     }
-    if (absPath.startsWith(this.paths.components)) {
-      const componentFile = new ComponentFile(absPath, this.project);
+
+    const plugin = this.filepathToPluginComponentData[absPath];
+    if (absPath.startsWith(this.paths.components) || plugin?.moduleName) {
+      const componentFile = new ComponentFile(absPath, this.project, plugin?.moduleName);
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
         return {
@@ -226,29 +228,12 @@ export default class ParsingOrchestrator {
       }
       return result.value;
     }
+
     if (absPath.startsWith(this.paths.modules)) {
       const moduleFile = this.getModuleFile(absPath);
       return moduleFile.getModuleMetadata();
     }
-    const plugin = this.filepathToPluginComponentData[absPath];
-    if (plugin?.moduleName) {
-      const componentFile = new ComponentFile(
-        absPath,
-        this.project,
-        plugin.moduleName
-      );
-      const result = componentFile.getComponentMetadata();
-      if (result.isErr) {
-        return {
-          kind: FileMetadataKind.Error,
-          intendedKind: FileMetadataKind.Component,
-          metadataUUID: v4(),
-          message: result.error.message,
-          filepath: absPath,
-        };
-      }
-      return result.value;
-    }
+
     const { modules, components } = this.paths;
     throw new Error(
       `Could not get FileMetadata for ${absPath}, file does not ` +
@@ -260,9 +245,8 @@ export default class ParsingOrchestrator {
     metadataUUID: string
   ): FileMetadata | undefined => {
     return Object.values(this.filepathToFileMetadata).find(
-      (fileMetadata): fileMetadata is FileMetadata =>
-        fileMetadata.metadataUUID === metadataUUID &&
-        fileMetadata.kind !== FileMetadataKind.Error
+      (fileMetadata) =>
+        fileMetadata.metadataUUID === metadataUUID
     );
   };
 

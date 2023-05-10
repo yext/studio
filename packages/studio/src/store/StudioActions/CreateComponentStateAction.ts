@@ -1,22 +1,21 @@
 import {
   ComponentStateKind,
-  FileMetadata,
   FileMetadataKind,
   PropValueKind,
   PropValueType,
   RecordProp,
   StandardOrModuleComponentState,
+  ValidFileMetadata,
 } from "@yext/studio-plugin";
 import path from "path-browserify";
 import { v4 } from "uuid";
 import StudioConfigSlice from "../models/slices/StudioConfigSlice";
-import { ErrorFileMetadata } from "@yext/studio-plugin/lib/types/ErrorFileMetadata";
 
 export default class CreateComponentStateAction {
   constructor(private getStudioConfig: () => StudioConfigSlice) {}
 
   createComponentState = (
-    metadata: Exclude<FileMetadata, ErrorFileMetadata>
+    metadata: ValidFileMetadata
   ): StandardOrModuleComponentState => {
     const componentName = path.basename(metadata.filepath, ".tsx");
     const componentState: StandardOrModuleComponentState = {

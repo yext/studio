@@ -12,3 +12,5 @@ export type FileMetadata =
   | ComponentMetadata
   | ModuleMetadata
   | ErrorFileMetadata;
+
+export type ValidFileMetadata = Exclude<FileMetadata, ErrorFileMetadata>;
