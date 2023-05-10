@@ -15,7 +15,7 @@ import {
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
-import { FileMetadataKind } from "../types";
+import { FileMetadataKind, TypelessPropVal } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
@@ -165,13 +165,24 @@ export default class ComponentTreeParser {
 
     const fileMetadata = this.getFileMetadata(filepath);
     if (fileMetadata.kind === FileMetadataKind.Error) {
+      const props: Record<string, TypelessPropVal> = {}
+      attributes.forEach(attribute => {
+        if (attribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
+          throw new Error(
+            `Error parsing \`${attribute.getText()}\`:` +
+              " JsxSpreadAttribute is not currently supported."
+          );
+        }
+        props[StaticParsingHelpers.parseJsxAttributeName(attribute)] = StaticParsingHelpers.parseJsxAttribute(attribute)
+      })
+
       return {
         kind: ComponentStateKind.Error,
         metadataUUID: fileMetadata.metadataUUID,
         uuid: v4(),
         fullText: component.getFullText(),
         message: fileMetadata.message,
-        props: {}
+        props,
       };
     }
     const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;

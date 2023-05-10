@@ -1,4 +1,4 @@
-import { FileMetadataKind, TypeGuards } from "@yext/studio-plugin";
+import { ComponentStateHelpers, ComponentStateKind, FileMetadataKind, TypeGuards } from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
 export default function useActiveComponentWithProps() {
@@ -16,9 +16,18 @@ export default function useActiveComponentWithProps() {
     return null;
   }
 
+  const extractedComponentState = ComponentStateHelpers.extractStandardOrModuleComponentState(
+    activeComponentState
+  );
+
+  if (extractedComponentState.kind === ComponentStateKind.Error) {
+    return null
+  }
+
   return {
     activeComponentMetadata,
     propShape: activeComponentMetadata.propShape,
     activeComponentState,
+    extractedComponentState,
   };
 }

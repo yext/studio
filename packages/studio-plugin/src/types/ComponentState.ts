@@ -1,4 +1,4 @@
-import { PropValues } from "./PropValues";
+import { ExpressionProp, LiteralProp, PropValueKind, PropValues, TypelessPropVal } from "./PropValues";
 
 export type ComponentState =
   | EditableComponentState
@@ -96,7 +96,12 @@ export type BuiltInState = {
 export type ErrorComponentState = {
   kind: ComponentStateKind.Error;
   componentName: string;
-  props: PropValues;
+  /**
+   * ErrorComponentStates do not support props since we're unable to
+   * get the underlying type even if props are specified.
+   */
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  props: Record<string, TypelessPropVal>;
   uuid: string;
   metadataUUID: string;
   parentUUID?: string;

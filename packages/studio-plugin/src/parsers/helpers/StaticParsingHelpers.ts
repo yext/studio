@@ -17,12 +17,14 @@ import {
   PropertyAssignment,
   JsxExpression,
   TypeAliasDeclaration,
+  JsxAttribute,
 } from "ts-morph";
-import { PropValueKind, PropValues } from "../../types/PropValues";
+import { PropValueKind, PropValues, TypelessPropVal } from "../../types/PropValues";
 import { PropShape, SpecialReactProps } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
+import { PropVal, PropValueType } from '../../types';
 
 export type ParsedObjectLiteral = {
   [key: string]:
@@ -194,15 +196,7 @@ export default class StaticParsingHelpers {
             " JsxSpreadAttribute is not currently supported."
         );
       }
-      const propName = jsxAttribute
-        .getFirstDescendantByKind(SyntaxKind.Identifier)
-        ?.getText();
-      if (!propName) {
-        throw new Error(
-          "Could not parse jsx attribute prop name: " +
-            jsxAttribute.getFullText()
-        );
-      }
+      const propName = this.parseJsxAttributeName(jsxAttribute);
       if (Object.values<string>(SpecialReactProps).includes(propName)) {
         return;
       }
@@ -216,14 +210,10 @@ export default class StaticParsingHelpers {
           )}`
         );
       }
-      const { value, isExpression } = StaticParsingHelpers.parseInitializer(
-        jsxAttribute.getInitializerOrThrow()
-      );
       const propValue = {
-        valueType: propType,
-        value,
-        kind: isExpression ? PropValueKind.Expression : PropValueKind.Literal,
-      };
+        ...this.parseJsxAttribute(jsxAttribute),
+        valueType: propType
+      }
       if (!TypeGuards.isValidPropValue(propValue)) {
         throw new Error(
           "Invalid prop value: " + JSON.stringify(propValue, null, 2)
@@ -232,6 +222,35 @@ export default class StaticParsingHelpers {
       propValues[propName] = propValue;
     });
     return propValues;
+  }
+
+  static parseJsxAttributeName(jsxAttribute: JsxAttribute) {
+    const propName = jsxAttribute
+      .getFirstDescendantByKind(SyntaxKind.Identifier)
+      ?.getText();
+    if (!propName) {
+      throw new Error(
+        "Could not parse jsx attribute prop name: " +
+          jsxAttribute.getFullText()
+      );
+    }
+    return propName;
+  }
+
+  static parseJsxAttribute(jsxAttribute: JsxAttribute): TypelessPropVal {
+    const { value, isExpression } = StaticParsingHelpers.parseInitializer(
+      jsxAttribute.getInitializerOrThrow()
+    );
+    if (isExpression) {
+      if (typeof value !== 'string') {
+        throw new Error(`Expected a string for expression prop ${jsxAttribute.getText()}.`)
+      }
+      return { value, kind: PropValueKind.Expression}
+    }
+    return {
+      value,
+      kind: PropValueKind.Literal,
+    };
   }
 
   static parseJsxElementName(

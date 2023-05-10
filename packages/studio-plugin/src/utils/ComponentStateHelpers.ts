@@ -26,3 +26,17 @@ export default class ComponentStateHelpers {
         };
   }
 }
+
+// if (TypeGuards.isStandardOrModuleComponentState(c)) {
+//   return c
+// }
+// const { repeatedComponent } = c;
+// if (repeatedComponent.kind === ComponentStateKind.Error) {
+//   return null;
+// }
+// return {
+//   ...repeatedComponent,
+//   uuid: c.uuid,
+//   parentUUID: c.parentUUID,
+// };
+// }

@@ -14,7 +14,7 @@ import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import PropEditor from "./PropEditor";
 
 export default function PropEditors(props: {
-  activeComponentState: StandardOrModuleComponentState | ErrorComponentState;
+  activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
   getPropValueKind: (metadata: PropMetadata) => PropValueKind;
   shouldRenderProp?: (propMetadata: PropMetadata) => boolean;

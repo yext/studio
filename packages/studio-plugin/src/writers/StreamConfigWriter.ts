@@ -8,7 +8,7 @@ import {
 import TypeGuards from "../utils/TypeGuards";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import { PropValueKind } from "../types/PropValues";
-import { ComponentState } from "../types/ComponentState";
+import { ComponentState, ComponentStateKind } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
@@ -39,6 +39,9 @@ export default class StreamConfigWriter {
   ): Set<StreamsDataExpression> {
     const streamDataExpressions = new Set<StreamsDataExpression>();
     componentTree.forEach((component) => {
+      if (component.kind === ComponentStateKind.Error) {
+        
+      }
       if (!TypeGuards.isEditableComponentState(component)) {
         return;
       }
