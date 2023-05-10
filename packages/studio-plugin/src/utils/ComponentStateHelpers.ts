@@ -1,6 +1,8 @@
 import {
+  ComponentState,
   EditableComponentState,
   ErrorComponentState,
+  RepeaterState,
   StandardOrModuleComponentState,
 } from "../types";
 import TypeGuards from "./TypeGuards";
@@ -24,6 +26,16 @@ export default class ComponentStateHelpers {
           uuid: c.uuid,
           parentUUID: c.parentUUID,
         };
+  }
+
+  static extractRepeatedState(c: ComponentState): Exclude<ComponentState, RepeaterState> {
+    return TypeGuards.isRepeaterState(c)
+      ? {
+          ...c.repeatedComponent,
+          uuid: c.uuid,
+          parentUUID: c.parentUUID,
+        }
+      : c;
   }
 }
 
