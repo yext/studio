@@ -10,8 +10,6 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
-  FileMetadata,
-  FileMetadataKind,
   ModuleMetadata,
   PropShape,
   PropValueKind,
@@ -23,7 +21,6 @@ import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { transformPropValuesToRaw } from "../utils";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import { TypeGuards } from "../utils";
-import { ErrorFileMetadata } from "../types/ErrorFileMetadata";
 
 export type GetFileMetadataByUUID =
   ParsingOrchestrator["getFileMetadataByUUID"];

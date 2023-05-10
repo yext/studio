@@ -73,10 +73,12 @@ export default class ComponentTreeParser {
     if (component.isKind(SyntaxKind.JsxExpression)) {
       const { selfClosingElement, listExpression } =
         StaticParsingHelpers.parseJsxExpression(component);
+      const fullText = component.getFullText();
       const parsedRepeaterElement = this.parseRepeaterElement(
         defaultImports,
         selfClosingElement,
-        listExpression
+        listExpression,
+        fullText
       );
       return {
         ...commonComponentState,
@@ -108,7 +110,8 @@ export default class ComponentTreeParser {
   private parseRepeaterElement(
     defaultImports: Record<string, string>,
     repeatedComponent: JsxSelfClosingElement,
-    listExpression: string
+    listExpression: string,
+    fullText: string
   ): Omit<RepeaterState, "uuid" | "parentUUID"> | ErrorComponentState {
     const componentName =
       StaticParsingHelpers.parseJsxElementName(repeatedComponent);
@@ -126,6 +129,7 @@ export default class ComponentTreeParser {
       return {
         ...parsedRepeatedComponent,
         componentName,
+        fullText
       };
     }
     return {
