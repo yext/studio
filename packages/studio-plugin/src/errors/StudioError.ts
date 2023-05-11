@@ -1,7 +1,7 @@
 /**
- * A class that represents the different kinds of errors that can occur within Studio.
+ * An abstract class that represents the different kinds of errors that can occur within Studio.
  */
-export class StudioError<T> {
+export abstract class StudioError<T> {
   kind: T;
   message: string;
   stack?: string;
