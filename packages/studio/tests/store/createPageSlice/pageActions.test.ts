@@ -2,19 +2,22 @@ import useStudioStore from "../../../src/store/useStudioStore";
 import path from "path";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
+import mockStore from "../../__utils__/mockStore";
 
 const pages: PagesRecord = {
   universal: {
     componentTree: [],
     cssImports: [],
     filepath: "mock-filepath",
+    pagesJS: { getPathValue: "index.html" },
   },
 };
 
 beforeEach(() => {
-  mockPageSliceStates({
-    pages,
-    activePageName: "universal",
+  const originalStudioConfig = useStudioStore.getState().studioConfig;
+  mockStore({
+    pages: { pages, activePageName: "universal" },
+    studioConfig: { ...originalStudioConfig, isPagesJSRepo: true },
   });
 });
 
@@ -69,5 +72,35 @@ describe("removePage", () => {
       pagesToUpdate: new Set(),
       pagesToRemove: new Set(["universal"]),
     });
+  });
+});
+
+describe("updateGetPathValue", () => {
+  it("updates getPathValue and pendingChanges", () => {
+    useStudioStore.getState().pages.updateGetPathValue("universal", "index");
+    const pageState = useStudioStore.getState().pages.pages["universal"];
+    expect(pageState.pagesJS?.getPathValue).toEqual("index");
+    const pendingChanges = useStudioStore.getState().pages.pendingChanges;
+    expect(pendingChanges).toEqual({
+      pagesToUpdate: new Set(["universal"]),
+      pagesToRemove: new Set(),
+    });
+  });
+
+  it("throws an error if original getPathValue is undefined", () => {
+    mockPageSliceStates({
+      pages: {
+        ...pages,
+        universal: {
+          ...pages["universal"],
+          pagesJS: undefined,
+        },
+      },
+    });
+    expect(() =>
+      useStudioStore.getState().pages.updateGetPathValue("universal", "index")
+    ).toThrowError(
+      "Error updating getPath value: unable to parse original getPath value."
+    );
   });
 });

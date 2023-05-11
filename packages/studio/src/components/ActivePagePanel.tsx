@@ -6,6 +6,7 @@ import { ReactComponent as Check } from "../icons/check.svg";
 import classNames from "classnames";
 import { useCallback, useMemo } from "react";
 import RemovePageButton from "./RemovePageButton";
+import PageSettingsButton from "./PageSettingsButton";
 
 /**
  * Renders the left panel of Studio, which lists all pages, indicates which
@@ -14,13 +15,19 @@ import RemovePageButton from "./RemovePageButton";
  * modules in the component tree of the active page.
  */
 export default function ActivePagePanel(): JSX.Element {
-  const [pages, updateActivePage, activePageName, moduleUUIDBeingEdited] =
-    useStudioStore((store) => [
-      store.pages.pages,
-      store.actions.updateActivePage,
-      store.pages.activePageName,
-      store.pages.moduleUUIDBeingEdited,
-    ]);
+  const [
+    pages,
+    updateActivePage,
+    activePageName,
+    moduleUUIDBeingEdited,
+    isPagesJSRepo,
+  ] = useStudioStore((store) => [
+    store.pages.pages,
+    store.actions.updateActivePage,
+    store.pages.activePageName,
+    store.pages.moduleUUIDBeingEdited,
+    store.studioConfig.isPagesJSRepo,
+  ]);
 
   const pageNames = useMemo(() => {
     const names = Object.keys(pages);
@@ -50,11 +57,14 @@ export default function ActivePagePanel(): JSX.Element {
               {pageName}
             </button>
           </div>
-          <RemovePageButton pageName={pageName} />
+          <div className="flex items-center space-x-3">
+            {isPagesJSRepo && <PageSettingsButton pageName={pageName} />}
+            <RemovePageButton pageName={pageName} />
+          </div>
         </li>
       );
     },
-    [activePageName, moduleUUIDBeingEdited, updateActivePage]
+    [activePageName, moduleUUIDBeingEdited, updateActivePage, isPagesJSRepo]
   );
 
   return (

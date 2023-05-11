@@ -9,7 +9,8 @@ interface FormModalProps<T extends Form> {
   isOpen: boolean;
   title: string;
   formDescriptions: T;
-  errorMessage: string;
+  initialFormValue?: T;
+  errorMessage?: string;
   handleClose: () => void | Promise<void>;
   handleSave: (form: T) => boolean | Promise<boolean>;
 }
@@ -18,31 +19,43 @@ export default function FormModal<T extends Form>({
   isOpen,
   title,
   formDescriptions,
+  initialFormValue,
   errorMessage,
   handleClose: customHandleClose,
   handleSave: customHandleSave,
 }: FormModalProps<T>) {
+  const baseForm = useMemo(() => {
+    return initialFormValue ?? resetForm(formDescriptions);
+  }, [initialFormValue, formDescriptions]);
+
   const [isValidForm, setIsValidForm] = useState<boolean>(false);
-  const [formValue, setFormValue] = useState<T>(resetForm(formDescriptions));
+  const [formValue, setFormValue] = useState<T>(baseForm);
 
   const handleClose = useCallback(async () => {
-    setFormValue((prev) => resetForm(prev));
+    setFormValue(baseForm);
     setIsValidForm(true);
     await customHandleClose();
-  }, [customHandleClose]);
+  }, [customHandleClose, baseForm]);
 
   const handleSave = useCallback(async () => {
     if (await customHandleSave(formValue)) {
       await handleClose();
+      initialFormValue && setFormValue(formValue);
     } else {
       setIsValidForm(false);
     }
-  }, [formValue, customHandleSave, handleClose]);
+  }, [formValue, customHandleSave, handleClose, initialFormValue]);
 
   const updateFormField = useCallback((field: string, value: string) => {
     setFormValue((prev) => ({ ...prev, [field]: value }));
     setIsValidForm(true);
   }, []);
+
+  const hasChanges = useMemo(
+    () =>
+      Object.entries(formValue).some(([field, val]) => val !== baseForm[field]),
+    [formValue, baseForm]
+  );
 
   const modalBodyContent = useMemo(() => {
     return (
@@ -69,7 +82,9 @@ export default function FormModal<T extends Form>({
       handleConfirm={handleSave}
       body={modalBodyContent}
       confirmButtonText="Save"
-      isConfirmButtonDisabled={!isValidForm || !getIsFormFilled(formValue)}
+      isConfirmButtonDisabled={
+        !isValidForm || !getIsFormFilled(formValue) || !hasChanges
+      }
     />
   );
 }

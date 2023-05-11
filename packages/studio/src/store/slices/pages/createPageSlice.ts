@@ -64,6 +64,25 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
+    updateGetPathValue: (pageName: string, getPathValue: string) => {
+      set((store) => {
+        const originalPagesJsState = store.pages[pageName].pagesJS;
+        const originalGetPathValue = originalPagesJsState?.getPathValue;
+        if (originalGetPathValue) {
+          if (originalGetPathValue !== getPathValue) {
+            store.pages[pageName].pagesJS = {
+              ...originalPagesJsState,
+              getPathValue,
+            };
+            store.pendingChanges.pagesToUpdate.add(pageName);
+          }
+        } else {
+          throw new Error(
+            "Error updating getPath value: unable to parse original getPath value."
+          );
+        }
+      });
+    },
   };
 
   const activePageActions = {
