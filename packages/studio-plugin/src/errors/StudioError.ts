@@ -11,17 +11,4 @@ export abstract class StudioError<T> {
     this.message = message;
     this.stack = stack;
   }
-
-  /**
-   * Type Guard to see if the provided value is a Studio Error. Note that a native Error
-   * will not pass this check since Studio Error has the 'kind' discriminator.
-   */
-  static isStudioError(err: unknown): err is StudioError<unknown> {
-    const expectedProperties = ["kind", "message"];
-    return (
-      !!err &&
-      typeof err === "object" &&
-      expectedProperties.every((prop) => prop in err)
-    );
-  }
 }

@@ -34,7 +34,7 @@ export default async function createStudioPlugin(
   try {
     studioConfig = await getStudioConfig(pathToUserProjectRoot);
   } catch (err: unknown) {
-    StudioError.isStudioError(err) &&
+    err instanceof StudioError &&
       prettyPrintError("Failed to start Studio", err.message);
     throw err;
   }
