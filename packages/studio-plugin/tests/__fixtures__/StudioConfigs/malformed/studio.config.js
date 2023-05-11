@@ -1,1 +1,1 @@
-bad bad file
+bad file
