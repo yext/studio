@@ -23,9 +23,9 @@ export default function usePreviewProps(
   return useMemo(() => {
     if (c?.kind === ComponentStateKind.Error) {
       return Object.keys(c.props).reduce((prev, curr) => {
-        prev[curr] = c.props[curr].value
-        return prev
-      }, {})
+        prev[curr] = c.props[curr].value;
+        return prev;
+      }, {});
     }
 
     if (!c || !TypeGuards.isStandardOrModuleComponentState(c)) {
@@ -34,7 +34,9 @@ export default function usePreviewProps(
 
     const fileMetadata = getFileMetadata(c.metadataUUID);
     if (!fileMetadata || fileMetadata.kind === FileMetadataKind.Error) {
-      throw new Error(`Cannot get propShape for FileMetadata of ${c.componentName}`);
+      throw new Error(
+        `Cannot get propShape for FileMetadata of ${c.componentName}`
+      );
     }
 
     return getPreviewProps(c.props, fileMetadata?.propShape ?? {}, {

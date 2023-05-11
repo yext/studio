@@ -19,7 +19,7 @@ export const initialProps: BannerData = {
 
 export default function Banner(props: BannerData) {
   return (
-    <div >
+    <div>
       <p style={{ backgroundColor: props.bgColor }}>{props.title}</p>
       <p>{`${props.bool}`}</p>
       <p>{props.num}</p>

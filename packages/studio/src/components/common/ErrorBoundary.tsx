@@ -5,8 +5,8 @@ interface State {
 }
 
 type Props = PropsWithChildren<{
-  customError?: string
-}>
+  customError?: string;
+}>;
 
 /**
  * An error boundary component that catch JavaScript errors in their child component tree,
@@ -21,10 +21,8 @@ export default class ErrorBoundary extends Component<Props, State> {
     if (!this.state?.error) {
       return this.props.children;
     }
-    const error = this.props.customError ?? this.state.error.toString()
+    const error = this.props.customError ?? this.state.error.toString();
 
-    return (
-      <div>{error}</div>
-    )
+    return <div>{error}</div>;
   }
 }

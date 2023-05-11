@@ -71,7 +71,12 @@ export default function ComponentPreview({
   }
 
   if (componentState.kind === ComponentStateKind.Error) {
-    return <ErrorComponentPreview element={element} errorComponentState={componentState} />
+    return (
+      <ErrorComponentPreview
+        element={element}
+        errorComponentState={componentState}
+      />
+    );
   }
   return element;
 }

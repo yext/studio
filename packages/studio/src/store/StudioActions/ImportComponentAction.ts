@@ -6,7 +6,6 @@ import {
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
-  ModuleState,
   StandardOrModuleComponentState,
   TypeGuards,
 } from "@yext/studio-plugin";
@@ -24,7 +23,10 @@ export default class ImportComponentAction {
   constructor(private getFileMetadataSlice: () => FileMetadataSlice) {}
 
   importComponent = async (c: ComponentState): Promise<void> => {
-    if (!TypeGuards.isEditableComponentState(c) && c.kind !== ComponentStateKind.Error) {
+    if (
+      !TypeGuards.isEditableComponentState(c) &&
+      c.kind !== ComponentStateKind.Error
+    ) {
       return;
     }
 
@@ -69,7 +71,7 @@ export default class ImportComponentAction {
     return Promise.all(
       metadata.componentTree.map((c) => this.importComponent(c))
     );
-  }
+  };
 }
 
 function getFunctionComponent(
