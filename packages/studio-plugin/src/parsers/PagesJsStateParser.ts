@@ -18,13 +18,12 @@ export default class PagesJsStateParser {
   }
 
   getPagesJsState(): PagesJsState | undefined {
-    const getPathValue =
-      this.isPagesJSRepo && this.getPathParser.parseGetPathValue();
-    if (getPathValue || this.entityFiles) {
-      return {
-        ...(this.entityFiles && { entityFiles: this.entityFiles }),
-        ...(getPathValue && { getPathValue }),
-      };
+    if (!this.isPagesJSRepo) {
+      return;
     }
+    return {
+      ...(this.entityFiles && { entityFiles: this.entityFiles }),
+      getPathValue: this.getPathParser.parseGetPathValue(),
+    };
   }
 }

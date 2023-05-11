@@ -224,6 +224,7 @@ async function mockPreviewState(componentTree: ComponentState[]) {
           filepath: "mock/file/path",
           pagesJS: {
             entityFiles: ["entityFile.json"],
+            getPathValue: undefined,
           },
         },
       },

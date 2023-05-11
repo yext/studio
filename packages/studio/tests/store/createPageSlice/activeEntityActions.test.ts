@@ -13,6 +13,7 @@ describe("active entity file actions", () => {
         filepath: "some/file/path",
         pagesJS: {
           entityFiles: ["file1.json", "entityFile.json"],
+          getPathValue: undefined,
         },
       },
     },
