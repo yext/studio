@@ -1,8 +1,9 @@
 import { Result } from "true-myth";
 import { printReceived, printExpected } from "jest-matcher-utils";
+import { StudioError } from "../../src/errors/StudioError";
 
 function toHaveErrorMessage(
-  actual: Result<unknown, { message: string }>,
+  actual: Result<unknown, StudioError<unknown>>,
   expected: string | RegExp
 ) {
   if (!actual.isErr) {

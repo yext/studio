@@ -17,7 +17,7 @@ import prettyPrintError from "./errors/prettyPrintError";
 import openBrowser from "react-dev-utils/openBrowser";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import path from "path";
-import { TypeGuards } from "./utils";
+import { StudioError } from "./errors/StudioError";
 
 /**
  * Handles server-client communication.
@@ -34,7 +34,7 @@ export default async function createStudioPlugin(
   try {
     studioConfig = await getStudioConfig(pathToUserProjectRoot);
   } catch (err: unknown) {
-    TypeGuards.isStudioError(err) &&
+    StudioError.isStudioError(err) &&
       prettyPrintError("Failed to start Studio", err.message);
     throw err;
   }

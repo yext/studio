@@ -54,19 +54,19 @@ async function importExistingConfig(filepath: string): Promise<StudioConfig> {
   try {
     importedFile = await import(/* @vite-ignore */ filepath);
   } catch (err) {
-    const importError: FileIOError = {
-      kind: IOErrorKind.FailedToImportFile,
-      message: `Failed to import module at ${filepath}`,
-    };
+    const importError = new FileIOError(
+      IOErrorKind.FailedToImportFile,
+      `Failed to import module at ${filepath}`
+    );
     throw importError;
   }
 
   const studioConfig = importedFile.default as StudioConfig;
   if (!studioConfig) {
-    const parsingError: ParsingError = {
-      kind: ParsingErrorKind.InvalidStudioConfig,
-      message: "Studio Config must be a default export",
-    };
+    const parsingError = new ParsingError(
+      ParsingErrorKind.InvalidStudioConfig,
+      "Studio Config must be a default export"
+    );
     throw parsingError;
   }
   studioConfig.plugins =

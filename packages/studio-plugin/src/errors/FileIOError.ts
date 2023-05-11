@@ -5,8 +5,6 @@ export enum IOErrorKind {
 }
 
 /**
- * An interface representing errors that occur during interactions with the Filesystem.
+ * A class representing errors that occur during interactions with the Filesystem.
  */
-export interface FileIOError extends StudioError<`${IOErrorKind}`> {
-  kind: `${IOErrorKind}`;
-}
+export class FileIOError extends StudioError<`${IOErrorKind}`> {}
