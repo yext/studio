@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 import usePreviewProps from "../hooks/usePreviewProps";
 import ComponentTreePreview from "./ComponentTreePreview";
-import Highlighter from "./Highlighter";
 import useRawSiteSettings from "../hooks/useRawSiteSettings";
 import { ComponentStateHelpers, TypeGuards } from "@yext/studio-plugin";
 import { get } from "lodash";
@@ -49,13 +48,10 @@ export default function HighlightedPreview() {
   }
 
   return (
-    <>
-      <ComponentTreePreview
-        componentTree={componentTree}
-        expressionSources={expressionSources}
-      />
-      <Highlighter />
-    </>
+    <ComponentTreePreview
+      componentTree={componentTree}
+      expressionSources={expressionSources}
+    />
   );
 }
 

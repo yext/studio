@@ -1,6 +1,7 @@
 import useImportedComponents from "../hooks/useImportedComponents";
 import useStudioStore from "../store/useStudioStore";
 import HighlightedPreview from "./HighlightedPreview";
+import Highlighter from "./Highlighter";
 
 export default function PreviewWithUseComponents() {
   const componentTree = useStudioStore((store) =>
@@ -8,5 +9,10 @@ export default function PreviewWithUseComponents() {
   );
   void useImportedComponents(componentTree);
 
-  return <HighlightedPreview />;
+  return (
+    <>
+      <HighlightedPreview />
+      <Highlighter />
+    </>
+  );
 }
