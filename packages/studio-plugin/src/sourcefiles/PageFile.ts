@@ -111,11 +111,13 @@ export default class PageFile {
         throw err;
       }
 
-      return Result.err({
-        kind: ParsingErrorKind.FailedToParsePageState,
-        stack: err.stack,
-        message: err.message,
-      });
+      return Result.err(
+        new ParsingError(
+          ParsingErrorKind.FailedToParsePageState,
+          err.message,
+          err.stack
+        )
+      );
     }
   }
 
