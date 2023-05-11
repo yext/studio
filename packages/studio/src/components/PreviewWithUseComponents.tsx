@@ -1,6 +1,6 @@
 import useImportedComponents from "../hooks/useImportedComponents";
 import useStudioStore from "../store/useStudioStore";
-import HighlightedPreview from "./HighlightedPreview";
+import PagePreview from "./PagePreview";
 import Highlighter from "./Highlighter";
 
 export default function PreviewWithUseComponents() {
@@ -11,7 +11,7 @@ export default function PreviewWithUseComponents() {
 
   return (
     <>
-      <HighlightedPreview />
+      <PagePreview />
       <Highlighter />
     </>
   );

@@ -1,6 +1,6 @@
 import { within, screen, render, renderHook } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import HighlightedPreview from "../../src/components/HighlightedPreview";
+import PagePreview from "../../src/components/PagePreview";
 import useStudioStore from "../../src/store/useStudioStore";
 import {
   nestedComponentTree,
@@ -46,7 +46,7 @@ beforeEach(() => {
 describe("renders preview", () => {
   it("renders component tree with nested Component(s)", async () => {
     await mockPreviewState(nestedComponentTree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const container1 = await screen.findByText(/Container 1/);
     const container2 = await within(container1).findByText(/Container 2/);
     const banner1 = await within(container1).findByText(/Banner 1/);
@@ -60,7 +60,7 @@ describe("renders preview", () => {
   it("renders component tree with Module component type", async () => {
     const tree = [moduleState];
     await mockPreviewState(tree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const panel = await screen.findByText(/This is Panel module/);
     const banner = await screen.findByText(/This is Banner/);
     expect(panel).toBeDefined();
@@ -70,7 +70,7 @@ describe("renders preview", () => {
   it("renders component tree with Repeater component over a module", async () => {
     const tree = [repeaterState];
     await mockPreviewState(tree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const panels = await screen.findAllByText(/This is Panel module/);
     const banners = await screen.findAllByText(/This is Banner/);
     expect(panels).toHaveLength(3);
@@ -80,7 +80,7 @@ describe("renders preview", () => {
   it("does not render Repeater if list expression is not found", async () => {
     const tree = [{ ...repeaterState, listExpression: "document.services" }];
     await mockPreviewState(tree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const panels = screen.queryByText(/This is Panel module/);
     const banners = screen.queryByText(/This is Banner/);
     expect(panels).toBeNull();
@@ -116,7 +116,7 @@ describe("renders preview", () => {
       },
     ];
     await mockPreviewState(tree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const siteSettingsExpressionProp = await screen.findByText(/mock-api-key/);
     expect(siteSettingsExpressionProp).toBeDefined();
     const documentExpressionProp = await screen.findByText(/123/);
@@ -139,7 +139,7 @@ describe("renders preview", () => {
       },
     ];
     await mockPreviewState(tree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const siteSettingsExpressionProp = await screen.findByText(/#AABBCC/);
     expect(siteSettingsExpressionProp).toBeDefined();
   });
@@ -164,7 +164,7 @@ describe("renders preview", () => {
       },
     ];
     await mockPreviewState(tree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const nestedPropUsage = await screen.findByText(/eggyweggy/);
     expect(nestedPropUsage).toBeDefined();
   });
@@ -186,7 +186,7 @@ describe("renders preview", () => {
       },
     ];
     await mockPreviewState(tree);
-    render(<HighlightedPreview />);
+    render(<PagePreview />);
     const catItemProp = await screen.findByText(/cat/);
     expect(catItemProp).toBeDefined();
     const dogItemProp = await screen.findByText(/dog/);
@@ -198,7 +198,7 @@ describe("renders preview", () => {
 
 it("clicking a component in the preview updates the activeComponentUUID", async () => {
   await mockPreviewState(nestedComponentTree);
-  render(<HighlightedPreview />);
+  render(<PagePreview />);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     undefined
   );

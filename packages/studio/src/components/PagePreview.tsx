@@ -6,7 +6,7 @@ import useRawSiteSettings from "../hooks/useRawSiteSettings";
 import { ComponentStateHelpers, TypeGuards } from "@yext/studio-plugin";
 import { get } from "lodash";
 
-export default function HighlightedPreview() {
+export default function PagePreview() {
   const [componentTree, moduleUUIDBeingEdited, getComponentState] =
     useStudioStore((store) => [
       store.actions.getComponentTree(),
