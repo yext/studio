@@ -13,9 +13,11 @@ import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
 import HmrManager from "./HmrManager";
 import getLocalDataMapping from "./parsers/getLocalDataMapping";
+import prettyPrintError from "./errors/prettyPrintError";
 import openBrowser from "react-dev-utils/openBrowser";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import path from "path";
+import { StudioError } from "./errors/StudioError";
 
 /**
  * Handles server-client communication.
@@ -27,7 +29,15 @@ export default async function createStudioPlugin(
   args: ConfigEnv
 ): Promise<Plugin> {
   const pathToUserProjectRoot = process.cwd();
-  const studioConfig = await getStudioConfig(pathToUserProjectRoot);
+
+  let studioConfig;
+  try {
+    studioConfig = await getStudioConfig(pathToUserProjectRoot);
+  } catch (err: unknown) {
+    err instanceof StudioError &&
+      prettyPrintError("Failed to start Studio", err.message);
+    throw err;
+  }
   const gitWrapper = new GitWrapper(simpleGit());
   await gitWrapper.refreshData();
 
