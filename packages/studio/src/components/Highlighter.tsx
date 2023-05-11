@@ -10,6 +10,7 @@ export default function Highlighter() {
   const activeUUID = useStudioStore((store) => store.pages.activeComponentUUID);
   const setRect = useStudioStore((store) => store.pages.setActiveComponentRect);
   const componentName = useActiveComponentName();
+  console.log(componentName)
 
   const style: CSSProperties = useMemo(() => {
     if (!rect) {
