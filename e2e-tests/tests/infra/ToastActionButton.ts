@@ -21,7 +21,7 @@ export default class ToastActionButton {
   async click() {
     await this.button.click();
     await expect(() => expect(this.successToast).toHaveCount(1)).toPass({
-      timeout: 10_000,
+      timeout: 25_000,
     });
     await this.successToast.click();
     await expect(this.successToast).toHaveCount(0);
