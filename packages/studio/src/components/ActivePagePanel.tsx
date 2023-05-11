@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { PropsWithChildren, useMemo } from "react";
 import RemovePageButton from "./RemovePageButton";
 import { Tooltip } from "react-tooltip";
+import PageSettingsButton from "./PageSettingsButton";
 
 /**
  * ActivePagePanel displays the available pages and allows the user to switch
@@ -38,12 +39,17 @@ export default function ActivePagePanel(): JSX.Element {
 }
 
 function PageItem({ pageName }: { pageName: string }) {
-  const [updateActivePage, activePageName, moduleUUIDBeingEdited] =
-    useStudioStore((store) => [
-      store.actions.updateActivePage,
-      store.pages.activePageName,
-      store.pages.moduleUUIDBeingEdited,
-    ]);
+  const [
+    updateActivePage,
+    activePageName,
+    moduleUUIDBeingEdited,
+    isPagesJSRepo,
+  ] = useStudioStore((store) => [
+    store.actions.updateActivePage,
+    store.pages.activePageName,
+    store.pages.moduleUUIDBeingEdited,
+    store.studioConfig.isPagesJSRepo,
+  ]);
   const isActivePage = !moduleUUIDBeingEdited && activePageName === pageName;
   const checkClasses = classNames({
     invisible: !isActivePage,
@@ -65,7 +71,10 @@ function PageItem({ pageName }: { pageName: string }) {
           {pageName}
         </button>
       </div>
-      <RemovePageButton pageName={pageName} />
+      <div className="flex items-center space-x-3">
+        {isPagesJSRepo && <PageSettingsButton pageName={pageName} />}
+        <RemovePageButton pageName={pageName} />
+      </div>
     </ListItem>
   );
 }

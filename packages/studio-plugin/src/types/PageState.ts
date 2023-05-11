@@ -18,7 +18,7 @@ export type PagesJsState = {
    * Return value of the getPath function if it returns a single, top-level,
    * string literal value.
    */
-  getPathValue?: string;
+  getPathValue: string | undefined;
 };
 
 export type ErrorPageState = {

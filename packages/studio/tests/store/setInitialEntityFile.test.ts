@@ -13,6 +13,7 @@ jest.mock("virtual:yext-studio", () => {
         filepath: "filepath to page",
         pagesJS: {
           entityFiles: ["entityFile.json"],
+          getPathValue: undefined,
         },
       },
     },
