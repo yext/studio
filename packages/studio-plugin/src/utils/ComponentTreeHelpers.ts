@@ -97,8 +97,7 @@ export default class ComponentTreeHelpers {
         return [];
       }
 
-      const props =
-        ComponentStateHelpers.extractStandardOrModuleComponentState(c).props;
+      const props = ComponentStateHelpers.extractRepeatedState(c).props;
       const expressionPropValues = this.getExpressionUsagesFromProps(props);
 
       return TypeGuards.isRepeaterState(c)

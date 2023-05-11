@@ -26,9 +26,7 @@ export default function DetachModuleButton(props: {
   }, [detachModuleInstance, metadata, state, isRepeater]);
 
   const moduleName =
-    ComponentStateHelpers.extractStandardOrModuleComponentState(
-      state
-    ).componentName;
+    ComponentStateHelpers.extractRepeatedState(state).componentName;
   const tooltipText = isRepeater
     ? "Unable to detach module instance since it is in a list"
     : "Detach";

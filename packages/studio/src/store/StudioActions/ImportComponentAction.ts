@@ -25,8 +25,7 @@ export default class ImportComponentAction {
       return;
     }
 
-    const componentState =
-      ComponentStateHelpers.extractStandardOrModuleComponentState(c);
+    const componentState = ComponentStateHelpers.extractRepeatedState(c);
     if (componentState.kind === ComponentStateKind.Error) {
       return;
     }

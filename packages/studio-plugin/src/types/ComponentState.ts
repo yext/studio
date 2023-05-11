@@ -74,7 +74,7 @@ export type RepeaterState = {
   metadataUUID?: never;
 };
 
-type FragmentState = {
+export type FragmentState = {
   kind: ComponentStateKind.Fragment;
   uuid: string;
   parentUUID?: string;
@@ -96,10 +96,9 @@ export type ErrorComponentState = {
   kind: ComponentStateKind.Error;
   componentName: string;
   /**
-   * ErrorComponentStates do not support props since we're unable to
+   * ErrorComponentStates do not fully support props since we're unable to
    * get the underlying type even if props are specified.
    */
-  // eslint-disable-next-line @typescript-eslint/ban-types
   props: Record<string, TypelessPropVal>;
   uuid: string;
   metadataUUID: string;

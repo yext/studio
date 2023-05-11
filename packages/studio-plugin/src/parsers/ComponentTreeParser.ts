@@ -167,12 +167,6 @@ export default class ComponentTreeParser {
     if (fileMetadata.kind === FileMetadataKind.Error) {
       const props: Record<string, TypelessPropVal> = {};
       attributes.forEach((attribute) => {
-        if (attribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
-          throw new Error(
-            `Error parsing \`${attribute.getText()}\`:` +
-              " JsxSpreadAttribute is not currently supported."
-          );
-        }
         props[StaticParsingHelpers.parseJsxAttributeName(attribute)] =
           StaticParsingHelpers.parseJsxAttribute(attribute);
       });

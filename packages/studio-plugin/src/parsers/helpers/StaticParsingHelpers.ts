@@ -227,7 +227,19 @@ export default class StaticParsingHelpers {
     return propValues;
   }
 
-  static parseJsxAttributeName(jsxAttribute: JsxAttribute) {
+  private static assertIsJsxAttribute(
+    jsxAttributeLike: JsxAttributeLike
+  ): asserts jsxAttributeLike is JsxAttribute {
+    if (jsxAttributeLike.isKind(SyntaxKind.JsxSpreadAttribute)) {
+      throw new Error(
+        `Error parsing \`${jsxAttributeLike.getText()}\`:` +
+          " JsxSpreadAttribute is not currently supported."
+      );
+    }
+  }
+
+  static parseJsxAttributeName(jsxAttribute: JsxAttributeLike) {
+    this.assertIsJsxAttribute(jsxAttribute);
     const propName = jsxAttribute
       .getFirstDescendantByKind(SyntaxKind.Identifier)
       ?.getText();
@@ -239,7 +251,8 @@ export default class StaticParsingHelpers {
     return propName;
   }
 
-  static parseJsxAttribute(jsxAttribute: JsxAttribute): TypelessPropVal {
+  static parseJsxAttribute(jsxAttribute: JsxAttributeLike): TypelessPropVal {
+    this.assertIsJsxAttribute(jsxAttribute);
     const { value, isExpression } = StaticParsingHelpers.parseInitializer(
       jsxAttribute.getInitializerOrThrow()
     );

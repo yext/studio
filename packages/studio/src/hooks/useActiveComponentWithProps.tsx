@@ -25,9 +25,7 @@ export default function useActiveComponentWithProps() {
   }
 
   const extractedComponentState =
-    ComponentStateHelpers.extractStandardOrModuleComponentState(
-      activeComponentState
-    );
+    ComponentStateHelpers.extractRepeatedState(activeComponentState);
 
   if (extractedComponentState.kind === ComponentStateKind.Error) {
     return null;
