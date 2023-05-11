@@ -74,7 +74,7 @@ export type RepeaterState = {
   metadataUUID?: never;
 };
 
-export type FragmentState = {
+type FragmentState = {
   kind: ComponentStateKind.Fragment;
   uuid: string;
   parentUUID?: string;
