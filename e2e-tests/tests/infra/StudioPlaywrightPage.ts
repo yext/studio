@@ -4,6 +4,7 @@ import ToastActionButton from "./ToastActionButton.js";
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
   readonly pagesPanel: Locator;
+  readonly componentTree: Locator;
   readonly addElementButton: Locator;
   readonly removeElementButton: Locator;
   readonly saveButton: ToastActionButton;
@@ -15,6 +16,7 @@ export default class StudioPlaywrightPage {
     });
 
     this.pagesPanel = page.locator(':text("Pages") + ul');
+    this.componentTree = page.locator(':text("Layers") + ul');
 
     this.addElementButton = page.getByRole("button", {
       name: "Open Add Element Menu",
