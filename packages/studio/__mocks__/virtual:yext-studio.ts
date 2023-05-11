@@ -4,6 +4,7 @@ import path from "path";
 const mockFilepath = path.join(__dirname, "../tests/__mocks__");
 const mockStudioData: StudioData = {
   pageNameToPageState: {},
+  pageNameToErrorPageState: {},
   UUIDToFileMetadata: {},
   studioConfig: {
     paths: {

@@ -323,6 +323,7 @@ describe("updatePageFile", () => {
         ...basicPageState,
         pagesJS: {
           entityFiles: ["mock-entity-file"],
+          getPathValue: undefined,
         },
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(

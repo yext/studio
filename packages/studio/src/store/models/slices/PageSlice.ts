@@ -54,6 +54,7 @@ interface PageSliceActions {
     pageName: string,
     componentTree: ComponentState[]
   ) => void;
+  updateGetPathValue: (pageName: string, getPathValue: string) => void;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
