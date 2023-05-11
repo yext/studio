@@ -193,12 +193,6 @@ export default class StaticParsingHelpers {
   ): PropValues {
     const propValues: PropValues = {};
     attributes.forEach((jsxAttribute: JsxAttributeLike) => {
-      if (jsxAttribute.isKind(SyntaxKind.JsxSpreadAttribute)) {
-        throw new Error(
-          `Error parsing \`${jsxAttribute.getText()}\`:` +
-            " JsxSpreadAttribute is not currently supported."
-        );
-      }
       const propName = this.parseJsxAttributeName(jsxAttribute);
       if (Object.values<string>(SpecialReactProps).includes(propName)) {
         return;
