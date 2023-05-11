@@ -20,3 +20,7 @@ export type PagesJsState = {
    */
   getPathValue?: string;
 };
+
+export type ErrorPageState = {
+  message: string;
+};
