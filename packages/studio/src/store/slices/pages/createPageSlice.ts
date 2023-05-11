@@ -69,18 +69,18 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       set((store) => {
         const originalPagesJsState = store.pages[pageName].pagesJS;
         const originalGetPathValue = originalPagesJsState?.getPathValue;
-        if (originalGetPathValue) {
-          if (originalGetPathValue !== getPathValue) {
-            store.pages[pageName].pagesJS = {
-              ...originalPagesJsState,
-              getPathValue,
-            };
-            store.pendingChanges.pagesToUpdate.add(pageName);
-          }
-        } else {
+        if (!originalGetPathValue) {
           throw new Error(
             "Error updating getPath value: unable to parse original getPath value."
           );
+        }
+
+        if (originalGetPathValue !== getPathValue) {
+          store.pages[pageName].pagesJS = {
+            ...originalPagesJsState,
+            getPathValue,
+          };
+          store.pendingChanges.pagesToUpdate.add(pageName);
         }
       });
     },

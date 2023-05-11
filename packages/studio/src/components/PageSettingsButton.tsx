@@ -4,8 +4,6 @@ import { useCallback, useMemo } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import FormModal from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
-import { v4 } from "uuid";
-import classNames from "classnames";
 
 type PageSettings = {
   url: string;
@@ -31,7 +29,6 @@ export default function PageSettingsButton({
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
   ]);
-  const tooltipAnchorID = useMemo(() => v4(), []);
 
   const initialFormValue: PageSettings = useMemo(
     () => ({ url: currGetPathValue ?? "" }),
@@ -63,18 +60,16 @@ export default function PageSettingsButton({
   );
 
   const disabled = !currGetPathValue;
-  const className = classNames({
-    "text-gray-800": !disabled,
-    "text-gray-400": disabled,
-  });
+  const tooltipAnchorID = `PageSettingsButton-${pageName}`;
 
   return (
-    <div id={tooltipAnchorID} className={className}>
+    <div id={tooltipAnchorID}>
       <ButtonWithModal
         buttonContent={<Gear />}
         renderModal={renderModal}
         ariaLabel={`Edit ${pageName} Page Settings`}
         disabled={disabled}
+        buttonClassName="text-gray-800 disabled:text-gray-400"
       />
       {disabled && (
         <Tooltip
