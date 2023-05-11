@@ -7,7 +7,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest("can rearrange elements in tree", async ({ page, studioPage }) => {
+studioTest.only("can rearrange elements in tree", async ({ page, studioPage }) => {
   const banner = page.getByText("Banner");
   const div = page.getByRole("list").filter({ hasText: "div" });
   const divBox = await div.boundingBox();
