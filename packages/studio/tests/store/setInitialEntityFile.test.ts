@@ -16,6 +16,7 @@ jest.mock("virtual:yext-studio", () => {
         },
       },
     },
+    pageNameToErrorPageState: {},
     UUIDToFileMetadata: {},
     studioConfig: {
       paths: {

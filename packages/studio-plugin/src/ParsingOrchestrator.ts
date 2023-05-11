@@ -6,6 +6,8 @@ import {
   SiteSettingsValues,
   SiteSettings,
   PluginConfig,
+  ErrorPageState,
+  PageState,
   FileMetadataKind,
 } from "./types";
 import fs from "fs";
@@ -153,22 +155,28 @@ export default class ParsingOrchestrator {
 
   private calculateStudioData(): StudioData {
     const siteSettings = this.getSiteSettings();
-    const pageNameToPageState = Object.keys(this.pageNameToPageFile).reduce(
+    const pageRecords = Object.keys(this.pageNameToPageFile).reduce(
       (prev, curr) => {
         const pageStateResult = this.pageNameToPageFile[curr].getPageState();
 
-        // TODO(SLAP-2686): Confirm behavior for failure case with Product.
         if (pageStateResult.isOk) {
-          prev[curr] = pageStateResult.value;
+          prev.pageNameToPageState[curr] = pageStateResult.value;
+        } else {
+          prev.pageNameToErrorPageState[curr] = {
+            message: pageStateResult.error.message,
+          };
         }
 
         return prev;
       },
-      {}
+      {
+        pageNameToPageState: {} as Record<string, PageState>,
+        pageNameToErrorPageState: {} as Record<string, ErrorPageState>,
+      }
     );
 
     return {
-      pageNameToPageState,
+      ...pageRecords,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
       studioConfig: this.studioConfig,
