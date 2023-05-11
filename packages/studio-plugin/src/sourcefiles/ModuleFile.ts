@@ -84,7 +84,6 @@ export default class ModuleFile {
       };
     });
     const propArgs = ModuleFile.calcPropArgs(moduleMetadata.componentTree);
-    console.log("propargs", propArgs);
     this.reactComponentFileWriter.updateFile({
       componentTree: moduleMetadata.componentTree,
       moduleMetadata,
