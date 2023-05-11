@@ -167,8 +167,8 @@ export default class ComponentTreeParser {
     if (fileMetadata.kind === FileMetadataKind.Error) {
       const props: Record<string, TypelessPropVal> = {};
       attributes.forEach((attribute) => {
-        props[StaticParsingHelpers.parseJsxAttributeName(attribute)] =
-          StaticParsingHelpers.parseJsxAttribute(attribute);
+        const propName = StaticParsingHelpers.parseJsxAttributeName(attribute);
+        props[propName] = StaticParsingHelpers.parseJsxAttribute(attribute);
       });
 
       return {
