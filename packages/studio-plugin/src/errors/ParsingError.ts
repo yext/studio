@@ -1,14 +1,13 @@
+import { StudioError } from "./StudioError";
+
 export enum ParsingErrorKind {
   FailedToParsePageState = "FailedToParsePageState",
+  InvalidStudioConfig = "InvalidStudioConfig",
   FailedToParseComponentMetadata = "FailedToParseComponentMetadata",
 }
 
 /**
- * An interface representing errors that occur during the parsing of Components,
+ * A class representing errors that occur during the parsing of Components,
  * their Prop interfaces, or Component Trees.
  */
-export interface ParsingError {
-  kind: `${ParsingErrorKind}`;
-  message: string;
-  stack?: string;
-}
+export class ParsingError extends StudioError<`${ParsingErrorKind}`> {}

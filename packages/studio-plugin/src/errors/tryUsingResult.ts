@@ -16,10 +16,6 @@ export default function tryUsingResult<T>(
 
     prettyPrintError(message, err.stack);
 
-    return Result.err({
-      kind: errorKind,
-      stack: err.stack,
-      message: err.message,
-    });
+    return Result.err(new ParsingError(errorKind, err.message, err.stack));
   }
 }
