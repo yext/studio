@@ -15,6 +15,7 @@ import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { complexBannerComponent } from "../__fixtures__/componentStates";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import { TypelessPropVal } from "../../lib";
 
 jest.mock("uuid");
 
@@ -81,6 +82,46 @@ describe("updateModuleFile", () => {
       expect.stringContaining("EmptyModule.tsx"),
       fs.readFileSync(
         getModulePath("updateModuleFile/ModuleUsingDocument"),
+        "utf-8"
+      )
+    );
+  });
+
+  it("handles document props used in ErrorComponentStates", () => {
+    const childPropValues: Record<string, TypelessPropVal> = {
+      title: {
+        kind: PropValueKind.Expression,
+        value: "document.name",
+      },
+    };
+    moduleFile.updateModuleFile({
+      kind: FileMetadataKind.Module,
+      componentTree: [
+        {
+          kind: ComponentStateKind.Error,
+          componentName: "ErrBanner",
+          props: childPropValues,
+          fullText: "<ErrBanner title={document.name}/>",
+          message: "could not render ErrBanner",
+          uuid: "errbanner-uuid",
+          metadataUUID: "errbanner-metadata",
+        },
+      ],
+      propShape: {
+        document: {
+          type: PropValueType.Record,
+          recordKey: "string",
+          recordValue: "any",
+          required: true,
+        },
+      },
+      metadataUUID: "mock-uuid",
+      filepath: "mock-filepath",
+    });
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect.stringContaining("EmptyModule.tsx"),
+      fs.readFileSync(
+        getModulePath("updateModuleFile/ModuleWithErrBanner"),
         "utf-8"
       )
     );

@@ -1,5 +1,6 @@
 import {
   ComponentStateKind,
+  FileMetadata,
   FileMetadataKind,
   PropValueType,
 } from "@yext/studio-plugin";
@@ -8,7 +9,7 @@ import { searchBarComponent } from "../__fixtures__/componentStates";
 import mockStore from "../__utils__/mockStore";
 import path from "path-browserify";
 
-const UUIDToFileMetadata = {
+const UUIDToFileMetadata: Record<string, FileMetadata> = {
   [path.resolve(__dirname, "../__mocks__", "./test.tsx")]: {
     kind: FileMetadataKind.Module,
     componentTree: [],

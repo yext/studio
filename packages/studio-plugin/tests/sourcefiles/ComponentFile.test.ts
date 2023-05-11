@@ -7,14 +7,20 @@ import {
   PropValueKind,
   PropValueType,
 } from "../../src/types";
+import { assertIsOk } from "../__utils__/asserts";
 
 describe("getComponentMetadata", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation();
+  });
   const project = createTsMorphProject();
 
   it("can parse a simple Banner component", () => {
     const pathToComponent = getComponentPath("SimpleBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
-    expect(componentFile.getComponentMetadata()).toEqual({
+    const result = componentFile.getComponentMetadata();
+    assertIsOk(result);
+    expect(result.value).toEqual({
       filepath: expect.stringContaining("ComponentFile/SimpleBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
@@ -25,7 +31,9 @@ describe("getComponentMetadata", () => {
   it("can parse a Banner component that accepts props.children", () => {
     const pathToComponent = getComponentPath("NestedBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
-    expect(componentFile.getComponentMetadata()).toEqual({
+    const result = componentFile.getComponentMetadata();
+    assertIsOk(result);
+    expect(result.value).toEqual({
       filepath: expect.stringContaining("ComponentFile/NestedBanner.tsx"),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
@@ -112,15 +120,15 @@ describe("getComponentMetadata", () => {
         },
       },
     };
-    expect(componentFile.getComponentMetadata()).toEqual(
-      expectedComponentMetadata
-    );
+    const result = componentFile.getComponentMetadata();
+    assertIsOk(result);
+    expect(result.value).toEqual(expectedComponentMetadata);
   });
 
   it("Throws an Error when an import for HexColor is missing", () => {
     const pathToComponent = getComponentPath("MissingImportBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
-    expect(() => componentFile.getComponentMetadata()).toThrowError(
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       /^Missing import from/
     );
   });
@@ -128,7 +136,7 @@ describe("getComponentMetadata", () => {
   it("Throws an Error when an Expression is used within initialProps", () => {
     const pathToComponent = getComponentPath("ExpressionInitialBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
-    expect(() => componentFile.getComponentMetadata()).toThrowError(
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       /^Expressions are not supported within object literal/
     );
   });
@@ -136,7 +144,7 @@ describe("getComponentMetadata", () => {
   it("Throws an Error when an unrecognized prop type is encountered", () => {
     const pathToComponent = getComponentPath("UnrecognizedPropBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
-    expect(() => componentFile.getComponentMetadata()).toThrowError(
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       /^Unrecognized type/
     );
   });
@@ -144,7 +152,7 @@ describe("getComponentMetadata", () => {
   it("Throws an Error when type of props is primitive", () => {
     const pathToComponent = getComponentPath("PrimitivePropsBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
-    expect(() => componentFile.getComponentMetadata()).toThrowError(
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       "Error parsing PrimitiveProps: Expected object."
     );
   });

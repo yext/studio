@@ -1,4 +1,4 @@
-import { FileMetadata, FileMetadataKind } from "@yext/studio-plugin";
+import { FileMetadataKind, ValidFileMetadata } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
@@ -18,14 +18,14 @@ export default function AddElementsList({
   });
 
   const addableElements = Object.values(UUIDToFileMetadata).filter(
-    (metadata) => {
+    (metadata): metadata is ValidFileMetadata => {
       if (activeType === ElementType.Components) {
         return (
           metadata.kind === FileMetadataKind.Component &&
           !metadata.acceptsChildren
         );
       } else if (activeType === ElementType.Containers) {
-        return (
+        return !!(
           metadata.kind === FileMetadataKind.Component &&
           metadata.acceptsChildren
         );
@@ -62,7 +62,7 @@ function Option({
   metadata,
   activeType,
 }: {
-  metadata: FileMetadata;
+  metadata: ValidFileMetadata;
   activeType: ElementType;
 }) {
   const componentName = path.basename(metadata.filepath, ".tsx");

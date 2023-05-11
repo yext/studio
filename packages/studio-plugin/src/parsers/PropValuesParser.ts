@@ -1,9 +1,12 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../types/PropShape";
-import { PropValueKind, PropValues, PropValueType } from "../types/PropValues";
-import StaticParsingHelpers, {
-  ParsedObjectLiteral,
-} from "../parsers/helpers/StaticParsingHelpers";
+import {
+  PropValueKind,
+  PropValues,
+  PropValueType,
+  TypelessPropVal,
+} from "../types/PropValues";
+import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 
@@ -31,7 +34,9 @@ export default class PropValuesParser {
     return this.parseRawValues(rawValues, propShape);
   }
 
-  private getRawValues(variableName?: string): ParsedObjectLiteral | undefined {
+  private getRawValues(
+    variableName?: string
+  ): Record<string, TypelessPropVal> | undefined {
     if (variableName) {
       return this.studioSourceFileParser.parseExportedObjectLiteral(
         variableName
@@ -50,7 +55,7 @@ export default class PropValuesParser {
   }
 
   private parseRawValues(
-    rawValues: ParsedObjectLiteral,
+    rawValues: Record<string, TypelessPropVal>,
     propShape: PropShape
   ): PropValues {
     const propValues: PropValues = {};
@@ -83,8 +88,8 @@ export default class PropValuesParser {
     };
 
     Object.keys(rawValues).forEach((propName) => {
-      const { isExpression } = rawValues[propName];
-      if (isExpression) {
+      const { kind } = rawValues[propName];
+      if (kind === PropValueKind.Expression) {
         throw new Error(`Expressions are not supported within object literal.`);
       }
       const propValue = getPropValue(propName);

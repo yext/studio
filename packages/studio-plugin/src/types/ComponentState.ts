@@ -1,9 +1,10 @@
-import { PropValues } from "./PropValues";
+import { PropValues, TypelessPropVal } from "./PropValues";
 
 export type ComponentState =
   | EditableComponentState
   | FragmentState
-  | BuiltInState;
+  | BuiltInState
+  | ErrorComponentState;
 
 export type EditableComponentState =
   | StandardOrModuleComponentState
@@ -19,6 +20,7 @@ export enum ComponentStateKind {
   Fragment = "fragment", // when the component is a React.Fragment,
   BuiltIn = "builtIn", // for built in elements like div and img
   Repeater = "repeater", // for a list repeater (map function)
+  Error = "error", // when the component file could not be parsed
 }
 
 export type StandardComponentState = {
@@ -57,11 +59,14 @@ export type RepeaterState = {
   kind: ComponentStateKind.Repeater;
   /** An expression representing the list of items to map over. */
   listExpression: string;
-  /** The state for the component being repeated in the map function. */
-  repeatedComponent: Omit<
-    StandardOrModuleComponentState,
-    "uuid" | "parentUUID"
-  >;
+  /**
+   * The state for the component being repeated in the map function.
+   * TypeScript has issues with the spread operator if StandardOrModuleComponentState
+   * and ErrorComponentState are combined into a union.
+   **/
+  repeatedComponent:
+    | Omit<StandardOrModuleComponentState, "uuid" | "parentUUID">
+    | Omit<ErrorComponentState, "uuid" | "parentUUID">;
   /** A unique UUID for this specific component instance. */
   uuid: string;
   /** The UUID of the parent component in the tree, if one exists. */
@@ -85,4 +90,19 @@ export type BuiltInState = {
   props: {};
   parentUUID?: string;
   metadataUUID?: never;
+};
+
+export type ErrorComponentState = {
+  kind: ComponentStateKind.Error;
+  componentName: string;
+  /**
+   * ErrorComponentStates do not fully support props since we're unable to
+   * get the underlying type even if props are specified.
+   */
+  props: Record<string, TypelessPropVal>;
+  uuid: string;
+  metadataUUID: string;
+  parentUUID?: string;
+  fullText: string;
+  message: string;
 };

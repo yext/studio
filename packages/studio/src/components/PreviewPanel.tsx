@@ -27,7 +27,7 @@ export default function PreviewPanel() {
 
   const extractedState =
     state && TypeGuards.isEditableComponentState(state)
-      ? ComponentStateHelpers.extractStandardOrModuleComponentState(state)
+      ? ComponentStateHelpers.extractRepeatedState(state)
       : undefined;
   const parentPreviewProps = usePreviewProps(
     extractedState,

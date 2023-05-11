@@ -7,12 +7,15 @@ import {
 } from "../constants";
 import TypeGuards from "../utils/TypeGuards";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import { PropValueKind } from "../types/PropValues";
-import { ComponentState } from "../types/ComponentState";
+import {
+  PropValueKind,
+  PropValues,
+  TypelessPropVal,
+} from "../types/PropValues";
+import { ComponentState, ComponentStateKind } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
-import { ComponentStateHelpers } from "../utils";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
@@ -38,37 +41,49 @@ export default class StreamConfigWriter {
     componentTree: ComponentState[]
   ): Set<StreamsDataExpression> {
     const streamDataExpressions = new Set<StreamsDataExpression>();
-    componentTree.forEach((component) => {
-      if (!TypeGuards.isEditableComponentState(component)) {
+    componentTree.forEach((c) => {
+      if (
+        !TypeGuards.isEditableComponentState(c) &&
+        c.kind !== ComponentStateKind.Error
+      ) {
         return;
       }
-      if (
-        TypeGuards.isRepeaterState(component) &&
-        TypeGuards.isStreamsDataExpression(component.listExpression)
-      ) {
-        streamDataExpressions.add(component.listExpression);
+      if (TypeGuards.isRepeaterState(c)) {
+        if (TypeGuards.isStreamsDataExpression(c.listExpression)) {
+          streamDataExpressions.add(c.listExpression);
+        }
+        this.getPathsFromProps(c.repeatedComponent.props).forEach((value) =>
+          streamDataExpressions.add(value)
+        );
+      } else {
+        this.getPathsFromProps(c.props).forEach((value) =>
+          streamDataExpressions.add(value)
+        );
       }
-      const props =
-        ComponentStateHelpers.extractStandardOrModuleComponentState(
-          component
-        ).props;
-      Object.keys(props).forEach((propName) => {
-        const { value, kind } = props[propName];
-        if (kind !== PropValueKind.Expression) {
-          return;
-        }
-        if (TypeGuards.isTemplateString(value)) {
-          [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)].forEach((m) => {
-            if (TypeGuards.isStreamsDataExpression(m[1])) {
-              streamDataExpressions.add(m[1]);
-            }
-          });
-        } else if (TypeGuards.isStreamsDataExpression(value)) {
-          streamDataExpressions.add(value);
-        }
-      });
     });
     return streamDataExpressions;
+  }
+
+  private getPathsFromProps(
+    props: PropValues | Record<string, TypelessPropVal>
+  ): StreamsDataExpression[] {
+    const dataExpressions: StreamsDataExpression[] = [];
+    Object.keys(props).forEach((propName) => {
+      const { value, kind } = props[propName];
+      if (kind !== PropValueKind.Expression) {
+        return;
+      }
+      if (TypeGuards.isTemplateString(value)) {
+        [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)].forEach((m) => {
+          if (TypeGuards.isStreamsDataExpression(m[1])) {
+            dataExpressions.push(m[1]);
+          }
+        });
+      } else if (TypeGuards.isStreamsDataExpression(value)) {
+        dataExpressions.push(value);
+      }
+    });
+    return dataExpressions;
   }
 
   /**

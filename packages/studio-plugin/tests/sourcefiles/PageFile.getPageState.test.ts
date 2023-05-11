@@ -183,6 +183,10 @@ describe("getPageState", () => {
   });
 
   describe("throws errors", () => {
+    beforeEach(() => {
+      jest.spyOn(console, "error").mockImplementation();
+    });
+
     it("throws an error when the return statement has no top-level Jsx node", () => {
       const pageFile = createPageFile("noTopLevelJsxPage");
 

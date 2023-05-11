@@ -1,7 +1,4 @@
-import {
-  EditableComponentState,
-  StandardOrModuleComponentState,
-} from "../types";
+import { ComponentState, ErrorComponentState, RepeaterState } from "../types";
 import TypeGuards from "./TypeGuards";
 
 /**
@@ -9,19 +6,17 @@ import TypeGuards from "./TypeGuards";
  * state used by Studio.
  */
 export default class ComponentStateHelpers {
-  /**
-   * Extracts the state for a regular component or module from any kind of
-   * editable component state.
-   */
-  static extractStandardOrModuleComponentState(
-    c: EditableComponentState
-  ): StandardOrModuleComponentState {
-    return TypeGuards.isStandardOrModuleComponentState(c)
-      ? c
-      : {
-          ...c.repeatedComponent,
-          uuid: c.uuid,
-          parentUUID: c.parentUUID,
-        };
+  static extractRepeatedState<T extends Exclude<ComponentState, RepeaterState>>(
+    c: T | RepeaterState
+  ): T | ErrorComponentState {
+    if (TypeGuards.isRepeaterState(c)) {
+      const repeatedState = {
+        ...c.repeatedComponent,
+        uuid: c.uuid,
+        parentUUID: c.parentUUID,
+      } as T | ErrorComponentState;
+      return repeatedState;
+    }
+    return c;
   }
 }

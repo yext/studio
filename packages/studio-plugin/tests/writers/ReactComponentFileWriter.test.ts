@@ -305,7 +305,7 @@ describe("updateFile", () => {
         filepath,
         "Panel"
       ).updateFile({
-        fileMetadata: {
+        moduleMetadata: {
           kind: FileMetadataKind.Module,
           propShape: {
             complexBannerText: {
@@ -336,7 +336,7 @@ describe("updateFile", () => {
         filepath,
         "Panel"
       ).updateFile({
-        fileMetadata: {
+        moduleMetadata: {
           kind: FileMetadataKind.Module,
           propShape: propShapeMultiFields,
           componentTree: [complexBannerComponent],
@@ -363,7 +363,7 @@ describe("updateFile", () => {
         filepath,
         "Panel"
       ).updateFile({
-        fileMetadata: {
+        moduleMetadata: {
           kind: FileMetadataKind.Module,
           propShape: {
             complexBannerText: {
@@ -401,7 +401,7 @@ describe("updateFile", () => {
         filepath,
         "Panel"
       ).updateFile({
-        fileMetadata: {
+        moduleMetadata: {
           kind: FileMetadataKind.Module,
           propShape: propShapeMultiFields,
           initialProps: {

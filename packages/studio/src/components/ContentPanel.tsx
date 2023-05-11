@@ -2,7 +2,6 @@ import {
   PropValueKind,
   PropMetadata,
   PropValueType,
-  ComponentStateHelpers,
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import PropEditors from "./PropEditors";
@@ -32,14 +31,13 @@ export default function ContentPanel(): JSX.Element | null {
   if (!activeComponentWithProps) {
     return null;
   }
-  const { activeComponentState, propShape } = activeComponentWithProps;
+  const { activeComponentState, extractedComponentState, propShape } =
+    activeComponentWithProps;
 
   return (
     <div>
       <PropEditors
-        activeComponentState={ComponentStateHelpers.extractStandardOrModuleComponentState(
-          activeComponentState
-        )}
+        activeComponentState={extractedComponentState}
         propShape={propShape}
         getPropValueKind={getPropValueKind}
         shouldRenderProp={shouldRenderProp}

@@ -56,7 +56,8 @@ async function importExistingConfig(filepath: string): Promise<StudioConfig> {
   } catch (err) {
     const importError = new FileIOError(
       IOErrorKind.FailedToImportFile,
-      `Failed to import module at ${filepath}`
+      `Failed to import module at ${filepath}`,
+      err instanceof Error ? err.stack : undefined
     );
     throw importError;
   }

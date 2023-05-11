@@ -1,11 +1,19 @@
-import { TypeGuards } from "@yext/studio-plugin";
+import {
+  ComponentStateHelpers,
+  ComponentStateKind,
+  FileMetadataKind,
+  TypeGuards,
+} from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
 export default function useActiveComponentWithProps() {
   const { activeComponentMetadata, activeComponentState } =
     useActiveComponent();
 
-  if (!activeComponentMetadata?.propShape) {
+  if (
+    activeComponentMetadata?.kind === FileMetadataKind.Error ||
+    !activeComponentMetadata?.propShape
+  ) {
     return null;
   }
 
@@ -16,9 +24,17 @@ export default function useActiveComponentWithProps() {
     return null;
   }
 
+  const extractedComponentState =
+    ComponentStateHelpers.extractRepeatedState(activeComponentState);
+
+  if (extractedComponentState.kind === ComponentStateKind.Error) {
+    return null;
+  }
+
   return {
     activeComponentMetadata,
     propShape: activeComponentMetadata.propShape,
     activeComponentState,
+    extractedComponentState,
   };
 }

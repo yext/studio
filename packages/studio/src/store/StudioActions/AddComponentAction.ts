@@ -1,4 +1,8 @@
-import { ComponentState, FileMetadata, TypeGuards } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  TypeGuards,
+  ValidFileMetadata,
+} from "@yext/studio-plugin";
 import StudioActions from "../StudioActions";
 
 export default class AddComponentAction {
@@ -7,7 +11,7 @@ export default class AddComponentAction {
   /**
    * Adds the component to the current active component tree.
    */
-  addComponent = (metadata: FileMetadata) => {
+  addComponent = (metadata: ValidFileMetadata) => {
     const componentState = this.studioActions.createComponentState(metadata);
     return this.insertComponentState(componentState);
   };
