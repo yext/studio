@@ -1,4 +1,8 @@
-import { TypeGuards, ComponentState } from "@yext/studio-plugin";
+import {
+  TypeGuards,
+  ComponentState,
+  FileMetadataKind,
+} from "@yext/studio-plugin";
 import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources, getPreviewProps } from "../utils/getPreviewProps";
@@ -15,18 +19,18 @@ export default function usePreviewProps(
   const getFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.getFileMetadata
   );
-  return useMemo(
-    () =>
-      c && TypeGuards.isStandardOrModuleComponentState(c)
-        ? getPreviewProps(
-            c.props,
-            getFileMetadata(c.metadataUUID)?.propShape ?? {},
-            {
-              ...expressionSources,
-              ...(parentItem !== undefined && { item: parentItem }),
-            }
-          )
-        : {},
-    [c, expressionSources, parentItem, getFileMetadata]
-  );
+  return useMemo(() => {
+    if (!c || !TypeGuards.isStandardOrModuleComponentState(c)) {
+      return {};
+    }
+    const fileMetadata = getFileMetadata(c.metadataUUID);
+    if (fileMetadata?.kind === FileMetadataKind.Error) {
+      return {};
+    }
+
+    return getPreviewProps(c.props, fileMetadata?.propShape ?? {}, {
+      ...expressionSources,
+      ...(parentItem !== undefined && { item: parentItem }),
+    });
+  }, [c, expressionSources, parentItem, getFileMetadata]);
 }

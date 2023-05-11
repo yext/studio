@@ -19,7 +19,7 @@ describe("parseObjectLiteral", () => {
     expect(parsedValue).toEqual({
       aKey: {
         value: "another.expression",
-        isExpression: true,
+        kind: PropValueKind.Expression,
       },
     });
   });

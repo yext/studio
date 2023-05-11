@@ -15,6 +15,7 @@ import { PluginComponentData } from "../ParsingOrchestrator";
 import GetPathWriter from "../writers/GetPathWriter";
 import PagesJsStateParser from "../parsers/PagesJsStateParser";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
+import tryUsingResult from "../errors/tryUsingResult";
 
 /**
  * Configuration options to the page file's update process
@@ -88,38 +89,32 @@ export default class PageFile {
   }
 
   getPageState(): Result<PageState, ParsingError> {
-    try {
-      this.studioSourceFileParser.checkForSyntaxErrors();
-      const componentTree = this.componentTreeParser.parseComponentTree({
-        ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-        ...this.pluginFilepathToComponentName,
-      });
-      const cssImports = this.studioSourceFileParser.parseCssImports();
-      const filepath = this.studioSourceFileParser.getFilepath();
-      const pagesJsState = this.pagesJsStateParser.getPagesJsState();
-
-      return Result.ok({
-        componentTree,
-        cssImports,
-        filepath,
-        ...(pagesJsState && {
-          pagesJS: pagesJsState,
-        }),
-      });
-    } catch (err: unknown) {
-      if (!(err instanceof Error)) {
-        throw err;
-      }
-
-      return Result.err(
-        new ParsingError(
-          ParsingErrorKind.FailedToParsePageState,
-          err.message,
-          err.stack
-        )
-      );
-    }
+    return tryUsingResult(
+      ParsingErrorKind.FailedToParsePageState,
+      `Failed to get PageState for "${this.studioSourceFileParser.getFilepath()}"`,
+      this._getPageState
+    );
   }
+
+  private _getPageState = (): PageState => {
+    this.studioSourceFileParser.checkForSyntaxErrors();
+    const componentTree = this.componentTreeParser.parseComponentTree({
+      ...this.studioSourceFileParser.getAbsPathDefaultImports(),
+      ...this.pluginFilepathToComponentName,
+    });
+    const cssImports = this.studioSourceFileParser.parseCssImports();
+    const filepath = this.studioSourceFileParser.getFilepath();
+    const pagesJsState = this.pagesJsStateParser.getPagesJsState();
+
+    return {
+      componentTree,
+      cssImports,
+      filepath,
+      ...(pagesJsState && {
+        pagesJS: pagesJsState,
+      }),
+    };
+  };
 
   /**
    * Update page file by mutating the source file based on the page's updated state.

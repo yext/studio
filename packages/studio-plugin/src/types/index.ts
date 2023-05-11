@@ -4,6 +4,7 @@ export * from "./ComponentMetadata";
 export * from "./Plugin";
 export * from "./ModuleMetadata";
 export * from "./FileMetadata";
+export * from "./ErrorFileMetadata";
 export * from "./ComponentState";
 export * from "./PageState";
 export * from "./StudioData";

@@ -8,6 +8,7 @@ import {
   PluginConfig,
   ErrorPageState,
   PageState,
+  FileMetadataKind,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -18,7 +19,7 @@ import { Project } from "ts-morph";
 import typescript from "typescript";
 import NpmLookup from "./parsers/helpers/NpmLookup";
 import { RequiredStudioConfig } from "./parsers/getStudioConfig";
-import prettyPrintError from "./errors/prettyPrintError";
+import { v4 } from "uuid";
 
 export function createTsMorphProject() {
   return new Project({
@@ -101,7 +102,7 @@ export default class ParsingOrchestrator {
     ).reduce((prev, curr) => {
       prev[curr.metadataUUID] = curr;
       return prev;
-    }, {});
+    }, {} as Record<string, FileMetadata>);
     return UUIDToFileMetadata;
   }
 
@@ -161,10 +162,6 @@ export default class ParsingOrchestrator {
         if (pageStateResult.isOk) {
           prev.pageNameToPageState[curr] = pageStateResult.value;
         } else {
-          prettyPrintError(
-            `Failed to get PageState for "${curr}"`,
-            pageStateResult.error.stack
-          );
           prev.pageNameToErrorPageState[curr] = {
             message: pageStateResult.error.message,
           };
@@ -223,23 +220,32 @@ export default class ParsingOrchestrator {
     if (this.filepathToFileMetadata[absPath]) {
       return this.filepathToFileMetadata[absPath];
     }
-    if (absPath.startsWith(this.paths.components)) {
-      const componentFile = new ComponentFile(absPath, this.project);
-      return componentFile.getComponentMetadata();
+
+    const plugin = this.filepathToPluginComponentData[absPath];
+    if (absPath.startsWith(this.paths.components) || plugin?.moduleName) {
+      const componentFile = new ComponentFile(
+        absPath,
+        this.project,
+        plugin?.moduleName
+      );
+      const result = componentFile.getComponentMetadata();
+      if (result.isErr) {
+        return {
+          kind: FileMetadataKind.Error,
+          intendedKind: FileMetadataKind.Component,
+          metadataUUID: v4(),
+          message: result.error.message,
+          filepath: absPath,
+        };
+      }
+      return result.value;
     }
+
     if (absPath.startsWith(this.paths.modules)) {
       const moduleFile = this.getModuleFile(absPath);
       return moduleFile.getModuleMetadata();
     }
-    const plugin = this.filepathToPluginComponentData[absPath];
-    if (plugin?.moduleName) {
-      const componentFile = new ComponentFile(
-        absPath,
-        this.project,
-        plugin.moduleName
-      );
-      return componentFile.getComponentMetadata();
-    }
+
     const { modules, components } = this.paths;
     throw new Error(
       `Could not get FileMetadata for ${absPath}, file does not ` +

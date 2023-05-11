@@ -26,9 +26,7 @@ export default function EditModuleButton({
   }, [state.uuid, setModuleUUIDBeingEdited, setActiveComponentUUID]);
 
   const moduleName =
-    ComponentStateHelpers.extractStandardOrModuleComponentState(
-      state
-    ).componentName;
+    ComponentStateHelpers.extractRepeatedState(state).componentName;
 
   return (
     <button onClick={handleClick} aria-label={`Edit Module ${moduleName}`}>

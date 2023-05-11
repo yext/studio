@@ -9,9 +9,7 @@ import {
   ArrayLiteralExpression,
   ArrowFunction,
 } from "ts-morph";
-import StaticParsingHelpers, {
-  ParsedObjectLiteral,
-} from "./helpers/StaticParsingHelpers";
+import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
 import TypeNodeParsingHelper, {
@@ -19,6 +17,7 @@ import TypeNodeParsingHelper, {
 } from "./helpers/TypeNodeParsingHelper";
 import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup";
+import { TypelessPropVal } from "../types";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -134,7 +133,7 @@ export default class StudioSourceFileParser {
 
   parseExportedObjectLiteral(
     variableName: string
-  ): ParsedObjectLiteral | undefined {
+  ): Record<string, TypelessPropVal> | undefined {
     const objectLiteralExp = this.getExportedObjectExpression(variableName);
     if (!objectLiteralExp) {
       return;

@@ -248,6 +248,42 @@ describe("updatePageFile", () => {
       );
     });
 
+    it("handles streams document usages even in ErrorComponentStates", () => {
+      const pageFile = createPageFile(
+        "PageWithErrorComponentState",
+        tsMorphProject
+      );
+      pageFile.updatePageFile(
+        {
+          ...basicPageState,
+          componentTree: [
+            {
+              kind: ComponentStateKind.Error,
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.name",
+                },
+              },
+              componentName: "Banner",
+              fullText: `<Banner title={document.name} />`,
+              uuid: "error-banner-uuid",
+              metadataUUID: "error-banner-metadataUUID",
+              message: "could not parse banner",
+            },
+          ],
+        },
+        { updateStreamConfig: true }
+      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithErrorComponentState.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithErrorComponentState"),
+          "utf-8"
+        )
+      );
+    });
+
     it("preserves 'slug' field for PagesJS PageFile", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile(

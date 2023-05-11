@@ -10,11 +10,12 @@ import {
   BuiltInState,
   ComponentState,
   ComponentStateKind,
+  ErrorComponentState,
   RepeaterState,
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
-import { FileMetadataKind } from "../types";
+import { FileMetadataKind, TypelessPropVal } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
@@ -137,7 +138,8 @@ export default class ComponentTreeParser {
     defaultImports: Record<string, string>
   ):
     | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
-    | Pick<BuiltInState, "kind" | "props"> {
+    | Pick<BuiltInState, "kind" | "props">
+    | Omit<ErrorComponentState, "componentName"> {
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
     )
@@ -162,6 +164,22 @@ export default class ComponentTreeParser {
     }
 
     const fileMetadata = this.getFileMetadata(filepath);
+    if (fileMetadata.kind === FileMetadataKind.Error) {
+      const props: Record<string, TypelessPropVal> = {};
+      attributes.forEach((attribute) => {
+        const propName = StaticParsingHelpers.parseJsxAttributeName(attribute);
+        props[propName] = StaticParsingHelpers.parseJsxAttribute(attribute);
+      });
+
+      return {
+        kind: ComponentStateKind.Error,
+        metadataUUID: fileMetadata.metadataUUID,
+        uuid: v4(),
+        fullText: component.getFullText(),
+        message: fileMetadata.message,
+        props,
+      };
+    }
     const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;
 
     const componentStateKind =

@@ -10,7 +10,7 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
-  FileMetadata,
+  ModuleMetadata,
   PropShape,
   PropValueKind,
   PropValues,
@@ -18,7 +18,7 @@ import {
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
-import { transformPropValuesToRaw } from "../utils";
+import { ComponentStateHelpers, transformPropValuesToRaw } from "../utils";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import { TypeGuards } from "../utils";
 
@@ -79,7 +79,9 @@ export default class ReactComponentFileWriter {
     const elements = ComponentTreeHelpers.mapComponentTree<string>(
       componentTree,
       (c, children): string => {
-        if (c.kind === ComponentStateKind.Fragment) {
+        if (c.kind === ComponentStateKind.Error) {
+          return c.fullText;
+        } else if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
         } else if (TypeGuards.isRepeaterState(c)) {
           const { componentName, props } = c.repeatedComponent;
@@ -162,14 +164,14 @@ export default class ReactComponentFileWriter {
    */
   updateFile({
     componentTree,
-    fileMetadata,
+    moduleMetadata,
     cssImports,
     onFileUpdate,
     defaultImports,
     propArgs,
   }: {
     componentTree: ComponentState[];
-    fileMetadata?: FileMetadata;
+    moduleMetadata?: ModuleMetadata;
     cssImports?: string[];
     onFileUpdate?: (
       functionComponent: FunctionDeclaration | ArrowFunction
@@ -199,8 +201,8 @@ export default class ReactComponentFileWriter {
       : defaultExport;
 
     onFileUpdate?.(functionComponent);
-    if (fileMetadata) {
-      const { initialProps, propShape } = fileMetadata;
+    if (moduleMetadata) {
+      const { initialProps, propShape } = moduleMetadata;
       if (initialProps) {
         this.updateInitialProps(initialProps);
       }
@@ -235,15 +237,7 @@ export default class ReactComponentFileWriter {
     const pluginNameToComponentNames: Record<string, string[]> = {};
 
     componentTree
-      .map((c) =>
-        TypeGuards.isRepeaterState(c)
-          ? {
-              ...c.repeatedComponent,
-              uuid: c.uuid,
-              parentUUID: c.parentUUID,
-            }
-          : c
-      )
+      .map(ComponentStateHelpers.extractRepeatedState)
       .filter(TypeGuards.isStandardOrModuleComponentState)
       .forEach((node) => {
         const metadata = this.getFileMetadataByUUID(node.metadataUUID);
