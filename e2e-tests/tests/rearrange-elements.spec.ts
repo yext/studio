@@ -8,6 +8,7 @@ const expectedPage = fs.readFileSync(
 );
 
 studioTest.only("can rearrange elements in tree", async ({ page, studioPage }) => {
+  await studioPage.saveButton.button.waitFor();
   const banner = page.getByText("Banner");
   const div = page.getByRole("list").filter({ hasText: "div" });
   const divBox = await div.boundingBox();
