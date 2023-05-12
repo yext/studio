@@ -17,7 +17,7 @@ export default function ErrorComponentPreview(props: {
   return (
     <div
       id={anchorId}
-      className="hover:shadow-md border hover:border-red-300 border-transparent"
+      className="hover:shadow-sm border hover:border-red-300 border-transparent"
     >
       <ErrorBoundary customError={errorComponentState.message}>
         {element}

@@ -1,6 +1,7 @@
 import { CSSProperties, useEffect, useMemo } from "react";
 import useActiveComponentName from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
+import { ComponentStateKind } from "@yext/studio-plugin";
 
 /**
  * Highlights the current activeComponentRect on the page.
@@ -10,7 +11,13 @@ export default function Highlighter() {
   const activeUUID = useStudioStore((store) => store.pages.activeComponentUUID);
   const setRect = useStudioStore((store) => store.pages.setActiveComponentRect);
   const componentName = useActiveComponentName();
-  console.log(componentName);
+  const isErrorState = useStudioStore(
+    (store) =>
+      store.actions.getActiveComponentState()?.kind === ComponentStateKind.Error
+  );
+  const red300 = "rgb(252 165 165)";
+  const skyBlueFromMocks = "rgb(88,146,255)";
+  const color = isErrorState ? red300 : skyBlueFromMocks;
 
   const style: CSSProperties = useMemo(() => {
     if (!rect) {
@@ -24,10 +31,10 @@ export default function Highlighter() {
       width: `${rect.width}px`,
       height: `${rect.height}px`,
       boxSizing: "border-box",
-      border: "1px solid #5892FF",
+      border: `1px solid ${color}`,
       pointerEvents: "none",
     };
-  }, [rect]);
+  }, [rect, color]);
 
   const tagStyle: CSSProperties = useMemo(() => {
     if (!rect) {
@@ -36,11 +43,11 @@ export default function Highlighter() {
     return {
       position: "absolute",
       top: `${rect.height - 1}px`,
-      backgroundColor: "#5892FF",
+      backgroundColor: color,
       color: "white",
       padding: "0px 10px",
     };
-  }, [rect]);
+  }, [rect, color]);
 
   useEffect(() => {
     if (!activeUUID) {

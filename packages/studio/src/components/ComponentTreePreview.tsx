@@ -1,8 +1,5 @@
 import { useMemo } from "react";
-import {
-  ComponentTreeHelpers,
-  ComponentState,
-} from "@yext/studio-plugin";
+import { ComponentTreeHelpers, ComponentState } from "@yext/studio-plugin";
 import { ExpressionSources } from "../utils/getPreviewProps";
 import ErrorBoundary from "./common/ErrorBoundary";
 import HighlightingContainer from "./HighlightingContainer";
