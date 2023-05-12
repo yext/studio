@@ -33,7 +33,7 @@ const config: PlaywrightTestConfig = {
     timeout: 5000,
     toHaveScreenshot: {
       threshold: 0,
-      maxDiffPixels: 100,
+      maxDiffPixels: 0,
     },
   },
   /* Fail the build on CI if you accidentally left test.only in the source code. */
