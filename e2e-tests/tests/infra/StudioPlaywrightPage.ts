@@ -103,8 +103,7 @@ export default class StudioPlaywrightPage {
   }
 
   async setActiveComponent(componentName: string, componentIndex = 0) {
-    const components = await this.page.getByText(componentName).all();
-    const component = components[componentIndex];
+    const component = this.componentTree.getByText(componentName).nth(componentIndex);
     await component.click();
   }
 
