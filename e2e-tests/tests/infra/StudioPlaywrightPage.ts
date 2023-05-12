@@ -54,9 +54,11 @@ export default class StudioPlaywrightPage {
   }
 
   async switchPage(pageName: string) {
-    await this.pagesPanel.getByRole('button', {
-      name: pageName
-    }).click()
+    await this.pagesPanel
+      .getByRole("button", {
+        name: pageName,
+      })
+      .click();
   }
 
   async removePage(pageName: string) {
@@ -103,7 +105,9 @@ export default class StudioPlaywrightPage {
   }
 
   async setActiveComponent(componentName: string, componentIndex = 0) {
-    const component = this.componentTree.getByText(componentName).nth(componentIndex);
+    const component = this.componentTree
+      .getByText(componentName)
+      .nth(componentIndex);
     await component.click();
   }
 
