@@ -8,7 +8,7 @@ const git = simpleGit();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const e2eSrcPath = path.resolve(__dirname, "../../src/*");
-const screenshotsPath = path.resolve(__dirname, "../../__screenshots__/*")
+const screenshotsPath = path.resolve(__dirname, "../../__screenshots__/*");
 
 /**
  * Wraps the given test run method with a bespoke git branch, which will be
@@ -84,7 +84,6 @@ async function restoreGitState(
   testBranch: string
 ) {
   const { originalBranch, originalRef, uncommittedChanges } = initialData;
-  console.log('initial data', initialData)
   // Commit any changes in e2e-tests/src, so that they will be removed
   // when the repo is reset to its original commit.
   await git.add([e2eSrcPath, screenshotsPath]);
@@ -98,6 +97,5 @@ async function restoreGitState(
   if (uncommittedChanges) {
     await git.reset(["HEAD^"]);
   }
-  console.log('running git raw', "checkout", testBranch, "--", screenshotsPath);
   await git.raw(["checkout", testBranch, "--", screenshotsPath]);
 }
