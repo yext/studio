@@ -8,6 +8,7 @@ const git = simpleGit();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const e2eSrcPath = path.resolve(__dirname, "../../src/*");
+const screenshotsPath = path.resolve(__dirname, "../../__screenshots__/*")
 
 /**
  * Wraps the given test run method with a bespoke git branch, which will be
@@ -28,11 +29,10 @@ export default async function setupGitBranch(
   try {
     await run();
   } finally {
-    return;
     await restoreGitState(testInfo, initialData);
 
     await Promise.all([
-      // git.branch(["-D", testBranch]),
+      git.branch(["-D", testBranch]),
       createRemote && git.push(["--delete", "origin", testBranch]),
     ]);
   }
@@ -86,7 +86,7 @@ async function restoreGitState(
   const { originalBranch, originalRef, uncommittedChanges } = initialData;
   // Commit any changes in e2e-tests/src, so that they will be removed
   // when the repo is reset to its original commit.
-  await git.add([e2eSrcPath]);
+  await git.add([e2eSrcPath, screenshotsPath]);
   await git.commit(testInfo.title);
   if (originalBranch) {
     await git.checkout(originalBranch);
