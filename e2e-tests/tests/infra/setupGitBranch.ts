@@ -97,5 +97,5 @@ async function restoreGitState(
   if (uncommittedChanges) {
     await git.reset(["HEAD^"]);
   }
-  await git.raw(["checkout", postTestRef, "--", "__screenshots__"]);
+  await git.raw(["checkout", postTestRef, "--", screenshotsPath]);
 }
