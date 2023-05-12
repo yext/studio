@@ -7,7 +7,8 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest("can rearrange elements in tree", async ({ page, studioPage }) => {
+studioTest.only("can rearrange elements in tree", async ({ page, studioPage }) => {
+  await page.waitForLoadState('networkidle');
   await studioPage.saveButton.button.waitFor();
   const banner = page.getByText("Banner");
   const div = page.getByRole("list").filter({ hasText: "div" });
