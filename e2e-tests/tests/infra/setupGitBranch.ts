@@ -32,7 +32,7 @@ export default async function setupGitBranch(
     await restoreGitState(testInfo, initialData, testBranch);
 
     await Promise.all([
-      // git.branch(["-D", testBranch]),
+      git.branch(["-D", testBranch]),
       createRemote && git.push(["--delete", "origin", testBranch]),
     ]);
   }
