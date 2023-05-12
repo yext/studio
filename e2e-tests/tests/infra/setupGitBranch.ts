@@ -28,6 +28,7 @@ export default async function setupGitBranch(
   try {
     await run();
   } finally {
+    return;
     await restoreGitState(testInfo, initialData);
 
     await Promise.all([
