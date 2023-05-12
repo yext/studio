@@ -53,6 +53,12 @@ export default class StudioPlaywrightPage {
     await modal.getByText("Save").click();
   }
 
+  async switchPage(pageName: string) {
+    await this.pagesPanel.getByRole('button', {
+      name: pageName
+    }).click()
+  }
+
   async removePage(pageName: string) {
     await this.pagesPanel
       .getByRole("listitem")

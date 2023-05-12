@@ -7,7 +7,7 @@ export interface BannerData {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
-  nestedProp?: NestedProp[];
+  nestedProp?: NestedProp;
 }
 
 export const initialProps: BannerData = {
