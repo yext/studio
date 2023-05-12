@@ -23,7 +23,7 @@ expect.extend({
 const config: PlaywrightTestConfig = {
   testDir: "./tests",
   /* Maximum time one test can run for. */
-  timeout: 60 * 1000,
+  timeout: 30 * 1000,
   snapshotPathTemplate: "__screenshots__/{testFilePath}/{arg}{ext}",
   expect: {
     /**
