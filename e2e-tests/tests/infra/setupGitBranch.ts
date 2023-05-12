@@ -84,6 +84,7 @@ async function restoreGitState(
 ) {
   const postTestRef = await git.revparse(["HEAD"]);
   const { originalBranch, originalRef, uncommittedChanges } = initialData;
+  console.log('initial data', initialData)
   // Commit any changes in e2e-tests/src, so that they will be removed
   // when the repo is reset to its original commit.
   await git.add([e2eSrcPath, screenshotsPath]);
@@ -97,5 +98,6 @@ async function restoreGitState(
   if (uncommittedChanges) {
     await git.reset(["HEAD^"]);
   }
+  console.log('running git raw', "checkout", postTestRef, "--", screenshotsPath);
   await git.raw(["checkout", postTestRef, "--", screenshotsPath]);
 }
