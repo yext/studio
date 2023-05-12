@@ -5,7 +5,7 @@ import {
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 
-export default function useActiveComponentName() {
+export default function useActiveComponentName(): string | undefined {
   const getActiveComponentState = useStudioStore(
     (store) => store.actions.getActiveComponentState
   );
@@ -13,7 +13,7 @@ export default function useActiveComponentName() {
   if (!activeState) {
     return undefined;
   }
-  getComponentDisplayName(activeState);
+  return getComponentDisplayName(activeState);
 }
 
 export function getComponentDisplayName(componentState: ComponentState) {
