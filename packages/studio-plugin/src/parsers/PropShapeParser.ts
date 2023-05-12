@@ -84,7 +84,7 @@ export default class PropShapeParser {
 
     if (!TypeGuards.isPropValueType(type) || type === PropValueType.Object) {
       throw new Error(
-        `Unrecognized type ${type} in ${identifier} within ${this.studioSourceFileParser.getFilepath()}`
+        `Unrecognized type ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}`
       );
     } else if (type === PropValueType.Record) {
       throw new Error("Only Records of Record<string, any> are supported.");
@@ -93,7 +93,7 @@ export default class PropShapeParser {
       !this.studioImports.includes(type)
     ) {
       throw new Error(
-        `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in ${identifier} within ${this.studioSourceFileParser.getFilepath()}.`
+        `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}.`
       );
     }
 

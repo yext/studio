@@ -37,6 +37,10 @@ export default class StudioSourceFileParser {
     return this.filepath;
   }
 
+  getFilename() {
+    return path.basename(this.filepath);
+  }
+
   checkForSyntaxErrors() {
     babelParseSync(this.sourceFile.getFullText(), {
       filename: this.filepath,
