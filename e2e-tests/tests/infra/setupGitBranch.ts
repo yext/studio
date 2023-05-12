@@ -29,7 +29,7 @@ export default async function setupGitBranch(
   try {
     await run();
   } finally {
-    await restoreGitState(testInfo, initialData);
+    await restoreGitState(testInfo, initialData, testBranch);
 
     await Promise.all([
       // git.branch(["-D", testBranch]),
@@ -80,9 +80,9 @@ async function createTestBranch(testInfo: TestInfo, createRemote: boolean) {
  */
 async function restoreGitState(
   testInfo: TestInfo,
-  initialData: InitialGitData
+  initialData: InitialGitData,
+  testBranch: string
 ) {
-  const postTestRef = await git.revparse(["HEAD"]);
   const { originalBranch, originalRef, uncommittedChanges } = initialData;
   console.log('initial data', initialData)
   // Commit any changes in e2e-tests/src, so that they will be removed
@@ -98,6 +98,6 @@ async function restoreGitState(
   if (uncommittedChanges) {
     await git.reset(["HEAD^"]);
   }
-  console.log('running git raw', "checkout", postTestRef, "--", screenshotsPath);
-  await git.raw(["checkout", postTestRef, "--", screenshotsPath]);
+  console.log('running git raw', "checkout", testBranch, "--", screenshotsPath);
+  await git.raw(["checkout", testBranch, "--", screenshotsPath]);
 }
