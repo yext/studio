@@ -23,6 +23,7 @@ export const studioTest = base.extend<Fixtures>({
   studioPage: async ({ page, createRemote }, use, testInfo) => {
     await setupGitBranch(testInfo, createRemote, async () => {
       await page.goto("./");
+      await page.waitForLoadState("networkidle");
       const studioPage = new StudioPlaywrightPage(page);
       await use(studioPage);
     });

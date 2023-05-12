@@ -4,19 +4,23 @@ import { expect } from "@playwright/test";
 studioTest("can create new nested modules", async ({ page, studioPage }) => {
   await studioPage.setActiveComponent("Banner");
   await studioPage.createModule("InnerModule");
-  await expect(page.getByText("InnerModule")).toHaveCount(2);
+
+  const innerModuleLocator = studioPage.componentTree.getByText("InnerModule");
+  await expect(innerModuleLocator).toHaveCount(1);
   await expect(page).toHaveScreenshot();
 
   await studioPage.setActiveComponent("Container");
   await studioPage.createModule("OuterModule");
-  await expect(page.getByText("OuterModule")).toHaveCount(2);
-  await expect(page.getByText("InnerModule")).toHaveCount(0);
+
+  const outerModuleLocator = studioPage.componentTree.getByText("OuterModule");
+  await expect(outerModuleLocator).toHaveCount(1);
+  await expect(innerModuleLocator).toHaveCount(0);
   await expect(page).toHaveScreenshot();
 
   await studioPage.saveButton.click();
   await expect(page).toHaveScreenshot();
   await page.reload();
-  await expect(page.getByText("OuterModule")).toHaveCount(1);
-  await expect(page.getByText("InnerModule")).toHaveCount(0);
+  await expect(outerModuleLocator).toHaveCount(1);
+  await expect(innerModuleLocator).toHaveCount(0);
   await expect(page).toHaveScreenshot();
 });
