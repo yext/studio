@@ -1,7 +1,7 @@
 import EditorSidebar from "./components/EditorSidebar";
 import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
-import PreviewWithUseComponents from "./components/PreviwWithUseComponents";
+import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
 
 export default function App() {
