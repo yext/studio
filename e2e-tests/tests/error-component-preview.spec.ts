@@ -1,7 +1,7 @@
 import { studioTest } from "./infra/studioTest.js";
 import { expect } from "@playwright/test";
 
-studioTest("can create new nested modules", async ({ page, studioPage }) => {
+studioTest("components with parsing errors", async ({ page, studioPage }) => {
   await studioPage.switchPage("ErrorComponentPreviews");
   await expect(page).toHaveScreenshot();
 
