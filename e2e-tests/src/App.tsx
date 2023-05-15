@@ -1,9 +1,9 @@
-import UniversalPage from "./pages/UniversalPage";
+import BasicPage from "./pages/BasicPage";
 
 function App() {
   return (
     <div className="App">
-      <UniversalPage />
+      <BasicPage />
     </div>
   );
 }

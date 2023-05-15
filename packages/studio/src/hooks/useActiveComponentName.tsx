@@ -5,7 +5,7 @@ import {
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 
-export default function useActiveComponentName() {
+export default function useActiveComponentName(): string | undefined {
   const getActiveComponentState = useStudioStore(
     (store) => store.actions.getActiveComponentState
   );

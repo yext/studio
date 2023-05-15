@@ -1,3 +1,3 @@
-export default function UniversalPage() {
+export default function BasicPage() {
   return <div />;
 }

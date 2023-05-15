@@ -10,7 +10,7 @@ import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
-)?.[0];
+)?.sort()[0];
 
 const initialStates: PageSliceStates = {
   pages: removeTopLevelFragments(initialStudioData.pageNameToPageState),

@@ -14,7 +14,7 @@ studioTest(
     await expect(containerPreviews).toHaveCount(1);
     const buttonPreviews = page.getByText("Press me!");
     await expect(buttonPreviews).toHaveCount(0);
-    fs.writeFileSync("./src/pages/UniversalPage.tsx", updatedPage);
+    fs.writeFileSync("./src/pages/BasicPage.tsx", updatedPage);
     await expect(containerPreviews).toHaveCount(0);
     await expect(buttonPreviews).toHaveCount(2);
     await expect(studioPage.saveButton.button).toBeDisabled();

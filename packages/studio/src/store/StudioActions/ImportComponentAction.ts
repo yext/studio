@@ -2,8 +2,10 @@ import {
   ComponentState,
   ComponentStateHelpers,
   ComponentStateKind,
+  ErrorComponentState,
   FileMetadata,
   FileMetadataKind,
+  ModuleMetadata,
   StandardOrModuleComponentState,
   TypeGuards,
 } from "@yext/studio-plugin";
@@ -21,19 +23,19 @@ export default class ImportComponentAction {
   constructor(private getFileMetadataSlice: () => FileMetadataSlice) {}
 
   importComponent = async (c: ComponentState): Promise<void> => {
-    if (!TypeGuards.isEditableComponentState(c)) {
+    if (
+      !TypeGuards.isEditableComponentState(c) &&
+      c.kind !== ComponentStateKind.Error
+    ) {
       return;
     }
 
     const componentState = ComponentStateHelpers.extractRepeatedState(c);
-    if (componentState.kind === ComponentStateKind.Error) {
-      return;
-    }
     await this.importStandardOrModuleComponentState(componentState);
   };
 
   private importStandardOrModuleComponentState = async (
-    componentState: StandardOrModuleComponentState
+    componentState: StandardOrModuleComponentState | ErrorComponentState
   ) => {
     const { metadataUUID, componentName } = componentState;
     const { getFileMetadata, UUIDToImportedComponent } =
@@ -47,14 +49,8 @@ export default class ImportComponentAction {
       return;
     }
 
-    if (
-      componentState.kind === ComponentStateKind.Module &&
-      metadata.kind === FileMetadataKind.Module
-    ) {
-      await Promise.all(
-        metadata.componentTree.map((c) => this.importComponent(c))
-      );
-      return;
+    if (metadata.kind === FileMetadataKind.Module) {
+      return this.importModule(metadata);
     }
 
     const importedValue = await import(/* @vite-ignore */ metadata.filepath);
@@ -62,12 +58,19 @@ export default class ImportComponentAction {
       importedValue,
       componentName
     );
+
     if (functionComponent) {
       this.getFileMetadataSlice().setImportedComponent(
         metadataUUID,
         functionComponent
       );
     }
+  };
+
+  importModule = async (metadata: ModuleMetadata) => {
+    return Promise.all(
+      metadata.componentTree.map((c) => this.importComponent(c))
+    );
   };
 }
 

@@ -2,6 +2,7 @@ import {
   TypeGuards,
   ComponentState,
   FileMetadataKind,
+  ComponentStateKind,
 } from "@yext/studio-plugin";
 import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
@@ -20,12 +21,22 @@ export default function usePreviewProps(
     (store) => store.fileMetadatas.getFileMetadata
   );
   return useMemo(() => {
+    if (c?.kind === ComponentStateKind.Error) {
+      return Object.keys(c.props).reduce((prev, curr) => {
+        prev[curr] = c.props[curr].value;
+        return prev;
+      }, {});
+    }
+
     if (!c || !TypeGuards.isStandardOrModuleComponentState(c)) {
       return {};
     }
+
     const fileMetadata = getFileMetadata(c.metadataUUID);
-    if (fileMetadata?.kind === FileMetadataKind.Error) {
-      return {};
+    if (!fileMetadata || fileMetadata.kind === FileMetadataKind.Error) {
+      throw new Error(
+        `Cannot get propShape for FileMetadata of ${c.componentName}`
+      );
     }
 
     return getPreviewProps(c.props, fileMetadata?.propShape ?? {}, {

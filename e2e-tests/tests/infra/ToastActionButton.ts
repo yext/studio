@@ -19,7 +19,7 @@ export default class ToastActionButton {
   }
 
   async click() {
-    await this.button.click();
+    await this.button.click({ timeout: 3000 });
     await expect(() => expect(this.successToast).toHaveCount(1)).toPass({
       timeout: 25_000,
     });

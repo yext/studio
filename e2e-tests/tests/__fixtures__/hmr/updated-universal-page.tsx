@@ -1,6 +1,6 @@
 import Button from "../components/Button";
 
-export default function UniversalPage() {
+export default function BasicPage() {
   return (
     <>
       <Button />

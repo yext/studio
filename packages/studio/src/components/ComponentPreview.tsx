@@ -11,6 +11,7 @@ import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources } from "../utils/getPreviewProps";
 import ComponentTreePreview from "./ComponentTreePreview";
 import RepeaterPreview from "./RepeaterPreview";
+import ErrorComponentPreview from "./ErrorComponentPreview";
 
 interface ComponentPreviewProps {
   componentState: ComponentState;
@@ -65,6 +66,15 @@ export default function ComponentPreview({
       <RepeaterPreview
         repeaterState={componentState}
         expressionSources={expressionSources}
+      />
+    );
+  }
+
+  if (componentState.kind === ComponentStateKind.Error) {
+    return (
+      <ErrorComponentPreview
+        element={element}
+        errorComponentState={componentState}
       />
     );
   }

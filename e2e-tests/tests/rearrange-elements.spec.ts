@@ -14,11 +14,15 @@ studioTest("can rearrange elements in tree", async ({ page, studioPage }) => {
 
   await banner.hover();
   await page.mouse.down();
-  divBox && (await page.mouse.move(divBox.x, divBox.y, { steps: 20 }));
+  divBox &&
+    (await page.mouse.move(divBox.x + divBox.width / 4, divBox.y, {
+      steps: 1000,
+    }));
+  await page.waitForTimeout(1000);
   await page.mouse.up();
   await expect(page).toHaveScreenshot();
 
   await studioPage.saveButton.click();
-  await expect("./src/pages/UniversalPage.tsx").toHaveContents(expectedPage);
+  await expect("./src/pages/BasicPage.tsx").toHaveContents(expectedPage);
   await expect(page).toHaveScreenshot();
 });

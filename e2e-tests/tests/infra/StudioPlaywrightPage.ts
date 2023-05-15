@@ -53,6 +53,14 @@ export default class StudioPlaywrightPage {
     await modal.getByText("Save").click();
   }
 
+  async switchPage(pageName: string) {
+    await this.pagesPanel
+      .getByRole("button", {
+        name: pageName,
+      })
+      .click();
+  }
+
   async removePage(pageName: string) {
     await this.pagesPanel
       .getByRole("listitem")
@@ -97,8 +105,9 @@ export default class StudioPlaywrightPage {
   }
 
   async setActiveComponent(componentName: string, componentIndex = 0) {
-    const components = await this.page.getByText(componentName).all();
-    const component = components[componentIndex];
+    const component = this.componentTree
+      .getByText(componentName)
+      .nth(componentIndex);
     await component.click();
   }
 
