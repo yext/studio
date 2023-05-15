@@ -56,7 +56,7 @@ export default class ModuleFile {
   getModuleMetadata() {
     return tryUsingResult(
       ParsingErrorKind.FailedToParseModuleMetadata,
-      `Failed to get PageState for "${this.studioSourceFileParser.getFilepath()}"`,
+      `Failed to parse ModuleMetadata for "${this.studioSourceFileParser.getFilepath()}"`,
       this._getModuleMetadata
     );
   }
