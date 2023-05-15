@@ -46,6 +46,19 @@ export default class TsMorphHelpers {
   }
 
   /**
+   * Similar to ts-morph's getFirstChildByKind but accepts multiple kinds.
+   */
+  static getFirstChildOfKind<T extends ReadonlyArray<SyntaxKind>>(
+    node: Node,
+    ...kinds: T
+  ): KindToNodeMappings[OneOf<T>] | undefined {
+    return this.getChildOfKind(
+      (condition) => node.getFirstChild(condition),
+      ...kinds
+    );
+  }
+
+  /**
    * Similar to ts-morph's getLastChildByKindOrThrow but accepts multiple kinds.
    */
   static getLastChildOfKindOrThrow<T extends ReadonlyArray<SyntaxKind>>(
@@ -58,9 +71,19 @@ export default class TsMorphHelpers {
       ...kinds
     );
   }
+
+  /**
+   * Similar to ts-morph's isKind but accepts multiple kinds.
+   */
+  static isKind<T extends ReadonlyArray<SyntaxKind>>(
+    node: Node,
+    ...kinds: T
+  ): node is KindToNodeMappings[OneOf<T>] {
+    return kinds.some((k) => node.isKind(k));
+  }
 }
 
-type OneOf<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
+export type OneOf<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<
   infer OneOf
 >
   ? OneOf

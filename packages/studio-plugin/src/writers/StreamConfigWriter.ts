@@ -2,7 +2,6 @@ import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import {
   PAGESJS_TEMPLATE_PROPS_TYPE,
-  PAGES_PACKAGE_NAME,
   TEMPLATE_STRING_EXPRESSION_REGEX,
 } from "../constants";
 import TypeGuards from "../utils/TypeGuards";
@@ -16,6 +15,7 @@ import { ComponentState, ComponentStateKind } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
+import PagesJsWriter from "./PagesJsWriter";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
@@ -25,10 +25,14 @@ const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
  * updating logic for Stream config in PageFile.
  */
 export default class StreamConfigWriter {
+  private pagesJsWriter: PagesJsWriter;
+
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
     private studioSourceFileParser: StudioSourceFileParser
-  ) {}
+  ) {
+    this.pagesJsWriter = new PagesJsWriter(studioSourceFileWriter);
+  }
 
   /**
    * Extracts stream's data expressions used in the provided component tree,
@@ -163,17 +167,13 @@ export default class StreamConfigWriter {
   }
 
   addStreamImport(): void {
-    this.studioSourceFileWriter.addFileImport({
-      source: PAGES_PACKAGE_NAME,
-      namedImports: [STREAM_CONFIG_VARIABLE_TYPE, PAGESJS_TEMPLATE_PROPS_TYPE],
-    });
+    this.pagesJsWriter.addPagesJsImports([
+      STREAM_CONFIG_VARIABLE_TYPE,
+      PAGESJS_TEMPLATE_PROPS_TYPE,
+    ]);
   }
 
   addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
-    this.studioSourceFileWriter.updateFunctionParameter(
-      componentFunction,
-      PAGESJS_TEMPLATE_PROPS_TYPE,
-      ["document"]
-    );
+    this.pagesJsWriter.addTemplateParameter(componentFunction);
   }
 }

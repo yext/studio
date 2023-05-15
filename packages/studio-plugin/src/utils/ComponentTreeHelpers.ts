@@ -6,6 +6,7 @@ import {
   TypelessPropVal,
 } from "../types";
 import ComponentStateHelpers from "./ComponentStateHelpers";
+import ExpressionHelpers from "./ExpressionHelpers";
 import TypeGuards from "./TypeGuards";
 
 /**
@@ -105,18 +106,9 @@ export default class ComponentTreeHelpers {
         : expressionPropValues;
     });
 
-    // This is used to create the regex: /\${source\..*}/
-    const regexStr = "\\${" + source + "\\..*}";
-    const templateStringRegex = new RegExp(regexStr);
-
-    return expressions.some((e) => {
-      return (
-        e === source ||
-        e.startsWith(source + ".") ||
-        e.match(templateStringRegex) ||
-        e.includes("${" + source + "}")
-      );
-    });
+    return expressions.some((e) =>
+      ExpressionHelpers.usesExpressionSource(e, source)
+    );
   }
 
   private static getExpressionUsagesFromProps(

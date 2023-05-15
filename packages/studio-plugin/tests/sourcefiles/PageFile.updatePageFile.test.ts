@@ -327,7 +327,7 @@ describe("updatePageFile", () => {
       pageFile.updatePageFile({
         ...basicPageState,
         pagesJS: {
-          getPathValue: "index.html",
+          getPathValue: { kind: PropValueKind.Literal, value: "index.html" },
         },
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -336,21 +336,63 @@ describe("updatePageFile", () => {
       );
     });
 
-    it("updates existing getPath function's return value", () => {
-      const pageFile = createPageFile("PageWithGetPath", tsMorphProject);
-      pageFile.updatePageFile({
-        ...basicPageState,
-        pagesJS: {
-          getPathValue: "static.html",
-        },
+    describe("updates existing getPath function", () => {
+      it("updates to modified string literal value", () => {
+        const pageFile = createPageFile("PageWithGetPath", tsMorphProject);
+        pageFile.updatePageFile({
+          ...basicPageState,
+          pagesJS: {
+            getPathValue: { kind: PropValueKind.Literal, value: "static.html" },
+          },
+        });
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+          expect.stringContaining("PageWithGetPath.tsx"),
+          fs.readFileSync(
+            getPagePath("updatePageFile/PageWithModifiedGetPath"),
+            "utf-8"
+          )
+        );
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithGetPath.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithModifiedGetPath"),
-          "utf-8"
-        )
-      );
+
+      it("updates to template expression", () => {
+        const pageFile = createPageFile("PageWithGetPath", tsMorphProject);
+        pageFile.updatePageFile({
+          ...basicPageState,
+          pagesJS: {
+            getPathValue: {
+              kind: PropValueKind.Expression,
+              value: "`test-${document.slug}`",
+            },
+          },
+        });
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+          expect.stringContaining("PageWithGetPath.tsx"),
+          fs.readFileSync(
+            getPagePath("updatePageFile/PageWithTemplateGetPath"),
+            "utf-8"
+          )
+        );
+      });
+
+      it("updates to property access expression", () => {
+        const pageFile = createPageFile("PageWithGetPath", tsMorphProject);
+        pageFile.updatePageFile({
+          ...basicPageState,
+          pagesJS: {
+            getPathValue: {
+              kind: PropValueKind.Expression,
+              value: "document.slug",
+            },
+          },
+        });
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+          expect.stringContaining("PageWithGetPath.tsx"),
+          fs.readFileSync(
+            getPagePath("updatePageFile/PageWithPropertyGetPath"),
+            "utf-8"
+          )
+        );
+      });
     });
 
     it("does not modify getPath if getPathValue is undefined", () => {

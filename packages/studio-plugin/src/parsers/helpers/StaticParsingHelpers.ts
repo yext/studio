@@ -40,7 +40,7 @@ export type ParsedImport = {
  * files within Studio.
  */
 export default class StaticParsingHelpers {
-  private static parseInitializer(initializer: Expression): TypelessPropVal {
+  static parseInitializer(initializer: Expression): TypelessPropVal {
     if (initializer.isKind(SyntaxKind.StringLiteral)) {
       return {
         value: initializer.compilerNode.text,

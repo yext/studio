@@ -3,7 +3,7 @@ import ActivePagePanel from "../../src/components/ActivePagePanel";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
-import { PageState } from "@yext/studio-plugin";
+import { PageState, PropValueKind } from "@yext/studio-plugin";
 
 const basePageState: PageState = {
   componentTree: [],
@@ -42,7 +42,7 @@ it("renders page settings button in PagesJS repo", () => {
         Universal: {
           ...basePageState,
           pagesJS: {
-            getPathValue: "index",
+            getPathValue: { kind: PropValueKind.Literal, value: "index" },
           },
         },
       },

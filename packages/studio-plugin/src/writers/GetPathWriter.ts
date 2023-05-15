@@ -1,11 +1,15 @@
 import {
   GET_PATH_FUNCTION_NAME,
   PAGESJS_TEMPLATE_PROPS_TYPE,
-  PAGES_PACKAGE_NAME,
 } from "../constants";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import GetPathParser from "../parsers/GetPathParser";
+import { SyntaxKind } from "ts-morph";
+import { GetPathVal } from "../types/PageState";
+import { PropValueKind } from "../types/PropValues";
+import ExpressionHelpers from "../utils/ExpressionHelpers";
+import PagesJsWriter from "./PagesJsWriter";
 
 const GET_PATH_FUNCTION_TYPE = "GetPath";
 
@@ -15,39 +19,60 @@ const GET_PATH_FUNCTION_TYPE = "GetPath";
  */
 export default class GetPathWriter {
   private getPathParser: GetPathParser;
+  private pagesJsWriter: PagesJsWriter;
 
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
     studioSourceFileParser: StudioSourceFileParser
   ) {
     this.getPathParser = new GetPathParser(studioSourceFileParser);
+    this.pagesJsWriter = new PagesJsWriter(studioSourceFileWriter);
   }
 
   /**
-   * Updates the getPath function by replacing the returned string literal's
-   * value or adding a new getPath function to the original sourceFile.
+   * Updates the getPath function by replacing the returned string's value or
+   * adding a new getPath function to the original sourceFile.
    *
    * @param getPathValue - the new value to return from the getPath function
    */
-  updateGetPath(getPathValue: string) {
+  updateGetPath(getPathValue: GetPathVal) {
+    const returnText = this.constructReturnText(getPathValue);
+    const usesDocument =
+      getPathValue.kind === PropValueKind.Expression &&
+      ExpressionHelpers.usesExpressionSource(getPathValue.value, "document");
+
     const getPathFunction = this.getPathParser.findGetPathFunction();
     if (getPathFunction) {
-      const returnStringLiteral = this.getPathParser.getReturnStringLiteral();
-      returnStringLiteral?.setLiteralValue(getPathValue);
+      const returnStatement = this.getPathParser
+        .getReturnStringNode()
+        ?.getFirstAncestorByKind(SyntaxKind.ReturnStatement);
+      if (!returnStatement) {
+        throw new Error(
+          "Error updating getPath function: unable to find return statement."
+        );
+      }
+      returnStatement.replaceWithText(returnText);
+      usesDocument && this.pagesJsWriter.addTemplateParameter(getPathFunction);
     } else {
+      const functionText = usesDocument
+        ? `({ document }) => { ${returnText} }`
+        : `() => { ${returnText} }`;
       this.studioSourceFileWriter.updateVariableStatement(
         GET_PATH_FUNCTION_NAME,
-        `() => { return "${getPathValue}"; }`,
+        functionText,
         `${GET_PATH_FUNCTION_TYPE}<${PAGESJS_TEMPLATE_PROPS_TYPE}>`
       );
-      this.addGetPathImports();
     }
+
+    this.pagesJsWriter.addPagesJsImports([
+      GET_PATH_FUNCTION_TYPE,
+      PAGESJS_TEMPLATE_PROPS_TYPE,
+    ]);
   }
 
-  private addGetPathImports(): void {
-    this.studioSourceFileWriter.addFileImport({
-      source: PAGES_PACKAGE_NAME,
-      namedImports: [GET_PATH_FUNCTION_TYPE, PAGESJS_TEMPLATE_PROPS_TYPE],
-    });
+  private constructReturnText({ kind, value }: GetPathVal) {
+    return kind === PropValueKind.Literal
+      ? `return "${value}";`
+      : `return ${value};`;
   }
 }
