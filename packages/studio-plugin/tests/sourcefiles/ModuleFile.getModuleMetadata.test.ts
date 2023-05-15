@@ -11,6 +11,7 @@ import { mockUUID } from "../__utils__/spies";
 import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
+import { assertIsOk } from "../__utils__/asserts";
 
 jest.mock("uuid");
 
@@ -50,7 +51,9 @@ describe("getModuleMetadata", () => {
       jest.fn(),
       project
     );
-    const moduleMetadata = moduleFile.getModuleMetadata();
+    const result = moduleFile.getModuleMetadata();
+    assertIsOk(result);
+    const moduleMetadata = result.value;
 
     const expectedModuleMetadata: ModuleMetadata = {
       filepath: expect.stringContaining("ModuleFile/PanelWithComponents.tsx"),
@@ -119,7 +122,9 @@ describe("getModuleMetadata", () => {
       jest.fn(),
       project
     );
-    const moduleMetadata = moduleFile.getModuleMetadata();
+    const result = moduleFile.getModuleMetadata();
+    assertIsOk(result);
+    const moduleMetadata = result.value;
 
     const expectedModuleMetadata: ModuleMetadata = {
       filepath: expect.stringContaining("ModuleFile/PanelWithModules.tsx"),
@@ -178,7 +183,9 @@ describe("getModuleMetadata", () => {
       jest.fn(),
       project
     );
-    const moduleMetadata = moduleFile.getModuleMetadata();
+    const result = moduleFile.getModuleMetadata();
+    assertIsOk(result);
+    const moduleMetadata = result.value;
 
     const expectedModuleMetadata: ModuleMetadata = {
       kind: FileMetadataKind.Module,

@@ -14,6 +14,8 @@ import ComponentTreeParser, {
 import getImportSpecifier from "../utils/getImportSpecifier";
 import { ComponentState } from "../types";
 import { ComponentTreeHelpers } from "../utils";
+import tryUsingResult from "../errors/tryUsingResult";
+import { ParsingErrorKind } from "../errors/ParsingError";
 
 /**
  * ModuleFile is responsible for parsing and updating a single
@@ -51,7 +53,16 @@ export default class ModuleFile {
     );
   }
 
-  getModuleMetadata(): ModuleMetadata {
+  getModuleMetadata() {
+    return tryUsingResult(
+      ParsingErrorKind.FailedToParseModuleMetadata,
+      `Failed to get PageState for "${this.studioSourceFileParser.getFilepath()}"`,
+      this._getModuleMetadata
+    );
+  }
+
+  private _getModuleMetadata = (): ModuleMetadata => {
+    this.studioSourceFileParser.checkForSyntaxErrors();
     const absPathDefaultImports =
       this.studioSourceFileParser.getAbsPathDefaultImports();
     const componentTree = this.componentTreeParser.parseComponentTree(
@@ -64,7 +75,7 @@ export default class ModuleFile {
       ...this.fileMetadataParser.parse(),
       filepath: this.studioSourceFileParser.getFilepath(),
     };
-  }
+  };
 
   /**
    * Update module file by mutating the source file based on
