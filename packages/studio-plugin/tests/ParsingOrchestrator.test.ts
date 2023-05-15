@@ -202,7 +202,7 @@ it("throws an error when the page imports components from unexpected folders", (
   createParsingOrchestrator({ paths: userPaths }).getStudioData();
   expect(prettyPrintError).toHaveBeenCalledTimes(2);
   expect(prettyPrintError).toHaveBeenCalledWith(
-    expect.stringMatching(/^Failed to get PageState/),
+    expect.stringMatching(/^Failed to parse PageState/),
     expect.stringMatching(/^Error: Could not get FileMetadata for/)
   );
 });
