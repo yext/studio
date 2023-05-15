@@ -1,4 +1,5 @@
 import { ComponentState } from "./ComponentState";
+import { PropValueKind } from "./PropValues";
 
 export type PageState = {
   componentTree: ComponentState[];
@@ -16,9 +17,14 @@ export type PagesJsState = {
   entityFiles?: string[];
   /**
    * Return value of the getPath function if it returns a single, top-level,
-   * string literal value.
+   * string literal or expression.
    */
-  getPathValue: string | undefined;
+  getPathValue: GetPathVal | undefined;
+};
+
+export type GetPathVal = {
+  kind: PropValueKind;
+  value: string;
 };
 
 export type ErrorPageState = {

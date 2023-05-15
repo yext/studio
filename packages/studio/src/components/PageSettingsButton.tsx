@@ -4,6 +4,7 @@ import { useCallback, useMemo } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import FormModal from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
+import { PropValueKind } from "@yext/studio-plugin";
 
 type PageSettings = {
   url: string;
@@ -31,7 +32,7 @@ export default function PageSettingsButton({
   ]);
 
   const initialFormValue: PageSettings = useMemo(
-    () => ({ url: currGetPathValue ?? "" }),
+    () => ({ url: currGetPathValue?.value ?? "" }),
     [currGetPathValue]
   );
 
@@ -59,7 +60,9 @@ export default function PageSettingsButton({
     [handleModalSave, initialFormValue]
   );
 
-  const disabled = !currGetPathValue;
+  // TODO (SLAP-2714): Add support for editing expressions
+  const disabled =
+    !currGetPathValue || currGetPathValue.kind === PropValueKind.Expression;
   const tooltipAnchorID = `PageSettingsButton-${pageName}`;
 
   return (

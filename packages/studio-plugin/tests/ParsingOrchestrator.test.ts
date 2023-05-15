@@ -8,6 +8,7 @@ import {
   FileMetadataKind,
   PageState,
   PluginConfig,
+  PropValueKind,
   StudioData,
   UserPaths,
 } from "../src/types";
@@ -146,12 +147,17 @@ describe("aggregates data as expected", () => {
           ...basicPageState,
           pagesJS: {
             entityFiles: ["basicpage-stream.json"],
-            getPathValue: "index.html",
+            getPathValue: { kind: PropValueKind.Literal, value: "index.html" },
           },
         },
         pageWithModules: {
           ...pageWithModulesState,
-          pagesJS: { getPathValue: "modules.html" },
+          pagesJS: {
+            getPathValue: {
+              kind: PropValueKind.Expression,
+              value: "`modules.html`",
+            },
+          },
         },
       });
     });

@@ -1,6 +1,6 @@
 import PageFile from "../../src/sourcefiles/PageFile";
 import { ComponentStateKind } from "../../src/types/ComponentState";
-import { PropValueType } from "../../src/types/PropValues";
+import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import { getPagePath } from "../__utils__/getFixturePath";
 import { FileMetadata, FileMetadataKind, PropShape } from "../../src/types";
 import {
@@ -172,7 +172,10 @@ describe("getPageState", () => {
     const result = pageFile.getPageState();
 
     assertIsOk(result);
-    expect(result.value.pagesJS?.getPathValue).toEqual("index.html");
+    expect(result.value.pagesJS?.getPathValue).toEqual({
+      kind: PropValueKind.Literal,
+      value: "index.html",
+    });
   });
 
   it("returns empty component tree when parses a page without return statement", () => {

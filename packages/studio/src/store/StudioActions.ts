@@ -5,6 +5,7 @@ import {
   MessageID,
   ModuleMetadata,
   ModuleState,
+  PropValueKind,
   PropValues,
   RepeaterState,
   TypeGuards,
@@ -277,7 +278,12 @@ export default class StudioActions {
       componentTree: [],
       cssImports: [],
       filepath,
-      ...(isPagesJSRepo && { pagesJS: { getPathValue } }),
+      ...(isPagesJSRepo &&
+        getPathValue && {
+          pagesJS: {
+            getPathValue: { kind: PropValueKind.Literal, value: getPathValue },
+          },
+        }),
     });
     await this.updateActivePage(pageName);
   };

@@ -3,12 +3,24 @@ import {
   Block,
   FunctionDeclaration,
   ArrowFunction,
-  StringLiteral,
   Node,
+  KindToNodeMappings,
 } from "ts-morph";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import { GET_PATH_FUNCTION_NAME } from "../constants";
+import TsMorphHelpers, { OneOf } from "./helpers/TsMorphHelpers";
+import { GetPathVal } from "../types";
+
+const STRING_KINDS = [
+  SyntaxKind.StringLiteral,
+  SyntaxKind.PropertyAccessExpression,
+  SyntaxKind.TemplateExpression,
+  SyntaxKind.ElementAccessExpression,
+  SyntaxKind.NoSubstitutionTemplateLiteral,
+] as const;
+
+type StringNode = KindToNodeMappings[OneOf<typeof STRING_KINDS>];
 
 /**
  * GetPathParser is a class for parsing the getPath function in a PageFile.
@@ -18,19 +30,26 @@ export default class GetPathParser {
 
   /**
    * Gets the return value of the getPath function if one is defined, and if
-   * there is a single, top-level, string literal value returned from it.
+   * there is a single, top-level, string literal or expression returned from
+   * it.
    */
-  parseGetPathValue(): string | undefined {
-    const returnStringLiteral = this.getReturnStringLiteral();
-    return returnStringLiteral?.getLiteralText();
+  parseGetPathValue(): GetPathVal | undefined {
+    const stringNode = this.getReturnStringNode();
+    if (!stringNode) {
+      return;
+    }
+    const { kind, value } = StaticParsingHelpers.parseInitializer(stringNode);
+    if (typeof value === "string") {
+      return { kind, value };
+    }
   }
 
   /**
    * If a getPath function is defined and a single, top-level, string literal
-   * is returned from it, returns that string literal. If a getPath function is
+   * or expression is returned from it, returns it. If a getPath function is
    * not defined, an error is thrown.
    */
-  getReturnStringLiteral(): StringLiteral | undefined {
+  getReturnStringNode(): StringNode | undefined {
     const getPathFunction = this.findGetPathFunction();
     if (!getPathFunction) {
       throw new Error(
@@ -48,7 +67,7 @@ export default class GetPathParser {
     if (body.isKind(SyntaxKind.Block)) {
       return this.handleBlock(body);
     }
-    return this.getStringLiteral(body);
+    return this.getStringNode(body);
   }
 
   /**
@@ -58,24 +77,28 @@ export default class GetPathParser {
     return this.studioSourceFileParser.getFunctionNode(GET_PATH_FUNCTION_NAME);
   }
 
-  private handleBlock(block: Block): StringLiteral | undefined {
+  private handleBlock(block: Block): StringNode | undefined {
     const returnStatements = block.getChildrenOfKind(
       SyntaxKind.ReturnStatement
     );
     if (returnStatements.length > 0) {
       const returnStatement = returnStatements[0];
       const returnValue = returnStatement.getChildAtIndex(1);
-      return this.getStringLiteral(returnValue);
+      return this.getStringNode(returnValue);
     }
   }
 
-  private getStringLiteral(node: Node): StringLiteral | undefined {
-    if (node.isKind(SyntaxKind.StringLiteral)) {
+  private getStringNode(node: Node): StringNode | undefined {
+    if (TsMorphHelpers.isKind(node, ...STRING_KINDS)) {
       return node;
     }
     if (node.isKind(SyntaxKind.ParenthesizedExpression)) {
       const unwrappedExp = StaticParsingHelpers.unwrapParensExpression(node);
-      return unwrappedExp.getFirstChildByKind(SyntaxKind.StringLiteral);
+      const child = TsMorphHelpers.getFirstChildOfKind(
+        unwrappedExp,
+        ...STRING_KINDS
+      );
+      return child;
     }
   }
 }

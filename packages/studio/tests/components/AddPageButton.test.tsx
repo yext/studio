@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import AddPageButton from "../../src/components/AddPageButton";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
+import { PropValueKind } from "@yext/studio-plugin";
 
 beforeEach(() => {
   mockStore({
@@ -59,7 +60,9 @@ it("closes the modal when page name and url are added in PagesJS repo", async ()
     componentTree: [],
     cssImports: [],
     filepath: expect.stringContaining("test.tsx"),
-    pagesJS: { getPathValue: "testing" },
+    pagesJS: {
+      getPathValue: { kind: PropValueKind.Literal, value: "testing" },
+    },
   });
   expect(screen.queryByText("Save")).toBeNull();
 });

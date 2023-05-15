@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton";
-import { PageState } from "@yext/studio-plugin";
+import { PageState, PropValueKind } from "@yext/studio-plugin";
 
 const basePageState: PageState = {
   componentTree: [],
@@ -19,7 +19,7 @@ beforeEach(() => {
         universal: {
           ...basePageState,
           pagesJS: {
-            getPathValue: "index",
+            getPathValue: { kind: PropValueKind.Literal, value: "index" },
           },
         },
         location: basePageState,

@@ -3,13 +3,16 @@ import path from "path";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 import mockStore from "../../__utils__/mockStore";
+import { PropValueKind } from "@yext/studio-plugin";
 
 const pages: PagesRecord = {
   universal: {
     componentTree: [],
     cssImports: [],
     filepath: "mock-filepath",
-    pagesJS: { getPathValue: "index.html" },
+    pagesJS: {
+      getPathValue: { kind: PropValueKind.Literal, value: "index.html" },
+    },
   },
 };
 
@@ -79,7 +82,10 @@ describe("updateGetPathValue", () => {
   it("updates getPathValue and pendingChanges", () => {
     useStudioStore.getState().pages.updateGetPathValue("universal", "index");
     const pageState = useStudioStore.getState().pages.pages["universal"];
-    expect(pageState.pagesJS?.getPathValue).toEqual("index");
+    expect(pageState.pagesJS?.getPathValue).toEqual({
+      kind: PropValueKind.Literal,
+      value: "index",
+    });
     const pendingChanges = useStudioStore.getState().pages.pendingChanges;
     expect(pendingChanges).toEqual({
       pagesToUpdate: new Set(["universal"]),

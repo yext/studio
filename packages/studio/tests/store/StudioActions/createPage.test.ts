@@ -1,3 +1,4 @@
+import { PropValueKind } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
 
@@ -75,7 +76,9 @@ describe("PagesJS repo", () => {
         componentTree: [],
         cssImports: [],
         filepath: expect.stringContaining("test"),
-        pagesJS: { getPathValue: "testing" },
+        pagesJS: {
+          getPathValue: { kind: PropValueKind.Literal, value: "testing" },
+        },
       },
     });
   });
