@@ -1,8 +1,8 @@
 /* eslint-disable no-template-curly-in-string */
 import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
 
-const rawTemplateString = "`hi ${document.address} ${document.cat} bye`";
-const displayValue = "hi [[address]] [[cat]] bye";
+const rawTemplateString = "`hi ${document.address} ${document.cats[0]} bye`";
+const displayValue = "hi [[address]] [[cats[0]]] bye";
 
 it("converts raw expression values into display values correctly", () => {
   const actualValue =

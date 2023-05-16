@@ -24,10 +24,11 @@ export default class TemplateExpressionFormatter {
   }
 
   /**
-   * Converts `[[field]]` usages into `${document.<field>}`.
+   * Converts `[[<field>]]` usages into `${document.<field>}` and
+   * `[[<field>[<num>]]]` to `${document.<field>[<num>]}`.
    */
   private static convertSquareBracketsToCurlyBraces(value: string) {
-    return value.replaceAll(/\[\[(.*?)\]\]/g, (_substring, match) => {
+    return value.replaceAll(/\[\[(.*?(\[\d+\])?)\]\]/g, (_substring, match) => {
       return "${document." + match + "}";
     });
   }
