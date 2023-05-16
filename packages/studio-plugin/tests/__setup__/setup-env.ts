@@ -23,9 +23,9 @@ function toHaveErrorMessage(
     return {
       pass,
       message: () =>
-        `Expected Error of ${printExpected(
-          expected
-        )}, received ${actualErrorMessage}}`,
+        `Expected Error of ${printExpected(expected)}, received ${printReceived(
+          actualErrorMessage
+        )}`,
     };
   }
 

@@ -12,6 +12,7 @@ import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
 import { assertIsOk } from "../__utils__/asserts";
+import createTestSourceFile from "../__utils__/createTestSourceFile";
 
 jest.mock("uuid");
 
@@ -236,5 +237,39 @@ describe("getModuleMetadata", () => {
       ],
     };
     expect(moduleMetadata).toEqual(expectedModuleMetadata);
+  });
+});
+
+describe("error cases", () => {
+  beforeEach(() => {
+    jest.spyOn(console, "error").mockImplementation();
+  });
+
+  it("errors when the module only returns null", () => {
+    const { project } = createTestSourceFile(
+      `export default function Module() { return null };`
+    );
+    const moduleFile = new ModuleFile(
+      "test.tsx",
+      mockGetFileMetadata,
+      jest.fn(),
+      project
+    );
+    const result = moduleFile.getModuleMetadata();
+    expect(result).toHaveErrorMessage(/^Unable to find top-level JSX element/);
+  });
+
+  it("errors when the prop interface is invalid", () => {
+    const { project } = createTestSourceFile(
+      `type Props = string; export default function Module(props: Props) { return <div></div> };`
+    );
+    const moduleFile = new ModuleFile(
+      "test.tsx",
+      mockGetFileMetadata,
+      jest.fn(),
+      project
+    );
+    const result = moduleFile.getModuleMetadata();
+    expect(result).toHaveErrorMessage("Error parsing Props: Expected object.");
   });
 });
