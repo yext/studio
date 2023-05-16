@@ -5,6 +5,8 @@ import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import FormModal from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
 import { PropValueKind } from "@yext/studio-plugin";
+import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
+import PropValueHelpers from "../utils/PropValueHelpers";
 
 type PageSettings = {
   url: string;
@@ -31,14 +33,23 @@ export default function PageSettingsButton({
     store.pages.updateGetPathValue,
   ]);
 
+  const getPathExpression = PropValueHelpers.getTemplateExpression(
+    currGetPathValue ?? { kind: PropValueKind.Literal, value: "" }
+  );
+  const urlDisplayValue =
+    TemplateExpressionFormatter.getTemplateStringDisplayValue(
+      getPathExpression
+    );
+
   const initialFormValue: PageSettings = useMemo(
-    () => ({ url: currGetPathValue?.value ?? "" }),
-    [currGetPathValue]
+    () => ({ url: urlDisplayValue }),
+    [urlDisplayValue]
   );
 
   const handleModalSave = useCallback(
     (form: PageSettings) => {
-      updateGetPathValue(pageName, form.url);
+      const rawValue = TemplateExpressionFormatter.getRawValue(form.url);
+      updateGetPathValue(pageName, rawValue);
       return true;
     },
     [updateGetPathValue, pageName]
@@ -54,15 +65,16 @@ export default function PageSettingsButton({
           initialFormValue={initialFormValue}
           handleClose={handleClose}
           handleSave={handleModalSave}
+          transformOnChangeValue={
+            TemplateExpressionFormatter.convertCurlyBracesToSquareBrackets
+          }
         />
       );
     },
     [handleModalSave, initialFormValue]
   );
 
-  // TODO (SLAP-2714): Add support for editing expressions
-  const disabled =
-    !currGetPathValue || currGetPathValue.kind === PropValueKind.Expression;
+  const disabled = !currGetPathValue;
   const tooltipAnchorID = `PageSettingsButton-${pageName}`;
 
   return (

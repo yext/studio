@@ -13,6 +13,7 @@ interface FormModalProps<T extends Form> {
   errorMessage?: string;
   handleClose: () => void | Promise<void>;
   handleSave: (form: T) => boolean | Promise<boolean>;
+  transformOnChangeValue?: (value: string) => string;
 }
 
 export default function FormModal<T extends Form>({
@@ -23,6 +24,7 @@ export default function FormModal<T extends Form>({
   errorMessage,
   handleClose: customHandleClose,
   handleSave: customHandleSave,
+  transformOnChangeValue,
 }: FormModalProps<T>) {
   const baseForm = useMemo(() => {
     return initialFormValue ?? resetForm(formDescriptions);
@@ -67,11 +69,12 @@ export default function FormModal<T extends Form>({
             description={formDescriptions[field]}
             value={val}
             updateFormField={updateFormField}
+            transformOnChangeValue={transformOnChangeValue}
           />
         ))}
       </>
     );
-  }, [formDescriptions, formValue, updateFormField]);
+  }, [formDescriptions, formValue, updateFormField, transformOnChangeValue]);
 
   return (
     <Modal
@@ -103,18 +106,21 @@ function FormField({
   description,
   value,
   updateFormField,
+  transformOnChangeValue,
 }: {
   field: string;
   description: string;
   value: string;
   updateFormField: (field: string, value: string) => void;
+  transformOnChangeValue?: (value: string) => string;
 }): JSX.Element {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value.trim();
-      updateFormField(field, value);
+      const transformedValue = transformOnChangeValue?.(value) ?? value;
+      updateFormField(field, transformedValue);
     },
-    [field, updateFormField]
+    [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
 

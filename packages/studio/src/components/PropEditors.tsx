@@ -4,13 +4,12 @@ import {
   PropVal,
   PropValueKind,
   PropMetadata,
-  PropValueType,
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
 import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
-import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import PropEditor from "./PropEditor";
+import PropValueHelpers from "../utils/PropValueHelpers";
 
 export default function PropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
@@ -57,7 +56,7 @@ export default function PropEditors(props: {
             propKind={propKind}
             propName={propName}
             propMetadata={propMetadata}
-            propValue={getPropValue(
+            propValue={PropValueHelpers.getPropValue(
               activeComponentState.props[propName],
               propKind
             )}
@@ -66,37 +65,6 @@ export default function PropEditors(props: {
       })}
     </>
   );
-}
-
-function getPropValue(
-  propVal: PropVal | undefined,
-  expectedPropKind: PropValueKind
-): string | number | boolean | undefined {
-  if (!propVal) {
-    return undefined;
-  }
-
-  const { value, kind, valueType } = propVal;
-  if (typeof value === "object") {
-    throw new Error(
-      `Unexpected object prop ${JSON.stringify(propVal, null, 2)}`
-    );
-  }
-
-  if (
-    expectedPropKind === PropValueKind.Expression &&
-    TemplateExpressionFormatter.isNonTemplateStringExpression(propVal)
-  ) {
-    return TemplateExpressionFormatter.addBackticks("${" + value + "}");
-  }
-
-  const shouldConvertLiteralToExpression =
-    expectedPropKind === PropValueKind.Expression &&
-    kind === PropValueKind.Literal;
-  if (shouldConvertLiteralToExpression && valueType === PropValueType.string) {
-    return TemplateExpressionFormatter.addBackticks(value);
-  }
-  return value;
 }
 
 /**

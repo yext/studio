@@ -7,6 +7,7 @@ import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
 import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
+import PropValueHelpers from "../../../utils/PropValueHelpers";
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
@@ -75,11 +76,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           );
         }
 
-        if (originalGetPathValue.value !== value) {
+        if (
+          PropValueHelpers.getTemplateExpression(originalGetPathValue) !== value
+        ) {
           store.pages[pageName].pagesJS = {
             ...originalPagesJsState,
-            // TODO (SLAP-2714): Allow expression values
-            getPathValue: { kind: PropValueKind.Literal, value },
+            getPathValue: { kind: PropValueKind.Expression, value },
           };
           store.pendingChanges.pagesToUpdate.add(pageName);
         }

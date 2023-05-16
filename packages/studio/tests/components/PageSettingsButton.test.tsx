@@ -22,7 +22,21 @@ beforeEach(() => {
             getPathValue: { kind: PropValueKind.Literal, value: "index" },
           },
         },
-        location: basePageState,
+        product: {
+          ...basePageState,
+          pagesJS: {
+            getPathValue: {
+              kind: PropValueKind.Expression,
+              value: "document.slug",
+            },
+          },
+        },
+        location: {
+          ...basePageState,
+          pagesJS: {
+            getPathValue: undefined,
+          },
+        },
       },
     },
     studioConfig: {
@@ -66,8 +80,29 @@ it("closes the modal when the getPath value is updated", async () => {
   await userEvent.type(textbox, ".html");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  expect(updateGetPathValueSpy).toBeCalledWith("universal", "index.html");
+  expect(updateGetPathValueSpy).toBeCalledWith("universal", "`index.html`");
   expect(screen.queryByText("Save")).toBeNull();
+});
+
+it("updates getPath value with square and curly bracket expression", async () => {
+  const updateGetPathValueSpy = jest.spyOn(
+    useStudioStore.getState().pages,
+    "updateGetPathValue"
+  );
+  render(<PageSettingsButton pageName="product" />);
+  const pageSettingsButton = screen.getByRole("button");
+  await userEvent.click(pageSettingsButton);
+  const textbox = screen.getByRole("textbox");
+  expect(textbox).toHaveValue("[[slug]]");
+  // userEvent treats `[` and `{` as special characters. To type each in the
+  // input, the character must be doubled in the string.
+  await userEvent.type(textbox, "-[[[[services[[0]]]-${{document.id}");
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  await userEvent.click(saveButton);
+  expect(updateGetPathValueSpy).toBeCalledWith(
+    "product",
+    "`${document.slug}-${document.services[0]}-${document.id}`"
+  );
 });
 
 it("disables the button and has a tooltip when getPath value is undefined", () => {

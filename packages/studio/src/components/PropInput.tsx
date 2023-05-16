@@ -1,7 +1,7 @@
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
-import getPropTypeDefaultValue from "../utils/getPropTypeDefaultValue";
+import PropValueHelpers from "../utils/PropValueHelpers";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 import ColorPicker from "./common/ColorPicker";
@@ -128,12 +128,12 @@ function useDisplayValue(
 ) {
   useLayoutEffect(() => {
     if (propValue === undefined) {
-      onChange(getPropTypeDefaultValue(propType, propKind));
+      onChange(PropValueHelpers.getPropTypeDefaultValue(propType, propKind));
     }
   }, [propValue, onChange, propType, propKind]);
 
   const propValueWithDefaulting =
-    propValue ?? getPropTypeDefaultValue(propType, propKind);
+    propValue ?? PropValueHelpers.getPropTypeDefaultValue(propType, propKind);
   if (propKind === PropValueKind.Expression) {
     if (typeof propValueWithDefaulting !== "string") {
       throw new Error(
