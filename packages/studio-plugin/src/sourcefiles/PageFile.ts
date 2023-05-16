@@ -91,7 +91,7 @@ export default class PageFile {
   getPageState(): Result<PageState, ParsingError> {
     return tryUsingResult(
       ParsingErrorKind.FailedToParsePageState,
-      `Failed to get PageState for "${this.studioSourceFileParser.getFilepath()}"`,
+      `Failed to parse PageState for "${this.studioSourceFileParser.getFilepath()}"`,
       this._getPageState
     );
   }

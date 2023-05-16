@@ -9,6 +9,7 @@ import {
   ErrorPageState,
   PageState,
   FileMetadataKind,
+  ErrorFileMetadata,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -20,6 +21,7 @@ import typescript from "typescript";
 import NpmLookup from "./parsers/helpers/NpmLookup";
 import { RequiredStudioConfig } from "./parsers/getStudioConfig";
 import { v4 } from "uuid";
+import { ParsingError } from "./errors/ParsingError";
 
 export function createTsMorphProject() {
   return new Project({
@@ -220,6 +222,14 @@ export default class ParsingOrchestrator {
     if (this.filepathToFileMetadata[absPath]) {
       return this.filepathToFileMetadata[absPath];
     }
+    const createErrorFileMetadata = (
+      error: ParsingError
+    ): ErrorFileMetadata => ({
+      kind: FileMetadataKind.Error,
+      metadataUUID: v4(),
+      message: error.message,
+      filepath: absPath,
+    });
 
     const plugin = this.filepathToPluginComponentData[absPath];
     if (absPath.startsWith(this.paths.components) || plugin?.moduleName) {
@@ -230,20 +240,17 @@ export default class ParsingOrchestrator {
       );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
-        return {
-          kind: FileMetadataKind.Error,
-          intendedKind: FileMetadataKind.Component,
-          metadataUUID: v4(),
-          message: result.error.message,
-          filepath: absPath,
-        };
+        return createErrorFileMetadata(result.error);
       }
       return result.value;
     }
 
     if (absPath.startsWith(this.paths.modules)) {
-      const moduleFile = this.getModuleFile(absPath);
-      return moduleFile.getModuleMetadata();
+      const result = this.getModuleFile(absPath).getModuleMetadata();
+      if (result.isErr) {
+        return createErrorFileMetadata(result.error);
+      }
+      return result.value;
     }
 
     const { modules, components } = this.paths;

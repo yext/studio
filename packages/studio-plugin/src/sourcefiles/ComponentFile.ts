@@ -26,7 +26,7 @@ export default class ComponentFile {
   getComponentMetadata(): Result<ComponentMetadata, ParsingError> {
     return tryUsingResult(
       ParsingErrorKind.FailedToParseComponentMetadata,
-      `Failed to get ComponentMetadata for "${this.studioSourceFileParser.getFilepath()}"`,
+      `Failed to parse ComponentMetadata for "${this.studioSourceFileParser.getFilepath()}"`,
       this._getComponentMetadata
     );
   }

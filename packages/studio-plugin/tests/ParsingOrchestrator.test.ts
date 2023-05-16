@@ -17,6 +17,7 @@ import sampleComponentPluginConfig from "./__fixtures__/StudioConfigs/plugins/Sa
 import fs from "fs";
 import getLocalDataMapping from "../src/parsers/getLocalDataMapping";
 import prettyPrintError from "../src/errors/prettyPrintError";
+import { assertIsOk } from "./__utils__/asserts";
 
 jest.mock("../src/errors/prettyPrintError");
 
@@ -207,7 +208,7 @@ it("throws an error when the page imports components from unexpected folders", (
   createParsingOrchestrator({ paths: userPaths }).getStudioData();
   expect(prettyPrintError).toHaveBeenCalledTimes(2);
   expect(prettyPrintError).toHaveBeenCalledWith(
-    expect.stringMatching(/^Failed to get PageState/),
+    expect.stringMatching(/^Failed to parse PageState/),
     expect.stringMatching(/^Error: Could not get FileMetadata for/)
   );
 });
@@ -244,9 +245,12 @@ describe("reloadFile", () => {
       );
     }
   `;
-    const originalTree = orchestrator
-      .getModuleFile(modulePath)
-      .getModuleMetadata().componentTree;
+    const getComponentTree = () => {
+      const result = orchestrator.getModuleFile(modulePath).getModuleMetadata();
+      assertIsOk(result);
+      return result.value.componentTree;
+    };
+    const originalTree = getComponentTree();
     expect(originalTree).toEqual([
       expect.objectContaining({
         kind: ComponentStateKind.Fragment,
@@ -261,9 +265,7 @@ describe("reloadFile", () => {
 
     fs.writeFileSync(modulePath, updatedModuleFile);
     orchestrator.reloadFile(modulePath);
-    const updatedTree = orchestrator
-      .getModuleFile(modulePath)
-      .getModuleMetadata().componentTree;
+    const updatedTree = getComponentTree();
     expect(updatedTree).toEqual([
       expect.objectContaining({
         componentName: "Banner",
