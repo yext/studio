@@ -7,6 +7,7 @@ import {
 import TypeGuards from "../utils/TypeGuards";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
+  PropVal,
   PropValueKind,
   PropValues,
   TypelessPropVal,
@@ -16,6 +17,7 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
+import { GetPathVal } from "../types";
 
 const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
@@ -42,7 +44,8 @@ export default class StreamConfigWriter {
    * @returns a set of stream's data expressions
    */
   private getUsedStreamDocumentPaths(
-    componentTree: ComponentState[]
+    componentTree: ComponentState[],
+    getPathValue?: GetPathVal
   ): Set<StreamsDataExpression> {
     const streamDataExpressions = new Set<StreamsDataExpression>();
     componentTree.forEach((c) => {
@@ -65,6 +68,11 @@ export default class StreamConfigWriter {
         );
       }
     });
+    if (getPathValue) {
+      this.getPathsFromPropVal(getPathValue)?.forEach((value) =>
+        streamDataExpressions.add(value)
+      );
+    }
     return streamDataExpressions;
   }
 
@@ -73,21 +81,30 @@ export default class StreamConfigWriter {
   ): StreamsDataExpression[] {
     const dataExpressions: StreamsDataExpression[] = [];
     Object.keys(props).forEach((propName) => {
-      const { value, kind } = props[propName];
-      if (kind !== PropValueKind.Expression) {
-        return;
-      }
-      if (TypeGuards.isTemplateString(value)) {
-        [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)].forEach((m) => {
-          if (TypeGuards.isStreamsDataExpression(m[1])) {
-            dataExpressions.push(m[1]);
-          }
-        });
-      } else if (TypeGuards.isStreamsDataExpression(value)) {
-        dataExpressions.push(value);
-      }
+      const paths = this.getPathsFromPropVal(props[propName]);
+      paths && dataExpressions.push(...paths);
     });
     return dataExpressions;
+  }
+
+  private getPathsFromPropVal({
+    value,
+    kind,
+  }: PropVal | TypelessPropVal | GetPathVal):
+    | StreamsDataExpression[]
+    | undefined {
+    if (kind !== PropValueKind.Expression) {
+      return;
+    }
+    if (TypeGuards.isTemplateString(value)) {
+      return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
+        .map((m) => m[1])
+        .filter((m): m is StreamsDataExpression =>
+          TypeGuards.isStreamsDataExpression(m)
+        );
+    } else if (TypeGuards.isStreamsDataExpression(value)) {
+      return [value];
+    }
   }
 
   /**
@@ -102,9 +119,13 @@ export default class StreamConfigWriter {
    */
   private getUpdatedTemplateConfig(
     componentTree: ComponentState[],
+    getPathValue?: GetPathVal,
     currentTemplateConfig?: TemplateConfig
   ): TemplateConfig | undefined {
-    const usedDocumentPaths = this.getUsedStreamDocumentPaths(componentTree);
+    const usedDocumentPaths = this.getUsedStreamDocumentPaths(
+      componentTree,
+      getPathValue
+    );
     if (!currentTemplateConfig && usedDocumentPaths.size === 0) {
       return undefined;
     }
@@ -139,7 +160,10 @@ export default class StreamConfigWriter {
    * @param componentTree - the states of the page's component tree
    * @returns Whether or not a stream config was written to the sourceFile
    */
-  updateStreamConfig(componentTree: ComponentState[]): boolean {
+  updateStreamConfig(
+    componentTree: ComponentState[],
+    getPathValue?: GetPathVal
+  ): boolean {
     const streamObjectLiteralExp =
       this.studioSourceFileParser.getExportedObjectExpression(
         STREAM_CONFIG_VARIABLE_NAME
@@ -151,6 +175,7 @@ export default class StreamConfigWriter {
       );
     const updatedTemplateConfig = this.getUpdatedTemplateConfig(
       componentTree,
+      getPathValue,
       currentTemplateConfig
     );
 

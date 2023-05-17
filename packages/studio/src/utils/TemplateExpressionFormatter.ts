@@ -36,7 +36,7 @@ export default class TemplateExpressionFormatter {
   /**
    * Converts `${document.<field>}` usages into `[[field]]`.
    */
-  private static convertCurlyBracesToSquareBrackets(value: string) {
+  static convertCurlyBracesToSquareBrackets(value: string) {
     return value.replaceAll(/\${document\.(.*?)}/g, (_substring, match) => {
       return "[[" + match + "]]";
     });

@@ -11,7 +11,7 @@ import {
 } from "@yext/studio-plugin";
 import { get } from "lodash";
 import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
-import getPropTypeDefaultValue from "./getPropTypeDefaultValue";
+import PropValueHelpers from "./PropValueHelpers";
 
 /**
  * Transform props' values based on PropValueKind. If a prop's value is of
@@ -35,7 +35,7 @@ export function getPreviewProps(
     }
 
     if (!props[propName]) {
-      transformedProps[propName] = getPropTypeDefaultValue(
+      transformedProps[propName] = PropValueHelpers.getPropTypeDefaultValue(
         propShape[propName].type,
         PropValueKind.Literal
       );

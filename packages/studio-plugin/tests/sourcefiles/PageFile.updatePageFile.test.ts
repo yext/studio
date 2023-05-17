@@ -173,6 +173,45 @@ describe("updatePageFile", () => {
       );
     });
 
+    it("adds stream document paths in getPath", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const pageFile = createPageFile("PageWithStreamConfig", tsMorphProject);
+      pageFile.updatePageFile(
+        {
+          ...basicPageState,
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.title",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid",
+            },
+          ],
+          pagesJS: {
+            getPathValue: {
+              kind: PropValueKind.Expression,
+              value: "`${document.city}-${document.services[0]}`",
+            },
+          },
+        },
+        { updateStreamConfig: true }
+      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithStreamConfig.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithGetPathStreamConfig"),
+          "utf-8"
+        )
+      );
+    });
+
     it("dedupes stream document paths", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile(

@@ -80,11 +80,11 @@ describe("removePage", () => {
 
 describe("updateGetPathValue", () => {
   it("updates getPathValue and pendingChanges", () => {
-    useStudioStore.getState().pages.updateGetPathValue("universal", "index");
+    useStudioStore.getState().pages.updateGetPathValue("universal", "`index`");
     const pageState = useStudioStore.getState().pages.pages["universal"];
     expect(pageState.pagesJS?.getPathValue).toEqual({
-      kind: PropValueKind.Literal,
-      value: "index",
+      kind: PropValueKind.Expression,
+      value: "`index`",
     });
     const pendingChanges = useStudioStore.getState().pages.pendingChanges;
     expect(pendingChanges).toEqual({
