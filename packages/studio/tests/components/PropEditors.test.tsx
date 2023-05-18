@@ -91,6 +91,13 @@ const propShape: PropShape = {
   bgColor: { type: PropValueType.HexColor, required: false },
 };
 
+const getComponentProps = () =>
+  (
+    useStudioStore
+      .getState()
+      .actions.getActiveComponentState() as StandardOrModuleComponentState
+  ).props;
+
 describe("ComponentStateKind.Component", () => {
   testStandardOrModuleComponentState(
     activeComponentState,
@@ -178,12 +185,6 @@ function testStandardOrModuleComponentState(
         />
       );
     }
-    const getComponentProps = () =>
-      (
-        useStudioStore
-          .getState()
-          .actions.getActiveComponentState() as StandardOrModuleComponentState
-      ).props;
     const activeComponent: ComponentState = {
       ...state,
       props: {
@@ -227,7 +228,8 @@ function testStandardOrModuleComponentState(
         ...activeComponent.props,
         title: {
           ...activeComponent.props.title,
-          value: "test!",
+          kind: PropValueKind.Expression,
+          value: "`test!`",
         },
       });
     });
@@ -286,6 +288,17 @@ it("converts string literals to string expressions when propKind = Expression", 
       valueType: PropValueType.string,
     },
   };
+
+  mockStoreActiveComponent({
+    activeComponent: {
+      kind: ComponentStateKind.Standard,
+      componentName: "MyComponent",
+      props,
+      uuid: "mock-uuid",
+      metadataUUID: "mock-metadataUUID",
+    },
+  });
+
   const propShape: PropShape = {
     title: {
       type: PropValueType.string,
@@ -302,6 +315,18 @@ it("converts string literals to string expressions when propKind = Expression", 
       propShape={propShape}
     />
   );
+
+  fireEvent.input(screen.getByLabelText("title"), {
+    target: { value: "${document.name}" },
+  });
+
+  expect(getComponentProps()).toEqual({
+    title: {
+      kind: PropValueKind.Expression,
+      valueType: PropValueType.string,
+      value: "`${document.name}`",
+    },
+  });
   expect(screen.getByText("title")).toBeDefined();
 });
 
@@ -330,6 +355,5 @@ it("converts non-template string expressions to template literals", () => {
     />
   );
   expect(screen.getByText("title")).toBeDefined();
-  // eslint-disable-next-line no-template-curly-in-string
   expect(screen.getByRole("textbox")).toHaveValue("${siteSettings.siteName}");
 });
