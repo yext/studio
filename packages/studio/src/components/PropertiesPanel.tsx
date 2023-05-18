@@ -2,7 +2,6 @@ import {
   FileMetadataKind,
   PropMetadata,
   PropValueType,
-  PropValueKind,
   ComponentState,
   FileMetadata,
   TypeGuards,
@@ -38,7 +37,6 @@ export default function PropertiesPanel(): JSX.Element | null {
       <PropEditors
         activeComponentState={extractedComponentState}
         propShape={propShape}
-        getPropValueKind={getPropValueKind}
         shouldRenderProp={shouldRenderProp}
       />
       <Divider />
@@ -74,8 +72,4 @@ function renderModuleActions(metadata: FileMetadata, state: ComponentState) {
 
 function shouldRenderProp(metadata: PropMetadata) {
   return metadata.type !== PropValueType.string;
-}
-
-export function getPropValueKind(): PropValueKind {
-  return PropValueKind.Literal;
 }

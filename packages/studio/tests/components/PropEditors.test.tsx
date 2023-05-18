@@ -40,7 +40,6 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
     <PropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Literal}
     />
   );
   expect(screen.queryByText("titleNode")).toBeNull();
@@ -70,7 +69,6 @@ it("does not render a prop editor for component's prop of type Object", () => {
     <PropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Literal}
     />
   );
   expect(screen.queryByText("objProp")).toBeNull();
@@ -140,7 +138,6 @@ function testStandardOrModuleComponentState(
       <PropEditors
         activeComponentState={state}
         propShape={propShape}
-        getPropValueKind={() => PropValueKind.Literal}
         shouldRenderProp={() => false}
       />
     );
@@ -155,13 +152,7 @@ function testStandardOrModuleComponentState(
   });
 
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
-    render(
-      <PropEditors
-        activeComponentState={state}
-        propShape={propShape}
-        getPropValueKind={() => PropValueKind.Literal}
-      />
-    );
+    render(<PropEditors activeComponentState={state} propShape={propShape} />);
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
     expect(screen.getByLabelText("bool")).toHaveAttribute("type", "checkbox");
@@ -184,7 +175,6 @@ function testStandardOrModuleComponentState(
         <PropEditors
           activeComponentState={activeComponentState}
           propShape={activeComponentMetadata.propShape}
-          getPropValueKind={() => PropValueKind.Literal}
         />
       );
     }
@@ -310,7 +300,6 @@ it("converts string literals to string expressions when propKind = Expression", 
         props,
       }}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Expression}
     />
   );
   expect(screen.getByText("title")).toBeDefined();
@@ -338,7 +327,6 @@ it("converts non-template string expressions to template literals", () => {
         props,
       }}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Expression}
     />
   );
   expect(screen.getByText("title")).toBeDefined();

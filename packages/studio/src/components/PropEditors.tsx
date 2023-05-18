@@ -2,7 +2,6 @@ import {
   StandardOrModuleComponentState,
   PropShape,
   PropVal,
-  PropValueKind,
   PropMetadata,
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
@@ -10,22 +9,17 @@ import useStudioStore from "../store/useStudioStore";
 import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
+import getDefaultPropValueKind from "../utils/getDefaultPropValueKind";
 
 export default function PropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
-  getPropValueKind: (metadata: PropMetadata) => PropValueKind;
   shouldRenderProp?: (propMetadata: PropMetadata) => boolean;
 }) {
   const updateActiveComponentProps = useStudioStore(
     (store) => store.actions.updateActiveComponentProps
   );
-  const {
-    activeComponentState,
-    propShape,
-    getPropValueKind,
-    shouldRenderProp,
-  } = props;
+  const { activeComponentState, propShape, shouldRenderProp } = props;
 
   const updateProps = useCallback(
     (propName: string, newPropVal: PropVal) => {
@@ -48,7 +42,9 @@ export default function PropEditors(props: {
   return (
     <>
       {editableProps.map(([propName, propMetadata]) => {
-        const propKind = getPropValueKind(propMetadata);
+        const propKind =
+          activeComponentState.props[propName]?.kind ??
+          getDefaultPropValueKind(propMetadata);
         return (
           <PropEditor
             key={`${activeComponentState.uuid}-${propName}`}

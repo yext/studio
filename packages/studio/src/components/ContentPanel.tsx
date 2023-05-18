@@ -1,8 +1,4 @@
-import {
-  PropValueKind,
-  PropMetadata,
-  PropValueType,
-} from "@yext/studio-plugin";
+import { PropMetadata, PropValueType } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import PropEditors from "./PropEditors";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
@@ -39,7 +35,6 @@ export default function ContentPanel(): JSX.Element | null {
       <PropEditors
         activeComponentState={extractedComponentState}
         propShape={propShape}
-        getPropValueKind={getPropValueKind}
         shouldRenderProp={shouldRenderProp}
       />
       <Divider />
@@ -56,10 +51,4 @@ export default function ContentPanel(): JSX.Element | null {
 
 function shouldRenderProp(metadata: PropMetadata) {
   return metadata.type === PropValueType.string;
-}
-
-export function getPropValueKind(metadata: PropMetadata): PropValueKind {
-  return Object.hasOwn(metadata, "unionValues")
-    ? PropValueKind.Literal
-    : PropValueKind.Expression;
 }
