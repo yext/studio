@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useContext, useMemo, useState } from "react";
+import { ChangeEvent, useCallback, useContext, useMemo } from "react";
 import AddPageContext from "./AddPageContext";
 import Modal from "../common/Modal";
 import { FlowStepModalProps } from "./FlowStep";
@@ -14,21 +14,15 @@ export default function PageTypeSelector({
   handleConfirm,
 }: FlowStepModalProps) {
   const { state, actions } = useContext(AddPageContext);
-  const [isStatic, setIsStatic] = useState(state.isStatic);
+  const { isStatic } = state;
+  const { setIsStatic } = actions;
 
-  const onClose = useCallback(async () => {
-    await handleClose();
-    setIsStatic(state.isStatic);
-  }, [handleClose, state.isStatic]);
-
-  const onConfirm = useCallback(async () => {
-    actions.setIsStatic(isStatic);
-    await handleConfirm();
-  }, [isStatic, handleConfirm, actions]);
-
-  const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
-    setIsStatic(e.target.name === PageType.Static);
-  }, []);
+  const onChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      setIsStatic(e.target.name === PageType.Static);
+    },
+    [setIsStatic]
+  );
 
   const body = useMemo(
     () => (
@@ -53,8 +47,8 @@ export default function PageTypeSelector({
   return (
     <Modal
       isOpen={isOpen}
-      handleClose={onClose}
-      handleConfirm={onConfirm}
+      handleClose={handleClose}
+      handleConfirm={handleConfirm}
       title="Select Page Type"
       body={body}
       confirmButtonText="Next"
