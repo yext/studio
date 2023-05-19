@@ -56,16 +56,4 @@ export default class TemplateExpressionFormatter {
   static hasBackticks(value: string): boolean {
     return value.length >= 2 && value.startsWith("`") && value.endsWith("`");
   }
-
-  static isNonTemplateStringExpression({
-    kind,
-    value,
-    valueType,
-  }: PropVal): boolean {
-    return (
-      kind === PropValueKind.Expression &&
-      valueType === PropValueType.string &&
-      !this.hasBackticks(value)
-    );
-  }
 }
