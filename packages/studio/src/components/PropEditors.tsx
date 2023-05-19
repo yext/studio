@@ -2,8 +2,9 @@ import {
   StandardOrModuleComponentState,
   PropShape,
   PropVal,
-  PropValueKind,
   PropMetadata,
+  PropValueType,
+  PropValueKind,
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
@@ -14,18 +15,12 @@ import PropValueHelpers from "../utils/PropValueHelpers";
 export default function PropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
-  getPropValueKind: (metadata: PropMetadata) => PropValueKind;
   shouldRenderProp?: (propMetadata: PropMetadata) => boolean;
 }) {
   const updateActiveComponentProps = useStudioStore(
     (store) => store.actions.updateActiveComponentProps
   );
-  const {
-    activeComponentState,
-    propShape,
-    getPropValueKind,
-    shouldRenderProp,
-  } = props;
+  const { activeComponentState, propShape, shouldRenderProp } = props;
 
   const updateProps = useCallback(
     (propName: string, newPropVal: PropVal) => {
@@ -48,7 +43,8 @@ export default function PropEditors(props: {
   return (
     <>
       {editableProps.map(([propName, propMetadata]) => {
-        const propKind = getPropValueKind(propMetadata);
+        const propKind = getPropKind(propMetadata);
+
         return (
           <PropEditor
             key={`${activeComponentState.uuid}-${propName}`}
@@ -65,6 +61,19 @@ export default function PropEditors(props: {
       })}
     </>
   );
+}
+
+/**
+ * Returns the PropValueKind to render in the UI for the given PropMetadata.
+ */
+function getPropKind(propMetadata: PropMetadata) {
+  if (propMetadata.type === PropValueType.string && !propMetadata.unionValues) {
+    // All non-union strings are expected to be treated as expressions so that
+    // string interpolation works as expected in the UI.
+    return PropValueKind.Expression;
+  }
+
+  return PropValueKind.Literal;
 }
 
 /**

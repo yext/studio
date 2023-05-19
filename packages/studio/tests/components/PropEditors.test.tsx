@@ -40,7 +40,6 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
     <PropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Literal}
     />
   );
   expect(screen.queryByText("titleNode")).toBeNull();
@@ -70,7 +69,6 @@ it("does not render a prop editor for component's prop of type Object", () => {
     <PropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Literal}
     />
   );
   expect(screen.queryByText("objProp")).toBeNull();
@@ -92,6 +90,13 @@ const propShape: PropShape = {
   bool: { type: PropValueType.boolean, required: false },
   bgColor: { type: PropValueType.HexColor, required: false },
 };
+
+const getComponentProps = () =>
+  (
+    useStudioStore
+      .getState()
+      .actions.getActiveComponentState() as StandardOrModuleComponentState
+  ).props;
 
 describe("ComponentStateKind.Component", () => {
   testStandardOrModuleComponentState(
@@ -140,7 +145,6 @@ function testStandardOrModuleComponentState(
       <PropEditors
         activeComponentState={state}
         propShape={propShape}
-        getPropValueKind={() => PropValueKind.Literal}
         shouldRenderProp={() => false}
       />
     );
@@ -155,13 +159,7 @@ function testStandardOrModuleComponentState(
   });
 
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
-    render(
-      <PropEditors
-        activeComponentState={state}
-        propShape={propShape}
-        getPropValueKind={() => PropValueKind.Literal}
-      />
-    );
+    render(<PropEditors activeComponentState={state} propShape={propShape} />);
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
     expect(screen.getByLabelText("bool")).toHaveAttribute("type", "checkbox");
@@ -184,16 +182,9 @@ function testStandardOrModuleComponentState(
         <PropEditors
           activeComponentState={activeComponentState}
           propShape={activeComponentMetadata.propShape}
-          getPropValueKind={() => PropValueKind.Literal}
         />
       );
     }
-    const getComponentProps = () =>
-      (
-        useStudioStore
-          .getState()
-          .actions.getActiveComponentState() as StandardOrModuleComponentState
-      ).props;
     const activeComponent: ComponentState = {
       ...state,
       props: {
@@ -237,7 +228,8 @@ function testStandardOrModuleComponentState(
         ...activeComponent.props,
         title: {
           ...activeComponent.props.title,
-          value: "test!",
+          kind: PropValueKind.Expression,
+          value: "`test!`",
         },
       });
     });
@@ -288,7 +280,7 @@ function testStandardOrModuleComponentState(
   });
 }
 
-it("converts string literals to string expressions when propKind = Expression", () => {
+it("converts string literals to string expressions when propKind = Expression", async () => {
   const props: PropValues = {
     title: {
       kind: PropValueKind.Literal,
@@ -296,6 +288,17 @@ it("converts string literals to string expressions when propKind = Expression", 
       valueType: PropValueType.string,
     },
   };
+
+  mockStoreActiveComponent({
+    activeComponent: {
+      kind: ComponentStateKind.Standard,
+      componentName: "MyComponent",
+      props,
+      uuid: "mock-uuid",
+      metadataUUID: "mock-metadataUUID",
+    },
+  });
+
   const propShape: PropShape = {
     title: {
       type: PropValueType.string,
@@ -310,10 +313,18 @@ it("converts string literals to string expressions when propKind = Expression", 
         props,
       }}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Expression}
     />
   );
-  expect(screen.getByText("title")).toBeDefined();
+
+  await userEvent.type(screen.getByLabelText("title"), "a");
+
+  expect(getComponentProps()).toEqual({
+    title: {
+      kind: PropValueKind.Expression,
+      valueType: PropValueType.string,
+      value: "`myTitlea`",
+    },
+  });
 });
 
 it("converts non-template string expressions to template literals", () => {
@@ -338,10 +349,8 @@ it("converts non-template string expressions to template literals", () => {
         props,
       }}
       propShape={propShape}
-      getPropValueKind={() => PropValueKind.Expression}
     />
   );
   expect(screen.getByText("title")).toBeDefined();
-  // eslint-disable-next-line no-template-curly-in-string
   expect(screen.getByRole("textbox")).toHaveValue("${siteSettings.siteName}");
 });
