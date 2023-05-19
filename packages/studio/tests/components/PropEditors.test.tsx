@@ -280,7 +280,7 @@ function testStandardOrModuleComponentState(
   });
 }
 
-it("converts string literals to string expressions when propKind = Expression", () => {
+it("converts string literals to string expressions when propKind = Expression", async () => {
   const props: PropValues = {
     title: {
       kind: PropValueKind.Literal,
@@ -316,15 +316,13 @@ it("converts string literals to string expressions when propKind = Expression", 
     />
   );
 
-  fireEvent.input(screen.getByLabelText("title"), {
-    target: { value: "${document.name}" },
-  });
+  await userEvent.type(screen.getByLabelText("title"), "a");
 
   expect(getComponentProps()).toEqual({
     title: {
       kind: PropValueKind.Expression,
       valueType: PropValueType.string,
-      value: "`${document.name}`",
+      value: "`myTitlea`",
     },
   });
   expect(screen.getByText("title")).toBeDefined();
