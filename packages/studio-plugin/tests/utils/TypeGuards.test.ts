@@ -38,3 +38,17 @@ describe("isSiteSettingsValues", () => {
     ).toBeFalsy();
   });
 });
+
+describe("isValidPropValue", () => {
+  it("requires object props to recursively have valueType specified", () => {
+    const invalidPropVal = {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.Object,
+      value: {
+        kind: PropValueKind.Literal,
+        value: "some string",
+      },
+    };
+    expect(TypeGuards.isValidPropValue(invalidPropVal)).toBeFalsy();
+  });
+});

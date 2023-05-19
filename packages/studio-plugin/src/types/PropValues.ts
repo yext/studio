@@ -48,7 +48,7 @@ export type BooleanProp = {
   valueType: PropValueType.boolean;
   value: boolean;
 };
-export type ObjectProp<T> = {
+export type ObjectProp<T = PropValues> = {
   kind: PropValueKind.Literal;
   valueType: PropValueType.Object;
   value: T;

@@ -1,6 +1,10 @@
 import { SyntaxKind } from "ts-morph";
 import { PropShape } from "../../src/types/PropShape";
-import { PropValueKind, PropValueType } from "../../src/types/PropValues";
+import {
+  PropValueKind,
+  PropValueType,
+  PropValues,
+} from "../../src/types/PropValues";
 import StaticParsingHelpers from "../../src/parsers/helpers/StaticParsingHelpers";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
@@ -52,6 +56,20 @@ describe("parseObjectLiteral", () => {
 describe("parseJsxAttributes", () => {
   const propShape: PropShape = {
     title: { type: PropValueType.string, doc: "jsdoc", required: false },
+    nested: {
+      type: PropValueType.Object,
+      required: false,
+      shape: {
+        expr: {
+          type: PropValueType.string,
+          required: false,
+        },
+        str: {
+          type: PropValueType.string,
+          required: false,
+        },
+      },
+    },
   };
 
   it("skips special React props", () => {
@@ -94,6 +112,39 @@ describe("parseJsxAttributes", () => {
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Invalid prop value:/);
+  });
+
+  it("can parse nested objects with expressions and string literals", () => {
+    const { sourceFile } = createTestSourceFile(
+      `<Banner nested={{ expr: document.name, str: 'cheese' }}  />`
+    );
+    const jsxAttributes = sourceFile
+      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+      .getAttributes();
+
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues: PropValues = {
+      nested: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          expr: {
+            kind: PropValueKind.Expression,
+            value: "document.name",
+            valueType: PropValueType.string,
+          },
+          str: {
+            kind: PropValueKind.Literal,
+            value: "cheese",
+            valueType: PropValueType.string,
+          },
+        },
+      },
+    };
+    expect(receivedPropValues).toEqual(expectedPropValues);
   });
 });
 

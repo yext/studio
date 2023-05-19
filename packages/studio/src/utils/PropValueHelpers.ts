@@ -32,7 +32,7 @@ export default class PropValueHelpers {
     }
 
     const { value, valueType } = propVal;
-    if (typeof value === "object") {
+    if (valueType === PropValueType.Object) {
       throw new Error(
         `Unexpected object prop ${JSON.stringify(propVal, null, 2)}`
       );
@@ -55,19 +55,18 @@ export default class PropValueHelpers {
     kind: PropValueKind;
     value: string;
   }): string {
-    if (
-      TemplateExpressionFormatter.isNonTemplateStringExpression({
-        kind,
-        value,
-        valueType: PropValueType.string,
-      })
-    ) {
+    const isPropertyAccessExpresion =
+      kind === PropValueKind.Expression &&
+      !TemplateExpressionFormatter.hasBackticks(value);
+
+    if (isPropertyAccessExpresion) {
       return TemplateExpressionFormatter.addBackticks("${" + value + "}");
     }
 
     if (kind === PropValueKind.Literal) {
       return TemplateExpressionFormatter.addBackticks(value);
     }
+
     return value;
   }
 }
