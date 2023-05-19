@@ -13,7 +13,6 @@ module.exports = {
   parserOptions: {
     project: ["tsconfig.json"],
   },
-  plugins: ["unused-imports"],
   rules: {
     "@typescript-eslint/require-await": "error",
     "@typescript-eslint/no-misused-promises": [
@@ -24,7 +23,6 @@ module.exports = {
     ],
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/await-thenable": "error",
-    "unused-imports/no-unused-imports": "error",
   },
   overrides: [
     {
