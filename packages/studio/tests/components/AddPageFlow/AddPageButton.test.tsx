@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import AddPageButton from "../../../src/components/AddPageFlow/AddPageButton";
+import AddPageButton from "../../../src/components/AddPageButton/AddPageButton";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
 import { PropValueKind } from "@yext/studio-plugin";

@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback, useContext, useMemo, useState } from "react";
 import AddPageContext from "./AddPageContext";
 import Modal from "../common/Modal";
-import { FlowStepModalProps } from "./AddPageButton";
+import { FlowStepModalProps } from "./FlowStep";
 
 enum PageType {
   Static = "Static",
@@ -42,7 +42,7 @@ export default function PageTypeSelector({
               checked={pageType === PageType.Static ? isStatic : !isStatic}
               name={pageType}
             />
-            {`${pageType} Page`}
+            {pageType} Page
           </div>
         ))}
       </div>

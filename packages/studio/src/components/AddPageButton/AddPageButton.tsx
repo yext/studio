@@ -3,31 +3,10 @@ import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";
 import { ReactComponent as Plus } from "../../icons/plus.svg";
-import PageTypeSelector from "./PageTypeSelector";
-import BasicPageDataCollector from "./BasicPageDataCollector";
 import AddPageContext from "./AddPageContext";
 import useStudioStore from "../../store/useStudioStore";
 import AddPageContextProvider from "./AddPageContextProvider";
-
-enum FlowStep {
-  SelectPageType,
-  GetBasicPageData,
-}
-
-export interface FlowStepModalProps {
-  isOpen: boolean;
-  handleClose: () => Promise<void>;
-  handleConfirm: (pageName?: string, url?: string) => Promise<void>;
-}
-
-type FlowStepModalMap = {
-  [key in FlowStep]: (props: FlowStepModalProps) => JSX.Element;
-};
-
-const flowStepModalMap: FlowStepModalMap = {
-  [FlowStep.SelectPageType]: PageTypeSelector,
-  [FlowStep.GetBasicPageData]: BasicPageDataCollector,
-};
+import { FlowStep, flowStepModalMap } from "./FlowStep";
 
 export default function AddPageButton() {
   return (

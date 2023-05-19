@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import FormModal from "../common/FormModal";
-import { FlowStepModalProps } from "./AddPageButton";
+import { FlowStepModalProps } from "./FlowStep";
 import useStudioStore from "../../store/useStudioStore";
 
 type BasicPageData = {
