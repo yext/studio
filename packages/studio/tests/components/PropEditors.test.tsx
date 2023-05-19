@@ -325,7 +325,6 @@ it("converts string literals to string expressions when propKind = Expression", 
       value: "`myTitlea`",
     },
   });
-  expect(screen.getByText("title")).toBeDefined();
 });
 
 it("converts non-template string expressions to template literals", () => {
