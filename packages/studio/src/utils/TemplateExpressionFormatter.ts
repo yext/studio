@@ -1,5 +1,3 @@
-import { PropVal, PropValueKind, PropValueType } from "@yext/studio-plugin";
-
 /**
  * TemplateExpressionFormatter contains various static utility methods
  * for formatting template expression strings.
