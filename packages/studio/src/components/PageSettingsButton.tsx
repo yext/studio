@@ -4,7 +4,7 @@ import { useCallback, useMemo } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import FormModal from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
-import { PropValueKind } from "@yext/studio-plugin";
+import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
 
@@ -28,31 +28,34 @@ interface PageSettingsButtonProps {
 export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
-  const [currGetPathValue, updateGetPathValue] = useStudioStore((store) => [
-    store.pages.pages[pageName].pagesJS?.getPathValue,
-    store.pages.updateGetPathValue,
-  ]);
-
-  const getPathExpression = PropValueHelpers.getTemplateExpression(
-    currGetPathValue ?? { kind: PropValueKind.Literal, value: "" }
+  const [currGetPathValue, updateGetPathValue, isEntityPage] = useStudioStore(
+    (store) => [
+      store.pages.pages[pageName].pagesJS?.getPathValue,
+      store.pages.updateGetPathValue,
+      !!store.pages.pages[pageName].pagesJS?.streamScope,
+    ]
   );
-  const urlDisplayValue =
-    TemplateExpressionFormatter.getTemplateStringDisplayValue(
-      getPathExpression
-    );
 
   const initialFormValue: PageSettings = useMemo(
-    () => ({ url: urlDisplayValue }),
-    [urlDisplayValue]
+    () => ({ url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
+    [currGetPathValue, isEntityPage]
   );
 
   const handleModalSave = useCallback(
     (form: PageSettings) => {
-      const rawValue = TemplateExpressionFormatter.getRawValue(form.url);
-      updateGetPathValue(pageName, rawValue);
+      const getPathValue: GetPathVal = isEntityPage
+        ? {
+            kind: PropValueKind.Expression,
+            value: TemplateExpressionFormatter.getRawValue(form.url),
+          }
+        : {
+            kind: PropValueKind.Literal,
+            value: form.url,
+          };
+      updateGetPathValue(pageName, getPathValue);
       return true;
     },
-    [updateGetPathValue, pageName]
+    [updateGetPathValue, pageName, isEntityPage]
   );
 
   const renderModal: renderModalFunction = useCallback(
@@ -66,12 +69,14 @@ export default function PageSettingsButton({
           handleClose={handleClose}
           handleSave={handleModalSave}
           transformOnChangeValue={
-            TemplateExpressionFormatter.convertCurlyBracesToSquareBrackets
+            isEntityPage
+              ? TemplateExpressionFormatter.convertCurlyBracesToSquareBrackets
+              : undefined
           }
         />
       );
     },
-    [handleModalSave, initialFormValue]
+    [handleModalSave, initialFormValue, isEntityPage]
   );
 
   const disabled = !currGetPathValue;
@@ -93,5 +98,21 @@ export default function PageSettingsButton({
         />
       )}
     </div>
+  );
+}
+
+function getUrlDisplayValue(
+  getPathValue: GetPathVal | undefined,
+  isEntityPage: boolean
+): string {
+  if (!isEntityPage) {
+    return getPathValue?.value ?? "";
+  }
+
+  const getPathExpression = PropValueHelpers.getTemplateExpression(
+    getPathValue ?? { kind: PropValueKind.Literal, value: "" }
+  );
+  return TemplateExpressionFormatter.getTemplateStringDisplayValue(
+    getPathExpression
   );
 }

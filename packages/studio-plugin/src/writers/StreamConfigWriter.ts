@@ -2,6 +2,7 @@ import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import {
   PAGESJS_TEMPLATE_PROPS_TYPE,
+  STREAM_CONFIG_VARIABLE_NAME,
   TEMPLATE_STRING_EXPRESSION_REGEX,
 } from "../constants";
 import TypeGuards from "../utils/TypeGuards";
@@ -17,9 +18,9 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
-import { GetPathVal } from "../types";
+import { GetPathVal, PagesJsState } from "../types";
+import TemplateConfigParser from "../parsers/TemplateConfigParser";
 
-const STREAM_CONFIG_VARIABLE_NAME = "config";
 const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
 
 /**
@@ -27,12 +28,16 @@ const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
  * updating logic for Stream config in PageFile.
  */
 export default class StreamConfigWriter {
+  private templateConfigParser: TemplateConfigParser;
   private pagesJsWriter: PagesJsWriter;
 
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
-    private studioSourceFileParser: StudioSourceFileParser
+    studioSourceFileParser: StudioSourceFileParser
   ) {
+    this.templateConfigParser = new TemplateConfigParser(
+      studioSourceFileParser
+    );
     this.pagesJsWriter = new PagesJsWriter(studioSourceFileWriter);
   }
 
@@ -114,19 +119,19 @@ export default class StreamConfigWriter {
    * found, then it returns undefined.
    *
    * @param componentTree - the states of the page's component tree
-   * @param currentTemplateConfig - template config defined in page file
+   * @param pagesJsState - the PagesJS-specific state of the page
    * @returns a template config with updated Stream configuration
    */
   private getUpdatedTemplateConfig(
     componentTree: ComponentState[],
-    getPathValue?: GetPathVal,
-    currentTemplateConfig?: TemplateConfig
+    pagesJsState?: PagesJsState
   ): TemplateConfig | undefined {
+    const currentTemplateConfig = this.templateConfigParser.getTemplateConfig();
     const usedDocumentPaths = this.getUsedStreamDocumentPaths(
       componentTree,
-      getPathValue
+      pagesJsState?.getPathValue
     );
-    if (!currentTemplateConfig && usedDocumentPaths.size === 0) {
+    if (!pagesJsState?.streamScope) {
       return undefined;
     }
 
@@ -141,12 +146,12 @@ export default class StreamConfigWriter {
       ...currentTemplateConfig,
       stream: {
         $id: "studio-stream-id",
-        filter: {},
         localization: {
           locales: ["en"],
           primary: false,
         },
         ...currentTemplateConfig?.stream,
+        filter: pagesJsState?.streamScope,
         fields: pagesJSFieldsMerger(currentFields, newFields),
       },
     };
@@ -158,25 +163,16 @@ export default class StreamConfigWriter {
    * document paths are used in the component tree.
    *
    * @param componentTree - the states of the page's component tree
+   * @param pagesJsState - the PagesJS-specific state of the page
    * @returns Whether or not a stream config was written to the sourceFile
    */
   updateStreamConfig(
     componentTree: ComponentState[],
-    getPathValue?: GetPathVal
+    pagesJsState?: PagesJsState
   ): boolean {
-    const streamObjectLiteralExp =
-      this.studioSourceFileParser.getExportedObjectExpression(
-        STREAM_CONFIG_VARIABLE_NAME
-      );
-    const currentTemplateConfig =
-      streamObjectLiteralExp &&
-      this.studioSourceFileParser.getCompiledObjectLiteral<TemplateConfig>(
-        streamObjectLiteralExp
-      );
     const updatedTemplateConfig = this.getUpdatedTemplateConfig(
       componentTree,
-      getPathValue,
-      currentTemplateConfig
+      pagesJsState
     );
 
     if (updatedTemplateConfig) {

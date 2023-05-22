@@ -19,6 +19,14 @@ const basicPageState: PageState = {
   filepath: "mock-filepath",
 };
 
+const entityPageState: PageState = {
+  ...basicPageState,
+  pagesJS: {
+    getPathValue: undefined,
+    streamScope: {},
+  },
+};
+
 describe("updatePageFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
@@ -57,7 +65,7 @@ describe("updatePageFile", () => {
       const pageFile = createPageFile("PageWithAComponent", tsMorphProject);
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -73,6 +81,12 @@ describe("updatePageFile", () => {
               metadataUUID: "mock-metadata-uuid",
             },
           ],
+          pagesJS: {
+            getPathValue: undefined,
+            streamScope: {
+              entityTypes: ["location"],
+            },
+          },
         },
         { updateStreamConfig: true }
       );
@@ -85,12 +99,12 @@ describe("updatePageFile", () => {
       );
     });
 
-    it("does not add stream config if it is not already defined and no document paths are used", () => {
+    it("does not add stream config if no stream scope is defined", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile("PageWithAComponent", tsMorphProject);
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -98,14 +112,18 @@ describe("updatePageFile", () => {
               uuid: "mock-uuid-0",
               props: {
                 title: {
-                  kind: PropValueKind.Literal,
-                  value: "title",
+                  kind: PropValueKind.Expression,
+                  value: "document.title",
                   valueType: PropValueType.string,
                 },
               },
               metadataUUID: "mock-metadata-uuid",
             },
           ],
+          pagesJS: {
+            getPathValue: undefined,
+            streamScope: undefined,
+          },
         },
         { updateStreamConfig: true }
       );
@@ -123,7 +141,7 @@ describe("updatePageFile", () => {
       const pageFile = createPageFile("EmptyPage", tsMorphProject);
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: streamConfigMultipleFieldsComponentTree,
         },
         { updateStreamConfig: true }
@@ -145,7 +163,7 @@ describe("updatePageFile", () => {
       );
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -161,6 +179,12 @@ describe("updatePageFile", () => {
               metadataUUID: "mock-metadata-uuid",
             },
           ],
+          pagesJS: {
+            getPathValue: undefined,
+            streamScope: {
+              entityTypes: ["location"],
+            },
+          },
         },
         { updateStreamConfig: true }
       );
@@ -178,7 +202,7 @@ describe("updatePageFile", () => {
       const pageFile = createPageFile("PageWithStreamConfig", tsMorphProject);
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -195,6 +219,7 @@ describe("updatePageFile", () => {
             },
           ],
           pagesJS: {
+            ...entityPageState.pagesJS,
             getPathValue: {
               kind: PropValueKind.Expression,
               value: "`${document.city}-${document.services[0]}`",
@@ -220,7 +245,7 @@ describe("updatePageFile", () => {
       );
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -294,7 +319,7 @@ describe("updatePageFile", () => {
       );
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Error,
@@ -331,7 +356,7 @@ describe("updatePageFile", () => {
       );
       pageFile.updatePageFile(
         {
-          ...basicPageState,
+          ...entityPageState,
           componentTree: [
             {
               kind: ComponentStateKind.Standard,
@@ -354,6 +379,45 @@ describe("updatePageFile", () => {
         expect.stringContaining("PageWithStreamConfigSlugField.tsx"),
         fs.readFileSync(
           getPagePath("updatePageFile/PageWithStreamConfigSlugField"),
+          "utf-8"
+        )
+      );
+    });
+
+    it("updates stream scope", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const pageFile = createPageFile("PageWithStreamConfig", tsMorphProject);
+      pageFile.updatePageFile(
+        {
+          ...entityPageState,
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              componentName: "ComplexBanner",
+              uuid: "mock-uuid-0",
+              props: {
+                title: {
+                  kind: PropValueKind.Expression,
+                  value: "document.title",
+                  valueType: PropValueType.string,
+                },
+              },
+              metadataUUID: "mock-metadata-uuid",
+            },
+          ],
+          pagesJS: {
+            getPathValue: undefined,
+            streamScope: {
+              entityTypes: ["product"],
+            },
+          },
+        },
+        { updateStreamConfig: true }
+      );
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithStreamConfig.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithModifiedStreamScope"),
           "utf-8"
         )
       );

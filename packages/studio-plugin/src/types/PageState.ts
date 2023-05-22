@@ -1,3 +1,4 @@
+import { Stream } from "@yext/pages";
 import { ComponentState } from "./ComponentState";
 import { PropValueKind } from "./PropValues";
 
@@ -20,12 +21,16 @@ export type PagesJsState = {
    * string literal or expression.
    */
   getPathValue: GetPathVal | undefined;
+  /** The scope for the stream in an entity template. */
+  streamScope?: StreamScope;
 };
 
 export type GetPathVal = {
   kind: PropValueKind;
   value: string;
 };
+
+export type StreamScope = Stream["filter"];
 
 export type ErrorPageState = {
   message: string;

@@ -4,8 +4,8 @@ import ComplexBanner from "../../ComponentFile/ComplexBanner";
 export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id",
-    filter: {},
     localization: { locales: ["en"], primary: false },
+    filter: {},
     fields: ["title", "city", "services"],
   },
 };

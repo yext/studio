@@ -29,12 +29,14 @@ beforeEach(() => {
               kind: PropValueKind.Expression,
               value: "document.slug",
             },
+            streamScope: {},
           },
         },
         location: {
           ...basePageState,
           pagesJS: {
             getPathValue: undefined,
+            streamScope: {},
           },
         },
       },
@@ -80,7 +82,10 @@ it("closes the modal when the getPath value is updated", async () => {
   await userEvent.type(textbox, ".html");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  expect(updateGetPathValueSpy).toBeCalledWith("universal", "`index.html`");
+  expect(updateGetPathValueSpy).toBeCalledWith("universal", {
+    kind: PropValueKind.Literal,
+    value: "index.html",
+  });
   expect(screen.queryByText("Save")).toBeNull();
 });
 
@@ -99,10 +104,10 @@ it("updates getPath value with square and curly bracket expression", async () =>
   await userEvent.type(textbox, "-[[[[services[[0]]]-${{document.id}");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  expect(updateGetPathValueSpy).toBeCalledWith(
-    "product",
-    "`${document.slug}-${document.services[0]}-${document.id}`"
-  );
+  expect(updateGetPathValueSpy).toBeCalledWith("product", {
+    kind: PropValueKind.Expression,
+    value: "`${document.slug}-${document.services[0]}-${document.id}`",
+  });
 });
 
 it("disables the button and has a tooltip when getPath value is undefined", () => {

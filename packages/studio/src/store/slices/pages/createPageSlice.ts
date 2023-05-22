@@ -1,4 +1,4 @@
-import { ComponentState, PageState, PropValueKind } from "@yext/studio-plugin";
+import { ComponentState, GetPathVal, PageState } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import path from "path-browserify";
 import initialStudioData from "virtual:yext-studio";
@@ -66,7 +66,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
-    updateGetPathValue: (pageName: string, value: string) => {
+    updateGetPathValue: (pageName: string, getPathValue: GetPathVal) => {
       set((store) => {
         const originalPagesJsState = store.pages[pageName].pagesJS;
         const originalGetPathValue = originalPagesJsState?.getPathValue;
@@ -77,11 +77,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
 
         if (
-          PropValueHelpers.getTemplateExpression(originalGetPathValue) !== value
+          PropValueHelpers.getTemplateExpression(originalGetPathValue) !==
+          PropValueHelpers.getTemplateExpression(getPathValue)
         ) {
           store.pages[pageName].pagesJS = {
             ...originalPagesJsState,
-            getPathValue: { kind: PropValueKind.Expression, value },
+            getPathValue,
           };
           store.pendingChanges.pagesToUpdate.add(pageName);
         }

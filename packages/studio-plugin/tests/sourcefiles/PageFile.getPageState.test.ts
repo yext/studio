@@ -178,6 +178,16 @@ describe("getPageState", () => {
     });
   });
 
+  it("correctly gets stream scope", () => {
+    const pageFile = createPageFile("entityTemplate", true);
+    const result = pageFile.getPageState();
+
+    assertIsOk(result);
+    expect(result.value.pagesJS?.streamScope).toEqual({
+      entityTypes: ["location"],
+    });
+  });
+
   it("returns empty component tree when parses a page without return statement", () => {
     const pageFile = createPageFile("noReturnStatementPage");
     const result = pageFile.getPageState();

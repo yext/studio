@@ -138,7 +138,7 @@ export default class PageFile {
       if (options.updateStreamConfig) {
         const hasStreamConfig = this.streamConfigWriter.updateStreamConfig(
           updatedPageState.componentTree,
-          updatedPageState.pagesJS?.getPathValue
+          updatedPageState.pagesJS
         );
         if (hasStreamConfig) {
           this.streamConfigWriter.addStreamParameter(pageComponent);
