@@ -1,6 +1,6 @@
 import ComponentTree from "./ComponentTree";
 import Divider from "./common/Divider";
-import AddPageButton from "./AddPageButton";
+import AddPageButton from "./AddPageButton/AddPageButton";
 import ActivePagePanel from "./ActivePagePanel";
 
 /**
