@@ -1,7 +1,7 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { Result } from "true-myth";
 import { PageState } from "../types";
-import StreamConfigWriter from "../writers/StreamConfigWriter";
+import TemplateConfigWriter from "../writers/TemplateConfigWriter";
 import ReactComponentFileWriter, {
   GetFileMetadataByUUID,
 } from "../writers/ReactComponentFileWriter";
@@ -16,14 +16,9 @@ import GetPathWriter from "../writers/GetPathWriter";
 import PagesJsStateParser from "../parsers/PagesJsStateParser";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import tryUsingResult from "../errors/tryUsingResult";
-
-/**
- * Configuration options to the page file's update process
- */
-interface UpdatePageFileOptions {
-  /** Whether to update stream config specified in the "config" variable in the page file. */
-  updateStreamConfig?: boolean;
-}
+import GetPathParser from "../parsers/GetPathParser";
+import TemplateConfigParser from "../parsers/TemplateConfigParser";
+import PagesJsWriter from "../writers/PagesJsWriter";
 
 /**
  * PageFile is responsible for parsing and updating a single
@@ -33,7 +28,7 @@ export default class PageFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private pagesJsStateParser: PagesJsStateParser;
   private getPathWriter: GetPathWriter;
-  private streamConfigWriter: StreamConfigWriter;
+  private templateConfigWriter: TemplateConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
   private pluginFilepathToComponentName?: Record<string, string>;
@@ -43,7 +38,7 @@ export default class PageFile {
     getFileMetadata: GetFileMetadata,
     getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
-    isPagesJSRepo: boolean,
+    private isPagesJSRepo: boolean,
     filepathToPluginNames: Record<string, PluginComponentData> = {},
     entityFiles?: string[]
   ) {
@@ -56,18 +51,26 @@ export default class PageFile {
       filepath,
       project
     );
+    const getPathParser = new GetPathParser(this.studioSourceFileParser);
+    const templateConfigParser = new TemplateConfigParser(
+      this.studioSourceFileParser
+    );
+    const pagesJsWriter = new PagesJsWriter(studioSourceFileWriter);
+
     this.pagesJsStateParser = new PagesJsStateParser(
-      this.studioSourceFileParser,
-      isPagesJSRepo,
+      getPathParser,
+      templateConfigParser,
       entityFiles
     );
     this.getPathWriter = new GetPathWriter(
       studioSourceFileWriter,
-      this.studioSourceFileParser
+      getPathParser,
+      pagesJsWriter
     );
-    this.streamConfigWriter = new StreamConfigWriter(
+    this.templateConfigWriter = new TemplateConfigWriter(
       studioSourceFileWriter,
-      this.studioSourceFileParser
+      templateConfigParser,
+      pagesJsWriter
     );
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
@@ -104,30 +107,25 @@ export default class PageFile {
     });
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();
-    const pagesJsState = this.pagesJsStateParser.getPagesJsState();
 
     return {
       componentTree,
       cssImports,
       filepath,
-      ...(pagesJsState && {
-        pagesJS: pagesJsState,
+      ...(this.isPagesJSRepo && {
+        pagesJS: this.pagesJsStateParser.getPagesJsState(),
       }),
     };
   };
 
   /**
-   * Update page file by mutating the source file based on the page's updated state.
-   * Additionally, if updateStreamConfig option is set to true, the "config" variable
-   * in the source file will also be mutated to update the stream configuration.
+   * Update page file by mutating the source file based on the page's updated
+   * state. Additionally, for an entity page, the "config" variable in the
+   * source file will be mutated to update the template configuration.
    *
    * @param updatedPageState - the updated state for the page file
-   * @param options - configuration to the source file's update process
    */
-  updatePageFile(
-    updatedPageState: PageState,
-    options: UpdatePageFileOptions = {}
-  ): void {
+  updatePageFile(updatedPageState: PageState): void {
     const onFileUpdate = (
       pageComponent: FunctionDeclaration | ArrowFunction
     ) => {
@@ -135,15 +133,12 @@ export default class PageFile {
       if (getPathValue) {
         this.getPathWriter.updateGetPath(getPathValue);
       }
-      if (options.updateStreamConfig) {
-        const hasStreamConfig = this.streamConfigWriter.updateStreamConfig(
+      if (updatedPageState.pagesJS?.streamScope) {
+        this.templateConfigWriter.updateTemplateConfig(
           updatedPageState.componentTree,
-          updatedPageState.pagesJS
+          updatedPageState.pagesJS,
+          pageComponent
         );
-        if (hasStreamConfig) {
-          this.streamConfigWriter.addStreamParameter(pageComponent);
-          this.streamConfigWriter.addStreamImport();
-        }
       }
     };
 

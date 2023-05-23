@@ -59,11 +59,7 @@ export default async function createStudioPlugin(
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
-    new FileSystemWriter(
-      orchestrator,
-      tsMorphProject,
-      studioConfig.isPagesJSRepo
-    )
+    new FileSystemWriter(orchestrator, tsMorphProject)
   );
 
   return {

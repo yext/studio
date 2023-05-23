@@ -1,4 +1,3 @@
-import StudioSourceFileParser from "./StudioSourceFileParser";
 import { PagesJsState } from "../types/PageState";
 import GetPathParser from "./GetPathParser";
 import TemplateConfigParser from "./TemplateConfigParser";
@@ -9,24 +8,13 @@ import { PropValueKind } from "../types";
  * (the {@link PagesJsState}) for a PageFile.
  */
 export default class PagesJsStateParser {
-  private getPathParser: GetPathParser;
-  private templateConfigParser: TemplateConfigParser;
-
   constructor(
-    studioSourceFileParser: StudioSourceFileParser,
-    private isPagesJSRepo: boolean,
+    private getPathParser: GetPathParser,
+    private templateConfigParser: TemplateConfigParser,
     private entityFiles?: string[]
-  ) {
-    this.getPathParser = new GetPathParser(studioSourceFileParser);
-    this.templateConfigParser = new TemplateConfigParser(
-      studioSourceFileParser
-    );
-  }
+  ) {}
 
-  getPagesJsState(): PagesJsState | undefined {
-    if (!this.isPagesJSRepo) {
-      return;
-    }
+  getPagesJsState(): PagesJsState {
     const streamScope = this.templateConfigParser.getStreamScope();
     let getPathValue = this.getPathParser.parseGetPathValue();
     if (getPathValue?.kind === PropValueKind.Expression && !streamScope) {
@@ -35,7 +23,7 @@ export default class PagesJsStateParser {
 
     return {
       ...(this.entityFiles && { entityFiles: this.entityFiles }),
-      getPathValue: this.getPathParser.parseGetPathValue(),
+      getPathValue,
       ...(streamScope && { streamScope }),
     };
   }

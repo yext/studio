@@ -156,8 +156,9 @@ describe("aggregates data as expected", () => {
           pagesJS: {
             getPathValue: {
               kind: PropValueKind.Expression,
-              value: "`modules.html`",
+              value: "document.slug",
             },
+            streamScope: {},
           },
         },
       });

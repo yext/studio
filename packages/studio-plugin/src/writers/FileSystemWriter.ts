@@ -19,8 +19,7 @@ import areEqualFileMetadata from "../utils/areEqualFileMetadata";
 export class FileSystemWriter {
   constructor(
     private orchestrator: ParsingOrchestrator,
-    private project: Project,
-    private isPagesJSRepo = false
+    private project: Project
   ) {}
 
   /**
@@ -31,9 +30,7 @@ export class FileSystemWriter {
    */
   writeToPageFile(pageName: string, pageState: PageState): void {
     const pageFile = this.orchestrator.getPageFile(pageName);
-    pageFile.updatePageFile(pageState, {
-      updateStreamConfig: this.isPagesJSRepo,
-    });
+    pageFile.updatePageFile(pageState);
   }
 
   /**

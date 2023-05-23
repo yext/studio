@@ -1,10 +1,10 @@
-import { STREAM_CONFIG_VARIABLE_NAME } from "../constants";
+import { TEMPLATE_CONFIG_VARIABLE_NAME } from "../constants";
 import { StreamScope } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import { TemplateConfig } from "@yext/pages";
 
 /**
- * TemplateConfigParser is a class for parsing the stream config in a PageFile.
+ * TemplateConfigParser is a class for parsing the template config in a PageFile.
  */
 export default class TemplateConfigParser {
   constructor(private studioSourceFileParser: StudioSourceFileParser) {}
@@ -19,14 +19,14 @@ export default class TemplateConfigParser {
 
   /** Returns the template config exported from the page if one is present. */
   getTemplateConfig(): TemplateConfig | undefined {
-    const streamObjectLiteralExp =
+    const configObjectLiteralExp =
       this.studioSourceFileParser.getExportedObjectExpression(
-        STREAM_CONFIG_VARIABLE_NAME
+        TEMPLATE_CONFIG_VARIABLE_NAME
       );
     return (
-      streamObjectLiteralExp &&
+      configObjectLiteralExp &&
       this.studioSourceFileParser.getCompiledObjectLiteral<TemplateConfig>(
-        streamObjectLiteralExp
+        configObjectLiteralExp
       )
     );
   }

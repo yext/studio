@@ -55,7 +55,7 @@ describe("updatePageFile", () => {
     );
   });
 
-  describe("stream config", () => {
+  describe("template config", () => {
     beforeEach(() => {
       jest.spyOn(uuidUtils, "v4").mockReturnValue("mock-uuid-value");
     });
@@ -63,33 +63,30 @@ describe("updatePageFile", () => {
     it("adds template config variable when it is not already defined", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile("PageWithAComponent", tsMorphProject);
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-0",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.title",
-                  valueType: PropValueType.string,
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.title",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid",
             },
-          ],
-          pagesJS: {
-            getPathValue: undefined,
-            streamScope: {
-              entityTypes: ["location"],
-            },
+            metadataUUID: "mock-metadata-uuid",
+          },
+        ],
+        pagesJS: {
+          getPathValue: undefined,
+          streamScope: {
+            entityTypes: ["location"],
           },
         },
-        { updateStreamConfig: true }
-      );
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithAComponent.tsx"),
         fs.readFileSync(
@@ -99,34 +96,31 @@ describe("updatePageFile", () => {
       );
     });
 
-    it("does not add stream config if no stream scope is defined", () => {
+    it("does not add template config if no stream scope is defined", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile("PageWithAComponent", tsMorphProject);
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-0",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.title",
-                  valueType: PropValueType.string,
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.title",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid",
             },
-          ],
-          pagesJS: {
-            getPathValue: undefined,
-            streamScope: undefined,
+            metadataUUID: "mock-metadata-uuid",
           },
+        ],
+        pagesJS: {
+          getPathValue: undefined,
+          streamScope: undefined,
         },
-        { updateStreamConfig: true }
-      );
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithAComponent.tsx"),
         fs.readFileSync(
@@ -139,13 +133,10 @@ describe("updatePageFile", () => {
     it("adds new stream document paths used in new page state", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile("EmptyPage", tsMorphProject);
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: streamConfigMultipleFieldsComponentTree,
-        },
-        { updateStreamConfig: true }
-      );
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: streamConfigMultipleFieldsComponentTree,
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("EmptyPage.tsx"),
         fs.readFileSync(
@@ -161,33 +152,30 @@ describe("updatePageFile", () => {
         "PageWithStreamConfigMultipleFields",
         tsMorphProject
       );
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-0",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.title",
-                  valueType: PropValueType.string,
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.title",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid",
             },
-          ],
-          pagesJS: {
-            getPathValue: undefined,
-            streamScope: {
-              entityTypes: ["location"],
-            },
+            metadataUUID: "mock-metadata-uuid",
+          },
+        ],
+        pagesJS: {
+          getPathValue: undefined,
+          streamScope: {
+            entityTypes: ["location"],
           },
         },
-        { updateStreamConfig: true }
-      );
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithStreamConfigMultipleFields.tsx"),
         fs.readFileSync(
@@ -200,34 +188,31 @@ describe("updatePageFile", () => {
     it("adds stream document paths in getPath", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile("PageWithStreamConfig", tsMorphProject);
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-0",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.title",
-                  valueType: PropValueType.string,
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.title",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid",
             },
-          ],
-          pagesJS: {
-            ...entityPageState.pagesJS,
-            getPathValue: {
-              kind: PropValueKind.Expression,
-              value: "`${document.city}-${document.services[0]}`",
-            },
+            metadataUUID: "mock-metadata-uuid",
+          },
+        ],
+        pagesJS: {
+          ...entityPageState.pagesJS,
+          getPathValue: {
+            kind: PropValueKind.Expression,
+            value: "`${document.city}-${document.services[0]}`",
           },
         },
-        { updateStreamConfig: true }
-      );
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithStreamConfig.tsx"),
         fs.readFileSync(
@@ -243,66 +228,63 @@ describe("updatePageFile", () => {
         "PageWithStreamConfigMultipleFields",
         tsMorphProject
       );
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-0",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.arrayIndex[0]",
-                  valueType: PropValueType.string,
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.arrayIndex[0]",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid-0",
             },
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-1",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.arrayIndex[1]",
-                  valueType: PropValueType.string,
-                },
+            metadataUUID: "mock-metadata-uuid-0",
+          },
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-1",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.arrayIndex[1]",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid-1",
             },
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-2",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.objectField.attr1",
-                  valueType: PropValueType.string,
-                },
+            metadataUUID: "mock-metadata-uuid-1",
+          },
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-2",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.objectField.attr1",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid-2",
             },
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-3",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.objectField.attr2",
-                  valueType: PropValueType.string,
-                },
+            metadataUUID: "mock-metadata-uuid-2",
+          },
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-3",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.objectField.attr2",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid-3",
             },
-          ],
-        },
-        { updateStreamConfig: true }
-      );
+            metadataUUID: "mock-metadata-uuid-3",
+          },
+        ],
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithStreamConfigMultipleFields.tsx"),
         fs.readFileSync(
@@ -317,28 +299,25 @@ describe("updatePageFile", () => {
         "PageWithErrorComponentState",
         tsMorphProject
       );
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Error,
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.name",
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Error,
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.name",
               },
-              componentName: "Banner",
-              fullText: `<Banner title={document.name} />`,
-              uuid: "error-banner-uuid",
-              metadataUUID: "error-banner-metadataUUID",
-              message: "could not parse banner",
             },
-          ],
-        },
-        { updateStreamConfig: true }
-      );
+            componentName: "Banner",
+            fullText: `<Banner title={document.name} />`,
+            uuid: "error-banner-uuid",
+            metadataUUID: "error-banner-metadataUUID",
+            message: "could not parse banner",
+          },
+        ],
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithErrorComponentState.tsx"),
         fs.readFileSync(
@@ -354,27 +333,24 @@ describe("updatePageFile", () => {
         "EmptyPageWithStreamConfigSlugField",
         tsMorphProject
       );
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-0",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.title",
-                  valueType: PropValueType.string,
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.title",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid",
             },
-          ],
-        },
-        { updateStreamConfig: true }
-      );
+            metadataUUID: "mock-metadata-uuid",
+          },
+        ],
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithStreamConfigSlugField.tsx"),
         fs.readFileSync(
@@ -387,33 +363,30 @@ describe("updatePageFile", () => {
     it("updates stream scope", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile("PageWithStreamConfig", tsMorphProject);
-      pageFile.updatePageFile(
-        {
-          ...entityPageState,
-          componentTree: [
-            {
-              kind: ComponentStateKind.Standard,
-              componentName: "ComplexBanner",
-              uuid: "mock-uuid-0",
-              props: {
-                title: {
-                  kind: PropValueKind.Expression,
-                  value: "document.title",
-                  valueType: PropValueType.string,
-                },
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Expression,
+                value: "document.title",
+                valueType: PropValueType.string,
               },
-              metadataUUID: "mock-metadata-uuid",
             },
-          ],
-          pagesJS: {
-            getPathValue: undefined,
-            streamScope: {
-              entityTypes: ["product"],
-            },
+            metadataUUID: "mock-metadata-uuid",
+          },
+        ],
+        pagesJS: {
+          getPathValue: undefined,
+          streamScope: {
+            entityTypes: ["product"],
           },
         },
-        { updateStreamConfig: true }
-      );
+      });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithStreamConfig.tsx"),
         fs.readFileSync(
