@@ -2,10 +2,10 @@ import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import {
   PAGESJS_TEMPLATE_PROPS_TYPE,
+  TEMPLATE_CONFIG_VARIABLE_NAME,
   TEMPLATE_STRING_EXPRESSION_REGEX,
 } from "../constants";
 import TypeGuards from "../utils/TypeGuards";
-import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   PropVal,
   PropValueKind,
@@ -17,24 +17,24 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
-import { GetPathVal } from "../types";
+import { GetPathVal, PagesJsState } from "../types";
+import TemplateConfigParser from "../parsers/TemplateConfigParser";
 
-const STREAM_CONFIG_VARIABLE_NAME = "config";
-const STREAM_CONFIG_VARIABLE_TYPE = "TemplateConfig";
+const TEMPLATE_CONFIG_VARIABLE_TYPE = "TemplateConfig";
+
+type EntityPageState = PagesJsState &
+  Required<Pick<PagesJsState, "streamScope">>;
 
 /**
- * StreamConfigWriter is a class for housing data
- * updating logic for Stream config in PageFile.
+ * TemplateConfigWriter is a class for housing the updating logic for the
+ * template config in the PageFile for an entity page.
  */
-export default class StreamConfigWriter {
-  private pagesJsWriter: PagesJsWriter;
-
+export default class TemplateConfigWriter {
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
-    private studioSourceFileParser: StudioSourceFileParser
-  ) {
-    this.pagesJsWriter = new PagesJsWriter(studioSourceFileWriter);
-  }
+    private templateConfigParser: TemplateConfigParser,
+    private pagesJsWriter: PagesJsWriter
+  ) {}
 
   /**
    * Extracts stream's data expressions used in the provided component tree,
@@ -108,27 +108,23 @@ export default class StreamConfigWriter {
   }
 
   /**
-   * Creates a Pages template config by merging current stream config, if defined,
-   * with a new stream configuration used by the constructed page from Studio.
-   * If there is no current stream config and there are no used document paths
-   * found, then it returns undefined.
+   * Creates a Pages template config by merging current template config, if
+   * defined, with a new template configuration used by the constructed page
+   * from Studio.
    *
    * @param componentTree - the states of the page's component tree
-   * @param currentTemplateConfig - template config defined in page file
-   * @returns a template config with updated Stream configuration
+   * @param entityPageState - the PagesJS-specific state of the entity page
+   * @returns the updated template config
    */
   private getUpdatedTemplateConfig(
     componentTree: ComponentState[],
-    getPathValue?: GetPathVal,
-    currentTemplateConfig?: TemplateConfig
-  ): TemplateConfig | undefined {
+    entityPageState: EntityPageState
+  ): TemplateConfig {
+    const currentTemplateConfig = this.templateConfigParser.getTemplateConfig();
     const usedDocumentPaths = this.getUsedStreamDocumentPaths(
       componentTree,
-      getPathValue
+      entityPageState.getPathValue
     );
-    if (!currentTemplateConfig && usedDocumentPaths.size === 0) {
-      return undefined;
-    }
 
     const currentFields = currentTemplateConfig?.stream?.fields || [];
     const newFields = [...usedDocumentPaths]
@@ -141,64 +137,53 @@ export default class StreamConfigWriter {
       ...currentTemplateConfig,
       stream: {
         $id: "studio-stream-id",
-        filter: {},
         localization: {
           locales: ["en"],
           primary: false,
         },
         ...currentTemplateConfig?.stream,
+        filter: entityPageState.streamScope,
         fields: pagesJSFieldsMerger(currentFields, newFields),
       },
     };
   }
 
   /**
-   * Updates the stream configuration by mutating the current template config
-   * or adding a template config definition to the original sourceFile if any
-   * document paths are used in the component tree.
+   * Updates the template configuration by mutating the current template config
+   * or adding a template config definition to the original sourceFile of the
+   * entity page.
    *
    * @param componentTree - the states of the page's component tree
-   * @returns Whether or not a stream config was written to the sourceFile
+   * @param entityPageState - the PagesJS-specific state of the entity page
+   * @param componentFunction - the default export React component function
    */
-  updateStreamConfig(
+  updateTemplateConfig(
     componentTree: ComponentState[],
-    getPathValue?: GetPathVal
-  ): boolean {
-    const streamObjectLiteralExp =
-      this.studioSourceFileParser.getExportedObjectExpression(
-        STREAM_CONFIG_VARIABLE_NAME
-      );
-    const currentTemplateConfig =
-      streamObjectLiteralExp &&
-      this.studioSourceFileParser.getCompiledObjectLiteral<TemplateConfig>(
-        streamObjectLiteralExp
-      );
+    entityPageState: EntityPageState,
+    componentFunction: FunctionDeclaration | ArrowFunction
+  ) {
     const updatedTemplateConfig = this.getUpdatedTemplateConfig(
       componentTree,
-      getPathValue,
-      currentTemplateConfig
+      entityPageState
     );
 
-    if (updatedTemplateConfig) {
-      const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
-      this.studioSourceFileWriter.updateVariableStatement(
-        STREAM_CONFIG_VARIABLE_NAME,
-        stringifiedConfig,
-        STREAM_CONFIG_VARIABLE_TYPE
-      );
-      return true;
-    }
-    return false;
-  }
+    const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
+    this.studioSourceFileWriter.updateVariableStatement(
+      TEMPLATE_CONFIG_VARIABLE_NAME,
+      stringifiedConfig,
+      TEMPLATE_CONFIG_VARIABLE_TYPE
+    );
 
-  addStreamImport(): void {
+    this.pagesJsWriter.addTemplateParameter(componentFunction);
     this.pagesJsWriter.addPagesJsImports([
-      STREAM_CONFIG_VARIABLE_TYPE,
+      TEMPLATE_CONFIG_VARIABLE_TYPE,
       PAGESJS_TEMPLATE_PROPS_TYPE,
     ]);
   }
 
-  addStreamParameter(componentFunction: FunctionDeclaration | ArrowFunction) {
-    this.pagesJsWriter.addTemplateParameter(componentFunction);
+  isEntityPageState(
+    pagesJsState: PagesJsState | undefined
+  ): pagesJsState is EntityPageState {
+    return !!pagesJsState?.streamScope;
   }
 }

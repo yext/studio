@@ -1,6 +1,7 @@
 import {
   ComponentState,
   ErrorPageState,
+  GetPathVal,
   ModuleMetadata,
   PageState,
 } from "@yext/studio-plugin";
@@ -54,7 +55,7 @@ interface PageSliceActions {
     pageName: string,
     componentTree: ComponentState[]
   ) => void;
-  updateGetPathValue: (pageName: string, getPathValue: string) => void;
+  updateGetPathValue: (pageName: string, getPathValue: GetPathVal) => void;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;

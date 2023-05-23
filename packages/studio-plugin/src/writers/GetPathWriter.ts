@@ -2,7 +2,6 @@ import {
   GET_PATH_FUNCTION_NAME,
   PAGESJS_TEMPLATE_PROPS_TYPE,
 } from "../constants";
-import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import GetPathParser from "../parsers/GetPathParser";
 import { SyntaxKind } from "ts-morph";
@@ -18,16 +17,11 @@ const GET_PATH_FUNCTION_TYPE = "GetPath";
  * function in a PageFile.
  */
 export default class GetPathWriter {
-  private getPathParser: GetPathParser;
-  private pagesJsWriter: PagesJsWriter;
-
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
-    studioSourceFileParser: StudioSourceFileParser
-  ) {
-    this.getPathParser = new GetPathParser(studioSourceFileParser);
-    this.pagesJsWriter = new PagesJsWriter(studioSourceFileWriter);
-  }
+    private getPathParser: GetPathParser,
+    private pagesJsWriter: PagesJsWriter
+  ) {}
 
   /**
    * Updates the getPath function by replacing the returned string's value or

@@ -79,17 +79,45 @@ describe("removePage", () => {
 });
 
 describe("updateGetPathValue", () => {
-  it("updates getPathValue and pendingChanges", () => {
-    useStudioStore.getState().pages.updateGetPathValue("universal", "`index`");
+  it("updates getPathValue and pendingChanges with string literal", () => {
+    useStudioStore.getState().pages.updateGetPathValue("universal", {
+      kind: PropValueKind.Literal,
+      value: "index",
+    });
     const pageState = useStudioStore.getState().pages.pages["universal"];
     expect(pageState.pagesJS?.getPathValue).toEqual({
-      kind: PropValueKind.Expression,
-      value: "`index`",
+      kind: PropValueKind.Literal,
+      value: "index",
     });
     const pendingChanges = useStudioStore.getState().pages.pendingChanges;
     expect(pendingChanges).toEqual({
       pagesToUpdate: new Set(["universal"]),
       pagesToRemove: new Set(),
+    });
+  });
+
+  it("updates getPathValue with expression", () => {
+    mockStore({
+      pages: {
+        pages: {
+          universal: {
+            ...pages.universal,
+            pagesJS: {
+              getPathValue: pages.universal.pagesJS?.getPathValue,
+              streamScope: {},
+            },
+          },
+        },
+      },
+    });
+    useStudioStore.getState().pages.updateGetPathValue("universal", {
+      kind: PropValueKind.Expression,
+      value: "`${document.slug}`",
+    });
+    const pageState = useStudioStore.getState().pages.pages["universal"];
+    expect(pageState.pagesJS?.getPathValue).toEqual({
+      kind: PropValueKind.Expression,
+      value: "`${document.slug}`",
     });
   });
 
@@ -104,7 +132,10 @@ describe("updateGetPathValue", () => {
       },
     });
     expect(() =>
-      useStudioStore.getState().pages.updateGetPathValue("universal", "index")
+      useStudioStore.getState().pages.updateGetPathValue("universal", {
+        kind: PropValueKind.Literal,
+        value: "index",
+      })
     ).toThrowError(
       "Error updating getPath value: unable to parse original getPath value."
     );
