@@ -133,7 +133,9 @@ export default class PageFile {
       if (getPathValue) {
         this.getPathWriter.updateGetPath(getPathValue);
       }
-      if (updatedPageState.pagesJS?.streamScope) {
+      if (
+        this.templateConfigWriter.isEntityPageState(updatedPageState.pagesJS)
+      ) {
         this.templateConfigWriter.updateTemplateConfig(
           updatedPageState.componentTree,
           updatedPageState.pagesJS,

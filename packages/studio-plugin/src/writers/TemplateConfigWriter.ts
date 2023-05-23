@@ -180,4 +180,10 @@ export default class TemplateConfigWriter {
       PAGESJS_TEMPLATE_PROPS_TYPE,
     ]);
   }
+
+  isEntityPageState(
+    pagesJsState: PagesJsState | undefined
+  ): pagesJsState is EntityPageState {
+    return !!pagesJsState?.streamScope;
+  }
 }
