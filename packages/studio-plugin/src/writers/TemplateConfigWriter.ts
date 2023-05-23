@@ -22,6 +22,9 @@ import TemplateConfigParser from "../parsers/TemplateConfigParser";
 
 const TEMPLATE_CONFIG_VARIABLE_TYPE = "TemplateConfig";
 
+type EntityPageState = PagesJsState &
+  Required<Pick<PagesJsState, "streamScope">>;
+
 /**
  * TemplateConfigWriter is a class for housing the updating logic for the
  * template config in the PageFile for an entity page.
@@ -110,23 +113,18 @@ export default class TemplateConfigWriter {
    * from Studio.
    *
    * @param componentTree - the states of the page's component tree
-   * @param pagesJsState - the PagesJS-specific state of the page
+   * @param entityPageState - the PagesJS-specific state of the entity page
    * @returns the updated template config
    */
   private getUpdatedTemplateConfig(
     componentTree: ComponentState[],
-    pagesJsState: PagesJsState
+    entityPageState: EntityPageState
   ): TemplateConfig {
     const currentTemplateConfig = this.templateConfigParser.getTemplateConfig();
     const usedDocumentPaths = this.getUsedStreamDocumentPaths(
       componentTree,
-      pagesJsState.getPathValue
+      entityPageState.getPathValue
     );
-    if (!pagesJsState.streamScope) {
-      throw new Error(
-        "Error updating template config: no stream scope defined."
-      );
-    }
 
     const currentFields = currentTemplateConfig?.stream?.fields || [];
     const newFields = [...usedDocumentPaths]
@@ -144,7 +142,7 @@ export default class TemplateConfigWriter {
           primary: false,
         },
         ...currentTemplateConfig?.stream,
-        filter: pagesJsState.streamScope,
+        filter: entityPageState.streamScope,
         fields: pagesJSFieldsMerger(currentFields, newFields),
       },
     };
@@ -152,21 +150,21 @@ export default class TemplateConfigWriter {
 
   /**
    * Updates the template configuration by mutating the current template config
-   * or adding a template config definition to the original sourceFile if the
-   * page is an entity template (i.e. it has a stream scope defined).
+   * or adding a template config definition to the original sourceFile of the
+   * entity page.
    *
    * @param componentTree - the states of the page's component tree
-   * @param pagesJsState - the PagesJS-specific state of the page
+   * @param entityPageState - the PagesJS-specific state of the entity page
    * @param componentFunction - the default export React component function
    */
   updateTemplateConfig(
     componentTree: ComponentState[],
-    pagesJsState: PagesJsState,
+    entityPageState: EntityPageState,
     componentFunction: FunctionDeclaration | ArrowFunction
   ) {
     const updatedTemplateConfig = this.getUpdatedTemplateConfig(
       componentTree,
-      pagesJsState
+      entityPageState
     );
 
     const stringifiedConfig = JSON.stringify(updatedTemplateConfig);
