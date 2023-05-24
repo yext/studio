@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import FormModal from "../common/FormModal";
+import FormModal, { FormData } from "../common/FormModal";
 import { FlowStepModalProps } from "./FlowStep";
 import useStudioStore from "../../store/useStudioStore";
 
@@ -18,15 +18,15 @@ export default function BasicPageDataCollector({
     (store) => store.studioConfig.isPagesJSRepo
   );
 
-  const formDescriptions: BasicPageData = useMemo(
+  const formData: FormData<BasicPageData> = useMemo(
     () => ({
-      pageName: "Give the page a name:",
-      ...(isPagesJSRepo && { url: "Specify the URL slug:" }),
+      pageName: { description: "Give the page a name:" },
+      ...(isPagesJSRepo && { url: { description: "Specify the URL slug:" } }),
     }),
     [isPagesJSRepo]
   );
 
-  const handleSave = useCallback(
+  const onConfirm = useCallback(
     async (data: BasicPageData) => {
       try {
         await handleConfirm(data.pageName, data.url);
@@ -49,10 +49,10 @@ export default function BasicPageDataCollector({
     <FormModal
       isOpen={isOpen}
       title={modalTitle}
-      formDescriptions={formDescriptions}
+      formData={formData}
       errorMessage={errorMessage}
       handleClose={handleClose}
-      handleSave={handleSave}
+      handleConfirm={onConfirm}
     />
   );
 }

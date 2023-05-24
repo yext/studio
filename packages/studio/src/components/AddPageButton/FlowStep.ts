@@ -1,8 +1,10 @@
 import BasicPageDataCollector from "./BasicPageDataCollector";
 import PageTypeSelector from "./PageTypeSelector";
+import StreamScopeCollector from "./StreamScopeCollector";
 
 export enum FlowStep {
   SelectPageType,
+  GetStreamScope,
   GetBasicPageData,
 }
 
@@ -18,5 +20,6 @@ type FlowStepModalMap = {
 
 export const flowStepModalMap: FlowStepModalMap = {
   [FlowStep.SelectPageType]: PageTypeSelector,
+  [FlowStep.GetStreamScope]: StreamScopeCollector,
   [FlowStep.GetBasicPageData]: BasicPageDataCollector,
 };

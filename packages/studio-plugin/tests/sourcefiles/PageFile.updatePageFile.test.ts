@@ -222,6 +222,43 @@ describe("updatePageFile", () => {
       );
     });
 
+    it("does not add template props param if no stream paths in tree", () => {
+      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
+      const pageFile = createPageFile("EmptyPage", tsMorphProject);
+      pageFile.updatePageFile({
+        ...entityPageState,
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "ComplexBanner",
+            uuid: "mock-uuid-0",
+            props: {
+              title: {
+                kind: PropValueKind.Literal,
+                value: "title",
+                valueType: PropValueType.string,
+              },
+            },
+            metadataUUID: "mock-metadata-uuid",
+          },
+        ],
+        pagesJS: {
+          ...entityPageState.pagesJS,
+          getPathValue: {
+            kind: PropValueKind.Expression,
+            value: "document.slug",
+          },
+        },
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithNoStreamPathsInTree"),
+          "utf-8"
+        )
+      );
+    });
+
     it("dedupes stream document paths", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const pageFile = createPageFile(
