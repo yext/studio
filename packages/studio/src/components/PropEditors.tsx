@@ -1,65 +1,104 @@
 import {
-  StandardOrModuleComponentState,
   PropShape,
   PropVal,
-  PropMetadata,
+  PropValues,
   PropValueType,
   PropValueKind,
+  ObjectProp,
+  NestedPropMetadata,
+  PropMetadata,
 } from "@yext/studio-plugin";
-import { useCallback } from "react";
-import useStudioStore from "../store/useStudioStore";
-import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
+import { useCallback } from "react";
 
 export default function PropEditors(props: {
-  activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
-  shouldRenderProp?: (propMetadata: PropMetadata) => boolean;
+  propValues: PropValues | undefined;
+  updateProps: (propVal: PropValues) => void;
 }) {
-  const updateActiveComponentProps = useStudioStore(
-    (store) => store.actions.updateActiveComponentProps
-  );
-  const { activeComponentState, propShape, shouldRenderProp } = props;
-
-  const updateProps = useCallback(
-    (propName: string, newPropVal: PropVal) => {
-      updateActiveComponentProps({
-        ...activeComponentState.props,
-        [propName]: newPropVal,
+  const { propShape, propValues, updateProps } = props;
+  const updateSpecificProp = useCallback(
+    (propName: string, propVal: PropVal) => {
+      updateProps({
+        ...propValues,
+        [propName]: propVal,
       });
     },
-    [updateActiveComponentProps, activeComponentState]
+    [propValues, updateProps]
   );
 
-  const editableProps = Object.entries(propShape)
-    .filter(createIsSupportedPropMetadata(activeComponentState.componentName))
-    .filter(([_, propMetadata]) => shouldRenderProp?.(propMetadata) ?? true);
+  const propEditors = Object.entries(propShape).map(
+    ([propName, propMetadata]) => {
+      if (propMetadata.type === PropValueType.Record) {
+        return null;
+      }
 
-  if (editableProps.length === 0) {
-    return renderNoEditableProps(activeComponentState.componentName);
-  }
+      const propVal: PropVal | undefined = propValues?.[propName];
 
-  return (
-    <>
-      {editableProps.map(([propName, propMetadata]) => {
-        const propKind = getPropKind(propMetadata);
+      if (propMetadata.type === PropValueType.Object) {
+        if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
+          console.error(
+            `Mismatching propMetadata type ${propMetadata.type} for ${propName}.`
+          );
+          return null;
+        }
 
         return (
-          <PropEditor
-            key={`${activeComponentState.uuid}-${propName}`}
-            onPropChange={updateProps}
-            propKind={propKind}
-            propName={propName}
+          <NestedPropEditors
+            propVal={propVal}
             propMetadata={propMetadata}
-            propValue={PropValueHelpers.getPropValue(
-              activeComponentState.props[propName],
-              propKind
-            )}
+            propName={propName}
+            updateSpecificProp={updateSpecificProp}
           />
         );
-      })}
-    </>
+      }
+
+      const propKind = getPropKind(propMetadata);
+
+      return (
+        <PropEditor
+          key={propName}
+          onPropChange={updateSpecificProp}
+          propKind={propKind}
+          propName={propName}
+          propMetadata={propMetadata}
+          propValue={PropValueHelpers.getPropValue(propVal, propKind)}
+        />
+      );
+    }
+  );
+
+  return <>{propEditors}</>;
+}
+
+function NestedPropEditors(props: {
+  propVal: ObjectProp | undefined;
+  propMetadata: NestedPropMetadata;
+  propName: string;
+  updateSpecificProp: (propName: string, propVal: PropVal) => void;
+}) {
+  const { propVal, propMetadata, propName, updateSpecificProp } = props;
+  const updateObjectProp = useCallback(
+    (updatedPropValues: PropValues) => {
+      updateSpecificProp(propName, {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: updatedPropValues,
+      });
+    },
+    [propName, updateSpecificProp]
+  );
+
+  return (
+    <div className="ml-2">
+      <div className="font-semibold">{propName}</div>
+      <PropEditors
+        propValues={propVal?.value}
+        propShape={propMetadata.shape}
+        updateProps={updateObjectProp}
+      />
+    </div>
   );
 }
 
@@ -74,17 +113,4 @@ function getPropKind(propMetadata: PropMetadata) {
   }
 
   return PropValueKind.Literal;
-}
-
-/**
- * Renders a styled, formatted message indicating the current Component has no editable props.
- *
- * @param componentName - The name of the current Component.
- */
-function renderNoEditableProps(componentName: string) {
-  return (
-    <div className="text-sm bg-gray-100 p-4 border text-gray-500 rounded-lg text-center mb-2">
-      {componentName} has no Editable Properties in this Panel.
-    </div>
-  );
 }
