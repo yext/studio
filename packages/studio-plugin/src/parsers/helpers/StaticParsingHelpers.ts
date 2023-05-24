@@ -20,11 +20,17 @@ import {
   JsxAttribute,
 } from "ts-morph";
 import {
+  PropVal,
   PropValueKind,
+  PropValueType,
   PropValues,
   TypelessPropVal,
 } from "../../types/PropValues";
-import { PropShape, SpecialReactProps } from "../../types/PropShape";
+import {
+  PropMetadata,
+  PropShape,
+  SpecialReactProps,
+} from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
@@ -40,6 +46,39 @@ export type ParsedImport = {
  * files within Studio.
  */
 export default class StaticParsingHelpers {
+  static addTypesToPropVal(
+    typelessPropVal: TypelessPropVal,
+    propMetadata: PropMetadata
+  ): PropVal {
+    const valueType = propMetadata.type;
+    if (
+      valueType !== PropValueType.Object ||
+      typeof typelessPropVal.value !== "object"
+    ) {
+      const propVal = {
+        ...typelessPropVal,
+        valueType,
+      };
+      TypeGuards.assertIsValidPropVal(propVal);
+      return propVal;
+    }
+
+    const getPropValues = (typelessValues: Record<string, TypelessPropVal>) => {
+      const propValues: PropValues = {};
+      Object.entries(typelessValues).forEach(([propName, value]) => {
+        const childMetadata = propMetadata.shape[propName];
+        propValues[propName] = this.addTypesToPropVal(value, childMetadata);
+      });
+      return propValues;
+    };
+
+    return {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.Object,
+      value: getPropValues(typelessPropVal.value),
+    };
+  }
+
   static parseInitializer(initializer: Expression): TypelessPropVal {
     if (initializer.isKind(SyntaxKind.StringLiteral)) {
       return {
@@ -192,25 +231,20 @@ export default class StaticParsingHelpers {
       if (Object.values<string>(SpecialReactProps).includes(propName)) {
         return;
       }
-      const propType = propShape?.[propName]?.type;
-      if (!propType) {
+      const propMetadata: PropMetadata | undefined = propShape?.[propName];
+      if (!propMetadata) {
         throw new Error(
-          `Could not find prop type for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(
+          `Could not find prop metadata for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(
             propShape,
             null,
             2
           )}`
         );
       }
-      const propValue = {
-        ...this.parseJsxAttribute(jsxAttribute),
-        valueType: propType,
-      };
-      if (!TypeGuards.isValidPropValue(propValue)) {
-        throw new Error(
-          "Invalid prop value: " + JSON.stringify(propValue, null, 2)
-        );
-      }
+      const propValue = StaticParsingHelpers.addTypesToPropVal(
+        this.parseJsxAttribute(jsxAttribute),
+        propMetadata
+      );
       propValues[propName] = propValue;
     });
     return propValues;

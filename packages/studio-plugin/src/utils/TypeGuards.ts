@@ -39,6 +39,18 @@ type PrimitivePropValueType =
  * A static class for housing various typeguards used by Studio.
  */
 export default class TypeGuards {
+  static assertIsValidPropVal(propValue: {
+    kind: PropValueKind;
+    valueType: PropValueType;
+    value: unknown;
+  }): asserts propValue is PropVal {
+    if (!this.isValidPropValue(propValue)) {
+      throw new Error(
+        "Invalid prop value: " + JSON.stringify(propValue, null, 2)
+      );
+    }
+  }
+
   static isValidPropValue(propValue: {
     kind: PropValueKind;
     valueType: PropValueType;
@@ -58,8 +70,11 @@ export default class TypeGuards {
       case PropValueType.HexColor:
         return typeof value === "string" && value.startsWith("#");
       case PropValueType.Object:
+        const baseIsValid =
+          typeof value === "object" && !Array.isArray(value) && value !== null;
         return (
-          typeof value === "object" && !Array.isArray(value) && value !== null
+          baseIsValid &&
+          Object.values(value as PropValues).every(this.isValidPropValue)
         );
     }
     return false;

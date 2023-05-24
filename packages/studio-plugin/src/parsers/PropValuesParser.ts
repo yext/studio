@@ -93,11 +93,7 @@ export default class PropValuesParser {
         throw new Error(`Expressions are not supported within object literal.`);
       }
       const propValue = getPropValue(propName);
-      if (!TypeGuards.isValidPropValue(propValue)) {
-        throw new Error(
-          "Invalid prop value: " + JSON.stringify(propValue, null, 2)
-        );
-      }
+      TypeGuards.assertIsValidPropVal(propValue);
       propValues[propName] = propValue;
     });
     return propValues;
