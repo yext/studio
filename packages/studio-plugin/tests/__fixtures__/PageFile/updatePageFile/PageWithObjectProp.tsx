@@ -4,7 +4,8 @@ export default function IndexPage({ document }) {
   return (
     <BannerUsingObject
       objProp={{
-        title: "-objProp.title-",
+        title: 'double quote -> " ',
+        subtitle: "the subtitle",
         templateString: `Hello ${document.world}`,
       }}
     />

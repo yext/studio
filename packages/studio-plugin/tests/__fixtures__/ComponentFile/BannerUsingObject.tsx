@@ -1,6 +1,7 @@
 export interface BannerUsingObjectProps {
   objProp?: {
     title?: string;
+    subtitle?: string;
     templateString?: string;
   };
 }

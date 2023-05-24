@@ -170,7 +170,12 @@ describe("updateFile", () => {
                   title: {
                     kind: PropValueKind.Literal,
                     valueType: PropValueType.string,
-                    value: "-objProp.title-",
+                    value: 'double quote -> " ',
+                  },
+                  subtitle: {
+                    kind: PropValueKind.Literal,
+                    valueType: PropValueType.string,
+                    value: "the subtitle",
                   },
                   templateString: {
                     kind: PropValueKind.Expression,
