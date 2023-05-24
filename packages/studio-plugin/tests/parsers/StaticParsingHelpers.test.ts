@@ -99,7 +99,7 @@ describe("parseJsxAttributes", () => {
       .getAttributes();
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
-    ).toThrowError(/^Could not find prop type for:/);
+    ).toThrowError(/^Could not find prop metadata for:/);
   });
 
   it("throws an error if a prop value is invalid", () => {

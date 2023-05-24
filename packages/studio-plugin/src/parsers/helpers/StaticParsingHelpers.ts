@@ -234,7 +234,7 @@ export default class StaticParsingHelpers {
       const propMetadata: PropMetadata | undefined = propShape?.[propName];
       if (!propMetadata) {
         throw new Error(
-          `Could not find prop type for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(
+          `Could not find prop metadata for: \`${jsxAttribute.getFullText()}\` with prop shape ${JSON.stringify(
             propShape,
             null,
             2
