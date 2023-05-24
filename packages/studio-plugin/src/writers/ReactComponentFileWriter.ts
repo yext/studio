@@ -12,13 +12,14 @@ import {
   ComponentStateKind,
   ModuleMetadata,
   PropShape,
+  PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
-import { ComponentStateHelpers, transformPropValuesToRaw } from "../utils";
+import { ComponentStateHelpers } from "../utils";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import { TypeGuards } from "../utils";
 
@@ -47,23 +48,46 @@ export default class ReactComponentFileWriter {
   private createProps(props: PropValues): string {
     let propsString = "";
     Object.keys(props).forEach((propName) => {
-      const { kind, valueType: propType, value } = props[propName];
-
-      if (
-        kind === PropValueKind.Literal &&
-        (propType === PropValueType.string ||
-          propType === PropValueType.HexColor)
-      ) {
-        propsString += `${propName}='${value}' `;
-      } else if (propType === PropValueType.Object) {
-        propsString += `${propName}={${JSON.stringify(
-          transformPropValuesToRaw(value)
-        )}}`;
+      const propVal = props[propName];
+      const value = this.parsePropVal(propVal);
+      if (this.shouldUseStringSyntaxForProp(propVal)) {
+        propsString += `${propName}=${value} `;
       } else {
         propsString += `${propName}={${value}} `;
       }
     });
     return propsString;
+  }
+
+  private parsePropVal(propVal: PropVal) {
+    const { value, valueType } = propVal;
+    if (this.shouldUseStringSyntaxForProp(propVal)) {
+      const escapedValueWithDoubleQuotes = JSON.stringify(value);
+      return escapedValueWithDoubleQuotes;
+    } else if (valueType === PropValueType.Object) {
+      const stringifiedObject = Object.keys(value).reduce(
+        (stringifiedObject, keyName) => {
+          const childPropVal = value[keyName];
+          stringifiedObject +=
+            JSON.stringify(keyName) +
+            ": " +
+            this.parsePropVal(childPropVal) +
+            ",\n";
+          return stringifiedObject;
+        },
+        ""
+      );
+      return "{" + stringifiedObject + "}";
+    } else {
+      return value;
+    }
+  }
+
+  private shouldUseStringSyntaxForProp({ kind, valueType }: PropVal) {
+    const isRepresentedAsString =
+      valueType === PropValueType.string ||
+      valueType === PropValueType.HexColor;
+    return kind === PropValueKind.Literal && isRepresentedAsString;
   }
 
   private createJsxSelfClosingElement(

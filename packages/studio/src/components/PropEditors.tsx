@@ -46,6 +46,7 @@ export default function PropEditors(props: {
 
         return (
           <NestedPropEditors
+            key={propName}
             propVal={propVal}
             propMetadata={propMetadata}
             propName={propName}

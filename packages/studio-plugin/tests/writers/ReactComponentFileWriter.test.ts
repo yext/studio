@@ -172,6 +172,11 @@ describe("updateFile", () => {
                     valueType: PropValueType.string,
                     value: "-objProp.title-",
                   },
+                  templateString: {
+                    kind: PropValueKind.Expression,
+                    valueType: PropValueType.string,
+                    value: "`Hello ${document.world}`",
+                  },
                 },
               },
             },
