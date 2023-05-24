@@ -1,4 +1,4 @@
-import FormModal from "../common/FormModal";
+import FormModal, { FormData } from "../common/FormModal";
 import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";
@@ -8,8 +8,8 @@ import { ComponentStateKind } from "@yext/studio-plugin";
 
 type CreateModuleForm = { modulePath: string };
 
-const formDescriptions: CreateModuleForm = {
-  modulePath: "Give the module a name:",
+const formData: FormData<CreateModuleForm> = {
+  modulePath: { description: "Give the module a name:" },
 };
 
 /**
@@ -45,10 +45,10 @@ export default function CreateModuleButton(): JSX.Element | null {
         <FormModal
           isOpen={isOpen}
           title="Create Module"
-          formDescriptions={formDescriptions}
+          formData={formData}
           errorMessage={errorMessage}
           handleClose={handleClose}
-          handleSave={handleModalSave}
+          handleConfirm={handleModalSave}
         />
       );
     },

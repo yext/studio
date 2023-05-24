@@ -8,6 +8,7 @@ import {
   PropValueKind,
   PropValues,
   RepeaterState,
+  StreamScope,
   TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
@@ -261,7 +262,11 @@ export default class StudioActions {
     };
   };
 
-  createPage = async (pageName: string, getPathValue?: string) => {
+  createPage = async (
+    pageName: string,
+    getPathValue?: string,
+    streamScope?: StreamScope
+  ) => {
     if (!pageName) {
       throw new Error("Error adding page: a pageName is required.");
     }
@@ -282,6 +287,7 @@ export default class StudioActions {
         getPathValue && {
           pagesJS: {
             getPathValue: { kind: PropValueKind.Literal, value: getPathValue },
+            ...(streamScope && { streamScope }),
           },
         }),
     });

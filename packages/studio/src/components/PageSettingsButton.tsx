@@ -2,7 +2,7 @@ import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Gear } from "../icons/gear.svg";
 import { useCallback, useMemo } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
-import FormModal from "./common/FormModal";
+import FormModal, { FormData } from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
@@ -12,8 +12,8 @@ type PageSettings = {
   url: string;
 };
 
-const formDescriptions: PageSettings = {
-  url: "URL slug:",
+const formData: FormData<PageSettings> = {
+  url: { description: "URL slug:" },
 };
 
 interface PageSettingsButtonProps {
@@ -64,10 +64,10 @@ export default function PageSettingsButton({
         <FormModal
           isOpen={isOpen}
           title="Page Settings"
-          formDescriptions={formDescriptions}
+          formData={formData}
           initialFormValue={initialFormValue}
           handleClose={handleClose}
-          handleSave={handleModalSave}
+          handleConfirm={handleModalSave}
           transformOnChangeValue={
             isEntityPage
               ? TemplateExpressionFormatter.convertCurlyBracesToSquareBrackets

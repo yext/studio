@@ -19,6 +19,7 @@ import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
 import { GetPathVal, PagesJsState } from "../types";
 import TemplateConfigParser from "../parsers/TemplateConfigParser";
+import { ComponentTreeHelpers } from "../utils";
 
 const TEMPLATE_CONFIG_VARIABLE_TYPE = "TemplateConfig";
 
@@ -174,11 +175,23 @@ export default class TemplateConfigWriter {
       TEMPLATE_CONFIG_VARIABLE_TYPE
     );
 
-    this.pagesJsWriter.addTemplateParameter(componentFunction);
-    this.pagesJsWriter.addPagesJsImports([
-      TEMPLATE_CONFIG_VARIABLE_TYPE,
-      PAGESJS_TEMPLATE_PROPS_TYPE,
-    ]);
+    this.addParametersAndImports(componentTree, componentFunction);
+  }
+
+  private addParametersAndImports(
+    componentTree: ComponentState[],
+    componentFunction: FunctionDeclaration | ArrowFunction
+  ) {
+    this.pagesJsWriter.addPagesJsImports([TEMPLATE_CONFIG_VARIABLE_TYPE]);
+
+    const usesDocument = ComponentTreeHelpers.usesExpressionSource(
+      componentTree,
+      "document"
+    );
+    if (usesDocument) {
+      this.pagesJsWriter.addTemplateParameter(componentFunction);
+      this.pagesJsWriter.addPagesJsImports([PAGESJS_TEMPLATE_PROPS_TYPE]);
+    }
   }
 
   isEntityPageState(

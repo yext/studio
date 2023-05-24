@@ -5,32 +5,45 @@ type Form = {
   [field: string]: string;
 };
 
+export type FormData<T extends Form> = {
+  [field in keyof T]: {
+    description: string;
+    optional?: boolean;
+  };
+};
+
 interface FormModalProps<T extends Form> {
   isOpen: boolean;
   title: string;
-  formDescriptions: T;
+  instructions?: string;
+  formData: FormData<T>;
   initialFormValue?: T;
   errorMessage?: string;
+  confirmButtonText?: string;
+  closeOnConfirm?: boolean;
   handleClose: () => void | Promise<void>;
-  handleSave: (form: T) => boolean | Promise<boolean>;
+  handleConfirm: (form: T) => boolean | Promise<boolean>;
   transformOnChangeValue?: (value: string) => string;
 }
 
 export default function FormModal<T extends Form>({
   isOpen,
   title,
-  formDescriptions,
+  instructions,
+  formData,
   initialFormValue,
   errorMessage,
+  confirmButtonText = "Save",
+  closeOnConfirm = true,
   handleClose: customHandleClose,
-  handleSave: customHandleSave,
+  handleConfirm: customHandleConfirm,
   transformOnChangeValue,
 }: FormModalProps<T>) {
   const baseForm = useMemo(() => {
-    return initialFormValue ?? resetForm(formDescriptions);
-  }, [initialFormValue, formDescriptions]);
+    return initialFormValue ?? getEmptyForm(formData);
+  }, [initialFormValue, formData]);
 
-  const [isValidForm, setIsValidForm] = useState<boolean>(false);
+  const [isValidForm, setIsValidForm] = useState<boolean>(true);
   const [formValue, setFormValue] = useState<T>(baseForm);
 
   const handleClose = useCallback(async () => {
@@ -39,14 +52,20 @@ export default function FormModal<T extends Form>({
     await customHandleClose();
   }, [customHandleClose, baseForm]);
 
-  const handleSave = useCallback(async () => {
-    if (await customHandleSave(formValue)) {
-      await handleClose();
+  const handleConfirm = useCallback(async () => {
+    if (await customHandleConfirm(formValue)) {
+      closeOnConfirm && (await handleClose());
       initialFormValue && setFormValue(formValue);
     } else {
       setIsValidForm(false);
     }
-  }, [formValue, customHandleSave, handleClose, initialFormValue]);
+  }, [
+    formValue,
+    customHandleConfirm,
+    handleClose,
+    initialFormValue,
+    closeOnConfirm,
+  ]);
 
   const updateFormField = useCallback((field: string, value: string) => {
     setFormValue((prev) => ({ ...prev, [field]: value }));
@@ -55,18 +74,22 @@ export default function FormModal<T extends Form>({
 
   const hasChanges = useMemo(
     () =>
-      Object.entries(formValue).some(([field, val]) => val !== baseForm[field]),
-    [formValue, baseForm]
+      !initialFormValue ||
+      Object.entries(formValue).some(
+        ([field, val]) => val !== initialFormValue[field]
+      ),
+    [formValue, initialFormValue]
   );
 
   const modalBodyContent = useMemo(() => {
     return (
       <>
+        {instructions && <div className="italic mb-4">{instructions}</div>}
         {Object.entries(formValue).map(([field, val]) => (
           <FormField
             key={field}
             field={field}
-            description={formDescriptions[field]}
+            description={formData[field].description}
             value={val}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
@@ -74,7 +97,13 @@ export default function FormModal<T extends Form>({
         ))}
       </>
     );
-  }, [formDescriptions, formValue, updateFormField, transformOnChangeValue]);
+  }, [
+    formData,
+    formValue,
+    updateFormField,
+    transformOnChangeValue,
+    instructions,
+  ]);
 
   return (
     <Modal
@@ -82,23 +111,28 @@ export default function FormModal<T extends Form>({
       title={title}
       errorMessage={!isValidForm ? errorMessage : undefined}
       handleClose={handleClose}
-      handleConfirm={handleSave}
+      handleConfirm={handleConfirm}
       body={modalBodyContent}
-      confirmButtonText="Save"
+      confirmButtonText={confirmButtonText}
       isConfirmButtonDisabled={
-        !isValidForm || !getIsFormFilled(formValue) || !hasChanges
+        !isValidForm || !getIsFormFilled(formValue, formData) || !hasChanges
       }
     />
   );
 }
 
-function resetForm<T extends Form>(form: T): T {
-  const entries = Object.keys(form).map((field) => [field, ""]);
+function getEmptyForm<T extends Form>(formData: FormData<T>): T {
+  const entries = Object.keys(formData).map((field) => [field, ""]);
   return Object.fromEntries(entries);
 }
 
-function getIsFormFilled(form: Form): boolean {
-  return Object.values(form).every((val) => val);
+function getIsFormFilled<T extends Form>(
+  form: T,
+  formData: FormData<T>
+): boolean {
+  return Object.entries(form).every(
+    ([field, val]) => formData[field].optional || val
+  );
 }
 
 function FormField({

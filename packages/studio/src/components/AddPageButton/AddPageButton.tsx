@@ -22,21 +22,26 @@ function AddPageButtonInternal() {
     store.actions.createPage,
   ]);
   const [step, setStep] = useState(getInitialStep(isPagesJSRepo));
-  const { actions } = useContext(AddPageContext);
+  const { state, actions } = useContext(AddPageContext);
   const { resetState } = actions;
 
   const handleConfirm = useCallback(
     async (pageName = "", url?: string) => {
       switch (step) {
         case FlowStep.SelectPageType:
+          setStep(
+            state.isStatic ? FlowStep.GetBasicPageData : FlowStep.GetStreamScope
+          );
+          break;
+        case FlowStep.GetStreamScope:
           setStep(FlowStep.GetBasicPageData);
           break;
         case FlowStep.GetBasicPageData:
-          await createPage(pageName, url);
+          await createPage(pageName, url, state.streamScope);
           break;
       }
     },
-    [step, createPage]
+    [step, createPage, state]
   );
 
   const decorateHandleClose = useCallback(
