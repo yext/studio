@@ -50,7 +50,9 @@ export function getPreviewProps(
     } else if (propVal.valueType === PropValueType.Object) {
       const propMetadata = propShape[propName];
       if (propMetadata.type !== PropValueType.Object) {
-        throw new Error();
+        throw new Error(
+          `Expected PropMetadata of type Object, received ${propMetadata.type}`
+        );
       }
       transformedProps[propName] = getPreviewProps(
         propVal.value,
