@@ -21,9 +21,10 @@ interface FormModalProps<T extends Form> {
   errorMessage?: string;
   confirmButtonText?: string;
   closeOnConfirm?: boolean;
+  requireChanges?: boolean;
   handleClose: () => void | Promise<void>;
   handleConfirm: (form: T) => boolean | Promise<boolean>;
-  transformOnChangeValue?: (value: string) => string;
+  transformOnChangeValue?: (value: string, field: string) => string;
 }
 
 export default function FormModal<T extends Form>({
@@ -35,6 +36,7 @@ export default function FormModal<T extends Form>({
   errorMessage,
   confirmButtonText = "Save",
   closeOnConfirm = true,
+  requireChanges,
   handleClose: customHandleClose,
   handleConfirm: customHandleConfirm,
   transformOnChangeValue,
@@ -55,7 +57,7 @@ export default function FormModal<T extends Form>({
   const handleConfirm = useCallback(async () => {
     if (await customHandleConfirm(formValue)) {
       closeOnConfirm && (await handleClose());
-      initialFormValue && setFormValue(formValue);
+      initialFormValue && requireChanges && setFormValue(formValue);
     } else {
       setIsValidForm(false);
     }
@@ -65,6 +67,7 @@ export default function FormModal<T extends Form>({
     handleClose,
     initialFormValue,
     closeOnConfirm,
+    requireChanges,
   ]);
 
   const updateFormField = useCallback((field: string, value: string) => {
@@ -74,12 +77,14 @@ export default function FormModal<T extends Form>({
 
   const hasChanges = useMemo(
     () =>
-      !initialFormValue ||
-      Object.entries(formValue).some(
-        ([field, val]) => val !== initialFormValue[field]
-      ),
-    [formValue, initialFormValue]
+      Object.entries(formValue).some(([field, val]) => val !== baseForm[field]),
+    [formValue, baseForm]
   );
+
+  const isConfirmButtonDisabled =
+    !isValidForm ||
+    !getIsFormFilled(formValue, formData) ||
+    (requireChanges && !hasChanges);
 
   const modalBodyContent = useMemo(() => {
     return (
@@ -114,9 +119,7 @@ export default function FormModal<T extends Form>({
       handleConfirm={handleConfirm}
       body={modalBodyContent}
       confirmButtonText={confirmButtonText}
-      isConfirmButtonDisabled={
-        !isValidForm || !getIsFormFilled(formValue, formData) || !hasChanges
-      }
+      isConfirmButtonDisabled={isConfirmButtonDisabled}
     />
   );
 }
@@ -146,12 +149,12 @@ function FormField({
   description: string;
   value: string;
   updateFormField: (field: string, value: string) => void;
-  transformOnChangeValue?: (value: string) => string;
+  transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.target.value.trim();
-      const transformedValue = transformOnChangeValue?.(value) ?? value;
+      const transformedValue = transformOnChangeValue?.(value, field) ?? value;
       updateFormField(field, transformedValue);
     },
     [field, updateFormField, transformOnChangeValue]

@@ -9,9 +9,9 @@ import ContainerWithButtons from "../modules/ContainerWithButtons";
 export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id",
-    filter: {},
     localization: { locales: ["en"], primary: false },
-    fields: ["services", "address"],
+    filter: {},
+    fields: ["services", "address", "slug"],
   },
 };
 export const getPath: GetPath<TemplateProps> = ({

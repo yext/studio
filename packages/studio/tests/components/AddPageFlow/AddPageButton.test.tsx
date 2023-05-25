@@ -25,14 +25,21 @@ beforeEach(() => {
   });
 });
 
+async function specifyName() {
+  const nameTextbox = screen.getByRole("textbox", {
+    name: "Give the page a name:",
+  });
+  await userEvent.type(nameTextbox, "test");
+}
+
 it("closes the modal when a page name is added in a non-PagesJS repo", async () => {
   const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
   render(<AddPageButton />);
   const addPageButton = screen.getByRole("button");
   await userEvent.click(addPageButton);
-  const textbox = screen.getByRole("textbox");
-  await userEvent.type(textbox, "test");
   const saveButton = screen.getByRole("button", { name: "Save" });
+  expect(saveButton).toBeDisabled();
+  await specifyName();
   await userEvent.click(saveButton);
   expect(addPageSpy).toBeCalledWith("test", basicPageState);
   await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
@@ -46,17 +53,11 @@ describe("PagesJS repo", () => {
     });
   });
 
-  async function specifyNameAndUrl() {
-    const nameTextbox = screen.getByRole("textbox", {
-      name: "Give the page a name:",
-    });
-    await userEvent.type(nameTextbox, "test");
-    const saveButton = screen.getByRole("button", { name: "Save" });
-    expect(saveButton).toBeDisabled();
+  async function specifyUrl(url: string) {
     const urlTextbox = screen.getByRole("textbox", {
       name: "Specify the URL slug:",
     });
-    await userEvent.type(urlTextbox, "testing");
+    await userEvent.type(urlTextbox, url);
   }
 
   it("closes modal when page type, name, and url are specified for static page", async () => {
@@ -71,8 +72,11 @@ describe("PagesJS repo", () => {
     const nextButton = screen.getByRole("button", { name: "Next" });
     await userEvent.click(nextButton);
 
-    await specifyNameAndUrl();
     const saveButton = screen.getByRole("button", { name: "Save" });
+    expect(saveButton).toBeDisabled();
+    await specifyName();
+    expect(saveButton).toBeDisabled();
+    await specifyUrl("testing");
     await userEvent.click(saveButton);
 
     expect(addPageSpy).toBeCalledWith("test", {
@@ -109,21 +113,27 @@ describe("PagesJS repo", () => {
       await userEvent.type(entityTypesTextbox, "location, restaurant");
       await userEvent.click(nextButton);
 
-      await specifyNameAndUrl();
       const saveButton = screen.getByRole("button", { name: "Save" });
+      expect(saveButton).toBeDisabled();
+      await specifyName();
+      expect(saveButton).toBeEnabled();
+      await specifyUrl("-[[[[id]]");
       await userEvent.click(saveButton);
 
       expect(addPageSpy).toBeCalledWith("test", {
         ...basicPageState,
         pagesJS: {
-          getPathValue: { kind: PropValueKind.Literal, value: "testing" },
+          getPathValue: {
+            kind: PropValueKind.Expression,
+            value: "`${document.slug}-${document.id}`",
+          },
           streamScope: { entityTypes: ["location", "restaurant"] },
         },
       });
       await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
     });
 
-    it("does not require any filters for stream scope", async () => {
+    it("does not require changes to stream scope or url slug", async () => {
       const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
       render(<AddPageButton />);
 
@@ -135,14 +145,18 @@ describe("PagesJS repo", () => {
       const nextButton = screen.getByRole("button", { name: "Next" });
       await userEvent.click(nextButton);
 
-      await specifyNameAndUrl();
       const saveButton = screen.getByRole("button", { name: "Save" });
+      expect(saveButton).toBeDisabled();
+      await specifyName();
       await userEvent.click(saveButton);
 
       expect(addPageSpy).toBeCalledWith("test", {
         ...basicPageState,
         pagesJS: {
-          getPathValue: { kind: PropValueKind.Literal, value: "testing" },
+          getPathValue: {
+            kind: PropValueKind.Expression,
+            value: "`${document.slug}`",
+          },
           streamScope: {},
         },
       });

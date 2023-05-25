@@ -38,7 +38,10 @@ describe("non-PagesJS repo", () => {
   });
 
   it("ignores getPath value if one is passed in", async () => {
-    await useStudioStore.getState().actions.createPage("test", "testing");
+    await useStudioStore.getState().actions.createPage("test", {
+      kind: PropValueKind.Literal,
+      value: "testing",
+    });
     const pagesRecord = useStudioStore.getState().pages.pages;
     expect(pagesRecord).toEqual({
       test: {
@@ -69,7 +72,10 @@ describe("PagesJS repo", () => {
   });
 
   it("adds a page with getPathValue to pages record", async () => {
-    await useStudioStore.getState().actions.createPage("test", "testing");
+    await useStudioStore.getState().actions.createPage("test", {
+      kind: PropValueKind.Literal,
+      value: "testing",
+    });
     const pagesRecord = useStudioStore.getState().pages.pages;
     expect(pagesRecord).toEqual({
       test: {
