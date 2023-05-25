@@ -100,7 +100,7 @@ const moduleWithObjPropsMetadata: ModuleMetadata = {
       },
     },
   },
-  filepath: path.resolve(__dirname, "../__mocks__/Panel.tsx"),
+  filepath: "unused",
   componentTree: [
     {
       ...componentState,
