@@ -48,7 +48,15 @@ export function getPreviewProps(
         expressionSources
       );
     } else if (propVal.valueType === PropValueType.Object) {
-      transformedProps[propName] = transformPropValuesToRaw(propVal.value);
+      const propMetadata = propShape[propName];
+      if (propMetadata.type !== PropValueType.Object) {
+        throw new Error();
+      }
+      transformedProps[propName] = getPreviewProps(
+        propVal.value,
+        propMetadata.shape,
+        expressionSources
+      );
     } else {
       transformedProps[propName] = propVal.value;
     }
