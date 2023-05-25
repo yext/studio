@@ -3,6 +3,7 @@ export interface BannerUsingObjectProps {
     title?: string;
     subtitle?: string;
     templateString?: string;
+    expression?: string;
   };
 }
 

@@ -4,17 +4,16 @@ import {
   PropValues,
   PropValueType,
   PropValueKind,
-  ObjectProp,
-  NestedPropMetadata,
   PropMetadata,
 } from "@yext/studio-plugin";
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import { useCallback } from "react";
+import NestedPropEditors from "./NestedPropEditors";
 
 export default function PropEditors(props: {
   propShape: PropShape;
-  propValues: PropValues | undefined;
+  propValues: PropValues;
   updateProps: (propVal: PropValues) => void;
 }) {
   const { propShape, propValues, updateProps } = props;
@@ -47,7 +46,7 @@ export default function PropEditors(props: {
         return (
           <NestedPropEditors
             key={propName}
-            propVal={propVal}
+            propValues={propVal?.value}
             propMetadata={propMetadata}
             propName={propName}
             updateSpecificProp={updateSpecificProp}
@@ -71,36 +70,6 @@ export default function PropEditors(props: {
   );
 
   return <>{propEditors}</>;
-}
-
-function NestedPropEditors(props: {
-  propVal: ObjectProp | undefined;
-  propMetadata: NestedPropMetadata;
-  propName: string;
-  updateSpecificProp: (propName: string, propVal: PropVal) => void;
-}) {
-  const { propVal, propMetadata, propName, updateSpecificProp } = props;
-  const updateObjectProp = useCallback(
-    (updatedPropValues: PropValues) => {
-      updateSpecificProp(propName, {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.Object,
-        value: updatedPropValues,
-      });
-    },
-    [propName, updateSpecificProp]
-  );
-
-  return (
-    <div className="ml-2">
-      <div className="font-semibold">{propName}</div>
-      <PropEditors
-        propValues={propVal?.value}
-        propShape={propMetadata.shape}
-        updateProps={updateObjectProp}
-      />
-    </div>
-  );
 }
 
 /**

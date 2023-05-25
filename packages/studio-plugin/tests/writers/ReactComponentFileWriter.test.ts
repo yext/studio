@@ -182,6 +182,11 @@ describe("updateFile", () => {
                     valueType: PropValueType.string,
                     value: "`Hello ${document.world}`",
                   },
+                  expression: {
+                    kind: PropValueKind.Expression,
+                    valueType: PropValueType.string,
+                    value: "document.name",
+                  },
                 },
               },
             },

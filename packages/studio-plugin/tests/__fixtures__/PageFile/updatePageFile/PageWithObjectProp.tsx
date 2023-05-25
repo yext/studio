@@ -7,6 +7,7 @@ export default function IndexPage({ document }) {
         title: 'double quote -> " ',
         subtitle: "the subtitle",
         templateString: `Hello ${document.world}`,
+        expression: document.name,
       }}
     />
   );
