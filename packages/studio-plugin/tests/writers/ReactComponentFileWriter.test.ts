@@ -368,6 +368,46 @@ describe("updateFile", () => {
         )
       );
     });
+
+    it.only("can update a prop interface with object props", () => {
+      const filepath = getModulePath("updateModuleFile/ModuleWithPropShape");
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "Panel"
+      ).updateFile({
+        moduleMetadata: {
+          kind: FileMetadataKind.Module,
+          componentTree: [complexBannerComponent],
+          filepath: "some/file/path",
+          metadataUUID: "mock-metadata-uuid",
+          propShape: {
+            obj: {
+              type: PropValueType.Object,
+              required: false,
+              shape: {
+                str: {
+                  type: PropValueType.string,
+                  required: false,
+                },
+                num: {
+                  type: PropValueType.number,
+                  required: false,
+                },
+              },
+            },
+          },
+        },
+        componentTree: [complexBannerComponent],
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("ModuleWithPropShape.tsx"),
+        fs.readFileSync(
+          getModulePath("updateModuleFile/ModuleWithObjProp"),
+          "utf-8"
+        )
+      );
+    });
   });
 
   describe("initialProps", () => {

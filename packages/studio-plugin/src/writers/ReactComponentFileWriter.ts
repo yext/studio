@@ -11,6 +11,7 @@ import {
   ComponentState,
   ComponentStateKind,
   ModuleMetadata,
+  PropMetadata,
   PropShape,
   PropVal,
   PropValueKind,
@@ -159,15 +160,37 @@ export default class ReactComponentFileWriter {
   }
 
   private updatePropInterface(propShape: PropShape) {
-    const getTypeString = (valueType: PropValueType) =>
-      valueType === PropValueType.Record ? "Record<string, any>" : valueType;
+    const getTypeString = (propMetadata: PropMetadata) => {
+      if (propMetadata.type === PropValueType.Record) {
+        return "Record<string, any>";
+      } else if (propMetadata.type === PropValueType.Object) {
+        const stringifiedShape = Object.entries(propMetadata.shape).reduce(
+          (stringifiedShape, [propName, childMetadata]) => {
+            stringifiedShape += propName;
+            if (!childMetadata.required) {
+              stringifiedShape += "?";
+            }
+            stringifiedShape += ":" + getTypeString(childMetadata) + ",\n";
+            return stringifiedShape;
+          },
+          ""
+        );
+        return "{" + stringifiedShape + "}";
+      } else {
+        return propMetadata.type;
+      }
+    };
     const interfaceName = `${this.componentName}Props`;
-    const properties = Object.entries(propShape).map(([key, value]) => ({
-      name: key,
-      type: getTypeString(value.type),
-      hasQuestionToken: !value.required,
-      ...(value.doc && { docs: [value.doc] }),
-    }));
+    const getProperties = (propShape: PropShape) =>
+      Object.entries(propShape).map(([key, propMetadata]) => {
+        return {
+          name: key,
+          type: getTypeString(propMetadata),
+          hasQuestionToken: !propMetadata.required,
+          ...(propMetadata.doc && { docs: [propMetadata.doc] }),
+        };
+      });
+    const properties = getProperties(propShape);
     this.studioSourceFileWriter.updateInterface(interfaceName, properties);
   }
 

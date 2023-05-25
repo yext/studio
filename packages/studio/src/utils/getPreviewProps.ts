@@ -148,7 +148,11 @@ function getExpressionValue(
       );
       return null;
     }
-    const newPropValue = get({ [parentPath]: sourceObject }, path) as unknown;
+    const pathWithoutOptionalChaining = path.replaceAll(/\?\./g, ".");
+    const newPropValue = get(
+      { [parentPath]: sourceObject },
+      pathWithoutOptionalChaining
+    ) as unknown;
     const propVal = createPropVal(newPropValue);
     if (!propVal) {
       console.warn(
