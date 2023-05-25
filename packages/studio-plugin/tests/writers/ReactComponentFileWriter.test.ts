@@ -369,7 +369,7 @@ describe("updateFile", () => {
       );
     });
 
-    it.only("can update a prop interface with object props", () => {
+    it("can update a prop interface with object props", () => {
       const filepath = getModulePath("updateModuleFile/ModuleWithPropShape");
       createReactComponentFileWriter(
         tsMorphProject,
