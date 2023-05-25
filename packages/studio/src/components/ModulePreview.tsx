@@ -9,7 +9,6 @@ export default function ModulePreview(props: {
   previewProps: Record<string, unknown>;
   moduleState: ModuleState;
 }) {
-  console.log(props);
   const { expressionSources, previewProps, moduleState } = props;
 
   const getModuleMetadata = useStudioStore(
