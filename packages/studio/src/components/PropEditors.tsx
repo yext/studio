@@ -29,10 +29,6 @@ export default function PropEditors(props: {
 
   const propEditors = Object.entries(propShape).map(
     ([propName, propMetadata]) => {
-      if (propMetadata.type === PropValueType.Record) {
-        return null;
-      }
-
       const propVal: PropVal | undefined = propValues[propName];
 
       if (propMetadata.type === PropValueType.Object) {

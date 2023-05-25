@@ -4,7 +4,6 @@ import {
   PropVal,
   PropValueKind,
   PropValueType,
-  RecordMetadata,
 } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
@@ -12,7 +11,7 @@ import useOnPropChange from "../hooks/useOnPropChange";
 
 interface PropEditorProps {
   propName: string;
-  propMetadata: Exclude<PropMetadata, NestedPropMetadata | RecordMetadata>;
+  propMetadata: Exclude<PropMetadata, NestedPropMetadata>;
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propName: string, propVal: PropVal) => void;
