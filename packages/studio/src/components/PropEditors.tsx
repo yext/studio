@@ -33,7 +33,7 @@ export default function PropEditors(props: {
         return null;
       }
 
-      const propVal: PropVal | undefined = propValues?.[propName];
+      const propVal: PropVal | undefined = propValues[propName];
 
       if (propMetadata.type === PropValueType.Object) {
         if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
