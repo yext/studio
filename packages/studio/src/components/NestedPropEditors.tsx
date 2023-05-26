@@ -7,6 +7,7 @@ import {
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import PropEditors from "./PropEditors";
+import { renderBranchUI } from "./PropEditor";
 
 const EMPTY_PROP_VALUES = {};
 
@@ -37,13 +38,9 @@ export default function NestedPropEditors(props: {
 
   return (
     <div className="flex">
-      {isNested && (
-        <div className="mr-1 text-gray-200 -ml-0.5 tracking-tighter text-sm">
-          --
-        </div>
-      )}
+      {renderBranchUI(isNested)}
       <div>
-        <div className="text-sm mb-2 font-semibold">{propName}</div>
+        <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
         <PropEditors
           propValues={propValues}
           propShape={propMetadata.shape}

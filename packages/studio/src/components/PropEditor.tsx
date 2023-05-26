@@ -36,9 +36,7 @@ export default function PropEditor({
 
   return (
     <div className="flex items-center mb-2 text-sm">
-      {isNested && (
-        <div className="mr-1 text-gray-200 -ml-0.5 tracking-tighter">--</div>
-      )}
+      {renderBranchUI(isNested)}
       <label className="flex h-10 items-center justify-self-start">
         <p className="pr-2">{propName}</p>
         <PropInput
@@ -63,5 +61,15 @@ export default function PropEditor({
         />
       )}
     </div>
+  );
+}
+
+export function renderBranchUI(isNested?: boolean) {
+  return (
+    isNested && (
+      <div className="mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap">
+        ---
+      </div>
+    )
   );
 }

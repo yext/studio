@@ -6,9 +6,14 @@ export interface BannerProps {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
-  nestedProp?: {
-    nestedString?: string
-  }
+  obj?: {
+    nestedString?: string;
+    nestedBool?: boolean;
+    nestedObj?: {
+      nestedNum?: number;
+      nestedColor?: HexColor;
+    };
+  };
 }
 
 export const initialProps: BannerProps = {
@@ -19,7 +24,7 @@ export const initialProps: BannerProps = {
 };
 
 export default function Banner(props: BannerProps) {
-  const nestedString = props.nestedProp?.nestedString;
+  const nestedString = props.obj?.nestedString;
 
   return (
     <div
