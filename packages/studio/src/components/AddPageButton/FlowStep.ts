@@ -1,3 +1,4 @@
+import { GetPathVal } from "@yext/studio-plugin";
 import BasicPageDataCollector from "./BasicPageDataCollector";
 import PageTypeSelector from "./PageTypeSelector";
 import StreamScopeCollector from "./StreamScopeCollector";
@@ -11,7 +12,7 @@ export enum FlowStep {
 export interface FlowStepModalProps {
   isOpen: boolean;
   handleClose: () => Promise<void>;
-  handleConfirm: (pageName?: string, url?: string) => Promise<void>;
+  handleConfirm: (pageName?: string, getPathVal?: GetPathVal) => Promise<void>;
 }
 
 type FlowStepModalMap = {

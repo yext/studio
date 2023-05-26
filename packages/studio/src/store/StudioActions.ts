@@ -2,10 +2,10 @@ import {
   ComponentState,
   ComponentStateKind,
   ComponentTreeHelpers,
+  GetPathVal,
   MessageID,
   ModuleMetadata,
   ModuleState,
-  PropValueKind,
   PropValues,
   RepeaterState,
   StreamScope,
@@ -264,7 +264,7 @@ export default class StudioActions {
 
   createPage = async (
     pageName: string,
-    getPathValue?: string,
+    getPathValue?: GetPathVal,
     streamScope?: StreamScope
   ) => {
     if (!pageName) {
@@ -286,7 +286,7 @@ export default class StudioActions {
       ...(isPagesJSRepo &&
         getPathValue && {
           pagesJS: {
-            getPathValue: { kind: PropValueKind.Literal, value: getPathValue },
+            getPathValue,
             ...(streamScope && { streamScope }),
           },
         }),

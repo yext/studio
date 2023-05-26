@@ -7,6 +7,7 @@ import AddPageContext from "./AddPageContext";
 import useStudioStore from "../../store/useStudioStore";
 import AddPageContextProvider from "./AddPageContextProvider";
 import { FlowStep, flowStepModalMap } from "./FlowStep";
+import { GetPathVal } from "@yext/studio-plugin";
 
 export default function AddPageButton() {
   return (
@@ -26,7 +27,7 @@ function AddPageButtonInternal() {
   const { resetState } = actions;
 
   const handleConfirm = useCallback(
-    async (pageName = "", url?: string) => {
+    async (pageName = "", getPathVal?: GetPathVal) => {
       switch (step) {
         case FlowStep.SelectPageType:
           setStep(
@@ -37,7 +38,7 @@ function AddPageButtonInternal() {
           setStep(FlowStep.GetBasicPageData);
           break;
         case FlowStep.GetBasicPageData:
-          await createPage(pageName, url, state.streamScope);
+          await createPage(pageName, getPathVal, state.streamScope);
           break;
       }
     },
