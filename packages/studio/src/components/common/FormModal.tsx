@@ -21,7 +21,7 @@ interface FormModalProps<T extends Form> {
   errorMessage?: string;
   confirmButtonText?: string;
   closeOnConfirm?: boolean;
-  requireChanges?: boolean;
+  requireChangesToSubmit?: boolean;
   handleClose: () => void | Promise<void>;
   handleConfirm: (form: T) => boolean | Promise<boolean>;
   transformOnChangeValue?: (value: string, field: string) => string;
@@ -36,7 +36,7 @@ export default function FormModal<T extends Form>({
   errorMessage,
   confirmButtonText = "Save",
   closeOnConfirm = true,
-  requireChanges,
+  requireChangesToSubmit,
   handleClose: customHandleClose,
   handleConfirm: customHandleConfirm,
   transformOnChangeValue,
@@ -57,7 +57,7 @@ export default function FormModal<T extends Form>({
   const handleConfirm = useCallback(async () => {
     if (await customHandleConfirm(formValue)) {
       closeOnConfirm && (await handleClose());
-      initialFormValue && requireChanges && setFormValue(formValue);
+      initialFormValue && requireChangesToSubmit && setFormValue(formValue);
     } else {
       setIsValidForm(false);
     }
@@ -67,7 +67,7 @@ export default function FormModal<T extends Form>({
     handleClose,
     initialFormValue,
     closeOnConfirm,
-    requireChanges,
+    requireChangesToSubmit,
   ]);
 
   const updateFormField = useCallback((field: string, value: string) => {
@@ -84,7 +84,7 @@ export default function FormModal<T extends Form>({
   const isConfirmButtonDisabled =
     !isValidForm ||
     !getIsFormFilled(formValue, formData) ||
-    (requireChanges && !hasChanges);
+    (requireChangesToSubmit && !hasChanges);
 
   const modalBodyContent = useMemo(() => {
     return (

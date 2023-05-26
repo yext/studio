@@ -66,7 +66,7 @@ export default function PageSettingsButton({
           title="Page Settings"
           formData={formData}
           initialFormValue={initialFormValue}
-          requireChanges={true}
+          requireChangesToSubmit={true}
           handleClose={handleClose}
           handleConfirm={handleModalSave}
           transformOnChangeValue={
