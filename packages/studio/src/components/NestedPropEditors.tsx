@@ -15,12 +15,14 @@ export default function NestedPropEditors(props: {
   propMetadata: NestedPropMetadata;
   propName: string;
   updateSpecificProp: (propName: string, propVal: PropVal) => void;
+  isNested?: boolean;
 }) {
   const {
     propValues = EMPTY_PROP_VALUES,
     propMetadata,
     propName,
     updateSpecificProp,
+    isNested,
   } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
@@ -34,13 +36,21 @@ export default function NestedPropEditors(props: {
   );
 
   return (
-    <div className="ml-2">
-      <div className="font-semibold">{propName}</div>
-      <PropEditors
-        propValues={propValues}
-        propShape={propMetadata.shape}
-        updateProps={updateObjectProp}
-      />
+    <div className="flex">
+      {isNested && (
+        <div className="mr-1 text-gray-200 -ml-0.5 tracking-tighter text-sm">
+          --
+        </div>
+      )}
+      <div>
+        <div className="text-sm mb-2 font-semibold">{propName}</div>
+        <PropEditors
+          propValues={propValues}
+          propShape={propMetadata.shape}
+          updateProps={updateObjectProp}
+          isNested={true}
+        />
+      </div>
     </div>
   );
 }

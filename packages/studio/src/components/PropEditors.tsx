@@ -15,8 +15,9 @@ export default function PropEditors(props: {
   propShape: PropShape;
   propValues: PropValues;
   updateProps: (propVal: PropValues) => void;
+  isNested?: boolean;
 }) {
-  const { propShape, propValues, updateProps } = props;
+  const { propShape, propValues, updateProps, isNested } = props;
   const updateSpecificProp = useCallback(
     (propName: string, propVal: PropVal) => {
       updateProps({
@@ -29,43 +30,70 @@ export default function PropEditors(props: {
 
   const propEditors = Object.entries(propShape).map(
     ([propName, propMetadata]) => {
-      const propVal: PropVal | undefined = propValues[propName];
-
-      if (propMetadata.type === PropValueType.Object) {
-        if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
-          console.error(
-            `Mismatching propMetadata type ${propMetadata.type} for ${propName}.`
-          );
-          return null;
-        }
-
+      const editor = renderPropEditor(
+        propName,
+        propMetadata,
+        propValues,
+        updateSpecificProp,
+        isNested
+      );
+      if (isNested) {
         return (
-          <NestedPropEditors
-            key={propName}
-            propValues={propVal?.value}
-            propMetadata={propMetadata}
-            propName={propName}
-            updateSpecificProp={updateSpecificProp}
-          />
+          <div className="flex items-center border-l-2 ml-2" key={propName}>
+            {editor}
+          </div>
         );
       }
-
-      const propKind = getPropKind(propMetadata);
-
-      return (
-        <PropEditor
-          key={propName}
-          onPropChange={updateSpecificProp}
-          propKind={propKind}
-          propName={propName}
-          propMetadata={propMetadata}
-          propValue={PropValueHelpers.getPropValue(propVal, propKind)}
-        />
-      );
+      return <div key={propName}>{editor}</div>;
     }
   );
 
   return <>{propEditors}</>;
+}
+
+function renderPropEditor(
+  propName: string,
+  propMetadata: PropMetadata,
+  propValues: PropValues,
+  updateSpecificProp: (propName: string, propVal: PropVal) => void,
+  isNested?: boolean
+) {
+  if (propMetadata.type === PropValueType.Record) {
+    return null;
+  }
+
+  const propVal: PropVal | undefined = propValues[propName];
+
+  if (propMetadata.type === PropValueType.Object) {
+    if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
+      console.error(
+        `Mismatching propMetadata type ${propMetadata.type} for ${propName}.`
+      );
+      return null;
+    }
+
+    return (
+      <NestedPropEditors
+        propValues={propVal?.value}
+        propMetadata={propMetadata}
+        propName={propName}
+        updateSpecificProp={updateSpecificProp}
+        isNested={isNested}
+      />
+    );
+  }
+
+  const propKind = getPropKind(propMetadata);
+  return (
+    <PropEditor
+      onPropChange={updateSpecificProp}
+      propKind={propKind}
+      propName={propName}
+      propMetadata={propMetadata}
+      propValue={PropValueHelpers.getPropValue(propVal, propKind)}
+      isNested={isNested}
+    />
+  );
 }
 
 /**

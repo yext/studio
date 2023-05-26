@@ -15,6 +15,7 @@ interface PropEditorProps {
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propName: string, propVal: PropVal) => void;
+  isNested?: boolean;
 }
 
 const tooltipStyle = { backgroundColor: "black" };
@@ -28,14 +29,18 @@ export default function PropEditor({
   propValue,
   propKind,
   onPropChange,
+  isNested,
 }: PropEditorProps) {
   const { type, doc, unionValues } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
 
   return (
-    <div className="mb-5">
-      <label className="flex h-10 items-center" id={propName}>
-        <p className="w-1/4">{propName}</p>
+    <div className="flex items-center mb-2 text-sm">
+      {isNested && (
+        <div className="mr-1 text-gray-200 -ml-0.5 tracking-tighter">--</div>
+      )}
+      <label className="flex h-10 items-center justify-self-start">
+        <p className="pr-2">{propName}</p>
         <PropInput
           {...{
             propType:

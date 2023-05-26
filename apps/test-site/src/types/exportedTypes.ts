@@ -1,3 +1,7 @@
 export interface NestedProp {
-  egg?: string;
+  str?: string;
+  num?: number;
+  obj?: {
+    hello?: string;
+  };
 }

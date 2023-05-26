@@ -23,7 +23,7 @@ export default function Banner(props: BannerData) {
       <p style={{ backgroundColor: props.bgColor }}>{props.title}</p>
       <p>{`${props.bool}`}</p>
       <p>{props.num}</p>
-      <h1>{props?.nestedProp?.egg}</h1>
+      <h1>{props.nestedProp && JSON.stringify(props.nestedProp)}</h1>
     </div>
   );
 }

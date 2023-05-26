@@ -15,7 +15,7 @@ interface PropInputProps<T = string | number | boolean> {
 }
 
 const inputBoxCssClasses =
-  "border border-gray-300 focus:border-indigo-500 rounded-lg p-2 w-full";
+  "border border-gray-300 focus:border-indigo-500 rounded-lg p-2";
 
 const selectCssClasses =
   "bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5";

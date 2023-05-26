@@ -6,6 +6,9 @@ export interface BannerProps {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
+  nestedProp?: {
+    nestedString?: string
+  }
 }
 
 export const initialProps: BannerProps = {
@@ -16,6 +19,8 @@ export const initialProps: BannerProps = {
 };
 
 export default function Banner(props: BannerProps) {
+  const nestedString = props.nestedProp?.nestedString;
+
   return (
     <div
       style={{ backgroundColor: props.bgColor }}
@@ -24,6 +29,7 @@ export default function Banner(props: BannerProps) {
       {props.title}
       {`${props.bool}`}
       {props.num}
+      {nestedString && <h2>{nestedString}</h2>}
     </div>
   );
 }

@@ -6,7 +6,6 @@ import {
   FileMetadata,
   TypeGuards,
 } from "@yext/studio-plugin";
-import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleEditActions";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 import CreateModuleButton from "./ModuleActions/CreateModuleButton";
@@ -39,7 +38,6 @@ export default function PropertiesPanel(): JSX.Element | null {
         propShape={propShape}
         shouldRenderProp={shouldRenderProp}
       />
-      <Divider />
     </div>
   );
 }
