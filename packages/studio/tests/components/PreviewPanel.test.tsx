@@ -214,6 +214,33 @@ it("clicking a component in the preview updates the activeComponentUUID", async 
   );
 });
 
+it("can preview a module with object props", async () => {
+  const componentTree: ComponentState[] = [
+    {
+      kind: ComponentStateKind.Module,
+      componentName: "ModuleWithObjProps",
+      uuid: "module-obj-props-uuid",
+      metadataUUID: "module-obj-props-metadata-uuid",
+      props: {
+        obj: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            text: {
+              kind: PropValueKind.Expression,
+              valueType: PropValueType.string,
+              value: "document.name",
+            },
+          },
+        },
+      },
+    },
+  ];
+  await mockPreviewState(componentTree);
+  render(<PreviewPanel />);
+  expect(screen.getByText("hello bob")).toBeDefined();
+});
+
 async function mockPreviewState(componentTree: ComponentState[]) {
   mockStore({
     pages: {

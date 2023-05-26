@@ -1,7 +1,6 @@
 import {
   ComponentState,
   ComponentStateKind,
-  FileMetadataKind,
   TypeGuards,
 } from "@yext/studio-plugin";
 import { createElement, Fragment, useMemo } from "react";
@@ -9,9 +8,9 @@ import usePreviewProps from "../hooks/usePreviewProps";
 import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources } from "../utils/getPreviewProps";
-import ComponentTreePreview from "./ComponentTreePreview";
 import RepeaterPreview from "./RepeaterPreview";
 import ErrorComponentPreview from "./ErrorComponentPreview";
+import ModulePreview from "./ModulePreview";
 
 interface ComponentPreviewProps {
   componentState: ComponentState;
@@ -29,9 +28,6 @@ export default function ComponentPreview({
   childElements = [],
   parentItem,
 }: ComponentPreviewProps): JSX.Element | null {
-  const UUIDToFileMetadata = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToFileMetadata
-  );
   const previewProps = usePreviewProps(
     componentState,
     expressionSources,
@@ -41,36 +37,22 @@ export default function ComponentPreview({
     createElement(type, previewProps, ...childElements)
   );
 
-  const moduleExpressionSources = useMemo(
-    () => ({
-      ...expressionSources,
-      props: previewProps,
-    }),
-    [expressionSources, previewProps]
-  );
-
   if (TypeGuards.isModuleState(componentState)) {
-    const metadata = UUIDToFileMetadata[componentState.metadataUUID];
-    if (metadata?.kind === FileMetadataKind.Module) {
-      return (
-        <ComponentTreePreview
-          componentTree={metadata.componentTree}
-          expressionSources={moduleExpressionSources}
-          renderHighlightingContainer={false}
-        />
-      );
-    }
-  }
-  if (TypeGuards.isRepeaterState(componentState)) {
+    return (
+      <ModulePreview
+        previewProps={previewProps}
+        expressionSources={expressionSources}
+        moduleState={componentState}
+      />
+    );
+  } else if (TypeGuards.isRepeaterState(componentState)) {
     return (
       <RepeaterPreview
         repeaterState={componentState}
         expressionSources={expressionSources}
       />
     );
-  }
-
-  if (componentState.kind === ComponentStateKind.Error) {
+  } else if (componentState.kind === ComponentStateKind.Error) {
     return (
       <ErrorComponentPreview
         element={element}

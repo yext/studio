@@ -48,7 +48,17 @@ export function getPreviewProps(
         expressionSources
       );
     } else if (propVal.valueType === PropValueType.Object) {
-      transformedProps[propName] = transformPropValuesToRaw(propVal.value);
+      const propMetadata = propShape[propName];
+      if (propMetadata.type !== PropValueType.Object) {
+        throw new Error(
+          `Expected PropMetadata of type Object, received ${propMetadata.type}`
+        );
+      }
+      transformedProps[propName] = getPreviewProps(
+        propVal.value,
+        propMetadata.shape,
+        expressionSources
+      );
     } else {
       transformedProps[propName] = propVal.value;
     }
@@ -138,7 +148,11 @@ function getExpressionValue(
       );
       return null;
     }
-    const newPropValue = get({ [parentPath]: sourceObject }, path) as unknown;
+    const pathWithoutOptionalChaining = path.replaceAll(/\?\./g, ".");
+    const newPropValue = get(
+      { [parentPath]: sourceObject },
+      pathWithoutOptionalChaining
+    ) as unknown;
     const propVal = createPropVal(newPropValue);
     if (!propVal) {
       console.warn(

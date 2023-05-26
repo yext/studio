@@ -8,9 +8,9 @@ import {
 } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
 import ModuleEditActions from "./ModuleActions/ModuleEditActions";
-import PropEditors from "./PropEditors";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 import CreateModuleButton from "./ModuleActions/CreateModuleButton";
+import ActiveComponentPropEditors from "./ActiveComponentPropEditors";
 
 /**
  * Renders prop editors for the active component selected by the user.
@@ -34,7 +34,7 @@ export default function PropertiesPanel(): JSX.Element | null {
   return (
     <div>
       {renderModuleActions(activeComponentMetadata, activeComponentState)}
-      <PropEditors
+      <ActiveComponentPropEditors
         activeComponentState={extractedComponentState}
         propShape={propShape}
         shouldRenderProp={shouldRenderProp}

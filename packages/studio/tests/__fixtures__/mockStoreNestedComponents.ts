@@ -88,10 +88,38 @@ const moduleMetadata: ModuleMetadata = {
   ],
 };
 
+const moduleWithObjPropsMetadata: ModuleMetadata = {
+  kind: FileMetadataKind.Module,
+  metadataUUID: "module-obj-props-metadata-uuid",
+  propShape: {
+    obj: {
+      type: PropValueType.Object,
+      required: false,
+      shape: {
+        text: { type: PropValueType.string, required: false },
+      },
+    },
+  },
+  filepath: "unused",
+  componentTree: [
+    {
+      ...componentState,
+      props: {
+        title: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "`hello ${props.obj?.text}`",
+        },
+      },
+    },
+  ],
+};
+
 export const mockUUIDToFileMetadata: Record<string, FileMetadata> = {
   "banner-metadata-uuid": componentMetadata,
   "container-metadata-uuid": containerMetadata,
   "panel-metadata-uuid": moduleMetadata,
+  "module-obj-props-metadata-uuid": moduleWithObjPropsMetadata,
 };
 
 export const nestedComponentTree: ComponentState[] = [

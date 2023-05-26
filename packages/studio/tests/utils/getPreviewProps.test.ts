@@ -246,3 +246,52 @@ function transformFooProp(value: string, parentProps: PropValues = {}) {
     }
   );
 }
+
+it("works with expressions inside object props", () => {
+  const propValues: PropValues = {
+    obj: {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.Object,
+      value: {
+        templateExpr: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "`hello ${document.world}`",
+        },
+        expr: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "document.name",
+        },
+      },
+    },
+  };
+  const propShape: PropShape = {
+    obj: {
+      type: PropValueType.Object,
+      required: false,
+      shape: {
+        templateExpr: {
+          type: PropValueType.string,
+          required: false,
+        },
+        expr: {
+          type: PropValueType.string,
+          required: false,
+        },
+      },
+    },
+  };
+  const previewProps = getPreviewProps(propValues, propShape, {
+    document: {
+      world: "whirled",
+      name: "bob",
+    },
+  });
+  expect(previewProps).toEqual({
+    obj: {
+      templateExpr: "hello whirled",
+      expr: "bob",
+    },
+  });
+});

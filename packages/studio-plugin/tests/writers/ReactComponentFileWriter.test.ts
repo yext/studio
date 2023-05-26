@@ -170,7 +170,22 @@ describe("updateFile", () => {
                   title: {
                     kind: PropValueKind.Literal,
                     valueType: PropValueType.string,
-                    value: "-objProp.title-",
+                    value: 'double quote -> " ',
+                  },
+                  subtitle: {
+                    kind: PropValueKind.Literal,
+                    valueType: PropValueType.string,
+                    value: "the subtitle",
+                  },
+                  templateString: {
+                    kind: PropValueKind.Expression,
+                    valueType: PropValueType.string,
+                    value: "`Hello ${document.world}`",
+                  },
+                  expression: {
+                    kind: PropValueKind.Expression,
+                    valueType: PropValueType.string,
+                    value: "document.name",
                   },
                 },
               },
@@ -349,6 +364,46 @@ describe("updateFile", () => {
         expect.stringContaining("ModuleWithPropShape.tsx"),
         fs.readFileSync(
           getModulePath("updateModuleFile/ModuleWithPropShapeMultiFields"),
+          "utf-8"
+        )
+      );
+    });
+
+    it("can update a prop interface with object props", () => {
+      const filepath = getModulePath("updateModuleFile/ModuleWithPropShape");
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "Panel"
+      ).updateFile({
+        moduleMetadata: {
+          kind: FileMetadataKind.Module,
+          componentTree: [complexBannerComponent],
+          filepath: "some/file/path",
+          metadataUUID: "mock-metadata-uuid",
+          propShape: {
+            obj: {
+              type: PropValueType.Object,
+              required: false,
+              shape: {
+                str: {
+                  type: PropValueType.string,
+                  required: false,
+                },
+                num: {
+                  type: PropValueType.number,
+                  required: false,
+                },
+              },
+            },
+          },
+        },
+        componentTree: [complexBannerComponent],
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("ModuleWithPropShape.tsx"),
+        fs.readFileSync(
+          getModulePath("updateModuleFile/ModuleWithObjProp"),
           "utf-8"
         )
       );

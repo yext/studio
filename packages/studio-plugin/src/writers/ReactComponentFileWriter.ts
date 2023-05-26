@@ -11,14 +11,16 @@ import {
   ComponentState,
   ComponentStateKind,
   ModuleMetadata,
+  PropMetadata,
   PropShape,
+  PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
-import { ComponentStateHelpers, transformPropValuesToRaw } from "../utils";
+import { ComponentStateHelpers } from "../utils";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import { TypeGuards } from "../utils";
 
@@ -47,23 +49,46 @@ export default class ReactComponentFileWriter {
   private createProps(props: PropValues): string {
     let propsString = "";
     Object.keys(props).forEach((propName) => {
-      const { kind, valueType: propType, value } = props[propName];
-
-      if (
-        kind === PropValueKind.Literal &&
-        (propType === PropValueType.string ||
-          propType === PropValueType.HexColor)
-      ) {
-        propsString += `${propName}='${value}' `;
-      } else if (propType === PropValueType.Object) {
-        propsString += `${propName}={${JSON.stringify(
-          transformPropValuesToRaw(value)
-        )}}`;
+      const propVal = props[propName];
+      const value = this.parsePropVal(propVal);
+      if (this.shouldUseStringSyntaxForProp(propVal)) {
+        propsString += `${propName}=${value} `;
       } else {
         propsString += `${propName}={${value}} `;
       }
     });
     return propsString;
+  }
+
+  private parsePropVal(propVal: PropVal) {
+    const { value, valueType } = propVal;
+    if (this.shouldUseStringSyntaxForProp(propVal)) {
+      const escapedValueWithDoubleQuotes = JSON.stringify(value);
+      return escapedValueWithDoubleQuotes;
+    } else if (valueType === PropValueType.Object) {
+      const stringifiedObject = Object.keys(value).reduce(
+        (stringifiedObject, keyName) => {
+          const childPropVal = value[keyName];
+          stringifiedObject +=
+            JSON.stringify(keyName) +
+            ": " +
+            this.parsePropVal(childPropVal) +
+            ",\n";
+          return stringifiedObject;
+        },
+        ""
+      );
+      return "{" + stringifiedObject + "}";
+    } else {
+      return value;
+    }
+  }
+
+  private shouldUseStringSyntaxForProp({ kind, valueType }: PropVal) {
+    const isRepresentedAsString =
+      valueType === PropValueType.string ||
+      valueType === PropValueType.HexColor;
+    return kind === PropValueKind.Literal && isRepresentedAsString;
   }
 
   private createJsxSelfClosingElement(
@@ -135,15 +160,37 @@ export default class ReactComponentFileWriter {
   }
 
   private updatePropInterface(propShape: PropShape) {
-    const getTypeString = (valueType: PropValueType) =>
-      valueType === PropValueType.Record ? "Record<string, any>" : valueType;
+    const getTypeString = (propMetadata: PropMetadata) => {
+      if (propMetadata.type === PropValueType.Record) {
+        return "Record<string, any>";
+      } else if (propMetadata.type === PropValueType.Object) {
+        const stringifiedShape = Object.entries(propMetadata.shape).reduce(
+          (stringifiedShape, [propName, childMetadata]) => {
+            stringifiedShape += propName;
+            if (!childMetadata.required) {
+              stringifiedShape += "?";
+            }
+            stringifiedShape += ":" + getTypeString(childMetadata) + ",\n";
+            return stringifiedShape;
+          },
+          ""
+        );
+        return "{" + stringifiedShape + "}";
+      } else {
+        return propMetadata.type;
+      }
+    };
     const interfaceName = `${this.componentName}Props`;
-    const properties = Object.entries(propShape).map(([key, value]) => ({
-      name: key,
-      type: getTypeString(value.type),
-      hasQuestionToken: !value.required,
-      ...(value.doc && { docs: [value.doc] }),
-    }));
+    const getProperties = (propShape: PropShape) =>
+      Object.entries(propShape).map(([key, propMetadata]) => {
+        return {
+          name: key,
+          type: getTypeString(propMetadata),
+          hasQuestionToken: !propMetadata.required,
+          ...(propMetadata.doc && { docs: [propMetadata.doc] }),
+        };
+      });
+    const properties = getProperties(propShape);
     this.studioSourceFileWriter.updateInterface(interfaceName, properties);
   }
 

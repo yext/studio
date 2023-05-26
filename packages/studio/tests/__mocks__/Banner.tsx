@@ -28,7 +28,7 @@ export default function Banner(props: BannerProps) {
 
   return (
     <div style={style}>
-      {props.title}
+      <div>{props.title}</div>
       {`${props.bool}`}
       {props.num}
       {props?.nestedProp?.egg}

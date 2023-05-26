@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import PropEditors from "../../src/components/PropEditors";
+import ActiveComponentPropEditors from "../../src/components/ActiveComponentPropEditors";
 import {
   ComponentState,
   ComponentStateKind,
@@ -37,7 +37,7 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
     .spyOn(global.console, "warn")
     .mockImplementation();
   render(
-    <PropEditors
+    <ActiveComponentPropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
     />
@@ -49,7 +49,7 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
   );
 });
 
-it("does not render a prop editor for component's prop of type Object", () => {
+it("renders nested prop editors for component's prop of type Object", () => {
   const propShape: PropShape = {
     objProp: {
       type: PropValueType.Object,
@@ -62,20 +62,14 @@ it("does not render a prop editor for component's prop of type Object", () => {
       },
     },
   };
-  const consoleWarnSpy = jest
-    .spyOn(global.console, "warn")
-    .mockImplementation();
   render(
-    <PropEditors
+    <ActiveComponentPropEditors
       activeComponentState={activeComponentState}
       propShape={propShape}
     />
   );
-  expect(screen.queryByText("objProp")).toBeNull();
-  expect(consoleWarnSpy).toHaveBeenCalledTimes(1);
-  expect(consoleWarnSpy).toHaveBeenCalledWith(
-    "Found objProp in component Banner with PropValueType.Object. Studio does not support editing nested props."
-  );
+  expect(screen.getByText("objProp")).toBeTruthy();
+  expect(screen.getByText("title")).toBeTruthy();
 });
 
 const activeComponentMetadata: FileMetadata = {
@@ -142,7 +136,7 @@ function testStandardOrModuleComponentState(
 
   it(`renders message when there are no editable props`, () => {
     render(
-      <PropEditors
+      <ActiveComponentPropEditors
         activeComponentState={state}
         propShape={propShape}
         shouldRenderProp={() => false}
@@ -159,7 +153,12 @@ function testStandardOrModuleComponentState(
   });
 
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
-    render(<PropEditors activeComponentState={state} propShape={propShape} />);
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={state}
+        propShape={propShape}
+      />
+    );
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
     expect(screen.getByLabelText("bool")).toHaveAttribute("type", "checkbox");
@@ -179,7 +178,7 @@ function testStandardOrModuleComponentState(
         return null;
       }
       return (
-        <PropEditors
+        <ActiveComponentPropEditors
           activeComponentState={activeComponentState}
           propShape={activeComponentMetadata.propShape}
         />
@@ -307,7 +306,7 @@ it("converts string literals to string expressions when propKind = Expression", 
   };
 
   render(
-    <PropEditors
+    <ActiveComponentPropEditors
       activeComponentState={{
         ...activeComponentState,
         props,
@@ -343,7 +342,7 @@ it("converts non-template string expressions to template literals", () => {
   };
 
   render(
-    <PropEditors
+    <ActiveComponentPropEditors
       activeComponentState={{
         ...activeComponentState,
         props,
