@@ -58,10 +58,6 @@ function renderPropEditor(
   updateSpecificProp: (propName: string, propVal: PropVal) => void,
   isNested?: boolean
 ) {
-  if (propMetadata.type === PropValueType.Record) {
-    return null;
-  }
-
   const propVal: PropVal | undefined = propValues[propName];
 
   if (propMetadata.type === PropValueType.Object) {

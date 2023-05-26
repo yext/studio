@@ -42,7 +42,6 @@ export default function ContentPanel(): JSX.Element | null {
       {hasArrayEntityData && (
         <>
           <RepeaterEditor componentState={activeComponentState} />
-          <Divider />
         </>
       )}
     </div>
