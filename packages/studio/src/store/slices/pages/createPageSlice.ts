@@ -88,6 +88,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
+    clearPendingChanges: () => {
+      set((store) => {
+        store.pendingChanges.pagesToRemove = new Set();
+        store.pendingChanges.pagesToUpdate = new Set();
+      });
+    },
   };
 
   const activePageActions = {

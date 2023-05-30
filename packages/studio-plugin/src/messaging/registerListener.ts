@@ -1,13 +1,6 @@
-import { ViteDevServer, WebSocketClient } from "vite";
+import { ViteDevServer } from "vite";
 import { MessageID, ResponseEventMap, StudioEventMap } from "../types";
-
-type WebSocketListener<T extends MessageID> = (
-  data: {
-    payload: StudioEventMap[T];
-    uuid: string;
-  },
-  client: WebSocketClient
-) => Promise<void>;
+import { IncomingMessage } from "http";
 
 /**
  * Registers a listener for the given messageId,
@@ -18,36 +11,60 @@ export function registerListener<T extends MessageID>(
   messageId: T,
   listener: (data: StudioEventMap[T]) => Promise<string>
 ) {
-  const handleRes: WebSocketListener<T> = async (data, client) => {
-    try {
-      const msg = await listener(data.payload);
-      sendClientMessage(client, messageId, {
-        type: "success",
-        uuid: data.uuid,
-        msg,
+  server.middlewares.use(async (req, res, next) => {
+    if (req.url === `/${messageId}`) {
+      const requestBody = await parseRequestBody<T>(req);
+      const responsePayload = await getResponsePayload(messageId, () =>
+        listener(requestBody)
+      );
+      res.on("error", (err) => {
+        throw new Error(JSON.stringify(err));
       });
-    } catch (error: unknown) {
-      let msg = `Error occurred for event ${messageId}`;
-      if (typeof error === "string") {
-        msg = error.toString();
-      } else if (error instanceof Error) {
-        msg = error.message;
-      }
-      console.error(error);
-      sendClientMessage(client, messageId, {
-        type: "error",
-        msg,
-        uuid: data.uuid,
-      });
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(JSON.stringify(responsePayload));
+    } else {
+      next();
     }
-  };
-  server.ws.on(messageId, (data, client) => void handleRes(data, client));
+  });
 }
 
-function sendClientMessage<T extends MessageID>(
-  client: WebSocketClient,
+async function getResponsePayload<T extends MessageID>(
   messageId: T,
-  payload: ResponseEventMap[T]
-) {
-  client.send(messageId, payload);
+  handler: () => Promise<string>
+): Promise<ResponseEventMap[T]> {
+  try {
+    const msg = await handler();
+    return {
+      type: "success",
+      msg,
+    };
+  } catch (error: unknown) {
+    let msg = `Error occurred for event ${messageId}`;
+    if (typeof error === "string") {
+      msg = error.toString();
+    } else if (error instanceof Error) {
+      msg = error.message;
+    }
+    console.error(error);
+    return {
+      type: "error",
+      msg,
+    };
+  }
+}
+
+function parseRequestBody<T extends MessageID>(
+  req: IncomingMessage
+): Promise<StudioEventMap[T]> {
+  return new Promise((resolve) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const body: any[] = [];
+    req
+      .on("data", (chunk) => body.push(chunk))
+      .on("end", () => {
+        const stringifiedBody = Buffer.concat(body).toString();
+        const requestBody: StudioEventMap[T] = JSON.parse(stringifiedBody);
+        resolve(requestBody);
+      });
+  });
 }

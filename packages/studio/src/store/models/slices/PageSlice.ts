@@ -65,6 +65,7 @@ interface PageSliceActions {
     activeEntityFile?: string
   ) => Promise<void>;
 
+  clearPendingChanges: () => void;
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }
 
