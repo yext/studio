@@ -17,9 +17,6 @@ export function registerListener<T extends MessageID>(
       const responsePayload = await getResponsePayload(messageId, () =>
         listener(requestBody)
       );
-      res.on("error", (err) => {
-        throw new Error(JSON.stringify(err));
-      });
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(responsePayload));
     } else {
