@@ -7,6 +7,7 @@ import {
 } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import PropEditors from "./PropEditors";
+import { renderBranchUI } from "./PropEditor";
 
 const EMPTY_PROP_VALUES = {};
 
@@ -15,12 +16,14 @@ export default function NestedPropEditors(props: {
   propMetadata: NestedPropMetadata;
   propName: string;
   updateSpecificProp: (propName: string, propVal: PropVal) => void;
+  isNested?: boolean;
 }) {
   const {
     propValues = EMPTY_PROP_VALUES,
     propMetadata,
     propName,
     updateSpecificProp,
+    isNested,
   } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
@@ -34,13 +37,17 @@ export default function NestedPropEditors(props: {
   );
 
   return (
-    <div className="ml-2">
-      <div className="font-semibold">{propName}</div>
-      <PropEditors
-        propValues={propValues}
-        propShape={propMetadata.shape}
-        updateProps={updateObjectProp}
-      />
+    <div className="flex">
+      {renderBranchUI(isNested)}
+      <div>
+        <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
+        <PropEditors
+          propValues={propValues}
+          propShape={propMetadata.shape}
+          updateProps={updateObjectProp}
+          isNested={true}
+        />
+      </div>
     </div>
   );
 }

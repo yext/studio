@@ -122,11 +122,15 @@ export default class StudioPlaywrightPage {
     return input.getAttribute("value");
   }
 
+  async clickPropertiesTab() {
+    await this.page.getByRole("button", { name: "Properties" }).click();
+  }
+
   /**
    * Turns the current active component into a module.
    */
   async createModule(moduleName: string) {
-    await this.page.getByRole("button", { name: "Properties" }).click();
+    await this.clickPropertiesTab();
     await this.page.getByRole("button", { name: "Create Module" }).click();
     await this.typeIntoModal("Create Module Modal", moduleName);
   }

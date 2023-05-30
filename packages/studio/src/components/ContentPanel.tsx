@@ -37,12 +37,11 @@ export default function ContentPanel(): JSX.Element | null {
         propShape={propShape}
         shouldRenderProp={shouldRenderProp}
       />
-      <Divider />
       {/** TODO: remove hasArrayEntityData check once other arrays are supported. */}
       {hasArrayEntityData && (
         <>
-          <RepeaterEditor componentState={activeComponentState} />
           <Divider />
+          <RepeaterEditor componentState={activeComponentState} />
         </>
       )}
     </div>

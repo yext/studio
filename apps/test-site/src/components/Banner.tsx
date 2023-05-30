@@ -7,7 +7,7 @@ export interface BannerData {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
-  nestedProp?: NestedProp;
+  obj?: NestedProp;
 }
 
 export const initialProps: BannerData = {
@@ -23,7 +23,7 @@ export default function Banner(props: BannerData) {
       <p style={{ backgroundColor: props.bgColor }}>{props.title}</p>
       <p>{`${props.bool}`}</p>
       <p>{props.num}</p>
-      <h1>{props?.nestedProp?.egg}</h1>
+      <h1>{props.obj && JSON.stringify(props.obj)}</h1>
     </div>
   );
 }

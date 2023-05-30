@@ -35,7 +35,17 @@ export default function UniversalPage({ document }: TemplateProps) {
         bannerTitle={document.address.city}
         document={document}
       />
-      <Banner nestedProp={{ egg: "eggyweggy" }} title="" />
+      <Banner
+        obj={{
+          nestedString: `hello ${document.address.city}  ${document.id}`,
+          nestedObj: { nestedNum: 333, nestedColor: "#FFFFFF" },
+          nestedBool: false,
+        }}
+        title=""
+        bgColor="#FFFFFF"
+        bool={false}
+        num={0}
+      />
     </>
   );
 }
