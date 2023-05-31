@@ -205,6 +205,48 @@ describe("updateFile", () => {
       );
     });
 
+    it("can write array expression props", () => {
+      addFilesToProject(tsMorphProject, [
+        getComponentPath("BannerUsingArrays"),
+      ]);
+
+      const filepath = getPagePath("updatePageFile/PageWithArrayProp");
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "IndexPage"
+      ).updateFile({
+        componentTree: [
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "BannerUsingArrays",
+            props: {
+              arrProp: {
+                kind: PropValueKind.Expression,
+                valueType: PropValueType.Array,
+                value: "document.services",
+              },
+              typeArr: {
+                kind: PropValueKind.Expression,
+                valueType: PropValueType.Array,
+                value: "document.nums",
+              },
+            },
+            uuid: "mock-uuid-0",
+            metadataUUID: getComponentPath("BannerUsingArrays"),
+          },
+        ],
+        cssImports: [],
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithArrayProp.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithArrayProp"),
+          "utf-8"
+        )
+      );
+    });
+
     it("remove components that are not part of the new component tree", () => {
       addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const filepath = getPagePath("updatePageFile/PageWithNestedComponents");

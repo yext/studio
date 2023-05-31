@@ -1,4 +1,4 @@
-import { PropMetadata, PropShape } from "../types/PropShape";
+import { PropMetadata, PropShape, PropType } from "../types/PropShape";
 import TypeGuards from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
@@ -6,6 +6,7 @@ import { PropValueType } from "../types";
 import {
   ParsedProperty,
   ParsedShape,
+  ParsedType,
   ParsedTypeKind,
 } from "./helpers/TypeNodeParsingHelper";
 
@@ -59,30 +60,48 @@ export default class PropShapeParser {
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropMetadata {
-    if (rawProp.kind === ParsedTypeKind.Object) {
-      const nestedShape = this.toPropShape(rawProp.type, identifier, onProp);
-      const propMetadata: PropMetadata = {
+    const { required, doc } = rawProp;
+    return {
+      ...(doc && { doc }),
+      required,
+      ...this.getPropType(rawProp, identifier, onProp),
+    };
+  }
+
+  private getPropType(
+    parsedType: ParsedType,
+    identifier: string,
+    onProp?: (propName: string) => boolean
+  ): PropType {
+    const { kind, type, unionValues } = parsedType;
+
+    if (kind === ParsedTypeKind.Array) {
+      const itemType = this.getPropType(type, identifier, onProp);
+      return {
+        type: PropValueType.Array,
+        itemType,
+      };
+    }
+    if (kind === ParsedTypeKind.Object) {
+      const nestedShape = this.toPropShape(type, identifier, onProp);
+      return {
         type: PropValueType.Object,
         shape: nestedShape,
-        required: rawProp.required,
       };
-      return propMetadata;
     }
-    const { type, doc, unionValues } = rawProp;
-    const sharedProperties = {
-      ...(doc && { doc }),
-      required: rawProp.required,
-    };
     if (type === "Record<string, any>") {
       return {
         type: PropValueType.Record,
         recordKey: "string",
         recordValue: "any",
-        ...sharedProperties,
       };
     }
 
-    if (!TypeGuards.isPropValueType(type) || type === PropValueType.Object) {
+    if (
+      !TypeGuards.isPropValueType(type) ||
+      type === PropValueType.Object ||
+      type === PropValueType.Array
+    ) {
       throw new Error(
         `Unrecognized type ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}`
       );
@@ -101,12 +120,10 @@ export default class PropShapeParser {
       return {
         type: PropValueType.string,
         unionValues,
-        ...sharedProperties,
       };
     }
     return {
       type,
-      ...sharedProperties,
     };
   }
 }

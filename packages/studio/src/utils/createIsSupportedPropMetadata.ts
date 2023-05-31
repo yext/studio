@@ -1,4 +1,5 @@
 import {
+  ArrayMetadata,
   PropMetadata,
   PropValueType,
   RecordMetadata,
@@ -13,7 +14,7 @@ import {
 export default function createIsSupportedPropMetadata(componentName: string) {
   return function isSupportedPropMetadata(
     entry: [string, PropMetadata]
-  ): entry is [string, Exclude<PropMetadata, RecordMetadata>] {
+  ): entry is [string, Exclude<PropMetadata, RecordMetadata | ArrayMetadata>] {
     const [propName, propMetadata] = entry;
     if (propMetadata.type === PropValueType.ReactNode) {
       console.warn(
@@ -23,6 +24,10 @@ export default function createIsSupportedPropMetadata(componentName: string) {
       return false;
     }
 
-    return propMetadata.type !== PropValueType.Record;
+    // TODO (SLAP-2744): Remove this check once array props are editable
+    return (
+      propMetadata.type !== PropValueType.Record &&
+      propMetadata.type !== PropValueType.Array
+    );
   };
 }

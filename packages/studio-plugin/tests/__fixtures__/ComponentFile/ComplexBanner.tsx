@@ -9,6 +9,8 @@ export interface ComplexBannerProps {
   bool?: boolean;
   bgColor?: HexColor;
   cta?: CtaData;
+  /** array doc */
+  colorArr?: HexColor[];
 }
 
 export const initialProps: ComplexBannerProps = {
@@ -29,6 +31,7 @@ export default function ComplexBanner(props: ComplexBannerProps) {
       {props.title}
       {props.bool}
       {props.cta?.label}
+      {props.colorArr?.[0]}
     </div>
   );
 }

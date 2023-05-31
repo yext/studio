@@ -263,6 +263,23 @@ describe("parseShape", () => {
     });
   });
 
+  it("can parse an interface with primitive array item type in same file", () => {
+    const parser = createParser(
+      `type Num = number;
+      export interface Props { data?: Array<Num> }`
+    );
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
+      data: {
+        kind: ParsedTypeKind.Array,
+        required: false,
+        type: {
+          kind: ParsedTypeKind.Simple,
+          type: "number",
+        },
+      },
+    });
+  });
+
   it("can parse an interface with sub-property type from other file", () => {
     const parser = createParser(
       `import { MyString } from "../__fixtures__/StudioSourceFileParser/exportedTypes";
