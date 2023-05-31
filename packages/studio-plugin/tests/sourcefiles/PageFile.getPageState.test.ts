@@ -39,7 +39,6 @@ function createPageFile(pageName: string, isPagesJSRepo = false): PageFile {
   return new PageFile(
     getPagePath(pageName),
     mockGetFileMetadata,
-    jest.fn(),
     createTsMorphProject(),
     isPagesJSRepo
   );

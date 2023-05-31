@@ -32,7 +32,7 @@ it("returns user studio config merge with default config for unspecified fields"
   });
 });
 
-it.only("throws FileIOError when user's studio config fails to import", async () => {
+it("throws FileIOError when user's studio config fails to import", async () => {
   const projectRoot = path.resolve(
     __dirname,
     "../__fixtures__/StudioConfigs/malformed"

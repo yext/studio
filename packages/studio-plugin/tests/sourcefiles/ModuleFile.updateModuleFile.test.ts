@@ -29,7 +29,6 @@ describe("updateModuleFile", () => {
     moduleFile = new ModuleFile(
       getModulePath("updateModuleFile/EmptyModule"),
       throwIfCalled,
-      jest.fn(),
       tsMorphProject
     );
   });
