@@ -7,32 +7,17 @@ import {
   ComponentStateKind,
   FileMetadataKind,
   PageState,
-  PluginConfig,
   PropValueKind,
   StudioData,
   UserPaths,
 } from "../src/types";
 import { Project } from "ts-morph";
-import sampleComponentPluginConfig from "./__fixtures__/StudioConfigs/plugins/SampleComponent";
 import fs from "fs";
 import getLocalDataMapping from "../src/parsers/getLocalDataMapping";
 import prettyPrintError from "../src/errors/prettyPrintError";
 import { assertIsOk } from "./__utils__/asserts";
 
 jest.mock("../src/errors/prettyPrintError");
-
-const mockGetPathToModuleResponse = path.join(
-  process.cwd(),
-  "tests/__fixtures__/StudioConfigs/plugins"
-);
-const mockGetPathToModule = jest
-  .fn()
-  .mockReturnValue(mockGetPathToModuleResponse);
-jest.mock("../src/parsers/helpers/NpmLookup", () => {
-  return jest.fn().mockImplementation(() => {
-    return { getRootPath: mockGetPathToModule };
-  });
-});
 
 const projectRoot = path.resolve(
   __dirname,
@@ -166,40 +151,6 @@ describe("aggregates data as expected", () => {
   });
 });
 
-describe("includes plugins in aggregate data as expected", () => {
-  const orchestrator = createParsingOrchestrator({
-    plugins: [sampleComponentPluginConfig],
-  });
-  let studioData: StudioData;
-
-  beforeAll(() => {
-    studioData = orchestrator.getStudioData();
-  });
-
-  it("properly installs @yext/sample-component plugin.", () => {
-    const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
-    expect(fileMetadataArray).toHaveLength(7);
-    expect(fileMetadataArray).toContainEqual(
-      expect.objectContaining({
-        filepath: expect.stringContaining("components/AceComponent.tsx"),
-        kind: FileMetadataKind.Component,
-      })
-    );
-    expect(fileMetadataArray).toContainEqual(
-      expect.objectContaining({
-        filepath: expect.stringContaining("components/BevComponent.tsx"),
-        kind: FileMetadataKind.Component,
-      })
-    );
-    expect(fileMetadataArray).toContainEqual(
-      expect.objectContaining({
-        filepath: expect.stringContaining("components/ChazComponent.tsx"),
-        kind: FileMetadataKind.Component,
-      })
-    );
-  });
-});
-
 it("throws an error when the page imports components from unexpected folders", () => {
   const userPaths = getUserPaths("thisFolderDoesNotExist");
   userPaths.pages = path.resolve(
@@ -277,17 +228,15 @@ describe("reloadFile", () => {
 
 function createParsingOrchestrator(opts?: {
   localDataMapping?: Record<string, string[]>;
-  plugins?: Required<PluginConfig>[];
   paths?: UserPaths;
   isPagesJS?: boolean;
 }) {
-  const { localDataMapping, plugins, paths, isPagesJS } = opts ?? {};
+  const { localDataMapping, paths, isPagesJS } = opts ?? {};
   const tsMorphProject: Project = createTsMorphProject();
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     {
       paths: paths ?? userPaths,
-      plugins: plugins ?? [],
       isPagesJSRepo: isPagesJS ?? false,
     },
     localDataMapping

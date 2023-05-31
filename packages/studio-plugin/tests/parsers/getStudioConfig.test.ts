@@ -14,7 +14,6 @@ it("returns default config when studio config file is not found", async () => {
       pages: "test-site/src/pages",
       siteSettings: "test-site/src/siteSettings.ts",
     },
-    plugins: [],
   });
 });
 
@@ -30,52 +29,16 @@ it("returns user studio config merge with default config for unspecified fields"
       pages: "custom/pages/folder/path",
       siteSettings: projectRoot + "/src/siteSettings.ts",
     },
-    plugins: [],
   });
 });
 
-it("returns user studio config merge with multiple plugin import methods", async () => {
-  const projectRoot = path.resolve(
-    __dirname,
-    "../__fixtures__/StudioConfigs/plugins"
-  );
-  const studioConfig = await getStudioConfig(projectRoot);
-  expect(studioConfig).toEqual({
-    isPagesJSRepo: false,
-    paths: {
-      components: "custom/components/folder/path",
-      localData: projectRoot + "/localData",
-      modules: projectRoot + "/src/modules",
-      pages: "custom/pages/folder/path",
-      siteSettings: projectRoot + "/src/siteSettings.ts",
-    },
-    plugins: [
-      {
-        name: "@yext/sample-component",
-        components: ["src/components/AceComponent.tsx"],
-      },
-      {
-        name: "@yext/sample-component-2",
-        components: ["src/components/BevComponent.tsx"],
-      },
-    ],
-  });
-});
-
-it("throws FileIOErorr when user's studio config fails to import", async () => {
+it.only("throws FileIOError when user's studio config fails to import", async () => {
   const projectRoot = path.resolve(
     __dirname,
     "../__fixtures__/StudioConfigs/malformed"
   );
 
-  let thrownError;
-  try {
-    await getStudioConfig(projectRoot);
-  } catch (err) {
-    thrownError = err;
-  }
-
-  expect(thrownError).toEqual({
+  await expect(getStudioConfig(projectRoot)).rejects.toEqual({
     kind: IOErrorKind.FailedToImportFile,
     message: `Failed to import module at ${projectRoot}/studio.config.js`,
   });

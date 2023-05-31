@@ -15,7 +15,6 @@ const mockStudioData: StudioData = {
       localData: mockFilepath,
     },
     isPagesJSRepo: false,
-    plugins: [],
   },
 };
 export default mockStudioData;

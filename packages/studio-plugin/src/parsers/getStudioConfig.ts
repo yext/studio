@@ -1,21 +1,28 @@
-import { PluginConfig, StudioConfig } from "../types";
+import {
+  StudioConfig,
+  StudioConfigDefaults,
+  StudioConfigWithDefaulting,
+} from "../types";
 import fs from "fs";
 import path from "path";
 import getUserPaths from "./getUserPaths";
 import lodash from "lodash";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { FileIOError, IOErrorKind } from "../errors/FileIOError";
+import { StudioError } from "../errors/StudioError";
+import prettyPrintError from "../errors/prettyPrintError";
 
-type RecursiveRequired<T> = {
-  [P in keyof T]-?: T[P] extends object
-    ? RecursiveRequired<T[P]>
-    : Required<T[P]>;
-};
-export type RequiredStudioConfig = RecursiveRequired<
-  Omit<StudioConfig, "plugins"> & {
-    plugins: PluginConfig[];
+export default async function getStudioConfig(
+  pathToProjectRoot: string
+): Promise<StudioConfigWithDefaulting> {
+  try {
+    return getStudioConfigInternal(pathToProjectRoot);
+  } catch (err: unknown) {
+    err instanceof StudioError &&
+      prettyPrintError("Failed to start Studio", err.message);
+    throw err;
   }
->;
+}
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's
@@ -25,13 +32,12 @@ export type RequiredStudioConfig = RecursiveRequired<
  * @param pathToProjectRoot - An absolute path to the project's root folder
  * @throws {@link ParsingError|FileIOError}
  */
-export default async function getStudioConfig(
+async function getStudioConfigInternal(
   pathToProjectRoot: string
-): Promise<RequiredStudioConfig> {
-  const defaultConfig: RequiredStudioConfig = {
+): Promise<StudioConfigWithDefaulting> {
+  const defaultConfig: StudioConfigDefaults = {
     isPagesJSRepo: false,
     paths: getUserPaths(pathToProjectRoot),
-    plugins: [],
   };
 
   const configFilepath = path.join(pathToProjectRoot, "studio.config.js");
@@ -44,7 +50,7 @@ export default async function getStudioConfig(
 }
 
 /**
- * Imports the Studio Config at the specified filepath and parses any Plugins it contains.
+ * Imports the Studio Config at the specified filepath.
  *
  * @param filepath - The location of the Studio Config.
  * @throws {@link ParsingError|FileIOError}
@@ -70,20 +76,6 @@ async function importExistingConfig(filepath: string): Promise<StudioConfig> {
     );
     throw parsingError;
   }
-  studioConfig.plugins =
-    studioConfig.plugins && handleDefaultImports(studioConfig.plugins);
 
   return studioConfig;
-}
-
-function handleDefaultImports(
-  pluginImports: (PluginConfig | { default: PluginConfig })[]
-): PluginConfig[] {
-  return pluginImports.map(function (pluginImport) {
-    if ("default" in pluginImport) {
-      return pluginImport.default as PluginConfig;
-    }
-
-    return pluginImport as PluginConfig;
-  });
 }

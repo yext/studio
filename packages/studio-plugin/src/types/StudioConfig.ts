@@ -1,4 +1,3 @@
-import { PluginConfig } from "./Plugin";
 import { UserPaths } from "./UserPaths";
 
 /**
@@ -23,5 +22,13 @@ export interface StudioConfig {
    * \}
    */
   paths?: Partial<UserPaths>;
-  plugins?: (PluginConfig | { default: PluginConfig })[];
 }
+
+/** The StudioConfig merged with defaults. */
+export type StudioConfigWithDefaulting = StudioConfig & StudioConfigDefaults;
+
+/** The default configuration we apply. */
+export type StudioConfigDefaults = {
+  isPagesJSRepo: boolean;
+  paths: UserPaths;
+};

@@ -9,5 +9,4 @@ export type ComponentMetadata = {
   initialProps?: PropValues;
   propShape?: PropShape;
   acceptsChildren?: boolean;
-  pluginName?: string;
 };
