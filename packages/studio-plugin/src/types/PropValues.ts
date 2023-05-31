@@ -29,6 +29,7 @@ export enum PropValueType {
   Object = "Object",
   HexColor = "HexColor",
   Record = "Record",
+  Array = "Array",
 }
 
 export enum PropValueKind {

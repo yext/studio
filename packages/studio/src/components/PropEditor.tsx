@@ -1,5 +1,5 @@
 import {
-  NestedPropMetadata,
+  NestedPropType,
   PropMetadata,
   PropVal,
   PropValueKind,
@@ -11,7 +11,7 @@ import useOnPropChange from "../hooks/useOnPropChange";
 
 interface PropEditorProps {
   propName: string;
-  propMetadata: Exclude<PropMetadata, NestedPropMetadata>;
+  propMetadata: Exclude<PropMetadata, NestedPropType>;
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propName: string, propVal: PropVal) => void;

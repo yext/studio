@@ -101,3 +101,85 @@ it("can parse an object property", () => {
     },
   });
 });
+
+it("can parse an ArrayType", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** array prop */
+      arr: {
+        /** an item field */
+        someKey: string[]
+      }[];
+  }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    arr: {
+      kind: ParsedTypeKind.Array,
+      required: true,
+      doc: "array prop",
+      type: {
+        kind: ParsedTypeKind.Object,
+        type: {
+          someKey: {
+            doc: "an item field",
+            kind: ParsedTypeKind.Array,
+            required: true,
+            type: {
+              kind: ParsedTypeKind.Simple,
+              type: "string",
+            },
+          },
+        },
+      },
+    },
+  });
+});
+
+it("can parse an Array TypeReference", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** array prop */
+      arr: Array<string>;
+    }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    arr: {
+      kind: ParsedTypeKind.Array,
+      required: true,
+      doc: "array prop",
+      type: {
+        kind: ParsedTypeKind.Simple,
+        type: "string",
+      },
+    },
+  });
+});
+
+it("throws an error if Array TypeReference is missing a type param", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** array prop */
+      arr: Array;
+    }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  expect(() =>
+    TypeNodeParsingHelper.parseShape(typeAlias, externalShapeParser)
+  ).toThrowError("One type param expected for Array type. Found 0.");
+});

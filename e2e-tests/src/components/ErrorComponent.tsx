@@ -1,6 +1,6 @@
 interface Props {
-  /** Arrays are currently unsupported and result in a parsing error */
-  unsupportedPropType?: string[];
+  /** Arbitrary records are currently unsupported and result in a parsing error */
+  unsupportedPropType?: Record<string, string[]>;
 }
 
 export default function ErrorComponent(_props: Props) {

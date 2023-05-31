@@ -75,6 +75,12 @@ describe("getComponentMetadata", () => {
             },
           },
         },
+        colorArr: {
+          type: PropValueType.Array,
+          required: false,
+          doc: "array doc",
+          itemType: { type: PropValueType.HexColor },
+        },
       },
       initialProps: {
         bgColor: {

@@ -14,41 +14,50 @@ export enum SpecialReactProps {
   Key = "key",
 }
 
-export type PropMetadata<T extends PropValueType = PropValueType> = (
-  | NestedPropMetadata<T>
-  | NonUnionMetadata<T>
-  | StringUnionMetadata
-  | (PropValueType.Record extends T ? RecordMetadata : never)
-) & {
-  required: boolean;
-};
+export type PropMetadata<T extends PropValueType = PropValueType> =
+  PropType<T> & {
+    doc?: string;
+    required: boolean;
+  };
 
-type NonUnionMetadata<T> = {
+export type PropType<T extends PropValueType = PropValueType> =
+  | NestedPropType<T>
+  | NonUnionPropType<T>
+  | StringUnionPropType
+  | (PropValueType.Record extends T ? RecordPropType : never)
+  | ArrayPropType;
+
+type NonUnionPropType<T> = {
   type: Exclude<
     T,
-    PropValueType.Object | PropValueType.string | PropValueType.Record
+    | PropValueType.Object
+    | PropValueType.string
+    | PropValueType.Record
+    | PropValueType.Array
   >;
-  doc?: string;
   unionValues?: never;
 };
 
-export type RecordMetadata = {
+export type RecordPropType = {
   type: PropValueType.Record;
-  doc?: string;
   // Only Record<string, any> is supported.
   recordKey: "string";
   recordValue: "any";
   unionValues?: never;
 };
 
-type StringUnionMetadata = {
+type StringUnionPropType = {
   type: PropValueType.string;
-  doc?: string;
   unionValues?: string[];
 };
 
-export type NestedPropMetadata<T extends PropValueType = PropValueType> = {
+export type NestedPropType<T extends PropValueType = PropValueType> = {
   type: PropValueType.Object;
-  doc?: undefined;
   shape: PropShape<T>;
+};
+
+export type ArrayPropType = {
+  type: PropValueType.Array;
+  itemType: PropType;
+  unionValues?: never;
 };

@@ -30,7 +30,11 @@ export function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
-    if (!props[propName] && propShape[propName].type === PropValueType.Object) {
+    if (
+      !props[propName] &&
+      (propShape[propName].type === PropValueType.Object ||
+        propShape[propName].type === PropValueType.Array)
+    ) {
       return undefined;
     }
 

@@ -1,6 +1,6 @@
 import {
   PropValues,
-  NestedPropMetadata,
+  NestedPropType,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -13,14 +13,14 @@ const EMPTY_PROP_VALUES = {};
 
 export default function NestedPropEditors(props: {
   propValues?: PropValues;
-  propMetadata: NestedPropMetadata;
+  propType: NestedPropType;
   propName: string;
   updateSpecificProp: (propName: string, propVal: PropVal) => void;
   isNested?: boolean;
 }) {
   const {
     propValues = EMPTY_PROP_VALUES,
-    propMetadata,
+    propType,
     propName,
     updateSpecificProp,
     isNested,
@@ -43,7 +43,7 @@ export default function NestedPropEditors(props: {
         <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
         <PropEditors
           propValues={propValues}
-          propShape={propMetadata.shape}
+          propShape={propType.shape}
           updateProps={updateObjectProp}
           isNested={true}
         />
