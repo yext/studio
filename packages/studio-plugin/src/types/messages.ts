@@ -32,6 +32,5 @@ export type ResponseEventMap = {
   [key in MessageID]: {
     type: "success" | "error";
     msg: string;
-    uuid: string;
   };
 };

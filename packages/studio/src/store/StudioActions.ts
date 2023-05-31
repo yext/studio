@@ -225,11 +225,13 @@ export default class StudioActions {
   deploy = async () => {
     await sendMessage(MessageID.Deploy, this.getSaveData());
     this.updatePreviousSave();
+    this.getPages().clearPendingChanges();
   };
 
   saveChanges = async () => {
     await sendMessage(MessageID.SaveChanges, this.getSaveData());
     this.updatePreviousSave();
+    this.getPages().clearPendingChanges();
   };
 
   private updatePreviousSave = () => {

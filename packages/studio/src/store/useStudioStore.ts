@@ -7,8 +7,6 @@ import { StudioStore } from "./models/StudioStore";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
 import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
-import { MessageID } from "@yext/studio-plugin";
-import registerMessageListener from "../messaging/registerMessageListener";
 import getCreateModuleAction from "./createModuleAction";
 import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
@@ -33,17 +31,6 @@ function storeMiddlewares(
 const useStudioStore = create<StudioStore>()(
   storeMiddlewares(
     withLenses((set, get) => {
-      registerMessageListener(MessageID.SaveChanges, (payload) => {
-        if (payload.type === "success") {
-          set((s) => {
-            s.pages.pendingChanges = {
-              pagesToRemove: new Set<string>(),
-              pagesToUpdate: new Set<string>(),
-            };
-          });
-        }
-      });
-
       return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
