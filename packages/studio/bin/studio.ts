@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 execSync(
-  "node --experimental-specifier-resolution=node node_modules/.bin/vite --config " +
+  "node --experimental-specifier-resolution=node node_modules/vite/bin/vite.js --config " +
     path.resolve(__dirname, "../../vite.config.ts"),
   { stdio: "inherit" }
 );
