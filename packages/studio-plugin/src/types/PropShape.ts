@@ -21,13 +21,13 @@ export type PropMetadata<T extends PropValueType = PropValueType> =
   };
 
 export type PropType<T extends PropValueType = PropValueType> =
-  | NestedPropMetadata<T>
-  | NonUnionMetadata<T>
-  | StringUnionMetadata
-  | (PropValueType.Record extends T ? RecordMetadata : never)
-  | ArrayMetadata;
+  | NestedPropType<T>
+  | NonUnionPropType<T>
+  | StringUnionPropType
+  | (PropValueType.Record extends T ? RecordPropType : never)
+  | ArrayPropType;
 
-type NonUnionMetadata<T> = {
+type NonUnionPropType<T> = {
   type: Exclude<
     T,
     | PropValueType.Object
@@ -38,7 +38,7 @@ type NonUnionMetadata<T> = {
   unionValues?: never;
 };
 
-export type RecordMetadata = {
+export type RecordPropType = {
   type: PropValueType.Record;
   // Only Record<string, any> is supported.
   recordKey: "string";
@@ -46,17 +46,17 @@ export type RecordMetadata = {
   unionValues?: never;
 };
 
-type StringUnionMetadata = {
+type StringUnionPropType = {
   type: PropValueType.string;
   unionValues?: string[];
 };
 
-export type NestedPropMetadata<T extends PropValueType = PropValueType> = {
+export type NestedPropType<T extends PropValueType = PropValueType> = {
   type: PropValueType.Object;
   shape: PropShape<T>;
 };
 
-export type ArrayMetadata = {
+export type ArrayPropType = {
   type: PropValueType.Array;
   itemType: PropType;
   unionValues?: never;

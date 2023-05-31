@@ -97,17 +97,13 @@ export default class TypeNodeParsingHelper {
   ): ParsedType {
     if (typeNode.isKind(SyntaxKind.TypeLiteral)) {
       return this.handleObjectType(typeNode, parseTypeReference);
-    }
-
-    if (
+    } else if (
       typeNode.isKind(SyntaxKind.ArrayType) ||
       (typeNode.isKind(SyntaxKind.TypeReference) &&
         typeNode.getTypeName().getText() === PropValueType.Array)
     ) {
       return this.handleArrayType(typeNode, name, parseTypeReference);
-    }
-
-    if (typeNode.isKind(SyntaxKind.LiteralType)) {
+    } else if (typeNode.isKind(SyntaxKind.LiteralType)) {
       const literal = typeNode.getLiteral();
       if (!literal.isKind(SyntaxKind.StringLiteral)) {
         throw new Error(
@@ -118,9 +114,7 @@ export default class TypeNodeParsingHelper {
         kind: ParsedTypeKind.StringLiteral,
         type: literal.getLiteralValue(),
       };
-    }
-
-    if (typeNode.isKind(SyntaxKind.UnionType)) {
+    } else if (typeNode.isKind(SyntaxKind.UnionType)) {
       const unionValues = StringUnionParsingHelper.parseStringUnion(
         typeNode,
         name,
@@ -131,10 +125,10 @@ export default class TypeNodeParsingHelper {
         type: PropValueType.string,
         unionValues,
       };
+    } else {
+      const type = typeNode.getText();
+      return this.handleTypeString(type, parseTypeReference);
     }
-
-    const type = typeNode.getText();
-    return this.handleTypeString(type, parseTypeReference);
   }
 
   private static handleObjectType(

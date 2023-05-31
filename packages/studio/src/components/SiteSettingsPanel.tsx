@@ -4,7 +4,7 @@ import {
   LiteralProp,
   SiteSettingsShape,
   ObjectProp,
-  NestedPropMetadata,
+  NestedPropType,
   TypeGuards,
   PropValueKind,
   SiteSettingsPropValueType,
@@ -85,7 +85,7 @@ function renderSiteSettings(
         <RecursiveGroup
           propName={propName}
           propVal={propVal as ObjectProp<SiteSettingsValues>}
-          propMetadata={propMetadata}
+          propType={propMetadata}
           updateValues={updateValues}
         />
         {shouldRenderDivider && (
@@ -102,14 +102,14 @@ function renderSiteSettings(
  */
 function RecursiveGroup(props: {
   propVal: ObjectProp<SiteSettingsValues>;
-  propMetadata: NestedPropMetadata<SiteSettingsPropValueType>;
+  propType: NestedPropType<SiteSettingsPropValueType>;
   updateValues: (
     propName: string,
     updatedProp: LiteralProp<SiteSettingsValues>
   ) => void;
   propName: string;
 }) {
-  const { propMetadata, updateValues, propName, propVal } = props;
+  const { propType, updateValues, propName, propVal } = props;
 
   const updateChildValues = useCallback(
     (childPropName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
@@ -125,9 +125,7 @@ function RecursiveGroup(props: {
   );
 
   return (
-    <>
-      {renderSiteSettings(propMetadata.shape, propVal.value, updateChildValues)}
-    </>
+    <>{renderSiteSettings(propType.shape, propVal.value, updateChildValues)}</>
   );
 }
 

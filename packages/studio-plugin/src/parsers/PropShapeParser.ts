@@ -81,23 +81,19 @@ export default class PropShapeParser {
         type: PropValueType.Array,
         itemType,
       };
-    }
-    if (kind === ParsedTypeKind.Object) {
+    } else if (kind === ParsedTypeKind.Object) {
       const nestedShape = this.toPropShape(type, identifier, onProp);
       return {
         type: PropValueType.Object,
         shape: nestedShape,
       };
-    }
-    if (type === "Record<string, any>") {
+    } else if (type === "Record<string, any>") {
       return {
         type: PropValueType.Record,
         recordKey: "string",
         recordValue: "any",
       };
-    }
-
-    if (
+    } else if (
       !TypeGuards.isPropValueType(type) ||
       type === PropValueType.Object ||
       type === PropValueType.Array
@@ -114,16 +110,15 @@ export default class PropShapeParser {
       throw new Error(
         `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}.`
       );
-    }
-
-    if (unionValues) {
+    } else if (unionValues) {
       return {
         type: PropValueType.string,
         unionValues,
       };
+    } else {
+      return {
+        type,
+      };
     }
-    return {
-      type,
-    };
   }
 }

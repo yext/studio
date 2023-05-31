@@ -1,8 +1,8 @@
 import {
-  ArrayMetadata,
+  ArrayPropType,
   PropMetadata,
   PropValueType,
-  RecordMetadata,
+  RecordPropType,
 } from "@yext/studio-plugin";
 
 /**
@@ -14,7 +14,7 @@ import {
 export default function createIsSupportedPropMetadata(componentName: string) {
   return function isSupportedPropMetadata(
     entry: [string, PropMetadata]
-  ): entry is [string, Exclude<PropMetadata, RecordMetadata | ArrayMetadata>] {
+  ): entry is [string, Exclude<PropMetadata, RecordPropType | ArrayPropType>] {
     const [propName, propMetadata] = entry;
     if (propMetadata.type === PropValueType.ReactNode) {
       console.warn(
