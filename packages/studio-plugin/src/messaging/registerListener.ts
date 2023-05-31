@@ -38,7 +38,7 @@ async function getResponsePayload<T extends MessageID>(
   } catch (error: unknown) {
     let msg = `Error occurred for event ${messageId}`;
     if (typeof error === "string") {
-      msg = error.toString();
+      msg = error;
     } else if (error instanceof Error) {
       msg = error.message;
     }
