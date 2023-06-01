@@ -63,5 +63,11 @@ module.exports = {
         "@typescript-eslint/no-explicit-any": "off",
       },
     },
+    {
+      files: ["**/*.js"],
+      rules: {
+        "tsdoc/syntax": "off",
+      },
+    },
   ],
 };

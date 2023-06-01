@@ -55,7 +55,7 @@ const config: PlaywrightTestConfig = {
   /* Run your local dev server before starting the tests */
   webServer: {
     command: "npx studio",
-    port: 5173,
+    port: 8080,
   },
 };
 

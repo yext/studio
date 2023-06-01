@@ -14,7 +14,6 @@ export default defineConfig((args: ConfigEnv): UserConfig => {
     root: __dirname,
     server: {
       host: "0.0.0.0",
-      port: 5173,
       fs: {
         allow: [
           searchForWorkspaceRoot(process.cwd()),
