@@ -31,6 +31,7 @@ export default async function getStudioConfig(
     throw err;
   }
 }
+
 async function getStudioConfigInternal(
   pathToProjectRoot: string
 ): Promise<StudioConfigWithDefaulting> {
