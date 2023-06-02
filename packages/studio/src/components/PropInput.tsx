@@ -42,7 +42,10 @@ export default function PropInput({
           return e.target.valueAsNumber;
         } else if (propType === PropValueType.boolean) {
           return e.target.checked;
-        } else if (propKind === PropValueKind.Expression) {
+        } else if (
+          propKind === PropValueKind.Expression &&
+          propType === PropValueType.string
+        ) {
           return TemplateExpressionFormatter.getRawValue(e.target.value);
         }
         return e.target.value;
@@ -115,6 +118,15 @@ export default function PropInput({
           value={displayValue as string}
         />
       );
+    case PropValueType.Array:
+      return (
+        <FieldPickerInput
+          onInputChange={handleChangeEvent}
+          handleFieldSelection={onChange}
+          displayValue={displayValue as string}
+          fieldType="array"
+        />
+      );
     default:
       return <div>Unknown PropValueType {propType}.</div>;
   }
@@ -140,9 +152,11 @@ function useDisplayValue(
         `Expression props are only supported for strings. Received: "${propValueWithDefaulting}".`
       );
     }
-    return TemplateExpressionFormatter.getTemplateStringDisplayValue(
-      propValueWithDefaulting
-    );
+    if (propType === PropValueType.string) {
+      return TemplateExpressionFormatter.getTemplateStringDisplayValue(
+        propValueWithDefaulting
+      );
+    }
   }
   return propValueWithDefaulting;
 }

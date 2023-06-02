@@ -51,4 +51,24 @@ describe("isValidPropValue", () => {
     };
     expect(TypeGuards.isValidPropValue(invalidPropVal)).toBeFalsy();
   });
+
+  it("requires array props to recursively be valid", () => {
+    const invalidPropVal = {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.Array,
+      value: [
+        {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.string,
+          value: "some string",
+        },
+        {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.string,
+          value: 3,
+        },
+      ],
+    };
+    expect(TypeGuards.isValidPropValue(invalidPropVal)).toBeFalsy();
+  });
 });

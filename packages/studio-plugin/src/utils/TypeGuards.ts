@@ -51,11 +51,11 @@ export default class TypeGuards {
     }
   }
 
-  static isValidPropValue(propValue: {
+  static isValidPropValue = (propValue: {
     kind: PropValueKind;
     valueType: PropValueType;
     value: unknown;
-  }): propValue is PropVal {
+  }): propValue is PropVal => {
     const { kind, valueType, value } = propValue;
     if (kind === PropValueKind.Expression) {
       return typeof value === "string";
@@ -69,6 +69,8 @@ export default class TypeGuards {
         return typeof value === "number";
       case PropValueType.HexColor:
         return typeof value === "string" && value.startsWith("#");
+      case PropValueType.Array:
+        return Array.isArray(value) && value.every(this.isValidPropValue);
       case PropValueType.Object:
         const baseIsValid =
           typeof value === "object" && !Array.isArray(value) && value !== null;
@@ -78,7 +80,7 @@ export default class TypeGuards {
         );
     }
     return false;
-  }
+  };
 
   static isPrimitiveProp(
     propValueType: string

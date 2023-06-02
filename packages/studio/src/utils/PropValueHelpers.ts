@@ -15,6 +15,8 @@ export default class PropValueHelpers {
         return false;
       case PropValueType.HexColor:
         return "#FFFFFF";
+      case PropValueType.Array:
+        return "";
       default:
         console.error(
           `Unknown PropValueType ${type}. Can't derive a default value based on PropValueType.`

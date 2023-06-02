@@ -5,9 +5,10 @@ import {
   TEMPLATE_STRING_EXPRESSION_REGEX,
   PropValues,
   PropShape,
-  transformPropValuesToRaw,
+  transformPropValToRaw,
   PropVal,
   ExpressionProp,
+  PropType,
 } from "@yext/studio-plugin";
 import { get } from "lodash";
 import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
@@ -30,44 +31,59 @@ export function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
-    if (
-      !props[propName] &&
-      (propShape[propName].type === PropValueType.Object ||
-        propShape[propName].type === PropValueType.Array)
-    ) {
-      return undefined;
-    }
-
-    if (!props[propName]) {
-      transformedProps[propName] = PropValueHelpers.getPropTypeDefaultValue(
-        propShape[propName].type,
-        PropValueKind.Literal
-      );
-      return;
-    }
-    const propVal = props[propName];
-    if (propVal.kind === PropValueKind.Expression) {
-      transformedProps[propName] = getExpressionPropLiteralValue(
-        propVal,
-        expressionSources
-      );
-    } else if (propVal.valueType === PropValueType.Object) {
-      const propMetadata = propShape[propName];
-      if (propMetadata.type !== PropValueType.Object) {
-        throw new Error(
-          `Expected PropMetadata of type Object, received ${propMetadata.type}`
-        );
-      }
-      transformedProps[propName] = getPreviewProps(
-        propVal.value,
-        propMetadata.shape,
-        expressionSources
-      );
-    } else {
-      transformedProps[propName] = propVal.value;
+    const previewProp = getPreviewProp(
+      props[propName],
+      propShape[propName],
+      expressionSources
+    );
+    if (previewProp !== undefined) {
+      transformedProps[propName] = previewProp;
     }
   });
   return transformedProps;
+}
+
+function getPreviewProp(
+  propVal: PropVal | undefined,
+  propType: PropType,
+  expressionSources: ExpressionSources
+) {
+  if (
+    !propVal &&
+    (propType.type === PropValueType.Object ||
+      propType.type === PropValueType.Array)
+  ) {
+    return undefined;
+  }
+
+  if (!propVal) {
+    return PropValueHelpers.getPropTypeDefaultValue(
+      propType.type,
+      PropValueKind.Literal
+    );
+  }
+  if (propVal.kind === PropValueKind.Expression) {
+    if (propVal.valueType === PropValueType.Record) {
+      return propVal.value;
+    }
+    const literalValue = getExpressionPropLiteralValue(
+      propVal,
+      propType,
+      expressionSources
+    );
+    if (propType.type !== PropValueType.Array || Array.isArray(literalValue)) {
+      return literalValue;
+    }
+  } else if (propVal.valueType === PropValueType.Object) {
+    if (propType.type !== PropValueType.Object) {
+      throw new Error(
+        `Expected PropMetadata of type Object, received ${propType.type}`
+      );
+    }
+    return getPreviewProps(propVal.value, propType.shape, expressionSources);
+  } else {
+    return propVal.value;
+  }
 }
 
 /**
@@ -75,26 +91,36 @@ export function getPreviewProps(
  */
 function getExpressionPropLiteralValue(
   { value, valueType }: ExpressionProp,
+  propType: PropType,
   expressionSources: ExpressionSources
 ) {
   if (TypeGuards.isTemplateString(value)) {
-    return getTemplateStringValue(value, valueType, expressionSources);
+    return getTemplateStringValue(
+      value,
+      valueType,
+      propType,
+      expressionSources
+    );
   }
-  return getExpressionValue(value, valueType, expressionSources) ?? value;
+  return (
+    getExpressionValue(value, valueType, propType, expressionSources) ?? value
+  );
 }
 
 /**
  * Construct a string by replacing any expressions in the provided
  * template string literal with the expression's actual value.
  *
- * @param templateString - the template string literal to process.
- * @param propType - the expected prop value's type.
- * @param expressionSources - a map of expression source to its field names and values.
- * @returns a string with actual expresssion value(s) constructed from the template string literal.
+ * @param templateString - the template string literal to process
+ * @param valueType - the expected prop value's type
+ * @param propType - the type of the prop
+ * @param expressionSources - a map of expression source to its field names and values
+ * @returns a string with actual expresssion value(s) constructed from the template string literal
  */
 function getTemplateStringValue(
   templateString: string,
-  propType: PropValueType,
+  valueType: PropValueType,
+  propType: PropType,
   expressionSources: ExpressionSources
 ): string {
   const hydratedString = templateString.replaceAll(
@@ -102,6 +128,7 @@ function getTemplateStringValue(
     (...args) => {
       const expressionVal = getExpressionValue(
         args[1],
+        valueType,
         propType,
         expressionSources
       );
@@ -121,27 +148,17 @@ function getTemplateStringValue(
  * expression's actual value using the provided map of expression sources.
  *
  * @param expression - the expression string to extract the actual value
- * @param propType - the expected prop value's type.
- * @param expressionSources - a map of expression source to its field names and values.
+ * @param valueType - the expected prop value's type
+ * @param propType - the type of the prop
+ * @param expressionSources - a map of expression source to its field names and values
  * @returns the expression's actual value
  */
 function getExpressionValue(
   expression: string,
-  propType: PropValueType,
+  valueType: PropValueType,
+  propType: PropType,
   expressionSources: ExpressionSources
-): string | number | boolean | null | Record<string, unknown> {
-  function createPropVal(value: unknown): PropVal | null {
-    const propVal = {
-      kind: PropValueKind.Literal,
-      valueType: propType,
-      value,
-    };
-    if (!TypeGuards.isValidPropValue(propVal)) {
-      return null;
-    }
-    return propVal;
-  }
-
+): string | number | boolean | null | Record<string, unknown> | unknown[] {
   function getValueFromPath(path: string, parentPath: keyof ExpressionSources) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {
@@ -157,20 +174,12 @@ function getExpressionValue(
       { [parentPath]: sourceObject },
       pathWithoutOptionalChaining
     ) as unknown;
-    const propVal = createPropVal(newPropValue);
+    const propVal = createPropVal(newPropValue, propType, valueType);
     if (!propVal) {
-      console.warn(
-        `Invalid expression prop value: ${newPropValue}. ` +
-          `The value extracted from the expression "${path}" ` +
-          `does not match with the expected propType ${propType}.`
-      );
+      logInvalidExpressionWarning(newPropValue, path, propType);
       return null;
     }
-
-    if (propVal.valueType === PropValueType.Object) {
-      return transformPropValuesToRaw(propVal.value);
-    }
-    return propVal.value;
+    return transformPropValToRaw(propVal);
   }
 
   if (TypeGuards.isSiteSettingsExpression(expression)) {
@@ -185,7 +194,77 @@ function getExpressionValue(
   if (expression.startsWith("item")) {
     return getValueFromPath(expression, "item");
   }
+  console.warn(
+    `Invalid expression: ${expression}.` +
+      " Expressions must reference an expression source from",
+    expressionSources
+  );
   return null;
+}
+
+/**
+ * Creates a PropVal with the provided data. If a valid one cannot be created,
+ * returns null.
+ */
+function createPropVal(
+  value: unknown,
+  propType: PropType,
+  valueType?: PropValueType
+): PropVal | null {
+  const propVal = {
+    kind: PropValueKind.Literal,
+    valueType: valueType ?? propType.type,
+    value,
+  };
+  if (propType.type === PropValueType.Array && Array.isArray(value)) {
+    const propVals = value.map((itemValue) =>
+      createPropVal(itemValue, propType.itemType)
+    );
+    if (propVals.some((val) => val === null)) {
+      return null;
+    } else {
+      propVal.value = propVals;
+    }
+  } else if (
+    propType.type === PropValueType.Object &&
+    typeof value === "object" &&
+    !Array.isArray(value) &&
+    value !== null
+  ) {
+    const propValues = Object.fromEntries(
+      Object.entries(value).map(([field, fieldVal]) => [
+        field,
+        createPropVal(fieldVal, propType.shape[field]),
+      ])
+    );
+    if (Object.values(propValues).some((val) => val === null)) {
+      return null;
+    } else {
+      propVal.value = propValues;
+    }
+  }
+  if (!TypeGuards.isValidPropValue(propVal)) {
+    return null;
+  }
+  return propVal;
+}
+
+function logInvalidExpressionWarning(
+  value: unknown,
+  expression: string,
+  propType: PropType
+) {
+  console.warn(
+    "Invalid expression prop value:",
+    value,
+    `The value extracted from the expression "${expression}" ` +
+      `does not match with the expected propValueType ${propType.type}`,
+    ...(propType.type === PropValueType.Object
+      ? ["with shape", propType.shape]
+      : propType.type === PropValueType.Array
+      ? ["with item type", propType.itemType]
+      : [])
+  );
 }
 
 export type ExpressionSources = {
