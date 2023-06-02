@@ -121,17 +121,4 @@ export default class StudioPlaywrightPage {
     const input = this.page.getByRole("textbox", { name: propName });
     return input.getAttribute("value");
   }
-
-  async clickPropertiesTab() {
-    await this.page.getByRole("button", { name: "Properties" }).click();
-  }
-
-  /**
-   * Turns the current active component into a module.
-   */
-  async createModule(moduleName: string) {
-    await this.clickPropertiesTab();
-    await this.page.getByRole("button", { name: "Create Module" }).click();
-    await this.typeIntoModal("Create Module Modal", moduleName);
-  }
 }
