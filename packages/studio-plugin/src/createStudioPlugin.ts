@@ -85,9 +85,9 @@ export default async function createStudioPlugin(
       const serverConfig: UserConfig = {
         server: {
           port: studioConfig.port,
-          strictPort: true 
+          strictPort: true,
         },
-      }
+      };
       return lodash.merge({}, config, serverConfig);
     },
     resolveId(id) {
