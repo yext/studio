@@ -22,7 +22,6 @@
     "@yext/eslint-config": "^1.0.0",
     "@yext/eslint-plugin-export-star": "^1.0.2",
     "@yext/pages": "^1.0.0-beta.15",
-    "@yext/sample-component": "*",
     "@yext/studio": "*",
     "eslint": "^8.11.0",
     "eslint-plugin-import": "^2.25.4",

@@ -532,7 +532,6 @@ function createPageFile(pageName: string, project: Project) {
   return new PageFile(
     getPagePath(`updatePageFile/${pageName}`),
     throwIfCalled,
-    jest.fn(),
     project,
     false
   );

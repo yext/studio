@@ -56,7 +56,6 @@ describe("syncFileMetadata", () => {
   const tsMorphProject: Project = createTsMorphProject();
   const orchestrator = new ParsingOrchestrator(tsMorphProject, {
     paths,
-    plugins: [],
     isPagesJSRepo: false,
   });
   const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);

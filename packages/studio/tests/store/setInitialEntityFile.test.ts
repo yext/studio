@@ -28,7 +28,6 @@ jest.mock("virtual:yext-studio", () => {
         localData: mockFilepath,
       },
       isPagesJSRepo: false,
-      plugins: [],
     },
   };
 

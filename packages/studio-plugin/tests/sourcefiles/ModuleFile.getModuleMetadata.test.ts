@@ -49,7 +49,6 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
-      jest.fn(),
       project
     );
     const result = moduleFile.getModuleMetadata();
@@ -120,7 +119,6 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
-      jest.fn(),
       project
     );
     const result = moduleFile.getModuleMetadata();
@@ -181,7 +179,6 @@ describe("getModuleMetadata", () => {
     const moduleFile = new ModuleFile(
       pathToModule,
       mockGetFileMetadata,
-      jest.fn(),
       project
     );
     const result = moduleFile.getModuleMetadata();
@@ -249,12 +246,7 @@ describe("error cases", () => {
     const { project } = createTestSourceFile(
       `export default function Module() { return null };`
     );
-    const moduleFile = new ModuleFile(
-      "test.tsx",
-      mockGetFileMetadata,
-      jest.fn(),
-      project
-    );
+    const moduleFile = new ModuleFile("test.tsx", mockGetFileMetadata, project);
     const result = moduleFile.getModuleMetadata();
     expect(result).toHaveErrorMessage(/^Unable to find top-level JSX element/);
   });
@@ -263,12 +255,7 @@ describe("error cases", () => {
     const { project } = createTestSourceFile(
       `type Props = string; export default function Module(props: Props) { return <div></div> };`
     );
-    const moduleFile = new ModuleFile(
-      "test.tsx",
-      mockGetFileMetadata,
-      jest.fn(),
-      project
-    );
+    const moduleFile = new ModuleFile("test.tsx", mockGetFileMetadata, project);
     const result = moduleFile.getModuleMetadata();
     expect(result).toHaveErrorMessage("Error parsing Props: Expected object.");
   });

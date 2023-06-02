@@ -117,38 +117,6 @@ When the new Component is added to a page, the `Properties` tab on the left-hand
 
 We've already added a few custom Components to the starter for you. One is a Banner, to prominently display an Entity's address. We also added an Entity Result Card and CTA in case you want to add Search functionality. You can use these Components as a guide when writing your own.
 
-### Importing Component Libraries
-
-Authoring is one way to register new Components with Studio. An easier way, one that promotes wider re-use, is to import an NPM package containing custom Studio Components. These packages are called Studio Plugins. A Plugin's entry point is structured like:
-
-```ts
-import { PluginConfig } from "@yext/studio-plugin";
-
-export * from "./components";
-
-const PluginConfig: PluginConfig = {
-  name: "[npm-package-name]",
-  components: {
-    SomeComponent: "src/components/SomeComponent.tsx",
-    AnotherComponent: "src/components/AnotherComponent.tsx",
-  },
-};
-
-export default PluginConfig;
-```
-
-To use a Plugin:
-
-1.  Install it with `npm install [npm-package-name]`.
-2.  Add a `require` statement to the top of your `studio.config.ts`. Something like `const SomePlugin = require("[npm-package-name]")`.
-3.  Add the imported Plugin to the `plugins` array in `studio.config.ts`.
-
-Now, all Components in the Plugin will be available for use in Studio.
-
-We've published a Plugin library, `@yext/studio-plugin-search-ui-react`, to power a basic Universal Search. The library exports three Components: `SearchBar`, `UniversalResults`, and `ResultsCount`. Note that these Components are hard-coded to use Slapshot's default Search Experience.
-
-To use these components, first add a SearchProvider component to the page, which can be found under the `Containers` category. This is necessary so that the Search components can properly interact with one another.
-
 ## Reuse through Modules
 
 Users may find that they use a certain combination of Components often across pages. For example, they may often pair a Search Bar Component with a Results Component. Repeating this combination over and over, for each page is tedious. That's where Studio Modules come in. A Module represents a named combination of Components. They can be added to a Page just like a single Component.

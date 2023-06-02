@@ -3,9 +3,7 @@ import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
-import ReactComponentFileWriter, {
-  GetFileMetadataByUUID,
-} from "../writers/ReactComponentFileWriter";
+import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 import ComponentTreeParser, {
@@ -30,7 +28,6 @@ export default class ModuleFile {
   constructor(
     filepath: string,
     getFileMetadata: GetFileMetadata,
-    getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
@@ -44,8 +41,7 @@ export default class ModuleFile {
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       componentName,
       new StudioSourceFileWriter(filepath, project),
-      this.studioSourceFileParser,
-      getFileMetadataByUUID
+      this.studioSourceFileParser
     );
     this.componentTreeParser = new ComponentTreeParser(
       this.studioSourceFileParser,

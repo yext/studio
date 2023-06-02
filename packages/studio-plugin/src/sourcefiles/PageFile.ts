@@ -2,16 +2,13 @@ import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { Result } from "true-myth";
 import { PageState } from "../types";
 import TemplateConfigWriter from "../writers/TemplateConfigWriter";
-import ReactComponentFileWriter, {
-  GetFileMetadataByUUID,
-} from "../writers/ReactComponentFileWriter";
+import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import path from "path";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser";
-import { PluginComponentData } from "../ParsingOrchestrator";
 import GetPathWriter from "../writers/GetPathWriter";
 import PagesJsStateParser from "../parsers/PagesJsStateParser";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
@@ -31,15 +28,12 @@ export default class PageFile {
   private templateConfigWriter: TemplateConfigWriter;
   private reactComponentFileWriter: ReactComponentFileWriter;
   private componentTreeParser: ComponentTreeParser;
-  private pluginFilepathToComponentName?: Record<string, string>;
 
   constructor(
     filepath: string,
     getFileMetadata: GetFileMetadata,
-    getFileMetadataByUUID: GetFileMetadataByUUID,
     project: Project,
     private isPagesJSRepo: boolean,
-    filepathToPluginNames: Record<string, PluginComponentData> = {},
     entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
@@ -75,20 +69,12 @@ export default class PageFile {
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,
       studioSourceFileWriter,
-      this.studioSourceFileParser,
-      getFileMetadataByUUID
+      this.studioSourceFileParser
     );
     this.componentTreeParser = new ComponentTreeParser(
       this.studioSourceFileParser,
       getFileMetadata
     );
-    this.pluginFilepathToComponentName = Object.keys(
-      filepathToPluginNames
-    ).reduce((filepathToComponent, filepath) => {
-      filepathToComponent[filepath] =
-        filepathToPluginNames[filepath].componentName;
-      return filepathToComponent;
-    }, {});
   }
 
   getPageState(): Result<PageState, ParsingError> {
@@ -103,7 +89,6 @@ export default class PageFile {
     this.studioSourceFileParser.checkForSyntaxErrors();
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
-      ...this.pluginFilepathToComponentName,
     });
     const cssImports = this.studioSourceFileParser.parseCssImports();
     const filepath = this.studioSourceFileParser.getFilepath();

@@ -5,11 +5,11 @@ import {
   StudioData,
   SiteSettingsValues,
   SiteSettings,
-  PluginConfig,
   ErrorPageState,
   PageState,
   FileMetadataKind,
   ErrorFileMetadata,
+  StudioConfigWithDefaulting,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -18,8 +18,6 @@ import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
-import NpmLookup from "./parsers/helpers/NpmLookup";
-import { RequiredStudioConfig } from "./parsers/getStudioConfig";
 import { v4 } from "uuid";
 import { ParsingError } from "./errors/ParsingError";
 
@@ -31,11 +29,6 @@ export function createTsMorphProject() {
   });
 }
 
-export type PluginComponentData = {
-  componentName: string;
-  moduleName: string;
-};
-
 /**
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.
  */
@@ -44,19 +37,15 @@ export default class ParsingOrchestrator {
   private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
-  private filepathToPluginComponentData: Record<string, PluginComponentData>;
   private studioData?: StudioData;
   private paths: UserPaths;
 
   /** All paths are assumed to be absolute. */
   constructor(
     private project: Project,
-    private studioConfig: RequiredStudioConfig,
+    private studioConfig: StudioConfigWithDefaulting,
     private localDataMapping?: Record<string, string[]>
   ) {
-    this.filepathToPluginComponentData = initFilepathToPluginNames(
-      studioConfig.plugins
-    );
     this.paths = studioConfig.paths;
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
@@ -75,10 +64,8 @@ export default class ParsingOrchestrator {
     return new PageFile(
       path.join(this.paths.pages, pageName + ".tsx"),
       this.getFileMetadata,
-      this.getFileMetadataByUUID,
       this.project,
       this.studioConfig.isPagesJSRepo,
-      this.filepathToPluginComponentData,
       pageEntityFiles
     );
   }
@@ -91,7 +78,6 @@ export default class ParsingOrchestrator {
     const newModuleFile = new ModuleFile(
       filepath,
       this.getFileMetadata,
-      this.getFileMetadataByUUID,
       this.project
     );
     this.filepathToModuleFile[filepath] = newModuleFile;
@@ -202,18 +188,8 @@ export default class ParsingOrchestrator {
       });
     };
 
-    const addFileToMapping = (filePath: string) => {
-      if (!fs.existsSync(filePath)) {
-        throw new Error(`File not found at: ${filePath}`);
-      }
-      this.filepathToFileMetadata[filePath] = this.getFileMetadata(filePath);
-    };
-
     addDirectoryToMapping(this.paths.components);
     addDirectoryToMapping(this.paths.modules);
-    Object.keys(this.filepathToPluginComponentData).forEach((pluginFile) =>
-      addFileToMapping(pluginFile)
-    );
 
     return this.filepathToFileMetadata;
   }
@@ -231,13 +207,8 @@ export default class ParsingOrchestrator {
       filepath: absPath,
     });
 
-    const plugin = this.filepathToPluginComponentData[absPath];
-    if (absPath.startsWith(this.paths.components) || plugin?.moduleName) {
-      const componentFile = new ComponentFile(
-        absPath,
-        this.project,
-        plugin?.moduleName
-      );
+    if (absPath.startsWith(this.paths.components)) {
+      const componentFile = new ComponentFile(absPath, this.project);
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
         return createErrorFileMetadata(result.error);
@@ -256,15 +227,7 @@ export default class ParsingOrchestrator {
     const { modules, components } = this.paths;
     throw new Error(
       `Could not get FileMetadata for ${absPath}, file does not ` +
-        `live inside the expected folders for modules: ${modules}, ${components}, or a plugin.`
-    );
-  };
-
-  private getFileMetadataByUUID = (
-    metadataUUID: string
-  ): FileMetadata | undefined => {
-    return Object.values(this.filepathToFileMetadata).find(
-      (fileMetadata) => fileMetadata.metadataUUID === metadataUUID
+        `live inside the expected folders for modules: ${modules}, ${components}.`
     );
   };
 
@@ -303,23 +266,4 @@ export default class ParsingOrchestrator {
   updateSiteSettings(siteSettingsValues: SiteSettingsValues): void {
     this.siteSettingsFile?.updateSiteSettingValues(siteSettingsValues);
   }
-}
-
-function initFilepathToPluginNames(
-  plugins: PluginConfig[] = []
-): Record<string, PluginComponentData> {
-  const filepathToPluginNames = {};
-
-  plugins.forEach((plugin: PluginConfig) => {
-    const npmModule = new NpmLookup(plugin.name);
-    Object.entries(plugin.components).forEach(([componentName, filepath]) => {
-      const absPath = path.join(npmModule.getRootPath(), filepath);
-      filepathToPluginNames[absPath] = {
-        moduleName: plugin.name,
-        componentName,
-      };
-    });
-  });
-
-  return filepathToPluginNames;
 }

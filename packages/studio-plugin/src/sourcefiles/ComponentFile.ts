@@ -16,7 +16,7 @@ export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string, project: Project, private pluginName?: string) {
+  constructor(filepath: string, project: Project) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
@@ -48,7 +48,6 @@ export default class ComponentFile {
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
       filepath,
-      pluginName: this.pluginName,
     };
   };
 }
