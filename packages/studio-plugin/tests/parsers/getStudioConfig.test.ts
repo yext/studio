@@ -14,7 +14,7 @@ it("returns default config when studio config file is not found", async () => {
       pages: "test-site/src/pages",
       siteSettings: "test-site/src/siteSettings.ts",
     },
-    port: 8080
+    port: 8080,
   });
 });
 
@@ -30,7 +30,7 @@ it("returns user studio config merge with default config for unspecified fields"
       pages: "custom/pages/folder/path",
       siteSettings: projectRoot + "/src/siteSettings.ts",
     },
-    port: 8080
+    port: 8080,
   });
 });
 
