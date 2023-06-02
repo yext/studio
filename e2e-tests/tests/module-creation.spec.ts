@@ -1,6 +1,7 @@
 // import { studioTest } from "./infra/studioTest.js";
 // import { expect } from "@playwright/test";
 
+// Temporarily commented out while module functionality is hidden.
 // studioTest("can create new nested modules", async ({ page, studioPage }) => {
 //   await studioPage.setActiveComponent("Banner");
 //   await studioPage.createModule("InnerModule");
