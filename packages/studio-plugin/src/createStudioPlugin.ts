@@ -17,6 +17,7 @@ import openBrowser from "react-dev-utils/openBrowser";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import path from "path";
 import lodash from "lodash";
+import { UserConfig } from "vite";
 
 /**
  * Handles server-client communication.
@@ -81,11 +82,13 @@ export default async function createStudioPlugin(
       watchUserFiles(studioConfig.paths);
     },
     config(config) {
-      return lodash.merge({}, config, {
+      const serverConfig: UserConfig = {
         server: {
           port: studioConfig.port,
+          strictPort: true 
         },
-      });
+      }
+      return lodash.merge({}, config, serverConfig);
     },
     resolveId(id) {
       if (id === VirtualModuleID.StudioData || id === VirtualModuleID.GitData) {
