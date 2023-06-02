@@ -3,7 +3,6 @@ import Banner from "../components/Banner";
 import Button from "../components/Button";
 import Container from "../components/Container";
 import Cta from "../components/Cta";
-import ContainerWithButtons from "../modules/ContainerWithButtons";
 
 export const config: TemplateConfig = {
   stream: {
@@ -29,10 +28,6 @@ export default function UniversalPage({ document }: TemplateProps) {
       <Container>
         <Button />
       </Container>
-      <ContainerWithButtons
-        bannerTitle={document.address.city}
-        document={document}
-      />
       <Banner
         obj={{
           nestedString: `hello ${document.address.city}  ${document.id}`,
