@@ -57,6 +57,7 @@ describe("syncFileMetadata", () => {
   const orchestrator = new ParsingOrchestrator(tsMorphProject, {
     paths,
     isPagesJSRepo: false,
+    port: 8080,
   });
   const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 

@@ -238,6 +238,7 @@ function createParsingOrchestrator(opts?: {
     {
       paths: paths ?? userPaths,
       isPagesJSRepo: isPagesJS ?? false,
+      port: 8080,
     },
     localDataMapping
   );

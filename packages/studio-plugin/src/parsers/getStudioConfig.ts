@@ -38,6 +38,7 @@ async function getStudioConfigInternal(
   const defaultConfig: StudioConfigDefaults = {
     isPagesJSRepo: false,
     paths: getUserPaths(pathToProjectRoot),
+    port: 8080,
   };
 
   const configFilepath = path.join(pathToProjectRoot, "studio.config.js");

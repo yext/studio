@@ -16,6 +16,8 @@ import getLocalDataMapping from "./parsers/getLocalDataMapping";
 import openBrowser from "react-dev-utils/openBrowser";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import path from "path";
+import lodash from "lodash";
+import { UserConfig } from "vite";
 
 /**
  * Handles server-client communication.
@@ -57,7 +59,7 @@ export default async function createStudioPlugin(
     name: "yext-studio-vite-plugin",
     buildStart() {
       if (args.mode === "development" && args.command === "serve") {
-        openBrowser("http://localhost:5173/");
+        openBrowser(`http://localhost:${studioConfig.port}/`);
       }
       const watchDir = (dirPath: string) => {
         if (existsSync(dirPath)) {
@@ -78,6 +80,15 @@ export default async function createStudioPlugin(
         this.addWatchFile(userPaths.siteSettings);
       };
       watchUserFiles(studioConfig.paths);
+    },
+    config(config) {
+      const serverConfig: UserConfig = {
+        server: {
+          port: studioConfig.port,
+          strictPort: true,
+        },
+      };
+      return lodash.merge({}, config, serverConfig);
     },
     resolveId(id) {
       if (id === VirtualModuleID.StudioData || id === VirtualModuleID.GitData) {

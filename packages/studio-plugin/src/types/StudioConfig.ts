@@ -22,6 +22,8 @@ export interface StudioConfig {
    * \}
    */
   paths?: Partial<UserPaths>;
+  /** The port number for studio to run on. Defaults to 8080. */
+  port?: number;
 }
 
 /** The StudioConfig merged with defaults. */
@@ -31,4 +33,5 @@ export type StudioConfigWithDefaulting = StudioConfig & StudioConfigDefaults;
 export type StudioConfigDefaults = {
   isPagesJSRepo: boolean;
   paths: UserPaths;
+  port: number;
 };

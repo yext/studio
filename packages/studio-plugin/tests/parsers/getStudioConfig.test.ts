@@ -14,6 +14,7 @@ it("returns default config when studio config file is not found", async () => {
       pages: "test-site/src/pages",
       siteSettings: "test-site/src/siteSettings.ts",
     },
+    port: 8080,
   });
 });
 
@@ -29,6 +30,7 @@ it("returns user studio config merge with default config for unspecified fields"
       pages: "custom/pages/folder/path",
       siteSettings: projectRoot + "/src/siteSettings.ts",
     },
+    port: 8080,
   });
 });
 
@@ -50,14 +52,7 @@ it("throws ParsingError when user's studio config is not a default export", asyn
     "../__fixtures__/StudioConfigs/malformed/missing-default"
   );
 
-  let thrownError;
-  try {
-    await getStudioConfig(projectRoot);
-  } catch (err) {
-    thrownError = err;
-  }
-
-  expect(thrownError).toEqual({
+  await expect(getStudioConfig(projectRoot)).rejects.toEqual({
     kind: ParsingErrorKind.InvalidStudioConfig,
     message: "Studio Config must be a default export",
   });

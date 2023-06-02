@@ -37,6 +37,7 @@ paths.modules = path.join(projectRoot, "modules");
 const orchestrator = new ParsingOrchestrator(tsMorphProject, {
   paths,
   isPagesJSRepo: false,
+  port: 8080,
 });
 const fileManager = new FileSystemManager(
   paths,
