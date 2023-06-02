@@ -40,11 +40,7 @@ export default function EditorSidebar(): JSX.Element {
 function renderTab(tab: Tab) {
   switch (tab) {
     case Tab.Props:
-      return (
-        <>
-          <PropsPanel />{" "}
-        </>
-      );
+      return <PropsPanel />;
     case Tab.SiteSettings:
       return <SiteSettingsPanel />;
   }
