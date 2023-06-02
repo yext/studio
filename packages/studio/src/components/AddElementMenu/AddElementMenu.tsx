@@ -33,13 +33,15 @@ function ElementTypeSwitcher(props: {
   const UUIDToFileMetadata = useStudioStore((store) => {
     return store.fileMetadatas.UUIDToFileMetadata;
   });
-  const numAvailableModules = Object.values(UUIDToFileMetadata).filter(metadata => metadata.kind === FileMetadataKind.Module).length
+  const numAvailableModules = Object.values(UUIDToFileMetadata).filter(
+    (metadata) => metadata.kind === FileMetadataKind.Module
+  ).length;
 
   return (
     <div className="flex px-4 pt-2 border-b">
       {Object.values(ElementType).map((elementType) => {
         if (elementType === ElementType.Modules && numAvailableModules === 0) {
-          return null
+          return null;
         }
         return (
           <ElementTypeButton

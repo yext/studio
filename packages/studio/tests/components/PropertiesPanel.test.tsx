@@ -28,7 +28,7 @@ it("does not render prop editor(s) when there's no selected active component", (
   expect(container).toBeEmptyDOMElement();
 });
 
-it("renders 'Create Module' button for Standard Component", () => {
+it("does not render 'Create Module' button for Standard Component", () => {
   const state: StandardComponentState = {
     kind: ComponentStateKind.Standard,
     componentName: "Standard",
@@ -49,8 +49,7 @@ it("renders 'Create Module' button for Standard Component", () => {
   });
 
   render(<PropertiesPanel />);
-  expect(screen.getAllByRole("button")).toHaveLength(1);
-  screen.getByRole("button", { name: "Create Module" });
+  expect(screen.queryByText("Create Module")).toBeNull();
 });
 
 it("renders Module Actions for Active Module", () => {
@@ -89,11 +88,10 @@ describe("Repeaters", () => {
     expect(screen.getByRole("spinbutton")).toHaveValue(5);
   });
 
-  it("renders Create Module button for a repeated component", () => {
+  it("does not render Create Module button for a repeated component", () => {
     mockRepeaterActiveComponent();
     render(<PropertiesPanel />);
-    expect(screen.getAllByRole("button")).toHaveLength(1);
-    screen.getByRole("button", { name: "Create Module" });
+    expect(screen.queryByText("Create Module")).toBeNull();
   });
 
   it("renders Module Actions for a repeated module", () => {

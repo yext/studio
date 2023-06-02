@@ -5,6 +5,7 @@ import {
   ComponentState,
   FileMetadata,
   TypeGuards,
+  ComponentStateHelpers,
 } from "@yext/studio-plugin";
 import ModuleEditActions from "./ModuleActions/ModuleEditActions";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
@@ -31,11 +32,14 @@ export default function PropertiesPanel(): JSX.Element | null {
     propShape,
   } = activeComponentWithProps;
 
-  const isModule = activeComponentState.kind === ComponentStateKind.Module
+  const isModule =
+    ComponentStateHelpers.extractRepeatedState(activeComponentState).kind ===
+    ComponentStateKind.Module;
 
   return (
     <div>
-      {isModule && renderModuleActions(activeComponentMetadata, activeComponentState)}
+      {isModule &&
+        renderModuleActions(activeComponentMetadata, activeComponentState)}
       <ActiveComponentPropEditors
         activeComponentState={extractedComponentState}
         propShape={propShape}
