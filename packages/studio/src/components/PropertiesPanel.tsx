@@ -10,6 +10,7 @@ import ModuleEditActions from "./ModuleActions/ModuleEditActions";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 import CreateModuleButton from "./ModuleActions/CreateModuleButton";
 import ActiveComponentPropEditors from "./ActiveComponentPropEditors";
+import { ComponentStateKind } from "@yext/studio-plugin";
 
 /**
  * Renders prop editors for the active component selected by the user.
@@ -30,9 +31,11 @@ export default function PropertiesPanel(): JSX.Element | null {
     propShape,
   } = activeComponentWithProps;
 
+  const isModule = activeComponentState.kind === ComponentStateKind.Module
+
   return (
     <div>
-      {renderModuleActions(activeComponentMetadata, activeComponentState)}
+      {isModule && renderModuleActions(activeComponentMetadata, activeComponentState)}
       <ActiveComponentPropEditors
         activeComponentState={extractedComponentState}
         propShape={propShape}
