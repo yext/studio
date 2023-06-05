@@ -5,7 +5,7 @@ import Divider from "./common/Divider";
 import RepeaterEditor from "./RepeaterEditor";
 
 export default function RepeaterPanel() {
-  const hasArrayEntityData = useStudioStore((store) => {
+  const entityHasArrayFields = useStudioStore((store) => {
     const filteredData = filterEntityData(
       "array",
       store.pages.activeEntityData
@@ -14,7 +14,7 @@ export default function RepeaterPanel() {
   });
 
   const activeComponentWithProps = useActiveComponentWithProps();
-  if (!activeComponentWithProps || !hasArrayEntityData) {
+  if (!activeComponentWithProps || !entityHasArrayFields) {
     return null;
   }
 

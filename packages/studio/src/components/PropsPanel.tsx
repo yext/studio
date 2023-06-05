@@ -7,10 +7,6 @@ import Divider from "./common/Divider";
 
 /**
  * Renders prop editors for the active component selected by the user.
- *
- * Filters props by {@link PropValueType} to only render non-strings.
- *
- * Interprets prop values as {@link PropValueKind.Literal}s.
  */
 export default function PropsPanel(): JSX.Element | null {
   const activeComponentWithProps = useActiveComponentWithProps();
