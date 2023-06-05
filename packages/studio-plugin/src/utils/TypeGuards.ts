@@ -52,11 +52,11 @@ export default class TypeGuards {
     }
   }
 
-  static isValidPropVal = (propVal: {
+  static isValidPropVal(propVal: {
     kind: PropValueKind;
     valueType: PropValueType;
     value: unknown;
-  }): propVal is PropVal => {
+  }): propVal is PropVal {
     const { kind, valueType, value } = propVal;
     if (kind === PropValueKind.Expression) {
       return typeof value === "string";
@@ -79,7 +79,7 @@ export default class TypeGuards {
         );
     }
     return false;
-  };
+  }
 
   /** Checks that the value of a prop matches the prop type. */
   static isValidPropValue(propType: PropType, value: unknown): boolean {
