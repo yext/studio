@@ -7,7 +7,7 @@ import { createElement, Fragment, useMemo } from "react";
 import usePreviewProps from "../hooks/usePreviewProps";
 import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
-import { ExpressionSources } from "../utils/getPreviewProps";
+import { ExpressionSources } from "../utils/getPropsForPreview";
 import RepeaterPreview from "./RepeaterPreview";
 import ErrorComponentPreview from "./ErrorComponentPreview";
 import ModulePreview from "./ModulePreview";
