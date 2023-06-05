@@ -13,6 +13,7 @@ import {
   ModuleMetadata,
   ModuleState,
   PropShape,
+  PropType,
   PropVal,
   PropValueKind,
   PropValues,
@@ -69,8 +70,6 @@ export default class TypeGuards {
         return typeof value === "number";
       case PropValueType.HexColor:
         return typeof value === "string" && value.startsWith("#");
-      case PropValueType.Array:
-        return Array.isArray(value) && value.every(this.isValidPropVal);
       case PropValueType.Object:
         const baseIsValid =
           typeof value === "object" && !Array.isArray(value) && value !== null;
@@ -81,6 +80,37 @@ export default class TypeGuards {
     }
     return false;
   };
+
+  /** Checks that the value of a prop matches the prop type. */
+  static isValidPropValue(propType: PropType, value: unknown): boolean {
+    switch (propType.type) {
+      case PropValueType.string:
+        return typeof value === "string";
+      case PropValueType.boolean:
+        return typeof value === "boolean";
+      case PropValueType.number:
+        return typeof value === "number";
+      case PropValueType.HexColor:
+        return typeof value === "string" && value.startsWith("#");
+      case PropValueType.Array:
+        return (
+          Array.isArray(value) &&
+          value.every((val) => this.isValidPropValue(propType.itemType, val))
+        );
+      case PropValueType.Object:
+        const baseIsValid =
+          typeof value === "object" && !Array.isArray(value) && value !== null;
+        return (
+          baseIsValid &&
+          Object.entries(propType.shape).every(([field, metadata]) =>
+            value[field] !== undefined
+              ? this.isValidPropValue(metadata, value[field])
+              : !metadata.required
+          )
+        );
+    }
+    return false;
+  }
 
   static isPrimitiveProp(
     propValueType: string

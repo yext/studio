@@ -1,4 +1,4 @@
-import { PropValueKind, PropValueType } from "../../src/types";
+import { PropValueKind, PropValueType, PropType } from "../../src/types";
 import TypeGuards from "../../src/utils/TypeGuards";
 
 describe("isSiteSettingsValues", () => {
@@ -51,24 +51,39 @@ describe("isValidPropVal", () => {
     };
     expect(TypeGuards.isValidPropVal(invalidPropVal)).toBeFalsy();
   });
+});
 
+describe("isValidPropValue", () => {
   it("requires array props to recursively be valid", () => {
-    const invalidPropVal = {
-      kind: PropValueKind.Literal,
-      valueType: PropValueType.Array,
-      value: [
-        {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.string,
-          value: "some string",
+    const propType: PropType = {
+      type: PropValueType.Array,
+      itemType: {
+        type: PropValueType.Object,
+        shape: {
+          str: {
+            required: true,
+            type: PropValueType.string,
+          },
+          nums: {
+            required: false,
+            type: PropValueType.Array,
+            itemType: {
+              type: PropValueType.number,
+            },
+          },
         },
-        {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.string,
-          value: 3,
-        },
-      ],
+      },
     };
-    expect(TypeGuards.isValidPropVal(invalidPropVal)).toBeFalsy();
+    const invalidValue = [
+      {
+        str: "some string",
+        nums: [1],
+      },
+      {
+        str: "other string",
+        nums: [2, "3"],
+      },
+    ];
+    expect(TypeGuards.isValidPropValue(propType, invalidValue)).toBeFalsy();
   });
 });
