@@ -5,7 +5,7 @@ import {
   PropValues,
   PropValueType,
 } from "@yext/studio-plugin";
-import { getPreviewProps } from "../../src/utils/getPreviewProps";
+import { getPropsForPreview } from "../../src/utils/getPropsForPreview";
 
 const siteSettings = {
   apiKey: "dummy-api-key",
@@ -81,7 +81,7 @@ const parentPropShape: PropShape = {
 };
 
 it("returns value as is for prop of type Literal", () => {
-  const transformedProps = getPreviewProps(
+  const transformedProps = getPropsForPreview(
     {
       foo: {
         kind: PropValueKind.Literal,
@@ -123,7 +123,7 @@ it("returns value as is for prop of type Literal", () => {
 });
 
 it("uses default value for props with unspecified/undefined value", () => {
-  const transformedProps = getPreviewProps(
+  const transformedProps = getPropsForPreview(
     {},
     {
       bgColor: {
@@ -203,7 +203,7 @@ describe("expression value handling", () => {
   });
 
   it("can handle expression that references an array of objects", () => {
-    const transformedProps = getPreviewProps(
+    const transformedProps = getPropsForPreview(
       {
         bar: {
           kind: PropValueKind.Expression,
@@ -221,7 +221,7 @@ describe("expression value handling", () => {
     const consoleWarnSpy = jest
       .spyOn(global.console, "warn")
       .mockImplementation();
-    const transformedProps = getPreviewProps(
+    const transformedProps = getPropsForPreview(
       {
         bar: {
           kind: PropValueKind.Expression,
@@ -314,7 +314,7 @@ it("applies expression sources for streams data", () => {
 });
 
 function transformFooProp(value: string, parentProps: PropValues = {}) {
-  return getPreviewProps(
+  return getPropsForPreview(
     {
       foo: {
         kind: PropValueKind.Expression,
@@ -325,7 +325,11 @@ function transformFooProp(value: string, parentProps: PropValues = {}) {
     propShape,
     {
       ...expressionSources,
-      props: getPreviewProps(parentProps, parentPropShape, expressionSources),
+      props: getPropsForPreview(
+        parentProps,
+        parentPropShape,
+        expressionSources
+      ),
     }
   );
 }
@@ -365,7 +369,7 @@ it("works with expressions inside object props", () => {
       },
     },
   };
-  const previewProps = getPreviewProps(
+  const previewProps = getPropsForPreview(
     propValues,
     propShape,
     expressionSources

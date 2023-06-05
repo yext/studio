@@ -22,7 +22,7 @@ import PropValueHelpers from "./PropValueHelpers";
  * @param expressionSources - a map of expression source to its field names and values.
  * @returns - a map of prop's name to its transformed value.
  */
-export function getPreviewProps(
+export function getPropsForPreview(
   props: PropValues,
   propShape: PropShape,
   expressionSources: ExpressionSources
@@ -92,7 +92,7 @@ function handleObjectProp(
       `Expected PropMetadata of type Object, received ${propType.type}`
     );
   }
-  return getPreviewProps(value, propType.shape, expressionSources);
+  return getPropsForPreview(value, propType.shape, expressionSources);
 }
 
 /**

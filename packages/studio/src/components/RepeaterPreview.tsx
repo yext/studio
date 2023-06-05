@@ -1,7 +1,7 @@
 import { RepeaterState } from "@yext/studio-plugin";
 import { get } from "lodash";
 import { useCallback, useMemo } from "react";
-import { ExpressionSources } from "../utils/getPreviewProps";
+import { ExpressionSources } from "../utils/getPropsForPreview";
 import ComponentPreview from "./ComponentPreview";
 
 interface RepeaterPreviewProps {
