@@ -52,11 +52,11 @@ export default class TypeGuards {
     }
   }
 
-  static isValidPropVal(propVal: {
+  static isValidPropVal = (propVal: {
     kind: PropValueKind;
     valueType: PropValueType;
     value: unknown;
-  }): propVal is PropVal {
+  }): propVal is PropVal => {
     const { kind, valueType, value } = propVal;
     if (kind === PropValueKind.Expression) {
       return this.valueMatchesPropType({ type: PropValueType.string }, value);
@@ -76,13 +76,18 @@ export default class TypeGuards {
         );
     }
     return false;
-  }
+  };
 
   /** Checks that the value of a prop matches the prop type. */
-  static valueMatchesPropType(
+  static valueMatchesPropType = (
     propType: PropType,
     value: unknown
-  ): value is string | number | boolean | unknown[] | Record<string, unknown> {
+  ): value is
+    | string
+    | number
+    | boolean
+    | unknown[]
+    | Record<string, unknown> => {
     switch (propType.type) {
       case PropValueType.string:
         return typeof value === "string";
@@ -112,7 +117,7 @@ export default class TypeGuards {
         );
     }
     return false;
-  }
+  };
 
   static isPrimitiveProp(
     propValueType: string
