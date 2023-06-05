@@ -144,7 +144,7 @@ function getExpressionValue(
   expression: string,
   propType: PropType,
   expressionSources: ExpressionSources
-): unknown {
+): string | number | boolean | null | Record<string, unknown> | unknown[] {
   function getValueFromPath(path: string, parentPath: keyof ExpressionSources) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {

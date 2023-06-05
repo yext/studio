@@ -82,7 +82,10 @@ export default class TypeGuards {
   }
 
   /** Checks that the value of a prop matches the prop type. */
-  static isValidPropValue(propType: PropType, value: unknown): boolean {
+  static isValidPropValue(
+    propType: PropType,
+    value: unknown
+  ): value is string | number | boolean | unknown[] | Record<string, unknown> {
     switch (propType.type) {
       case PropValueType.string:
         return typeof value === "string";
