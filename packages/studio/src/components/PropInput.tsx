@@ -140,16 +140,16 @@ function useDisplayValue(
 ) {
   useLayoutEffect(() => {
     if (propValue === undefined) {
-      onChange(PropValueHelpers.getPropTypeDefaultValue(propType, propKind));
+      onChange(PropValueHelpers.getPropInputDefaultValue(propType, propKind));
     }
   }, [propValue, onChange, propType, propKind]);
 
   const propValueWithDefaulting =
-    propValue ?? PropValueHelpers.getPropTypeDefaultValue(propType, propKind);
+    propValue ?? PropValueHelpers.getPropInputDefaultValue(propType, propKind);
   if (propKind === PropValueKind.Expression) {
     if (typeof propValueWithDefaulting !== "string") {
       throw new Error(
-        `Expression props are only supported for strings. Received: "${propValueWithDefaulting}".`
+        `Only strings are supported as the value for expression props. Received: "${propValueWithDefaulting}".`
       );
     }
     if (propType === PropValueType.string) {

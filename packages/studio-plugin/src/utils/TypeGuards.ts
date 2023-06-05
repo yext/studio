@@ -59,17 +59,14 @@ export default class TypeGuards {
   }): propVal is PropVal {
     const { kind, valueType, value } = propVal;
     if (kind === PropValueKind.Expression) {
-      return typeof value === "string";
+      return this.valueMatchesPropType({ type: PropValueType.string }, value);
     }
     switch (valueType) {
       case PropValueType.string:
-        return typeof value === "string";
       case PropValueType.boolean:
-        return typeof value === "boolean";
       case PropValueType.number:
-        return typeof value === "number";
       case PropValueType.HexColor:
-        return typeof value === "string" && value.startsWith("#");
+        return this.valueMatchesPropType({ type: valueType }, value);
       case PropValueType.Object:
         const baseIsValid =
           typeof value === "object" && !Array.isArray(value) && value !== null;
@@ -82,7 +79,7 @@ export default class TypeGuards {
   }
 
   /** Checks that the value of a prop matches the prop type. */
-  static isValidPropValue(
+  static valueMatchesPropType(
     propType: PropType,
     value: unknown
   ): value is string | number | boolean | unknown[] | Record<string, unknown> {
@@ -98,7 +95,9 @@ export default class TypeGuards {
       case PropValueType.Array:
         return (
           Array.isArray(value) &&
-          value.every((val) => this.isValidPropValue(propType.itemType, val))
+          value.every((val) =>
+            this.valueMatchesPropType(propType.itemType, val)
+          )
         );
       case PropValueType.Object:
         const baseIsValid =
@@ -107,7 +106,7 @@ export default class TypeGuards {
           baseIsValid &&
           Object.entries(propType.shape).every(([field, metadata]) =>
             value[field] !== undefined
-              ? this.isValidPropValue(metadata, value[field])
+              ? this.valueMatchesPropType(metadata, value[field])
               : !metadata.required
           )
         );

@@ -53,7 +53,7 @@ describe("isValidPropVal", () => {
   });
 });
 
-describe("isValidPropValue", () => {
+describe("valueMatchesPropType", () => {
   it("requires array props to recursively be valid", () => {
     const propType: PropType = {
       type: PropValueType.Array,
@@ -84,6 +84,6 @@ describe("isValidPropValue", () => {
         nums: [2, "3"],
       },
     ];
-    expect(TypeGuards.isValidPropValue(propType, invalidValue)).toBeFalsy();
+    expect(TypeGuards.valueMatchesPropType(propType, invalidValue)).toBeFalsy();
   });
 });

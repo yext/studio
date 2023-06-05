@@ -29,59 +29,70 @@ export function getPreviewProps(
 ): Record<string, unknown> {
   const transformedProps: Record<string, unknown> = {};
   Object.keys(propShape).forEach((propName) => {
-    const previewProp = getPreviewProp(
+    const value = getPropValueForPreview(
       props[propName],
       propShape[propName],
       expressionSources
     );
-    if (previewProp !== undefined) {
-      transformedProps[propName] = previewProp;
+    if (value !== undefined) {
+      transformedProps[propName] = value;
     }
   });
   return transformedProps;
 }
 
-function getPreviewProp(
+function getPropValueForPreview(
   propVal: PropVal | undefined,
   propType: PropType,
   expressionSources: ExpressionSources
 ) {
-  if (
-    !propVal &&
-    (propType.type === PropValueType.Object ||
-      propType.type === PropValueType.Array)
-  ) {
-    return undefined;
-  }
-
   if (!propVal) {
-    return PropValueHelpers.getPropTypeDefaultValue(
-      propType.type,
-      PropValueKind.Literal
-    );
-  }
-  if (propVal.kind === PropValueKind.Expression) {
-    if (propVal.valueType === PropValueType.Record) {
-      return propVal.value;
-    }
-    const literalValue = getExpressionPropLiteralValue(
-      propVal.value,
-      propType,
-      expressionSources
-    );
-    if (propType.type !== PropValueType.Array || Array.isArray(literalValue)) {
-      return literalValue;
-    }
+    return handleNoPropVal(propType.type);
+  } else if (propVal.kind === PropValueKind.Expression) {
+    return handleExpressionProp(propVal.value, propType, expressionSources);
   } else if (propVal.valueType === PropValueType.Object) {
-    if (propType.type !== PropValueType.Object) {
-      throw new Error(
-        `Expected PropMetadata of type Object, received ${propType.type}`
-      );
-    }
-    return getPreviewProps(propVal.value, propType.shape, expressionSources);
+    return handleObjectProp(propVal.value, propType, expressionSources);
   } else {
     return propVal.value;
   }
+}
+
+function handleNoPropVal(valueType: PropValueType) {
+  if (valueType === PropValueType.Object || valueType === PropValueType.Array) {
+    return undefined;
+  }
+  return PropValueHelpers.getLiteralPropDefaultValue(valueType);
+}
+
+function handleExpressionProp(
+  value: string,
+  propType: PropType,
+  expressionSources: ExpressionSources
+) {
+  if (propType.type === PropValueType.Record) {
+    return value;
+  }
+  const literalValue = getExpressionPropLiteralValue(
+    value,
+    propType,
+    expressionSources
+  );
+  if (propType.type !== PropValueType.Array || Array.isArray(literalValue)) {
+    return literalValue;
+  }
+}
+
+function handleObjectProp(
+  value: PropValues,
+  propType: PropType,
+  expressionSources: ExpressionSources
+) {
+  if (propType.type !== PropValueType.Object) {
+    throw new Error(
+      `Expected PropMetadata of type Object, received ${propType.type}`
+    );
+  }
+  return getPreviewProps(value, propType.shape, expressionSources);
 }
 
 /**
@@ -160,7 +171,7 @@ function getExpressionValue(
       { [parentPath]: sourceObject },
       pathWithoutOptionalChaining
     ) as unknown;
-    if (TypeGuards.isValidPropValue(propType, newPropValue)) {
+    if (TypeGuards.valueMatchesPropType(propType, newPropValue)) {
       return newPropValue;
     } else {
       logInvalidExpressionWarning(newPropValue, path, propType);

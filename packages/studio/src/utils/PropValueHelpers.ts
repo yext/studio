@@ -2,21 +2,38 @@ import { PropVal, PropValueKind, PropValueType } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
 
 export default class PropValueHelpers {
-  static getPropTypeDefaultValue(
+  static getPropInputDefaultValue(
     type: PropValueType,
     kind: PropValueKind
+  ): string | number | boolean {
+    if (kind === PropValueKind.Literal) {
+      return this.getLiteralPropDefaultValue(type);
+    }
+    switch (type) {
+      case PropValueType.string:
+        return "``";
+      case PropValueType.Array:
+        return "";
+      default:
+        console.error(
+          `Unknown PropValueType ${type}. Can't derive a default value based on PropValueType.`
+        );
+        return "";
+    }
+  }
+
+  static getLiteralPropDefaultValue(
+    type: PropValueType
   ): string | number | boolean {
     switch (type) {
       case PropValueType.number:
         return 0;
       case PropValueType.string:
-        return kind === PropValueKind.Expression ? "``" : "";
+        return "";
       case PropValueType.boolean:
         return false;
       case PropValueType.HexColor:
         return "#FFFFFF";
-      case PropValueType.Array:
-        return "";
       default:
         console.error(
           `Unknown PropValueType ${type}. Can't derive a default value based on PropValueType.`
