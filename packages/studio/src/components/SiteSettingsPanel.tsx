@@ -147,7 +147,7 @@ function SimplePropInput(props: {
         value: rawValue,
         valueType,
       };
-      if (!TypeGuards.isValidPropValue(updatedValue)) {
+      if (!TypeGuards.isValidPropVal(updatedValue)) {
         console.error(
           "Invalid PropVal when updating SiteSettings:",
           updatedValue

@@ -39,24 +39,24 @@ type PrimitivePropValueType =
  * A static class for housing various typeguards used by Studio.
  */
 export default class TypeGuards {
-  static assertIsValidPropVal(propValue: {
+  static assertIsValidPropVal(propVal: {
     kind: PropValueKind;
     valueType: PropValueType;
     value: unknown;
-  }): asserts propValue is PropVal {
-    if (!this.isValidPropValue(propValue)) {
+  }): asserts propVal is PropVal {
+    if (!this.isValidPropVal(propVal)) {
       throw new Error(
-        "Invalid prop value: " + JSON.stringify(propValue, null, 2)
+        "Invalid prop value: " + JSON.stringify(propVal, null, 2)
       );
     }
   }
 
-  static isValidPropValue = (propValue: {
+  static isValidPropVal = (propVal: {
     kind: PropValueKind;
     valueType: PropValueType;
     value: unknown;
-  }): propValue is PropVal => {
-    const { kind, valueType, value } = propValue;
+  }): propVal is PropVal => {
+    const { kind, valueType, value } = propVal;
     if (kind === PropValueKind.Expression) {
       return typeof value === "string";
     }
@@ -70,13 +70,13 @@ export default class TypeGuards {
       case PropValueType.HexColor:
         return typeof value === "string" && value.startsWith("#");
       case PropValueType.Array:
-        return Array.isArray(value) && value.every(this.isValidPropValue);
+        return Array.isArray(value) && value.every(this.isValidPropVal);
       case PropValueType.Object:
         const baseIsValid =
           typeof value === "object" && !Array.isArray(value) && value !== null;
         return (
           baseIsValid &&
-          Object.values(value as PropValues).every(this.isValidPropValue)
+          Object.values(value as PropValues).every(this.isValidPropVal)
         );
     }
     return false;

@@ -243,7 +243,7 @@ function createPropVal(
       propVal.value = propValues;
     }
   }
-  if (!TypeGuards.isValidPropValue(propVal)) {
+  if (!TypeGuards.isValidPropVal(propVal)) {
     return null;
   }
   return propVal;

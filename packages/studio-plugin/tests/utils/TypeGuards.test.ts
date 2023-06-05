@@ -39,7 +39,7 @@ describe("isSiteSettingsValues", () => {
   });
 });
 
-describe("isValidPropValue", () => {
+describe("isValidPropVal", () => {
   it("requires object props to recursively have valueType specified", () => {
     const invalidPropVal = {
       kind: PropValueKind.Literal,
@@ -49,7 +49,7 @@ describe("isValidPropValue", () => {
         value: "some string",
       },
     };
-    expect(TypeGuards.isValidPropValue(invalidPropVal)).toBeFalsy();
+    expect(TypeGuards.isValidPropVal(invalidPropVal)).toBeFalsy();
   });
 
   it("requires array props to recursively be valid", () => {
@@ -69,6 +69,6 @@ describe("isValidPropValue", () => {
         },
       ],
     };
-    expect(TypeGuards.isValidPropValue(invalidPropVal)).toBeFalsy();
+    expect(TypeGuards.isValidPropVal(invalidPropVal)).toBeFalsy();
   });
 });
