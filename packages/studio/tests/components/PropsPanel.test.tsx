@@ -7,7 +7,7 @@ import {
   StandardComponentState,
 } from "@yext/studio-plugin";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
-import PropertiesPanel from "../../src/components/PropertiesPanel";
+import PropsPanel from "../../src/components/PropsPanel";
 import { render, screen } from "@testing-library/react";
 import { mockRepeaterActiveComponent } from "../__utils__/mockRepeaterActiveComponent";
 
@@ -18,17 +18,17 @@ it("does not render prop editor(s) for fragment component", () => {
       uuid: "fragment-uuid",
     },
   });
-  const { container } = render(<PropertiesPanel />);
+  const { container } = render(<PropsPanel />);
   expect(container).toBeEmptyDOMElement();
 });
 
 it("does not render prop editor(s) when there's no selected active component", () => {
   mockStoreActiveComponent({});
-  const { container } = render(<PropertiesPanel />);
+  const { container } = render(<PropsPanel />);
   expect(container).toBeEmptyDOMElement();
 });
 
-it("renders 'Create Module' button for Standard Component", () => {
+it("does not render 'Create Module' button for Standard Component", () => {
   const state: StandardComponentState = {
     kind: ComponentStateKind.Standard,
     componentName: "Standard",
@@ -48,9 +48,8 @@ it("renders 'Create Module' button for Standard Component", () => {
     activeComponentMetadata: metadata,
   });
 
-  render(<PropertiesPanel />);
-  expect(screen.getAllByRole("button")).toHaveLength(1);
-  screen.getByRole("button", { name: "Create Module" });
+  render(<PropsPanel />);
+  expect(screen.queryByText("Create Module")).toBeNull();
 });
 
 it("renders Module Actions for Active Module", () => {
@@ -74,7 +73,7 @@ it("renders Module Actions for Active Module", () => {
     activeComponentMetadata: metadata,
   });
 
-  render(<PropertiesPanel />);
+  render(<PropsPanel />);
   expect(screen.getAllByRole("button")).toHaveLength(3);
   screen.getByRole("button", { name: "Edit Module Test" });
   screen.getByRole("button", { name: "Detach Module Test" });
@@ -84,21 +83,20 @@ it("renders Module Actions for Active Module", () => {
 describe("Repeaters", () => {
   it("renders repeated component's props", () => {
     mockRepeaterActiveComponent();
-    render(<PropertiesPanel />);
+    render(<PropsPanel />);
     screen.getByText("num");
     expect(screen.getByRole("spinbutton")).toHaveValue(5);
   });
 
-  it("renders Create Module button for a repeated component", () => {
+  it("does not render Create Module button for a repeated component", () => {
     mockRepeaterActiveComponent();
-    render(<PropertiesPanel />);
-    expect(screen.getAllByRole("button")).toHaveLength(1);
-    screen.getByRole("button", { name: "Create Module" });
+    render(<PropsPanel />);
+    expect(screen.queryByText("Create Module")).toBeNull();
   });
 
   it("renders Module Actions for a repeated module", () => {
     mockRepeaterActiveComponent(true);
-    render(<PropertiesPanel />);
+    render(<PropsPanel />);
     expect(screen.getAllByRole("button")).toHaveLength(3);
     const editButton = screen.getByRole("button", { name: "Edit Module Mod" });
     expect(editButton).toBeEnabled();
@@ -111,4 +109,11 @@ describe("Repeaters", () => {
     });
     expect(deleteButton).toBeDisabled();
   });
+});
+
+it("renders repeated component's props for a Repeater", () => {
+  mockRepeaterActiveComponent();
+  render(<PropsPanel />);
+  screen.getByText("text");
+  expect(screen.getAllByRole("textbox")[0]).toHaveValue("test");
 });
