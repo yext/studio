@@ -54,7 +54,7 @@ export default class ImportComponentAction {
     }
 
     console.log('importing component', metadata.filepath)
-    const importedValue = await import(/* @vite-ignore */ metadata.filepath);
+    const importedValue = await import(/* @vite-ignore */ '/@fs/' + metadata.filepath);
     const functionComponent = getFunctionComponent(
       importedValue,
       componentName
