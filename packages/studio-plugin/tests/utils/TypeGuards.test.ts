@@ -86,4 +86,12 @@ describe("valueMatchesPropType", () => {
     ];
     expect(TypeGuards.valueMatchesPropType(propType, invalidValue)).toBeFalsy();
   });
+
+  it("checks for specific values for string union", () => {
+    const propType: PropType = {
+      type: PropValueType.string,
+      unionValues: ["some string"]
+    };
+    expect(TypeGuards.valueMatchesPropType(propType, "other string")).toBeFalsy();
+  });
 });

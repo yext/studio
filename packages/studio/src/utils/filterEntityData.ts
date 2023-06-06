@@ -1,9 +1,11 @@
+import { PropType, PropValueType, TypeGuards } from "@yext/studio-plugin";
+
 /**
  * Filters the given entity data down to fields that match a certain type.
- * When fieldType is "array", all item types are supported.
+ * When fieldType is {@link PropValueType.Array}, all item types are supported.
  */
 export default function filterEntityData(
-  fieldType: "string" | "array",
+  fieldType: PropType | PropValueType.Array,
   entityData: Record<string, unknown> = {}
 ): Record<string, unknown> {
   const filteredEntries = Object.entries(entityData)
@@ -20,19 +22,12 @@ export default function filterEntityData(
         return Object.keys(filteredSubObject).length === 0
           ? null
           : [field, filteredSubObject];
-      }
-
-      switch (fieldType) {
-        case "string":
-          if (typeof value === "string") {
-            return [field, value];
-          }
-          break;
-        case "array":
-          if (Array.isArray(value)) {
-            return [field, value];
-          }
-          break;
+      } else if (typeof fieldType === "object") {
+        if (TypeGuards.valueMatchesPropType(fieldType, value)) {
+          return [field, value];
+        }
+      } else if (Array.isArray(value)) {
+        return [field, value];
       }
       return null;
     })

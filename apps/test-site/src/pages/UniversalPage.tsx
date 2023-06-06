@@ -9,7 +9,7 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     localization: { locales: ["en"], primary: false },
     filter: {},
-    fields: ["services", "address", "slug"],
+    fields: ["services", "address", "hours", "slug"],
   },
 };
 export const getPath: GetPath<TemplateProps> = ({
@@ -38,6 +38,7 @@ export default function UniversalPage({ document }: TemplateProps) {
         bgColor="#FFFFFF"
         bool={false}
         num={0}
+        intervals={document.hours.monday.openIntervals}
       />
     </>
   );

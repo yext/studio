@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import FieldPicker from "../../../src/components/FieldPicker/FieldPicker";
 import filterEntityData from "../../../src/utils/filterEntityData";
+import { PropValueType } from "@yext/studio-plugin";
 
 const entityData = {
   __: {
@@ -98,7 +99,10 @@ it("opening one section will collapse unrelated ones", async () => {
 function renderFieldPicker(handleFieldSelection = jest.fn()) {
   render(
     <FieldPicker
-      filteredEntityData={filterEntityData("string", entityData)}
+      filteredEntityData={filterEntityData(
+        { type: PropValueType.string },
+        entityData
+      )}
       handleFieldSelection={handleFieldSelection}
     />
   );

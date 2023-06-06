@@ -30,7 +30,7 @@ it("requires backticks for template string expressions", () => {
 it("correctly renders String Union Prop", () => {
   render(
     <PropInput
-      propType={PropValueType.string}
+      propType={{ type: PropValueType.string }}
       propValue="c"
       propKind={PropValueKind.Literal}
       onChange={jest.fn()}
@@ -52,7 +52,7 @@ it("correctly renders String Union Prop", () => {
 function renderExpressionPropInput(propValue: string, onChange = jest.fn()) {
   render(
     <PropInput
-      propType={PropValueType.string}
+      propType={{ type: PropValueType.string }}
       propKind={PropValueKind.Expression}
       onChange={onChange}
       propValue={propValue}

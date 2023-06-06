@@ -1,4 +1,4 @@
-import { PropValueKind, PropValueType } from "@yext/studio-plugin";
+import { PropType, PropValueKind, PropValueType } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import PropValueHelpers from "../utils/PropValueHelpers";
@@ -7,7 +7,7 @@ import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 import ColorPicker from "./common/ColorPicker";
 
 interface PropInputProps<T = string | number | boolean> {
-  propType: PropValueType;
+  propType: PropType;
   propValue?: T;
   onChange: (value: T) => void;
   unionValues?: string[];
@@ -32,19 +32,20 @@ export default function PropInput({
   unionValues,
   propKind,
 }: PropInputProps): JSX.Element {
+  const { type } = propType;
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const getValue = () => {
         if (e.target instanceof HTMLSelectElement) {
           return e.target.value;
         }
-        if (propType === PropValueType.number) {
+        if (type === PropValueType.number) {
           return e.target.valueAsNumber;
-        } else if (propType === PropValueType.boolean) {
+        } else if (type === PropValueType.boolean) {
           return e.target.checked;
         } else if (
           propKind === PropValueKind.Expression &&
-          propType === PropValueType.string
+          type === PropValueType.string
         ) {
           return TemplateExpressionFormatter.getRawValue(e.target.value);
         }
@@ -52,9 +53,9 @@ export default function PropInput({
       };
       onChange(getValue());
     },
-    [onChange, propKind, propType]
+    [onChange, propKind, type]
   );
-  const displayValue = useDisplayValue(propValue, propType, propKind, onChange);
+  const displayValue = useDisplayValue(propValue, type, propKind, onChange);
 
   const appendField = useCallback(
     (fieldId: string) => {
@@ -85,7 +86,7 @@ export default function PropInput({
     );
   }
 
-  switch (propType) {
+  switch (type) {
     case PropValueType.number:
       return (
         <input
@@ -101,7 +102,7 @@ export default function PropInput({
           onInputChange={handleChangeEvent}
           handleFieldSelection={appendField}
           displayValue={displayValue as string}
-          fieldType="string"
+          fieldType={propType}
         />
       );
     case PropValueType.boolean:
@@ -124,11 +125,11 @@ export default function PropInput({
           onInputChange={handleChangeEvent}
           handleFieldSelection={onChange}
           displayValue={displayValue as string}
-          fieldType="array"
+          fieldType={propType}
         />
       );
     default:
-      return <div>Unknown PropValueType {propType}.</div>;
+      return <div>Unknown PropValueType {type}.</div>;
   }
 }
 

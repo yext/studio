@@ -4,12 +4,13 @@ import FieldPicker from "./FieldPicker";
 import { useFuncWithZundoBatching } from "../../hooks/useFuncWithZundoBatching";
 import filterEntityData from "../../utils/filterEntityData";
 import classNames from "classnames";
+import { PropType, PropValueType } from "@yext/studio-plugin";
 
 interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
   handleFieldSelection: (fieldId: string) => void;
   displayValue: string;
-  fieldType: "string" | "array";
+  fieldType: PropType | PropValueType.Array;
 }
 
 /**
