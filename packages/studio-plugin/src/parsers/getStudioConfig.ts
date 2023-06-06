@@ -41,7 +41,9 @@ async function getStudioConfigInternal(
     port: 8080,
   };
 
-  const configFilepath = path.join(pathToProjectRoot, "studio.config.js");
+  // const configFilepath = path.join(pathToProjectRoot, "studio.config.js");
+  const configFilepath = "file:///C:\\Users\\olive\\Documents\\Github\\studio-prototype\\apps\\test-site\\studio.config.js"
+  console.log('configFilepath', configFilepath)
   if (!fs.existsSync(configFilepath)) {
     return defaultConfig;
   }

@@ -53,6 +53,7 @@ export default class ImportComponentAction {
       return this.importModule(metadata);
     }
 
+    console.log('importing component', metadata.filepath)
     const importedValue = await import(/* @vite-ignore */ metadata.filepath);
     const functionComponent = getFunctionComponent(
       importedValue,
