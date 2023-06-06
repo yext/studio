@@ -90,8 +90,10 @@ describe("valueMatchesPropType", () => {
   it("checks for specific values for string union", () => {
     const propType: PropType = {
       type: PropValueType.string,
-      unionValues: ["some string"]
+      unionValues: ["some string"],
     };
-    expect(TypeGuards.valueMatchesPropType(propType, "other string")).toBeFalsy();
+    expect(
+      TypeGuards.valueMatchesPropType(propType, "other string")
+    ).toBeFalsy();
   });
 });

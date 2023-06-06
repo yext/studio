@@ -90,9 +90,9 @@ export default class TypeGuards {
     | Record<string, unknown> => {
     switch (propType.type) {
       case PropValueType.string:
-        return typeof value === "string" && (
-          !propType.unionValues ||
-          propType.unionValues.includes(value)
+        return (
+          typeof value === "string" &&
+          (!propType.unionValues || propType.unionValues.includes(value))
         );
       case PropValueType.boolean:
         return typeof value === "boolean";
