@@ -6,7 +6,7 @@ import {
   WriterFunction,
   Writers,
 } from "ts-morph";
-import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser.js";
 import {
   ComponentState,
   ComponentStateKind,
@@ -17,10 +17,10 @@ import {
   PropValueKind,
   PropValues,
   PropValueType,
-} from "../types";
-import StudioSourceFileWriter from "./StudioSourceFileWriter";
-import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
-import { TypeGuards } from "../utils";
+} from "../types.js";
+import StudioSourceFileWriter from "./StudioSourceFileWriter.js";
+import ComponentTreeHelpers from "../utils/ComponentTreeHelpers.js";
+import { TypeGuards } from "../utils.js";
 
 /**
  * ReactComponentFileWriter is a class for housing data

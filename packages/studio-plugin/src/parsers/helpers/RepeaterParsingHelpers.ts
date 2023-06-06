@@ -6,8 +6,8 @@ import {
   ReturnStatement,
   ArrowFunction,
 } from "ts-morph";
-import StaticParsingHelpers from "./StaticParsingHelpers";
-import TsMorphHelpers from "./TsMorphHelpers";
+import StaticParsingHelpers from "./StaticParsingHelpers.js";
+import TsMorphHelpers from "./TsMorphHelpers.js";
 
 /**
  * RepeaterParsingHelpers is a static class for housing lower level details for parsing

@@ -1,19 +1,19 @@
 import path from "path";
-import { ModuleMetadata } from "../types/ModuleMetadata";
-import { FileMetadataKind } from "../types/FileMetadata";
-import FileMetadataParser from "../parsers/FileMetadataParser";
+import { ModuleMetadata } from "../types/ModuleMetadata.js";
+import { FileMetadataKind } from "../types/FileMetadata.js";
+import FileMetadataParser from "../parsers/FileMetadataParser.js";
 import { Project } from "ts-morph";
-import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
-import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
+import ReactComponentFileWriter from "../writers/ReactComponentFileWriter.js";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser.js";
+import StudioSourceFileWriter from "../writers/StudioSourceFileWriter.js";
 import ComponentTreeParser, {
   GetFileMetadata,
-} from "../parsers/ComponentTreeParser";
-import getImportSpecifier from "../utils/getImportSpecifier";
-import { ComponentState } from "../types";
-import { ComponentTreeHelpers } from "../utils";
-import tryUsingResult from "../errors/tryUsingResult";
-import { ParsingErrorKind } from "../errors/ParsingError";
+} from "../parsers/ComponentTreeParser.js";
+import getImportSpecifier from "../utils/getImportSpecifier.js";
+import { ComponentState } from "../types.js";
+import { ComponentTreeHelpers } from "../utils.js";
+import tryUsingResult from "../errors/tryUsingResult.js";
+import { ParsingErrorKind } from "../errors/ParsingError.js";
 
 /**
  * ModuleFile is responsible for parsing and updating a single

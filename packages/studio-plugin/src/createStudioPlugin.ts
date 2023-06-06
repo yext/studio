@@ -1,18 +1,18 @@
 import { ConfigEnv, Plugin } from "vite";
 import { simpleGit } from "simple-git";
-import getStudioConfig from "./parsers/getStudioConfig";
+import getStudioConfig from "./parsers/getStudioConfig.js";
 import ParsingOrchestrator, {
   createTsMorphProject,
-} from "./ParsingOrchestrator";
-import FileSystemManager from "./FileSystemManager";
-import { FileSystemWriter } from "./writers/FileSystemWriter";
-import { UserPaths } from "./types";
-import createHandleHotUpdate from "./handleHotUpdate";
-import createConfigureStudioServer from "./configureStudioServer";
-import GitWrapper from "./git/GitWrapper";
-import VirtualModuleID from "./VirtualModuleID";
-import HmrManager from "./HmrManager";
-import getLocalDataMapping from "./parsers/getLocalDataMapping";
+} from "./ParsingOrchestrator.js";
+import FileSystemManager from "./FileSystemManager.js";
+import { FileSystemWriter } from "./writers/FileSystemWriter.js";
+import { UserPaths } from "./types.js";
+import createHandleHotUpdate from "./handleHotUpdate.js";
+import createConfigureStudioServer from "./configureStudioServer.js";
+import GitWrapper from "./git/GitWrapper.js";
+import VirtualModuleID from "./VirtualModuleID.js";
+import HmrManager from "./HmrManager.js";
+import getLocalDataMapping from "./parsers/getLocalDataMapping.js";
 import openBrowser from "react-dev-utils/openBrowser";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import path from "path";

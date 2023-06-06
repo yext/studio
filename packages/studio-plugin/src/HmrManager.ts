@@ -1,7 +1,7 @@
-import ParsingOrchestrator from "./ParsingOrchestrator";
-import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
+import ParsingOrchestrator from "./ParsingOrchestrator.js";
+import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types.js";
 import { ViteDevServer } from "vite";
-import VirtualModuleID from "./VirtualModuleID";
+import VirtualModuleID from "./VirtualModuleID.js";
 
 /**
  * HmrManager is responsible for handling studio specific HMR updates.

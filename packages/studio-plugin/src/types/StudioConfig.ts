@@ -1,4 +1,4 @@
-import { UserPaths } from "./UserPaths";
+import { UserPaths } from "./UserPaths.js";
 
 /**
  * User configurations for Studio. Expected to be defined in

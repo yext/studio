@@ -13,7 +13,7 @@ import {
 } from "ts-morph";
 import prettier from "prettier";
 import fs from "fs";
-import { PropVal, PropValueKind, PropValues, PropValueType } from "../types";
+import { PropVal, PropValueKind, PropValues, PropValueType } from "../types.js";
 
 /**
  * StudioSourceFileWriter contains shared business logic for

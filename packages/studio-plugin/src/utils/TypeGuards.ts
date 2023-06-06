@@ -21,14 +21,14 @@ import {
   SiteSettingsShape,
   SiteSettingsValues,
   StandardOrModuleComponentState,
-} from "../types";
+} from "../types.js";
 
-import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
+import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers.js";
 import {
   SiteSettingsExpression,
   StreamsDataExpression,
   TemplateStringExpression,
-} from "../types/Expression";
+} from "../types/Expression.js";
 
 type PrimitivePropValueType =
   | PropValueType.number

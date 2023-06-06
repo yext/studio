@@ -2,15 +2,15 @@ import {
   StudioConfig,
   StudioConfigDefaults,
   StudioConfigWithDefaulting,
-} from "../types";
+} from "../types.js";
 import fs from "fs";
 import path from "path";
-import getUserPaths from "./getUserPaths";
+import getUserPaths from "./getUserPaths.js";
 import lodash from "lodash";
-import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
-import { FileIOError, IOErrorKind } from "../errors/FileIOError";
-import { StudioError } from "../errors/StudioError";
-import prettyPrintError from "../errors/prettyPrintError";
+import { ParsingError, ParsingErrorKind } from "../errors/ParsingError.js";
+import { FileIOError, IOErrorKind } from "../errors/FileIOError.js";
+import { StudioError } from "../errors/StudioError.js";
+import prettyPrintError from "../errors/prettyPrintError.js";
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's

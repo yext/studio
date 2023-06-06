@@ -1,4 +1,4 @@
-import { PropValueType } from "./PropValues";
+import { PropValueType } from "./PropValues.js";
 
 export type PropShape<T extends PropValueType = PropValueType> = Omit<
   {

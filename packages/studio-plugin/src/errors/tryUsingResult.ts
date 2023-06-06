@@ -1,6 +1,6 @@
 import { Result } from "true-myth";
-import { ParsingError, ParsingErrorKind } from "./ParsingError";
-import prettyPrintError from "./prettyPrintError";
+import { ParsingError, ParsingErrorKind } from "./ParsingError.js";
+import prettyPrintError from "./prettyPrintError.js";
 
 export default function tryUsingResult<T>(
   errorKind: ParsingErrorKind,

@@ -1,6 +1,6 @@
-import { TEMPLATE_CONFIG_VARIABLE_NAME } from "../constants";
-import { StreamScope } from "../types";
-import StudioSourceFileParser from "./StudioSourceFileParser";
+import { TEMPLATE_CONFIG_VARIABLE_NAME } from "../constants.js";
+import { StreamScope } from "../types.js";
+import StudioSourceFileParser from "./StudioSourceFileParser.js";
 import { TemplateConfig } from "@yext/pages";
 
 /**

@@ -1,5 +1,5 @@
-import { ComponentState, ErrorComponentState, RepeaterState } from "../types";
-import TypeGuards from "./TypeGuards";
+import { ComponentState, ErrorComponentState, RepeaterState } from "../types.js";
+import TypeGuards from "./TypeGuards.js";
 
 /**
  * A static class for housing various util functions related to the component

@@ -1,21 +1,21 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { Result } from "true-myth";
-import { PageState } from "../types";
-import TemplateConfigWriter from "../writers/TemplateConfigWriter";
-import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
+import { PageState } from "../types.js";
+import TemplateConfigWriter from "../writers/TemplateConfigWriter.js";
+import ReactComponentFileWriter from "../writers/ReactComponentFileWriter.js";
 import path from "path";
-import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser.js";
+import StudioSourceFileWriter from "../writers/StudioSourceFileWriter.js";
 import ComponentTreeParser, {
   GetFileMetadata,
-} from "../parsers/ComponentTreeParser";
-import GetPathWriter from "../writers/GetPathWriter";
-import PagesJsStateParser from "../parsers/PagesJsStateParser";
-import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
-import tryUsingResult from "../errors/tryUsingResult";
-import GetPathParser from "../parsers/GetPathParser";
-import TemplateConfigParser from "../parsers/TemplateConfigParser";
-import PagesJsWriter from "../writers/PagesJsWriter";
+} from "../parsers/ComponentTreeParser.js";
+import GetPathWriter from "../writers/GetPathWriter.js";
+import PagesJsStateParser from "../parsers/PagesJsStateParser.js";
+import { ParsingError, ParsingErrorKind } from "../errors/ParsingError.js";
+import tryUsingResult from "../errors/tryUsingResult.js";
+import GetPathParser from "../parsers/GetPathParser.js";
+import TemplateConfigParser from "../parsers/TemplateConfigParser.js";
+import PagesJsWriter from "../writers/PagesJsWriter.js";
 
 /**
  * PageFile is responsible for parsing and updating a single
