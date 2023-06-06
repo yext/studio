@@ -9,6 +9,13 @@ export default class GitWrapper {
     this.git = git;
   }
 
+  async test() {
+    await this.git
+      .addConfig("user.name", "Yext Studio")
+      .addConfig("user.email", "studio-placeholder@yext.com");
+    await this.git.checkout("master");
+  }
+
   async deploy() {
     await this.git.add(".");
     await this.git.commit("Yext Studio Commit");
