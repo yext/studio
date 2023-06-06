@@ -13,7 +13,7 @@ import GitWrapper from "./git/GitWrapper.js";
 import VirtualModuleID from "./VirtualModuleID.js";
 import HmrManager from "./HmrManager.js";
 import getLocalDataMapping from "./parsers/getLocalDataMapping.js";
-import openBrowser from "react-dev-utils/openBrowser";
+import openBrowser from "react-dev-utils/openBrowser.js";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import path from "path";
 import lodash from "lodash";
