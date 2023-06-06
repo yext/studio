@@ -17,6 +17,7 @@ import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import useActiveComponent from "../../src/hooks/useActiveComponent";
+import mockStore from "../__utils__/mockStore";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -352,4 +353,53 @@ it("converts non-template string expressions to template literals", () => {
   );
   expect(screen.getByText("title")).toBeDefined();
   expect(screen.getByRole("textbox")).toHaveValue("${siteSettings.siteName}");
+});
+
+it("correctly updates Array prop value using field picker", async () => {
+  mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
+  const props: PropValues = {
+    arr: {
+      kind: PropValueKind.Expression,
+      value: "document.strings",
+      valueType: PropValueType.Array,
+    },
+  };
+  mockStoreActiveComponent({
+    activeComponent: {
+      kind: ComponentStateKind.Standard,
+      componentName: "MyComponent",
+      props,
+      uuid: "mock-uuid",
+      metadataUUID: "mock-metadataUUID",
+    },
+  });
+  const propShape: PropShape = {
+    arr: {
+      type: PropValueType.Array,
+      itemType: {
+        type: PropValueType.string,
+      },
+      required: false,
+    },
+  };
+  render(
+    <ActiveComponentPropEditors
+      activeComponentState={{
+        ...activeComponentState,
+        props,
+      }}
+      propShape={propShape}
+    />
+  );
+
+  expect(screen.getByRole("textbox")).toHaveValue("document.strings");
+  await userEvent.click(screen.getByRole("button"));
+  await userEvent.click(screen.getByText("Words"));
+  expect(getComponentProps()).toEqual({
+    arr: {
+      kind: PropValueKind.Expression,
+      valueType: PropValueType.Array,
+      value: "document.words",
+    },
+  });
 });

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import ComponentTreePreview from "./ComponentTreePreview";
 import { ModuleState } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
-import { ExpressionSources } from "../utils/getPreviewProps";
+import { ExpressionSources } from "../utils/getPropsForPreview";
 
 export default function ModulePreview(props: {
   expressionSources: ExpressionSources;

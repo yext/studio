@@ -42,7 +42,8 @@ export default function PropEditor({
         <PropInput
           {...{
             propType:
-              propKind === PropValueKind.Expression
+              propKind === PropValueKind.Expression &&
+              type !== PropValueType.Array
                 ? PropValueType.string
                 : type,
             propValue,

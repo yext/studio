@@ -56,7 +56,7 @@ export type NestedPropType<T extends PropValueType = PropValueType> = {
   shape: PropShape<T>;
 };
 
-export type ArrayPropType = {
+type ArrayPropType = {
   type: PropValueType.Array;
   itemType: PropType;
   unionValues?: never;

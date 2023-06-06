@@ -6,7 +6,10 @@ import {
 } from "@yext/studio-plugin";
 import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
-import { ExpressionSources, getPreviewProps } from "../utils/getPreviewProps";
+import {
+  ExpressionSources,
+  getPropsForPreview,
+} from "../utils/getPropsForPreview";
 
 /**
  * Gets the previewable props for the specified component, with any expressions
@@ -39,7 +42,7 @@ export default function usePreviewProps(
       );
     }
 
-    return getPreviewProps(c.props, fileMetadata?.propShape ?? {}, {
+    return getPropsForPreview(c.props, fileMetadata?.propShape ?? {}, {
       ...expressionSources,
       ...(parentItem !== undefined && { item: parentItem }),
     });

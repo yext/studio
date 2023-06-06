@@ -101,6 +101,9 @@ function getPropKind(propMetadata: PropMetadata) {
     // string interpolation works as expected in the UI.
     return PropValueKind.Expression;
   }
+  if (propMetadata.type === PropValueType.Array) {
+    return PropValueKind.Expression;
+  }
 
   return PropValueKind.Literal;
 }
