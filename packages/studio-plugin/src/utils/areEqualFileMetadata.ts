@@ -1,4 +1,4 @@
-import { FileMetadata } from "../types.js";
+import { FileMetadata } from "../types/index.js";
 import lodash from "lodash";
 
 /**

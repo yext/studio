@@ -1,11 +1,11 @@
 import { Project } from "ts-morph";
-import { PropShape } from "../types.js";
+import { PropShape } from "../types/index.js";
 import PropShapeParser from "../parsers/PropShapeParser.js";
 import PropValuesParser from "../parsers/PropValuesParser.js";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser.js";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter.js";
 import { SiteSettings, SiteSettingsValues } from "../types/SiteSettings.js";
-import { TypeGuards } from "../utils.js";
+import { TypeGuards } from "../utils/index.js";
 
 /**
  * SiteSettingsFile is responsible for parsing and updating

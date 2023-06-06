@@ -10,7 +10,7 @@ import StaticParsingHelpers from "./helpers/StaticParsingHelpers.js";
 import StudioSourceFileParser from "./StudioSourceFileParser.js";
 import { GET_PATH_FUNCTION_NAME } from "../constants.js";
 import TsMorphHelpers, { OneOf } from "./helpers/TsMorphHelpers.js";
-import { GetPathVal } from "../types.js";
+import { GetPathVal } from "../types/index.js";
 
 const STRING_KINDS = [
   SyntaxKind.StringLiteral,

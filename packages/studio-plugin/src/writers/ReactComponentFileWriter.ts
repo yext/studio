@@ -17,10 +17,10 @@ import {
   PropValueKind,
   PropValues,
   PropValueType,
-} from "../types.js";
+} from "../types/index.js";
 import StudioSourceFileWriter from "./StudioSourceFileWriter.js";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers.js";
-import { TypeGuards } from "../utils.js";
+import { TypeGuards } from "../utils/index.js";
 
 /**
  * ReactComponentFileWriter is a class for housing data

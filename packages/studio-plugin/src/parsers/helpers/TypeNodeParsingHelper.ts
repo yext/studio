@@ -9,9 +9,9 @@ import {
   Node,
   TypeNode,
 } from "ts-morph";
-import { PropValueType } from "../../types.js";
+import { PropValueType } from "../../types/index.js";
 import StaticParsingHelpers from "./StaticParsingHelpers.js";
-import { TypeGuards } from "../../utils.js";
+import { TypeGuards } from "../../utils/index.js";
 import StringUnionParsingHelper from "./StringUnionParsingHelper.js";
 
 export type ParsedType =

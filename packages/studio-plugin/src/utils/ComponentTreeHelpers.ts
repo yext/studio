@@ -4,7 +4,7 @@ import {
   ExpressionProp,
   PropValueKind,
   TypelessPropVal,
-} from "../types.js";
+} from "../types/index.js";
 import ComponentStateHelpers from "./ComponentStateHelpers.js";
 import ExpressionHelpers from "./ExpressionHelpers.js";
 import TypeGuards from "./TypeGuards.js";

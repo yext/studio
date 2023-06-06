@@ -3,7 +3,7 @@ import FileSystemManager from "../FileSystemManager.js";
 import GitWrapper from "../git/GitWrapper.js";
 import reloadGitData from "../git/reloadGitData.js";
 import ParsingOrchestrator from "../ParsingOrchestrator.js";
-import { MessageID, SaveChangesPayload } from "../types.js";
+import { MessageID, SaveChangesPayload } from "../types/index.js";
 import executeSaveChanges from "./executeSaveChanges.js";
 import { registerListener } from "./registerListener.js";
 

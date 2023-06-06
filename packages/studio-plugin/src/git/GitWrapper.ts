@@ -1,5 +1,5 @@
 import { SimpleGit } from "simple-git";
-import { GitData } from "../types.js";
+import { GitData } from "../types/index.js";
 
 export default class GitWrapper {
   private git: SimpleGit;

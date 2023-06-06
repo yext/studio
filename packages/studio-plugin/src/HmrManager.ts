@@ -1,5 +1,5 @@
 import ParsingOrchestrator from "./ParsingOrchestrator.js";
-import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types.js";
+import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types/index.js";
 import { ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID.js";
 

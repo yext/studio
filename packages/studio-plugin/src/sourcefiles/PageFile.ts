@@ -1,6 +1,6 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { Result } from "true-myth";
-import { PageState } from "../types.js";
+import { PageState } from "../types/index.js";
 import TemplateConfigWriter from "../writers/TemplateConfigWriter.js";
 import ReactComponentFileWriter from "../writers/ReactComponentFileWriter.js";
 import path from "path";

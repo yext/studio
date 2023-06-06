@@ -10,8 +10,8 @@ import ComponentTreeParser, {
   GetFileMetadata,
 } from "../parsers/ComponentTreeParser.js";
 import getImportSpecifier from "../utils/getImportSpecifier.js";
-import { ComponentState } from "../types.js";
-import { ComponentTreeHelpers } from "../utils.js";
+import { ComponentState } from "../types/index.js";
+import { ComponentTreeHelpers } from "../utils/index.js";
 import tryUsingResult from "../errors/tryUsingResult.js";
 import { ParsingErrorKind } from "../errors/ParsingError.js";
 

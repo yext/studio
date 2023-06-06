@@ -10,7 +10,7 @@ import {
   FileMetadataKind,
   ErrorFileMetadata,
   StudioConfigWithDefaulting,
-} from "./types.js";
+} from "./types/index.js";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile.js";
 import ModuleFile from "./sourcefiles/ModuleFile.js";

@@ -6,7 +6,7 @@ import ParsingOrchestrator, {
 } from "./ParsingOrchestrator.js";
 import FileSystemManager from "./FileSystemManager.js";
 import { FileSystemWriter } from "./writers/FileSystemWriter.js";
-import { UserPaths } from "./types.js";
+import { UserPaths } from "./types/index.js";
 import createHandleHotUpdate from "./handleHotUpdate.js";
 import createConfigureStudioServer from "./configureStudioServer.js";
 import GitWrapper from "./git/GitWrapper.js";

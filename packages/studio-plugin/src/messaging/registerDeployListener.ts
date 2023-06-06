@@ -1,5 +1,5 @@
 import { ViteDevServer } from "vite";
-import { MessageID, SaveChangesPayload } from "../types.js";
+import { MessageID, SaveChangesPayload } from "../types/index.js";
 import { registerListener } from "./registerListener.js";
 import executeSaveChanges from "./executeSaveChanges.js";
 import FileSystemManager from "../FileSystemManager.js";

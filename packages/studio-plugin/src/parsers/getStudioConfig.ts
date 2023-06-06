@@ -2,7 +2,7 @@ import {
   StudioConfig,
   StudioConfigDefaults,
   StudioConfigWithDefaulting,
-} from "../types.js";
+} from "../types/index.js";
 import fs from "fs";
 import path from "path";
 import getUserPaths from "./getUserPaths.js";

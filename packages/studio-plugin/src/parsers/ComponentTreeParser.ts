@@ -15,7 +15,7 @@ import {
   StandardOrModuleComponentState,
 } from "../types/ComponentState.js";
 import { v4 } from "uuid";
-import { FileMetadataKind, TypelessPropVal } from "../types.js";
+import { FileMetadataKind, TypelessPropVal } from "../types/index.js";
 import StudioSourceFileParser from "./StudioSourceFileParser.js";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers.js";
 import TypeGuards from "../utils/TypeGuards.js";

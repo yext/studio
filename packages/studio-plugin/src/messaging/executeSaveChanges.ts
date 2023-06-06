@@ -1,5 +1,5 @@
 import FileSystemManager from "../FileSystemManager.js";
-import { SaveChangesPayload } from "../types.js";
+import { SaveChangesPayload } from "../types/index.js";
 import path from "path";
 import ParsingOrchestrator from "../ParsingOrchestrator.js";
 

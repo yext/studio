@@ -21,7 +21,7 @@ import {
   SiteSettingsShape,
   SiteSettingsValues,
   StandardOrModuleComponentState,
-} from "../types.js";
+} from "../types/index.js";
 
 import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers.js";
 import {

@@ -2,7 +2,7 @@ import { PropMetadata, PropShape, PropType } from "../types/PropShape.js";
 import TypeGuards from "../utils/TypeGuards.js";
 import { STUDIO_PACKAGE_NAME } from "../constants.js";
 import StudioSourceFileParser from "./StudioSourceFileParser.js";
-import { PropValueType } from "../types.js";
+import { PropValueType } from "../types/index.js";
 import {
   ParsedProperty,
   ParsedShape,

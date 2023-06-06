@@ -5,11 +5,11 @@ import {
   ModuleMetadata,
   PageState,
   SiteSettingsValues,
-} from "../types.js";
+} from "../types/index.js";
 import fs from "fs";
 import { Project } from "ts-morph";
 import path from "path";
-import { TypeGuards } from "../utils.js";
+import { TypeGuards } from "../utils/index.js";
 import areEqualFileMetadata from "../utils/areEqualFileMetadata.js";
 
 /**

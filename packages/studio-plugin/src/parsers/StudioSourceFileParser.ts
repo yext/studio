@@ -17,7 +17,7 @@ import TypeNodeParsingHelper, {
 } from "./helpers/TypeNodeParsingHelper.js";
 import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup.js";
-import { TypelessPropVal } from "../types.js";
+import { TypelessPropVal } from "../types/index.js";
 
 /**
  * StudioSourceFileParser contains shared business logic for

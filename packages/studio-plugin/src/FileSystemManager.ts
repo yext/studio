@@ -3,7 +3,7 @@ import {
   PageState,
   SiteSettingsValues,
   UserPaths,
-} from "./types.js";
+} from "./types/index.js";
 import path from "path";
 import { FileSystemWriter } from "./writers/FileSystemWriter.js";
 

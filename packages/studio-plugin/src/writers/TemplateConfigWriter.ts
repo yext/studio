@@ -17,9 +17,9 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter.js";
 import { StreamsDataExpression } from "../types/Expression.js";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger.js";
 import PagesJsWriter from "./PagesJsWriter.js";
-import { GetPathVal, PagesJsState } from "../types.js";
+import { GetPathVal, PagesJsState } from "../types/index.js";
 import TemplateConfigParser from "../parsers/TemplateConfigParser.js";
-import { ComponentTreeHelpers } from "../utils.js";
+import { ComponentTreeHelpers } from "../utils/index.js";
 
 const TEMPLATE_CONFIG_VARIABLE_TYPE = "TemplateConfig";
 
