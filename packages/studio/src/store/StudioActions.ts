@@ -272,6 +272,17 @@ export default class StudioActions {
     if (!pageName) {
       throw new Error("Error adding page: a pageName is required.");
     }
+    if (pageName[0] <= '9' && pageName[0] >= '0') {
+      throw new Error("Error adding page: pageName cannot start with a digit.");
+    }
+    for (let i = 0; i < pageName.length; i++) {
+      let curr = pageName[i];
+      if ((curr < 'a' || curr > 'z') && (curr < 'A' || curr > 'Z')) {
+        if ((curr < '0' || curr > '9') && curr !== '_' && curr !== '$') {
+          throw new Error("Error adding page: pageName can include only letters, digits, underscores (_), and dollar signs ($).");
+        }
+      }
+    }
     const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
     if (isPagesJSRepo && !getPathValue) {
       throw new Error("Error adding page: a getPath value is required.");
