@@ -10,9 +10,6 @@ export default class GitWrapper {
   }
 
   async setup() {
-    await this.git
-      .addConfig("user.name", "Yext Studio")
-      .addConfig("user.email", "studio-placeholder@yext.com");
     if (process.env.YEXT_CBD_BRANCH) {
       const branchName = process.env.YEXT_CBD_BRANCH.replaceAll(
         "refs/heads/",

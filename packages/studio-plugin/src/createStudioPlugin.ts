@@ -31,7 +31,14 @@ export default async function createStudioPlugin(
   const pathToUserProjectRoot = process.cwd();
 
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
-  const gitWrapper = new GitWrapper(simpleGit());
+  const gitWrapper = new GitWrapper(
+    simpleGit({
+      config: [
+        'user.name="Yext Studio"',
+        'user.email="studio-placeholder@yext.com"',
+      ],
+    })
+  );
   await gitWrapper.setup();
 
   /** The ts-morph Project instance for the entire app. */
