@@ -1,4 +1,9 @@
-import { PropType, PropValueKind, PropValueType } from "@yext/studio-plugin";
+import {
+  PropType,
+  PropValueKind,
+  PropValueType,
+  TypeGuards,
+} from "@yext/studio-plugin";
 import { ChangeEvent, useCallback, useLayoutEffect } from "react";
 import Toggle from "./common/Toggle";
 import PropValueHelpers from "../utils/PropValueHelpers";
@@ -68,6 +73,11 @@ export default function PropInput({
     [displayValue, onChange]
   );
 
+  const fieldPickerFilter = useCallback(
+    (value: unknown) => TypeGuards.valueMatchesPropType(propType, value),
+    [propType]
+  );
+
   if (unionValues) {
     return (
       <select
@@ -102,7 +112,7 @@ export default function PropInput({
           onInputChange={handleChangeEvent}
           handleFieldSelection={appendField}
           displayValue={displayValue as string}
-          fieldType={propType}
+          fieldFilter={fieldPickerFilter}
         />
       );
     case PropValueType.boolean:
@@ -125,7 +135,7 @@ export default function PropInput({
           onInputChange={handleChangeEvent}
           handleFieldSelection={onChange}
           displayValue={displayValue as string}
-          fieldType={propType}
+          fieldFilter={fieldPickerFilter}
         />
       );
     default:

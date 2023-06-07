@@ -1,4 +1,3 @@
-import { PropValueType } from "@yext/studio-plugin";
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 import useStudioStore from "../store/useStudioStore";
 import filterEntityData from "../utils/filterEntityData";
@@ -8,7 +7,7 @@ import RepeaterEditor from "./RepeaterEditor";
 export default function RepeaterPanel() {
   const entityHasArrayFields = useStudioStore((store) => {
     const filteredData = filterEntityData(
-      PropValueType.Array,
+      Array.isArray,
       store.pages.activeEntityData
     );
     return Object.keys(filteredData).length > 0;

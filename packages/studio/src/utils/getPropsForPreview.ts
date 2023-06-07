@@ -103,6 +103,9 @@ function getExpressionPropLiteralValue(
   propType: PropType,
   expressionSources: ExpressionSources
 ) {
+  if (value === "") {
+    return value;
+  }
   if (TypeGuards.isTemplateString(value)) {
     return getTemplateStringValue(value, propType, expressionSources);
   }

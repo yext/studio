@@ -1,8 +1,4 @@
-import {
-  EditableComponentState,
-  PropValueType,
-  TypeGuards,
-} from "@yext/studio-plugin";
+import { EditableComponentState, TypeGuards } from "@yext/studio-plugin";
 import { useCallback, ChangeEvent } from "react";
 import { Tooltip } from "react-tooltip";
 import useStudioStore from "../store/useStudioStore";
@@ -75,7 +71,7 @@ export default function RepeaterEditor({
             displayValue={componentState.listExpression}
             onInputChange={handleListUpdate}
             handleFieldSelection={updateListExpression}
-            fieldType={PropValueType.Array}
+            fieldFilter={Array.isArray}
           />
         </label>
       )}

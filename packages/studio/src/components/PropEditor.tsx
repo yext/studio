@@ -9,7 +9,6 @@ import {
 import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
-import { useMemo } from "react";
 
 interface PropEditorProps {
   propName: string;
@@ -35,14 +34,6 @@ export default function PropEditor({
 }: PropEditorProps) {
   const { type, doc, unionValues } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
-  const propType: PropType = useMemo(
-    () =>
-      propKind === PropValueKind.Expression &&
-      propMetadata.type !== PropValueType.Array
-        ? { type: PropValueType.string }
-        : propMetadata,
-    [propKind, propMetadata]
-  );
 
   return (
     <div className="flex items-center mb-2 text-sm">
@@ -51,7 +42,7 @@ export default function PropEditor({
         <p className="pr-2">{propName}</p>
         <PropInput
           {...{
-            propType,
+            propType: getInputPropType(propMetadata, propKind),
             propValue,
             onChange,
             propKind,
@@ -79,4 +70,17 @@ export function renderBranchUI(isNested?: boolean) {
       </div>
     )
   );
+}
+
+function getInputPropType(
+  propMetadata: Exclude<PropMetadata, NestedPropType>,
+  propKind: PropValueKind
+): PropType {
+  if (
+    propKind === PropValueKind.Expression &&
+    propMetadata.type !== PropValueType.Array
+  ) {
+    return { type: PropValueType.string };
+  }
+  return propMetadata;
 }
