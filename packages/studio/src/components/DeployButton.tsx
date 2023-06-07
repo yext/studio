@@ -4,6 +4,7 @@ import gitData from "virtual:yext-studio-git-data";
 import useHasChanges from "../hooks/useHasChanges";
 import { Tooltip } from "react-tooltip";
 
+const canPush = gitData.canPush.status;
 const tooltipAnchorID = "YextStudio-deployButton";
 
 /**
@@ -25,13 +26,20 @@ export default function DeployButton() {
     // Setting it back to false immediately after awaiting the deploy action
     // can lead to an intermediate state when deployInProgress is false
     // but the HMR update hasn't completed yet, resulting in a momentary flicker.
-    if (!gitData.canPush.status) {
+    if (!canPush) {
       setDeployInProgress(false);
     }
   }, []);
 
-  const isDisabled =
-    deployInProgress || (!hasChanges && !gitData.canPush.status);
+  useEffect(() => {
+    // Websockets do not currently work in CBD, which prevents the gitData useEffect from correctly setting
+    // deplyInProgress to false. In the short term, if the user makes changes within studio, assume the deploy is complete.
+    if (hasChanges) {
+      setDeployInProgress(false);
+    }
+  }, [hasChanges]);
+
+  const isDisabled = deployInProgress || (!hasChanges && !canPush);
 
   return (
     <button
@@ -41,7 +49,7 @@ export default function DeployButton() {
       aria-label="Deploy Changes to Repository"
     >
       <span id={tooltipAnchorID}>Deploy</span>
-      {isDisabled && gitData.canPush.reason && (
+      {isDisabled && canPush && (
         <Tooltip
           className="z-20"
           anchorId={tooltipAnchorID}

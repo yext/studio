@@ -27,7 +27,7 @@ export default class GitWrapper {
     await this.git.add(".");
     // .initializationdata is a special file created by CBD that should not be committed.
     // If the file does not exist this is a no-op.
-    await this.git.reset(['--', '.initializationdata']);
+    await this.git.reset(["--", ".initializationdata"]);
     await this.git.commit("Yext Studio Commit");
     await this.git.push();
   }
@@ -37,50 +37,58 @@ export default class GitWrapper {
   }
 
   private async canPush(): Promise<{ reason?: string; status: boolean }> {
-    try {
-      const remotes = await this.git.getRemotes();
-      if (remotes.length === 0) {
-        return {
-          status: false,
-          reason: "No remotes found.",
-        };
-      } else if (remotes.length > 1) {
-        return {
-          status: false,
-          reason: "Multiple remotes found.",
-        };
-      }
-      const upstreamBranch = await this.git.revparse(["--abbrev-ref", "@{u}"]);
-      if (!upstreamBranch) {
-        return {
-          status: false,
-          reason: "No upstream branch found",
-        };
-      }
-      const diff = await this.git.diff(["--stat", upstreamBranch]);
-      if (!diff) {
-        return {
-          status: false,
-          reason: "No changes to push.",
-        };
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        return {
-          status: false,
-          reason: err.message,
-        };
-      } else {
-        throw err;
-      }
+    const remotes = await this.git.getRemotes();
+    if (remotes.length === 0) {
+      return {
+        status: false,
+        reason: "No remotes found.",
+      };
+    } else if (remotes.length > 1) {
+      return {
+        status: false,
+        reason: "Multiple remotes found.",
+      };
     }
+    const upstreamBranch = await this.git.revparse(["--abbrev-ref", "@{u}"]);
+    if (!upstreamBranch) {
+      return {
+        status: false,
+        reason: "No upstream branch found",
+      };
+    }
+    const diff = await this.git.diff(["--stat", upstreamBranch]);
+    if (!diff) {
+      return {
+        status: false,
+        reason: "No changes to push.",
+      };
+    }
+
     return {
       status: true,
     };
   }
 
+  private handleErr(err: unknown) {
+    if (err instanceof Error) {
+      return {
+        status: false,
+        reason: err.message,
+      };
+    } else {
+      throw err;
+    }
+  }
+
   async refreshData() {
-    const canPush = await this.canPush();
-    this.gitData = { canPush };
+    try {
+      const canPush = await this.canPush();
+      this.gitData = {
+        canPush,
+        isWithinCBD: !!process.env.YEXT_CBD_BRANCH,
+      };
+    } catch (err) {
+      this.handleErr(err);
+    }
   }
 }

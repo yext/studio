@@ -2,6 +2,7 @@ import AddElementButton from "./AddElementButton";
 import UndoRedo from "./UndoRedo";
 import SaveButton from "./SaveButton";
 import DeployButton from "./DeployButton";
+import gitData from "virtual:yext-studio-git-data";
 
 /**
  * Renders the top bar of Studio, which includes buttons for performing undo
@@ -14,7 +15,7 @@ export default function ActionsBar(): JSX.Element {
       <div className="ml-auto flex">
         <UndoRedo />
       </div>
-      <SaveButton />
+      {!gitData.isWithinCBD && <SaveButton />}
       <DeployButton />
     </div>
   );
