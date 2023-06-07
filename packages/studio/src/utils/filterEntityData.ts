@@ -13,6 +13,7 @@ export default function filterEntityData(
     .map(([field, value]) => {
       const isObjectField =
         typeof value === "object" && !Array.isArray(value) && value !== null;
+      const allowAnyArray = fieldType === PropValueType.Array;
 
       if (isObjectField) {
         const filteredSubObject = filterEntityData(
@@ -22,11 +23,11 @@ export default function filterEntityData(
         return Object.keys(filteredSubObject).length === 0
           ? null
           : [field, filteredSubObject];
-      } else if (typeof fieldType === "object") {
-        if (TypeGuards.valueMatchesPropType(fieldType, value)) {
+      } else if (allowAnyArray) {
+        if (Array.isArray(value)) {
           return [field, value];
         }
-      } else if (Array.isArray(value)) {
+      } else if (TypeGuards.valueMatchesPropType(fieldType, value)) {
         return [field, value];
       }
       return null;
