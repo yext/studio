@@ -25,6 +25,9 @@ export default class GitWrapper {
 
   async deploy() {
     await this.git.add(".");
+    // .initializationdata is a special file created by CBD that should not be committed.
+    // If the file does not exist this is a no-op.
+    await this.git.reset(['--', '.initializationdata']);
     await this.git.commit("Yext Studio Commit");
     await this.git.push();
   }
