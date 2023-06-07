@@ -33,7 +33,7 @@ export default function DeployButton() {
 
   useEffect(() => {
     // Websockets do not currently work in CBD, which prevents the gitData useEffect from correctly setting
-    // deplyInProgress to false. In the short term, if the user makes changes within studio, assume the deploy is complete.
+    // deployInProgress to false. In the short term, if the user makes changes within studio, assume the deploy is complete.
     if (hasChanges) {
       setDeployInProgress(false);
     }
