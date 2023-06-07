@@ -32,8 +32,7 @@ export default async function createStudioPlugin(
 
   const studioConfig = await getStudioConfig(pathToUserProjectRoot);
   const gitWrapper = new GitWrapper(simpleGit());
-  await gitWrapper.test();
-  await gitWrapper.refreshData();
+  await gitWrapper.setup();
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();

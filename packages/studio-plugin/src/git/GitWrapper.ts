@@ -9,11 +9,18 @@ export default class GitWrapper {
     this.git = git;
   }
 
-  async test() {
+  async setup() {
     await this.git
       .addConfig("user.name", "Yext Studio")
       .addConfig("user.email", "studio-placeholder@yext.com");
-    await this.git.checkout("master");
+    if (process.env.YEXT_CBD_BRANCH) {
+      const branchName = process.env.YEXT_CBD_BRANCH.replaceAll(
+        "refs/heads/",
+        ""
+      );
+      await this.git.checkout(branchName);
+    }
+    await this.refreshData();
   }
 
   async deploy() {
