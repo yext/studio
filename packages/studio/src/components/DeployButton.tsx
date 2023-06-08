@@ -49,7 +49,7 @@ export default function DeployButton() {
       aria-label="Deploy Changes to Repository"
     >
       <span id={tooltipAnchorID}>Deploy</span>
-      {isDisabled && canPush && (
+      {isDisabled && gitData.canPush.reason && (
         <Tooltip
           className="z-20"
           anchorId={tooltipAnchorID}
