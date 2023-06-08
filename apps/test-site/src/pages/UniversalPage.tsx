@@ -9,7 +9,7 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     localization: { locales: ["en"], primary: false },
     filter: {},
-    fields: ["services", "address", "slug"],
+    fields: ["services", "slug"],
   },
 };
 export const getPath: GetPath<TemplateProps> = ({
@@ -25,7 +25,7 @@ export default function UniversalPage({ document }: TemplateProps) {
       {document.services.map((item, index) => (
         <Banner title={`${item}!`} key={index} />
       ))}
-      <Container>
+      <Container className={`test`}>
         <Button />
       </Container>
       <Banner
