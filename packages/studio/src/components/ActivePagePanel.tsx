@@ -61,7 +61,7 @@ function PageItem({ pageName }: { pageName: string }) {
 
   return (
     <ListItem>
-      <div className="flex items-center">
+      <div className="flex items-center overflow-auto">
         <Check className={checkClasses} />
         <button
           disabled={isActivePage}
@@ -85,7 +85,7 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
 
   return (
     <ListItem additionalClassNames="text-red-300">
-      <div className="flex items-center" id={anchorId}>
+      <div className="flex items-center overflow-auto" id={anchorId}>
         <Tooltip
           anchorId={anchorId}
           content={errorMessage}

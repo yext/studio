@@ -527,4 +527,39 @@ describe("updateFile", () => {
       );
     });
   });
+
+  describe("reactComponentNameSanitizer", () => {
+    it("removes all special characters in name", () => {
+      const filepath = getPagePath("updatePageFile/PageWithAComponent");
+      const inputName = "~'!@#%^&*()+={}\[\]\|\\\/:;\"`<>,.\?- \t\r\n\f";
+      const outputName = createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "Test"
+      ).reactComponentNameSanitizer(inputName);
+      expect(outputName).toEqual("Default");
+    });
+
+    it("removes all leading digits in name and uppercases first letter", () => {
+      const filepath = getPagePath("updatePageFile/PageWithAComponent");
+      const inputName = "0123456789test";
+      const outputName = createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "Test"
+      ).reactComponentNameSanitizer(inputName);
+      expect(outputName).toEqual("Test");
+    });
+
+    it("removes all leading non-letter unicode chars and uppercases first letter", () => {
+      const filepath = getPagePath("updatePageFile/PageWithAComponent");
+      const inputName = "àÀصʱapple";
+      const outputName = createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "Test"
+      ).reactComponentNameSanitizer(inputName);
+      expect(outputName).toEqual("Apple");
+    });
+  });
 });

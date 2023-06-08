@@ -33,7 +33,22 @@ export default class ReactComponentFileWriter {
     private studioSourceFileParser: StudioSourceFileParser
   ) {}
 
+  reactComponentNameSanitizer(name: string) {
+    const specialChars = /[~'!@#%^&*()+={}\[\]\|\\\/:;"`<>,.\?-\s]/g;
+    const firstNonLetters = /^[^a-zA-Z]*/i;
+    name = name.replaceAll(specialChars, "")
+    name = name.replace(firstNonLetters, "");
+    if (!name) {
+      name = "Default";
+    }
+    else {
+      name = name[0].toUpperCase() + name.slice(1);
+    }
+    return name;
+  }
+
   private createComponentFunction(): FunctionDeclaration {
+    this.componentName = this.reactComponentNameSanitizer(this.componentName);
     const functionDeclaration =
       this.studioSourceFileWriter.createDefaultFunction(this.componentName);
     functionDeclaration.addStatements([Writers.returnStatement("<></>")]);

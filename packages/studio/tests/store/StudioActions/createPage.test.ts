@@ -17,6 +17,35 @@ describe("non-PagesJS repo", () => {
     );
   });
 
+  it("gives an error for a pagename with forward slashes", async () => {
+    const createPage = useStudioStore.getState().actions.createPage("te/st/er");
+    await expect(createPage).rejects.toThrow(
+      "Error adding page: pageName is invalid: te/st/er"
+    )
+  });
+
+  it("gives an error for a pagename with only asterisks", async () => {
+    const createPage = useStudioStore.getState().actions.createPage("***");
+    await expect(createPage).rejects.toThrow(
+      "Error adding page: pageName is invalid: ***"
+    )
+  });
+
+  it("gives an error for a pagename ending in a period", async () => {
+    const createPage = useStudioStore.getState().actions.createPage("test.");
+    await expect(createPage).rejects.toThrow(
+      "Error adding page: pageName is invalid: test."
+    )
+  });
+
+  it("gives an error for a pagename 256 characters long", async () => {
+    let longName = "a".repeat(256);
+    const createPage = useStudioStore.getState().actions.createPage(longName);
+    await expect(createPage).rejects.toThrow(
+      "Error adding page: pageName must be 255 characters or less."
+    )
+  });
+
   it("adds the new page name to pagesToUpdate", async () => {
     await useStudioStore.getState().actions.createPage("test");
     const pagesToUpdate =

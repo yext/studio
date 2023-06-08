@@ -272,16 +272,15 @@ export default class StudioActions {
     if (!pageName) {
       throw new Error("Error adding page: a pageName is required.");
     }
-    if (pageName[0] <= '9' && pageName[0] >= '0') {
-      throw new Error("Error adding page: pageName cannot start with a digit.");
+    pageName = pageName.trim();
+    if (pageName.search(/[\/\\?%*:|\"<>]/) != -1) {
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`)
     }
-    for (let i = 0; i < pageName.length; i++) {
-      let curr = pageName[i];
-      if ((curr < 'a' || curr > 'z') && (curr < 'A' || curr > 'Z')) {
-        if ((curr < '0' || curr > '9') && curr !== '_' && curr !== '$') {
-          throw new Error("Error adding page: pageName can include only letters, digits, underscores (_), and dollar signs ($).");
-        }
-      }
+    if (pageName.endsWith(".")) {
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`)
+    }
+    if (pageName.length > 255) {
+      throw new Error("Error adding page: pageName must be 255 characters or less.")
     }
     const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
     if (isPagesJSRepo && !getPathValue) {
