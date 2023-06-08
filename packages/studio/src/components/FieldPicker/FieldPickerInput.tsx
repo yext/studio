@@ -9,7 +9,7 @@ interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
   handleFieldSelection: (fieldId: string) => void;
   displayValue: string;
-  fieldType: "string" | "array";
+  fieldFilter: (value: unknown) => boolean;
 }
 
 /**
@@ -19,10 +19,10 @@ export default function FieldPickerInput({
   onInputChange,
   handleFieldSelection,
   displayValue,
-  fieldType,
+  fieldFilter,
 }: FieldPickerInputProps) {
   const entityData = useStudioStore((store) => store.pages.activeEntityData);
-  const filteredData = filterEntityData(fieldType, entityData);
+  const filteredData = filterEntityData(fieldFilter, entityData);
   const hasFilteredData = Object.keys(filteredData).length > 0;
   const inputBoxCssClasses = classNames(
     "border border-gray-300 focus:border-indigo-500 rounded-lg py-2 pl-2 w-full",

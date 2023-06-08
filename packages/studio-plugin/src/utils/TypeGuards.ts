@@ -90,7 +90,12 @@ export default class TypeGuards {
     | Record<string, unknown> => {
     switch (propType.type) {
       case PropValueType.string:
-        return typeof value === "string";
+        const unionValues = propType.unionValues;
+        const isStringUnion = !!unionValues;
+        return (
+          typeof value === "string" &&
+          (!isStringUnion || unionValues.includes(value))
+        );
       case PropValueType.boolean:
         return typeof value === "boolean";
       case PropValueType.number:

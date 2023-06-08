@@ -1,11 +1,12 @@
 import filterEntityData from "../../src/utils/filterEntityData";
 
-it("can filter by fieldType = array", () => {
+it("successfully filters based on fieldFilter", () => {
   const entityData = {
     str: "stringy",
     arr: ["an arr"],
     nestedObj: {
       nestedArr: ["hey"],
+      numArr: [3],
       deletMe: {
         hi: "hi",
       },
@@ -15,10 +16,11 @@ it("can filter by fieldType = array", () => {
     },
   };
 
-  expect(filterEntityData("array", entityData)).toEqual({
+  expect(filterEntityData(Array.isArray, entityData)).toEqual({
     arr: ["an arr"],
     nestedObj: {
       nestedArr: ["hey"],
+      numArr: [3],
     },
   });
 });

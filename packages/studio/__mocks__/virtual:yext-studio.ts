@@ -15,6 +15,7 @@ const mockStudioData: StudioData = {
       localData: mockFilepath,
     },
     isPagesJSRepo: false,
+    port: 8080,
   },
 };
 export default mockStudioData;

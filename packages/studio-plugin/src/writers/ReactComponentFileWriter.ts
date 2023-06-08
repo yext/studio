@@ -45,6 +45,9 @@ export default class ReactComponentFileWriter {
     Object.keys(props).forEach((propName) => {
       const propVal = props[propName];
       const value = this.parsePropVal(propVal);
+      if (value === "") {
+        return;
+      }
       if (this.shouldUseStringSyntaxForProp(propVal)) {
         propsString += `${propName}=${value} `;
       } else {

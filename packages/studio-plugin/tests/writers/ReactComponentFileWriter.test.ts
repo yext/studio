@@ -230,6 +230,11 @@ describe("updateFile", () => {
                 valueType: PropValueType.Array,
                 value: "document.nums",
               },
+              optionalArr: {
+                kind: PropValueKind.Expression,
+                valueType: PropValueType.Array,
+                value: "",
+              },
             },
             uuid: "mock-uuid-0",
             metadataUUID: getComponentPath("BannerUsingArrays"),

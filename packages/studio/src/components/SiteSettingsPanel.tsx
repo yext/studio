@@ -8,8 +8,9 @@ import {
   TypeGuards,
   PropValueKind,
   SiteSettingsPropValueType,
+  PropType,
 } from "@yext/studio-plugin";
-import React, { useCallback } from "react";
+import React, { useCallback, useMemo } from "react";
 import { startCase } from "lodash";
 import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
@@ -159,11 +160,18 @@ function SimplePropInput(props: {
     [propName, updateValues, valueType]
   );
 
+  const propType: PropType = useMemo(
+    () => ({
+      type: valueType,
+    }),
+    [valueType]
+  );
+
   return (
     <label id={propName} className="flex flex-col mb-2">
       <span>{startCase(propName)}</span>
       <PropInput
-        propType={valueType}
+        propType={propType}
         propValue={value}
         onChange={handleUpdate}
         unionValues={unionValues}

@@ -7,7 +7,7 @@ import RepeaterEditor from "./RepeaterEditor";
 export default function RepeaterPanel() {
   const entityHasArrayFields = useStudioStore((store) => {
     const filteredData = filterEntityData(
-      "array",
+      Array.isArray,
       store.pages.activeEntityData
     );
     return Object.keys(filteredData).length > 0;

@@ -12,7 +12,7 @@ export type SiteSettingsShape = {
 
 export type SiteSettingsPropValueType = Exclude<
   PropValueType,
-  PropValueType.ReactNode | PropValueType.Record
+  PropValueType.ReactNode | PropValueType.Record | PropValueType.Array
 >;
 
 export type SiteSettingsValues = {
