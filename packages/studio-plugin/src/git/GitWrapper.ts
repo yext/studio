@@ -11,7 +11,7 @@ export default class GitWrapper {
 
   async setup() {
     if (process.env.YEXT_CBD_BRANCH) {
-      const branchName = process.env.YEXT_CBD_BRANCH.replaceAll(
+      const branchName = process.env.YEXT_CBD_BRANCH.replace(
         "refs/heads/",
         ""
       );
