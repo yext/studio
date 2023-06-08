@@ -1,5 +1,6 @@
 import { simpleGit, Response, RemoteWithRefs } from "simple-git";
 import GitWrapper from "../../src/git/GitWrapper";
+import { GitData } from "../../src/types";
 
 jest.mock("simple-git", () => {
   return {
@@ -11,6 +12,7 @@ jest.mock("simple-git", () => {
         getRemotes: jest.fn(),
         revparse: jest.fn(),
         diff: jest.fn(),
+        reset: jest.fn(),
       };
     },
   };
@@ -43,11 +45,12 @@ describe("verifying canPush calculation", () => {
     gitRemotesSpy.mockReturnValue(getResponseWithRemotes([]));
     await gitWrapper.refreshData();
 
-    const expectedData = {
+    const expectedData: GitData = {
       canPush: {
         status: false,
         reason: "No remotes found.",
       },
+      isWithinCBD: false,
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -67,11 +70,12 @@ describe("verifying canPush calculation", () => {
     gitRemotesSpy.mockReturnValue(getResponseWithRemotes(remotes));
     await gitWrapper.refreshData();
 
-    const expectedData = {
+    const expectedData: GitData = {
       canPush: {
         status: false,
         reason: "Multiple remotes found.",
       },
+      isWithinCBD: false,
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -81,11 +85,12 @@ describe("verifying canPush calculation", () => {
     gitRevParseSpy.mockReturnValue(getResponseWithString(""));
     await gitWrapper.refreshData();
 
-    const expectedData = {
+    const expectedData: GitData = {
       canPush: {
         status: false,
         reason: "No upstream branch found",
       },
+      isWithinCBD: false,
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -96,11 +101,12 @@ describe("verifying canPush calculation", () => {
     gitDiffSpy.mockReturnValue(getResponseWithString(""));
     await gitWrapper.refreshData();
 
-    const expectedData = {
+    const expectedData: GitData = {
       canPush: {
         status: false,
         reason: "No changes to push.",
       },
+      isWithinCBD: false,
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -111,10 +117,11 @@ describe("verifying canPush calculation", () => {
     gitDiffSpy.mockReturnValue(getResponseWithString("Diff"));
     await gitWrapper.refreshData();
 
-    const expectedData = {
+    const expectedData: GitData = {
       canPush: {
         status: true,
       },
+      isWithinCBD: false,
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
