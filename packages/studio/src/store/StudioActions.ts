@@ -273,7 +273,7 @@ export default class StudioActions {
       throw new Error("Error adding page: a pageName is required.");
     }
     pageName = pageName.trim();
-    if (pageName.search(/[\/\\?%*:|\"<>]/) != -1) {
+    if (pageName.search(/[/\\?%*:|"<>]/) !== -1) {
       throw new Error(`Error adding page: pageName is invalid: ${pageName}`)
     }
     if (pageName.endsWith(".")) {

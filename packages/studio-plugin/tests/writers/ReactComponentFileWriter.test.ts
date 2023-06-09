@@ -531,7 +531,7 @@ describe("updateFile", () => {
   describe("reactComponentNameSanitizer", () => {
     it("removes all special characters in name", () => {
       const filepath = getPagePath("updatePageFile/PageWithAComponent");
-      const inputName = "~'!@#%^&*()+={}\[\]\|\\\/:;\"`<>,.\?- \t\r\n\f";
+      const inputName = "~'!@#%^&*()+={}[]|\\/:;\"`<>,.?- \t\r\n\f";
       const outputName = createReactComponentFileWriter(
         tsMorphProject,
         filepath,

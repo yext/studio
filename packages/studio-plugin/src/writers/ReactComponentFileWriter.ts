@@ -34,7 +34,7 @@ export default class ReactComponentFileWriter {
   ) {}
 
   reactComponentNameSanitizer(name: string) {
-    const specialChars = /[~'!@#%^&*()+={}\[\]\|\\\/:;"`<>,.\?-\s]/g;
+    const specialChars = /[~'!@#%^&*()+={}[\]|\\/:;"`<>,.?\s-]/g;
     const firstNonLetters = /^[^a-zA-Z]*/i;
     name = name.replaceAll(specialChars, "")
     name = name.replace(firstNonLetters, "");
