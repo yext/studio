@@ -36,12 +36,11 @@ export default class ReactComponentFileWriter {
   reactComponentNameSanitizer(name: string) {
     const specialChars = /[~'!@#%^&*()+={}[\]|\\/:;"`<>,.?\s-]/g;
     const firstNonLetters = /^[^a-zA-Z]*/i;
-    name = name.replaceAll(specialChars, "")
+    name = name.replaceAll(specialChars, "");
     name = name.replace(firstNonLetters, "");
     if (!name) {
       name = "Default";
-    }
-    else {
+    } else {
       name = name[0].toUpperCase() + name.slice(1);
     }
     return name;

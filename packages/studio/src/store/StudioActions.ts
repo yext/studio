@@ -274,13 +274,15 @@ export default class StudioActions {
     }
     pageName = pageName.trim();
     if (pageName.search(/[/\\?%*:|"<>]/) !== -1) {
-      throw new Error(`Error adding page: pageName is invalid: ${pageName}`)
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
     if (pageName.endsWith(".")) {
-      throw new Error(`Error adding page: pageName is invalid: ${pageName}`)
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
     if (pageName.length > 255) {
-      throw new Error("Error adding page: pageName must be 255 characters or less.")
+      throw new Error(
+        "Error adding page: pageName must be 255 characters or less."
+      );
     }
     const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
     if (isPagesJSRepo && !getPathValue) {
