@@ -537,18 +537,18 @@ describe("updateFile", () => {
         filepath,
         "Test"
       ).reactComponentNameSanitizer(inputName);
-      expect(outputName).toEqual("Default");
+      expect(outputName).toEqual("Page");
     });
 
     it("removes all leading digits in name and uppercases first letter", () => {
       const filepath = getPagePath("updatePageFile/PageWithAComponent");
-      const inputName = "0123456789test";
+      const inputName = "0123456789te9st";
       const outputName = createReactComponentFileWriter(
         tsMorphProject,
         filepath,
         "Test"
       ).reactComponentNameSanitizer(inputName);
-      expect(outputName).toEqual("Test");
+      expect(outputName).toEqual("Te9st");
     });
 
     it("removes all leading non-letter unicode chars and uppercases first letter", () => {

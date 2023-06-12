@@ -21,6 +21,7 @@ import {
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { TypeGuards } from "../utils";
+import camelCase from "camelcase";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -34,12 +35,24 @@ export default class ReactComponentFileWriter {
   ) {}
 
   reactComponentNameSanitizer(name: string) {
-    const specialChars = /[~'!@#%^&*()+={}[\]|\\/:;"`<>,.?\s-]/g;
-    const firstNonLetters = /^[^a-zA-Z]*/i;
-    name = name.replaceAll(specialChars, "")
-    name = name.replace(firstNonLetters, "");
+    camelCase(name, {pascalCase: true});
+    let nameArray = Array.from(name);
+    nameArray = nameArray.filter(x => 
+      (x >= 'a' && x <= 'z') || (x >= 'A' && x <= 'Z') || x === '_' || x === '$' || (x >= '0' && x <= '9')
+    );
+    let beginning = true;
+    nameArray = nameArray.map(x => {
+      if (beginning && (x < 'a' || x > 'z') && (x < 'A' || x > 'Z')) {
+        return '';
+      }
+      else {
+        beginning = false;
+        return x;
+      }
+    });
+    name = nameArray.join("");
     if (!name) {
-      name = "Default";
+      name = "Page";
     }
     else {
       name = name[0].toUpperCase() + name.slice(1);
