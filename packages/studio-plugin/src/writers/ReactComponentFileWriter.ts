@@ -35,10 +35,10 @@ export default class ReactComponentFileWriter {
   ) {}
 
   reactComponentNameSanitizer(name: string) {
-    camelCase(name, {pascalCase: true});
+    camelCase(name, { pascalCase: true });
     const nonAlphaNumeric = /[^A-Za-z0-9]/g;
     const firstNonLetters = /^[^a-zA-Z]*/;
-    name = name.replaceAll(nonAlphaNumeric, "")
+    name = name.replaceAll(nonAlphaNumeric, "");
     name = name.replace(firstNonLetters, "");
     if (!name) {
       name = "Page";
