@@ -39,11 +39,11 @@ describe("non-PagesJS repo", () => {
   });
 
   it("gives an error for a pagename 256 characters long", async () => {
-    let longName = "a".repeat(256);
+    const longName = "a".repeat(256);
     const createPage = useStudioStore.getState().actions.createPage(longName);
     await expect(createPage).rejects.toThrow(
       "Error adding page: pageName must be 255 characters or less."
-    )
+    );
   });
 
   it("adds the new page name to pagesToUpdate", async () => {
