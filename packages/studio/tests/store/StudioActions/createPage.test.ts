@@ -29,7 +29,7 @@ describe("non-PagesJS repo", () => {
       .getState()
       .actions.createPage('test\\|"<>?');
     await expect(createPage).rejects.toThrow(
-      'Error adding page: pageName test\\|\"<>? cannot contain the characters: \\,|,\",<,>,?'
+      'Error adding page: pageName test\\|"<>? cannot contain the characters: \\,|,",<,>,?'
     );
   });
 
