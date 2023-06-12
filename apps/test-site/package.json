@@ -34,8 +34,7 @@
     "dev": "studio",
     "localData": "yext pages generate-test-data",
     "start": "craco start",
-    "build": "craco build",
-    "features": "pages generate features"
+    "build": "craco build"
   },
   "browserslist": {
     "production": [

@@ -42,8 +42,7 @@ export default class ReactComponentFileWriter {
     name = name.replace(firstNonLetters, "");
     if (!name) {
       name = "Page";
-    }
-    else {
+    } else {
       name = name[0].toUpperCase() + name.slice(1);
     }
     return name;
