@@ -8,6 +8,7 @@ import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
 import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
 import PropValueHelpers from "../../../utils/PropValueHelpers";
+import dynamicImportFromBrowser from "../../../utils/dynamicImportFromBrowser";
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
@@ -160,8 +161,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         );
       }
       const activeEntityData = (
-        await import(
-          /* @vite-ignore */ path.join(parentFolder, activeEntityFile)
+        await dynamicImportFromBrowser(
+          path.join(parentFolder, activeEntityFile)
         )
       ).default;
       set({ activeEntityFile, activeEntityData });

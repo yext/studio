@@ -1,4 +1,8 @@
-import { ComponentState, ErrorComponentState, RepeaterState } from "../types/index.js";
+import {
+  ComponentState,
+  ErrorComponentState,
+  RepeaterState,
+} from "../types/index.js";
 import TypeGuards from "./TypeGuards.js";
 
 /**

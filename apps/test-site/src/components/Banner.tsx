@@ -1,4 +1,5 @@
 import { HexColor } from "@yext/studio";
+import { NestedProp } from "../types/exportedTypes";
 
 export interface BannerData {
   /** banner's title */
@@ -6,6 +7,7 @@ export interface BannerData {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
+  obj?: NestedProp;
   words?: string[];
 }
 
@@ -22,6 +24,7 @@ export default function Banner(props: BannerData) {
       <p style={{ backgroundColor: props.bgColor }}>{props.title}</p>
       <p>{`${props.bool}`}</p>
       <p>{props.num}</p>
+      <h1>{props.obj && JSON.stringify(props.obj)}</h1>
       <p>{props.words?.join(", ")}</p>
     </div>
   );

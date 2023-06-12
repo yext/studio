@@ -12,6 +12,7 @@ import {
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { ImportType } from "../models/ImportType";
 import { FunctionComponent } from "react";
+import dynamicImportFromBrowser from "../../utils/dynamicImportFromBrowser";
 
 /**
  * Imports a component into the global store.
@@ -53,8 +54,7 @@ export default class ImportComponentAction {
       return this.importModule(metadata);
     }
 
-    console.log('importing component', metadata.filepath)
-    const importedValue = await import(/* @vite-ignore */ '/@fs/' + metadata.filepath);
+    const importedValue = await dynamicImportFromBrowser(metadata.filepath);
     const functionComponent = getFunctionComponent(
       importedValue,
       componentName

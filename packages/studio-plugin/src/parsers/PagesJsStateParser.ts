@@ -21,10 +21,11 @@ export default class PagesJsStateParser {
       getPathValue = undefined;
     }
 
-    return {
+    const pagesJsState = {
       ...(this.entityFiles && { entityFiles: this.entityFiles }),
       getPathValue,
       ...(streamScope && { streamScope }),
     };
+    return pagesJsState;
   }
 }

@@ -11,6 +11,7 @@ import { ParsingError, ParsingErrorKind } from "../errors/ParsingError.js";
 import { FileIOError, IOErrorKind } from "../errors/FileIOError.js";
 import { StudioError } from "../errors/StudioError.js";
 import prettyPrintError from "../errors/prettyPrintError.js";
+import { dynamicImport } from "../utils/dynamicImport.js";
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's
@@ -41,13 +42,11 @@ async function getStudioConfigInternal(
     port: 8080,
   };
 
-  // const configFilepath = path.join(pathToProjectRoot, "studio.config.js");
-  const configFilepath = "file:///C:\\Users\\olive\\Documents\\Github\\studio-prototype\\apps\\test-site\\studio.config.js"
-  console.log('configFilepath', configFilepath)
-  if (!fs.existsSync(configFilepath)) {
+  const absConfigFilepath = path.join(pathToProjectRoot, "studio.config.js");
+  if (!fs.existsSync(absConfigFilepath)) {
     return defaultConfig;
   }
-  const studioConfig = await importExistingConfig(configFilepath);
+  const studioConfig = await importExistingConfig(absConfigFilepath);
 
   return lodash.merge({}, defaultConfig, studioConfig);
 }
@@ -55,17 +54,19 @@ async function getStudioConfigInternal(
 /**
  * Imports the Studio Config at the specified filepath.
  *
- * @param filepath - The location of the Studio Config.
+ * @param filepath - An absolute path to the location of the Studio Config.
  * @throws {@link ParsingError|FileIOError}
  */
-async function importExistingConfig(filepath: string): Promise<StudioConfig> {
+async function importExistingConfig(
+  absFilepath: string
+): Promise<StudioConfig> {
   let importedFile;
   try {
-    importedFile = await import(/* @vite-ignore */ filepath);
+    importedFile = await dynamicImport(absFilepath);
   } catch (err) {
     const importError = new FileIOError(
       IOErrorKind.FailedToImportFile,
-      `Failed to import module at ${filepath}`,
+      `Failed to import module at ${absFilepath}`,
       err instanceof Error ? err.stack : undefined
     );
     throw importError;
