@@ -12,7 +12,6 @@ export const config: TemplateConfig = {
     fields: ["services", "address", "hours", "slug"],
   },
 };
-
 export const getPath: GetPath<TemplateProps> = ({
   document,
 }: TemplateProps) => {
