@@ -264,30 +264,6 @@ export default class StudioActions {
     };
   };
 
-  private FilenameSanitizer = (input: string) => {
-    if (!input) {
-      throw new Error("Error adding page: a pageName is required.");
-    }
-    const errorChars = input.match(/[\\/?%*:|"<>]/g);
-    if (errorChars) {
-      throw new Error(
-        `Error adding page: pageName ${input} cannot contain the characters: ${[
-          ...new Set(errorChars),
-        ]}`
-      );
-    }
-    if (input.endsWith(".")) {
-      throw new Error(
-        `Error adding page: pageName ${input} cannot end with a period.`
-      );
-    }
-    if (input.length > 255) {
-      throw new Error(
-        "Error adding page: pageName must be 255 characters or less."
-      );
-    }
-  };
-
   createPage = async (
     pageName: string,
     getPathValue?: GetPathVal,
