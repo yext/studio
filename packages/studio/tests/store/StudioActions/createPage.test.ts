@@ -17,24 +17,24 @@ describe("non-PagesJS repo", () => {
     );
   });
 
-  it("gives an error for a pagename with forward slashes", async () => {
-    const createPage = useStudioStore.getState().actions.createPage("te/st/er");
-    await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName is invalid: te/st/er"
-    )
-  });
-
   it("gives an error for a pagename with only asterisks", async () => {
     const createPage = useStudioStore.getState().actions.createPage("***");
     await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName is invalid: ***"
+      "Error adding page: pageName *** cannot contain *."
+    )
+  });
+
+  it("gives an error for a pagename with multiple special characters", async () => {
+    const createPage = useStudioStore.getState().actions.createPage("test\\|\"<>?");
+    await expect(createPage).rejects.toThrow(
+      "Error adding page: pageName test\\|\"<>? cannot contain \\."
     )
   });
 
   it("gives an error for a pagename ending in a period", async () => {
     const createPage = useStudioStore.getState().actions.createPage("test.");
     await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName is invalid: test."
+      "Error adding page: pageName test. cannot end with a period."
     )
   });
 

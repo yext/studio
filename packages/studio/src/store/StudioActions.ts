@@ -273,14 +273,15 @@ export default class StudioActions {
       throw new Error("Error adding page: a pageName is required.");
     }
     pageName = pageName.trim();
-    if (pageName.search(/[/\\?%*:|"<>]/) !== -1) {
-      throw new Error(`Error adding page: pageName is invalid: ${pageName}`)
+    let errorIndex = pageName.search(/[\\?%*:|"<>]/);
+    if (errorIndex !== -1) {
+      throw new Error(`Error adding page: pageName ${pageName} cannot contain ${pageName[errorIndex]}.`);
     }
     if (pageName.endsWith(".")) {
-      throw new Error(`Error adding page: pageName is invalid: ${pageName}`)
+      throw new Error(`Error adding page: pageName ${pageName} cannot end with a period.`);
     }
     if (pageName.length > 255) {
-      throw new Error("Error adding page: pageName must be 255 characters or less.")
+      throw new Error("Error adding page: pageName must be 255 characters or less.");
     }
     const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
     if (isPagesJSRepo && !getPathValue) {
