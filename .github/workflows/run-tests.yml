@@ -8,6 +8,7 @@ on:
 jobs:
   unit_tests:
     strategy:
+      fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest]
         node-version: [16.x, 18.x, 19.x]
@@ -22,7 +23,9 @@ jobs:
       - run: npm ci --ignore-scripts
       - run: npm rebuild
       - run: npm run build -w=packages/studio-plugin
-      - run: npm test
+      - run: npm test -w=packages/studio-plugin
+      - run: npm test -w=packages/studio
+        if: success() || failure()
 
   test_build:
     runs-on: ubuntu-latest
