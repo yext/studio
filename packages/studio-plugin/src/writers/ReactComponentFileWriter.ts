@@ -35,17 +35,21 @@ export default class ReactComponentFileWriter {
   ) {}
 
   reactComponentNameSanitizer(name: string) {
-    camelCase(name, {pascalCase: true});
+    camelCase(name, { pascalCase: true });
     let nameArray = Array.from(name);
-    nameArray = nameArray.filter(x => 
-      (x >= 'a' && x <= 'z') || (x >= 'A' && x <= 'Z') || x === '_' || x === '$' || (x >= '0' && x <= '9')
+    nameArray = nameArray.filter(
+      (x) =>
+        (x >= "a" && x <= "z") ||
+        (x >= "A" && x <= "Z") ||
+        x === "_" ||
+        x === "$" ||
+        (x >= "0" && x <= "9")
     );
     let beginning = true;
-    nameArray = nameArray.map(x => {
-      if (beginning && (x < 'a' || x > 'z') && (x < 'A' || x > 'Z')) {
-        return '';
-      }
-      else {
+    nameArray = nameArray.map((x) => {
+      if (beginning && (x < "a" || x > "z") && (x < "A" || x > "Z")) {
+        return "";
+      } else {
         beginning = false;
         return x;
       }
@@ -53,8 +57,7 @@ export default class ReactComponentFileWriter {
     name = nameArray.join("");
     if (!name) {
       name = "Page";
-    }
-    else {
+    } else {
       name = name[0].toUpperCase() + name.slice(1);
     }
     return name;

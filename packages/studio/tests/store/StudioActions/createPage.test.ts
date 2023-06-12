@@ -21,21 +21,23 @@ describe("non-PagesJS repo", () => {
     const createPage = useStudioStore.getState().actions.createPage("***");
     await expect(createPage).rejects.toThrow(
       "Error adding page: pageName *** cannot contain *."
-    )
+    );
   });
 
   it("gives an error for a pagename with multiple special characters", async () => {
-    const createPage = useStudioStore.getState().actions.createPage("test\\|\"<>?");
+    const createPage = useStudioStore
+      .getState()
+      .actions.createPage('test\\|"<>?');
     await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName test\\|\"<>? cannot contain \\."
-    )
+      'Error adding page: pageName test\\|"<>? cannot contain \\.'
+    );
   });
 
   it("gives an error for a pagename ending in a period", async () => {
     const createPage = useStudioStore.getState().actions.createPage("test.");
     await expect(createPage).rejects.toThrow(
       "Error adding page: pageName test. cannot end with a period."
-    )
+    );
   });
 
   it("gives an error for a pagename 256 characters long", async () => {
