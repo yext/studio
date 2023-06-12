@@ -36,21 +36,10 @@ export default class ReactComponentFileWriter {
 
   reactComponentNameSanitizer(name: string) {
     camelCase(name, {pascalCase: true});
-    let nameArray = Array.from(name);
-    nameArray = nameArray.filter(x => 
-      (x >= 'a' && x <= 'z') || (x >= 'A' && x <= 'Z') || x === '_' || x === '$' || (x >= '0' && x <= '9')
-    );
-    let beginning = true;
-    nameArray = nameArray.map(x => {
-      if (beginning && (x < 'a' || x > 'z') && (x < 'A' || x > 'Z')) {
-        return '';
-      }
-      else {
-        beginning = false;
-        return x;
-      }
-    });
-    name = nameArray.join("");
+    const nonAlphaNumeric = /[^A-Za-z0-9]/g;
+    const firstNonLetters = /^[^a-zA-Z]*/;
+    name = name.replaceAll(nonAlphaNumeric, "")
+    name = name.replace(firstNonLetters, "");
     if (!name) {
       name = "Page";
     }
