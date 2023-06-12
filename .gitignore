@@ -34,5 +34,3 @@ yarn-error.log*
 
 #pagesJS
 apps/**/localData
-
-!apps/test-site/node_modules/vite/dist/node
