@@ -1,7 +1,6 @@
 import {
   PropValueType,
   SiteSettingsValues,
-  LiteralProp,
   SiteSettingsShape,
   ObjectProp,
   NestedPropType,
@@ -9,6 +8,7 @@ import {
   PropValueKind,
   SiteSettingsPropValueType,
   PropType,
+  SiteSettingsVal,
 } from "@yext/studio-plugin";
 import React, { useCallback, useMemo } from "react";
 import { startCase } from "lodash";
@@ -29,7 +29,7 @@ export default function SiteSettingsPanel(): JSX.Element {
   );
 
   const updateValues = useCallback(
-    (propName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
+    (propName: string, updatedProp: SiteSettingsVal) => {
       setValues({ ...siteSettingsValues, [propName]: updatedProp });
     },
     [siteSettingsValues, setValues]
@@ -51,10 +51,7 @@ export default function SiteSettingsPanel(): JSX.Element {
 function renderSiteSettings(
   siteSettingsShape: SiteSettingsShape,
   siteSettingsValues: SiteSettingsValues,
-  updateValues: (
-    propName: string,
-    updatedProp: LiteralProp<SiteSettingsValues>
-  ) => void
+  updateValues: (propName: string, updatedProp: SiteSettingsVal) => void
 ) {
   const sortedShape = Object.entries(siteSettingsShape).sort(
     ([_, firstMetadata]) => {
@@ -64,8 +61,7 @@ function renderSiteSettings(
 
   return sortedShape.map(([propName, propMetadata], index) => {
     const valueType = propMetadata.type;
-    const propVal: LiteralProp<SiteSettingsValues> | undefined =
-      siteSettingsValues[propName];
+    const propVal: SiteSettingsVal | undefined = siteSettingsValues[propName];
     if (valueType !== PropValueType.Object) {
       return (
         <SimplePropInput
@@ -104,16 +100,13 @@ function renderSiteSettings(
 function RecursiveGroup(props: {
   propVal: ObjectProp<SiteSettingsValues>;
   propType: NestedPropType<SiteSettingsPropValueType>;
-  updateValues: (
-    propName: string,
-    updatedProp: LiteralProp<SiteSettingsValues>
-  ) => void;
+  updateValues: (propName: string, updatedProp: SiteSettingsVal) => void;
   propName: string;
 }) {
   const { propType, updateValues, propName, propVal } = props;
 
   const updateChildValues = useCallback(
-    (childPropName: string, updatedProp: LiteralProp<SiteSettingsValues>) => {
+    (childPropName: string, updatedProp: SiteSettingsVal) => {
       updateValues(propName, {
         ...propVal,
         value: {
@@ -133,10 +126,7 @@ function RecursiveGroup(props: {
 function SimplePropInput(props: {
   valueType: Exclude<SiteSettingsPropValueType, PropValueType.Object>;
   value?: string | number | boolean;
-  updateValues: (
-    propName: string,
-    updatedProp: LiteralProp<SiteSettingsValues>
-  ) => void;
+  updateValues: (propName: string, updatedProp: SiteSettingsVal) => void;
   propName: string;
   unionValues?: string[];
 }) {

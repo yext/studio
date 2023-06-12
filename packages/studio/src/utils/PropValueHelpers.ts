@@ -64,6 +64,11 @@ export default class PropValueHelpers {
       return this.getTemplateExpression(propVal);
     }
 
+    // TODO (SLAP-2773): Add support for handling array prop values in UI
+    if (Array.isArray(value)) {
+      return undefined;
+    }
+
     return value;
   }
 

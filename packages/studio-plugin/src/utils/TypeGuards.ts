@@ -67,6 +67,8 @@ export default class TypeGuards {
       case PropValueType.number:
       case PropValueType.HexColor:
         return this.valueMatchesPropType({ type: valueType }, value);
+      case PropValueType.Array:
+        return Array.isArray(value) && value.every(this.isValidPropVal);
       case PropValueType.Object:
         const baseIsValid =
           typeof value === "object" && !Array.isArray(value) && value !== null;

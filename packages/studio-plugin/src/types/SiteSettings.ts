@@ -1,5 +1,5 @@
 import { PropMetadata } from "./PropShape";
-import { LiteralProp, PropValueType } from "./PropValues";
+import { ArrayProp, LiteralProp, PropValueType } from "./PropValues";
 
 export interface SiteSettings {
   shape: SiteSettingsShape;
@@ -16,5 +16,10 @@ export type SiteSettingsPropValueType = Exclude<
 >;
 
 export type SiteSettingsValues = {
-  [propName: string]: LiteralProp<SiteSettingsValues>;
+  [propName: string]: SiteSettingsVal;
 };
+
+export type SiteSettingsVal = Exclude<
+  LiteralProp<SiteSettingsValues>,
+  ArrayProp
+>;

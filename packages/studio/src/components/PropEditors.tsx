@@ -79,6 +79,14 @@ function renderPropEditor(
     );
   }
 
+  if (
+    propMetadata.type === PropValueType.Array &&
+    propVal?.kind === PropValueKind.Literal
+  ) {
+    // TODO (SLAP-2773): Display editor for array literal items
+    return null;
+  }
+
   const propKind = getPropKind(propMetadata);
   return (
     <PropEditor

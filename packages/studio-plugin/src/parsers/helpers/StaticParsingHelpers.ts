@@ -20,6 +20,7 @@ import {
   JsxAttribute,
 } from "ts-morph";
 import {
+  ArrayProp,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -29,6 +30,7 @@ import {
 import {
   PropMetadata,
   PropShape,
+  PropType,
   SpecialReactProps,
 } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
@@ -46,15 +48,49 @@ export type ParsedImport = {
  * files within Studio.
  */
 export default class StaticParsingHelpers {
-  static addTypesToPropVal(
+  private static addTypesToPropVal(
     typelessPropVal: TypelessPropVal,
-    propMetadata: PropMetadata
+    propType: PropType
   ): PropVal {
-    const valueType = propMetadata.type;
+    const valueType = propType.type;
     if (
-      valueType !== PropValueType.Object ||
-      typeof typelessPropVal.value !== "object"
+      valueType === PropValueType.Array &&
+      Array.isArray(typelessPropVal.value)
     ) {
+      const getPropVals = (typelessPropVals: TypelessPropVal[]): PropVal[] => {
+        return typelessPropVals.map((val) =>
+          this.addTypesToPropVal(val, propType.itemType)
+        );
+      };
+      const arrayPropVal: ArrayProp = {
+        kind: PropValueKind.Literal,
+        valueType,
+        value: getPropVals(typelessPropVal.value),
+      };
+      TypeGuards.assertIsValidPropVal(arrayPropVal);
+      return arrayPropVal;
+    } else if (
+      valueType === PropValueType.Object &&
+      typeof typelessPropVal.value === "object" &&
+      !Array.isArray(typelessPropVal.value)
+    ) {
+      const getPropValues = (
+        typelessValues: Record<string, TypelessPropVal>
+      ) => {
+        const propValues: PropValues = {};
+        Object.entries(typelessValues).forEach(([propName, value]) => {
+          const childMetadata = propType.shape[propName];
+          propValues[propName] = this.addTypesToPropVal(value, childMetadata);
+        });
+        return propValues;
+      };
+
+      return {
+        kind: PropValueKind.Literal,
+        valueType,
+        value: getPropValues(typelessPropVal.value),
+      };
+    } else {
       const propVal = {
         ...typelessPropVal,
         valueType,
@@ -62,24 +98,9 @@ export default class StaticParsingHelpers {
       TypeGuards.assertIsValidPropVal(propVal);
       return propVal;
     }
-
-    const getPropValues = (typelessValues: Record<string, TypelessPropVal>) => {
-      const propValues: PropValues = {};
-      Object.entries(typelessValues).forEach(([propName, value]) => {
-        const childMetadata = propMetadata.shape[propName];
-        propValues[propName] = this.addTypesToPropVal(value, childMetadata);
-      });
-      return propValues;
-    };
-
-    return {
-      kind: PropValueKind.Literal,
-      valueType: PropValueType.Object,
-      value: getPropValues(typelessPropVal.value),
-    };
   }
 
-  static parseInitializer(initializer: Expression): TypelessPropVal {
+  static parseInitializer = (initializer: Expression): TypelessPropVal => {
     if (initializer.isKind(SyntaxKind.StringLiteral)) {
       return {
         value: initializer.compilerNode.text,
@@ -111,13 +132,18 @@ export default class StaticParsingHelpers {
         value: this.parseObjectLiteral(expression),
         kind: PropValueKind.Literal,
       };
+    } else if (expression.isKind(SyntaxKind.ArrayLiteralExpression)) {
+      return {
+        value: expression.getElements().map(this.parseInitializer),
+        kind: PropValueKind.Literal,
+      };
     } else {
       throw new Error(
         `Unrecognized prop value ${initializer.getFullText()} ` +
           `with kind: ${expression.getKindName()}`
       );
     }
-  }
+  };
 
   static parseObjectLiteral(
     objectLiteral: ObjectLiteralExpression
