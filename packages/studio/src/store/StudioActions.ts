@@ -271,7 +271,9 @@ export default class StudioActions {
     const errorChars = input.match(/[\\/?%*:|"<>]/g);
     if (errorChars) {
       throw new Error(
-        `Error adding page: pageName ${input} cannot contain the characters: ${[...new Set(errorChars)]}`
+        `Error adding page: pageName ${input} cannot contain the characters: ${[
+          ...new Set(errorChars),
+        ]}`
       );
     }
     if (input.endsWith(".")) {
@@ -307,7 +309,9 @@ export default class StudioActions {
     const errorChars = pageName.match(/[\\/?%*:|"<>]/g);
     if (errorChars) {
       throw new Error(
-        `Error adding page: pageName ${pageName} cannot contain the characters: ${[...new Set(errorChars)]}`
+        `Error adding page: pageName ${pageName} cannot contain the characters: ${[
+          ...new Set(errorChars),
+        ]}`
       );
     }
     if (pageName.endsWith(".")) {
