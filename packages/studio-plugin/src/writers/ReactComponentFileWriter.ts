@@ -40,11 +40,7 @@ export default class ReactComponentFileWriter {
     const firstNonLetters = /^[^a-zA-Z]*/;
     name = name.replaceAll(nonAlphaNumeric, "");
     name = name.replace(firstNonLetters, "");
-    if (!name) {
-      name = "PageDefaultFromInvalidInput";
-    } else {
-      name = name[0].toUpperCase() + name.slice(1);
-    }
+    name = name ? name[0].toUpperCase() + name.slice(1) : "PageDefaultFromInvalidInput";
     return name;
   }
 
