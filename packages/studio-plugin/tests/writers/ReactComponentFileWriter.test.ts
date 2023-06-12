@@ -537,7 +537,7 @@ describe("updateFile", () => {
         filepath,
         "Test"
       ).reactComponentNameSanitizer(inputName);
-      expect(outputName).toEqual("Page");
+      expect(outputName).toEqual("PageDefaultFromInvalidInput");
     });
 
     it("removes all leading digits in name and uppercases first letter", () => {
@@ -548,7 +548,7 @@ describe("updateFile", () => {
         filepath,
         "Test"
       ).reactComponentNameSanitizer(inputName);
-      expect(outputName).toEqual("Te9st");
+      expect(outputName).toEqual("Te9St");
     });
 
     it("removes all leading non-letter unicode chars and uppercases first letter", () => {

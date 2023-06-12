@@ -20,7 +20,7 @@ describe("non-PagesJS repo", () => {
   it("gives an error for a pagename with only asterisks", async () => {
     const createPage = useStudioStore.getState().actions.createPage("***");
     await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName *** cannot contain *."
+      "Error adding page: pageName *** cannot contain the characters: *"
     );
   });
 
@@ -29,7 +29,7 @@ describe("non-PagesJS repo", () => {
       .getState()
       .actions.createPage('test\\|"<>?');
     await expect(createPage).rejects.toThrow(
-      'Error adding page: pageName test\\|"<>? cannot contain \\.'
+      'Error adding page: pageName test\\|\"<>? cannot contain the characters: \\,|,\",<,>,?'
     );
   });
 

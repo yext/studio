@@ -264,19 +264,50 @@ export default class StudioActions {
     };
   };
 
+  private FilenameSanitizer = (input: string) => {
+    if (!input) {
+      throw new Error("Error adding page: a pageName is required.");
+    }
+    const errorChars = input.match(/[\\/?%*:|"<>]/g);
+    if (errorChars) {
+      throw new Error(
+        `Error adding page: pageName ${input} cannot contain the characters: ${[...new Set(errorChars)]}`
+      );
+    }
+    if (input.endsWith(".")) {
+      throw new Error(
+        `Error adding page: pageName ${input} cannot end with a period.`
+      );
+    }
+    if (input.length > 255) {
+      throw new Error(
+        "Error adding page: pageName must be 255 characters or less."
+      );
+    }
+  };
+
   createPage = async (
     pageName: string,
     getPathValue?: GetPathVal,
     streamScope?: StreamScope
   ) => {
+    const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
+    if (isPagesJSRepo && !getPathValue) {
+      throw new Error("Error adding page: a getPath value is required.");
+    }
     if (!pageName) {
       throw new Error("Error adding page: a pageName is required.");
     }
-    pageName = pageName.trim();
-    const errorIndex = pageName.search(/[\\?%*:|"<>]/);
-    if (errorIndex !== -1) {
+    const pagesPath = this.getStudioConfig().paths.pages;
+    const filepath = path.join(pagesPath, pageName + ".tsx");
+    if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
+      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
+    }
+    pageName = path.basename(filepath, ".tsx");
+    const errorChars = pageName.match(/[\\/?%*:|"<>]/g);
+    if (errorChars) {
       throw new Error(
-        `Error adding page: pageName ${pageName} cannot contain ${pageName[errorIndex]}.`
+        `Error adding page: pageName ${pageName} cannot contain the characters: ${[...new Set(errorChars)]}`
       );
     }
     if (pageName.endsWith(".")) {
@@ -288,15 +319,6 @@ export default class StudioActions {
       throw new Error(
         "Error adding page: pageName must be 255 characters or less."
       );
-    }
-    const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
-    if (isPagesJSRepo && !getPathValue) {
-      throw new Error("Error adding page: a getPath value is required.");
-    }
-    const pagesPath = this.getStudioConfig().paths.pages;
-    const filepath = path.join(pagesPath, pageName + ".tsx");
-    if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
-      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
     this.getPages().addPage(pageName, {
       componentTree: [],

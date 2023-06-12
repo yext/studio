@@ -35,13 +35,13 @@ export default class ReactComponentFileWriter {
   ) {}
 
   reactComponentNameSanitizer(name: string) {
-    camelCase(name, {pascalCase: true});
-    const nonAlphaNumeric = /[^A-Za-z0-9]/g;
+    name = camelCase(name, {pascalCase: true});
+    const nonAlphaNumeric = /[^\w]/g;
     const firstNonLetters = /^[^a-zA-Z]*/;
     name = name.replaceAll(nonAlphaNumeric, "")
     name = name.replace(firstNonLetters, "");
     if (!name) {
-      name = "Page";
+      name = "PageDefaultFromInvalidInput";
     } else {
       name = name[0].toUpperCase() + name.slice(1);
     }
