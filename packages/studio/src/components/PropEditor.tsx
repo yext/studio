@@ -1,6 +1,7 @@
 import {
   NestedPropType,
   PropMetadata,
+  PropType,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -41,10 +42,7 @@ export default function PropEditor({
         <p className="pr-2">{propName}</p>
         <PropInput
           {...{
-            propType:
-              propKind === PropValueKind.Expression
-                ? PropValueType.string
-                : type,
+            propType: getInputPropType(propMetadata, propKind),
             propValue,
             onChange,
             propKind,
@@ -72,4 +70,17 @@ export function renderBranchUI(isNested?: boolean) {
       </div>
     )
   );
+}
+
+function getInputPropType(
+  propMetadata: Exclude<PropMetadata, NestedPropType>,
+  propKind: PropValueKind
+): PropType {
+  if (
+    propKind === PropValueKind.Expression &&
+    propMetadata.type !== PropValueType.Array
+  ) {
+    return { type: PropValueType.string };
+  }
+  return propMetadata;
 }

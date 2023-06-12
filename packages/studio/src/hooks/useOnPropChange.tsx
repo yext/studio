@@ -41,7 +41,7 @@ function createPropVal(
     valueType,
     value,
   };
-  if (!TypeGuards.isValidPropValue(newPropVal)) {
+  if (!TypeGuards.isValidPropVal(newPropVal)) {
     return null;
   }
   return newPropVal;

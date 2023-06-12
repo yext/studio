@@ -1,9 +1,8 @@
 /**
- * Filters the given entity data down to fields that match a certain type.
- * When fieldType is "array", all item types are supported.
+ * Filters the entity data using the provided fieldFilter function.
  */
 export default function filterEntityData(
-  fieldType: "string" | "array",
+  fieldFilter: (value: unknown) => boolean,
   entityData: Record<string, unknown> = {}
 ): Record<string, unknown> {
   const filteredEntries = Object.entries(entityData)
@@ -14,27 +13,15 @@ export default function filterEntityData(
 
       if (isObjectField) {
         const filteredSubObject = filterEntityData(
-          fieldType,
+          fieldFilter,
           value as Record<string, unknown>
         );
         return Object.keys(filteredSubObject).length === 0
           ? null
           : [field, filteredSubObject];
+      } else {
+        return fieldFilter(value) ? [field, value] : null;
       }
-
-      switch (fieldType) {
-        case "string":
-          if (typeof value === "string") {
-            return [field, value];
-          }
-          break;
-        case "array":
-          if (Array.isArray(value)) {
-            return [field, value];
-          }
-          break;
-      }
-      return null;
     })
     .filter((n): n is [string, unknown[] | string] => !!n);
   return Object.fromEntries(filteredEntries);

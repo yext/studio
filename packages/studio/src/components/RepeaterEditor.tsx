@@ -71,7 +71,7 @@ export default function RepeaterEditor({
             displayValue={componentState.listExpression}
             onInputChange={handleListUpdate}
             handleFieldSelection={updateListExpression}
-            fieldType="array"
+            fieldFilter={Array.isArray}
           />
         </label>
       )}

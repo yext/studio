@@ -25,7 +25,7 @@ export type PropType<T extends PropValueType = PropValueType> =
   | NonUnionPropType<T>
   | StringUnionPropType
   | (PropValueType.Record extends T ? RecordPropType : never)
-  | ArrayPropType;
+  | (PropValueType.Array extends T ? ArrayPropType : never);
 
 type NonUnionPropType<T> = {
   type: Exclude<
@@ -56,7 +56,7 @@ export type NestedPropType<T extends PropValueType = PropValueType> = {
   shape: PropShape<T>;
 };
 
-export type ArrayPropType = {
+type ArrayPropType = {
   type: PropValueType.Array;
   itemType: PropType;
   unionValues?: never;

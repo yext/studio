@@ -1,4 +1,4 @@
-import { PropValueKind, PropValueType } from "../../src/types";
+import { PropValueKind, PropValueType, PropType } from "../../src/types";
 import TypeGuards from "../../src/utils/TypeGuards";
 
 describe("isSiteSettingsValues", () => {
@@ -39,7 +39,7 @@ describe("isSiteSettingsValues", () => {
   });
 });
 
-describe("isValidPropValue", () => {
+describe("isValidPropVal", () => {
   it("requires object props to recursively have valueType specified", () => {
     const invalidPropVal = {
       kind: PropValueKind.Literal,
@@ -49,6 +49,51 @@ describe("isValidPropValue", () => {
         value: "some string",
       },
     };
-    expect(TypeGuards.isValidPropValue(invalidPropVal)).toBeFalsy();
+    expect(TypeGuards.isValidPropVal(invalidPropVal)).toBeFalsy();
+  });
+});
+
+describe("valueMatchesPropType", () => {
+  it("requires array props to recursively be valid", () => {
+    const propType: PropType = {
+      type: PropValueType.Array,
+      itemType: {
+        type: PropValueType.Object,
+        shape: {
+          str: {
+            required: true,
+            type: PropValueType.string,
+          },
+          nums: {
+            required: false,
+            type: PropValueType.Array,
+            itemType: {
+              type: PropValueType.number,
+            },
+          },
+        },
+      },
+    };
+    const invalidValue = [
+      {
+        str: "some string",
+        nums: [1],
+      },
+      {
+        str: "other string",
+        nums: [2, "3"],
+      },
+    ];
+    expect(TypeGuards.valueMatchesPropType(propType, invalidValue)).toBeFalsy();
+  });
+
+  it("checks for specific values for string union", () => {
+    const propType: PropType = {
+      type: PropValueType.string,
+      unionValues: ["some string"],
+    };
+    expect(
+      TypeGuards.valueMatchesPropType(propType, "other string")
+    ).toBeFalsy();
   });
 });

@@ -13,6 +13,7 @@ import {
   ModuleMetadata,
   ModuleState,
   PropShape,
+  PropType,
   PropVal,
   PropValueKind,
   PropValues,
@@ -39,46 +40,89 @@ type PrimitivePropValueType =
  * A static class for housing various typeguards used by Studio.
  */
 export default class TypeGuards {
-  static assertIsValidPropVal(propValue: {
+  static assertIsValidPropVal(propVal: {
     kind: PropValueKind;
     valueType: PropValueType;
     value: unknown;
-  }): asserts propValue is PropVal {
-    if (!this.isValidPropValue(propValue)) {
+  }): asserts propVal is PropVal {
+    if (!this.isValidPropVal(propVal)) {
       throw new Error(
-        "Invalid prop value: " + JSON.stringify(propValue, null, 2)
+        "Invalid prop value: " + JSON.stringify(propVal, null, 2)
       );
     }
   }
 
-  static isValidPropValue(propValue: {
+  static isValidPropVal = (propVal: {
     kind: PropValueKind;
     valueType: PropValueType;
     value: unknown;
-  }): propValue is PropVal {
-    const { kind, valueType, value } = propValue;
+  }): propVal is PropVal => {
+    const { kind, valueType, value } = propVal;
     if (kind === PropValueKind.Expression) {
-      return typeof value === "string";
+      return this.valueMatchesPropType({ type: PropValueType.string }, value);
     }
     switch (valueType) {
       case PropValueType.string:
-        return typeof value === "string";
+      case PropValueType.boolean:
+      case PropValueType.number:
+      case PropValueType.HexColor:
+        return this.valueMatchesPropType({ type: valueType }, value);
+      case PropValueType.Object:
+        const baseIsValid =
+          typeof value === "object" && !Array.isArray(value) && value !== null;
+        return (
+          baseIsValid &&
+          Object.values(value as PropValues).every(this.isValidPropVal)
+        );
+    }
+    return false;
+  };
+
+  /** Checks that the value of a prop matches the prop type. */
+  static valueMatchesPropType = (
+    propType: PropType,
+    value: unknown
+  ): value is
+    | string
+    | number
+    | boolean
+    | unknown[]
+    | Record<string, unknown> => {
+    switch (propType.type) {
+      case PropValueType.string:
+        const unionValues = propType.unionValues;
+        const isStringUnion = !!unionValues;
+        return (
+          typeof value === "string" &&
+          (!isStringUnion || unionValues.includes(value))
+        );
       case PropValueType.boolean:
         return typeof value === "boolean";
       case PropValueType.number:
         return typeof value === "number";
       case PropValueType.HexColor:
         return typeof value === "string" && value.startsWith("#");
+      case PropValueType.Array:
+        return (
+          Array.isArray(value) &&
+          value.every((val) =>
+            this.valueMatchesPropType(propType.itemType, val)
+          )
+        );
       case PropValueType.Object:
         const baseIsValid =
           typeof value === "object" && !Array.isArray(value) && value !== null;
         return (
           baseIsValid &&
-          Object.values(value as PropValues).every(this.isValidPropValue)
+          Object.entries(propType.shape).every(([field, metadata]) =>
+            value[field] !== undefined
+              ? this.valueMatchesPropType(metadata, value[field])
+              : !metadata.required
+          )
         );
     }
     return false;
-  }
+  };
 
   static isPrimitiveProp(
     propValueType: string

@@ -5,7 +5,7 @@ import {
   PropValues,
   PropValueType,
 } from "@yext/studio-plugin";
-import { getPreviewProps } from "../../src/utils/getPreviewProps";
+import { getPropsForPreview } from "../../src/utils/getPropsForPreview";
 
 const siteSettings = {
   apiKey: "dummy-api-key",
@@ -15,6 +15,29 @@ const siteSettings = {
 
 const entityData = {
   name: "office space",
+  world: "whirled",
+  hours: {
+    openIntervals: [
+      {
+        start: "01:00",
+        end: "03:00",
+      },
+      {
+        start: "12:00",
+        end: "14:00",
+      },
+    ],
+    fakeIntervals: [
+      {
+        start: "01:00",
+        end: "03:00",
+      },
+      {
+        start: "12:00",
+        end: 14,
+      },
+    ],
+  },
 };
 
 const expressionSources = {
@@ -25,6 +48,23 @@ const expressionSources = {
 const propShape: PropShape = {
   foo: {
     type: PropValueType.string,
+    required: false,
+  },
+  bar: {
+    type: PropValueType.Array,
+    itemType: {
+      type: PropValueType.Object,
+      shape: {
+        start: {
+          type: PropValueType.string,
+          required: true,
+        },
+        end: {
+          type: PropValueType.string,
+          required: true,
+        },
+      },
+    },
     required: false,
   },
 };
@@ -41,7 +81,7 @@ const parentPropShape: PropShape = {
 };
 
 it("returns value as is for prop of type Literal", () => {
-  const transformedProps = getPreviewProps(
+  const transformedProps = getPropsForPreview(
     {
       foo: {
         kind: PropValueKind.Literal,
@@ -83,7 +123,7 @@ it("returns value as is for prop of type Literal", () => {
 });
 
 it("uses default value for props with unspecified/undefined value", () => {
-  const transformedProps = getPreviewProps(
+  const transformedProps = getPropsForPreview(
     {},
     {
       bgColor: {
@@ -107,8 +147,10 @@ it("logs a warning when transformed value type doesn't match from the expected t
     foo: "siteSettings.isDevMode",
   });
   expect(consoleWarnSpy).toHaveBeenCalledWith(
-    `Invalid expression prop value: ${siteSettings.isDevMode}. The value extracted from the expression` +
-      ` "siteSettings.isDevMode" does not match with the expected propType ${PropValueType.string}.`
+    "Invalid expression prop value:",
+    siteSettings.isDevMode,
+    'The value extracted from the expression "siteSettings.isDevMode" does' +
+      ` not match with the expected propValueType ${PropValueType.string}`
   );
 });
 
@@ -158,6 +200,47 @@ describe("expression value handling", () => {
     expect(transformedProps).toEqual({
       foo: "office space",
     });
+  });
+
+  it("can handle expression that references an array of objects", () => {
+    const transformedProps = getPropsForPreview(
+      {
+        bar: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.Array,
+          value: "document.hours.openIntervals",
+        },
+      },
+      propShape,
+      expressionSources
+    );
+    expect(transformedProps.bar).toEqual(entityData.hours.openIntervals);
+  });
+
+  it("logs a warning when transformed array value doesn't match expected item type", () => {
+    const consoleWarnSpy = jest
+      .spyOn(global.console, "warn")
+      .mockImplementation();
+    const transformedProps = getPropsForPreview(
+      {
+        bar: {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.Array,
+          value: "document.hours.fakeIntervals",
+        },
+      },
+      propShape,
+      expressionSources
+    );
+    expect(transformedProps.bar).toBeUndefined();
+    expect(consoleWarnSpy).toHaveBeenCalledWith(
+      "Invalid expression prop value:",
+      entityData.hours.fakeIntervals,
+      'The value extracted from the expression "document.hours.fakeIntervals"' +
+        ` does not match with the expected propValueType ${PropValueType.Array}`,
+      "with item type",
+      propShape["bar"]["itemType"]
+    );
   });
 });
 
@@ -231,7 +314,7 @@ it("applies expression sources for streams data", () => {
 });
 
 function transformFooProp(value: string, parentProps: PropValues = {}) {
-  return getPreviewProps(
+  return getPropsForPreview(
     {
       foo: {
         kind: PropValueKind.Expression,
@@ -242,7 +325,11 @@ function transformFooProp(value: string, parentProps: PropValues = {}) {
     propShape,
     {
       ...expressionSources,
-      props: getPreviewProps(parentProps, parentPropShape, expressionSources),
+      props: getPropsForPreview(
+        parentProps,
+        parentPropShape,
+        expressionSources
+      ),
     }
   );
 }
@@ -282,16 +369,15 @@ it("works with expressions inside object props", () => {
       },
     },
   };
-  const previewProps = getPreviewProps(propValues, propShape, {
-    document: {
-      world: "whirled",
-      name: "bob",
-    },
-  });
+  const previewProps = getPropsForPreview(
+    propValues,
+    propShape,
+    expressionSources
+  );
   expect(previewProps).toEqual({
     obj: {
       templateExpr: "hello whirled",
-      expr: "bob",
+      expr: "office space",
     },
   });
 });

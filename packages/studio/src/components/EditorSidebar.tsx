@@ -1,22 +1,18 @@
 import { useState } from "react";
-import PropertiesPanel from "./PropertiesPanel";
+import PropsPanel from "./PropsPanel";
 import OptionPicker from "./common/OptionPicker";
 import Divider from "./common/Divider";
-import { ReactComponent as Sliders } from "../icons/sliders.svg";
 import { ReactComponent as Globe } from "../icons/globe.svg";
 import { ReactComponent as Content } from "../icons/content.svg";
 import SiteSettingsPanel from "./SiteSettingsPanel";
-import ContentPanel from "./ContentPanel";
 
 enum Tab {
-  Content = "Content",
-  Properties = "Properties",
+  Props = "Props",
   SiteSettings = "SiteSettings",
 }
 
 const tabIcons = {
-  [Tab.Content]: <Content className="w-7" />,
-  [Tab.Properties]: <Sliders className="w-4" />,
+  [Tab.Props]: <Content className="w-7" />,
   [Tab.SiteSettings]: <Globe className="w-4" />,
 };
 
@@ -25,14 +21,14 @@ const tabIcons = {
  * Used for editing the active component's props or site settings.
  */
 export default function EditorSidebar(): JSX.Element {
-  const [selectedTab, setTab] = useState<Tab>(Tab.Content);
+  const [selectedTab, setTab] = useState<Tab>(Tab.Props);
 
   return (
     <div className="w-1/4 px-4" data-testid="EditorSidebar">
       <OptionPicker
         options={Tab}
         icons={tabIcons}
-        defaultOption={Tab.Content}
+        defaultOption={Tab.Props}
         onSelect={setTab}
       />
       <Divider />
@@ -43,10 +39,8 @@ export default function EditorSidebar(): JSX.Element {
 
 function renderTab(tab: Tab) {
   switch (tab) {
-    case Tab.Properties:
-      return <PropertiesPanel />;
-    case Tab.Content:
-      return <ContentPanel />;
+    case Tab.Props:
+      return <PropsPanel />;
     case Tab.SiteSettings:
       return <SiteSettingsPanel />;
   }
