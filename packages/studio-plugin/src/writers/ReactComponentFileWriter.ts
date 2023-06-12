@@ -38,7 +38,7 @@ export default class ReactComponentFileWriter {
     name = camelCase(name, {pascalCase: true});
     const nonAlphaNumeric = /[^\w]/g;
     const firstNonLetters = /^[^a-zA-Z]*/;
-    name = name.replaceAll(nonAlphaNumeric, "")
+    name = name.replaceAll(nonAlphaNumeric, "");
     name = name.replace(firstNonLetters, "");
     if (!name) {
       name = "PageDefaultFromInvalidInput";
