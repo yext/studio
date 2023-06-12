@@ -1,6 +1,6 @@
 import useStudioStore from "../store/useStudioStore";
 import { useCallback, useEffect, useState } from "react";
-import gitData from "virtual:yext-studio-git-data";
+import gitData from "virtual_yext-studio-git-data";
 import useHasChanges from "../hooks/useHasChanges";
 import { Tooltip } from "react-tooltip";
 

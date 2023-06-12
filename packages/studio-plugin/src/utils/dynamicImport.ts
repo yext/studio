@@ -3,11 +3,12 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export function dynamicImport(absFilepath: string): Promise<any> {
+export function dynamicImport(absFilepath: string): Promise<unknown> {
   const relativeFilepath = getWindowsCompatiblePath(absFilepath);
   return import(/* @vite-ignore */ relativeFilepath);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function dynamicImportJson(absFilepath: string): Promise<any> {
   const relativeFilepath = getWindowsCompatiblePath(absFilepath);
   const importedModule = await import(/* @vite-ignore */ relativeFilepath, {

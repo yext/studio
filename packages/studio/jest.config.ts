@@ -13,5 +13,8 @@ const config: Config = {
     "\\.[jt]sx?$": "babel-jest",
     "\\.svg$": "<rootDir>/tests/__setup__/svgTransformer.cjs",
   },
+  moduleNameMapper: {
+    "^(.+)\\.js$": "$1",
+  },
 };
 export default config;

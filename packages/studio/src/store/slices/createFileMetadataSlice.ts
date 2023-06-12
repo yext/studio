@@ -5,7 +5,7 @@ import {
   FileMetadataKind,
   ModuleMetadata,
 } from "@yext/studio-plugin";
-import initialStudioData from "virtual:yext-studio";
+import initialStudioData from "virtual_yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { SliceCreator } from "../models/utils";
 import removeTopLevelFragments from "../../utils/removeTopLevelFragments";

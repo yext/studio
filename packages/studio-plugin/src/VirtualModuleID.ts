@@ -3,8 +3,8 @@
  * studio-plugin to the studio frontend.
  */
 enum VirtualModuleID {
-  StudioData = "virtual:yext-studio",
-  GitData = "virtual:yext-studio-git-data",
+  StudioData = "virtual_yext-studio",
+  GitData = "virtual_yext-studio-git-data",
 }
 
 export default VirtualModuleID;

@@ -16,7 +16,7 @@ export default function getImportSpecifier(
   const importPath = path.join(relativePath, importName);
   // We need to add a leading ./ if there is none present.
   if (path.dirname(importPath) === "." && !importPath.startsWith(".")) {
-    return "./.js" + importPath;
+    return "./" + importPath;
   }
   return importPath;
 }

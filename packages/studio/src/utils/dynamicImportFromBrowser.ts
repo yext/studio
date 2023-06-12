@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * In order to support dynamic imports from the browser on Windows,
  * we need to add an `@fs` prefix to all imports.
