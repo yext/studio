@@ -31,58 +31,54 @@ export default class GitWrapper {
   }
 
   private async canPush(): Promise<{ reason?: string; status: boolean }> {
-    const remotes = await this.git.getRemotes();
-    if (remotes.length === 0) {
-      return {
-        status: false,
-        reason: "No remotes found.",
-      };
-    } else if (remotes.length > 1) {
-      return {
-        status: false,
-        reason: "Multiple remotes found.",
-      };
-    }
-    const upstreamBranch = await this.git.revparse(["--abbrev-ref", "@{u}"]);
-    if (!upstreamBranch) {
-      return {
-        status: false,
-        reason: "No upstream branch found",
-      };
-    }
-    const diff = await this.git.diff(["--stat", upstreamBranch]);
-    if (!diff) {
-      return {
-        status: false,
-        reason: "No changes to push.",
-      };
-    }
+    try {
+      const remotes = await this.git.getRemotes();
+      if (remotes.length === 0) {
+        return {
+          status: false,
+          reason: "No remotes found.",
+        };
+      } else if (remotes.length > 1) {
+        return {
+          status: false,
+          reason: "Multiple remotes found.",
+        };
+      }
+      const upstreamBranch = await this.git.revparse(["--abbrev-ref", "@{u}"]);
+      if (!upstreamBranch) {
+        return {
+          status: false,
+          reason: "No upstream branch found",
+        };
+      }
+      const diff = await this.git.diff(["--stat", upstreamBranch]);
+      if (!diff) {
+        return {
+          status: false,
+          reason: "No changes to push.",
+        };
+      }
 
-    return {
-      status: true,
-    };
-  }
+      return {
+        status: true,
+      };
+    } catch (err: unknown) {
+      if (!(err instanceof Error)) {
+        throw err;
+      }
 
-  private handleErr(err: unknown) {
-    if (err instanceof Error) {
       return {
         status: false,
         reason: err.message,
       };
-    } else {
-      throw err;
     }
   }
 
   async refreshData() {
-    try {
-      const canPush = await this.canPush();
-      this.gitData = {
-        canPush,
-        isWithinCBD: !!process.env.YEXT_CBD_BRANCH,
-      };
-    } catch (err) {
-      this.handleErr(err);
-    }
+    const canPush = await this.canPush();
+    this.gitData = {
+      canPush,
+      isWithinCBD: !!process.env.YEXT_CBD_BRANCH,
+    };
   }
 }

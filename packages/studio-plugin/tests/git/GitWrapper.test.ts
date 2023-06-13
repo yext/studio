@@ -41,6 +41,17 @@ describe("verifying canPush calculation", () => {
 
   const gitWrapper = new GitWrapper(mockedGitInstance);
 
+  it("handles arbitrarily thrown errors correctly", async () => {
+    jest.spyOn(mockedGitInstance, "getRemotes").mockImplementation(() => {
+      throw new Error("Arbitrary error");
+    });
+    await gitWrapper.refreshData();
+    expect(gitWrapper.getStoredData()?.canPush).toEqual({
+      reason: "Arbitrary error",
+      status: false,
+    });
+  });
+
   it("handles no remotes correctly", async () => {
     gitRemotesSpy.mockReturnValue(getResponseWithRemotes([]));
     await gitWrapper.refreshData();
