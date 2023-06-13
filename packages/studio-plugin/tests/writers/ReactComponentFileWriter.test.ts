@@ -54,13 +54,15 @@ function createReactComponentFileWriter(
   );
 }
 
-function testComponentNameSanitation (inputName: string, outputName: string, proj: Project) {
+function testComponentNameSanitation(
+  inputName: string,
+  outputName: string,
+  proj: Project
+) {
   const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
-  createReactComponentFileWriter(
-    proj,
-    filepath,
-    inputName
-  ).updateFile({componentTree: []});
+  createReactComponentFileWriter(proj, filepath, inputName).updateFile({
+    componentTree: [],
+  });
   expect(fs.writeFileSync).toHaveBeenCalledWith(
     expect.stringContaining("PageWithNoDefaultFunction"),
     expect.stringContaining(`export default function ${outputName}() {}`)
