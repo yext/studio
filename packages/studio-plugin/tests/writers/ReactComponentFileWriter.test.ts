@@ -534,7 +534,7 @@ describe("updateFile", () => {
       tsMorphProject,
       filepath,
       inputName
-    ).updateFile({componentTree: []});
+    ).updateFile({ componentTree: [] });
     expect(fs.writeFileSync).toHaveBeenCalledWith(
       expect.stringContaining("EmptyFile"),
       expect.stringContaining(`export default function ${outputName}() {}`)
