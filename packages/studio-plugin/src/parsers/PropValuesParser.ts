@@ -78,6 +78,9 @@ export default class PropValuesParser {
     propType: PropType,
     propShape: PropShape
   ): PropVal {
+    if (rawVal.kind === PropValueKind.Expression) {
+      throw new Error(`Expressions are not supported within object literal.`);
+    }
     const typeMatchErrorMessage = `Error parsing value of ${propName} in ${JSON.stringify(
       propShape,
       null,
@@ -115,9 +118,6 @@ export default class PropValuesParser {
       };
     };
 
-    if (rawVal.kind === PropValueKind.Expression) {
-      throw new Error(`Expressions are not supported within object literal.`);
-    }
     const propVal = getPropVal();
     TypeGuards.assertIsValidPropVal(propVal);
     return propVal;

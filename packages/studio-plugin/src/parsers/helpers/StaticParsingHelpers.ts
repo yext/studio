@@ -57,15 +57,13 @@ export default class StaticParsingHelpers {
       valueType === PropValueType.Array &&
       Array.isArray(typelessPropVal.value)
     ) {
-      const getPropVals = (typelessPropVals: TypelessPropVal[]): PropVal[] => {
-        return typelessPropVals.map((val) =>
-          this.addTypesToPropVal(val, propType.itemType)
-        );
-      };
+      const arrayPropVals: PropVal[] = typelessPropVal.value.map((val) =>
+        this.addTypesToPropVal(val, propType.itemType)
+      );
       const arrayPropVal: ArrayProp = {
         kind: PropValueKind.Literal,
         valueType,
-        value: getPropVals(typelessPropVal.value),
+        value: arrayPropVals,
       };
       TypeGuards.assertIsValidPropVal(arrayPropVal);
       return arrayPropVal;
