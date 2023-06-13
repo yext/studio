@@ -530,36 +530,49 @@ describe("updateFile", () => {
 
   describe("reactComponentNameSanitizer", () => {
     it("removes all special characters in name", () => {
-      const filepath = getPagePath("updatePageFile/PageWithAComponent");
       const inputName = "~'!@#%^&*()+={}[]|\\/:;\"`<>,.?- \t\r\n\f";
-      const outputName = createReactComponentFileWriter(
+      const outputName = "PageDefaultFromInvalidInput";
+      const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
+      createReactComponentFileWriter(
         tsMorphProject,
         filepath,
-        "Test"
-      ).reactComponentNameSanitizer(inputName);
-      expect(outputName).toEqual("PageDefaultFromInvalidInput");
+        inputName
+      ).updateFile({componentTree: []});
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithNoDefaultFunction"),
+        expect.stringContaining("export default function " + outputName + "() {}")
+      );
     });
 
     it("removes all leading digits in name and uppercases first letter", () => {
-      const filepath = getPagePath("updatePageFile/PageWithAComponent");
       const inputName = "0123456789te9st";
-      const outputName = createReactComponentFileWriter(
+      const outputName = "Te9St";
+      const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
+      createReactComponentFileWriter(
         tsMorphProject,
         filepath,
-        "Test"
-      ).reactComponentNameSanitizer(inputName);
-      expect(outputName).toEqual("Te9St");
+        inputName
+      ).updateFile({componentTree: []});
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithNoDefaultFunction"),
+        expect.stringContaining("export default function " + outputName + "() {}")
+      );
     });
 
     it("removes all leading non-letter unicode chars and uppercases first letter", () => {
-      const filepath = getPagePath("updatePageFile/PageWithAComponent");
       const inputName = "àÀصʱapple";
-      const outputName = createReactComponentFileWriter(
+      const outputName = "Apple";
+      const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
+      createReactComponentFileWriter(
         tsMorphProject,
         filepath,
-        "Test"
-      ).reactComponentNameSanitizer(inputName);
-      expect(outputName).toEqual("Apple");
+        inputName
+      ).updateFile({componentTree: []});
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("PageWithNoDefaultFunction"),
+        expect.stringContaining("export default function " + outputName + "() {}")
+      );
     });
+    
   });
 });

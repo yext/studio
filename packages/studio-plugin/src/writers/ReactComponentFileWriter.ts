@@ -34,7 +34,7 @@ export default class ReactComponentFileWriter {
     private studioSourceFileParser: StudioSourceFileParser
   ) {}
 
-  reactComponentNameSanitizer(name: string) {
+  private reactComponentNameSanitizer(name: string) {
     name = camelCase(name, { pascalCase: true });
     const nonAlphaNumeric = /[\W]/g;
     const firstNonLetters = /^[^a-zA-Z]*/;
