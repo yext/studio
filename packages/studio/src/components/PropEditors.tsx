@@ -41,10 +41,14 @@ export default function PropEditors(props: {
       );
       if (isNested) {
         const isLastProp = index === numProps - 1;
-        const classes = classNames('flex', 'flex-row', 'ml-2', { 'border-l-2': !isLastProp });
+        const classes = classNames("flex", "flex-row", "ml-2", {
+          "border-l-2": !isLastProp,
+        });
         return (
           <div className={classes} key={propName}>
-            {isLastProp && <div className="before:border-l-2 before:pt-1"></div>}
+            {isLastProp && (
+              <div className="before:border-l-2 before:pt-1"></div>
+            )}
             {editor}
           </div>
         );
