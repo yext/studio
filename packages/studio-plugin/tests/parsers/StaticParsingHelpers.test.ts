@@ -70,6 +70,13 @@ describe("parseJsxAttributes", () => {
         },
       },
     },
+    arr: {
+      type: PropValueType.Array,
+      required: false,
+      itemType: {
+        type: PropValueType.string,
+      },
+    },
   };
 
   it("skips special React props", () => {
@@ -142,6 +149,39 @@ describe("parseJsxAttributes", () => {
             valueType: PropValueType.string,
           },
         },
+      },
+    };
+    expect(receivedPropValues).toEqual(expectedPropValues);
+  });
+
+  it("can parse arrays with expressions and string literals", () => {
+    const { sourceFile } = createTestSourceFile(
+      `<Banner arr={[ document.name, 'cheese' ]} />`
+    );
+    const jsxAttributes = sourceFile
+      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+      .getAttributes();
+
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues: PropValues = {
+      arr: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Array,
+        value: [
+          {
+            kind: PropValueKind.Expression,
+            value: "document.name",
+            valueType: PropValueType.string,
+          },
+          {
+            kind: PropValueKind.Literal,
+            value: "cheese",
+            valueType: PropValueType.string,
+          },
+        ],
       },
     };
     expect(receivedPropValues).toEqual(expectedPropValues);

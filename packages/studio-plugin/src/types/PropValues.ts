@@ -2,16 +2,28 @@ export type PropValues = {
   [propName: string]: PropVal;
 };
 
-export type PropVal<T = PropValues> = LiteralProp<T> | ExpressionProp;
+export type PropVal = LiteralProp | ExpressionProp;
 export type TypelessPropVal =
   | {
       kind: PropValueKind.Literal;
-      value: string | number | boolean | Record<string, TypelessPropVal>;
+      value:
+        | string
+        | number
+        | boolean
+        | Record<string, TypelessPropVal>
+        | TypelessPropVal[];
     }
   | Omit<ExpressionProp, "valueType">;
 export type LiteralProp<T = PropValues> = {
   kind: PropValueKind.Literal;
-} & (NumberProp | StringProp | BooleanProp | HexColorProp | ObjectProp<T>);
+} & (
+  | NumberProp
+  | StringProp
+  | BooleanProp
+  | HexColorProp
+  | ObjectProp<T>
+  | ArrayProp
+);
 
 export type ExpressionProp =
   | {
@@ -37,15 +49,15 @@ export enum PropValueKind {
   Expression = "Expression",
 }
 
-export type NumberProp = {
+type NumberProp = {
   valueType: PropValueType.number;
   value: number;
 };
-export type StringProp = {
+type StringProp = {
   valueType: PropValueType.string;
   value: string;
 };
-export type BooleanProp = {
+type BooleanProp = {
   valueType: PropValueType.boolean;
   value: boolean;
 };
@@ -53,6 +65,11 @@ export type ObjectProp<T = PropValues> = {
   kind: PropValueKind.Literal;
   valueType: PropValueType.Object;
   value: T;
+};
+export type ArrayProp = {
+  kind: PropValueKind.Literal;
+  valueType: PropValueType.Array;
+  value: PropVal[];
 };
 export type RecordProp = {
   kind: PropValueKind.Expression;
@@ -62,7 +79,7 @@ export type RecordProp = {
 };
 // Used in component outside Studio to represent a hex color prop in Studio preview.
 export type HexColor = `#${string}`;
-export type HexColorProp = {
+type HexColorProp = {
   valueType: PropValueType.HexColor;
   value: HexColor;
 };
