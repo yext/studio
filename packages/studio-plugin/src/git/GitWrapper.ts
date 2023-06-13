@@ -58,7 +58,7 @@ export default class GitWrapper {
           reason: "No changes to push.",
         };
       }
-  
+
       return {
         status: true,
       };
