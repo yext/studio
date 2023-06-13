@@ -528,20 +528,20 @@ describe("updateFile", () => {
     });
   });
 
-  function testComponentNameSanitation (inputName: string, outputName: string) {
-    const filepath = getPagePath("updatePageFile/EmptyFile");
-    createReactComponentFileWriter(
-      tsMorphProject,
-      filepath,
-      inputName
-    ).updateFile({ componentTree: [] });
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining("EmptyFile"),
-      expect.stringContaining(`export default function ${outputName}() {}`)
-    );
-  }
-
   describe("reactComponentNameSanitizer", () => {
+    function testComponentNameSanitation (inputName: string, outputName: string) {
+      const filepath = getPagePath("updatePageFile/EmptyFile");
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        inputName
+      ).updateFile({ componentTree: [] });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("EmptyFile"),
+        expect.stringContaining(`export default function ${outputName}() {}`)
+      );
+    }
+
     it("removes all special characters in name", () => {
       const inputName = "~'!@#%^&*()+={}[]|\\/:;\"`<>,.?- \t\r\n\f";
       const outputName = "PageDefaultFromInvalidInput";
