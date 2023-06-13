@@ -559,6 +559,5 @@ describe("updateFile", () => {
       const outputName = "Apple";
       testComponentNameSanitation(inputName, outputName, tsMorphProject);
     });
-    
   });
 });
