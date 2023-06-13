@@ -12,6 +12,6 @@ const config: Config = {
   transform: {
     "\\.[jt]sx?$": "babel-jest",
     "\\.svg$": "<rootDir>/tests/__setup__/svgTransformer.cjs",
-  }
+  },
 };
 export default config;
