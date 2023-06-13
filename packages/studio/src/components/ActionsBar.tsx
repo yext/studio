@@ -2,7 +2,7 @@ import AddElementButton from "./AddElementButton";
 import UndoRedo from "./UndoRedo";
 import SaveButton from "./SaveButton";
 import DeployButton from "./DeployButton";
-import gitData from "virtual:yext-studio-git-data";
+import gitData from "virtual_yext-studio-git-data";
 
 /**
  * Renders the top bar of Studio, which includes buttons for performing undo

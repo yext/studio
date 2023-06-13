@@ -1,4 +1,4 @@
-import initialStudioData from "virtual:yext-studio";
+import initialStudioData from "virtual_yext-studio";
 import SiteSettingsSlice from "../models/slices/SiteSettingsSlice";
 import { SliceCreator } from "../models/utils";
 
