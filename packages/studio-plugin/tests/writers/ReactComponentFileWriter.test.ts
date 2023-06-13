@@ -54,19 +54,6 @@ function createReactComponentFileWriter(
   );
 }
 
-function testComponentNameSanitation (inputName: string, outputName: string, proj: Project) {
-  const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
-  createReactComponentFileWriter(
-    proj,
-    filepath,
-    inputName
-  ).updateFile({componentTree: []});
-  expect(fs.writeFileSync).toHaveBeenCalledWith(
-    expect.stringContaining("PageWithNoDefaultFunction"),
-    expect.stringContaining(`export default function ${outputName}() {}`)
-  );
-}
-
 jest.mock("uuid");
 
 describe("updateFile", () => {
@@ -541,23 +528,36 @@ describe("updateFile", () => {
     });
   });
 
+  function testComponentNameSanitation (inputName: string, outputName: string) {
+    const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
+    createReactComponentFileWriter(
+      tsMorphProject,
+      filepath,
+      inputName
+    ).updateFile({componentTree: []});
+    expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect.stringContaining("PageWithNoDefaultFunction"),
+      expect.stringContaining(`export default function ${outputName}() {}`)
+    );
+  }
+
   describe("reactComponentNameSanitizer", () => {
     it("removes all special characters in name", () => {
       const inputName = "~'!@#%^&*()+={}[]|\\/:;\"`<>,.?- \t\r\n\f";
       const outputName = "PageDefaultFromInvalidInput";
-      testComponentNameSanitation(inputName, outputName, tsMorphProject);
+      testComponentNameSanitation(inputName, outputName);
     });
 
     it("removes all leading digits in name and uppercases first letter", () => {
       const inputName = "0123456789te9st";
       const outputName = "Te9St";
-      testComponentNameSanitation(inputName, outputName, tsMorphProject);
+      testComponentNameSanitation(inputName, outputName);
     });
 
     it("removes all leading non-letter unicode chars and uppercases first letter", () => {
       const inputName = "àÀصʱapple";
       const outputName = "Apple";
-      testComponentNameSanitation(inputName, outputName, tsMorphProject);
+      testComponentNameSanitation(inputName, outputName);
     });
   });
 });
