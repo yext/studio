@@ -41,7 +41,7 @@ export default function PropEditors(props: {
       );
       if (isNested) {
         const isLastProp = index === numProps - 1;
-        const classes = classNames("flex", "flex-row", "ml-2", {
+        const classes = classNames("flex flex-row ml-2", {
           "border-l-2": !isLastProp,
         });
         return (
