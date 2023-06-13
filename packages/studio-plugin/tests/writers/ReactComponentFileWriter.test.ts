@@ -529,14 +529,14 @@ describe("updateFile", () => {
   });
 
   function testComponentNameSanitation (inputName: string, outputName: string) {
-    const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
+    const filepath = getPagePath("updatePageFile/EmptyFile");
     createReactComponentFileWriter(
       tsMorphProject,
       filepath,
       inputName
     ).updateFile({componentTree: []});
     expect(fs.writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining("PageWithNoDefaultFunction"),
+      expect.stringContaining("EmptyFile"),
       expect.stringContaining(`export default function ${outputName}() {}`)
     );
   }
