@@ -10,6 +10,7 @@ import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import { useCallback } from "react";
 import NestedPropEditors from "./NestedPropEditors";
+import classNames from "classnames";
 
 export default function PropEditors(props: {
   propShape: PropShape;
@@ -28,8 +29,9 @@ export default function PropEditors(props: {
     [propValues, updateProps]
   );
 
+  const numProps = Object.keys(propShape).length;
   const propEditors = Object.entries(propShape).map(
-    ([propName, propMetadata]) => {
+    ([propName, propMetadata], index) => {
       const editor = renderPropEditor(
         propName,
         propMetadata,
@@ -38,8 +40,11 @@ export default function PropEditors(props: {
         isNested
       );
       if (isNested) {
+        const isLastProp = index === numProps - 1;
+        const classes = classNames('flex', 'flex-row', 'ml-2', { 'border-l-2': !isLastProp });
         return (
-          <div className="flex items-center border-l-2 ml-2" key={propName}>
+          <div className={classes} key={propName}>
+            {isLastProp && <div className="before:border-l-2 before:pt-1"></div>}
             {editor}
           </div>
         );
