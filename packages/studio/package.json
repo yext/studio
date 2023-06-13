@@ -1,6 +1,6 @@
 {
   "name": "@yext/studio",
-  "version": "0.12.0-alpha.3",
+  "version": "0.12.0",
   "types": "./lib/types.d.ts",
   "type": "module",
   "bin": {
