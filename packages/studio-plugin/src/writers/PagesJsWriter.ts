@@ -1,5 +1,8 @@
-import { PAGESJS_TEMPLATE_PROPS_TYPE, PAGES_PACKAGE_NAME } from "../constants";
-import StudioSourceFileWriter from "./StudioSourceFileWriter";
+import {
+  PAGESJS_TEMPLATE_PROPS_TYPE,
+  PAGES_PACKAGE_NAME,
+} from "../constants.js";
+import StudioSourceFileWriter from "./StudioSourceFileWriter.js";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 
 /**

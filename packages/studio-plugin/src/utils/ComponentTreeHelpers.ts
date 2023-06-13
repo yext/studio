@@ -4,10 +4,10 @@ import {
   ExpressionProp,
   PropValueKind,
   TypelessPropVal,
-} from "../types";
-import ComponentStateHelpers from "./ComponentStateHelpers";
-import ExpressionHelpers from "./ExpressionHelpers";
-import TypeGuards from "./TypeGuards";
+} from "../types/index.js";
+import ComponentStateHelpers from "./ComponentStateHelpers.js";
+import ExpressionHelpers from "./ExpressionHelpers.js";
+import TypeGuards from "./TypeGuards.js";
 
 /**
  * A static class for housing various util functions related to component state used by Studio.

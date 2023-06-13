@@ -13,13 +13,13 @@ import {
   ErrorComponentState,
   RepeaterState,
   StandardOrModuleComponentState,
-} from "../types/ComponentState";
+} from "../types/ComponentState.js";
 import { v4 } from "uuid";
-import { FileMetadataKind, TypelessPropVal } from "../types";
-import StudioSourceFileParser from "./StudioSourceFileParser";
-import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
-import TypeGuards from "../utils/TypeGuards";
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import { FileMetadataKind, TypelessPropVal } from "../types/index.js";
+import StudioSourceFileParser from "./StudioSourceFileParser.js";
+import StaticParsingHelpers from "./helpers/StaticParsingHelpers.js";
+import TypeGuards from "../utils/TypeGuards.js";
+import ParsingOrchestrator from "../ParsingOrchestrator.js";
 
 export type GetFileMetadata = ParsingOrchestrator["getFileMetadata"];
 

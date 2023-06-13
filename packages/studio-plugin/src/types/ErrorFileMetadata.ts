@@ -1,4 +1,4 @@
-import { FileMetadataKind } from "./FileMetadata";
+import { FileMetadataKind } from "./FileMetadata.js";
 
 export type ErrorFileMetadata = {
   kind: FileMetadataKind.Error;

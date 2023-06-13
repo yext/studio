@@ -1,4 +1,4 @@
-export { default as TypeGuards } from "./TypeGuards";
-export { default as ComponentTreeHelpers } from "./ComponentTreeHelpers";
-export { default as transformPropValuesToRaw } from "./transformPropValuesToRaw";
-export { default as ComponentStateHelpers } from "./ComponentStateHelpers";
+export { default as TypeGuards } from "./TypeGuards.js";
+export { default as ComponentTreeHelpers } from "./ComponentTreeHelpers.js";
+export { default as transformPropValuesToRaw } from "./transformPropValuesToRaw.js";
+export { default as ComponentStateHelpers } from "./ComponentStateHelpers.js";

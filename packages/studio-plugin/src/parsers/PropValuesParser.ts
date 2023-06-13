@@ -1,14 +1,14 @@
 import { SyntaxKind } from "ts-morph";
-import { PropShape } from "../types/PropShape";
+import { PropShape } from "../types/PropShape.js";
 import {
   PropValueKind,
   PropValues,
   PropValueType,
   TypelessPropVal,
-} from "../types/PropValues";
-import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
-import TypeGuards from "../utils/TypeGuards";
-import StudioSourceFileParser from "./StudioSourceFileParser";
+} from "../types/PropValues.js";
+import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers.js";
+import TypeGuards from "../utils/TypeGuards.js";
+import StudioSourceFileParser from "./StudioSourceFileParser.js";
 
 /**
  * PropValuesParser is a class for parsing object literals in a Studio file into PropValues.

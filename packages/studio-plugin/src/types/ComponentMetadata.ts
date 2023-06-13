@@ -1,6 +1,6 @@
-import { FileMetadataKind } from "./FileMetadata";
-import { PropShape } from "./PropShape";
-import { PropValues } from "./PropValues";
+import { FileMetadataKind } from "./FileMetadata.js";
+import { PropShape } from "./PropShape.js";
+import { PropValues } from "./PropValues.js";
 
 export type ComponentMetadata = {
   kind: FileMetadataKind.Component;
