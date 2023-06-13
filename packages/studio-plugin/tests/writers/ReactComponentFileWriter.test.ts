@@ -54,6 +54,24 @@ function createReactComponentFileWriter(
   );
 }
 
+<<<<<<< HEAD
+=======
+function testComponentNameSanitation(
+  inputName: string,
+  outputName: string,
+  proj: Project
+) {
+  const filepath = getPagePath("updatePageFile/PageWithNoDefaultFunction");
+  createReactComponentFileWriter(proj, filepath, inputName).updateFile({
+    componentTree: [],
+  });
+  expect(fs.writeFileSync).toHaveBeenCalledWith(
+    expect.stringContaining("PageWithNoDefaultFunction"),
+    expect.stringContaining(`export default function ${outputName}() {}`)
+  );
+}
+
+>>>>>>> e7551ec9b9ed9e8d862ebdce20ccdc3b344d835e
 jest.mock("uuid");
 
 describe("updateFile", () => {
