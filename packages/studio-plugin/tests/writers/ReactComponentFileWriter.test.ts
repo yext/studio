@@ -529,7 +529,10 @@ describe("updateFile", () => {
   });
 
   describe("reactComponentNameSanitizer", () => {
-    function testComponentNameSanitation (inputName: string, outputName: string) {
+    function testComponentNameSanitation(
+      inputName: string,
+      outputName: string
+    ) {
       const filepath = getPagePath("updatePageFile/EmptyFile");
       createReactComponentFileWriter(
         tsMorphProject,
