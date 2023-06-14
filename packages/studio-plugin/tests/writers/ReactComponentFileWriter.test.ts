@@ -204,12 +204,12 @@ describe("updateFile", () => {
       );
     });
 
-    it("can write array expression props", () => {
+    it("can write array props", () => {
       addFilesToProject(tsMorphProject, [
         getComponentPath("BannerUsingArrays"),
       ]);
 
-      const filepath = getPagePath("updatePageFile/PageWithArrayProp");
+      const filepath = getPagePath("updatePageFile/PageWithArrayProps");
       createReactComponentFileWriter(
         tsMorphProject,
         filepath,
@@ -226,9 +226,20 @@ describe("updateFile", () => {
                 value: "document.services",
               },
               typeArr: {
-                kind: PropValueKind.Expression,
+                kind: PropValueKind.Literal,
                 valueType: PropValueType.Array,
-                value: "document.nums",
+                value: [
+                  {
+                    kind: PropValueKind.Literal,
+                    valueType: PropValueType.number,
+                    value: 1,
+                  },
+                  {
+                    kind: PropValueKind.Expression,
+                    valueType: PropValueType.number,
+                    value: "document.num",
+                  },
+                ],
               },
               optionalArr: {
                 kind: PropValueKind.Expression,
@@ -243,9 +254,9 @@ describe("updateFile", () => {
         cssImports: [],
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithArrayProp.tsx"),
+        expect.stringContaining("PageWithArrayProps.tsx"),
         fs.readFileSync(
-          getPagePath("updatePageFile/PageWithArrayProp"),
+          getPagePath("updatePageFile/PageWithArrayProps"),
           "utf-8"
         )
       );

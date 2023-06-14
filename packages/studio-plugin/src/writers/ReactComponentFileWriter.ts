@@ -57,8 +57,8 @@ export default class ReactComponentFileWriter {
     return propsString;
   }
 
-  private parsePropVal(propVal: PropVal) {
-    const { value, valueType } = propVal;
+  private parsePropVal = (propVal: PropVal) => {
+    const { value, valueType, kind } = propVal;
     if (this.shouldUseStringSyntaxForProp(propVal)) {
       const escapedValueWithDoubleQuotes = JSON.stringify(value);
       return escapedValueWithDoubleQuotes;
@@ -76,10 +76,16 @@ export default class ReactComponentFileWriter {
         ""
       );
       return "{" + stringifiedObject + "}";
+    } else if (
+      valueType === PropValueType.Array &&
+      kind === PropValueKind.Literal
+    ) {
+      const stringifiedArray = value.map(this.parsePropVal).join(", ");
+      return "[" + stringifiedArray + "]";
     } else {
       return value;
     }
-  }
+  };
 
   private shouldUseStringSyntaxForProp({ kind, valueType }: PropVal) {
     const isRepresentedAsString =

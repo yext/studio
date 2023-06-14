@@ -52,6 +52,9 @@ function getPropValueForPreview(
     return handleExpressionProp(propVal.value, propType, expressionSources);
   } else if (propVal.valueType === PropValueType.Object) {
     return handleObjectProp(propVal.value, propType, expressionSources);
+  } else if (propVal.valueType === PropValueType.Array) {
+    // TODO (SLAP-2773): Add support for previewing array literal props
+    return undefined;
   } else {
     return propVal.value;
   }

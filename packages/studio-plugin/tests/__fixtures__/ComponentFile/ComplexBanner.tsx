@@ -23,6 +23,7 @@ export const initialProps: ComplexBannerProps = {
     link: "LINK",
     linkType: "LINKTYPE",
   },
+  colorArr: ["#abcdef", "#ffffff"],
 };
 
 export default function ComplexBanner(props: ComplexBannerProps) {

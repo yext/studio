@@ -124,6 +124,22 @@ describe("getComponentMetadata", () => {
             },
           },
         },
+        colorArr: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Array,
+          value: [
+            {
+              kind: PropValueKind.Literal,
+              valueType: PropValueType.HexColor,
+              value: "#abcdef",
+            },
+            {
+              kind: PropValueKind.Literal,
+              valueType: PropValueType.HexColor,
+              value: "#ffffff",
+            },
+          ],
+        },
       },
     };
     const result = componentFile.getComponentMetadata();

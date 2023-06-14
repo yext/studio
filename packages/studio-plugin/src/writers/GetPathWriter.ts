@@ -30,27 +30,25 @@ export default class GetPathWriter {
    * @param getPathValue - the new value to return from the getPath function
    */
   updateGetPath(getPathValue: GetPathVal) {
-    const returnText = this.constructReturnText(getPathValue);
+    const stringNodeText = this.constructStringNodeText(getPathValue);
     const usesDocument =
       getPathValue.kind === PropValueKind.Expression &&
       ExpressionHelpers.usesExpressionSource(getPathValue.value, "document");
 
     const getPathFunction = this.getPathParser.findGetPathFunction();
     if (getPathFunction) {
-      const returnStatement = this.getPathParser
-        .getReturnStringNode()
-        ?.getFirstAncestorByKind(SyntaxKind.ReturnStatement);
-      if (!returnStatement) {
+      const stringNode = this.getPathParser.getReturnStringNode();
+      if (!stringNode) {
         throw new Error(
-          "Error updating getPath function: unable to find return statement."
+          "Error updating getPath function: unable to find returned string node."
         );
       }
-      returnStatement.replaceWithText(returnText);
+      stringNode.replaceWithText(stringNodeText);
       usesDocument && this.pagesJsWriter.addTemplateParameter(getPathFunction);
     } else {
       const functionText = usesDocument
-        ? `({ document }) => { ${returnText} }`
-        : `() => { ${returnText} }`;
+        ? `({ document }) => { return ${stringNodeText}; }`
+        : `() => { return ${stringNodeText}; }`;
       this.studioSourceFileWriter.updateVariableStatement(
         GET_PATH_FUNCTION_NAME,
         functionText,
@@ -64,9 +62,7 @@ export default class GetPathWriter {
     ]);
   }
 
-  private constructReturnText({ kind, value }: GetPathVal) {
-    return kind === PropValueKind.Literal
-      ? `return "${value}";`
-      : `return ${value};`;
+  private constructStringNodeText({ kind, value }: GetPathVal) {
+    return kind === PropValueKind.Literal ? `"${value}"` : value;
   }
 }
