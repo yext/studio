@@ -1,9 +1,9 @@
 import { ViteDevServer } from "vite";
-import FileSystemManager from "./FileSystemManager.js";
-import GitWrapper from "./git/GitWrapper.js";
-import registerDeployListener from "./messaging/registerDeployListener.js";
-import registerSaveChangesListener from "./messaging/registerSaveChangesListener.js";
-import ParsingOrchestrator from "./ParsingOrchestrator.js";
+import FileSystemManager from "./FileSystemManager";
+import GitWrapper from "./git/GitWrapper";
+import registerDeployListener from "./messaging/registerDeployListener";
+import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
+import ParsingOrchestrator from "./ParsingOrchestrator";
 
 /**
  * A factory method for our vite plugin's configureServer handler.

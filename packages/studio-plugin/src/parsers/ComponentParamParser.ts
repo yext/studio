@@ -1,6 +1,6 @@
 import { SyntaxKind } from "ts-morph";
-import StudioSourceFileParser from "./StudioSourceFileParser.js";
-import TsMorphHelpers from "./helpers/TsMorphHelpers.js";
+import StudioSourceFileParser from "./StudioSourceFileParser";
+import TsMorphHelpers from "./helpers/TsMorphHelpers";
 
 export default class ComponentParamParser {
   constructor(private sourceFileParser: StudioSourceFileParser) {}

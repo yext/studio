@@ -2,8 +2,8 @@ import {
   ComponentState,
   ErrorComponentState,
   RepeaterState,
-} from "../types/index.js";
-import TypeGuards from "./TypeGuards.js";
+} from "../types";
+import TypeGuards from "./TypeGuards";
 
 /**
  * A static class for housing various util functions related to the component

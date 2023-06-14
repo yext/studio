@@ -1,5 +1,5 @@
-import { PropMetadata } from "./PropShape.js";
-import { ArrayProp, LiteralProp, PropValueType } from "./PropValues.js";
+import { PropMetadata } from "./PropShape";
+import { ArrayProp, LiteralProp, PropValueType } from "./PropValues";
 
 export interface SiteSettings {
   shape: SiteSettingsShape;

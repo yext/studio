@@ -1,11 +1,11 @@
 import { ViteDevServer } from "vite";
-import { MessageID, SaveChangesPayload } from "../types/index.js";
-import { registerListener } from "./registerListener.js";
-import executeSaveChanges from "./executeSaveChanges.js";
-import FileSystemManager from "../FileSystemManager.js";
-import GitWrapper from "../git/GitWrapper.js";
-import reloadGitData from "../git/reloadGitData.js";
-import ParsingOrchestrator from "../ParsingOrchestrator.js";
+import { MessageID, SaveChangesPayload } from "../types";
+import { registerListener } from "./registerListener";
+import executeSaveChanges from "./executeSaveChanges";
+import FileSystemManager from "../FileSystemManager";
+import GitWrapper from "../git/GitWrapper";
+import reloadGitData from "../git/reloadGitData";
+import ParsingOrchestrator from "../ParsingOrchestrator";
 
 export default function registerDeployListener(
   server: ViteDevServer,

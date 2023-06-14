@@ -1,4 +1,4 @@
-import { PropValues, PropValueType } from "../types/index.js";
+import { PropValues, PropValueType } from "../types";
 
 /**
  * Given a PropValues object, parse the object into its raw values.

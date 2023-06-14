@@ -10,16 +10,16 @@ import {
   FileMetadataKind,
   ErrorFileMetadata,
   StudioConfigWithDefaulting,
-} from "./types/index.js";
+} from "./types";
 import fs from "fs";
-import ComponentFile from "./sourcefiles/ComponentFile.js";
-import ModuleFile from "./sourcefiles/ModuleFile.js";
-import PageFile from "./sourcefiles/PageFile.js";
-import SiteSettingsFile from "./sourcefiles/SiteSettingsFile.js";
+import ComponentFile from "./sourcefiles/ComponentFile";
+import ModuleFile from "./sourcefiles/ModuleFile";
+import PageFile from "./sourcefiles/PageFile";
+import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 import { v4 } from "uuid";
-import { ParsingError } from "./errors/ParsingError.js";
+import { ParsingError } from "./errors/ParsingError";
 
 export function createTsMorphProject() {
   return new Project({

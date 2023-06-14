@@ -1,6 +1,6 @@
 import { ViteDevServer } from "vite";
-import VirtualModuleID from "../VirtualModuleID.js";
-import GitWrapper from "./GitWrapper.js";
+import VirtualModuleID from "../VirtualModuleID";
+import GitWrapper from "./GitWrapper";
 
 export default async function reloadGitData(
   gitWrapper: GitWrapper,

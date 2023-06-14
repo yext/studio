@@ -4,22 +4,22 @@ import {
   PAGESJS_TEMPLATE_PROPS_TYPE,
   TEMPLATE_CONFIG_VARIABLE_NAME,
   TEMPLATE_STRING_EXPRESSION_REGEX,
-} from "../constants.js";
-import TypeGuards from "../utils/TypeGuards.js";
+} from "../constants";
+import TypeGuards from "../utils/TypeGuards";
 import {
   PropVal,
   PropValueKind,
   PropValues,
   TypelessPropVal,
-} from "../types/PropValues.js";
-import { ComponentState, ComponentStateKind } from "../types/ComponentState.js";
-import StudioSourceFileWriter from "./StudioSourceFileWriter.js";
-import { StreamsDataExpression } from "../types/Expression.js";
-import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger.js";
-import PagesJsWriter from "./PagesJsWriter.js";
-import { GetPathVal, PagesJsState } from "../types/index.js";
-import TemplateConfigParser from "../parsers/TemplateConfigParser.js";
-import { ComponentTreeHelpers } from "../utils/index.js";
+} from "../types/PropValues";
+import { ComponentState, ComponentStateKind } from "../types/ComponentState";
+import StudioSourceFileWriter from "./StudioSourceFileWriter";
+import { StreamsDataExpression } from "../types/Expression";
+import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
+import PagesJsWriter from "./PagesJsWriter";
+import { GetPathVal, PagesJsState } from "../types";
+import TemplateConfigParser from "../parsers/TemplateConfigParser";
+import { ComponentTreeHelpers } from "../utils";
 
 const TEMPLATE_CONFIG_VARIABLE_TYPE = "TemplateConfig";
 

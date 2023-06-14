@@ -1,13 +1,13 @@
 import {
   GET_PATH_FUNCTION_NAME,
   PAGESJS_TEMPLATE_PROPS_TYPE,
-} from "../constants.js";
-import StudioSourceFileWriter from "./StudioSourceFileWriter.js";
-import GetPathParser from "../parsers/GetPathParser.js";
-import { GetPathVal } from "../types/PageState.js";
-import { PropValueKind } from "../types/PropValues.js";
-import ExpressionHelpers from "../utils/ExpressionHelpers.js";
-import PagesJsWriter from "./PagesJsWriter.js";
+} from "../constants";
+import StudioSourceFileWriter from "./StudioSourceFileWriter";
+import GetPathParser from "../parsers/GetPathParser";
+import { GetPathVal } from "../types/PageState";
+import { PropValueKind } from "../types/PropValues";
+import ExpressionHelpers from "../utils/ExpressionHelpers";
+import PagesJsWriter from "./PagesJsWriter";
 
 const GET_PATH_FUNCTION_TYPE = "GetPath";
 

@@ -1,7 +1,7 @@
-import FileSystemManager from "../FileSystemManager.js";
-import { SaveChangesPayload } from "../types/index.js";
+import FileSystemManager from "../FileSystemManager";
+import { SaveChangesPayload } from "../types";
 import path from "path";
-import ParsingOrchestrator from "../ParsingOrchestrator.js";
+import ParsingOrchestrator from "../ParsingOrchestrator";
 
 export default function executeSaveChanges(
   saveData: SaveChangesPayload,

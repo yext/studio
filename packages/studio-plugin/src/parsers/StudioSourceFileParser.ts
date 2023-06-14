@@ -9,15 +9,15 @@ import {
   ArrayLiteralExpression,
   ArrowFunction,
 } from "ts-morph";
-import StaticParsingHelpers from "./helpers/StaticParsingHelpers.js";
+import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
 import TypeNodeParsingHelper, {
   ParsedType,
-} from "./helpers/TypeNodeParsingHelper.js";
+} from "./helpers/TypeNodeParsingHelper";
 import { parseSync as babelParseSync } from "@babel/core";
-import NpmLookup from "./helpers/NpmLookup.js";
-import { TypelessPropVal } from "../types/index.js";
+import NpmLookup from "./helpers/NpmLookup";
+import { TypelessPropVal } from "../types";
 
 /**
  * StudioSourceFileParser contains shared business logic for

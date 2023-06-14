@@ -1,5 +1,5 @@
-import { SiteSettingsValues } from "./SiteSettings.js";
-import { StudioData } from "./StudioData.js";
+import { SiteSettingsValues } from "./SiteSettings";
+import { StudioData } from "./StudioData";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",

@@ -1,11 +1,11 @@
-import { PropShape } from "../types/PropShape.js";
-import { PropValues } from "../types/PropValues.js";
-import PropValuesParser from "./PropValuesParser.js";
-import PropShapeParser from "./PropShapeParser.js";
+import { PropShape } from "../types/PropShape";
+import { PropValues } from "../types/PropValues";
+import PropValuesParser from "./PropValuesParser";
+import PropShapeParser from "./PropShapeParser";
 import { v4 } from "uuid";
-import StudioSourceFileParser from "./StudioSourceFileParser.js";
-import ComponentParamParser from "./ComponentParamParser.js";
-import { ValidFileMetadata } from "../types/FileMetadata.js";
+import StudioSourceFileParser from "./StudioSourceFileParser";
+import ComponentParamParser from "./ComponentParamParser";
+import { ValidFileMetadata } from "../types/FileMetadata";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for

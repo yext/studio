@@ -26,16 +26,16 @@ import {
   PropValueType,
   PropValues,
   TypelessPropVal,
-} from "../../types/PropValues.js";
+} from "../../types/PropValues";
 import {
   PropMetadata,
   PropShape,
   PropType,
   SpecialReactProps,
-} from "../../types/PropShape.js";
-import TypeGuards from "../../utils/TypeGuards.js";
-import TsMorphHelpers from "./TsMorphHelpers.js";
-import RepeaterParsingHelpers from "./RepeaterParsingHelpers.js";
+} from "../../types/PropShape";
+import TypeGuards from "../../utils/TypeGuards";
+import TsMorphHelpers from "./TsMorphHelpers";
+import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
 
 export type ParsedImport = {
   source: string;

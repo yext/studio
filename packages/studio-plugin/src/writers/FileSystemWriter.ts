@@ -1,16 +1,16 @@
-import ParsingOrchestrator from "../ParsingOrchestrator.js";
+import ParsingOrchestrator from "../ParsingOrchestrator";
 import {
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
   PageState,
   SiteSettingsValues,
-} from "../types/index.js";
+} from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
 import path from "path";
-import { TypeGuards } from "../utils/index.js";
-import areEqualFileMetadata from "../utils/areEqualFileMetadata.js";
+import { TypeGuards } from "../utils";
+import areEqualFileMetadata from "../utils/areEqualFileMetadata";
 
 /**
  * FileSystemWriter is a class for housing content modification logic

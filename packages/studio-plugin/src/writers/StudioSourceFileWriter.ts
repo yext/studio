@@ -18,7 +18,7 @@ import {
   PropValueKind,
   PropValues,
   PropValueType,
-} from "../types/index.js";
+} from "../types";
 
 /**
  * StudioSourceFileWriter contains shared business logic for

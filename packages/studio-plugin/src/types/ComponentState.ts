@@ -1,4 +1,4 @@
-import { PropValues, TypelessPropVal } from "./PropValues.js";
+import { PropValues, TypelessPropVal } from "./PropValues";
 
 export type ComponentState =
   | EditableComponentState

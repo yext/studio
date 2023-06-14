@@ -1,11 +1,11 @@
-import { ComponentMetadata } from "../types/ComponentMetadata.js";
-import { SpecialReactProps } from "../types/PropShape.js";
-import { FileMetadataKind } from "../types/FileMetadata.js";
-import FileMetadataParser from "../parsers/FileMetadataParser.js";
+import { ComponentMetadata } from "../types/ComponentMetadata";
+import { SpecialReactProps } from "../types/PropShape";
+import { FileMetadataKind } from "../types/FileMetadata";
+import FileMetadataParser from "../parsers/FileMetadataParser";
 import { Project } from "ts-morph";
-import StudioSourceFileParser from "../parsers/StudioSourceFileParser.js";
-import tryUsingResult from "../errors/tryUsingResult.js";
-import { ParsingError, ParsingErrorKind } from "../errors/ParsingError.js";
+import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
+import tryUsingResult from "../errors/tryUsingResult";
+import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { Result } from "true-myth";
 
 /**

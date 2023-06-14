@@ -1,5 +1,5 @@
 import path from "path";
-import { UserPaths } from "../types/index.js";
+import { UserPaths } from "../types";
 
 /**
  * Given an absolute path to the user's project root folder, determine

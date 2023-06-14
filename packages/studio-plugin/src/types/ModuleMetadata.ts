@@ -1,7 +1,7 @@
-import { ComponentState } from "./ComponentState.js";
-import { FileMetadataKind } from "./FileMetadata.js";
-import { PropShape } from "./PropShape.js";
-import { PropValues } from "./PropValues.js";
+import { ComponentState } from "./ComponentState";
+import { FileMetadataKind } from "./FileMetadata";
+import { PropShape } from "./PropShape";
+import { PropValues } from "./PropValues";
 
 export type ModuleMetadata = {
   kind: FileMetadataKind.Module;

@@ -1,7 +1,7 @@
-import { PagesJsState } from "../types/PageState.js";
-import GetPathParser from "./GetPathParser.js";
-import TemplateConfigParser from "./TemplateConfigParser.js";
-import { PropValueKind } from "../types/index.js";
+import { PagesJsState } from "../types/PageState";
+import GetPathParser from "./GetPathParser";
+import TemplateConfigParser from "./TemplateConfigParser";
+import { PropValueKind } from "../types";
 
 /**
  * PagesJsStateParser is a class for parsing the PagesJS-related information

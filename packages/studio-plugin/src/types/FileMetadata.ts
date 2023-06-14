@@ -1,6 +1,6 @@
-import { ComponentMetadata } from "./ComponentMetadata.js";
-import { ErrorFileMetadata } from "./ErrorFileMetadata.js";
-import { ModuleMetadata } from "./ModuleMetadata.js";
+import { ComponentMetadata } from "./ComponentMetadata";
+import { ErrorFileMetadata } from "./ErrorFileMetadata";
+import { ModuleMetadata } from "./ModuleMetadata";
 
 export enum FileMetadataKind {
   Component = "componentMetadata",

@@ -1,4 +1,4 @@
-import { StudioError } from "./StudioError.js";
+import { StudioError } from "./StudioError";
 
 export enum ParsingErrorKind {
   FailedToParsePageState = "FailedToParsePageState",

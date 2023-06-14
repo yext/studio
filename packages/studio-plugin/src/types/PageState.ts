@@ -1,6 +1,6 @@
 import { Stream } from "@yext/pages";
-import { ComponentState } from "./ComponentState.js";
-import { PropValueKind } from "./PropValues.js";
+import { ComponentState } from "./ComponentState";
+import { PropValueKind } from "./PropValues";
 
 export type PageState = {
   componentTree: ComponentState[];

@@ -3,9 +3,9 @@ import {
   PageState,
   SiteSettingsValues,
   UserPaths,
-} from "./types/index.js";
+} from "./types";
 import path from "path";
-import { FileSystemWriter } from "./writers/FileSystemWriter.js";
+import { FileSystemWriter } from "./writers/FileSystemWriter";
 
 /**
  * Handles file removal and content update in user's repo

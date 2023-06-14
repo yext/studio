@@ -1,5 +1,5 @@
 import { HmrContext } from "vite";
-import HmrManager from "./HmrManager.js";
+import HmrManager from "./HmrManager";
 
 /**
  * Factory method for creating our handleHotUpdate handler.

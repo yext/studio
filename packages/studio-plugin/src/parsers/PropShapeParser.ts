@@ -1,14 +1,14 @@
-import { PropMetadata, PropShape, PropType } from "../types/PropShape.js";
-import TypeGuards from "../utils/TypeGuards.js";
-import { STUDIO_PACKAGE_NAME } from "../constants.js";
-import StudioSourceFileParser from "./StudioSourceFileParser.js";
-import { PropValueType } from "../types/index.js";
+import { PropMetadata, PropShape, PropType } from "../types/PropShape";
+import TypeGuards from "../utils/TypeGuards";
+import { STUDIO_PACKAGE_NAME } from "../constants";
+import StudioSourceFileParser from "./StudioSourceFileParser";
+import { PropValueType } from "../types";
 import {
   ParsedProperty,
   ParsedShape,
   ParsedType,
   ParsedTypeKind,
-} from "./helpers/TypeNodeParsingHelper.js";
+} from "./helpers/TypeNodeParsingHelper";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.

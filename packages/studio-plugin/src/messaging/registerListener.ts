@@ -1,5 +1,5 @@
 import { ViteDevServer } from "vite";
-import { MessageID, ResponseEventMap, StudioEventMap } from "../types/index.js";
+import { MessageID, ResponseEventMap, StudioEventMap } from "../types";
 import { IncomingMessage } from "http";
 
 /**

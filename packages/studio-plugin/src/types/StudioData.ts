@@ -1,7 +1,7 @@
-import { FileMetadata } from "./FileMetadata.js";
-import { SiteSettings } from "./SiteSettings.js";
-import { ErrorPageState, PageState } from "./PageState.js";
-import { StudioConfigWithDefaulting } from "./StudioConfig.js";
+import { FileMetadata } from "./FileMetadata";
+import { SiteSettings } from "./SiteSettings";
+import { ErrorPageState, PageState } from "./PageState";
+import { StudioConfigWithDefaulting } from "./StudioConfig";
 
 export interface StudioData {
   pageNameToPageState: Record<string, PageState>;
