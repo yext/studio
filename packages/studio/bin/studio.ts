@@ -7,6 +7,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const pathToViteConfig = path.resolve(__dirname, "../../vite.config.ts");
 
-execSync("npx vite --config " + pathToViteConfig, {
-  stdio: "inherit",
-});
+execSync(
+  "npx vite --config " +
+    pathToViteConfig,
+  { stdio: "inherit", env: {
+    NODE_OPTIONS: '--experimental-specifier-resolution=node'
+  } }
+);
