@@ -1,7 +1,7 @@
 import { ComponentState, GetPathVal, PageState } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import path from "path-browserify";
-import initialStudioData from "virtual:yext-studio";
+import initialStudioData from "virtual_yext-studio";
 import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";

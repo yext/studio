@@ -506,6 +506,26 @@ describe("updatePageFile", () => {
           )
         );
       });
+
+      it("updates a getPath function without return keyword", () => {
+        const pageFile = createPageFile(
+          "PageWithNoReturnGetPath",
+          tsMorphProject
+        );
+        pageFile.updatePageFile({
+          ...basicPageState,
+          pagesJS: {
+            getPathValue: { kind: PropValueKind.Literal, value: "static.html" },
+          },
+        });
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+          expect.stringContaining("PageWithNoReturnGetPath.tsx"),
+          fs.readFileSync(
+            getPagePath("updatePageFile/PageWithModifiedNoReturnGetPath"),
+            "utf-8"
+          )
+        );
+      });
     });
 
     it("does not modify getPath if getPathValue is undefined", () => {

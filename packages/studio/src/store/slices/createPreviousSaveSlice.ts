@@ -1,4 +1,4 @@
-import initialStudioData from "virtual:yext-studio";
+import initialStudioData from "virtual_yext-studio";
 import PreviousSaveSlice, {
   PreviousSaveSliceState,
 } from "../models/slices/PreviousSaveSlice";

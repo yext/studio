@@ -1,6 +1,7 @@
 import { SyntaxKind } from "ts-morph";
-import { PropShape } from "../types/PropShape";
+import { PropShape, PropType } from "../types/PropShape";
 import {
+  PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
@@ -60,42 +61,65 @@ export default class PropValuesParser {
   ): PropValues {
     const propValues: PropValues = {};
 
-    const getPropValue = (propName: string) => {
-      const { value } = rawValues[propName];
-      if (typeof value === "object") {
-        const childShape = propShape[propName];
-        if (childShape.type !== PropValueType.Object) {
-          throw new Error(
-            `Expected PropValueType.Object for ${propName} in ${JSON.stringify(
-              propShape,
-              null,
-              2
-            )}`
-          );
+    Object.keys(rawValues).forEach((propName) => {
+      propValues[propName] = this.parseRawVal(
+        propName,
+        rawValues[propName],
+        propShape[propName],
+        propShape
+      );
+    });
+    return propValues;
+  }
+
+  private parseRawVal(
+    propName: string,
+    rawVal: TypelessPropVal,
+    propType: PropType,
+    propShape: PropShape
+  ): PropVal {
+    if (rawVal.kind === PropValueKind.Expression) {
+      throw new Error(`Expressions are not supported within object literal.`);
+    }
+    const typeMatchErrorMessage = `Error parsing value of ${propName} in ${JSON.stringify(
+      propShape,
+      null,
+      2
+    )}: Expected value ${rawVal} to match PropType ${propType}`;
+
+    const getPropVal = () => {
+      const { value } = rawVal;
+      if (Array.isArray(value)) {
+        if (propType.type !== PropValueType.Array) {
+          throw new Error(typeMatchErrorMessage);
+        }
+        return {
+          valueType: PropValueType.Array,
+          kind: PropValueKind.Literal,
+          value: value.map((val) =>
+            this.parseRawVal(propName, val, propType.itemType, propShape)
+          ),
+        };
+      } else if (typeof value === "object") {
+        if (propType.type !== PropValueType.Object) {
+          throw new Error(typeMatchErrorMessage);
         }
         return {
           valueType: PropValueType.Object,
           kind: PropValueKind.Literal,
-          value: this.parseRawValues(value, childShape.shape),
+          value: this.parseRawValues(value, propType.shape),
         };
       }
 
       return {
-        valueType: propShape[propName].type,
+        valueType: propType.type,
         kind: PropValueKind.Literal,
         value,
       };
     };
 
-    Object.keys(rawValues).forEach((propName) => {
-      const { kind } = rawValues[propName];
-      if (kind === PropValueKind.Expression) {
-        throw new Error(`Expressions are not supported within object literal.`);
-      }
-      const propValue = getPropValue(propName);
-      TypeGuards.assertIsValidPropVal(propValue);
-      propValues[propName] = propValue;
-    });
-    return propValues;
+    const propVal = getPropVal();
+    TypeGuards.assertIsValidPropVal(propVal);
+    return propVal;
   }
 }

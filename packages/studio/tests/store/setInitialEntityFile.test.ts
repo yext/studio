@@ -2,7 +2,7 @@ import { StudioData } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
 import setInitialEntityFile from "../../src/store/setInitialEntityFile";
 
-jest.mock("virtual:yext-studio", () => {
+jest.mock("virtual_yext-studio", () => {
   const path = jest.requireActual("path");
   const mockFilepath = path.join(__dirname, "../../tests/__mocks__");
   const mockStudioData: StudioData = {
