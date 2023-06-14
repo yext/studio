@@ -53,8 +53,7 @@ function getPropValueForPreview(
   } else if (propVal.valueType === PropValueType.Object) {
     return handleObjectProp(propVal.value, propType, expressionSources);
   } else if (propVal.valueType === PropValueType.Array) {
-    // TODO (SLAP-2773): Add support for previewing array literal props
-    return undefined;
+    return handleArrayProp(propVal.value, propType, expressionSources);
   } else {
     return propVal.value;
   }
@@ -96,6 +95,21 @@ function handleObjectProp(
     );
   }
   return getPropsForPreview(value, propType.shape, expressionSources);
+}
+
+function handleArrayProp(
+  propVals: PropVal[],
+  propType: PropType,
+  expressionSources: ExpressionSources
+) {
+  if (propType.type !== PropValueType.Array) {
+    throw new Error(
+      `Expected PropMetadata of type Array, received ${propType.type}`
+    );
+  }
+  return propVals.map((propVal) =>
+    getPropValueForPreview(propVal, propType.itemType, expressionSources)
+  );
 }
 
 /**

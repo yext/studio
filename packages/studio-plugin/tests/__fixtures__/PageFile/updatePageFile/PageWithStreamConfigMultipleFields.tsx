@@ -6,14 +6,25 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     localization: { locales: ["en"], primary: false },
     filter: {},
-    fields: ["title", "services", "stringLiteral", "arrayIndex"],
+    fields: [
+      "title",
+      "exp",
+      "color",
+      "services",
+      "stringLiteral",
+      "arrayIndex",
+    ],
   },
 };
 
 export default function IndexPage({ document }: TemplateProps) {
   return (
     <>
-      <ComplexBanner title={document.title} />
+      <ComplexBanner
+        title={document.title}
+        cta={{ link: document.exp, linkType: "linktype", label: "label" }}
+        colorArr={[document.color]}
+      />
       {document.services.map((item, index) => (
         <ComplexBanner
           title={`this is ${document.stringLiteral}`}

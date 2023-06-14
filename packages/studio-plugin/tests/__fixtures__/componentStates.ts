@@ -112,6 +112,38 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
         value: "document.title",
         valueType: PropValueType.string,
       },
+      cta: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          link: {
+            kind: PropValueKind.Expression,
+            value: "document.exp",
+            valueType: PropValueType.string,
+          },
+          linkType: {
+            kind: PropValueKind.Literal,
+            value: "linktype",
+            valueType: PropValueType.string,
+          },
+          label: {
+            kind: PropValueKind.Literal,
+            value: "label",
+            valueType: PropValueType.string,
+          },
+        },
+      },
+      colorArr: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Array,
+        value: [
+          {
+            kind: PropValueKind.Expression,
+            value: "document.color",
+            valueType: PropValueType.HexColor,
+          },
+        ],
+      },
     },
   },
   {

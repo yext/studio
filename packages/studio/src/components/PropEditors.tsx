@@ -11,11 +11,12 @@ import PropValueHelpers from "../utils/PropValueHelpers";
 import { useCallback } from "react";
 import NestedPropEditors from "./NestedPropEditors";
 import classNames from "classnames";
+import ArrayPropEditor from "./ArrayPropEditor";
 
 export default function PropEditors(props: {
   propShape: PropShape;
   propValues: PropValues;
-  updateProps: (propVal: PropValues) => void;
+  updateProps: (propValues: PropValues) => void;
   isNested?: boolean;
 }) {
   const { propShape, propValues, updateProps, isNested } = props;
@@ -35,7 +36,7 @@ export default function PropEditors(props: {
       const editor = renderPropEditor(
         propName,
         propMetadata,
-        propValues,
+        propValues[propName],
         updateSpecificProp,
         isNested
       );
@@ -63,12 +64,10 @@ export default function PropEditors(props: {
 function renderPropEditor(
   propName: string,
   propMetadata: PropMetadata,
-  propValues: PropValues,
+  propVal: PropVal | undefined,
   updateSpecificProp: (propName: string, propVal: PropVal) => void,
   isNested?: boolean
 ) {
-  const propVal: PropVal | undefined = propValues[propName];
-
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
       console.error(
@@ -86,14 +85,23 @@ function renderPropEditor(
         isNested={isNested}
       />
     );
-  }
+  } else if (propMetadata.type === PropValueType.Array) {
+    if (propVal?.valueType && propVal.valueType !== PropValueType.Array) {
+      console.error(
+        `Mismatching propMetadata type ${propMetadata.type} for ${propName}.`
+      );
+      return null;
+    }
 
-  if (
-    propMetadata.type === PropValueType.Array &&
-    propVal?.kind === PropValueKind.Literal
-  ) {
-    // TODO (SLAP-2773): Display editor for array literal items
-    return null;
+    return (
+      <ArrayPropEditor
+        propName={propName}
+        propMetadata={propMetadata}
+        propValue={propVal?.value}
+        onPropChange={updateSpecificProp}
+        isNested={isNested}
+      />
+    );
   }
 
   const propKind = getPropKind(propMetadata);
@@ -116,9 +124,6 @@ function getPropKind(propMetadata: PropMetadata) {
   if (propMetadata.type === PropValueType.string && !propMetadata.unionValues) {
     // All non-union strings are expected to be treated as expressions so that
     // string interpolation works as expected in the UI.
-    return PropValueKind.Expression;
-  }
-  if (propMetadata.type === PropValueType.Array) {
     return PropValueKind.Expression;
   }
 

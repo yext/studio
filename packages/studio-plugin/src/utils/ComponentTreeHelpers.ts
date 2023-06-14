@@ -1,7 +1,6 @@
 import {
   ComponentState,
   ComponentStateKind,
-  ExpressionProp,
   PropValueKind,
   TypelessPropVal,
 } from "../types";
@@ -113,11 +112,26 @@ export default class ComponentTreeHelpers {
 
   private static getExpressionUsagesFromProps(
     props: Record<string, TypelessPropVal>
-  ) {
-    return Object.values(props)
-      .filter((p): p is ExpressionProp => p.kind === PropValueKind.Expression)
-      .map((p) => p.value);
+  ): string[] {
+    return Object.values(props).flatMap(this.getExpressionUsagesFromPropVal);
   }
+
+  private static getExpressionUsagesFromPropVal = ({
+    kind,
+    value,
+  }: TypelessPropVal): string[] => {
+    if (kind === PropValueKind.Expression) {
+      return [value];
+    } else if (typeof value === "object") {
+      if (Array.isArray(value)) {
+        return value.flatMap(this.getExpressionUsagesFromPropVal);
+      } else {
+        return this.getExpressionUsagesFromProps(value);
+      }
+    } else {
+      return [];
+    }
+  };
 
   /**
    * Returns all descendants of the given ComponentState within the given tree.
