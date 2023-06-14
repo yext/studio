@@ -25,6 +25,10 @@ module.exports = {
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/await-thenable": "error",
     "unused-imports/no-unused-imports": "error",
+    "import/extensions": ["error", {
+      "js": "never",
+      "json": "always"
+    }]
   },
   overrides: [
     {
