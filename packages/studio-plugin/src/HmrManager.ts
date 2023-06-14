@@ -1,9 +1,5 @@
 import ParsingOrchestrator from "./ParsingOrchestrator";
-import {
-  StudioHMRPayload,
-  StudioHMRUpdateID,
-  UserPaths,
-} from "./types";
+import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
 import { ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID";
 
