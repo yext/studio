@@ -26,7 +26,7 @@ interface ArrayPropEditorProps {
 const tooltipStyle = { backgroundColor: "black" };
 
 /**
- * Renders an input editor for a single prop of a component or module.
+ * Renders an input editor for a single array-type prop.
  */
 export default function ArrayPropEditor({
   propName,
@@ -35,12 +35,7 @@ export default function ArrayPropEditor({
   onPropChange,
   isNested,
 }: ArrayPropEditorProps) {
-  const value = Array.isArray(propValue)
-    ? propValue.length > 0
-      ? propValue
-      : ""
-    : propValue ?? "";
-
+  const value = getEditorValue(propValue);
   const isExpression = typeof value === "string";
 
   const fieldPickerFilter = useCallback(
@@ -80,6 +75,14 @@ export default function ArrayPropEditor({
           <p className={propNameClasses} id={docTooltipId}>
             {propName}
           </p>
+          {propMetadata.doc && (
+            <Tooltip
+              style={tooltipStyle}
+              anchorId={docTooltipId}
+              content={propMetadata.doc}
+              place="top"
+            />
+          )}
           <div id={inputTooltipId}>
             <FieldPickerInput
               onInputChange={onExpressionChange}
@@ -98,14 +101,6 @@ export default function ArrayPropEditor({
             />
           )}
         </label>
-        {propMetadata.doc && (
-          <Tooltip
-            style={tooltipStyle}
-            anchorId={docTooltipId}
-            content={propMetadata.doc}
-            place="top"
-          />
-        )}
       </div>
       {!isExpression &&
         renderLiteralEditor(value, propMetadata.itemType, onLiteralChange)}
@@ -149,6 +144,13 @@ function createArrayPropVal(value: string | PropVal[]): PropVal {
   return {
     kind: PropValueKind.Expression,
     valueType: PropValueType.Array,
-    value: value,
+    value,
   };
+}
+
+function getEditorValue(propValue: string | PropVal[] | undefined) {
+  if (typeof propValue === "string" || propValue?.length) {
+    return propValue;
+  }
+  return "";
 }
