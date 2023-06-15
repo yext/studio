@@ -7,9 +7,6 @@ const config: Config = {
   resetMocks: true,
   restoreMocks: true,
   transformIgnorePatterns: ["node_modules/(?!true-myth)"],
-  setupFilesAfterEnv: ["<rootDir>/tests/__setup__/setup-env.ts"],
-  moduleNameMapper: {
-    "^(.+)\\.js$": "$1",
-  },
+  setupFilesAfterEnv: ["<rootDir>/tests/__setup__/setup-env.ts"]
 };
 export default config;
