@@ -1,6 +1,6 @@
 import { join } from "path";
 import { existsSync } from "fs";
-import { dynamicImportJson } from "../utils/dynamicImport.js";
+import { dynamicImportJson } from "../utils/dynamicImport";
 
 /**
  * Import the user's localData/mapping.json file, so that studio can find the user's test data.
