@@ -129,15 +129,6 @@ export default function PropInput({
           value={displayValue as string}
         />
       );
-    case PropValueType.Array:
-      return (
-        <FieldPickerInput
-          onInputChange={handleChangeEvent}
-          handleFieldSelection={onChange}
-          displayValue={displayValue as string}
-          fieldFilter={fieldPickerFilter}
-        />
-      );
     default:
       return <div>Unknown PropValueType {type}.</div>;
   }

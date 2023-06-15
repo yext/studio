@@ -72,6 +72,14 @@ it("can close the field picker", async () => {
   expect(screen.queryByText(/\w/)).toBeNull();
 });
 
+it("remains closed if clicked when disabled", async () => {
+  renderFieldPicker(jest.fn(), true);
+  await userEvent.click(
+    screen.getByRole("button", { name: "Toggle field picker" })
+  );
+  expect(screen.queryByText(/\w/)).toBeNull();
+});
+
 it("can collapse a section", async () => {
   renderFieldPicker();
   await userEvent.click(
@@ -96,13 +104,14 @@ it("opening one section will collapse unrelated ones", async () => {
   expect(screen.getByText("Desc")).toBeDefined();
 });
 
-function renderFieldPicker(handleFieldSelection = jest.fn()) {
+function renderFieldPicker(handleFieldSelection = jest.fn(), disabled = false) {
   const fieldFilter = (value: unknown) =>
     TypeGuards.valueMatchesPropType({ type: PropValueType.string }, value);
   render(
     <FieldPicker
       filteredEntityData={filterEntityData(fieldFilter, entityData)}
       handleFieldSelection={handleFieldSelection}
+      disabled={disabled}
     />
   );
 }

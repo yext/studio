@@ -38,7 +38,12 @@ export default function UniversalPage({ document }: TemplateProps) {
         bgColor="#FFFFFF"
         bool={false}
         num={0}
-        intervals={document.hours.monday.openIntervals}
+        intervals={[
+          {
+            start: "01:00",
+            end: document.hours.monday.openIntervals[0].end,
+          },
+        ]}
       />
     </>
   );

@@ -1,7 +1,7 @@
 import {
+  ArrayPropType,
   NestedPropType,
   PropMetadata,
-  PropType,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -12,7 +12,7 @@ import useOnPropChange from "../hooks/useOnPropChange";
 
 interface PropEditorProps {
   propName: string;
-  propMetadata: Exclude<PropMetadata, NestedPropType>;
+  propMetadata: Exclude<PropMetadata, NestedPropType | ArrayPropType>;
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propName: string, propVal: PropVal) => void;
@@ -38,11 +38,17 @@ export default function PropEditor({
   return (
     <div className="flex items-center mb-2 text-sm">
       {renderBranchUI(isNested)}
-      <label className="flex h-10 items-center justify-self-start">
+      <label
+        className="flex h-10 items-center justify-self-start"
+        id={propName}
+      >
         <p className="pr-2">{propName}</p>
         <PropInput
           {...{
-            propType: getInputPropType(propMetadata, propKind),
+            propType:
+              propKind === PropValueKind.Expression
+                ? { type: PropValueType.string }
+                : propMetadata,
             propValue,
             onChange,
             propKind,
@@ -70,17 +76,4 @@ export function renderBranchUI(isNested?: boolean) {
       </div>
     )
   );
-}
-
-function getInputPropType(
-  propMetadata: Exclude<PropMetadata, NestedPropType>,
-  propKind: PropValueKind
-): PropType {
-  if (
-    propKind === PropValueKind.Expression &&
-    propMetadata.type !== PropValueType.Array
-  ) {
-    return { type: PropValueType.string };
-  }
-  return propMetadata;
 }

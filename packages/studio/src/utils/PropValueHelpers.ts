@@ -51,9 +51,12 @@ export default class PropValueHelpers {
     }
 
     const { value, valueType } = propVal;
-    if (valueType === PropValueType.Object) {
+    if (
+      valueType === PropValueType.Object ||
+      valueType === PropValueType.Array
+    ) {
       throw new Error(
-        `Unexpected object prop ${JSON.stringify(propVal, null, 2)}`
+        `Unexpected ${valueType} prop ${JSON.stringify(propVal, null, 2)}`
       );
     }
 
@@ -62,11 +65,6 @@ export default class PropValueHelpers {
       valueType === PropValueType.string
     ) {
       return this.getTemplateExpression(propVal);
-    }
-
-    // TODO (SLAP-2773): Add support for handling array prop values in UI
-    if (Array.isArray(value)) {
-      return undefined;
     }
 
     return value;

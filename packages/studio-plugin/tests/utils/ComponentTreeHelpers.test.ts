@@ -54,6 +54,44 @@ describe("usesExpressionSource", () => {
       ComponentTreeHelpers.usesExpressionSource(componentTree, "document")
     ).toBeTruthy();
   });
+
+  it("matches expression within object literal", () => {
+    const componentTree = createComponentTree({
+      documentUsage: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          title: {
+            kind: PropValueKind.Expression,
+            valueType: PropValueType.string,
+            value: "document.name",
+          },
+        },
+      },
+    });
+    expect(
+      ComponentTreeHelpers.usesExpressionSource(componentTree, "document")
+    ).toBeTruthy();
+  });
+
+  it("matches expression within array literal", () => {
+    const componentTree = createComponentTree({
+      documentUsage: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Array,
+        value: [
+          {
+            kind: PropValueKind.Expression,
+            valueType: PropValueType.string,
+            value: "document.name",
+          },
+        ],
+      },
+    });
+    expect(
+      ComponentTreeHelpers.usesExpressionSource(componentTree, "document")
+    ).toBeTruthy();
+  });
 });
 
 function createComponentTree(props: PropValues) {
