@@ -11,7 +11,7 @@ import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { FileIOError, IOErrorKind } from "../errors/FileIOError";
 import { StudioError } from "../errors/StudioError";
 import prettyPrintError from "../errors/prettyPrintError";
-import { dynamicImport } from "../utils/dynamicImport.js";
+import { dynamicImport } from "../utils/dynamicImport";
 
 /**
  * Given an absolute path to the user's project root folder, retrieve Studio's
