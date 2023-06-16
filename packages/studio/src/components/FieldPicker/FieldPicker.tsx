@@ -2,6 +2,7 @@ import { useCallback, useRef, useState, MouseEvent } from "react";
 import FieldDropdown from "./FieldDropdown";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
 import useRootClose from "@restart/ui/useRootClose";
+import classNames from "classnames";
 
 /**
  * An icon that when clicked on, opens up a dropdown for selecting
@@ -10,9 +11,11 @@ import useRootClose from "@restart/ui/useRootClose";
 export default function FieldPicker({
   handleFieldSelection,
   filteredEntityData,
+  disabled,
 }: {
   handleFieldSelection: (fieldId: string) => void;
   filteredEntityData: Record<string, unknown>;
+  disabled?: boolean;
 }) {
   const [expandedFieldId, setExpandedFieldId] = useState<string>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,13 +28,16 @@ export default function FieldPicker({
   const togglePicker = useCallback(
     (e: MouseEvent<SVGSVGElement>) => {
       e.preventDefault();
+      if (disabled) {
+        return;
+      }
       if (fieldPickerIsClosed) {
         setExpandedFieldId("");
       } else {
         setExpandedFieldId(undefined);
       }
     },
-    [fieldPickerIsClosed]
+    [fieldPickerIsClosed, disabled]
   );
 
   const handleFieldDropdownSelection = useCallback(
@@ -60,13 +66,17 @@ export default function FieldPicker({
     },
     [expandedFieldId]
   );
+  const classes = classNames("opacity-50", {
+    "cursor-pointer hover:opacity-100": !disabled,
+    "cursor-default": disabled,
+  });
 
   return (
     <div ref={containerRef}>
       <EmbedIcon
         role="button"
         onClick={togglePicker}
-        className="hover:opacity-100 opacity-50 cursor-pointer"
+        className={classes}
         aria-label="Toggle field picker"
       />
       {!fieldPickerIsClosed && (

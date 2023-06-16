@@ -8,7 +8,9 @@
   },
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
-    "build": "rm -rf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json && chmod 755 lib/bin/studio.js",
+    "build": "run-script-os",
+    "build:default": "npm run build:windows && chmod 755 lib/bin/studio.js",
+    "build:windows": "rimraf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json",
     "preview": "vite preview",
     "test": "jest",
     "typecheck-jest": "npx tsc -p tsconfig.jest.json"

@@ -18,6 +18,7 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import useActiveComponent from "../../src/hooks/useActiveComponent";
 import mockStore from "../__utils__/mockStore";
+import { checkTooltipFunctionality } from "../__utils__/helpers";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -80,7 +81,11 @@ const activeComponentMetadata: FileMetadata = {
 };
 
 const propShape: PropShape = {
-  title: { type: PropValueType.string, required: false },
+  title: {
+    type: PropValueType.string,
+    required: false,
+    doc: "this is a title",
+  },
   num: { type: PropValueType.number, required: false },
   bool: { type: PropValueType.boolean, required: false },
   bgColor: { type: PropValueType.HexColor, required: false },
@@ -166,6 +171,19 @@ function testStandardOrModuleComponentState(
     expect(screen.getByLabelText("bgColor")).toHaveAttribute("type", "color");
   });
 
+  it(`renders tooltip for each of the active ${componentKindLabel}'s props with docs`, async () => {
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={state}
+        propShape={propShape}
+      />
+    );
+    await checkTooltipFunctionality(
+      "this is a title",
+      screen.getByText("title")
+    );
+  });
+
   describe(`updates active ${componentKindLabel}'s prop state correctly through prop editors`, () => {
     function PropEditorsWithActiveState() {
       const { activeComponentMetadata, activeComponentState } =
@@ -185,7 +203,7 @@ function testStandardOrModuleComponentState(
         />
       );
     }
-    const activeComponent: ComponentState = {
+    const activeComponent: StandardOrModuleComponentState = {
       ...state,
       props: {
         title: {

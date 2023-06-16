@@ -1,6 +1,10 @@
 name: Run Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches: main
+  pull_request:
+
 
 jobs:
   unit_tests:
@@ -10,7 +14,10 @@ jobs:
       build_script: "npm run build -w=packages/studio-plugin"
 
   test_build:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js 18

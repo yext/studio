@@ -5,5 +5,8 @@ module.exports = {
     "@babel/preset-typescript",
     ["@babel/preset-react", { runtime: "automatic" }],
   ],
-  plugins: ["@babel/plugin-syntax-import-assertions"],
+  plugins: [
+    "@babel/plugin-syntax-import-assertions",
+    "babel-plugin-transform-import-meta",
+  ],
 };

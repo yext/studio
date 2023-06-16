@@ -6,12 +6,7 @@ import {
   TEMPLATE_STRING_EXPRESSION_REGEX,
 } from "../constants";
 import TypeGuards from "../utils/TypeGuards";
-import {
-  PropVal,
-  PropValueKind,
-  PropValues,
-  TypelessPropVal,
-} from "../types/PropValues";
+import { PropValueKind, TypelessPropVal } from "../types/PropValues";
 import { ComponentState, ComponentStateKind } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
@@ -70,7 +65,7 @@ export default class TemplateConfigWriter {
       }
     });
     if (getPathValue) {
-      this.getPathsFromPropVal(getPathValue)?.forEach((value) =>
+      this.getPathsFromPropVal(getPathValue).forEach((value) =>
         streamDataExpressions.add(value)
       );
     }
@@ -78,24 +73,29 @@ export default class TemplateConfigWriter {
   }
 
   private getPathsFromProps(
-    props: PropValues | Record<string, TypelessPropVal>
+    props: Record<string, TypelessPropVal>
   ): StreamsDataExpression[] {
     const dataExpressions: StreamsDataExpression[] = [];
     Object.keys(props).forEach((propName) => {
       const paths = this.getPathsFromPropVal(props[propName]);
-      paths && dataExpressions.push(...paths);
+      dataExpressions.push(...paths);
     });
     return dataExpressions;
   }
 
-  private getPathsFromPropVal({
+  private getPathsFromPropVal = ({
     value,
     kind,
-  }: PropVal | TypelessPropVal | GetPathVal):
-    | StreamsDataExpression[]
-    | undefined {
+  }: TypelessPropVal): StreamsDataExpression[] => {
+    if (typeof value === "object") {
+      if (Array.isArray(value)) {
+        return value.flatMap(this.getPathsFromPropVal);
+      } else {
+        return this.getPathsFromProps(value);
+      }
+    }
     if (kind !== PropValueKind.Expression) {
-      return;
+      return [];
     }
     if (TypeGuards.isTemplateString(value)) {
       return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
@@ -106,7 +106,8 @@ export default class TemplateConfigWriter {
     } else if (TypeGuards.isStreamsDataExpression(value)) {
       return [value];
     }
-  }
+    return [];
+  };
 
   /**
    * Creates a Pages template config by merging current template config, if

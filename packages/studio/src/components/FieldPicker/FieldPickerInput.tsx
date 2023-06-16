@@ -10,6 +10,7 @@ interface FieldPickerInputProps {
   handleFieldSelection: (fieldId: string) => void;
   displayValue: string;
   fieldFilter: (value: unknown) => boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -20,6 +21,7 @@ export default function FieldPickerInput({
   handleFieldSelection,
   displayValue,
   fieldFilter,
+  disabled,
 }: FieldPickerInputProps) {
   const entityData = useStudioStore((store) => store.pages.activeEntityData);
   const filteredData = filterEntityData(fieldFilter, entityData);
@@ -38,12 +40,14 @@ export default function FieldPickerInput({
         onChange={onChange}
         className={inputBoxCssClasses}
         value={displayValue}
+        disabled={disabled}
       />
       {hasFilteredData && (
         <i className="absolute right-0 top-2.5 mr-2 bg-white not-italic">
           <FieldPicker
             handleFieldSelection={handleFieldSelection}
             filteredEntityData={filteredData}
+            disabled={disabled}
           />
         </i>
       )}

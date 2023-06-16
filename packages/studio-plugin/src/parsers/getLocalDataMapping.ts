@@ -1,5 +1,6 @@
 import { join } from "path";
 import { existsSync } from "fs";
+import { dynamicImportJson } from "../utils/dynamicImport";
 
 /**
  * Import the user's localData/mapping.json file, so that studio can find the user's test data.
@@ -14,8 +15,5 @@ export default async function getLocalDataMapping(
       `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
     );
   }
-  const mapping = await import(/* @vite-ignore */ localDataMappingFilepath, {
-    assert: { type: "json" },
-  });
-  return mapping.default;
+  return dynamicImportJson(localDataMappingFilepath);
 }

@@ -80,7 +80,7 @@ const parentPropShape: PropShape = {
   },
 };
 
-it("returns value as is for prop of type Literal", () => {
+it("returns value as is for primitive prop of type Literal", () => {
   const transformedProps = getPropsForPreview(
     {
       foo: {
@@ -379,5 +379,41 @@ it("works with expressions inside object props", () => {
       templateExpr: "hello whirled",
       expr: "office space",
     },
+  });
+});
+
+it("works with expressions inside array props", () => {
+  const propValues: PropValues = {
+    arr: {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.Array,
+      value: [
+        {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "`hello ${document.world}`",
+        },
+        {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "document.name",
+        },
+      ],
+    },
+  };
+  const propShape: PropShape = {
+    arr: {
+      type: PropValueType.Array,
+      required: false,
+      itemType: { type: PropValueType.string },
+    },
+  };
+  const previewProps = getPropsForPreview(
+    propValues,
+    propShape,
+    expressionSources
+  );
+  expect(previewProps).toEqual({
+    arr: ["hello whirled", "office space"],
   });
 });
