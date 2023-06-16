@@ -5,14 +5,15 @@ import {
   PropVal,
   PropValueKind,
   PropValueType,
-  PropValues,
   TypeGuards,
 } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 import { ChangeEvent, useCallback } from "react";
 import { renderBranchUI } from "./PropEditor";
-import PropEditors from "./PropEditors";
+import { renderPropEditor } from "./PropEditors";
+import { ReactComponent as Plus } from "../icons/plus.svg";
+import PropValueHelpers from "../utils/PropValueHelpers";
 import classNames from "classnames";
 
 interface ArrayPropEditorProps {
@@ -24,6 +25,7 @@ interface ArrayPropEditorProps {
 }
 
 const tooltipStyle = { backgroundColor: "black" };
+const DEFAULT_ARRAY_LITERAL = [];
 
 /**
  * Renders an input editor for a single array-type prop.
@@ -54,25 +56,19 @@ export default function ArrayPropEditor({
     [onChange]
   );
 
-  const onLiteralChange = useCallback(
-    (updatedPropValues: PropValues) =>
-      onChange(Object.values(updatedPropValues)),
-    [onChange]
-  );
-
-  const propNameClasses = classNames("pr-2", {
-    "font-semibold": !isExpression,
+  const containerClasses = classNames("flex ", {
+    "mb-2": !isNested
   });
 
   const docTooltipId = `${propName}-doc`;
   const inputTooltipId = `${propName}-input`;
 
   return (
-    <>
-      <div className="flex items-center mb-2 text-sm">
-        {renderBranchUI(isNested)}
-        <label className="flex h-10 items-center justify-self-start">
-          <p className={propNameClasses} id={docTooltipId}>
+    <div className={containerClasses}>
+      {renderBranchUI(isNested, "pt-[.5em]")}
+      <div className="flex flex-col text-sm">
+        <label className="flex h-10 items-center">
+          <p className="pr-2 font-semibold" id={docTooltipId}>
             {propName}
           </p>
           {propMetadata.doc && (
@@ -101,35 +97,63 @@ export default function ArrayPropEditor({
             />
           )}
         </label>
+        <LiteralEditor
+          value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
+          itemType={propMetadata.itemType}
+          updateItems={onChange}
+        />
       </div>
-      {!isExpression &&
-        renderLiteralEditor(value, propMetadata.itemType, onLiteralChange)}
-    </>
+    </div>
   );
 }
 
-function renderLiteralEditor(
+function LiteralEditor({ value, itemType, updateItems }: {
   value: PropVal[],
   itemType: PropType,
-  updateItems: (updatedPropValues: PropValues) => void
-) {
-  const propShape = Object.fromEntries(
-    value.map((_, index) => [
-      `Item ${index + 1}`,
-      { ...itemType, required: true },
-    ])
-  );
-  const propValues = Object.fromEntries(
-    value.map((propVal, index) => [`Item ${index + 1}`, propVal])
-  );
+  updateItems: (value: PropVal[]) => void
+}) {
+  const addItem = useCallback(() => updateItems([
+    ...value,
+    PropValueHelpers.getDefaultPropVal(itemType)
+  ]), [itemType, value, updateItems]);
+
+  const updateItem = useCallback((itemName: string, itemVal: PropVal) => {
+    const index = parseInt(itemName.replace("Item ", "")) - 1;
+    const newPropVals = [...value];
+    newPropVals.splice(index, 1, itemVal);
+    updateItems(newPropVals);
+  }, [value, updateItems]);
 
   return (
-    <PropEditors
-      propShape={propShape}
-      propValues={propValues}
-      updateProps={updateItems}
-      isNested={true}
-    />
+    <>
+      {value.length > 0 &&
+        <div className="pt-2 ml-2 border-l-2">
+          {value.map((propVal, index) => {
+            const name = `Item ${index + 1}`;
+            const editor = renderPropEditor(
+              name,
+              { ...itemType, required: false },
+              propVal,
+              updateItem,
+              true
+            );
+            return <div key={name}>{editor}</div>;
+          })}
+        </div>
+      }
+      <div className="flex flex-row ml-2 self-start items-center">
+        <div className="before:border-l-2 before:pt-3 pb-3"></div>
+        {renderBranchUI(true)}
+        <button
+          className="flex gap-x-2 items-center self-start py-1 px-2 bg-gray-200
+            hover:bg-gray-300 rounded-md mt-2"
+          onClick={addItem}
+        >
+          <Plus />
+          Add Item
+        </button>
+      </div>
+    </>
   );
 }
 

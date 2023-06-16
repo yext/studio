@@ -68,10 +68,12 @@ export default function PropEditor({
   );
 }
 
-export function renderBranchUI(isNested?: boolean) {
+export function renderBranchUI(isNested?: boolean, additionalClasses = "") {
+  const classes = "mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap "
+    + additionalClasses;
   return (
     isNested && (
-      <div className="mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap">
+      <div className={classes}>
         ---
       </div>
     )
