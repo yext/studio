@@ -6,9 +6,11 @@ import {
   FileMetadata,
   FileMetadataKind,
   PropShape,
+  PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
+  StandardComponentState,
   StandardOrModuleComponentState,
   TypeGuards,
   ValidFileMetadata,
@@ -373,24 +375,12 @@ it("converts non-template string expressions to template literals", () => {
   expect(screen.getByRole("textbox")).toHaveValue("${siteSettings.siteName}");
 });
 
-it("correctly updates Array prop value using field picker", async () => {
-  mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
-  const props: PropValues = {
-    arr: {
-      kind: PropValueKind.Expression,
-      value: "document.strings",
-      valueType: PropValueType.Array,
-    },
+describe("Array prop", () => {
+  const expressionPropVal: PropVal = {
+    kind: PropValueKind.Expression,
+    value: "document.strings",
+    valueType: PropValueType.Array,
   };
-  mockStoreActiveComponent({
-    activeComponent: {
-      kind: ComponentStateKind.Standard,
-      componentName: "MyComponent",
-      props,
-      uuid: "mock-uuid",
-      metadataUUID: "mock-metadataUUID",
-    },
-  });
   const propShape: PropShape = {
     arr: {
       type: PropValueType.Array,
@@ -400,24 +390,108 @@ it("correctly updates Array prop value using field picker", async () => {
       required: false,
     },
   };
-  render(
-    <ActiveComponentPropEditors
-      activeComponentState={{
-        ...activeComponentState,
-        props,
-      }}
-      propShape={propShape}
-    />
-  );
 
-  expect(screen.getByRole("textbox")).toHaveValue("document.strings");
-  await userEvent.click(screen.getByRole("button"));
-  await userEvent.click(screen.getByText("Words"));
-  expect(getComponentProps()).toEqual({
-    arr: {
-      kind: PropValueKind.Expression,
+  function ActiveComponentPropEditorsWrapper() {
+    const state = useStudioStore().pages.pages["index"].componentTree[0];
+    return (
+      <ActiveComponentPropEditors
+        activeComponentState={state as StandardComponentState}
+        propShape={propShape}
+      />
+    );
+  }
+
+  it("correctly updates expression value using field picker", async () => {
+    mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
+    mockStoreActiveComponent({
+      activeComponent: {
+        ...activeComponentState,
+        props: { arr: expressionPropVal },
+      },
+    });
+    render(<ActiveComponentPropEditorsWrapper />);
+
+    expect(screen.getByRole("textbox")).toHaveValue("document.strings");
+    await userEvent.click(
+      screen.getByRole("button", { name: "Toggle field picker" })
+    );
+    await userEvent.click(screen.getByText("Words"));
+    expect(getComponentProps()).toEqual({
+      arr: {
+        kind: PropValueKind.Expression,
+        valueType: PropValueType.Array,
+        value: "document.words",
+      },
+    });
+    expect(screen.getByRole("textbox")).toHaveValue("document.words");
+  });
+
+  it("correctly switches to literal editor using Add Item button", async () => {
+    mockStoreActiveComponent({
+      activeComponent: {
+        ...activeComponentState,
+        props: { arr: expressionPropVal },
+      },
+    });
+    render(<ActiveComponentPropEditorsWrapper />);
+
+    const expressionInput = screen.getByRole("textbox");
+    await userEvent.click(screen.getByRole("button", { name: "Add Item" }));
+    expect(expressionInput).toHaveValue("");
+    expect(expressionInput).toBeDisabled();
+    expect(getComponentProps()).toEqual({
+      arr: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Array,
+        value: [
+          {
+            kind: PropValueKind.Literal,
+            valueType: PropValueType.string,
+            value: "",
+          },
+        ],
+      },
+    });
+    expect(screen.getByRole("textbox", { name: "Item 1" })).toHaveValue("");
+  });
+
+  it("correctly adds item to existing literal value", async () => {
+    const propVal: PropVal = {
+      kind: PropValueKind.Literal,
       valueType: PropValueType.Array,
-      value: "document.words",
-    },
+      value: [
+        {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "document.name",
+        },
+      ],
+    };
+    mockStoreActiveComponent({
+      activeComponent: {
+        ...activeComponentState,
+        props: { arr: propVal },
+      },
+    });
+    render(<ActiveComponentPropEditorsWrapper />);
+
+    await userEvent.click(screen.getByRole("button", { name: "Add Item" }));
+    expect(getComponentProps()).toEqual({
+      arr: {
+        ...propVal,
+        value: [
+          ...propVal.value,
+          {
+            kind: PropValueKind.Literal,
+            valueType: PropValueType.string,
+            value: "",
+          },
+        ],
+      },
+    });
+    expect(screen.getByRole("textbox", { name: "Item 1" })).toHaveValue(
+      "[[name]]"
+    );
+    expect(screen.getByRole("textbox", { name: "Item 2" })).toHaveValue("");
   });
 });

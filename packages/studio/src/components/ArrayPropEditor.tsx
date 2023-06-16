@@ -5,14 +5,15 @@ import {
   PropVal,
   PropValueKind,
   PropValueType,
-  PropValues,
   TypeGuards,
 } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 import { ChangeEvent, useCallback } from "react";
 import { renderBranchUI } from "./PropEditor";
-import PropEditors from "./PropEditors";
+import { renderPropEditor } from "./PropEditors";
+import { ReactComponent as Plus } from "../icons/plus.svg";
+import PropValueHelpers from "../utils/PropValueHelpers";
 import classNames from "classnames";
 
 interface ArrayPropEditorProps {
@@ -23,6 +24,7 @@ interface ArrayPropEditorProps {
   isNested?: boolean;
 }
 
+const DEFAULT_ARRAY_LITERAL = [];
 const tooltipStyle = { backgroundColor: "black" };
 
 /**
@@ -54,25 +56,19 @@ export default function ArrayPropEditor({
     [onChange]
   );
 
-  const onLiteralChange = useCallback(
-    (updatedPropValues: PropValues) =>
-      onChange(Object.values(updatedPropValues)),
-    [onChange]
-  );
-
-  const propNameClasses = classNames("pr-2", {
-    "font-semibold": !isExpression,
+  const containerClasses = classNames("flex text-sm", {
+    "mb-2": !isNested,
   });
 
   const docTooltipId = `${propName}-doc`;
   const inputTooltipId = `${propName}-input`;
 
   return (
-    <>
-      <div className="flex items-center mb-2 text-sm">
-        {renderBranchUI(isNested)}
-        <label className="flex h-10 items-center justify-self-start">
-          <p className={propNameClasses} id={docTooltipId}>
+    <div className={containerClasses}>
+      {renderBranchUI(isNested, "pt-[.5em]")}
+      <div className="flex flex-col">
+        <label className="flex h-10 items-center">
+          <p className="pr-2 font-semibold" id={docTooltipId}>
             {propName}
           </p>
           {propMetadata.doc && (
@@ -101,35 +97,69 @@ export default function ArrayPropEditor({
             />
           )}
         </label>
+        <LiteralEditor
+          value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
+          itemType={propMetadata.itemType}
+          updateItems={onChange}
+        />
       </div>
-      {!isExpression &&
-        renderLiteralEditor(value, propMetadata.itemType, onLiteralChange)}
-    </>
+    </div>
   );
 }
 
-function renderLiteralEditor(
-  value: PropVal[],
-  itemType: PropType,
-  updateItems: (updatedPropValues: PropValues) => void
-) {
-  const propShape = Object.fromEntries(
-    value.map((_, index) => [
-      `Item ${index + 1}`,
-      { ...itemType, required: true },
-    ])
-  );
+function LiteralEditor({
+  value,
+  itemType,
+  updateItems,
+}: {
+  value: PropVal[];
+  itemType: PropType;
+  updateItems: (value: PropVal[]) => void;
+}) {
   const propValues = Object.fromEntries(
     value.map((propVal, index) => [`Item ${index + 1}`, propVal])
   );
 
+  const updateItem = useCallback(
+    (itemName: string, itemVal: PropVal) =>
+      updateItems(Object.values({ ...propValues, [itemName]: itemVal })),
+    [propValues, updateItems]
+  );
+
+  const addItem = useCallback(
+    () => updateItems([...value, PropValueHelpers.getDefaultPropVal(itemType)]),
+    [itemType, value, updateItems]
+  );
+
   return (
-    <PropEditors
-      propShape={propShape}
-      propValues={propValues}
-      updateProps={updateItems}
-      isNested={true}
-    />
+    <>
+      {value.length > 0 && (
+        <div className="pt-2 ml-2 border-l-2">
+          {Object.entries(propValues).map(([name, propVal]) => {
+            const editor = renderPropEditor(
+              name,
+              { ...itemType, required: false },
+              propVal,
+              updateItem,
+              true
+            );
+            return <div key={name}>{editor}</div>;
+          })}
+        </div>
+      )}
+      <div className="flex items-center ml-2 mt-1">
+        <div className="before:border-l-2 before:pt-3 pb-4"></div>
+        {renderBranchUI(true)}
+        <button
+          className="flex gap-x-2 items-center bg-gray-200 hover:bg-gray-300
+            rounded-md py-1 px-2"
+          onClick={addItem}
+        >
+          <Plus />
+          Add Item
+        </button>
+      </div>
+    </>
   );
 }
 

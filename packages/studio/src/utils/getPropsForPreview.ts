@@ -47,7 +47,7 @@ function getPropValueForPreview(
   expressionSources: ExpressionSources
 ) {
   if (!propVal) {
-    return handleNoPropVal(propType.type);
+    return PropValueHelpers.getLiteralPropDefaultValue(propType.type);
   } else if (propVal.kind === PropValueKind.Expression) {
     return handleExpressionProp(propVal.value, propType, expressionSources);
   } else if (propVal.valueType === PropValueType.Object) {
@@ -57,13 +57,6 @@ function getPropValueForPreview(
   } else {
     return propVal.value;
   }
-}
-
-function handleNoPropVal(valueType: PropValueType) {
-  if (valueType === PropValueType.Object || valueType === PropValueType.Array) {
-    return undefined;
-  }
-  return PropValueHelpers.getLiteralPropDefaultValue(valueType);
 }
 
 function handleExpressionProp(

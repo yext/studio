@@ -8,6 +8,7 @@ import {
 import { useCallback } from "react";
 import PropEditors from "./PropEditors";
 import { renderBranchUI } from "./PropEditor";
+import classNames from "classnames";
 
 const EMPTY_PROP_VALUES = {};
 
@@ -36,8 +37,12 @@ export default function NestedPropEditors(props: {
     [propName, updateSpecificProp]
   );
 
+  const containerClasses = classNames("flex", {
+    "mb-2": !isNested,
+  });
+
   return (
-    <div className="flex">
+    <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
         <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>

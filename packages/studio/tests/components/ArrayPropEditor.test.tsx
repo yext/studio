@@ -40,7 +40,9 @@ describe("expression value", () => {
     mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
     const onPropChange = jest.fn();
     renderArrayPropEditor("document.strings", onPropChange);
-    await userEvent.click(screen.getByRole("button"));
+    await userEvent.click(
+      screen.getByRole("button", { name: "Toggle field picker" })
+    );
     await userEvent.click(screen.getByText("Words"));
     expect(onPropChange).toBeCalledWith("arrProp", {
       kind: PropValueKind.Expression,

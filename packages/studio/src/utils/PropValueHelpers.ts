@@ -1,4 +1,10 @@
-import { PropVal, PropValueKind, PropValueType } from "@yext/studio-plugin";
+import {
+  PropType,
+  PropVal,
+  PropValueKind,
+  PropValueType,
+  TypeGuards,
+} from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
 
 export default class PropValueHelpers {
@@ -6,12 +12,15 @@ export default class PropValueHelpers {
     type: PropValueType,
     kind: PropValueKind
   ): string | number | boolean {
-    if (kind === PropValueKind.Literal) {
-      return this.getLiteralPropDefaultValue(type);
-    }
     switch (type) {
+      case PropValueType.number:
+        return 0;
       case PropValueType.string:
-        return "``";
+        return kind === PropValueKind.Expression ? "``" : "";
+      case PropValueType.boolean:
+        return false;
+      case PropValueType.HexColor:
+        return "#FFFFFF";
       case PropValueType.Array:
         return "";
       default:
@@ -24,22 +33,39 @@ export default class PropValueHelpers {
 
   static getLiteralPropDefaultValue(
     type: PropValueType
-  ): string | number | boolean {
+  ): string | number | boolean | unknown[] | undefined {
     switch (type) {
       case PropValueType.number:
-        return 0;
       case PropValueType.string:
-        return "";
       case PropValueType.boolean:
-        return false;
       case PropValueType.HexColor:
-        return "#FFFFFF";
+        return this.getPropInputDefaultValue(type, PropValueKind.Literal);
+      case PropValueType.Array:
+        return [];
       default:
-        console.error(
-          `Unknown PropValueType ${type}. Can't derive a default value based on PropValueType.`
-        );
-        return "";
+        return undefined;
     }
+  }
+
+  static getDefaultPropVal(propType: PropType): PropVal {
+    const getDefaultValue = () => {
+      if (propType.type !== PropValueType.Object) {
+        return PropValueHelpers.getLiteralPropDefaultValue(propType.type);
+      }
+
+      const propValEntries = Object.entries(propType.shape).map(
+        ([name, propMetadata]) => [name, this.getDefaultPropVal(propMetadata)]
+      );
+      return Object.fromEntries(propValEntries);
+    };
+
+    const propVal = {
+      kind: PropValueKind.Literal,
+      valueType: propType.type,
+      value: getDefaultValue(),
+    };
+    TypeGuards.assertIsValidPropVal(propVal);
+    return propVal;
   }
 
   static getPropValue(
