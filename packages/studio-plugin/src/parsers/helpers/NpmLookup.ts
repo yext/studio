@@ -3,35 +3,34 @@ import path from "path";
 import typescript, { ModuleResolutionHost } from "typescript";
 
 // "typescript" is a CommonJS module, which may not support all module.exports as named exports
-const { resolveModuleName } = typescript;
-
+const { resolveModuleName: resolveTypescriptModule } = typescript;
 /**
  * NpmLookup is a class for retrieving information on an import.
  */
 export default class NpmLookup {
-  private rootPath: string;
   private resolvedFilepath: string;
 
-  constructor(private moduleName: string) {
+  constructor(private moduleName: string, private rootPath: string) {
     const { resolvedModule, root } = this.resolveModuleName();
-    this.rootPath = this.setRootPath(resolvedModule, root);
     this.resolvedFilepath = path.join(root, resolvedModule.resolvedFileName);
   }
 
-  private resolveModuleName(root = process.cwd()): {
+  private resolveModuleName(root = this.rootPath): {
     resolvedModule: typescript.ResolvedModuleFull;
     root: string;
   } {
     const customModuleResolutionHost: ModuleResolutionHost = {
-      fileExists(fileName) {
-        return fs.existsSync(path.join(root, fileName));
+      fileExists(filepath) {
+        console.log('fileexists', filepath, root)
+        return fs.existsSync(path.join(root, filepath));
       },
       readFile(fileName) {
+        console.log('readfile', fileName)
         return fs.readFileSync(path.join(root, fileName), "utf-8");
       },
     };
 
-    const { resolvedModule } = resolveModuleName(
+    const { resolvedModule } = resolveTypescriptModule(
       this.moduleName,
       "",
       {},
@@ -50,16 +49,6 @@ export default class NpmLookup {
       resolvedModule,
       root,
     };
-  }
-
-  private setRootPath(
-    resolvedModule: typescript.ResolvedModuleFull,
-    root: string
-  ): string {
-    const pathToEntry = resolvedModule.packageId?.subModuleName || "";
-    const stripPathToEntryNameFromPath =
-      resolvedModule.resolvedFileName.replace(pathToEntry, "");
-    return path.join(root, stripPathToEntryNameFromPath);
   }
 
   getResolvedFilepath(): string {
