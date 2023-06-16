@@ -20,9 +20,19 @@ it("throws when the import specifier cannot be resolved", () => {
 });
 
 it("can resolve relative filepaths", () => {
-  const relativePath = "../../__fixtures__/NpmLookup/sourceFileToLookup";
-  const npmLookup = new NpmLookup(relativePath, __dirname);
+  const relativePath = "./__fixtures__/NpmLookup/sourceFileToLookup";
+  const rootPath = path.resolve(__dirname, "../..");
+  const npmLookup = new NpmLookup(relativePath, rootPath);
   expect(npmLookup.getResolvedFilepath()).toEqual(
-    path.resolve(__dirname, relativePath + ".ts")
+    path.resolve(rootPath, relativePath + ".ts")
+  );
+});
+
+it("will not recurse when resolving relative imports", () => {
+  const relativePath = "./__fixtures__/NpmLookup/sourceFileToLookup";
+  const rootPath = path.resolve(__dirname, "..");
+  const instantiate = () => new NpmLookup(relativePath, rootPath);
+  expect(instantiate).toThrow(
+    `The import specifier "${relativePath}" could not be resolved.`
   );
 });

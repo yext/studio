@@ -3,27 +3,33 @@ import path from "path";
 import typescript, { ModuleResolutionHost } from "typescript";
 const { resolveModuleName: resolveTypescriptModule } = typescript;
 
+type ModuleResolutionData = {
+  resolvedModule: typescript.ResolvedModuleFull;
+  resolvedRoot: string;
+};
+
 /**
  * NpmLookup is a class for retrieving information on an import.
  */
 export default class NpmLookup {
   private resolvedFilepath: string;
 
-  constructor(private importSpecifier: string, rootPath: string) {
-    const { resolvedModule, root } = this.resolveImportSpecifier(rootPath);
-    this.resolvedFilepath = path.join(root, resolvedModule.resolvedFileName);
+  constructor(private importSpecifier: string, initialSearchRoot: string) {
+    const { resolvedModule, resolvedRoot } =
+      this.resolveImportSpecifier(initialSearchRoot);
+    this.resolvedFilepath = path.join(
+      resolvedRoot,
+      resolvedModule.resolvedFileName
+    );
   }
 
-  private resolveImportSpecifier(root: string): {
-    resolvedModule: typescript.ResolvedModuleFull;
-    root: string;
-  } {
+  private resolveImportSpecifier(searchRoot: string): ModuleResolutionData {
     const customModuleResolutionHost: ModuleResolutionHost = {
       fileExists(filepath) {
-        return fs.existsSync(path.join(root, filepath));
+        return fs.existsSync(path.join(searchRoot, filepath));
       },
       readFile(filepath) {
-        return fs.readFileSync(path.join(root, filepath), "utf-8");
+        return fs.readFileSync(path.join(searchRoot, filepath), "utf-8");
       },
     };
 
@@ -35,8 +41,9 @@ export default class NpmLookup {
     );
 
     if (!resolvedModule) {
-      const parent = path.normalize(path.join(root, ".."));
-      if (root === parent) {
+      const parent = path.normalize(path.join(searchRoot, ".."));
+      const isRelativeImport = this.importSpecifier.startsWith(".");
+      if (isRelativeImport || searchRoot === parent) {
         throw Error(
           `The import specifier "${this.importSpecifier}" could not be resolved.`
         );
@@ -46,7 +53,7 @@ export default class NpmLookup {
 
     return {
       resolvedModule,
-      root,
+      resolvedRoot: searchRoot,
     };
   }
 
