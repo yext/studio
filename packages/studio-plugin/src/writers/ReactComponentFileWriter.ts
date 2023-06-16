@@ -21,6 +21,7 @@ import {
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { TypeGuards } from "../utils";
+import camelCase from "camelcase";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -33,7 +34,19 @@ export default class ReactComponentFileWriter {
     private studioSourceFileParser: StudioSourceFileParser
   ) {}
 
+  private reactComponentNameSanitizer(name: string) {
+    name = camelCase(name, { pascalCase: true });
+    const nonAlphaNumeric = /[\W]/g;
+    const firstNonLetters = /^[^a-zA-Z]*/;
+    name = name.replaceAll(nonAlphaNumeric, "");
+    name = name.replace(firstNonLetters, "");
+    return name
+      ? name[0].toUpperCase() + name.slice(1)
+      : "PageDefaultFromInvalidInput";
+  }
+
   private createComponentFunction(): FunctionDeclaration {
+    this.componentName = this.reactComponentNameSanitizer(this.componentName);
     const functionDeclaration =
       this.studioSourceFileWriter.createDefaultFunction(this.componentName);
     functionDeclaration.addStatements([Writers.returnStatement("<></>")]);
