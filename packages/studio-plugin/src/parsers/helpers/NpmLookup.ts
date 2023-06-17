@@ -14,7 +14,10 @@ type ModuleResolutionData = {
 export default class NpmLookup {
   private resolvedFilepath: string;
 
-  constructor(private importSpecifier: string, private initialSearchRoot: string) {
+  constructor(
+    private importSpecifier: string,
+    private initialSearchRoot: string
+  ) {
     const { resolvedModule, resolvedRoot } =
       this.resolveImportSpecifier(initialSearchRoot);
     this.resolvedFilepath = path.join(
