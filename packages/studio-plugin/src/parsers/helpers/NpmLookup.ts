@@ -18,8 +18,9 @@ export default class NpmLookup {
     private importSpecifier: string,
     private initialSearchRoot: string
   ) {
+    const searchRootDir = path.dirname(initialSearchRoot);
     const { resolvedModule, resolvedRoot } =
-      this.resolveImportSpecifier(initialSearchRoot);
+      this.resolveImportSpecifier(searchRootDir);
     this.resolvedFilepath = path.join(
       resolvedRoot,
       resolvedModule.resolvedFileName
