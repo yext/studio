@@ -5,9 +5,12 @@ import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const pathToViteConfig = path.resolve(__dirname, "../../vite.config.ts");
+const NODE_OPTIONS = 'NODE_OPTIONS="--experimental-specifier-resolution=node"';
 
 execSync(
-  "node --experimental-specifier-resolution=node node_modules/.bin/vite --config " +
-    path.resolve(__dirname, "../../vite.config.ts"),
-  { stdio: "inherit" }
+  `npx cross-env ${NODE_OPTIONS} npx vite --config "${pathToViteConfig}"`,
+  {
+    stdio: "inherit",
+  }
 );
