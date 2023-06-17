@@ -14,7 +14,7 @@ type ModuleResolutionData = {
 export default class NpmLookup {
   private resolvedFilepath: string;
 
-  constructor(private importSpecifier: string, initialSearchRoot: string) {
+  constructor(private importSpecifier: string, private initialSearchRoot: string) {
     const { resolvedModule, resolvedRoot } =
       this.resolveImportSpecifier(initialSearchRoot);
     this.resolvedFilepath = path.join(
@@ -45,7 +45,7 @@ export default class NpmLookup {
       const isRelativeImport = this.importSpecifier.startsWith(".");
       if (isRelativeImport || searchRoot === parent) {
         throw Error(
-          `The import specifier "${this.importSpecifier}" could not be resolved.`
+          `The import specifier "${this.importSpecifier}" could not be resolved from ${this.initialSearchRoot}.`
         );
       }
       return this.resolveImportSpecifier(parent);
