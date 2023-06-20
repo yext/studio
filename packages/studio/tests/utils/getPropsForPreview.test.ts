@@ -1,5 +1,6 @@
 /* eslint-disable no-template-curly-in-string */
 import {
+  PropMetadata,
   PropShape,
   PropValueKind,
   PropValues,
@@ -50,23 +51,24 @@ const propShape: PropShape = {
     type: PropValueType.string,
     required: false,
   },
-  bar: {
-    type: PropValueType.Array,
-    itemType: {
-      type: PropValueType.Object,
-      shape: {
-        start: {
-          type: PropValueType.string,
-          required: true,
-        },
-        end: {
-          type: PropValueType.string,
-          required: true,
-        },
+};
+
+const arrayPropMetadata: PropMetadata = {
+  type: PropValueType.Array,
+  itemType: {
+    type: PropValueType.Object,
+    shape: {
+      start: {
+        type: PropValueType.string,
+        required: true,
+      },
+      end: {
+        type: PropValueType.string,
+        required: true,
       },
     },
-    required: false,
   },
+  required: false,
 };
 
 const parentPropShape: PropShape = {
@@ -211,7 +213,7 @@ describe("expression value handling", () => {
           value: "document.hours.openIntervals",
         },
       },
-      propShape,
+      { bar: arrayPropMetadata },
       expressionSources
     );
     expect(transformedProps.bar).toEqual(entityData.hours.openIntervals);
@@ -229,7 +231,7 @@ describe("expression value handling", () => {
           value: "document.hours.fakeIntervals",
         },
       },
-      propShape,
+      { bar: arrayPropMetadata },
       expressionSources
     );
     expect(transformedProps.bar).toBeUndefined();
@@ -239,7 +241,7 @@ describe("expression value handling", () => {
       'The value extracted from the expression "document.hours.fakeIntervals"' +
         ` does not match with the expected propValueType ${PropValueType.Array}`,
       "with item type",
-      propShape["bar"]["itemType"]
+      arrayPropMetadata.itemType
     );
   });
 });

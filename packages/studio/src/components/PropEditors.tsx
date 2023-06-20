@@ -61,7 +61,7 @@ export default function PropEditors(props: {
   return <>{propEditors}</>;
 }
 
-function renderPropEditor(
+export function renderPropEditor(
   propName: string,
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
