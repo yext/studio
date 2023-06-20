@@ -1,6 +1,6 @@
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Gear } from "../icons/gear.svg";
-import { useCallback, useMemo, useContext } from "react";
+import { useCallback, useMemo } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import FormModal, { FormData } from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
