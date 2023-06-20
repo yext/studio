@@ -15,6 +15,7 @@ import { renderPropEditor } from "./PropEditors";
 import { ReactComponent as Plus } from "../icons/plus.svg";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import classNames from "classnames";
+import RemovableElement from "./RemovableElement";
 
 interface ArrayPropEditorProps {
   propName: string;
@@ -131,11 +132,25 @@ function LiteralEditor({
     [itemType, value, updateItems]
   );
 
+  const generateRemoveItem = useCallback(
+    (index: number) => () => {
+      const updatedItems = [...value];
+      updatedItems.splice(index, 1);
+      updateItems(updatedItems);
+    },
+    [value, updateItems]
+  );
+
+  const buttonClasses = classNames("ml-3", {
+    "self-start mt-2": itemType.type === PropValueType.Object,
+    "mb-2": itemType.type !== PropValueType.Object,
+  });
+
   return (
     <>
       {value.length > 0 && (
         <div className="pt-2 ml-2 border-l-2">
-          {Object.entries(propValues).map(([name, propVal]) => {
+          {Object.entries(propValues).map(([name, propVal], index) => {
             const editor = renderPropEditor(
               name,
               { ...itemType, required: false },
@@ -143,7 +158,16 @@ function LiteralEditor({
               updateItem,
               true
             );
-            return <div key={name}>{editor}</div>;
+            return (
+              <RemovableElement
+                key={name}
+                onRemove={generateRemoveItem(index)}
+                buttonClasses={buttonClasses}
+                ariaLabel={`Remove ${name}`}
+              >
+                {editor}
+              </RemovableElement>
+            );
           })}
         </div>
       )}

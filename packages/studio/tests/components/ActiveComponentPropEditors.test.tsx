@@ -381,6 +381,17 @@ describe("Array prop", () => {
     value: "document.strings",
     valueType: PropValueType.Array,
   };
+  const literalPropVal: PropVal = {
+    kind: PropValueKind.Literal,
+    valueType: PropValueType.Array,
+    value: [
+      {
+        kind: PropValueKind.Expression,
+        valueType: PropValueType.string,
+        value: "document.name",
+      },
+    ],
+  };
   const propShape: PropShape = {
     arr: {
       type: PropValueType.Array,
@@ -456,21 +467,10 @@ describe("Array prop", () => {
   });
 
   it("correctly adds item to existing literal value", async () => {
-    const propVal: PropVal = {
-      kind: PropValueKind.Literal,
-      valueType: PropValueType.Array,
-      value: [
-        {
-          kind: PropValueKind.Expression,
-          valueType: PropValueType.string,
-          value: "document.name",
-        },
-      ],
-    };
     mockStoreActiveComponent({
       activeComponent: {
         ...activeComponentState,
-        props: { arr: propVal },
+        props: { arr: literalPropVal },
       },
     });
     render(<ActiveComponentPropEditorsWrapper />);
@@ -478,9 +478,9 @@ describe("Array prop", () => {
     await userEvent.click(screen.getByRole("button", { name: "Add Item" }));
     expect(getComponentProps()).toEqual({
       arr: {
-        ...propVal,
+        ...literalPropVal,
         value: [
-          ...propVal.value,
+          ...literalPropVal.value,
           {
             kind: PropValueKind.Literal,
             valueType: PropValueType.string,
@@ -493,5 +493,65 @@ describe("Array prop", () => {
       "[[name]]"
     );
     expect(screen.getByRole("textbox", { name: "Item 2" })).toHaveValue("");
+  });
+
+  it("correctly removes item when there are multiple", async () => {
+    const propVal: PropVal = {
+      ...literalPropVal,
+      value: [
+        {
+          kind: PropValueKind.Expression,
+          valueType: PropValueType.string,
+          value: "document.title",
+        },
+        ...literalPropVal.value,
+      ],
+    };
+    mockStoreActiveComponent({
+      activeComponent: {
+        ...activeComponentState,
+        props: { arr: propVal },
+      },
+    });
+    render(<ActiveComponentPropEditorsWrapper />);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Remove Item 1" })
+    );
+    expect(getComponentProps()).toEqual({ arr: literalPropVal });
+    expect(screen.getByRole("textbox", { name: "Item 1" })).toHaveValue(
+      "[[name]]"
+    );
+    expect(screen.queryByRole("textbox", { name: "Item 2" })).toBeNull();
+    const expressionInput = screen.getByRole("textbox", {
+      name: (text) => text.startsWith("arr"),
+    });
+    expect(expressionInput).toHaveValue("");
+    expect(expressionInput).toBeDisabled();
+  });
+
+  it("correctly removes item when there is only one", async () => {
+    mockStoreActiveComponent({
+      activeComponent: {
+        ...activeComponentState,
+        props: { arr: literalPropVal },
+      },
+    });
+    render(<ActiveComponentPropEditorsWrapper />);
+
+    await userEvent.click(
+      screen.getByRole("button", { name: "Remove Item 1" })
+    );
+    expect(getComponentProps()).toEqual({
+      arr: {
+        ...literalPropVal,
+        value: [],
+      },
+    });
+    expect(screen.queryByRole("textbox", { name: "Item 1" })).toBeNull();
+    const expressionInput = screen.getByRole("textbox");
+    expect(expressionInput).toHaveValue("");
+    expect(expressionInput).toBeEnabled();
+    expect(screen.queryByRole("tooltip")).toBeNull();
   });
 });
