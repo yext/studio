@@ -126,7 +126,6 @@ it("disables the button and has a tooltip when getPath value is undefined", () =
   );
 });
 
-<<<<<<< HEAD
 it("displays the correct stream scope when model opens", async () => {
   render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
@@ -138,6 +137,3 @@ it("displays the correct stream scope when model opens", async () => {
   expect(entityTypesTextbox).toHaveValue("");
   expect(savedFilterIDsTextbox).toHaveValue("banana");
 });
-=======
-it("displays the correct stream scope when model opens");
->>>>>>> f7c492717ef6170a96d3653d2fcfab9e8fdf3fae
