@@ -97,7 +97,7 @@ it("updates getPath value with square and curly bracket expression", async () =>
   render(<PageSettingsButton pageName="product" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", {name: "URL slug:"});
+  const textbox = screen.getByRole("textbox", { name: "URL slug:" });
   expect(textbox).toHaveValue("[[slug]]");
   // userEvent treats `[` and `{` as special characters. To type each in the
   // input, the character must be doubled in the string.
@@ -119,4 +119,4 @@ it("disables the button and has a tooltip when getPath value is undefined", () =
   );
 });
 
-it("displays the correct stream scope when model opens")
+it("displays the correct stream scope when model opens");

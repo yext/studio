@@ -1,4 +1,9 @@
-import { ComponentState, GetPathVal, PageState, StreamScope } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  GetPathVal,
+  PageState,
+  StreamScope,
+} from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import path from "path-browserify";
 import initialStudioData from "virtual_yext-studio";
@@ -91,12 +96,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     updateStreamScope: (pageName: string, newStreamScope: StreamScope) => {
       set((store) => {
-        let pagesJS = store.pages[pageName].pagesJS ?? undefined;
+        const pagesJS = store.pages[pageName].pagesJS ?? undefined;
         if (pagesJS !== undefined) {
           pagesJS.streamScope = newStreamScope;
           store.pendingChanges.pagesToUpdate.add(pageName);
         }
-      })
+      });
     },
     clearPendingChanges: () => {
       set((store) => {
