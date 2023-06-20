@@ -92,7 +92,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     updateStreamScope: (pageName: string, newStreamScope: StreamScope) => {
       set((store) => {
         let pagesJS = store.pages[pageName].pagesJS ?? undefined;
-        if (pagesJS != undefined) {
+        if (pagesJS !== undefined) {
           pagesJS.streamScope = newStreamScope;
           store.pendingChanges.pagesToUpdate.add(pageName);
         }
