@@ -79,32 +79,32 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     removeComponent(componentState.uuid);
   }, [componentState, removeComponent]);
 
-  const buttonStyles = classNames({ hidden: !isActiveComponent })
+  const buttonStyles = classNames({ hidden: !isActiveComponent });
 
   return (
-      <div className={componentNodeClasses} style={componentNodeStyle}>
-        <RemovableElement onRemove={handleRemove} buttonClasses={buttonStyles}>
-          <div
-            className="flex grow items-center cursor-pointer"
-            onClick={handleClick}
-            id={anchorId}
-          >
-            <Vector className={vectorClassName} onClick={handleToggle} />
-            <div className="pl-2">
-              <ComponentKindIcon componentState={componentState} />
-            </div>
-            <span className="pl-1.5">
-              {getComponentDisplayName(componentState)}
-            </span>
-            {isErrorState && (
-              <Tooltip
-                content={extractedState.message}
-                anchorId={anchorId}
-                place="right"
-              />
-            )}
+    <div className={componentNodeClasses} style={componentNodeStyle}>
+      <RemovableElement onRemove={handleRemove} buttonClasses={buttonStyles}>
+        <div
+          className="flex grow items-center cursor-pointer"
+          onClick={handleClick}
+          id={anchorId}
+        >
+          <Vector className={vectorClassName} onClick={handleToggle} />
+          <div className="pl-2">
+            <ComponentKindIcon componentState={componentState} />
           </div>
-        </RemovableElement>
-      </div>
+          <span className="pl-1.5">
+            {getComponentDisplayName(componentState)}
+          </span>
+          {isErrorState && (
+            <Tooltip
+              content={extractedState.message}
+              anchorId={anchorId}
+              place="right"
+            />
+          )}
+        </div>
+      </RemovableElement>
+    </div>
   );
 }
