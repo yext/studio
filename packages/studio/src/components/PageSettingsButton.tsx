@@ -1,10 +1,10 @@
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Gear } from "../icons/gear.svg";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useContext } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import FormModal, { FormData } from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
-import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
+import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
 
@@ -12,9 +12,32 @@ type PageSettings = {
   url: string;
 };
 
+type EntityPageSettings = {
+  [key in keyof StreamScope]: string;
+};
+
 const formData: FormData<PageSettings> = {
   url: { description: "URL slug:" },
 };
+
+const entityFormData: FormData<PageSettings & EntityPageSettings> = {
+  url: { 
+    description: "URL slug:" ,
+    optional: false,
+  },
+  entityIds: {
+    description: "Entity IDs:",
+    optional: true,
+  },
+  entityTypes: {
+    description: "Entity Types:",
+    optional: true,
+  },
+  savedFilterIds: {
+    description: "Saved Filter IDs:",
+    optional: true,
+  },
+}
 
 interface PageSettingsButtonProps {
   pageName: string;
@@ -28,11 +51,13 @@ interface PageSettingsButtonProps {
 export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
-  const [currGetPathValue, updateGetPathValue, isEntityPage] = useStudioStore(
+  const [currGetPathValue, updateGetPathValue, isEntityPage, streamScope, updateStreamScope] = useStudioStore(
     (store) => [
       store.pages.pages[pageName].pagesJS?.getPathValue,
       store.pages.updateGetPathValue,
       !!store.pages.pages[pageName].pagesJS?.streamScope,
+      store.pages.pages[pageName].pagesJS?.streamScope,
+      store.pages.updateStreamScope,
     ]
   );
 
@@ -41,8 +66,18 @@ export default function PageSettingsButton({
     [currGetPathValue, isEntityPage]
   );
 
+  const initialEntityFormValue: PageSettings & EntityPageSettings = useMemo(
+    () => ({ 
+      url: getUrlDisplayValue(currGetPathValue, isEntityPage),
+      entityIds: streamScope ? streamScope["entityIds"]?.join(",") : undefined, 
+      entityTypes: streamScope ? streamScope["entityTypes"]?.join(",") : undefined, 
+      savedFilterIds: streamScope ? streamScope["savedFilterIds"]?.join(",") : undefined, 
+    }), 
+    [currGetPathValue, isEntityPage, streamScope]
+  );
+
   const handleModalSave = useCallback(
-    (form: PageSettings) => {
+    (form: PageSettings & EntityPageSettings) => {
       const getPathValue: GetPathVal = isEntityPage
         ? {
             kind: PropValueKind.Expression,
@@ -53,9 +88,22 @@ export default function PageSettingsButton({
             value: form.url,
           };
       updateGetPathValue(pageName, getPathValue);
+      if(isEntityPage) {
+        const newStreamScope = Object.entries(form).reduce((scope, [key, val]) => {
+          const values = val
+            .split(",")
+            .map((str) => str.trim())
+            .filter((str) => str);
+          if (values.length > 0 && key !== 'url') {
+            scope[key] = values;
+          }
+          return scope;
+        }, {} as StreamScope);
+        updateStreamScope(pageName, newStreamScope);
+      }
       return true;
     },
-    [updateGetPathValue, pageName, isEntityPage]
+    [updateGetPathValue, updateStreamScope, pageName, isEntityPage]
   );
 
   const renderModal: renderModalFunction = useCallback(
@@ -64,8 +112,9 @@ export default function PageSettingsButton({
         <FormModal
           isOpen={isOpen}
           title="Page Settings"
-          formData={formData}
-          initialFormValue={initialFormValue}
+          instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may cause entity data to be undefined."
+          formData={isEntityPage ? entityFormData : formData}
+          initialFormValue={isEntityPage ? initialEntityFormValue : initialFormValue}
           requireChangesToSubmit={true}
           handleClose={handleClose}
           handleConfirm={handleModalSave}
@@ -77,7 +126,7 @@ export default function PageSettingsButton({
         />
       );
     },
-    [handleModalSave, initialFormValue, isEntityPage]
+    [handleModalSave, initialFormValue, initialEntityFormValue, isEntityPage]
   );
 
   const disabled = !currGetPathValue;
