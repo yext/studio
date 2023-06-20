@@ -21,10 +21,7 @@ const formData: FormData<PageSettings> = {
 };
 
 const entityFormData: FormData<PageSettings & EntityPageSettings> = {
-  url: { 
-    description: "URL slug:" ,
-    optional: false,
-  },
+  url: { description: "URL slug:" },
   entityIds: {
     description: "Entity IDs:",
     optional: true,
