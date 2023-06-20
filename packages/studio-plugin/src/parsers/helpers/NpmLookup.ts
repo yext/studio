@@ -45,9 +45,9 @@ export default class NpmLookup {
     );
 
     if (!resolvedModule) {
+      const isLocalFileImport = this.importSpecifier.startsWith(".");
       const parent = path.normalize(path.join(searchRoot, ".."));
-      const isRelativeImport = this.importSpecifier.startsWith(".");
-      if (isRelativeImport || searchRoot === parent) {
+      if (isLocalFileImport || searchRoot === parent) {
         throw Error(
           `The import specifier "${this.importSpecifier}" could not be resolved from ${this.initialSearchRoot}.`
         );
