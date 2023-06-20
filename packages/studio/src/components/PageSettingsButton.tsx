@@ -12,7 +12,7 @@ type PageSettings = {
   url: string;
 };
 
-type EntityPageSettings = {
+export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
 };
 
@@ -20,7 +20,7 @@ const formData: FormData<PageSettings> = {
   url: { description: "URL slug:" },
 };
 
-const entityFormData: FormData<PageSettings & EntityPageSettings> = {
+const entityFormData: FormData<PageSettings & StreamScopeForm> = {
   url: { description: "URL slug:" },
   entityIds: {
     description: "Entity IDs:",
@@ -38,6 +38,20 @@ const entityFormData: FormData<PageSettings & EntityPageSettings> = {
 
 interface PageSettingsButtonProps {
   pageName: string;
+}
+
+export const readStreamScope = (form: StreamScopeForm) => {
+  const newStreamScope = Object.entries(form).reduce((scope, [key, val]) => {
+    const values = val ? val
+      .split(",")
+      .map((str) => str.trim())
+      .filter((str) => str) : [];
+    if (values.length > 0) {
+      scope[key] = values;
+    }
+    return scope;
+  }, {} as StreamScope);
+  return newStreamScope;
 }
 
 /**
@@ -63,7 +77,7 @@ export default function PageSettingsButton({
     [currGetPathValue, isEntityPage]
   );
 
-  const initialEntityFormValue: PageSettings & EntityPageSettings = useMemo(
+  const initialEntityFormValue: PageSettings & StreamScopeForm = useMemo(
     () => ({ 
       url: getUrlDisplayValue(currGetPathValue, isEntityPage),
       entityIds: streamScope ? streamScope["entityIds"]?.join(",") : "", 
@@ -74,7 +88,7 @@ export default function PageSettingsButton({
   );
 
   const handleModalSave = useCallback(
-    (form: PageSettings & EntityPageSettings) => {
+    (form: PageSettings & StreamScopeForm) => {
       const getPathValue: GetPathVal = isEntityPage
         ? {
             kind: PropValueKind.Expression,
@@ -86,17 +100,12 @@ export default function PageSettingsButton({
           };
       updateGetPathValue(pageName, getPathValue);
       if(isEntityPage) {
-        const newStreamScope = Object.entries(form).reduce((scope, [key, val]) => {
-          const values = val ? val
-            .split(",")
-            .map((str) => str.trim())
-            .filter((str) => str) : [];
-          if (values.length > 0 && key !== 'url') {
-            scope[key] = values;
-          }
-          return scope;
-        }, {} as StreamScope);
-        updateStreamScope(pageName, newStreamScope);
+        const scopeForm = {
+          entityIds: form.entityIds,
+          entityTypes: form.entityTypes,
+          savedFilterIds: form.savedFilterIds,
+        } as StreamScopeForm;
+        updateStreamScope(pageName, readStreamScope(scopeForm));
       }
       return true;
     },
