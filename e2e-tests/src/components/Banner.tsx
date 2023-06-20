@@ -9,9 +9,11 @@ export interface BannerProps {
   obj?: {
     nestedString?: string;
     nestedBool?: boolean;
+    nestedLitArr?: boolean[];
     nestedObj?: {
       nestedNum?: number;
       nestedColor?: HexColor;
+      nestedExpArr?: string[];
     };
   };
 }
@@ -21,6 +23,9 @@ export const initialProps: BannerProps = {
   num: 5,
   bool: true,
   title: "initial title",
+  obj: {
+    nestedLitArr: [true, false],
+  },
 };
 
 export default function Banner(props: BannerProps) {
