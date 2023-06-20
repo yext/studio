@@ -66,9 +66,9 @@ export default function PageSettingsButton({
   const initialEntityFormValue: PageSettings & EntityPageSettings = useMemo(
     () => ({ 
       url: getUrlDisplayValue(currGetPathValue, isEntityPage),
-      entityIds: streamScope ? streamScope["entityIds"]?.join(",") : undefined, 
-      entityTypes: streamScope ? streamScope["entityTypes"]?.join(",") : undefined, 
-      savedFilterIds: streamScope ? streamScope["savedFilterIds"]?.join(",") : undefined, 
+      entityIds: streamScope ? streamScope["entityIds"]?.join(",") : "", 
+      entityTypes: streamScope ? streamScope["entityTypes"]?.join(",") : "", 
+      savedFilterIds: streamScope ? streamScope["savedFilterIds"]?.join(",") : "", 
     }), 
     [currGetPathValue, isEntityPage, streamScope]
   );
@@ -87,10 +87,10 @@ export default function PageSettingsButton({
       updateGetPathValue(pageName, getPathValue);
       if(isEntityPage) {
         const newStreamScope = Object.entries(form).reduce((scope, [key, val]) => {
-          const values = val
+          const values = val ? val
             .split(",")
             .map((str) => str.trim())
-            .filter((str) => str);
+            .filter((str) => str) : [];
           if (values.length > 0 && key !== 'url') {
             scope[key] = values;
           }
