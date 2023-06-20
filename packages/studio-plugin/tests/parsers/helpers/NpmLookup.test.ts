@@ -3,7 +3,7 @@ import path from "path";
 import NpmLookup from "../../../src/parsers/helpers/NpmLookup";
 
 it("resolves the source file for the import specifier", () => {
-  const npmLookup = new NpmLookup("@yext/search-ui-react", __dirname);
+  const npmLookup = new NpmLookup("@yext/search-ui-react", __filename);
   expect(npmLookup.getResolvedFilepath()).toBe(
     path.resolve(
       __dirname,
@@ -13,26 +13,24 @@ it("resolves the source file for the import specifier", () => {
 });
 
 it("throws when the import specifier cannot be resolved", () => {
-  const instantiate = () => new NpmLookup("@package-that-DNE", __dirname);
+  const instantiate = () => new NpmLookup("@package-that-DNE", __filename);
   expect(instantiate).toThrow(
-    'The import specifier "@package-that-DNE" could not be resolved.'
+    `The import specifier "@package-that-DNE" could not be resolved from ${__filename}.`
   );
 });
 
 it("can resolve relative filepaths", () => {
-  const relativePath = "./__fixtures__/NpmLookup/sourceFileToLookup";
-  const rootPath = path.resolve(__filename, "../..");
-  const npmLookup = new NpmLookup(relativePath, rootPath);
+  const relativePath = "../../__fixtures__/NpmLookup/sourceFileToLookup";
+  const npmLookup = new NpmLookup(relativePath, __filename);
   expect(npmLookup.getResolvedFilepath()).toEqual(
-    path.resolve(rootPath, relativePath + ".ts")
+    path.resolve(__dirname, relativePath + ".ts")
   );
 });
 
 it("will not recurse when resolving relative imports", () => {
   const relativePath = "./__fixtures__/NpmLookup/sourceFileToLookup";
-  const rootPath = path.resolve(__filename, "..");
-  const instantiate = () => new NpmLookup(relativePath, rootPath);
+  const instantiate = () => new NpmLookup(relativePath, __filename);
   expect(instantiate).toThrow(
-    `The import specifier "${relativePath}" could not be resolved.`
+    `The import specifier "${relativePath}" could not be resolved from ${__filename}.`
   );
 });
