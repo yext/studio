@@ -36,7 +36,6 @@ beforeEach(() => {
           ...basePageState,
           pagesJS: {
             getPathValue: undefined,
-            streamScope: {},
           },
         },
         fruits: {
@@ -126,7 +125,7 @@ it("disables the button and has a tooltip when getPath value is undefined", () =
   );
 });
 
-it("displays the correct stream scope when model opens", async () => {
+it("displays the correct stream scope when modal opens", async () => {
   render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
@@ -136,4 +135,19 @@ it("displays the correct stream scope when model opens", async () => {
   expect(entityIDsTextbox).toHaveValue("apple,orange");
   expect(entityTypesTextbox).toHaveValue("");
   expect(savedFilterIDsTextbox).toHaveValue("banana");
+});
+
+it("updates the stream scope with user input", async () => {
+  render(<PageSettingsButton pageName="fruits" />);
+  const pageSettingsButton = screen.getByRole("button");
+  await userEvent.click(pageSettingsButton);
+  const entityTypesTextbox = screen.getByRole("textbox", { name: "Entity Types:" });
+  const savedFilterIDsTextbox = screen.getByRole("textbox", { name: "Saved Filter IDs:" });
+  await userEvent.type(entityTypesTextbox, "kiwi");
+  await userEvent.type(savedFilterIDsTextbox, ",pineapple");
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  await userEvent.click(saveButton);
+  await userEvent.click(pageSettingsButton);
+  expect(entityTypesTextbox).toHaveValue("kiwi");
+  expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
 });

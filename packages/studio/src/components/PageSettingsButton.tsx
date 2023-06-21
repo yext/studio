@@ -21,7 +21,7 @@ const formData: FormData<PageSettings> = {
 };
 
 const entityFormData: FormData<PageSettings & StreamScopeForm> = {
-  url: { description: "URL slug:" },
+  url: formData.url,
   entityIds: {
     description: "Entity IDs:",
     optional: true,
@@ -46,7 +46,7 @@ export const readStreamScope = (form: StreamScopeForm) => {
       .split(",")
       .map((str) => str.trim())
       .filter((str) => str) : [];
-    if (values.length > 0) {
+    if (values.length > 0 && key !== "url") {
       scope[key] = values;
     }
     return scope;
@@ -65,23 +65,18 @@ export default function PageSettingsButton({
   const [
     currGetPathValue,
     updateGetPathValue,
-    isEntityPage,
     streamScope,
     updateStreamScope,
   ] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
-    !!store.pages.pages[pageName].pagesJS?.streamScope,
     store.pages.pages[pageName].pagesJS?.streamScope,
     store.pages.updateStreamScope,
   ]);
+  const isEntityPage = !!streamScope;
 
-  const initialFormValue: PageSettings = useMemo(
-    () => ({ url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
-    [currGetPathValue, isEntityPage]
-  );
-
-  const initialEntityFormValue: PageSettings & StreamScopeForm = useMemo(
+  const initialFormValue: PageSettings & StreamScopeForm = useMemo(
+    isEntityPage ? 
     () => ({ 
       url: getUrlDisplayValue(currGetPathValue, isEntityPage),
       entityIds: streamScope ? streamScope["entityIds"]?.join(",") : "",
@@ -89,8 +84,9 @@ export default function PageSettingsButton({
       savedFilterIds: streamScope
         ? streamScope["savedFilterIds"]?.join(",")
         : "",
-    }),
-    [currGetPathValue, isEntityPage, streamScope]
+    })
+    : () => ({ url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
+    isEntityPage ? [currGetPathValue, isEntityPage] : [currGetPathValue, isEntityPage, streamScope]
   );
 
   const handleModalSave = useCallback(
@@ -106,12 +102,7 @@ export default function PageSettingsButton({
           };
       updateGetPathValue(pageName, getPathValue);
       if(isEntityPage) {
-        const scopeForm = {
-          entityIds: form.entityIds,
-          entityTypes: form.entityTypes,
-          savedFilterIds: form.savedFilterIds,
-        } as StreamScopeForm;
-        updateStreamScope(pageName, readStreamScope(scopeForm));
+        updateStreamScope(pageName, readStreamScope(form));
       }
       return true;
     },
@@ -127,7 +118,7 @@ export default function PageSettingsButton({
           instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may cause entity data to be undefined."
           formData={isEntityPage ? entityFormData : formData}
           initialFormValue={
-            isEntityPage ? initialEntityFormValue : initialFormValue
+            initialFormValue
           }
           requireChangesToSubmit={true}
           handleClose={handleClose}
@@ -140,10 +131,10 @@ export default function PageSettingsButton({
         />
       );
     },
-    [handleModalSave, initialFormValue, initialEntityFormValue, isEntityPage]
+    [handleModalSave, initialFormValue, isEntityPage]
   );
 
-  const disabled = !currGetPathValue;
+  const disabled = !currGetPathValue && !isEntityPage;
   const tooltipAnchorID = `PageSettingsButton-${pageName}`;
 
   return (
