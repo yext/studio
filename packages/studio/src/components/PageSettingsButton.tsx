@@ -83,7 +83,7 @@ export default function PageSettingsButton({
       savedFilterIds: streamScope ? streamScope["savedFilterIds"]?.join(",") : "",
     } 
     : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
-    isEntityPage ? [currGetPathValue, isEntityPage] : [currGetPathValue, isEntityPage, streamScope]
+    isEntityPage ? [currGetPathValue, isEntityPage, streamScope] : [currGetPathValue, isEntityPage]
   );
 
   const handleModalSave = useCallback(
