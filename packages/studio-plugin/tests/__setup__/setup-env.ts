@@ -35,6 +35,50 @@ function toHaveErrorMessage(
   };
 }
 
+function toHaveWritten(
+  writeMock: jest.Mock,
+  expectedDestination: string,
+  expectedContents: string | Buffer
+) {
+  if (writeMock.mock.calls.length !== 1) {
+    return {
+      pass: false,
+      message: () =>
+        `writeFileSync mock called ${printReceived(
+          writeMock.mock.calls.length
+        )} times. Expected exactly 1 call.`,
+    };
+  }
+  const [actualDestination, actualContents] = writeMock.mock.calls[0];
+
+  if (expectedDestination !== actualDestination) {
+    return {
+      pass: false,
+      message: () =>
+        `writeFileSync mock called with destination ${printReceived(
+          actualDestination
+        )} times. Expected ${printExpected(expectedDestination)}.`,
+    };
+  }
+
+  const transformedExpectedContents = expectedContents
+    .toString()
+    .replaceAll("\r\n", "\n");
+
+  if (transformedExpectedContents !== actualContents) {
+    return {
+      pass: false,
+      message: () =>
+        `writeFileSync mock called with contents ${printReceived(
+          actualContents
+        )}. Expected ${printExpected(transformedExpectedContents)}.`,
+    };
+  }
+
+  return { pass: true, message: () => "" };
+}
+
 expect.extend({
   toHaveErrorMessage,
+  toHaveWritten,
 });
