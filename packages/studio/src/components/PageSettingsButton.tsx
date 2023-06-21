@@ -83,7 +83,7 @@ export default function PageSettingsButton({
       savedFilterIds: streamScope ? streamScope["savedFilterIds"]?.join(",") : "",
     } 
     : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
-    [currGetPathValue, isEntityPage, streamScope].filter(depen => depen !== undefined)
+    [currGetPathValue, isEntityPage, streamScope]
   );
 
   const handleModalSave = useCallback(
@@ -157,6 +157,7 @@ function getUrlDisplayValue(
   getPathValue: GetPathVal | undefined,
   isEntityPage: boolean
 ): string {
+  console.log("called!")
   if (!isEntityPage) {
     return getPathValue?.value ?? "";
   }
