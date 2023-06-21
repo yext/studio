@@ -17,7 +17,7 @@ export default class NpmLookup {
     this.resolvedFilepath = this.resolveImportSpecifier(searchRootDir);
   }
 
-  private resolveImportSpecifier(searchRoot: string): ModuleResolutionData {
+  private resolveImportSpecifier(searchRoot: string): string {
     const customModuleResolutionHost: ModuleResolutionHost = {
       fileExists(filepath) {
         return fs.existsSync(path.join(searchRoot, filepath));
