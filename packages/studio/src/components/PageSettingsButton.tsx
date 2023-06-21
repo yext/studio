@@ -76,16 +76,13 @@ export default function PageSettingsButton({
   const isEntityPage = !!streamScope;
 
   const initialFormValue: PageSettings & StreamScopeForm = useMemo(
-    isEntityPage ? 
-    () => ({ 
+    () => (isEntityPage ? { 
       url: getUrlDisplayValue(currGetPathValue, isEntityPage),
       entityIds: streamScope ? streamScope["entityIds"]?.join(",") : "",
       entityTypes: streamScope ? streamScope["entityTypes"]?.join(",") : "",
-      savedFilterIds: streamScope
-        ? streamScope["savedFilterIds"]?.join(",")
-        : "",
-    })
-    : () => ({ url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
+      savedFilterIds: streamScope ? streamScope["savedFilterIds"]?.join(",") : "",
+    } 
+    : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
     isEntityPage ? [currGetPathValue, isEntityPage] : [currGetPathValue, isEntityPage, streamScope]
   );
 
