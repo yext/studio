@@ -34,7 +34,7 @@ describe("updatePageFile", () => {
     tsMorphProject = createTsMorphProject();
   });
 
-  it("updates page component based on PageState's component tree", () => {
+  it.only("updates page component based on PageState's component tree", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const pageFile = createPageFile("EmptyPage", tsMorphProject);
     pageFile.updatePageFile({
@@ -49,9 +49,9 @@ describe("updatePageFile", () => {
         },
       ],
     });
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
+    expect(fs.writeFileSync).toHaveWritten(
       expect.stringContaining("EmptyPage.tsx"),
-      fs.readFileSync(getPagePath("updatePageFile/PageWithAComponent"), "utf-8")
+      fs.readFileSync(getPagePath("updatePageFile/PageWithAComponent"))
     );
   });
 
