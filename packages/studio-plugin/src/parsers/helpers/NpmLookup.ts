@@ -3,11 +3,6 @@ import path from "path";
 import typescript, { ModuleResolutionHost } from "typescript";
 const { resolveModuleName: resolveTypescriptModule } = typescript;
 
-type ModuleResolutionData = {
-  resolvedModule: typescript.ResolvedModuleFull;
-  resolvedRoot: string;
-};
-
 /**
  * NpmLookup is a class for retrieving information on an import.
  */
@@ -19,12 +14,7 @@ export default class NpmLookup {
     private initialSearchRoot: string
   ) {
     const searchRootDir = path.dirname(initialSearchRoot);
-    const { resolvedModule, resolvedRoot } =
-      this.resolveImportSpecifier(searchRootDir);
-    this.resolvedFilepath = path.join(
-      resolvedRoot,
-      resolvedModule.resolvedFileName
-    );
+    this.resolvedFilepath = this.resolveImportSpecifier(searchRootDir);
   }
 
   private resolveImportSpecifier(searchRoot: string): ModuleResolutionData {
@@ -55,10 +45,10 @@ export default class NpmLookup {
       return this.resolveImportSpecifier(parent);
     }
 
-    return {
-      resolvedModule,
-      resolvedRoot: searchRoot,
-    };
+    return path.join(
+      searchRoot,
+      resolvedModule.resolvedFileName
+    );
   }
 
   getResolvedFilepath(): string {
