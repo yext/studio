@@ -45,10 +45,7 @@ export default class NpmLookup {
       return this.resolveImportSpecifier(parent);
     }
 
-    return path.join(
-      searchRoot,
-      resolvedModule.resolvedFileName
-    );
+    return path.join(searchRoot, resolvedModule.resolvedFileName);
   }
 
   getResolvedFilepath(): string {
