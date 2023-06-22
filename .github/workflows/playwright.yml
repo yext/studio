@@ -19,6 +19,7 @@ jobs:
           node-version: 18
       - run: npm ci
       - run: npm run build -w=packages/studio-plugin
+      - run: npm run build -w=packages/studio
       - run: npx playwright install
       - run: npm i
       - run: git config --global user.email "slapshot-github-actions@yext.com"
