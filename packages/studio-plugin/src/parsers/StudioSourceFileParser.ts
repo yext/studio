@@ -182,10 +182,10 @@ export default class StudioSourceFileParser {
     importSource: string,
     isDefault: boolean
   ) {
-    if (importSource.startsWith(".")) {
-      importSource = path.resolve(path.dirname(this.filepath), importSource);
-    }
-    const typesFile = new NpmLookup(importSource).getResolvedFilepath();
+    const typesFile = new NpmLookup(
+      importSource,
+      this.filepath
+    ).getResolvedFilepath();
     const parserForImportSource = new StudioSourceFileParser(
       typesFile,
       this.sourceFile.getProject()

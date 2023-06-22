@@ -1,72 +1,54 @@
 import fs from "fs";
 import path from "path";
 import typescript, { ModuleResolutionHost } from "typescript";
-
-// "typescript" is a CommonJS module, which may not support all module.exports as named exports
-const { resolveModuleName } = typescript;
+const { resolveModuleName: resolveTypescriptModule } = typescript;
 
 /**
  * NpmLookup is a class for retrieving information on an import.
  */
 export default class NpmLookup {
-  private rootPath: string;
   private resolvedFilepath: string;
 
-  constructor(private moduleName: string) {
-    const { resolvedModule, root } = this.resolveModuleName();
-    this.rootPath = this.setRootPath(resolvedModule, root);
-    this.resolvedFilepath = path.join(root, resolvedModule.resolvedFileName);
+  constructor(
+    private importSpecifier: string,
+    private initialSearchRoot: string
+  ) {
+    const searchRootDir = path.dirname(initialSearchRoot);
+    this.resolvedFilepath = this.resolveImportSpecifier(searchRootDir);
   }
 
-  private resolveModuleName(root = process.cwd()): {
-    resolvedModule: typescript.ResolvedModuleFull;
-    root: string;
-  } {
+  private resolveImportSpecifier(searchRoot: string): string {
     const customModuleResolutionHost: ModuleResolutionHost = {
-      fileExists(fileName) {
-        return fs.existsSync(path.join(root, fileName));
+      fileExists(filepath) {
+        return fs.existsSync(path.join(searchRoot, filepath));
       },
-      readFile(fileName) {
-        return fs.readFileSync(path.join(root, fileName), "utf-8");
+      readFile(filepath) {
+        return fs.readFileSync(path.join(searchRoot, filepath), "utf-8");
       },
     };
 
-    const { resolvedModule } = resolveModuleName(
-      this.moduleName,
+    const { resolvedModule } = resolveTypescriptModule(
+      this.importSpecifier,
       "",
       {},
       customModuleResolutionHost
     );
 
     if (!resolvedModule) {
-      const parent = path.normalize(path.join(root, ".."));
-      if (root === parent) {
-        throw Error(`The npm package "${this.moduleName}" was not found.`);
+      const isLocalFileImport = this.importSpecifier.startsWith(".");
+      const parent = path.normalize(path.join(searchRoot, ".."));
+      if (isLocalFileImport || searchRoot === parent) {
+        throw Error(
+          `The import specifier "${this.importSpecifier}" could not be resolved from ${this.initialSearchRoot}.`
+        );
       }
-      return this.resolveModuleName(parent);
+      return this.resolveImportSpecifier(parent);
     }
 
-    return {
-      resolvedModule,
-      root,
-    };
-  }
-
-  private setRootPath(
-    resolvedModule: typescript.ResolvedModuleFull,
-    root: string
-  ): string {
-    const pathToEntry = resolvedModule.packageId?.subModuleName || "";
-    const stripPathToEntryNameFromPath =
-      resolvedModule.resolvedFileName.replace(pathToEntry, "");
-    return path.join(root, stripPathToEntryNameFromPath);
+    return path.join(searchRoot, resolvedModule.resolvedFileName);
   }
 
   getResolvedFilepath(): string {
     return this.resolvedFilepath;
-  }
-
-  getRootPath(): string {
-    return this.rootPath;
   }
 }
