@@ -131,7 +131,7 @@ export default function PageSettingsButton({
         />
       );
     },
-    [handleModalSave, initialFormValue, isEntityPage]
+    [handleModalSave, initialFormValue, isEntityPage, disableURL]
   );
 
   const disabled = !currGetPathValue && !isEntityPage;
