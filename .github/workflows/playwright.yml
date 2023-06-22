@@ -19,6 +19,8 @@ jobs:
       - run: npm run build
       - run: npx playwright install
       - run: npm i
+      - run: git config --global user.email "slapshot-github-actions@yext.com"
+      - run: git config --global user.name "Slap"
       - name: Run Playwright
         run: npm run playwright
 
@@ -29,7 +31,7 @@ jobs:
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
           message: Commit new snapshots for ${{ matrix.os }}
-          add: e2e_tests/__screenshots__/*
+          add: ./e2e_tests/__screenshots__/*
           push: true
           pull: --rebase --autostash
           default_author: github_actions 
