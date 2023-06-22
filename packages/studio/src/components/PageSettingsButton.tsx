@@ -160,7 +160,6 @@ function getUrlDisplayValue(
   getPathValue: GetPathVal | undefined,
   isEntityPage: boolean
 ): string {
-  console.log("called!")
   if (!isEntityPage) {
     return getPathValue?.value ?? "";
   }
