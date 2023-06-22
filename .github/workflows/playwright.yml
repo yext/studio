@@ -23,8 +23,7 @@ jobs:
       - run: npm i
       - run: git config --global user.email "slapshot-github-actions@yext.com"
       - run: git config --global user.name "Slap"
-      - name: Run Playwright
-        run: npm run playwright
+      - run: npm run playwright
 
       # This step will commit any new snapshots that weren't taken locally.
       # i.e. snapshots for Windows
