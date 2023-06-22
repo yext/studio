@@ -1,6 +1,7 @@
 import { Result } from "true-myth";
 import { printReceived, printExpected } from "jest-matcher-utils";
 import { StudioError } from "../../src/errors/StudioError";
+import path from "path";
 
 function toHaveErrorMessage(
   actual: Result<unknown, StudioError<unknown>>,
@@ -51,8 +52,9 @@ function toHaveWritten(
     };
   }
   const [actualDestination, actualContents] = writeMock.mock.calls[0];
+  const transformedExpectedDestination = path.normalize(expectedDestination);
 
-  if (!this.equals(expectedDestination, actualDestination)) {
+  if (!this.equals(transformedExpectedDestination, actualDestination)) {
     return {
       pass: false,
       message: () =>
