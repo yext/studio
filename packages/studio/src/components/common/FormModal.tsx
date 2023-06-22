@@ -94,23 +94,15 @@ export default function FormModal<T extends Form>({
       <>
         {instructions && <div className="italic mb-4">{instructions}</div>}
         {Object.entries(formValue).map(([field, val]) => (
-          <div id={`FormField-${field}`}>
-            <FormField
-              key={field}
-              field={field}
-              description={formData[field].description}
-              value={val}
-              updateFormField={updateFormField}
-              transformOnChangeValue={transformOnChangeValue}
-              disabled={disabledFields.includes(field)}
-            />
-            {disabledFields.includes(field) && (
-              <Tooltip
-                anchorId={`FormField-${field}`}
-                content={`No ${field} settings available to edit via the UI.`}
-              />
-            )}
-          </div>
+          <FormField
+            key={field}
+            field={field}
+            description={formData[field].description}
+            value={val}
+            updateFormField={updateFormField}
+            transformOnChangeValue={transformOnChangeValue}
+            disabled={disabledFields.includes(field)}
+          />
         ))}
       </>
     );
@@ -179,14 +171,22 @@ function FormField({
   return (
     <>
       <label htmlFor={inputId}>{description}</label>
-      <input
-        id={inputId}
-        type="text"
-        className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
-        value={value}
-        onChange={handleChange}
-        disabled={disabled}
-      />
+      <div id={inputId}>
+        <input
+          id={inputId}
+          type="text"
+          className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
+          value={value}
+          onChange={handleChange}
+          disabled={disabled}
+        />
+        {disabled && (
+          <Tooltip
+            anchorId={inputId}
+            content={`No ${field} settings available to edit via the UI.`}
+          />
+        )}
+      </div>
     </>
   );
 }
