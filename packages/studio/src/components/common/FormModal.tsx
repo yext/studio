@@ -167,11 +167,12 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
+  const divId = `${field}-div`
 
   return (
     <>
-      <label htmlFor={inputId}>{description}</label>
-      <div id={inputId}>
+        <label htmlFor={inputId}>{description}</label>
+        <div id={divId}>
         <input
           id={inputId}
           type="text"
@@ -180,13 +181,13 @@ function FormField({
           onChange={handleChange}
           disabled={disabled}
         />
+        </div>
         {disabled && (
           <Tooltip
-            anchorId={inputId}
+            anchorId={divId}
             content={`No ${field} settings available to edit via the UI.`}
           />
         )}
-      </div>
     </>
   );
 }
