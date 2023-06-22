@@ -7,7 +7,7 @@ declare global {
       toHaveWritten(
         expectedDestination: string,
         expectedContents: string | Buffer
-      ): R
+      ): R;
     }
   }
 }

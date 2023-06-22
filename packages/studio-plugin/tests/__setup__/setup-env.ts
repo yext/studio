@@ -36,6 +36,7 @@ function toHaveErrorMessage(
 }
 
 function toHaveWritten(
+  this: jest.MatcherContext,
   writeMock: jest.Mock,
   expectedDestination: string,
   expectedContents: string | Buffer
@@ -51,7 +52,7 @@ function toHaveWritten(
   }
   const [actualDestination, actualContents] = writeMock.mock.calls[0];
 
-  if (expectedDestination !== actualDestination) {
+  if (!this.equals(expectedDestination, actualDestination)) {
     return {
       pass: false,
       message: () =>
@@ -65,7 +66,7 @@ function toHaveWritten(
     .toString()
     .replaceAll("\r\n", "\n");
 
-  if (transformedExpectedContents !== actualContents) {
+  if (!this.equals(transformedExpectedContents, actualContents)) {
     return {
       pass: false,
       message: () =>

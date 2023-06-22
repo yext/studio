@@ -34,7 +34,7 @@ describe("updatePageFile", () => {
     tsMorphProject = createTsMorphProject();
   });
 
-  it.only("updates page component based on PageState's component tree", () => {
+  it("updates page component based on PageState's component tree", () => {
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     const pageFile = createPageFile("EmptyPage", tsMorphProject);
     pageFile.updatePageFile({
@@ -49,10 +49,7 @@ describe("updatePageFile", () => {
         },
       ],
     });
-    expect(fs.writeFileSync).toHaveWritten(
-      expect.stringContaining("EmptyPage.tsx"),
-      fs.readFileSync(getPagePath("updatePageFile/PageWithAComponent"))
-    );
+    expectToHaveWrittenPage("EmptyPage.tsx", "PageWithAComponent");
   });
 
   describe("template config", () => {
@@ -87,13 +84,7 @@ describe("updatePageFile", () => {
           },
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithAComponent.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithStreamConfig"),
-          "utf-8"
-        )
-      );
+      expectToHaveWrittenPage("PageWithAComponent.tsx", "PageWithStreamConfig");
     });
 
     it("does not add template config if no stream scope is defined", () => {
@@ -121,12 +112,9 @@ describe("updatePageFile", () => {
           streamScope: undefined,
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithAComponent.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithoutStreamConfig"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithAComponent.tsx",
+        "PageWithoutStreamConfig"
       );
     });
 
@@ -137,12 +125,9 @@ describe("updatePageFile", () => {
         ...entityPageState,
         componentTree: streamConfigMultipleFieldsComponentTree,
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("EmptyPage.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithStreamConfigMultipleFields"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "EmptyPage.tsx",
+        "PageWithStreamConfigMultipleFields"
       );
     });
 
@@ -176,12 +161,9 @@ describe("updatePageFile", () => {
           },
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithStreamConfigMultipleFields.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithStreamConfig"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithStreamConfigMultipleFields.tsx",
+        "PageWithStreamConfig"
       );
     });
 
@@ -213,12 +195,9 @@ describe("updatePageFile", () => {
           },
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithStreamConfig.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithGetPathStreamConfig"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithStreamConfig.tsx",
+        "PageWithGetPathStreamConfig"
       );
     });
 
@@ -250,13 +229,7 @@ describe("updatePageFile", () => {
           },
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("EmptyPage.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithNoStreamPathsInTree"),
-          "utf-8"
-        )
-      );
+      expectToHaveWrittenPage("EmptyPage.tsx", "PageWithNoStreamPathsInTree");
     });
 
     it("dedupes stream document paths", () => {
@@ -322,12 +295,9 @@ describe("updatePageFile", () => {
           },
         ],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithStreamConfigMultipleFields.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithStreamConfigArrayAndObjectField"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithStreamConfigMultipleFields.tsx",
+        "PageWithStreamConfigArrayAndObjectField"
       );
     });
 
@@ -355,12 +325,9 @@ describe("updatePageFile", () => {
           },
         ],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithErrorComponentState.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithErrorComponentState"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithErrorComponentState.tsx",
+        "PageWithErrorComponentState"
       );
     });
 
@@ -388,12 +355,9 @@ describe("updatePageFile", () => {
           },
         ],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithStreamConfigSlugField.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithStreamConfigSlugField"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithStreamConfigSlugField.tsx",
+        "PageWithStreamConfigSlugField"
       );
     });
 
@@ -424,12 +388,9 @@ describe("updatePageFile", () => {
           },
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithStreamConfig.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithModifiedStreamScope"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithStreamConfig.tsx",
+        "PageWithModifiedStreamScope"
       );
     });
   });
@@ -443,10 +404,7 @@ describe("updatePageFile", () => {
           getPathValue: { kind: PropValueKind.Literal, value: "index.html" },
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("EmptyPage.tsx"),
-        fs.readFileSync(getPagePath("updatePageFile/PageWithGetPath"), "utf-8")
-      );
+      expectToHaveWrittenPage("EmptyPage.tsx", "PageWithGetPath");
     });
 
     describe("updates existing getPath function", () => {
@@ -458,12 +416,9 @@ describe("updatePageFile", () => {
             getPathValue: { kind: PropValueKind.Literal, value: "static.html" },
           },
         });
-        expect(fs.writeFileSync).toHaveBeenCalledWith(
-          expect.stringContaining("PageWithGetPath.tsx"),
-          fs.readFileSync(
-            getPagePath("updatePageFile/PageWithModifiedGetPath"),
-            "utf-8"
-          )
+        expectToHaveWrittenPage(
+          "PageWithGetPath.tsx",
+          "PageWithModifiedGetPath"
         );
       });
 
@@ -478,12 +433,9 @@ describe("updatePageFile", () => {
             },
           },
         });
-        expect(fs.writeFileSync).toHaveBeenCalledWith(
-          expect.stringContaining("PageWithGetPath.tsx"),
-          fs.readFileSync(
-            getPagePath("updatePageFile/PageWithTemplateGetPath"),
-            "utf-8"
-          )
+        expectToHaveWrittenPage(
+          "PageWithGetPath.tsx",
+          "PageWithTemplateGetPath"
         );
       });
 
@@ -498,12 +450,9 @@ describe("updatePageFile", () => {
             },
           },
         });
-        expect(fs.writeFileSync).toHaveBeenCalledWith(
-          expect.stringContaining("PageWithGetPath.tsx"),
-          fs.readFileSync(
-            getPagePath("updatePageFile/PageWithPropertyGetPath"),
-            "utf-8"
-          )
+        expectToHaveWrittenPage(
+          "PageWithGetPath.tsx",
+          "PageWithPropertyGetPath"
         );
       });
 
@@ -518,12 +467,9 @@ describe("updatePageFile", () => {
             getPathValue: { kind: PropValueKind.Literal, value: "static.html" },
           },
         });
-        expect(fs.writeFileSync).toHaveBeenCalledWith(
-          expect.stringContaining("PageWithNoReturnGetPath.tsx"),
-          fs.readFileSync(
-            getPagePath("updatePageFile/PageWithModifiedNoReturnGetPath"),
-            "utf-8"
-          )
+        expectToHaveWrittenPage(
+          "PageWithNoReturnGetPath.tsx",
+          "PageWithModifiedNoReturnGetPath"
         );
       });
     });
@@ -537,12 +483,9 @@ describe("updatePageFile", () => {
           getPathValue: undefined,
         },
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithComplexGetPath.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithComplexGetPath"),
-          "utf-8"
-        )
+      expectToHaveWrittenPage(
+        "PageWithComplexGetPath.tsx",
+        "PageWithComplexGetPath"
       );
     });
   });
@@ -554,5 +497,15 @@ function createPageFile(pageName: string, project: Project) {
     throwIfCalled,
     project,
     false
+  );
+}
+
+function expectToHaveWrittenPage(
+  destinationFilename: string,
+  fixtureFile: string
+) {
+  expect(fs.writeFileSync).toHaveWritten(
+    expect.stringContaining(destinationFilename),
+    fs.readFileSync(getPagePath("updatePageFile/" + fixtureFile))
   );
 }

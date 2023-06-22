@@ -2,7 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["jest", "./__setup__/setup-env.ts"],
+    "types": ["jest", "./__setup__/setup-env.ts"]
   },
   "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["./__fixtures__/**/*.tsx"]

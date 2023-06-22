@@ -40,13 +40,7 @@ describe("updateModuleFile", () => {
       metadataUUID: "mock-uuid",
       filepath: "mock-filepath",
     });
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining("EmptyModule.tsx"),
-      fs.readFileSync(
-        getModulePath("updateModuleFile/ModuleWithAComponent"),
-        "utf-8"
-      )
-    );
+    expectToHaveWrittenModule("EmptyModule.tsx", "ModuleWithAComponent");
   });
 
   it("handles destructuring a document prop in the function arg", () => {
@@ -77,13 +71,7 @@ describe("updateModuleFile", () => {
     moduleFile.updateModuleFile(
       createModuleMetadata(childPropValues, propShape)
     );
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining("EmptyModule.tsx"),
-      fs.readFileSync(
-        getModulePath("updateModuleFile/ModuleUsingDocument"),
-        "utf-8"
-      )
-    );
+    expectToHaveWrittenModule("EmptyModule.tsx", "ModuleUsingDocument");
   });
 
   it("handles document props used in ErrorComponentStates", () => {
@@ -117,13 +105,7 @@ describe("updateModuleFile", () => {
       metadataUUID: "mock-uuid",
       filepath: "mock-filepath",
     });
-    expect(fs.writeFileSync).toHaveBeenCalledWith(
-      expect.stringContaining("EmptyModule.tsx"),
-      fs.readFileSync(
-        getModulePath("updateModuleFile/ModuleWithErrBanner"),
-        "utf-8"
-      )
-    );
+    expectToHaveWrittenModule("EmptyModule.tsx", "ModuleWithErrBanner");
   });
 });
 
@@ -146,4 +128,14 @@ function createModuleMetadata(
     filepath: "mock-filepath",
     propShape,
   };
+}
+
+function expectToHaveWrittenModule(
+  destinationFilename: string,
+  fixtureFile: string
+) {
+  expect(fs.writeFileSync).toHaveWritten(
+    expect.stringContaining(destinationFilename),
+    fs.readFileSync(getModulePath("updateModuleFile/" + fixtureFile))
+  );
 }

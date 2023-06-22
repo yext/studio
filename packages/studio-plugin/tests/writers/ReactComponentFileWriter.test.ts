@@ -84,12 +84,9 @@ describe("updateFile", () => {
         ],
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("PageWithAComponent.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithSiblingComponents"),
-          "utf-8"
-        )
+        fs.readFileSync(getPagePath("updatePageFile/PageWithSiblingComponents"))
       );
     });
 
@@ -108,12 +105,9 @@ describe("updateFile", () => {
         componentTree: nestedBannerComponentTree,
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("PageWithAComponent.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithNestedComponents"),
-          "utf-8"
-        )
+        fs.readFileSync(getPagePath("updatePageFile/PageWithNestedComponents"))
       );
     });
 
@@ -140,9 +134,9 @@ describe("updateFile", () => {
         componentTree: [repeaterState],
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("PageWithAComponent.tsx"),
-        fs.readFileSync(getPagePath("updatePageFile/PageWithRepeater"), "utf-8")
+        fs.readFileSync(getPagePath("updatePageFile/PageWithRepeater"))
       );
     });
 
@@ -195,12 +189,9 @@ describe("updateFile", () => {
         ],
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("PageWithObjectProp.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithObjectProp"),
-          "utf-8"
-        )
+        fs.readFileSync(getPagePath("updatePageFile/PageWithObjectProp"))
       );
     });
 
@@ -253,12 +244,9 @@ describe("updateFile", () => {
         ],
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("PageWithArrayProps.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithArrayProps"),
-          "utf-8"
-        )
+        fs.readFileSync(getPagePath("updatePageFile/PageWithArrayProps"))
       );
     });
 
@@ -281,12 +269,9 @@ describe("updateFile", () => {
         ],
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("PageWithNestedComponents.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithAComponent"),
-          "utf-8"
-        )
+        fs.readFileSync(getPagePath("updatePageFile/PageWithAComponent"))
       );
     });
   });
@@ -302,12 +287,9 @@ describe("updateFile", () => {
         componentTree: [fragmentComponent],
         cssImports: ["../index.css", "./App.css"],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("EmptyPage.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithCssImports"),
-          "utf-8"
-        )
+        fs.readFileSync(getPagePath("updatePageFile/PageWithCssImports"))
       );
     });
 
@@ -343,12 +325,9 @@ describe("updateFile", () => {
         ],
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("EmptyPage.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithComponentImports"),
-          "utf-8"
-        )
+        fs.readFileSync(getPagePath("updatePageFile/PageWithComponentImports"))
       );
     });
 
@@ -362,9 +341,9 @@ describe("updateFile", () => {
         componentTree: [fragmentComponent],
         cssImports: [],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("PageWithUnusedImports.tsx"),
-        fs.readFileSync(getPagePath("updatePageFile/EmptyPage"), "utf-8")
+        fs.readFileSync(getPagePath("updatePageFile/EmptyPage"))
       );
     });
   });
@@ -392,12 +371,9 @@ describe("updateFile", () => {
         },
         componentTree: [complexBannerComponent],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("ModuleWithAComponent.tsx"),
-        fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithPropShape"),
-          "utf-8"
-        )
+        fs.readFileSync(getModulePath("updateModuleFile/ModuleWithPropShape"))
       );
     });
 
@@ -417,11 +393,10 @@ describe("updateFile", () => {
         },
         componentTree: [complexBannerComponent],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("ModuleWithPropShape.tsx"),
         fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithPropShapeMultiFields"),
-          "utf-8"
+          getModulePath("updateModuleFile/ModuleWithPropShapeMultiFields")
         )
       );
     });
@@ -457,12 +432,9 @@ describe("updateFile", () => {
         },
         componentTree: [complexBannerComponent],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("ModuleWithPropShape.tsx"),
-        fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithObjProp"),
-          "utf-8"
-        )
+        fs.readFileSync(getModulePath("updateModuleFile/ModuleWithObjProp"))
       );
     });
   });
@@ -497,11 +469,10 @@ describe("updateFile", () => {
         },
         componentTree: [complexBannerComponent],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("ModuleWithAComponent.tsx"),
         fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithInitialProps"),
-          "utf-8"
+          getModulePath("updateModuleFile/ModuleWithInitialProps")
         )
       );
     });
@@ -534,11 +505,10 @@ describe("updateFile", () => {
         },
         componentTree: [complexBannerComponent],
       });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("ModuleWithInitialProps.tsx"),
         fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithInitialPropsMultiFields"),
-          "utf-8"
+          getModulePath("updateModuleFile/ModuleWithInitialPropsMultiFields")
         )
       );
     });
@@ -555,9 +525,9 @@ describe("updateFile", () => {
         filepath,
         inputName
       ).updateFile({ componentTree: [] });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
+      expect(fs.writeFileSync).toHaveWritten(
         expect.stringContaining("EmptyFile"),
-        expect.stringContaining(`export default function ${outputName}() {}`)
+        `export default function ${outputName}() {}\n`
       );
     }
 
