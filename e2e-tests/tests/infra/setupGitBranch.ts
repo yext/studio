@@ -66,7 +66,7 @@ async function getInitialGitData(): Promise<InitialGitData> {
  * If createRemote is set to true, will push the new branch to remote.
  */
 async function createTestBranch(testInfo: TestInfo, createRemote: boolean) {
-  const testFile = testInfo.file.split("/").at(-1);
+  const testFile = testInfo.file.split(path.sep).at(-1);
   const testBranch = `e2e-test_${testFile}_${Date.now()}`;
   await git.checkout(["-b", testBranch]);
   if (createRemote) {
