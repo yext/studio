@@ -1,5 +1,6 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import Modal from "./Modal";
+import { Tooltip } from "react-tooltip";
 
 type Form = {
   [field: string]: string;
@@ -16,6 +17,7 @@ interface FormModalProps<T extends Form> {
   isOpen: boolean;
   title: string;
   instructions?: string;
+  disabledFields?: string[];
   formData: FormData<T>;
   initialFormValue?: T;
   errorMessage?: string;
@@ -31,6 +33,7 @@ export default function FormModal<T extends Form>({
   isOpen,
   title,
   instructions,
+  disabledFields = [],
   formData,
   initialFormValue,
   errorMessage,
@@ -91,14 +94,23 @@ export default function FormModal<T extends Form>({
       <>
         {instructions && <div className="italic mb-4">{instructions}</div>}
         {Object.entries(formValue).map(([field, val]) => (
-          <FormField
-            key={field}
-            field={field}
-            description={formData[field].description}
-            value={val}
-            updateFormField={updateFormField}
-            transformOnChangeValue={transformOnChangeValue}
-          />
+          <div id={`FormField-${field}`}>
+            <FormField
+              key={field}
+              field={field}
+              description={formData[field].description}
+              value={val}
+              updateFormField={updateFormField}
+              transformOnChangeValue={transformOnChangeValue}
+              disabled={disabledFields.includes(field)}
+            />
+            {disabledFields.includes(field) && (
+              <Tooltip
+                anchorId={`FormField-${field}`}
+                content={`No ${field} settings available to edit via the UI.`}
+              />
+            )}
+          </div>
         ))}
       </>
     );
@@ -108,6 +120,7 @@ export default function FormModal<T extends Form>({
     updateFormField,
     transformOnChangeValue,
     instructions,
+    disabledFields,
   ]);
 
   return (
@@ -142,12 +155,14 @@ function FormField({
   field,
   description,
   value,
+  disabled,
   updateFormField,
   transformOnChangeValue,
 }: {
   field: string;
   description: string;
   value: string;
+  disabled: boolean;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -170,6 +185,7 @@ function FormField({
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
         value={value}
         onChange={handleChange}
+        disabled={disabled}
       />
     </>
   );

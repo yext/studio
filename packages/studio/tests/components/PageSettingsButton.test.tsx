@@ -41,7 +41,7 @@ beforeEach(() => {
         fruits: {
           ...basePageState,
           pagesJS: {
-            getPathValue: { kind: PropValueKind.Literal, value: "index" },
+            getPathValue: undefined,
             streamScope: { entityIds: ["apple", "orange"], savedFilterIds: ["banana"] }
           },
         },
@@ -116,7 +116,7 @@ it("updates getPath value with square and curly bracket expression", async () =>
   });
 });
 
-it("disables the button and has a tooltip when getPath value is undefined", () => {
+it("disables the button and has a tooltip when static page's getPath value is undefined", () => {
   render(<PageSettingsButton pageName="location" />);
   const pageSettingsButton = screen.getByRole("button");
   expect(pageSettingsButton).toBeDisabled();
@@ -150,4 +150,15 @@ it("updates the stream scope with user input", async () => {
   await userEvent.click(pageSettingsButton);
   expect(entityTypesTextbox).toHaveValue("kiwi");
   expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
+});
+
+it("disables url input with message if entity page's getPath is undefined", async () => {
+  render(<PageSettingsButton pageName="fruits" />);
+  const pageSettingsButton = screen.getByRole("button");
+  await userEvent.click(pageSettingsButton);
+  const urlTextbox = screen.getByRole("textbox", { name: "URL slug:" });
+  expect(urlTextbox).toBeDisabled();
+  expect(screen.getByRole("tooltip")).toHaveTextContent(
+    "No url settings available to edit via the UI."
+  );
 });
