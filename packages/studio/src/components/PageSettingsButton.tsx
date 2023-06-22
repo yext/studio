@@ -106,10 +106,9 @@ export default function PageSettingsButton({
     [updateGetPathValue, updateStreamScope, pageName, isEntityPage]
   );
 
-  const disableURL = !currGetPathValue ? ["url"] : [];
-
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
+      const disableURL = !currGetPathValue ? ["url"] : [];
       return (
         <FormModal
           isOpen={isOpen}
@@ -131,7 +130,7 @@ export default function PageSettingsButton({
         />
       );
     },
-    [handleModalSave, initialFormValue, isEntityPage, disableURL]
+    [handleModalSave, initialFormValue, isEntityPage, currGetPathValue]
   );
 
   const disabled = !currGetPathValue && !isEntityPage;
