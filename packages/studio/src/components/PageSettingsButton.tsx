@@ -6,14 +6,11 @@ import FormModal, { FormData } from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
 import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
+import StreamScopeFormatter, { StreamScopeForm } from "../utils/StreamScopeFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
 
 type PageSettings = {
   url: string;
-};
-
-export type StreamScopeForm = {
-  [key in keyof StreamScope]: string;
 };
 
 const formData: FormData<PageSettings> = {
@@ -41,20 +38,6 @@ const entityFormData: FormData<PageSettings & StreamScopeForm> = {
 
 interface PageSettingsButtonProps {
   pageName: string;
-}
-
-export const readStreamScope = (form: StreamScopeForm) => {
-  const newStreamScope = Object.entries(form).reduce((scope, [key, val]) => {
-    const values = val ? val
-      .split(",")
-      .map((str) => str.trim())
-      .filter((str) => str) : [];
-    if (values.length > 0 && key !== "url") {
-      scope[key] = values;
-    }
-    return scope;
-  }, {} as StreamScope);
-  return newStreamScope;
 }
 
 /**
@@ -104,7 +87,7 @@ export default function PageSettingsButton({
         updateGetPathValue(pageName, getPathValue);
       }
       if(isEntityPage) {
-        updateStreamScope(pageName, readStreamScope(form));
+        updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
       }
       return true;
     },

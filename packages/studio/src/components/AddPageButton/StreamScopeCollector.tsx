@@ -3,7 +3,7 @@ import FormModal, { FormData } from "../common/FormModal";
 import { FlowStepModalProps } from "./FlowStep";
 import { StreamScope } from "@yext/studio-plugin";
 import AddPageContext from "./AddPageContext";
-import { StreamScopeForm, readStreamScope } from "../PageSettingsButton"
+import StreamScopeFormatter, { StreamScopeForm } from "../../utils/StreamScopeFormatter";
 
 const formData: FormData<StreamScopeForm> = {
   entityIds: {
@@ -29,7 +29,7 @@ export default function StreamScopeCollector({
 
   const onConfirm = useCallback(
     async (data: StreamScopeForm) => {
-      const streamScope = readStreamScope(data);
+      const streamScope = StreamScopeFormatter.readStreamScope(data);
       actions.setStreamScope(streamScope);
       await handleConfirm();
       return true;
