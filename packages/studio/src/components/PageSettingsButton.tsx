@@ -21,7 +21,10 @@ const formData: FormData<PageSettings> = {
 };
 
 const entityFormData: FormData<PageSettings & StreamScopeForm> = {
-  url: formData.url,
+  url: {
+    description: formData.url.description,
+    optional: true,
+  },
   entityIds: {
     description: "Entity IDs:",
     optional: true,
@@ -78,9 +81,9 @@ export default function PageSettingsButton({
   const initialFormValue: PageSettings & StreamScopeForm = useMemo(
     () => (isEntityPage ? { 
       url: getUrlDisplayValue(currGetPathValue, isEntityPage),
-      entityIds: streamScope ? streamScope["entityIds"]?.join(",") : "",
-      entityTypes: streamScope ? streamScope["entityTypes"]?.join(",") : "",
-      savedFilterIds: streamScope ? streamScope["savedFilterIds"]?.join(",") : "",
+      entityIds: streamScope["entityIds"] ? streamScope["entityIds"]?.join(",") : "",
+      entityTypes: streamScope["entityTypes"] ? streamScope["entityTypes"]?.join(",") : "",
+      savedFilterIds: streamScope["savedFilterIds"] ? streamScope["savedFilterIds"]?.join(",") : "",
     } 
     : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
     [currGetPathValue, isEntityPage, streamScope]
@@ -97,13 +100,15 @@ export default function PageSettingsButton({
             kind: PropValueKind.Literal,
             value: form.url,
           };
-      updateGetPathValue(pageName, getPathValue);
+      if(currGetPathValue) {
+        updateGetPathValue(pageName, getPathValue);
+      }
       if(isEntityPage) {
         updateStreamScope(pageName, readStreamScope(form));
       }
       return true;
     },
-    [updateGetPathValue, updateStreamScope, pageName, isEntityPage]
+    [updateGetPathValue, updateStreamScope, pageName, isEntityPage, currGetPathValue]
   );
 
   const renderModal: renderModalFunction = useCallback(

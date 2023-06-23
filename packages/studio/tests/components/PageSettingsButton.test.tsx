@@ -32,7 +32,7 @@ beforeEach(() => {
             streamScope: {},
           },
         },
-        location: {
+        index: {
           ...basePageState,
           pagesJS: {
             getPathValue: undefined,
@@ -117,7 +117,7 @@ it("updates getPath value with square and curly bracket expression", async () =>
 });
 
 it("disables the button and has a tooltip when static page's getPath value is undefined", () => {
-  render(<PageSettingsButton pageName="location" />);
+  render(<PageSettingsButton pageName="index" />);
   const pageSettingsButton = screen.getByRole("button");
   expect(pageSettingsButton).toBeDisabled();
   expect(screen.getByRole("tooltip")).toHaveTextContent(
@@ -138,6 +138,10 @@ it("displays the correct stream scope when modal opens", async () => {
 });
 
 it("updates the stream scope with user input", async () => {
+  const updateStreamScopeSpy = jest.spyOn(
+    useStudioStore.getState().pages,
+    "updateStreamScope"
+  );
   render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
@@ -147,10 +151,14 @@ it("updates the stream scope with user input", async () => {
   await userEvent.type(savedFilterIDsTextbox, ",pineapple");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
+  expect(updateStreamScopeSpy).toBeCalledWith("fruits", {
+    entityIds: ["apple","orange"],
+    entityTypes: ["kiwi"],
+    savedFilterIds: ["banana","pineapple"],
+  });
   await userEvent.click(pageSettingsButton);
   expect(entityTypesTextbox).toHaveValue("kiwi");
   expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
-
 });
 
 it("disables url input with message if entity page's getPath is undefined", async () => {

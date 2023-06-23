@@ -1,6 +1,5 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import Modal from "./Modal";
-import { Tooltip } from "react-tooltip";
 
 type Form = {
   [field: string]: string;
