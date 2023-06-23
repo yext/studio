@@ -108,7 +108,7 @@ export default function PageSettingsButton({
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      const disableURL = !currGetPathValue ? ["url"] : [];
+      const urlField = !currGetPathValue ? ["url"] : [];
       return (
         <FormModal
           isOpen={isOpen}
@@ -119,7 +119,7 @@ export default function PageSettingsButton({
             initialFormValue
           }
           requireChangesToSubmit={true}
-          disabledFields={disableURL}
+          errorFields={urlField}
           handleClose={handleClose}
           handleConfirm={handleModalSave}
           transformOnChangeValue={

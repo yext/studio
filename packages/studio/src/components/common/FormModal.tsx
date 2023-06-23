@@ -17,7 +17,7 @@ interface FormModalProps<T extends Form> {
   isOpen: boolean;
   title: string;
   instructions?: string;
-  disabledFields?: string[];
+  errorFields?: string[];
   formData: FormData<T>;
   initialFormValue?: T;
   errorMessage?: string;
@@ -33,7 +33,7 @@ export default function FormModal<T extends Form>({
   isOpen,
   title,
   instructions,
-  disabledFields = [],
+  errorFields = [],
   formData,
   initialFormValue,
   errorMessage,
@@ -99,9 +99,9 @@ export default function FormModal<T extends Form>({
             field={field}
             description={formData[field].description}
             value={val}
+            error={errorFields.includes(field)}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
-            disabled={disabledFields.includes(field)}
           />
         ))}
       </>
@@ -112,7 +112,7 @@ export default function FormModal<T extends Form>({
     updateFormField,
     transformOnChangeValue,
     instructions,
-    disabledFields,
+    errorFields,
   ]);
 
   return (
@@ -147,14 +147,14 @@ function FormField({
   field,
   description,
   value,
-  disabled,
+  error,
   updateFormField,
   transformOnChangeValue,
 }: {
   field: string;
   description: string;
   value: string;
-  disabled: boolean;
+  error: boolean;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -167,27 +167,19 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
-  const divId = `${field}-div`
+  const inputType = error ? "hidden" : "text";
 
   return (
     <>
-        <label htmlFor={inputId}>{description}</label>
-        <div id={divId}>
-        <input
-          id={inputId}
-          type="text"
-          className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
-          value={value}
-          onChange={handleChange}
-          disabled={disabled}
-        />
-        </div>
-        {disabled && (
-          <Tooltip
-            anchorId={divId}
-            content={`No ${field} settings available to edit via the UI.`}
-          />
-        )}
+      <label htmlFor={inputId}>{description}</label>
+      <span role="error" className="text-red-300" hidden={!error}> No settings available to edit via the UI.<br /><br /></span>
+      <input
+        id={inputId}
+        type={inputType}
+        className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
+        value={value}
+        onChange={handleChange}
+      />
     </>
   );
 }

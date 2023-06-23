@@ -156,9 +156,6 @@ it("disables url input with message if entity page's getPath is undefined", asyn
   render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const urlTextbox = screen.getByRole("textbox", { name: "URL slug:" });
-  expect(urlTextbox).toBeDisabled();
-  expect(screen.getByRole("tooltip")).toHaveTextContent(
-    "No url settings available to edit via the UI."
-  );
+  const urlError = screen.getByRole("error");
+  expect(urlError).toHaveTextContent("No settings available to edit via the UI.")
 });
