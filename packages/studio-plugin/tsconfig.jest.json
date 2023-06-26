@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "types": ["jest", "./tests/__setup__/setup-env.ts"]
-  },
-  "include": ["tests"],
-  "exclude": ["tests/__fixtures__/**/*.tsx"]
-}

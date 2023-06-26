@@ -13,7 +13,7 @@
     "build:windows": "rimraf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json",
     "preview": "vite preview",
     "test": "jest",
-    "typecheck-jest": "npx tsc -p tsconfig.jest.json"
+    "typecheck-jest": "npx tsc -p tests/tsconfig.json"
   },
   "dependencies": {
     "@dhmk/zustand-lens": "^2.0.5",

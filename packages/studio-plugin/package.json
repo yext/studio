@@ -26,7 +26,7 @@
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.json",
     "build": "rimraf lib && tsc -p tsconfig.json",
     "test": "jest",
-    "typecheck-jest": "npx tsc -p tsconfig.jest.json"
+    "typecheck-jest": "npx tsc -p tests/tsconfig.json"
   },
   "dependencies": {
     "@babel/parser": "^7.21.8",
