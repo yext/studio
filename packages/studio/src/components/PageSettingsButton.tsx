@@ -96,7 +96,9 @@ export default function PageSettingsButton({
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      const urlField = !currGetPathValue ? ["url"] : [];
+      if(isEntityPage) {
+        entityFormData.url.hidden = !currGetPathValue;
+      }
       return (
         <FormModal
           isOpen={isOpen}
@@ -107,7 +109,6 @@ export default function PageSettingsButton({
             initialFormValue
           }
           requireChangesToSubmit={true}
-          errorFields={urlField}
           handleClose={handleClose}
           handleConfirm={handleModalSave}
           transformOnChangeValue={

@@ -9,6 +9,7 @@ export type FormData<T extends Form> = {
   [field in keyof T]: {
     description: string;
     optional?: boolean;
+    hidden?: boolean;
   };
 };
 
@@ -16,7 +17,6 @@ interface FormModalProps<T extends Form> {
   isOpen: boolean;
   title: string;
   instructions?: string;
-  errorFields?: string[];
   formData: FormData<T>;
   initialFormValue?: T;
   errorMessage?: string;
@@ -32,7 +32,6 @@ export default function FormModal<T extends Form>({
   isOpen,
   title,
   instructions,
-  errorFields = [],
   formData,
   initialFormValue,
   errorMessage,
@@ -98,7 +97,7 @@ export default function FormModal<T extends Form>({
             field={field}
             description={formData[field].description}
             value={val}
-            error={errorFields.includes(field)}
+            hidden={formData[field].hidden}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
           />
@@ -111,7 +110,6 @@ export default function FormModal<T extends Form>({
     updateFormField,
     transformOnChangeValue,
     instructions,
-    errorFields,
   ]);
 
   return (
@@ -146,14 +144,14 @@ function FormField({
   field,
   description,
   value,
-  error,
+  hidden,
   updateFormField,
   transformOnChangeValue,
 }: {
   field: string;
   description: string;
   value: string;
-  error: boolean;
+  hidden?: boolean;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -166,12 +164,12 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
-  const inputType = error ? "hidden" : "text";
+  const inputType = hidden ? "hidden" : "text";
 
   return (
     <>
       <label htmlFor={inputId}>{description}</label>
-      <span role="status" className="text-red-300" hidden={!error}> No settings available to edit via the UI.<br /><br /></span>
+      <span role="status" className="text-red-300" hidden={!hidden}> No settings available to edit via the UI.<br /><br /></span>
       <input
         id={inputId}
         type={inputType}
