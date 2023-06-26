@@ -10,6 +10,5 @@
       "@yext/studio-plugin/virtual-module",
       "vite-plugin-svgr/client"
     ]
-  },
-  "include": ["."]
+  }
 }
