@@ -42,7 +42,10 @@ beforeEach(() => {
           ...basePageState,
           pagesJS: {
             getPathValue: undefined,
-            streamScope: { entityIds: ["apple", "orange"], savedFilterIds: ["banana"] }
+            streamScope: {
+              entityIds: ["apple", "orange"],
+              savedFilterIds: ["banana"],
+            },
           },
         },
       },
@@ -130,8 +133,12 @@ it("displays the correct stream scope when modal opens", async () => {
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const entityIDsTextbox = screen.getByRole("textbox", { name: "Entity IDs:" });
-  const entityTypesTextbox = screen.getByRole("textbox", { name: "Entity Types:" });
-  const savedFilterIDsTextbox = screen.getByRole("textbox", { name: "Saved Filter IDs:" });
+  const entityTypesTextbox = screen.getByRole("textbox", {
+    name: "Entity Types:",
+  });
+  const savedFilterIDsTextbox = screen.getByRole("textbox", {
+    name: "Saved Filter IDs:",
+  });
   expect(entityIDsTextbox).toHaveValue("apple,orange");
   expect(entityTypesTextbox).toHaveValue("");
   expect(savedFilterIDsTextbox).toHaveValue("banana");
@@ -145,16 +152,20 @@ it("updates the stream scope with user input", async () => {
   render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const entityTypesTextbox = screen.getByRole("textbox", { name: "Entity Types:" });
-  const savedFilterIDsTextbox = screen.getByRole("textbox", { name: "Saved Filter IDs:" });
+  const entityTypesTextbox = screen.getByRole("textbox", {
+    name: "Entity Types:",
+  });
+  const savedFilterIDsTextbox = screen.getByRole("textbox", {
+    name: "Saved Filter IDs:",
+  });
   await userEvent.type(entityTypesTextbox, "kiwi");
   await userEvent.type(savedFilterIDsTextbox, ",pineapple");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
   expect(updateStreamScopeSpy).toBeCalledWith("fruits", {
-    entityIds: ["apple","orange"],
+    entityIds: ["apple", "orange"],
     entityTypes: ["kiwi"],
-    savedFilterIds: ["banana","pineapple"],
+    savedFilterIds: ["banana", "pineapple"],
   });
   await userEvent.click(pageSettingsButton);
   expect(entityTypesTextbox).toHaveValue("kiwi");
@@ -166,5 +177,7 @@ it("disables url input with message if entity page's getPath is undefined", asyn
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlStatus = screen.getByRole("status");
-  expect(urlStatus).toHaveTextContent("No settings available to edit via the UI.")
+  expect(urlStatus).toHaveTextContent(
+    "No settings available to edit via the UI."
+  );
 });

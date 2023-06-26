@@ -169,7 +169,12 @@ function FormField({
   return (
     <>
       <label htmlFor={inputId}>{description}</label>
-      <span role="status" className="text-red-300" hidden={!hidden}> No settings available to edit via the UI.<br /><br /></span>
+      <span role="status" className="text-red-300" hidden={!hidden}>
+        {" "}
+        No settings available to edit via the UI.
+        <br />
+        <br />
+      </span>
       <input
         id={inputId}
         type={inputType}

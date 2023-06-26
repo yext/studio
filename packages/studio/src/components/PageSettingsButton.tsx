@@ -4,11 +4,12 @@ import { useCallback, useMemo } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import FormModal, { FormData } from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
-import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
+import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
-import StreamScopeFormatter, { StreamScopeForm } from "../utils/StreamScopeFormatter";
+import StreamScopeFormatter, {
+  StreamScopeForm,
+} from "../utils/StreamScopeFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
-import setInitialEntityFile from "../store/setInitialEntityFile";
 
 type PageSettings = {
   url: string;
@@ -49,26 +50,23 @@ interface PageSettingsButtonProps {
 export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
-  const [
-    currGetPathValue,
-    updateGetPathValue,
-    streamScope,
-    updateStreamScope,
-  ] = useStudioStore((store) => [
-    store.pages.pages[pageName].pagesJS?.getPathValue,
-    store.pages.updateGetPathValue,
-    store.pages.pages[pageName].pagesJS?.streamScope,
-    store.pages.updateStreamScope,
-  ]);
+  const [currGetPathValue, updateGetPathValue, streamScope, updateStreamScope] =
+    useStudioStore((store) => [
+      store.pages.pages[pageName].pagesJS?.getPathValue,
+      store.pages.updateGetPathValue,
+      store.pages.pages[pageName].pagesJS?.streamScope,
+      store.pages.updateStreamScope,
+    ]);
   const isEntityPage = !!streamScope;
 
   const initialFormValue: PageSettings & StreamScopeForm = useMemo(
-    () => (
-      isEntityPage ? {
-        ...StreamScopeFormatter.displayStreamScope(streamScope),
-        url: getUrlDisplayValue(currGetPathValue, isEntityPage),
-      }
-      : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
+    () =>
+      isEntityPage
+        ? {
+            ...StreamScopeFormatter.displayStreamScope(streamScope),
+            url: getUrlDisplayValue(currGetPathValue, isEntityPage),
+          }
+        : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) },
     [currGetPathValue, isEntityPage, streamScope]
   );
 
@@ -83,20 +81,26 @@ export default function PageSettingsButton({
             kind: PropValueKind.Literal,
             value: form.url,
           };
-      if(currGetPathValue) {
+      if (currGetPathValue) {
         updateGetPathValue(pageName, getPathValue);
       }
-      if(isEntityPage) {
+      if (isEntityPage) {
         updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
       }
       return true;
     },
-    [updateGetPathValue, updateStreamScope, pageName, isEntityPage, currGetPathValue]
+    [
+      updateGetPathValue,
+      updateStreamScope,
+      pageName,
+      isEntityPage,
+      currGetPathValue,
+    ]
   );
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      if(isEntityPage) {
+      if (isEntityPage) {
         entityFormData.url.hidden = !currGetPathValue;
       }
       return (
@@ -105,9 +109,7 @@ export default function PageSettingsButton({
           title="Page Settings"
           instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may cause entity data to be undefined."
           formData={isEntityPage ? entityFormData : formData}
-          initialFormValue={
-            initialFormValue
-          }
+          initialFormValue={initialFormValue}
           requireChangesToSubmit={true}
           handleClose={handleClose}
           handleConfirm={handleModalSave}
