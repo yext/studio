@@ -1,15 +1,8 @@
 {
-  "extends": "../../../tsconfig.json",
-  "include": [
-    "__fixtures__",
-    "__utils__",
-    "parsers",
-    "writers",
-    "sourcefiles",
-    "*.test.ts",
-    "**/*.d.ts"
-  ],
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["jest", "./__setup__/setup-env.ts", "node"]
-  }
+    "noEmit": true,
+    "types": ["jest", "./__setup__/setup-env.ts"]
+  },
+  "exclude": ["__fixtures__"]
 }
