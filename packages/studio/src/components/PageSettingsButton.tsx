@@ -8,6 +8,7 @@ import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import StreamScopeFormatter, { StreamScopeForm } from "../utils/StreamScopeFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
+import setInitialEntityFile from "../store/setInitialEntityFile";
 
 type PageSettings = {
   url: string;
@@ -62,13 +63,12 @@ export default function PageSettingsButton({
   const isEntityPage = !!streamScope;
 
   const initialFormValue: PageSettings & StreamScopeForm = useMemo(
-    () => (isEntityPage ? { 
-      url: getUrlDisplayValue(currGetPathValue, isEntityPage),
-      entityIds: StreamScopeFormatter.displayStreamScopeField(streamScope["entityIds"]),
-      entityTypes: StreamScopeFormatter.displayStreamScopeField(streamScope["entityTypes"]),
-      savedFilterIds: StreamScopeFormatter.displayStreamScopeField(streamScope["savedFilterIds"]),
-    } 
-    : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
+    () => (
+      isEntityPage ? {
+        ...StreamScopeFormatter.displayStreamScope(streamScope),
+        url: getUrlDisplayValue(currGetPathValue, isEntityPage),
+      }
+      : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
     [currGetPathValue, isEntityPage, streamScope]
   );
 

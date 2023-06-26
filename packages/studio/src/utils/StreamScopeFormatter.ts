@@ -22,10 +22,13 @@ export default class StreamScopeFormatter {
         return newStreamScope;
     }
     /**
-     * Generates a string of values separated by commas to display to the user for a property 
-     * (entityIds, entityTypes, savedFilterIds) in the StreamScope object
+     * Generates a StreamScopeForm to display to the user from the StreamScope object
      */
-    static displayStreamScopeField(values: string[] | undefined): string {
-        return values ? values.join(",") : "";
+    static displayStreamScope(scope: StreamScope): StreamScopeForm {
+        return {
+            entityIds: scope["entityIds"] ? scope["entityIds"].join(",") : "",
+            entityTypes: scope["entityTypes"] ? scope["entityTypes"].join(",") : "",
+            savedFilterIds: scope["savedFilterIds"] ? scope["savedFilterIds"].join(",") : "",
+        }
     }
 }
