@@ -8,7 +8,6 @@ import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import StreamScopeFormatter, { StreamScopeForm } from "../utils/StreamScopeFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
-import setInitialEntityFile from "../store/setInitialEntityFile";
 
 type PageSettings = {
   url: string;
@@ -48,6 +47,7 @@ interface PageSettingsButtonProps {
  */
 export default function PageSettingsButton({
   pageName,
+  initialFormData
 }: PageSettingsButtonProps): JSX.Element {
   const [
     currGetPathValue,
@@ -63,12 +63,10 @@ export default function PageSettingsButton({
   const isEntityPage = !!streamScope;
 
   const initialFormValue: PageSettings & StreamScopeForm = useMemo(
-    () => (
-      isEntityPage ? {
-        ...StreamScopeFormatter.displayStreamScope(streamScope),
-        url: getUrlDisplayValue(currGetPathValue, isEntityPage),
-      }
-      : { url: getUrlDisplayValue(currGetPathValue, isEntityPage) }),
+    () => ({
+      ...(isEntityPage && StreamScopeFormatter.displayStreamScope(streamScope)),
+      url: getUrlDisplayValue(currGetPathValue, isEntityPage),
+    }),
     [currGetPathValue, isEntityPage, streamScope]
   );
 
@@ -83,12 +81,8 @@ export default function PageSettingsButton({
             kind: PropValueKind.Literal,
             value: form.url,
           };
-      if(currGetPathValue) {
-        updateGetPathValue(pageName, getPathValue);
-      }
-      if(isEntityPage) {
-        updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
-      }
+      (currGetPathValue && updateGetPathValue(pageName, getPathValue));
+      (isEntityPage && updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form)));
       return true;
     },
     [updateGetPathValue, updateStreamScope, pageName, isEntityPage, currGetPathValue]
@@ -105,9 +99,7 @@ export default function PageSettingsButton({
           title="Page Settings"
           instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may cause entity data to be undefined."
           formData={isEntityPage ? entityFormData : formData}
-          initialFormValue={
-            initialFormValue
-          }
+          initialFormValue={initialFormValue}
           requireChangesToSubmit={true}
           handleClose={handleClose}
           handleConfirm={handleModalSave}
