@@ -4,6 +4,5 @@
     "noEmit": true,
     "types": ["jest", "./__setup__/setup-env.ts"]
   },
-  "include": ["."],
   "exclude": ["__fixtures__"]
 }
