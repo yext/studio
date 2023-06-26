@@ -99,7 +99,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         const pagesJS = store.pages[pageName].pagesJS;
         if(pagesJS?.streamScope) {
           pagesJS.streamScope = newStreamScope;
-          store.pages[pageName].pagesJS = pagesJS;
+          // store.pages[pageName].pagesJS = pagesJS;
           store.pendingChanges.pagesToUpdate.add(pageName);
         }
       });
