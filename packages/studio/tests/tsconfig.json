@@ -1,4 +1,15 @@
 {
-  "extends": "../../../tsconfig.json",
-  "include": ["components", "store", "hooks", "__utils__", "__mocks__"]
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "types": [
+      "node",
+      "jest",
+      "vite/client",
+      "testing-library__jest-dom",
+      "@yext/studio-plugin/virtual-module",
+      "vite-plugin-svgr/client"
+    ]
+  },
+  "include": ["."]
 }

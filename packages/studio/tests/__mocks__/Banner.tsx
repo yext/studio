@@ -1,4 +1,4 @@
-import { HexColor } from "@yext/studio";
+import { HexColor } from "@yext/studio-plugin";
 import { useMemo } from "react";
 import siteSettings from "./siteSettings";
 
