@@ -51,10 +51,9 @@ function toHaveWritten(
         )} times. Expected exactly 1 call.`,
     };
   }
-  const [actualDestination, actualContents] = writeMock.mock.calls[0];
-  const transformedExpectedDestination = path.normalize(expectedDestination);
 
-  if (!this.equals(transformedExpectedDestination, actualDestination)) {
+  const [actualDestination, actualContents] = writeMock.mock.calls[0];
+  if (!this.equals(expectedDestination, actualDestination)) {
     return {
       pass: false,
       message: () =>
