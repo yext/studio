@@ -2,7 +2,6 @@ import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Gear } from "../icons/gear.svg";
 import { useCallback } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
-import { Tooltip } from "react-tooltip";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
