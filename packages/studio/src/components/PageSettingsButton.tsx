@@ -27,10 +27,8 @@ export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
   const [
-    currGetPathValue,
     streamScope,
   ] = useStudioStore((store) => [
-    store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.pages[pageName].pagesJS?.streamScope,
   ]);
   const isEntityPage = !!streamScope;

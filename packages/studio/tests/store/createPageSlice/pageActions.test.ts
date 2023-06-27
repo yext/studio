@@ -121,7 +121,7 @@ describe("updateGetPathValue", () => {
     });
   });
 
-  it("throws an error if original getPathValue is undefined", () => {
+  it("updates getPathValue if original getPathValue is undefined", () => {
     mockPageSliceStates({
       pages: {
         ...pages,
@@ -131,13 +131,14 @@ describe("updateGetPathValue", () => {
         },
       },
     });
-    expect(() =>
-      useStudioStore.getState().pages.updateGetPathValue("universal", {
-        kind: PropValueKind.Literal,
-        value: "index",
-      })
-    ).toThrowError(
-      "Error updating getPath value: unable to parse original getPath value."
-    );
+    useStudioStore.getState().pages.updateGetPathValue("universal", {
+      kind: PropValueKind.Literal,
+      value: "index",
+    });
+    const pageState = useStudioStore.getState().pages.pages["universal"];
+    expect(pageState.pagesJS?.getPathValue).toEqual({
+      kind: PropValueKind.Literal,
+      value: "index",
+    });
   });
 });
