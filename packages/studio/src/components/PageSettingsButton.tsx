@@ -16,7 +16,7 @@ export interface PageSettingsModalProps {
 
 interface PageSettingsButtonProps {
   pageName: string;
-};
+}
 
 /**
  * Renders a button for editing the page-level settings for a PagesJS repo.
@@ -26,9 +26,7 @@ interface PageSettingsButtonProps {
 export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
-  const [
-    streamScope,
-  ] = useStudioStore((store) => [
+  const [streamScope] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.streamScope,
   ]);
   const isEntityPage = !!streamScope;
@@ -47,7 +45,7 @@ export default function PageSettingsButton({
           isOpen={isOpen}
           handleClose={handleClose}
         />
-      )
+      );
     },
     [isEntityPage, pageName]
   );
