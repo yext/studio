@@ -8,27 +8,27 @@ it("returns default config when studio config file is not found", async () => {
   expect(studioConfig).toEqual({
     isPagesJSRepo: false,
     paths: {
-      components: "test-site/src/components",
-      localData: "test-site/localData",
-      modules: "test-site/src/modules",
-      pages: "test-site/src/pages",
-      siteSettings: "test-site/src/siteSettings.ts",
+      components: path.normalize("test-site/src/components"),
+      localData: path.normalize("test-site/localData"),
+      modules: path.normalize("test-site/src/modules"),
+      pages: path.normalize("test-site/src/pages"),
+      siteSettings: path.normalize("test-site/src/siteSettings.ts"),
     },
     port: 8080,
   });
 });
 
-it("returns user studio config merge with default config for unspecified fields", async () => {
+it("merges the user's studio config with the default config for unspecified fields", async () => {
   const projectRoot = path.resolve(__dirname, "../__fixtures__/StudioConfigs");
   const studioConfig = await getStudioConfig(projectRoot);
   expect(studioConfig).toEqual({
     isPagesJSRepo: false,
     paths: {
       components: "custom/components/folder/path",
-      localData: projectRoot + "/localData",
-      modules: projectRoot + "/src/modules",
+      localData: path.join(projectRoot, "localData"),
+      modules: path.join(projectRoot, "src", "modules"),
       pages: "custom/pages/folder/path",
-      siteSettings: projectRoot + "/src/siteSettings.ts",
+      siteSettings: path.join(projectRoot, "src", "siteSettings.ts"),
     },
     port: 8080,
   });
@@ -42,7 +42,7 @@ it("throws FileIOError when user's studio config fails to import", async () => {
 
   await expect(getStudioConfig(projectRoot)).rejects.toEqual({
     kind: IOErrorKind.FailedToImportFile,
-    message: `Failed to import module at ${projectRoot}/studio.config.js`,
+    message: `Failed to import module at ${path.join(projectRoot, 'studio.config.js')}`,
   });
 });
 
