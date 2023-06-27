@@ -8,6 +8,8 @@ export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
 };
 
+const streamScopeKeys = ["entityIds", "entityTypes",  "savedFilterIds"]
+
 export default class StreamScopeParser {
   /**
    * Generates a StreamScope object from the user input
@@ -21,7 +23,7 @@ export default class StreamScopeParser {
             .map((str) => str.trim())
             .filter((str) => str)
         : [];
-      if (values.length > 0 && key !== "url") {
+      if (values.length > 0 && streamScopeKeys.includes(key)) {
         scope[key] = values;
       }
       return scope;

@@ -12,24 +12,6 @@ import { getUrlDisplayValue } from "./GetUrlDisplayValue";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
-const entityFormData: FormData<EntityPageSettings> = {
-  url: {
-    description: "URL slug:",
-  },
-  entityIds: {
-    description: "Entity IDs:",
-    optional: true,
-  },
-  entityTypes: {
-    description: "Entity Types:",
-    optional: true,
-  },
-  savedFilterIds: {
-    description: "Saved Filter IDs:",
-    optional: true,
-  },
-};
-
 export default function EntityModal({
   pageName,
   isOpen,
@@ -43,17 +25,35 @@ export default function EntityModal({
       store.pages.updateStreamScope,
     ]);
 
-  entityFormData.url.optional = !currGetPathValue;
-  entityFormData.url.placeholder = currGetPathValue
-    ? ""
-    : "URL slug is defined by developer";
-
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
       url: getUrlDisplayValue(currGetPathValue, true),
       ...(streamScope && StreamScopeFormatter.displayStreamScope(streamScope)),
     }),
     [currGetPathValue, streamScope]
+  );
+
+  const entityFormData: FormData<EntityPageSettings> = useMemo(
+    () => ({
+      url: {
+        description: "URL slug:",
+        optional: !currGetPathValue,
+        placeholder: currGetPathValue ? "" : "URL slug is defined by developer",
+      },
+      entityIds: {
+        description: "Entity IDs:",
+        optional: true,
+      },
+      entityTypes: {
+        description: "Entity Types:",
+        optional: true,
+      },
+      savedFilterIds: {
+        description: "Saved Filter IDs:",
+        optional: true,
+      },
+    }),
+    [currGetPathValue]
   );
 
   const handleModalSave = useCallback(

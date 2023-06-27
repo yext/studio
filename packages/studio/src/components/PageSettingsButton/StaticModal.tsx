@@ -9,12 +9,6 @@ export type StaticPageSettings = {
   url: string;
 };
 
-const staticFormData: FormData<StaticPageSettings> = {
-  url: {
-    description: "URL slug:",
-  },
-};
-
 export default function StaticModal({
   pageName,
   isOpen,
@@ -25,12 +19,19 @@ export default function StaticModal({
     store.pages.updateGetPathValue,
   ]);
 
-  staticFormData.url.placeholder = currGetPathValue
-    ? ""
-    : "URL slug is defined by developer";
-
   const initialFormValue: StaticPageSettings = useMemo(
     () => ({ url: getUrlDisplayValue(currGetPathValue, false) }),
+    [currGetPathValue]
+  );
+
+  const staticFormData: FormData<StaticPageSettings> = useMemo(
+    () => ({
+      url: {
+        description: "URL slug:",
+        optional: !currGetPathValue,
+        placeholder: currGetPathValue ? "" : "URL slug is defined by developer",
+      },
+    }),
     [currGetPathValue]
   );
 
