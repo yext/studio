@@ -9,7 +9,7 @@ export type FormData<T extends Form> = {
   [field in keyof T]: {
     description: string;
     optional?: boolean;
-    placeholder?: string
+    placeholder?: string;
   };
 };
 
@@ -170,7 +170,7 @@ function FormField({
       <label htmlFor={inputId}>{description}</label>
       <input
         id={inputId}
-        type={"text"}
+        type="text"
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
         placeholder={placeholder}
         value={value}

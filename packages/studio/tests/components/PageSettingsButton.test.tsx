@@ -171,7 +171,9 @@ it("displays URL placeholder and can edit URL when static page's getPath value i
   render(<PageSettingsButton pageName="index" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const urlTextbox = screen.getByPlaceholderText("URL slug is defined by developer");
+  const urlTextbox = screen.getByPlaceholderText(
+    "URL slug is defined by developer"
+  );
   await userEvent.type(urlTextbox, "test-url");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
