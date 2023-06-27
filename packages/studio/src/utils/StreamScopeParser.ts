@@ -1,7 +1,7 @@
 import { StreamScope } from "@yext/studio-plugin";
 
 /**
- * The values in entityIds, entityTypes, and savedFilterIds are
+ * The values in each stream scope filter are
  * separated by commas in a string to display to the user
  */
 export type StreamScopeForm = {
