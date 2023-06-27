@@ -12,7 +12,6 @@ import {
 import { StaticPageSettings } from "./StaticModal";
 import { getUrlDisplayValue } from "./GetUrlDisplayValue";
 
-
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
 const entityFormData: FormData<EntityPageSettings> = {
