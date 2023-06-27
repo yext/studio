@@ -8,7 +8,7 @@ export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
 };
 
-const streamScopeKeys = ["entityIds", "entityTypes",  "savedFilterIds"]
+const streamScopeKeys = ["entityIds", "entityTypes", "savedFilterIds"];
 
 export default class StreamScopeParser {
   /**
