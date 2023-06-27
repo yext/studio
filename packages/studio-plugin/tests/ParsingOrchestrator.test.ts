@@ -72,20 +72,26 @@ describe("aggregates data as expected", () => {
     expect(fileMetadataArray).toHaveLength(4);
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(path.normalize("components/Card.tsx")),
+        filepath: expect.stringContaining(
+          path.normalize("components/Card.tsx")
+        ),
         kind: FileMetadataKind.Component,
       })
     );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(path.normalize("components/NestedBanner.tsx")),
+        filepath: expect.stringContaining(
+          path.normalize("components/NestedBanner.tsx")
+        ),
         kind: FileMetadataKind.Component,
         acceptsChildren: true,
       })
     );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(path.normalize("modules/BannerWithCard.tsx")),
+        filepath: expect.stringContaining(
+          path.normalize("modules/BannerWithCard.tsx")
+        ),
         kind: FileMetadataKind.Module,
         componentTree: [
           expect.objectContaining({ componentName: "NestedBanner" }),
@@ -95,7 +101,9 @@ describe("aggregates data as expected", () => {
     );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(path.normalize("modules/a/b/NestedModule.tsx")),
+        filepath: expect.stringContaining(
+          path.normalize("modules/a/b/NestedModule.tsx")
+        ),
         kind: FileMetadataKind.Module,
         componentTree: [
           expect.objectContaining({ kind: ComponentStateKind.Fragment }),
