@@ -42,7 +42,10 @@ it("throws FileIOError when user's studio config fails to import", async () => {
 
   await expect(getStudioConfig(projectRoot)).rejects.toEqual({
     kind: IOErrorKind.FailedToImportFile,
-    message: `Failed to import module at ${path.join(projectRoot, 'studio.config.js')}`,
+    message: `Failed to import module at ${path.join(
+      projectRoot,
+      "studio.config.js"
+    )}`,
   });
 });
 
