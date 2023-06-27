@@ -1,5 +1,5 @@
 import useStudioStore from "../../store/useStudioStore";
-import { ReactComponent as Gear } from "../icons/gear.svg";
+import { ReactComponent as Gear } from "../../icons/gear.svg";
 import { useCallback } from "react";
 import ButtonWithModal, {
   renderModalFunction,
