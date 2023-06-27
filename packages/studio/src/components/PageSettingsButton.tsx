@@ -8,10 +8,6 @@ import PropValueHelpers from "../utils/PropValueHelpers";
 import StaticModal from "./StaticModal";
 import EntityModal from "./EntityModal";
 
-export type PageSettings = {
-  url: string;
-};
-
 export interface PageSettingsModalProps {
   pageName: string;
   isOpen: boolean;
@@ -55,7 +51,7 @@ export default function PageSettingsButton({
         />
       )
     },
-    [isEntityPage, currGetPathValue, pageName]
+    [isEntityPage, pageName]
   );
 
   return (

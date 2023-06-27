@@ -4,9 +4,12 @@ import FormModal, { FormData } from "./common/FormModal";
 import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import StreamScopeFormatter, { StreamScopeForm } from "../utils/StreamScopeFormatter";
-import { PageSettings, getUrlDisplayValue, PageSettingsModalProps } from "./PageSettingsButton";
+import { getUrlDisplayValue, PageSettingsModalProps } from "./PageSettingsButton";
+import { StaticPageSettings } from "./StaticModal";
 
-const entityFormData: FormData<PageSettings & StreamScopeForm> = {
+type EntityPageSettings = StaticPageSettings & StreamScopeForm;
+
+const entityFormData: FormData<EntityPageSettings> = {
    url: { 
       description: "URL slug:",
    },
@@ -44,7 +47,7 @@ export default function EntityModal({
    entityFormData.url.optional = !currGetPathValue;
    entityFormData.url.placeholder = currGetPathValue ? "" : "URL slug is defined by developer";
 
-   const initialFormValue: PageSettings & StreamScopeForm = useMemo(
+   const initialFormValue: EntityPageSettings = useMemo(
       () => ({
          url: getUrlDisplayValue(currGetPathValue, true),
          ...(streamScope && StreamScopeFormatter.displayStreamScope(streamScope)),
@@ -53,7 +56,7 @@ export default function EntityModal({
    );
 
    const handleModalSave = useCallback(
-      (form: PageSettings & StreamScopeForm) => {
+      (form: EntityPageSettings) => {
          const getPathValue: GetPathVal = {
             kind: PropValueKind.Expression,
             value: TemplateExpressionFormatter.getRawValue(form.url),

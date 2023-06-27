@@ -2,9 +2,13 @@ import useStudioStore from "../store/useStudioStore";
 import { useCallback, useMemo } from "react";
 import FormModal, { FormData } from "./common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
-import { PageSettings, getUrlDisplayValue, PageSettingsModalProps } from "./PageSettingsButton";
+import { getUrlDisplayValue, PageSettingsModalProps } from "./PageSettingsButton";
 
-const staticFormData: FormData<PageSettings> = {
+export type StaticPageSettings = {
+	url: string;
+ }; 
+
+const staticFormData: FormData<StaticPageSettings> = {
 	url: { 
 		description: "URL slug:",
 	},
@@ -25,13 +29,13 @@ export default function StaticModal({
 
    staticFormData.url.placeholder = currGetPathValue ? "" : "URL slug is defined by developer";
 
-	const initialFormValue: PageSettings = useMemo(
+	const initialFormValue: StaticPageSettings = useMemo(
 		() => ({ url: getUrlDisplayValue(currGetPathValue, false) }),
 		[currGetPathValue]
 	);
 
 	const handleModalSave = useCallback(
-		(form: PageSettings) => {
+		(form: StaticPageSettings) => {
 			const getPathValue: GetPathVal = {
 				kind: PropValueKind.Literal,
 				value: form.url,
