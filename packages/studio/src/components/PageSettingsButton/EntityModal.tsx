@@ -1,16 +1,17 @@
-import useStudioStore from "../store/useStudioStore";
+import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useMemo } from "react";
-import FormModal, { FormData } from "./common/FormModal";
+import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
-import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
+import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
 import StreamScopeFormatter, {
   StreamScopeForm,
-} from "../utils/StreamScopeFormatter";
+} from "../../utils/StreamScopeFormatter";
 import {
-  getUrlDisplayValue,
-  PageSettingsModalProps,
+  PageSettingsModalProps
 } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticModal";
+import { getUrlDisplayValue } from "./GetUrlDisplayValue";
+
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -70,7 +71,7 @@ export default function EntityModal({
          updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
          return true;
       },
-      [updateGetPathValue, updateStreamScope, pageName]
+      [updateGetPathValue, updateStreamScope, currGetPathValue, pageName]
    );
 
   return (

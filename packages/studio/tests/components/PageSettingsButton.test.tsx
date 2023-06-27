@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
-import PageSettingsButton from "../../src/components/PageSettingsButton";
+import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
 
 const basePageState: PageState = {

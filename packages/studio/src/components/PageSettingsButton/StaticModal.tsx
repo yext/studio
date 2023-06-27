@@ -1,11 +1,9 @@
-import useStudioStore from "../store/useStudioStore";
+import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useMemo } from "react";
-import FormModal, { FormData } from "./common/FormModal";
+import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
-import {
-  getUrlDisplayValue,
-  PageSettingsModalProps,
-} from "./PageSettingsButton";
+import { PageSettingsModalProps } from "./PageSettingsButton";
+import { getUrlDisplayValue } from "./GetUrlDisplayValue";
 
 export type StaticPageSettings = {
   url: string;

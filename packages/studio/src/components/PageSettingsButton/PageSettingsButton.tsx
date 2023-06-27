@@ -1,10 +1,7 @@
-import useStudioStore from "../store/useStudioStore";
+import useStudioStore from "../../store/useStudioStore";
 import { ReactComponent as Gear } from "../icons/gear.svg";
 import { useCallback } from "react";
-import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
-import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
-import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
-import PropValueHelpers from "../utils/PropValueHelpers";
+import ButtonWithModal, { renderModalFunction } from "../common/ButtonWithModal";
 import StaticModal from "./StaticModal";
 import EntityModal from "./EntityModal";
 
@@ -58,21 +55,5 @@ export default function PageSettingsButton({
       ariaLabel={`Edit ${pageName} Page Settings`}
       buttonClassName="text-gray-800 disabled:text-gray-400"
     />
-  );
-}
-
-export function getUrlDisplayValue(
-  getPathValue: GetPathVal | undefined,
-  isEntityPage: boolean
-): string {
-  if (!isEntityPage) {
-    return getPathValue?.value ?? "";
-  }
-
-  const getPathExpression = PropValueHelpers.getTemplateExpression(
-    getPathValue ?? { kind: PropValueKind.Literal, value: "" }
-  );
-  return TemplateExpressionFormatter.getTemplateStringDisplayValue(
-    getPathExpression
   );
 }
