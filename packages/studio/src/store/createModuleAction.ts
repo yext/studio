@@ -16,7 +16,7 @@ export default function getCreateModuleAction(
   function throwIfInvalidFilepath(filepath: string) {
     const modulesFolder = get().studioConfig.paths.modules;
     const moduleName = path.basename(filepath, ".tsx");
-    if (!path.isAbsolute(filepath) || !filepath.startsWith(modulesFolder)) {
+    if (!filepath.startsWith(modulesFolder)) {
       throw new Error(
         `Error creating module: modulePath is invalid: "${path.relative(
           modulesFolder,
