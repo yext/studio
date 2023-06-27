@@ -13,6 +13,7 @@ import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
 import { assertIsOk } from "../__utils__/asserts";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
+import path from 'path';
 
 jest.mock("uuid");
 
@@ -28,7 +29,7 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
     };
   }
   return {
-    kind: filepath?.includes("components/")
+    kind: filepath?.includes("components" + path.sep)
       ? FileMetadataKind.Component
       : FileMetadataKind.Module,
     metadataUUID: "mock-metadata-uuid",
@@ -56,7 +57,7 @@ describe("getModuleMetadata", () => {
     const moduleMetadata = result.value;
 
     const expectedModuleMetadata: ModuleMetadata = {
-      filepath: expect.stringContaining("ModuleFile/PanelWithComponents.tsx"),
+      filepath: expect.stringContaining(path.join("ModuleFile", "PanelWithComponents.tsx")),
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Module,
       propShape: {
@@ -126,7 +127,7 @@ describe("getModuleMetadata", () => {
     const moduleMetadata = result.value;
 
     const expectedModuleMetadata: ModuleMetadata = {
-      filepath: expect.stringContaining("ModuleFile/PanelWithModules.tsx"),
+      filepath: expect.stringContaining(path.join("ModuleFile", "PanelWithModules.tsx")),
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Module,
       propShape: {
@@ -188,7 +189,7 @@ describe("getModuleMetadata", () => {
     const expectedModuleMetadata: ModuleMetadata = {
       kind: FileMetadataKind.Module,
       filepath: expect.stringContaining(
-        "ModuleFile/PanelWithComponentAndModule.tsx"
+        path.join("ModuleFile", "PanelWithComponentAndModule.tsx")
       ),
       metadataUUID: expect.any(String),
       propShape: {
