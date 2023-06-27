@@ -35,32 +35,31 @@ export default function PageSettingsButton({
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      return isEntityPage ? (
-        <EntityModal
+      if (isEntityPage) {
+        return <EntityModal
           pageName={pageName}
           isOpen={isOpen}
           handleClose={handleClose}
         />
-      ) : (
-        <StaticModal
-          pageName={pageName}
-          isOpen={isOpen}
-          handleClose={handleClose}
-        />
-      )
+      }
+      else { 
+      return <StaticModal
+        pageName={pageName}
+        isOpen={isOpen}
+        handleClose={handleClose}
+      />
+      }
     },
     [isEntityPage, pageName]
   );
 
   return (
-    <div>
-      <ButtonWithModal
-        buttonContent={<Gear />}
-        renderModal={renderModal}
-        ariaLabel={`Edit ${pageName} Page Settings`}
-        buttonClassName="text-gray-800 disabled:text-gray-400"
-      />
-    </div>
+    <ButtonWithModal
+      buttonContent={<Gear />}
+      renderModal={renderModal}
+      ariaLabel={`Edit ${pageName} Page Settings`}
+      buttonClassName="text-gray-800 disabled:text-gray-400"
+    />
   );
 }
 

@@ -61,7 +61,9 @@ export default function EntityModal({
             kind: PropValueKind.Expression,
             value: TemplateExpressionFormatter.getRawValue(form.url),
          };
-         updateGetPathValue(pageName, getPathValue);
+         if(form.url || currGetPathValue) {
+            updateGetPathValue(pageName, getPathValue);
+         }
          updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
          return true;
       },
