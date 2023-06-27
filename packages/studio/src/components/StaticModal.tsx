@@ -2,19 +2,19 @@ import useStudioStore from "../store/useStudioStore";
 import { useCallback, useMemo } from "react";
 import FormModal, { FormData } from "./common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
-import { PageSettings, getUrlDisplayValue } from "./PageSettingsButton";
+import { PageSettings, getUrlDisplayValue, PageSettingsModalProps } from "./PageSettingsButton";
 
-interface StaticModalProps {
-	pageName: string;
-	isOpen: boolean;
-	handleClose: () => void | Promise<void>;
-}
+const staticFormData: FormData<PageSettings> = {
+	url: { 
+		description: "URL slug:",
+	},
+};
 
 export default function StaticModal({
 	pageName,
 	isOpen,
 	handleClose,
-}: StaticModalProps): JSX.Element {
+}: PageSettingsModalProps): JSX.Element {
 	const [
 		currGetPathValue,
 		updateGetPathValue,
@@ -23,12 +23,7 @@ export default function StaticModal({
 		store.pages.updateGetPathValue,
 	]);
 
-	const staticFormData: FormData<PageSettings> = {
-		url: { 
-			description: "URL slug:",
-			placeholder: currGetPathValue ? "" : "URL slug is defined by developer",
-		},
-	};
+   staticFormData.url.placeholder = currGetPathValue ? "" : "URL slug is defined by developer";
 
 	const initialFormValue: PageSettings = useMemo(
 		() => ({ url: getUrlDisplayValue(currGetPathValue, false) }),
@@ -44,7 +39,7 @@ export default function StaticModal({
 			updateGetPathValue(pageName, getPathValue);
 			return true;
 		},
-		[updateGetPathValue, pageName, currGetPathValue]
+		[updateGetPathValue, pageName]
 	);
 
 	return (<FormModal

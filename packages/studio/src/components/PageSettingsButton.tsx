@@ -12,6 +12,12 @@ export type PageSettings = {
   url: string;
 };
 
+export interface PageSettingsModalProps {
+  pageName: string;
+  isOpen: boolean;
+  handleClose: () => void | Promise<void>;
+}
+
 interface PageSettingsButtonProps {
   pageName: string;
 };
@@ -49,7 +55,7 @@ export default function PageSettingsButton({
         />
       )
     },
-    [isEntityPage, currGetPathValue]
+    [isEntityPage, currGetPathValue, pageName]
   );
 
   return (

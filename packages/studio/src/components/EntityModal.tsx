@@ -4,19 +4,31 @@ import FormModal, { FormData } from "./common/FormModal";
 import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import StreamScopeFormatter, { StreamScopeForm } from "../utils/StreamScopeFormatter";
-import { PageSettings, getUrlDisplayValue } from "./PageSettingsButton";
+import { PageSettings, getUrlDisplayValue, PageSettingsModalProps } from "./PageSettingsButton";
 
-interface EntityModalProps {
-   pageName: string;
-   isOpen: boolean;
-   handleClose: () => void | Promise<void>;
-}
+const entityFormData: FormData<PageSettings & StreamScopeForm> = {
+   url: { 
+      description: "URL slug:",
+   },
+   entityIds: {
+      description: "Entity IDs:",
+      optional: true,
+   },
+   entityTypes: {
+      description: "Entity Types:",
+      optional: true,
+   },
+   savedFilterIds: {
+      description: "Saved Filter IDs:",
+      optional: true,
+   },
+};
 
 export default function EntityModal({
    pageName,
    isOpen,
    handleClose,
-}: EntityModalProps): JSX.Element {
+}: PageSettingsModalProps): JSX.Element {
    const [
       currGetPathValue,
       updateGetPathValue,
@@ -29,25 +41,8 @@ export default function EntityModal({
       store.pages.updateStreamScope,
    ]);
 
-   const entityFormData: FormData<PageSettings & StreamScopeForm> = {
-      url: { 
-         description: "URL slug:",
-         optional: !currGetPathValue,
-         placeholder: currGetPathValue ? "" : "URL slug is defined by developer",
-      },
-      entityIds: {
-         description: "Entity IDs:",
-         optional: true,
-      },
-      entityTypes: {
-         description: "Entity Types:",
-         optional: true,
-      },
-      savedFilterIds: {
-         description: "Saved Filter IDs:",
-         optional: true,
-      },
-   };
+   entityFormData.url.optional = !currGetPathValue;
+   entityFormData.url.placeholder = currGetPathValue ? "" : "URL slug is defined by developer";
 
    const initialFormValue: PageSettings & StreamScopeForm = useMemo(
       () => ({
@@ -67,7 +62,7 @@ export default function EntityModal({
          updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
          return true;
       },
-      [updateGetPathValue, updateStreamScope, pageName, currGetPathValue]
+      [updateGetPathValue, updateStreamScope, pageName]
    );
 
    return (<FormModal
