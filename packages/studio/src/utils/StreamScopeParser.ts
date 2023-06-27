@@ -1,14 +1,19 @@
 import { StreamScope } from "@yext/studio-plugin";
 
+/**
+ * The values in entityIds, entityTypes, and savedFilterIds are
+ * separated by commas in a string to display to the user
+ */
 export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
 };
-export default class StreamScopeFormatter {
+
+export default class StreamScopeParser {
   /**
    * Generates a StreamScope object from the user input
    * in a StreamScopeForm object.
    */
-  static readStreamScope(form: StreamScopeForm): StreamScope {
+  static parseStreamScope(form: StreamScopeForm): StreamScope {
     const newStreamScope = Object.entries(form).reduce((scope, [key, val]) => {
       const values = val
         ? val

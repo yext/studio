@@ -5,7 +5,7 @@ import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
 import StreamScopeFormatter, {
   StreamScopeForm,
-} from "../../utils/StreamScopeFormatter";
+} from "../../utils/StreamScopeParser";
 import {
   PageSettingsModalProps
 } from "./PageSettingsButton";
@@ -68,7 +68,7 @@ export default function EntityModal({
          if(form.url || currGetPathValue) {
             updateGetPathValue(pageName, getPathValue);
          }
-         updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
+         updateStreamScope(pageName, StreamScopeFormatter.parseStreamScope(form));
          return true;
       },
       [updateGetPathValue, updateStreamScope, currGetPathValue, pageName]

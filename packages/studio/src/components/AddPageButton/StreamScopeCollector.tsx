@@ -4,7 +4,7 @@ import { FlowStepModalProps } from "./FlowStep";
 import AddPageContext from "./AddPageContext";
 import StreamScopeFormatter, {
   StreamScopeForm,
-} from "../../utils/StreamScopeFormatter";
+} from "../../utils/StreamScopeParser";
 
 const formData: FormData<StreamScopeForm> = {
   entityIds: {
@@ -30,7 +30,7 @@ export default function StreamScopeCollector({
 
   const onConfirm = useCallback(
     async (data: StreamScopeForm) => {
-      const streamScope = StreamScopeFormatter.readStreamScope(data);
+      const streamScope = StreamScopeFormatter.parseStreamScope(data);
       actions.setStreamScope(streamScope);
       await handleConfirm();
       return true;
