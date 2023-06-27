@@ -1,9 +1,10 @@
 import { useCallback, useContext } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { FlowStepModalProps } from "./FlowStep";
-import { StreamScope } from "@yext/studio-plugin";
 import AddPageContext from "./AddPageContext";
-import StreamScopeFormatter, { StreamScopeForm } from "../../utils/StreamScopeFormatter";
+import StreamScopeFormatter, {
+  StreamScopeForm,
+} from "../../utils/StreamScopeFormatter";
 
 const formData: FormData<StreamScopeForm> = {
   entityIds: {
