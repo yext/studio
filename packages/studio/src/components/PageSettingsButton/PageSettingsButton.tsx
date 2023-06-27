@@ -1,7 +1,9 @@
 import useStudioStore from "../../store/useStudioStore";
 import { ReactComponent as Gear } from "../icons/gear.svg";
 import { useCallback } from "react";
-import ButtonWithModal, { renderModalFunction } from "../common/ButtonWithModal";
+import ButtonWithModal, {
+  renderModalFunction,
+} from "../common/ButtonWithModal";
 import StaticModal from "./StaticModal";
 import EntityModal from "./EntityModal";
 
@@ -31,18 +33,21 @@ export default function PageSettingsButton({
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       if (isEntityPage) {
-        return <EntityModal
-          pageName={pageName}
-          isOpen={isOpen}
-          handleClose={handleClose}
-        />
-      }
-      else { 
-      return <StaticModal
-        pageName={pageName}
-        isOpen={isOpen}
-        handleClose={handleClose}
-      />
+        return (
+          <EntityModal
+            pageName={pageName}
+            isOpen={isOpen}
+            handleClose={handleClose}
+          />
+        );
+      } else {
+        return (
+          <StaticModal
+            pageName={pageName}
+            isOpen={isOpen}
+            handleClose={handleClose}
+          />
+        );
       }
     },
     [isEntityPage, pageName]

@@ -6,12 +6,9 @@ import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter
 import StreamScopeFormatter, {
   StreamScopeForm,
 } from "../../utils/StreamScopeFormatter";
-import {
-  PageSettingsModalProps
-} from "./PageSettingsButton";
+import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticModal";
 import { getUrlDisplayValue } from "./GetUrlDisplayValue";
-
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -59,20 +56,20 @@ export default function EntityModal({
     [currGetPathValue, streamScope]
   );
 
-   const handleModalSave = useCallback(
-      (form: EntityPageSettings) => {
-         const getPathValue: GetPathVal = {
-            kind: PropValueKind.Expression,
-            value: TemplateExpressionFormatter.getRawValue(form.url),
-         };
-         if(form.url || currGetPathValue) {
-            updateGetPathValue(pageName, getPathValue);
-         }
-         updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
-         return true;
-      },
-      [updateGetPathValue, updateStreamScope, currGetPathValue, pageName]
-   );
+  const handleModalSave = useCallback(
+    (form: EntityPageSettings) => {
+      const getPathValue: GetPathVal = {
+        kind: PropValueKind.Expression,
+        value: TemplateExpressionFormatter.getRawValue(form.url),
+      };
+      if (form.url || currGetPathValue) {
+        updateGetPathValue(pageName, getPathValue);
+      }
+      updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form));
+      return true;
+    },
+    [updateGetPathValue, updateStreamScope, currGetPathValue, pageName]
+  );
 
   return (
     <FormModal
