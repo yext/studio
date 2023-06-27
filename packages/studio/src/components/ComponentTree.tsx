@@ -122,7 +122,10 @@ function renderDragPreview(
 
 function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
   const Placeholder = () => {
-    const placeHolderStyle = useMemo(() => ({ left: `${depth}em`, width:`calc(100% - ${depth}em)` }), []);
+    const placeHolderStyle = useMemo(
+      () => ({ left: `${depth}em`, width: `calc(100% - ${depth}em)` }),
+      []
+    );
     return (
       <div
         className="bg-rose-500 absolute h-0.5 z-10"
