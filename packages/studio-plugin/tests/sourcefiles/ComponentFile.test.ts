@@ -8,6 +8,7 @@ import {
   PropValueType,
 } from "../../src/types";
 import { assertIsOk } from "../__utils__/asserts";
+import path from 'path';
 
 describe("getComponentMetadata", () => {
   beforeEach(() => {
@@ -21,7 +22,7 @@ describe("getComponentMetadata", () => {
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value).toEqual({
-      filepath: expect.stringContaining("ComponentFile/SimpleBanner.tsx"),
+      filepath: expect.stringContaining(path.join("ComponentFile", "SimpleBanner.tsx")),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
       propShape: { title: { type: "string", required: false } },
@@ -34,7 +35,7 @@ describe("getComponentMetadata", () => {
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value).toEqual({
-      filepath: expect.stringContaining("ComponentFile/NestedBanner.tsx"),
+      filepath: expect.stringContaining(path.join("ComponentFile", "NestedBanner.tsx")),
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
       propShape: {},
@@ -46,7 +47,7 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     const expectedComponentMetadata: ComponentMetadata = {
-      filepath: expect.stringContaining("ComponentFile/ComplexBanner.tsx"),
+      filepath: expect.stringContaining(path.join("ComponentFile", "ComplexBanner.tsx")),
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Component,
       propShape: {
