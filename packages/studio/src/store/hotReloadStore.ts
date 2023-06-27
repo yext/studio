@@ -50,6 +50,7 @@ function syncPages(studioData: StudioData) {
   );
   useStudioStore.setState((store) => {
     store.pages.pages = pageNameToPageState;
+    store.pages.errorPages = studioData.pageNameToErrorPageState;
     store.pages.pendingChanges.pagesToRemove = new Set();
     store.pages.pendingChanges.pagesToUpdate = new Set();
     store.pages.activeComponentUUID = undefined;
