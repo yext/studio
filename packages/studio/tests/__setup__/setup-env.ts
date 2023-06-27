@@ -10,9 +10,9 @@ jest.mock("../../src/messaging/sendMessage", () => ({
 
 jest.mock("../../src/utils/dynamicImportFromBrowser", () => {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const path = require('path')
+  const path = require("path");
   return {
     __esModule: true,
-    default: (absPath: string) => import(path.relative(__dirname, absPath))
-  }
+    default: (absPath: string) => import(path.relative(__dirname, absPath)),
+  };
 });
