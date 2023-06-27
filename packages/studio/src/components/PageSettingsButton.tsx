@@ -1,44 +1,21 @@
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Gear } from "../icons/gear.svg";
-import { useCallback, useMemo } from "react";
+import { useCallback } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
-import FormModal, { FormData } from "./common/FormModal";
 import { Tooltip } from "react-tooltip";
-import { GetPathVal, PropValueKind, StreamScope } from "@yext/studio-plugin";
+import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
-import StreamScopeFormatter, { StreamScopeForm } from "../utils/StreamScopeFormatter";
 import PropValueHelpers from "../utils/PropValueHelpers";
+import StaticModal from "./StaticModal";
+import EntityModal from "./EntityModal";
 
-type PageSettings = {
+export type PageSettings = {
   url: string;
-};
-
-const formData: FormData<PageSettings> = {
-  url: { description: "URL slug:" },
-};
-
-const entityFormData: FormData<PageSettings & StreamScopeForm> = {
-  url: {
-    description: formData.url.description,
-    optional: true,
-  },
-  entityIds: {
-    description: "Entity IDs:",
-    optional: true,
-  },
-  entityTypes: {
-    description: "Entity Types:",
-    optional: true,
-  },
-  savedFilterIds: {
-    description: "Saved Filter IDs:",
-    optional: true,
-  },
 };
 
 interface PageSettingsButtonProps {
   pageName: string;
-}
+};
 
 /**
  * Renders a button for editing the page-level settings for a PagesJS repo.
@@ -47,96 +24,48 @@ interface PageSettingsButtonProps {
  */
 export default function PageSettingsButton({
   pageName,
-  initialFormData
 }: PageSettingsButtonProps): JSX.Element {
   const [
     currGetPathValue,
-    updateGetPathValue,
     streamScope,
-    updateStreamScope,
   ] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.getPathValue,
-    store.pages.updateGetPathValue,
     store.pages.pages[pageName].pagesJS?.streamScope,
-    store.pages.updateStreamScope,
   ]);
   const isEntityPage = !!streamScope;
 
-  const initialFormValue: PageSettings & StreamScopeForm = useMemo(
-    () => ({
-      ...(isEntityPage && StreamScopeFormatter.displayStreamScope(streamScope)),
-      url: getUrlDisplayValue(currGetPathValue, isEntityPage),
-    }),
-    [currGetPathValue, isEntityPage, streamScope]
-  );
-
-  const handleModalSave = useCallback(
-    (form: PageSettings & StreamScopeForm) => {
-      const getPathValue: GetPathVal = isEntityPage
-        ? {
-            kind: PropValueKind.Expression,
-            value: TemplateExpressionFormatter.getRawValue(form.url),
-          }
-        : {
-            kind: PropValueKind.Literal,
-            value: form.url,
-          };
-      (currGetPathValue && updateGetPathValue(pageName, getPathValue));
-      (isEntityPage && updateStreamScope(pageName, StreamScopeFormatter.readStreamScope(form)));
-      return true;
-    },
-    [updateGetPathValue, updateStreamScope, pageName, isEntityPage, currGetPathValue]
-  );
-
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      if(isEntityPage) {
-        entityFormData.url.hidden = !currGetPathValue;
-      }
-      return (
-        <FormModal
+      return isEntityPage ? (
+        <EntityModal
+          pageName={pageName}
           isOpen={isOpen}
-          title="Page Settings"
-          instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may cause entity data to be undefined."
-          formData={isEntityPage ? entityFormData : formData}
-          initialFormValue={initialFormValue}
-          requireChangesToSubmit={true}
           handleClose={handleClose}
-          handleConfirm={handleModalSave}
-          transformOnChangeValue={
-            isEntityPage
-              ? TemplateExpressionFormatter.convertCurlyBracesToSquareBrackets
-              : undefined
-          }
         />
-      );
+      ) : (
+        <StaticModal
+          pageName={pageName}
+          isOpen={isOpen}
+          handleClose={handleClose}
+        />
+      )
     },
-    [handleModalSave, initialFormValue, isEntityPage, currGetPathValue]
+    [isEntityPage, currGetPathValue]
   );
 
-  const disabled = !currGetPathValue && !isEntityPage;
-  const tooltipAnchorID = `PageSettingsButton-${pageName}`;
-
   return (
-    <div id={tooltipAnchorID}>
+    <div>
       <ButtonWithModal
         buttonContent={<Gear />}
         renderModal={renderModal}
         ariaLabel={`Edit ${pageName} Page Settings`}
-        disabled={disabled}
         buttonClassName="text-gray-800 disabled:text-gray-400"
       />
-      {disabled && (
-        <Tooltip
-          anchorId={tooltipAnchorID}
-          content="No settings available to edit via the UI."
-        />
-      )}
     </div>
   );
 }
 
-function getUrlDisplayValue(
+export function getUrlDisplayValue(
   getPathValue: GetPathVal | undefined,
   isEntityPage: boolean
 ): string {

@@ -35,13 +35,8 @@ export default class GetPathWriter {
       ExpressionHelpers.usesExpressionSource(getPathValue.value, "document");
 
     const getPathFunction = this.getPathParser.findGetPathFunction();
-    if (getPathFunction) {
-      const stringNode = this.getPathParser.getReturnStringNode();
-      if (!stringNode) {
-        throw new Error(
-          "Error updating getPath function: unable to find returned string node."
-        );
-      }
+    const stringNode = this.getPathParser.getReturnStringNode();
+    if (getPathFunction && stringNode) {
       stringNode.replaceWithText(stringNodeText);
       usesDocument && this.pagesJsWriter.addTemplateParameter(getPathFunction);
     } else {

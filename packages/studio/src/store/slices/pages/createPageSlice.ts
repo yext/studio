@@ -77,12 +77,13 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         const originalPagesJsState = store.pages[pageName].pagesJS;
         const originalGetPathValue = originalPagesJsState?.getPathValue;
         if (!originalGetPathValue) {
-          throw new Error(
-            "Error updating getPath value: unable to parse original getPath value."
-          );
+          store.pages[pageName].pagesJS = {
+            ...originalPagesJsState,
+            getPathValue,
+          };
+          store.pendingChanges.pagesToUpdate.add(pageName);
         }
-
-        if (
+        else if (
           PropValueHelpers.getTemplateExpression(originalGetPathValue) !==
           PropValueHelpers.getTemplateExpression(getPathValue)
         ) {

@@ -9,7 +9,7 @@ export type FormData<T extends Form> = {
   [field in keyof T]: {
     description: string;
     optional?: boolean;
-    hidden?: boolean;
+    placeholder?: string
   };
 };
 
@@ -97,7 +97,7 @@ export default function FormModal<T extends Form>({
             field={field}
             description={formData[field].description}
             value={val}
-            hidden={formData[field].hidden}
+            placeholder={formData[field].placeholder}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
           />
@@ -144,14 +144,14 @@ function FormField({
   field,
   description,
   value,
-  hidden,
+  placeholder,
   updateFormField,
   transformOnChangeValue,
 }: {
   field: string;
   description: string;
   value: string;
-  hidden?: boolean;
+  placeholder?: string;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -164,16 +164,15 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
-  const inputType = hidden ? "hidden" : "text";
 
   return (
     <>
       <label htmlFor={inputId}>{description}</label>
-      <span role="status" className="text-red-300" hidden={!hidden}> No settings available to edit via the UI.<br /><br /></span>
       <input
         id={inputId}
-        type={inputType}
+        type={"text"}
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
+        placeholder={placeholder}
         value={value}
         onChange={handleChange}
       />

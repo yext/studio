@@ -116,15 +116,6 @@ it("updates getPath value with square and curly bracket expression", async () =>
   });
 });
 
-it("disables the button and has a tooltip when static page's getPath value is undefined", () => {
-  render(<PageSettingsButton pageName="index" />);
-  const pageSettingsButton = screen.getByRole("button");
-  expect(pageSettingsButton).toBeDisabled();
-  expect(screen.getByRole("tooltip")).toHaveTextContent(
-    "No settings available to edit via the UI."
-  );
-});
-
 it("displays the correct stream scope when modal opens", async () => {
   render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
@@ -137,7 +128,7 @@ it("displays the correct stream scope when modal opens", async () => {
   expect(savedFilterIDsTextbox).toHaveValue("banana");
 });
 
-it("updates the stream scope with user input", async () => {
+it("updates the stream scope with user input when entity page's getPath value is undefined", async () => {
   const updateStreamScopeSpy = jest.spyOn(
     useStudioStore.getState().pages,
     "updateStreamScope"
@@ -161,10 +152,22 @@ it("updates the stream scope with user input", async () => {
   expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
 });
 
-it("disables url input with message if entity page's getPath is undefined", async () => {
-  render(<PageSettingsButton pageName="fruits" />);
+it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
+  const updateGetPathValueSpy = jest.spyOn(
+    useStudioStore.getState().pages,
+    "updateGetPathValue"
+  );
+  render(<PageSettingsButton pageName="index" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const urlStatus = screen.getByRole("status");
-  expect(urlStatus).toHaveTextContent("No settings available to edit via the UI.")
+  const urlTextbox = screen.getByPlaceholderText("URL slug is defined by developer");
+  await userEvent.type(urlTextbox, "test-url");
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  await userEvent.click(saveButton);
+  expect(updateGetPathValueSpy).toBeCalledWith("index", {
+    kind: PropValueKind.Literal,
+    value: "test-url",
+  });
+  await userEvent.click(pageSettingsButton);
+  expect(urlTextbox).toHaveValue("test-url");
 });
