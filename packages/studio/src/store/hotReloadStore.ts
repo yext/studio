@@ -12,6 +12,7 @@ export default function hotReloadStore(payload: StudioHMRPayload) {
     case "components":
     case "modules":
       syncFileMetadata(studioData);
+      syncPages(studioData);
       break;
     case "pages":
       syncPages(studioData);
