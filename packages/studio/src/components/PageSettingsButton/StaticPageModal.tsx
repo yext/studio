@@ -3,13 +3,12 @@ import { useCallback, useMemo } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import { PageSettingsModalProps } from "./PageSettingsButton";
-import { getUrlDisplayValue } from "./GetUrlDisplayValue";
 
 export type StaticPageSettings = {
   url: string;
 };
 
-export default function StaticModal({
+export default function StaticPageModal({
   pageName,
   isOpen,
   handleClose,
@@ -20,7 +19,7 @@ export default function StaticModal({
   ]);
 
   const initialFormValue: StaticPageSettings = useMemo(
-    () => ({ url: getUrlDisplayValue(currGetPathValue, false) }),
+    () => ({ url: currGetPathValue?.value ?? "" }),
     [currGetPathValue]
   );
 
@@ -29,7 +28,7 @@ export default function StaticModal({
       url: {
         description: "URL slug:",
         optional: !currGetPathValue,
-        placeholder: currGetPathValue ? "" : "URL slug is defined by developer",
+        placeholder: currGetPathValue ? "" : "<URL slug is defined by developer>",
       },
     }),
     [currGetPathValue]
@@ -56,7 +55,6 @@ export default function StaticModal({
       requireChangesToSubmit={true}
       handleClose={handleClose}
       handleConfirm={handleModalSave}
-      transformOnChangeValue={undefined}
     />
   );
 }

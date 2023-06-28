@@ -163,12 +163,12 @@ it("updates the stream scope with user input when entity page's getPath value is
   expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
 });
 
-it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
+async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
   const updateGetPathValueSpy = jest.spyOn(
     useStudioStore.getState().pages,
     "updateGetPathValue"
   );
-  render(<PageSettingsButton pageName="index" />);
+  render(<PageSettingsButton pageName={pageName} />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlTextbox = screen.getByPlaceholderText(
@@ -177,10 +177,18 @@ it("displays URL placeholder and can edit URL when static page's getPath value i
   await userEvent.type(urlTextbox, "test-url");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  expect(updateGetPathValueSpy).toBeCalledWith("index", {
-    kind: PropValueKind.Literal,
+  expect(updateGetPathValueSpy).toBeCalledWith(pageName, {
+    kind: isEntityPage ? PropValueKind.Expression : PropValueKind.Literal,
     value: "test-url",
   });
   await userEvent.click(pageSettingsButton);
   expect(urlTextbox).toHaveValue("test-url");
+}
+
+it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
+  await editUndefinedURL("index", false);
+});
+
+it("displays URL placeholder and can edit URL when entity page's getPath value is undefined", async() => {
+  await editUndefinedURL("fruits", true);
 });

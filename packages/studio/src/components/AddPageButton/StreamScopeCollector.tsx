@@ -2,7 +2,7 @@ import { useCallback, useContext } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { FlowStepModalProps } from "./FlowStep";
 import AddPageContext from "./AddPageContext";
-import StreamScopeFormatter, {
+import StreamScopeParser, {
   StreamScopeForm,
 } from "../../utils/StreamScopeParser";
 
@@ -30,7 +30,7 @@ export default function StreamScopeCollector({
 
   const onConfirm = useCallback(
     async (data: StreamScopeForm) => {
-      const streamScope = StreamScopeFormatter.parseStreamScope(data);
+      const streamScope = StreamScopeParser.parseStreamScope(data);
       actions.setStreamScope(streamScope);
       await handleConfirm();
       return true;

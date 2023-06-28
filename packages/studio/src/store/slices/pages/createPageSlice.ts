@@ -76,13 +76,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       set((store) => {
         const originalPagesJsState = store.pages[pageName].pagesJS;
         const originalGetPathValue = originalPagesJsState?.getPathValue;
-        if (!originalGetPathValue) {
-          store.pages[pageName].pagesJS = {
-            ...originalPagesJsState,
-            getPathValue,
-          };
-          store.pendingChanges.pagesToUpdate.add(pageName);
-        } else if (
+        if (
+          !originalGetPathValue || 
           PropValueHelpers.getTemplateExpression(originalGetPathValue) !==
           PropValueHelpers.getTemplateExpression(getPathValue)
         ) {

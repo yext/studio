@@ -4,8 +4,8 @@ import { useCallback } from "react";
 import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";
-import StaticModal from "./StaticModal";
-import EntityModal from "./EntityModal";
+import StaticPageModal from "./StaticPageModal";
+import EntityPageModal from "./EntityPageModal";
 
 export interface PageSettingsModalProps {
   pageName: string;
@@ -28,29 +28,19 @@ export default function PageSettingsButton({
   const [streamScope] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.streamScope,
   ]);
-  const isEntityPage = !!streamScope;
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      if (isEntityPage) {
-        return (
-          <EntityModal
-            pageName={pageName}
-            isOpen={isOpen}
-            handleClose={handleClose}
-          />
-        );
-      } else {
-        return (
-          <StaticModal
-            pageName={pageName}
-            isOpen={isOpen}
-            handleClose={handleClose}
-          />
-        );
-      }
+      const PageSettingsModal = !!streamScope ? EntityPageModal : StaticPageModal;
+      return (
+        <PageSettingsModal
+          pageName={pageName}
+          isOpen={isOpen}
+          handleClose={handleClose}
+        /> 
+      )
     },
-    [isEntityPage, pageName]
+    [streamScope, pageName]
   );
 
   return (
@@ -58,7 +48,7 @@ export default function PageSettingsButton({
       buttonContent={<Gear />}
       renderModal={renderModal}
       ariaLabel={`Edit ${pageName} Page Settings`}
-      buttonClassName="text-gray-800 disabled:text-gray-400"
+      buttonClassName="text-gray-800"
     />
   );
 }

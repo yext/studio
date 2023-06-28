@@ -3,16 +3,16 @@ import { useCallback, useMemo } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
-import StreamScopeFormatter, {
+import PropValueHelpers from "../../utils/PropValueHelpers";
+import StreamScopeParser, {
   StreamScopeForm,
 } from "../../utils/StreamScopeParser";
 import { PageSettingsModalProps } from "./PageSettingsButton";
-import { StaticPageSettings } from "./StaticModal";
-import { getUrlDisplayValue } from "./GetUrlDisplayValue";
+import { StaticPageSettings } from "./StaticPageModal";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
-export default function EntityModal({
+export default function EntityPageModal({
   pageName,
   isOpen,
   handleClose,
@@ -27,8 +27,8 @@ export default function EntityModal({
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
-      url: getUrlDisplayValue(currGetPathValue, true),
-      ...(streamScope && StreamScopeFormatter.displayStreamScope(streamScope)),
+      url: getUrlDisplayValue(currGetPathValue),
+      ...(streamScope && StreamScopeParser.displayStreamScope(streamScope)),
     }),
     [currGetPathValue, streamScope]
   );
@@ -38,7 +38,7 @@ export default function EntityModal({
       url: {
         description: "URL slug:",
         optional: !currGetPathValue,
-        placeholder: currGetPathValue ? "" : "URL slug is defined by developer",
+        placeholder: currGetPathValue ? "" : "<URL slug is defined by developer>",
       },
       entityIds: {
         description: "Entity IDs:",
@@ -65,7 +65,7 @@ export default function EntityModal({
       if (form.url || currGetPathValue) {
         updateGetPathValue(pageName, getPathValue);
       }
-      updateStreamScope(pageName, StreamScopeFormatter.parseStreamScope(form));
+      updateStreamScope(pageName, StreamScopeParser.parseStreamScope(form));
       return true;
     },
     [updateGetPathValue, updateStreamScope, currGetPathValue, pageName]
@@ -85,5 +85,16 @@ export default function EntityModal({
         TemplateExpressionFormatter.convertCurlyBracesToSquareBrackets
       }
     />
+  );
+}
+
+function getUrlDisplayValue(
+  getPathValue: GetPathVal | undefined,
+): string {
+  const getPathExpression = PropValueHelpers.getTemplateExpression(
+    getPathValue ?? { kind: PropValueKind.Literal, value: "" }
+  );
+  return TemplateExpressionFormatter.getTemplateStringDisplayValue(
+    getPathExpression
   );
 }

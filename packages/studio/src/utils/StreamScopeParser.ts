@@ -2,13 +2,17 @@ import { StreamScope } from "@yext/studio-plugin";
 
 /**
  * The values in each stream scope filter are
- * separated by commas in a string to display to the user
+ * separated by commas in a string to display to the user.
  */
 export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
 };
 
-const streamScopeKeys = ["entityIds", "entityTypes",  "savedFilterIds"]
+const defaultStreamScopeDisplay : Required<StreamScopeForm> = {
+  entityIds: "",
+  entityTypes: "",
+  savedFilterIds: "",
+}
 
 export default class StreamScopeParser {
   /**
@@ -23,7 +27,7 @@ export default class StreamScopeParser {
             .map((str) => str.trim())
             .filter((str) => str)
         : [];
-      if (values.length > 0 && streamScopeKeys.includes(key)) {
+      if (values.length > 0 && key in defaultStreamScopeDisplay) {
         scope[key] = values;
       }
       return scope;
@@ -35,10 +39,10 @@ export default class StreamScopeParser {
    * Generates a StreamScopeForm to display to the user from the StreamScope object.
    */
   static displayStreamScope(scope: StreamScope): Required<StreamScopeForm> {
-    return {
-      entityIds: scope.entityIds?.join(",") ?? "",
-      entityTypes: scope.entityTypes?.join(",") ?? "",
-      savedFilterIds: scope.savedFilterIds?.join(",") ?? "",
-    };
+    const newStreamScopeForm : Required<StreamScopeForm> = Object.entries(scope).reduce((form, [key, val]) => {
+      form[key] = val.join(",");
+      return form;
+    }, {...defaultStreamScopeDisplay});
+    return newStreamScopeForm;
   }
 }
