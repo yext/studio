@@ -179,7 +179,9 @@ async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
   await userEvent.type(urlTextbox, testUrl);
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
-  const updatedUrl = isEntityPage ? TemplateExpressionFormatter.addBackticks(testUrl) : testUrl;
+  const updatedUrl = isEntityPage
+    ? TemplateExpressionFormatter.addBackticks(testUrl)
+    : testUrl;
   expect(updateGetPathValueSpy).toBeCalledWith(pageName, {
     kind: isEntityPage ? PropValueKind.Expression : PropValueKind.Literal,
     value: updatedUrl,
