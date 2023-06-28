@@ -8,11 +8,11 @@ export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
 };
 
-const defaultStreamScopeDisplay : Required<StreamScopeForm> = {
+const defaultStreamScopeDisplay: Required<StreamScopeForm> = {
   entityIds: "",
   entityTypes: "",
   savedFilterIds: "",
-}
+};
 
 export default class StreamScopeParser {
   /**
@@ -39,10 +39,15 @@ export default class StreamScopeParser {
    * Generates a StreamScopeForm to display to the user from the StreamScope object.
    */
   static displayStreamScope(scope: StreamScope): Required<StreamScopeForm> {
-    const newStreamScopeForm : Required<StreamScopeForm> = Object.entries(scope).reduce((form, [key, val]) => {
-      form[key] = val.join(",");
-      return form;
-    }, {...defaultStreamScopeDisplay});
+    const newStreamScopeForm: Required<StreamScopeForm> = Object.entries(
+      scope
+    ).reduce(
+      (form, [key, val]) => {
+        form[key] = val.join(",");
+        return form;
+      },
+      { ...defaultStreamScopeDisplay }
+    );
     return newStreamScopeForm;
   }
 }

@@ -31,14 +31,16 @@ export default function PageSettingsButton({
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      const PageSettingsModal = !!streamScope ? EntityPageModal : StaticPageModal;
+      const PageSettingsModal = !!streamScope
+        ? EntityPageModal
+        : StaticPageModal;
       return (
         <PageSettingsModal
           pageName={pageName}
           isOpen={isOpen}
           handleClose={handleClose}
-        /> 
-      )
+        />
+      );
     },
     [streamScope, pageName]
   );
