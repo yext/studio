@@ -24,11 +24,14 @@ export default function EntityPageModal({
       store.pages.pages[pageName].pagesJS?.streamScope,
       store.pages.updateStreamScope,
     ]);
+  if(!streamScope) {
+    return <></>;
+  }
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
       url: getUrlDisplayValue(currGetPathValue),
-      ...(streamScope && StreamScopeParser.convertStreamScopeToForm(streamScope)),
+      ...StreamScopeParser.convertStreamScopeToForm(streamScope),
     }),
     [currGetPathValue, streamScope]
   );
