@@ -38,7 +38,9 @@ export default function EntityPageModal({
       url: {
         description: "URL slug:",
         optional: !currGetPathValue,
-        placeholder: currGetPathValue ? "" : "<URL slug is defined by developer>",
+        placeholder: currGetPathValue
+          ? ""
+          : "<URL slug is defined by developer>",
       },
       entityIds: {
         description: "Entity IDs:",
@@ -88,9 +90,7 @@ export default function EntityPageModal({
   );
 }
 
-function getUrlDisplayValue(
-  getPathValue: GetPathVal | undefined,
-): string {
+function getUrlDisplayValue(getPathValue: GetPathVal | undefined): string {
   const getPathExpression = PropValueHelpers.getTemplateExpression(
     getPathValue ?? { kind: PropValueKind.Literal, value: "" }
   );

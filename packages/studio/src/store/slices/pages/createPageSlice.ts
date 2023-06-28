@@ -77,9 +77,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         const originalPagesJsState = store.pages[pageName].pagesJS;
         const originalGetPathValue = originalPagesJsState?.getPathValue;
         if (
-          !originalGetPathValue || 
+          !originalGetPathValue ||
           PropValueHelpers.getTemplateExpression(originalGetPathValue) !==
-          PropValueHelpers.getTemplateExpression(getPathValue)
+            PropValueHelpers.getTemplateExpression(getPathValue)
         ) {
           store.pages[pageName].pagesJS = {
             ...originalPagesJsState,

@@ -189,6 +189,6 @@ it("displays URL placeholder and can edit URL when static page's getPath value i
   await editUndefinedURL("index", false);
 });
 
-it("displays URL placeholder and can edit URL when entity page's getPath value is undefined", async() => {
+it("displays URL placeholder and can edit URL when entity page's getPath value is undefined", async () => {
   await editUndefinedURL("fruits", true);
 });

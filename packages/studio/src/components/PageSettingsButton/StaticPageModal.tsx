@@ -28,7 +28,9 @@ export default function StaticPageModal({
       url: {
         description: "URL slug:",
         optional: !currGetPathValue,
-        placeholder: currGetPathValue ? "" : "<URL slug is defined by developer>",
+        placeholder: currGetPathValue
+          ? ""
+          : "<URL slug is defined by developer>",
       },
     }),
     [currGetPathValue]
