@@ -4,6 +4,7 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
+import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
 
 const basePageState: PageState = {
   componentTree: [],
@@ -172,17 +173,19 @@ async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlTextbox = screen.getByPlaceholderText(
-    "URL slug is defined by developer"
+    "<URL slug is defined by developer>"
   );
-  await userEvent.type(urlTextbox, "test-url");
+  const testUrl = "test-url";
+  await userEvent.type(urlTextbox, testUrl);
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
+  const updatedUrl = isEntityPage ? TemplateExpressionFormatter.addBackticks(testUrl) : testUrl;
   expect(updateGetPathValueSpy).toBeCalledWith(pageName, {
     kind: isEntityPage ? PropValueKind.Expression : PropValueKind.Literal,
-    value: "test-url",
+    value: updatedUrl,
   });
   await userEvent.click(pageSettingsButton);
-  expect(urlTextbox).toHaveValue("test-url");
+  expect(urlTextbox).toHaveValue(testUrl);
 }
 
 it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
