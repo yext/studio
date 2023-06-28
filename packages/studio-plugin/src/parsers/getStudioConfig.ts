@@ -54,7 +54,7 @@ async function getStudioConfigInternal(
 /**
  * Imports the Studio Config at the specified filepath.
  *
- * @param filepath - An absolute path to the location of the Studio Config.
+ * @param absFilepath - An absolute path to the location of the Studio Config.
  * @throws {@link ParsingError|FileIOError}
  */
 async function importExistingConfig(
