@@ -40,7 +40,7 @@ beforeEach(() => {
 });
 
 it("renders Components on load", () => {
-  render(<AddElementMenu closeMenu={closeMenu}/>);
+  render(<AddElementMenu closeMenu={closeMenu} />);
   expect(screen.getByText("Mock-Component")).toBeDefined();
   expect(screen.queryByText("Mock-Container")).toBeNull();
   expect(screen.queryByText("Mock-Module")).toBeNull();
@@ -48,7 +48,7 @@ it("renders Components on load", () => {
 });
 
 it("can add a component to the tree", async () => {
-  render(<AddElementMenu closeMenu={closeMenu}/>);
+  render(<AddElementMenu closeMenu={closeMenu} />);
   await userEvent.click(screen.getByText("Mock-Component"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
@@ -63,7 +63,7 @@ it("can add a component to the tree", async () => {
 });
 
 it("can switch to Containers", async () => {
-  render(<AddElementMenu closeMenu={closeMenu}/>);
+  render(<AddElementMenu closeMenu={closeMenu} />);
   await userEvent.click(screen.getByText("Containers"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.getByText("Mock-Container")).toBeDefined();
@@ -72,7 +72,7 @@ it("can switch to Containers", async () => {
 });
 
 it("can add a container to the tree", async () => {
-  render(<AddElementMenu closeMenu={closeMenu}/>);
+  render(<AddElementMenu closeMenu={closeMenu} />);
   await userEvent.click(screen.getByText("Containers"));
   await userEvent.click(screen.getByText("Mock-Container"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
@@ -88,7 +88,7 @@ it("can add a container to the tree", async () => {
 });
 
 it("can switch to Modules", async () => {
-  render(<AddElementMenu closeMenu={closeMenu}/>);
+  render(<AddElementMenu closeMenu={closeMenu} />);
   await userEvent.click(screen.getByText("Modules"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.queryByText("Mock-Container")).toBeNull();
@@ -97,7 +97,7 @@ it("can switch to Modules", async () => {
 });
 
 it("can add a module to the tree", async () => {
-  render(<AddElementMenu closeMenu={closeMenu}/>);
+  render(<AddElementMenu closeMenu={closeMenu} />);
   await userEvent.click(screen.getByText("Modules"));
   await userEvent.click(screen.getByText("Mock-Module"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
