@@ -278,7 +278,7 @@ export default class StudioActions {
     }
     const pagesPath = this.getStudioConfig().paths.pages;
     const filepath = path.join(pagesPath, pageName + ".tsx");
-    if (!path.isAbsolute(filepath) || !filepath.startsWith(pagesPath)) {
+    if (!filepath.startsWith(pagesPath)) {
       throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
     const errorChars = pageName.match(/[\\/?%*:|"<>]/g);

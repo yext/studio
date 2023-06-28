@@ -1,4 +1,5 @@
 import getImportSpecifier from "../../src/utils/getImportSpecifier";
+import path from "path";
 
 it("can import between two module files in the same directory", () => {
   const baseFile = "/src/modules/BaseFile.tsx";
@@ -10,6 +11,6 @@ it("can import files in separate folders", () => {
   const baseFile = "/a/b/BaseFile.tsx";
   const toBeImported = "/c/d/NewModule.tsx";
   expect(getImportSpecifier(baseFile, toBeImported)).toEqual(
-    "../../c/d/NewModule"
+    path.normalize("../../c/d/NewModule")
   );
 });

@@ -8,10 +8,25 @@ on:
 
 jobs:
   unit_tests:
-    uses: yext/slapshot-reusable-workflows/.github/workflows/run_tests.yml@v1
-    with:
-      node_matrix: '["16.x", "18.x", "19.x"]'
-      build_script: "npm run build -w=packages/studio-plugin"
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        node-version: [16.x, 18.x, 19.x]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: "https://registry.npmjs.org"
+      - run: npm ci --ignore-scripts
+      - run: npm rebuild
+      - run: npm run build -w=packages/studio-plugin
+      - run: npm test -w=packages/studio-plugin
+      - run: npm test -w=packages/studio
+        if: success() || failure()
 
   test_build:
     strategy:
