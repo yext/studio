@@ -25,13 +25,13 @@ interface PageSettingsButtonProps {
 export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
-  const [streamScope] = useStudioStore((store) => [
-    store.pages.pages[pageName].pagesJS?.streamScope,
+  const [isEntityPage] = useStudioStore((store) => [
+    !!store.pages.pages[pageName].pagesJS?.streamScope,
   ]);
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      const PageSettingsModal = !!streamScope
+      const PageSettingsModal = isEntityPage
         ? EntityPageModal
         : StaticPageModal;
       return (
@@ -42,7 +42,7 @@ export default function PageSettingsButton({
         />
       );
     },
-    [streamScope, pageName]
+    [isEntityPage, pageName]
   );
 
   return (
