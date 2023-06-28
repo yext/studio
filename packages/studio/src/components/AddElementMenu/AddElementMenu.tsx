@@ -1,9 +1,9 @@
 import { useState } from "react";
-import AddElementsList from "./AddElementsList";
+import ElementSelector from "./ElementSelector";
 import { useCallback } from "react";
 import renderIconForType from "../common/renderIconForType";
 import useStudioStore from "../../store/useStudioStore";
-import { FileMetadataKind } from "@yext/studio-plugin";
+import { FileMetadataKind, ValidFileMetadata } from "@yext/studio-plugin";
 
 export enum ElementType {
   Components = "Components",
@@ -13,13 +13,28 @@ export enum ElementType {
 /**
  * A menu for adding elements to the page.
  */
-export default function AddElementMenu(): JSX.Element {
+export default function AddElementMenu({
+  closeMenu,
+}: {
+  closeMenu: () => void;
+}): JSX.Element {
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
+
+  const addComponent = useStudioStore((store) => {
+    return store.actions.addComponent;
+  });
+  const onElementSelect = useCallback(
+    (metadata: ValidFileMetadata) => {
+      addComponent(metadata);
+      closeMenu();
+    },
+    [addComponent, closeMenu]
+  );
 
   return (
     <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
       <ElementTypeSwitcher activeType={activeType} setType={setType} />
-      <AddElementsList activeType={activeType} />
+      <ElementSelector activeType={activeType} onSelect={onElementSelect} />
     </div>
   );
 }

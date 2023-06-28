@@ -4,15 +4,18 @@ import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
 import renderIconForType from "../common/renderIconForType";
+interface ElementSelectorProps {
+  activeType: ElementType;
+  onSelect: (metadata: ValidFileMetadata) => void;
+}
 
 /**
  * The list of available, addable elements for the current activeType.
  */
-export default function AddElementsList({
+export default function ElementSelector({
   activeType,
-}: {
-  activeType: ElementType;
-}) {
+  onSelect,
+}: ElementSelectorProps) {
   const UUIDToFileMetadata = useStudioStore((store) => {
     return store.fileMetadatas.UUIDToFileMetadata;
   });
@@ -51,6 +54,7 @@ export default function AddElementsList({
             metadata={metadata}
             activeType={activeType}
             key={metadata.metadataUUID}
+            onSelect={onSelect}
           />
         );
       })}
@@ -61,21 +65,20 @@ export default function AddElementsList({
 function Option({
   metadata,
   activeType,
+  onSelect,
 }: {
   metadata: ValidFileMetadata;
   activeType: ElementType;
+  onSelect: (metadata: ValidFileMetadata) => void;
 }) {
   const componentName = path.basename(metadata.filepath, ".tsx");
   const moduleMetadataBeingEdited = useStudioStore((store) =>
     store.actions.getModuleMetadataBeingEdited()
   );
-  const addComponent = useStudioStore((store) => {
-    return store.actions.addComponent;
-  });
 
-  const handleClick = useCallback(() => {
-    addComponent(metadata);
-  }, [addComponent, metadata]);
+  const handleSelect = useCallback(() => {
+    onSelect(metadata);
+  }, [onSelect, metadata]);
 
   // Prevent users from adding infinite looping modules.
   const isSameAsActiveModule =
@@ -84,7 +87,7 @@ function Option({
   return (
     <button
       className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 disabled:opacity-25 w-full text-left"
-      onClick={handleClick}
+      onClick={handleSelect}
       aria-label={`Add ${componentName} Element`}
       disabled={isSameAsActiveModule}
     >

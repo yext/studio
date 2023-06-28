@@ -6,7 +6,9 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockActivePage from "../__utils__/mockActivePage";
 import mockStore from "../__utils__/mockStore";
 
+const closeMenu = jest.fn();
 beforeEach(() => {
+  closeMenu.mockReset();
   mockActivePage({
     componentTree: [],
     filepath: "",
@@ -38,14 +40,15 @@ beforeEach(() => {
 });
 
 it("renders Components on load", () => {
-  render(<AddElementMenu />);
+  render(<AddElementMenu closeMenu={closeMenu}/>);
   expect(screen.getByText("Mock-Component")).toBeDefined();
   expect(screen.queryByText("Mock-Container")).toBeNull();
   expect(screen.queryByText("Mock-Module")).toBeNull();
+  expect(closeMenu).not.toBeCalled();
 });
 
 it("can add a component to the tree", async () => {
-  render(<AddElementMenu />);
+  render(<AddElementMenu closeMenu={closeMenu}/>);
   await userEvent.click(screen.getByText("Mock-Component"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
@@ -56,18 +59,20 @@ it("can add a component to the tree", async () => {
       uuid: expect.any(String),
     },
   ]);
+  expect(closeMenu).toHaveBeenCalled();
 });
 
 it("can switch to Containers", async () => {
-  render(<AddElementMenu />);
+  render(<AddElementMenu closeMenu={closeMenu}/>);
   await userEvent.click(screen.getByText("Containers"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.getByText("Mock-Container")).toBeDefined();
   expect(screen.queryByText("Mock-Module")).toBeNull();
+  expect(closeMenu).not.toBeCalled();
 });
 
 it("can add a container to the tree", async () => {
-  render(<AddElementMenu />);
+  render(<AddElementMenu closeMenu={closeMenu}/>);
   await userEvent.click(screen.getByText("Containers"));
   await userEvent.click(screen.getByText("Mock-Container"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
@@ -79,18 +84,20 @@ it("can add a container to the tree", async () => {
       uuid: expect.any(String),
     },
   ]);
+  expect(closeMenu).toBeCalled();
 });
 
 it("can switch to Modules", async () => {
-  render(<AddElementMenu />);
+  render(<AddElementMenu closeMenu={closeMenu}/>);
   await userEvent.click(screen.getByText("Modules"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.queryByText("Mock-Container")).toBeNull();
   expect(screen.getByText("Mock-Module")).toBeDefined();
+  expect(closeMenu).not.toBeCalled();
 });
 
 it("can add a module to the tree", async () => {
-  render(<AddElementMenu />);
+  render(<AddElementMenu closeMenu={closeMenu}/>);
   await userEvent.click(screen.getByText("Modules"));
   await userEvent.click(screen.getByText("Mock-Module"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
@@ -102,4 +109,5 @@ it("can add a module to the tree", async () => {
       uuid: expect.any(String),
     },
   ]);
+  expect(closeMenu).toBeCalled();
 });
