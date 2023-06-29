@@ -129,7 +129,7 @@ describe("updateGetPathValue", () => {
           ...pages["universal"],
           pagesJS: {
             getPathValue: undefined,
-          }
+          },
         },
       },
     });
@@ -154,10 +154,11 @@ describe("updateGetPathValue", () => {
         },
       },
     });
-    const action = () => useStudioStore.getState().pages.updateGetPathValue("universal", {
-      kind: PropValueKind.Literal,
-      value: "index",
-    });
+    const action = () =>
+      useStudioStore.getState().pages.updateGetPathValue("universal", {
+        kind: PropValueKind.Literal,
+        value: "index",
+      });
     expect(action).toThrowError(
       `Error updating getPath value: "universal" is not a PagesJS page.`
     );
