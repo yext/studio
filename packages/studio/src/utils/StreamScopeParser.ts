@@ -22,11 +22,9 @@ export default class StreamScopeParser {
   static parseStreamScope(form: StreamScopeForm): StreamScope {
     const newStreamScope = Object.entries(form).reduce((scope, [key, val]) => {
       const values = val
-        ? val
-            .split(",")
-            .map((str) => str.trim())
-            .filter((str) => str)
-        : [];
+        .split(",")
+        .map((str) => str.trim())
+        .filter((str) => str);
       if (values.length > 0 && key in defaultStreamScopeDisplay) {
         scope[key] = values;
       }
@@ -36,13 +34,14 @@ export default class StreamScopeParser {
   }
 
   /**
-   * Generates a StreamScopeForm to display to the user from the StreamScope object.
+   * Generates a StreamScopeForm to display to the user from 
+   * a StreamScope object.
    */
   static convertStreamScopeToForm(
     scope: StreamScope | undefined
   ): Required<StreamScopeForm> {
     if (!scope) {
-      return {...defaultStreamScopeDisplay};
+      return defaultStreamScopeDisplay;
     }
     const newStreamScopeForm: Required<StreamScopeForm> = Object.entries(
       scope

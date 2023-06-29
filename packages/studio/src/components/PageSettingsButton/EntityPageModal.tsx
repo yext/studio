@@ -12,6 +12,11 @@ import { StaticPageSettings } from "./StaticPageModal";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
+/**
+ * EntityPageModal is a form modal that displays the page settings
+ * for an entity page and allows editing of these settings 
+ * (URL slug and stream scope). 
+ */
 export default function EntityPageModal({
   pageName,
   isOpen,
@@ -77,7 +82,7 @@ export default function EntityPageModal({
     <FormModal
       isOpen={isOpen}
       title="Page Settings"
-      instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may cause entity data to be undefined."
+      instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may result in entity data references being invalid or out of date."
       formData={entityFormData}
       initialFormValue={initialFormValue}
       requireChangesToSubmit={true}

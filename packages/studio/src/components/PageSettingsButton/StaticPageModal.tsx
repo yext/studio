@@ -8,6 +8,10 @@ export type StaticPageSettings = {
   url: string;
 };
 
+/**
+ * StaticPageModal is a form modal that displays the page settings
+ * for a static page and allows editing of these settings (URL slug). 
+ */
 export default function StaticPageModal({
   pageName,
   isOpen,
