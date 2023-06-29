@@ -96,7 +96,6 @@ export default class StudioPlaywrightPage {
         name: `Add ${elementName} Element`,
       })
       .click();
-    await this.addElementButton.click();
   }
 
   async removeElement(elementName: string, index?: number) {

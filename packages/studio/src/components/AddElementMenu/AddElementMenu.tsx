@@ -1,5 +1,5 @@
 import { useState } from "react";
-import AddElementsList from "./AddElementsList";
+import ElementSelector from "./ElementSelector";
 import { useCallback } from "react";
 import renderIconForType from "../common/renderIconForType";
 import useStudioStore from "../../store/useStudioStore";
@@ -13,13 +13,17 @@ export enum ElementType {
 /**
  * A menu for adding elements to the page.
  */
-export default function AddElementMenu(): JSX.Element {
+export default function AddElementMenu({
+  closeMenu,
+}: {
+  closeMenu: () => void;
+}): JSX.Element {
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
 
   return (
     <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
       <ElementTypeSwitcher activeType={activeType} setType={setType} />
-      <AddElementsList activeType={activeType} />
+      <ElementSelector activeType={activeType} afterSelect={closeMenu} />
     </div>
   );
 }

@@ -12,8 +12,9 @@ export default function AddElementButton(): JSX.Element | null {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const handleClose = useCallback(() => setIsOpen(false), []);
   useRootClose(containerRef, () => {
-    setIsOpen(false);
+    handleClose();
   });
   const handleClick = useCallback(() => setIsOpen(!isOpen), [isOpen]);
 
@@ -38,7 +39,7 @@ export default function AddElementButton(): JSX.Element | null {
         <AddIcon />
         Insert
       </button>
-      {isOpen && <AddElementMenu />}
+      {isOpen && <AddElementMenu closeMenu={handleClose} />}
     </div>
   );
 }
