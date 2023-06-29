@@ -1,4 +1,5 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { Tooltip } from "react-tooltip";
 import Modal from "./Modal";
 
 type Form = {
@@ -10,6 +11,7 @@ export type FormData<T extends Form> = {
     description: string;
     optional?: boolean;
     placeholder?: string;
+    tooltip?: string;
   };
 };
 
@@ -98,6 +100,7 @@ export default function FormModal<T extends Form>({
             description={formData[field].description}
             value={val}
             placeholder={formData[field].placeholder}
+            tooltip={formData[field].tooltip}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
           />
@@ -145,6 +148,7 @@ function FormField({
   description,
   value,
   placeholder,
+  tooltip,
   updateFormField,
   transformOnChangeValue,
 }: {
@@ -152,6 +156,7 @@ function FormField({
   description: string;
   value: string;
   placeholder?: string;
+  tooltip?: string;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -164,10 +169,11 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
+  const labelId = `${field}-label`
 
   return (
     <>
-      <label htmlFor={inputId}>{description}</label>
+      <label id={labelId} htmlFor={inputId}>{description}</label>
       <input
         id={inputId}
         type="text"
@@ -176,6 +182,10 @@ function FormField({
         value={value}
         onChange={handleChange}
       />
+      {tooltip && <Tooltip
+        anchorId={labelId}
+        content={tooltip}
+      />}
     </>
   );
 }

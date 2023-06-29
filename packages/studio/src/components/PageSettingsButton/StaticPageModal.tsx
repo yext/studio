@@ -31,7 +31,7 @@ export default function StaticPageModal({
   const staticFormData: FormData<StaticPageSettings> = useMemo(
     () => ({
       url: {
-        description: "URL slug:",
+        description: "URL slug",
         optional: isPathUndefined,
         placeholder: isPathUndefined
           ? "<URL slug is defined by developer>"

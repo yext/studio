@@ -108,7 +108,7 @@ describe("PagesJS repo", () => {
 
       const nextButton = screen.getByRole("button", { name: "Next" });
       const entityTypesTextbox = screen.getByRole("textbox", {
-        name: "Entity Types:",
+        name: "Entity Type IDs",
       });
       await userEvent.type(entityTypesTextbox, "location, restaurant");
       await userEvent.click(nextButton);

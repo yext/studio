@@ -42,22 +42,22 @@ export default function EntityPageModal({
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
       url: {
-        description: "URL slug:",
+        description: "URL slug",
         optional: isPathUndefined,
         placeholder: isPathUndefined
           ? "<URL slug is defined by developer>"
           : "",
       },
       entityIds: {
-        description: "Entity IDs:",
+        description: "Entity IDs",
         optional: true,
       },
       entityTypes: {
-        description: "Entity Types:",
+        description: "Entity Type IDs",
         optional: true,
       },
       savedFilterIds: {
-        description: "Saved Filter IDs:",
+        description: "Saved Filter IDs",
         optional: true,
       },
     }),
@@ -83,7 +83,7 @@ export default function EntityPageModal({
     <FormModal
       isOpen={isOpen}
       title="Page Settings"
-      instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may result in entity data references being invalid or out of date."
+      instructions="Changing the scope of the stream (entity IDs, entity type IDs, and saved filter IDs) may result in entity data references being invalid or out of date."
       formData={entityFormData}
       initialFormValue={initialFormValue}
       requireChangesToSubmit={true}

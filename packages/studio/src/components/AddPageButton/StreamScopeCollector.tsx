@@ -8,16 +8,19 @@ import StreamScopeParser, {
 
 const formData: FormData<StreamScopeForm> = {
   entityIds: {
-    description: "Entity IDs:",
+    description: "Entity IDs",
     optional: true,
+    tooltip: "On Yext, navigate to Knowledge Graph > Entities.",
   },
   entityTypes: {
-    description: "Entity Types:",
+    description: "Entity Type IDs",
     optional: true,
+    tooltip: "On Yext, navigate to Knowledge Graph > Configuration > Entity Types and then select an entity type.", //TODO: this doesn't fit in the modal box
   },
   savedFilterIds: {
-    description: "Saved Filter IDs:",
+    description: "Saved Filter IDs",
     optional: true,
+    tooltip: "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.", //TODO: add this to EntityPageModal and StaticPageModal
   },
 };
 
@@ -41,9 +44,8 @@ export default function StreamScopeCollector({
   return (
     <FormModal
       isOpen={isOpen}
-      title="Specify the Stream Scope"
-      instructions="Use the optional fields below to define the scope of the
-        stream for the entity page. Values should be separated by commas."
+      title="Specify the Entities"
+      instructions="Use the optional fields below to specify which entities this page will use. Values should be separated by commas."
       formData={formData}
       closeOnConfirm={false}
       confirmButtonText="Next"

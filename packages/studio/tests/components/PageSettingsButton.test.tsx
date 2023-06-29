@@ -62,7 +62,7 @@ it("displays the original getPath value when the modal is opened", async () => {
   render(<PageSettingsButton pageName="universal" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug:" });
+  const textbox = screen.getByRole("textbox", { name: "URL slug" });
   expect(textbox).toHaveValue("index");
 });
 
@@ -70,7 +70,7 @@ it("disables the Save button if new getPath value is blank or matches original",
   render(<PageSettingsButton pageName="universal" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug:" });
+  const textbox = screen.getByRole("textbox", { name: "URL slug" });
   await userEvent.clear(textbox);
   const saveButton = screen.getByRole("button", { name: "Save" });
   expect(saveButton).toBeDisabled();
@@ -88,7 +88,7 @@ it("closes the modal when the getPath value is updated", async () => {
   render(<PageSettingsButton pageName="universal" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug:" });
+  const textbox = screen.getByRole("textbox", { name: "URL slug" });
   await userEvent.type(textbox, ".html");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
@@ -107,7 +107,7 @@ it("updates getPath value with square and curly bracket expression", async () =>
   render(<PageSettingsButton pageName="product" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug:" });
+  const textbox = screen.getByRole("textbox", { name: "URL slug" });
   expect(textbox).toHaveValue("[[slug]]");
   // userEvent treats `[` and `{` as special characters. To type each in the
   // input, the character must be doubled in the string.
@@ -124,12 +124,12 @@ it("displays the correct stream scope when modal opens", async () => {
   render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const entityIDsTextbox = screen.getByRole("textbox", { name: "Entity IDs:" });
+  const entityIDsTextbox = screen.getByRole("textbox", { name: "Entity IDs" });
   const entityTypesTextbox = screen.getByRole("textbox", {
-    name: "Entity Types:",
+    name: "Entity Type IDs",
   });
   const savedFilterIDsTextbox = screen.getByRole("textbox", {
-    name: "Saved Filter IDs:",
+    name: "Saved Filter IDs",
   });
   expect(entityIDsTextbox).toHaveValue("apple,orange");
   expect(entityTypesTextbox).toHaveValue("");
@@ -145,10 +145,10 @@ it("updates the stream scope with user input when entity page's getPath value is
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const entityTypesTextbox = screen.getByRole("textbox", {
-    name: "Entity Types:",
+    name: "Entity Type IDs",
   });
   const savedFilterIDsTextbox = screen.getByRole("textbox", {
-    name: "Saved Filter IDs:",
+    name: "Saved Filter IDs",
   });
   await userEvent.type(entityTypesTextbox, "kiwi");
   await userEvent.type(savedFilterIDsTextbox, ",pineapple");
