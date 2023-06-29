@@ -29,6 +29,7 @@ export default function EntityPageModal({
       store.pages.pages[pageName].pagesJS?.streamScope,
       store.pages.updateStreamScope,
     ]);
+  const isPathUndefined = !currGetPathValue;
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
@@ -42,10 +43,10 @@ export default function EntityPageModal({
     () => ({
       url: {
         description: "URL slug:",
-        optional: !currGetPathValue,
-        placeholder: currGetPathValue
-          ? ""
-          : "<URL slug is defined by developer>",
+        optional: isPathUndefined,
+        placeholder: isPathUndefined
+          ? "<URL slug is defined by developer>"
+          : "",
       },
       entityIds: {
         description: "Entity IDs:",
@@ -60,7 +61,7 @@ export default function EntityPageModal({
         optional: true,
       },
     }),
-    [currGetPathValue]
+    [isPathUndefined]
   );
 
   const handleModalSave = useCallback(

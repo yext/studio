@@ -21,6 +21,7 @@ export default function StaticPageModal({
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
   ]);
+  const isPathUndefined = !currGetPathValue;
 
   const initialFormValue: StaticPageSettings = useMemo(
     () => ({ url: currGetPathValue?.value ?? "" }),
@@ -31,13 +32,13 @@ export default function StaticPageModal({
     () => ({
       url: {
         description: "URL slug:",
-        optional: !currGetPathValue,
-        placeholder: currGetPathValue
-          ? ""
-          : "<URL slug is defined by developer>",
+        optional: isPathUndefined,
+        placeholder: isPathUndefined
+          ? "<URL slug is defined by developer>"
+          : "",
       },
     }),
-    [currGetPathValue]
+    [isPathUndefined]
   );
 
   const handleModalSave = useCallback(
