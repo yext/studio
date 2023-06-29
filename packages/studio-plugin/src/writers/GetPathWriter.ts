@@ -35,7 +35,8 @@ export default class GetPathWriter {
       ExpressionHelpers.usesExpressionSource(getPathValue.value, "document");
 
     const getPathFunction = this.getPathParser.findGetPathFunction();
-    const stringNode = getPathFunction && this.getPathParser.findGetPathFunction();
+    const stringNode =
+      getPathFunction && this.getPathParser.findGetPathFunction();
     if (getPathFunction && stringNode) {
       stringNode.replaceWithText(stringNodeText);
       usesDocument && this.pagesJsWriter.addTemplateParameter(getPathFunction);

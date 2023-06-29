@@ -25,8 +25,8 @@ interface PageSettingsButtonProps {
 export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
-  const isEntityPage = useStudioStore((store) => 
-    !!store.pages.pages[pageName].pagesJS?.streamScope,
+  const isEntityPage = useStudioStore(
+    (store) => !!store.pages.pages[pageName].pagesJS?.streamScope
   );
 
   const renderModal: renderModalFunction = useCallback(
