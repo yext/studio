@@ -127,7 +127,9 @@ describe("updateGetPathValue", () => {
         ...pages,
         universal: {
           ...pages["universal"],
-          pagesJS: undefined,
+          pagesJS: {
+            getPathValue: undefined,
+          }
         },
       },
     });
@@ -140,5 +142,24 @@ describe("updateGetPathValue", () => {
       kind: PropValueKind.Literal,
       value: "index",
     });
+  });
+
+  it("throws error if pagesJS state is undefined", () => {
+    mockPageSliceStates({
+      pages: {
+        ...pages,
+        universal: {
+          ...pages["universal"],
+          pagesJS: undefined,
+        },
+      },
+    });
+    const action = () => useStudioStore.getState().pages.updateGetPathValue("universal", {
+      kind: PropValueKind.Literal,
+      value: "index",
+    });
+    expect(action).toThrowError(
+      `Error updating getPath value: "universal" is not a PagesJS page.`
+    );
   });
 });
