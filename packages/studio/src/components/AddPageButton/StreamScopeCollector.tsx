@@ -15,12 +15,14 @@ const formData: FormData<StreamScopeForm> = {
   entityTypes: {
     description: "Entity Type IDs",
     optional: true,
-    tooltip: "On Yext, navigate to Knowledge Graph > Configuration > Entity Types and then select an entity type.", //TODO: this doesn't fit in the modal box
+    tooltip:
+      "On Yext, navigate to Knowledge Graph > Configuration > Entity Types and then select an entity type.", //TODO: this doesn't fit in the modal box
   },
   savedFilterIds: {
     description: "Saved Filter IDs",
     optional: true,
-    tooltip: "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.", //TODO: add this to EntityPageModal and StaticPageModal
+    tooltip:
+      "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.", //TODO: add this to EntityPageModal and StaticPageModal
   },
 };
 
