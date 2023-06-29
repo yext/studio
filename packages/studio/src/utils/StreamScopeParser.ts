@@ -39,8 +39,11 @@ export default class StreamScopeParser {
    * Generates a StreamScopeForm to display to the user from the StreamScope object.
    */
   static convertStreamScopeToForm(
-    scope: StreamScope
+    scope: StreamScope | undefined
   ): Required<StreamScopeForm> {
+    if (!scope) {
+      return {...defaultStreamScopeDisplay};
+    }
     const newStreamScopeForm: Required<StreamScopeForm> = Object.entries(
       scope
     ).reduce(
