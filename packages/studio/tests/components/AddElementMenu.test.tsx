@@ -59,7 +59,7 @@ it("can add a component to the tree", async () => {
       uuid: expect.any(String),
     },
   ]);
-  expect(closeMenu).toHaveBeenCalled();
+  expect(closeMenu).toBeCalledTimes(1);
 });
 
 it("can switch to Containers", async () => {
@@ -84,7 +84,7 @@ it("can add a container to the tree", async () => {
       uuid: expect.any(String),
     },
   ]);
-  expect(closeMenu).toBeCalled();
+  expect(closeMenu).toBeCalledTimes(1);
 });
 
 it("can switch to Modules", async () => {
@@ -109,5 +109,5 @@ it("can add a module to the tree", async () => {
       uuid: expect.any(String),
     },
   ]);
-  expect(closeMenu).toBeCalled();
+  expect(closeMenu).toBeCalledTimes(1);
 });

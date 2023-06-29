@@ -4,9 +4,10 @@ import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
 import renderIconForType from "../common/renderIconForType";
+
 interface ElementSelectorProps {
   activeType: ElementType;
-  onSelect: (metadata: ValidFileMetadata) => void;
+  afterSelect?: () => void;
 }
 
 /**
@@ -14,7 +15,7 @@ interface ElementSelectorProps {
  */
 export default function ElementSelector({
   activeType,
-  onSelect,
+  afterSelect,
 }: ElementSelectorProps) {
   const UUIDToFileMetadata = useStudioStore((store) => {
     return store.fileMetadatas.UUIDToFileMetadata;
@@ -54,7 +55,7 @@ export default function ElementSelector({
             metadata={metadata}
             activeType={activeType}
             key={metadata.metadataUUID}
-            onSelect={onSelect}
+            afterSelect={afterSelect}
           />
         );
       })}
@@ -65,20 +66,25 @@ export default function ElementSelector({
 function Option({
   metadata,
   activeType,
-  onSelect,
+  afterSelect,
 }: {
   metadata: ValidFileMetadata;
   activeType: ElementType;
-  onSelect: (metadata: ValidFileMetadata) => void;
+  afterSelect?: () => void;
 }) {
   const componentName = path.basename(metadata.filepath, ".tsx");
   const moduleMetadataBeingEdited = useStudioStore((store) =>
     store.actions.getModuleMetadataBeingEdited()
   );
 
+  const addComponent = useStudioStore((store) => {
+    return store.actions.addComponent;
+  });
+
   const handleSelect = useCallback(() => {
-    onSelect(metadata);
-  }, [onSelect, metadata]);
+    addComponent(metadata);
+    afterSelect?.();
+  }, [afterSelect, addComponent, metadata]);
 
   // Prevent users from adding infinite looping modules.
   const isSameAsActiveModule =

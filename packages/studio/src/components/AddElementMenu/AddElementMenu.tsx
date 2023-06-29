@@ -3,7 +3,7 @@ import ElementSelector from "./ElementSelector";
 import { useCallback } from "react";
 import renderIconForType from "../common/renderIconForType";
 import useStudioStore from "../../store/useStudioStore";
-import { FileMetadataKind, ValidFileMetadata } from "@yext/studio-plugin";
+import { FileMetadataKind } from "@yext/studio-plugin";
 
 export enum ElementType {
   Components = "Components",
@@ -20,21 +20,10 @@ export default function AddElementMenu({
 }): JSX.Element {
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
 
-  const addComponent = useStudioStore((store) => {
-    return store.actions.addComponent;
-  });
-  const onElementSelect = useCallback(
-    (metadata: ValidFileMetadata) => {
-      addComponent(metadata);
-      closeMenu();
-    },
-    [addComponent, closeMenu]
-  );
-
   return (
     <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
       <ElementTypeSwitcher activeType={activeType} setType={setType} />
-      <ElementSelector activeType={activeType} onSelect={onElementSelect} />
+      <ElementSelector activeType={activeType} afterSelect={closeMenu} />
     </div>
   );
 }
