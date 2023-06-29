@@ -42,7 +42,7 @@ export default class StreamScopeParser {
     scope: StreamScope | undefined
   ): Required<StreamScopeForm> {
     if (!scope) {
-      return {...defaultStreamScopeDisplay};
+      return { ...defaultStreamScopeDisplay };
     }
     const newStreamScopeForm: Required<StreamScopeForm> = Object.entries(
       scope
