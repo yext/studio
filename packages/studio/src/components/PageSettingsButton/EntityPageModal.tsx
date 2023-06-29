@@ -14,8 +14,8 @@ type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
 /**
  * EntityPageModal is a form modal that displays the page settings
- * for an entity page and allows editing of these settings 
- * (URL slug and stream scope). 
+ * for an entity page and allows editing of these settings
+ * (URL slug and stream scope).
  */
 export default function EntityPageModal({
   pageName,

@@ -34,7 +34,7 @@ export default class StreamScopeParser {
   }
 
   /**
-   * Generates a StreamScopeForm to display to the user from 
+   * Generates a StreamScopeForm to display to the user from
    * a StreamScope object.
    */
   static convertStreamScopeToForm(
