@@ -9,6 +9,7 @@ export type FormData<T extends Form> = {
   [field in keyof T]: {
     description: string;
     optional?: boolean;
+    placeholder?: string;
   };
 };
 
@@ -96,6 +97,7 @@ export default function FormModal<T extends Form>({
             field={field}
             description={formData[field].description}
             value={val}
+            placeholder={formData[field].placeholder}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
           />
@@ -142,12 +144,14 @@ function FormField({
   field,
   description,
   value,
+  placeholder,
   updateFormField,
   transformOnChangeValue,
 }: {
   field: string;
   description: string;
   value: string;
+  placeholder?: string;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -168,6 +172,7 @@ function FormField({
         id={inputId}
         type="text"
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
+        placeholder={placeholder}
         value={value}
         onChange={handleChange}
       />

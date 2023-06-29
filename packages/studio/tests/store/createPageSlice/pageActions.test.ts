@@ -121,7 +121,30 @@ describe("updateGetPathValue", () => {
     });
   });
 
-  it("throws an error if original getPathValue is undefined", () => {
+  it("updates getPathValue if original getPathValue is undefined", () => {
+    mockPageSliceStates({
+      pages: {
+        ...pages,
+        universal: {
+          ...pages["universal"],
+          pagesJS: {
+            getPathValue: undefined,
+          },
+        },
+      },
+    });
+    useStudioStore.getState().pages.updateGetPathValue("universal", {
+      kind: PropValueKind.Literal,
+      value: "index",
+    });
+    const pageState = useStudioStore.getState().pages.pages["universal"];
+    expect(pageState.pagesJS?.getPathValue).toEqual({
+      kind: PropValueKind.Literal,
+      value: "index",
+    });
+  });
+
+  it("throws error if pagesJS state is undefined", () => {
     mockPageSliceStates({
       pages: {
         ...pages,
@@ -131,13 +154,13 @@ describe("updateGetPathValue", () => {
         },
       },
     });
-    expect(() =>
+    const action = () =>
       useStudioStore.getState().pages.updateGetPathValue("universal", {
         kind: PropValueKind.Literal,
         value: "index",
-      })
-    ).toThrowError(
-      "Error updating getPath value: unable to parse original getPath value."
+      });
+    expect(action).toThrowError(
+      `Error updating getPath value: "universal" is not a PagesJS page.`
     );
   });
 });

@@ -1,4 +1,9 @@
-import { ComponentState, GetPathVal, PageState } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  GetPathVal,
+  PageState,
+  StreamScope,
+} from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import path from "path-browserify";
 import initialStudioData from "virtual_yext-studio";
@@ -70,21 +75,30 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     updateGetPathValue: (pageName: string, getPathValue: GetPathVal) => {
       set((store) => {
         const originalPagesJsState = store.pages[pageName].pagesJS;
-        const originalGetPathValue = originalPagesJsState?.getPathValue;
-        if (!originalGetPathValue) {
+        if (!originalPagesJsState) {
           throw new Error(
-            "Error updating getPath value: unable to parse original getPath value."
+            `Error updating getPath value: "${pageName}" is not a PagesJS page.`
           );
         }
-
+        const originalGetPathValue = originalPagesJsState.getPathValue;
         if (
+          !originalGetPathValue ||
           PropValueHelpers.getTemplateExpression(originalGetPathValue) !==
-          PropValueHelpers.getTemplateExpression(getPathValue)
+            PropValueHelpers.getTemplateExpression(getPathValue)
         ) {
           store.pages[pageName].pagesJS = {
             ...originalPagesJsState,
             getPathValue,
           };
+          store.pendingChanges.pagesToUpdate.add(pageName);
+        }
+      });
+    },
+    updateStreamScope: (pageName: string, newStreamScope: StreamScope) => {
+      set((store) => {
+        const pagesJS = store.pages[pageName].pagesJS;
+        if (pagesJS?.streamScope) {
+          pagesJS.streamScope = newStreamScope;
           store.pendingChanges.pagesToUpdate.add(pageName);
         }
       });

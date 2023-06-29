@@ -4,7 +4,7 @@ import classNames from "classnames";
 import { PropsWithChildren, useMemo } from "react";
 import RemovePageButton from "./RemovePageButton";
 import { Tooltip } from "react-tooltip";
-import PageSettingsButton from "./PageSettingsButton";
+import PageSettingsButton from "./PageSettingsButton/PageSettingsButton";
 
 /**
  * ActivePagePanel displays the available pages and allows the user to switch
