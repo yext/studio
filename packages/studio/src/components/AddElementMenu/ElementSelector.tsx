@@ -69,9 +69,7 @@ function Option({
   afterSelect,
 }: {
   metadata: ValidFileMetadata;
-  activeType: ElementType;
-  afterSelect?: () => void;
-}) {
+} & ElementSelectorProps) {
   const componentName = path.basename(metadata.filepath, ".tsx");
   const moduleMetadataBeingEdited = useStudioStore((store) =>
     store.actions.getModuleMetadataBeingEdited()
