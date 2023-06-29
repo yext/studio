@@ -20,16 +20,18 @@ export default class StreamScopeParser {
    * in a StreamScopeForm object.
    */
   static parseStreamScope(form: StreamScopeForm): StreamScope {
-    const newStreamScope = Object.entries(form).filter(([key]) => key in defaultStreamScopeDisplay).reduce((scope, [key, val]) => {
-      const values = val
-        .split(",")
-        .map((str) => str.trim())
-        .filter((str) => str);
-      if (values.length > 0) {
-        scope[key] = values;
-      }
-      return scope;
-    }, {} as StreamScope);
+    const newStreamScope = Object.entries(form)
+      .filter(([key]) => key in defaultStreamScopeDisplay)
+      .reduce((scope, [key, val]) => {
+        const values = val
+          .split(",")
+          .map((str) => str.trim())
+          .filter((str) => str);
+        if (values.length > 0) {
+          scope[key] = values;
+        }
+        return scope;
+      }, {} as StreamScope);
     return newStreamScope;
   }
 
