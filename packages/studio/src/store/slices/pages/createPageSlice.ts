@@ -77,7 +77,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         const originalPagesJsState = store.pages[pageName].pagesJS;
         if (!originalPagesJsState) {
           throw new Error(
-            `Page "${pageName}" is not a pagesJS page. Unable to update its path value.`
+            `Error updating getPath value: "${pageName}" is not a PagesJS page.`
           );
         }
         const originalGetPathValue = originalPagesJsState.getPathValue;
