@@ -5,7 +5,7 @@ export default function BasicPage() {
   return (
     <div>
       <Container>
-        <Banner />
+        <Banner bool={false} num={0} />
       </Container>
     </div>
   );
