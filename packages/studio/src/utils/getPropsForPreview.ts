@@ -10,7 +10,6 @@ import {
 } from "@yext/studio-plugin";
 import { get } from "lodash";
 import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
-import PropValueHelpers from "./PropValueHelpers";
 
 /**
  * Transform props' values based on PropValueKind. If a prop's value is of
@@ -47,7 +46,7 @@ function getPropValueForPreview(
   expressionSources: ExpressionSources
 ) {
   if (!propVal) {
-    return PropValueHelpers.getLiteralPropDefaultValue(propType.type);
+    return;
   } else if (propVal.kind === PropValueKind.Expression) {
     return handleExpressionProp(propVal.value, propType, expressionSources);
   } else if (propVal.valueType === PropValueType.Object) {

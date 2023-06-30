@@ -14,15 +14,20 @@ describe("getDefaultPropVal", () => {
         bool: { type: PropValueType.boolean, required: false },
         arr: {
           type: PropValueType.Array,
-          required: false,
+          required: true,
           itemType: { type: PropValueType.string },
         },
         obj: {
           type: PropValueType.Object,
           required: true,
           shape: {
-            num: { type: PropValueType.number, required: true },
-            color: { type: PropValueType.HexColor, required: false },
+            num: { type: PropValueType.number, required: false },
+            color: { type: PropValueType.HexColor, required: true },
+            union: {
+              type: PropValueType.string,
+              required: true,
+              unionValues: ["1", "2"],
+            },
           },
         },
       },
@@ -31,11 +36,6 @@ describe("getDefaultPropVal", () => {
       kind: PropValueKind.Literal,
       valueType: PropValueType.Object,
       value: {
-        bool: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.boolean,
-          value: false,
-        },
         arr: {
           kind: PropValueKind.Literal,
           valueType: PropValueType.Array,
@@ -45,15 +45,15 @@ describe("getDefaultPropVal", () => {
           kind: PropValueKind.Literal,
           valueType: PropValueType.Object,
           value: {
-            num: {
-              kind: PropValueKind.Literal,
-              valueType: PropValueType.number,
-              value: 0,
-            },
             color: {
               kind: PropValueKind.Literal,
               valueType: PropValueType.HexColor,
               value: "#FFFFFF",
+            },
+            union: {
+              kind: PropValueKind.Literal,
+              valueType: PropValueType.string,
+              value: "1",
             },
           },
         },

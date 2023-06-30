@@ -54,6 +54,7 @@ type StringUnionPropType = {
 export type NestedPropType<T extends PropValueType = PropValueType> = {
   type: PropValueType.Object;
   shape: PropShape<T>;
+  unionValues?: never;
 };
 
 export type ArrayPropType = {
