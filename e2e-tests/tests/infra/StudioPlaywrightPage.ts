@@ -48,6 +48,7 @@ export default class StudioPlaywrightPage {
     await expect(this.page).toHaveScreenshot();
     await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
     await this.typeIntoModal(basicDataModal, "Specify the URL slug:", urlSlug);
+    await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(basicDataModal, "Save");
   }
 
