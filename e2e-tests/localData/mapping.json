@@ -1,1 +1,11 @@
-{}
+{
+	"BasicPage": [
+		"cog-internal-feature-static-file-generation-BasicPage__en__cfcd208495d565ef66e7dff9f98764da.json"
+	],
+	"ErrorComponentPreviews": [
+		"cog-internal-feature-static-file-generation-ErrorComponentPreviews__en__cfcd208495d565ef66e7dff9f98764da.json"
+	],
+	"ErrorPage": [
+		"cog-internal-feature-static-file-generation-ErrorPage__en__cfcd208495d565ef66e7dff9f98764da.json"
+	]
+}

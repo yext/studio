@@ -1,4 +1,26 @@
 {
-  "features": [],
+  "features": [
+    {
+      "name": "BasicPage",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
+    },
+    {
+      "name": "ErrorComponentPreviews",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
+    },
+    {
+      "name": "ErrorPage",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
+    }
+  ],
   "streams": []
 }
