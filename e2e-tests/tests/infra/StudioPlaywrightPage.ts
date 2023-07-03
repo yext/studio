@@ -39,24 +39,49 @@ export default class StudioPlaywrightPage {
     );
   }
 
-  async addPage(pageName: string) {
+  async addStaticPage(pageName: string, urlSlug: string) {
+    const pageTypeModal = "Select Page Type";
+    const basicDataModal = "Specify Page Name and URL";
     await this.addPageButton.click();
     await expect(this.page).toHaveScreenshot();
-    await this.typeIntoModal("Add Page Modal", pageName);
+    await this.clickModalButton(pageTypeModal, "Next");
+    await expect(this.page).toHaveScreenshot();
+    await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
+    await this.typeIntoModal(basicDataModal, "Specify the URL slug:", urlSlug);
+    await this.clickModalButton(basicDataModal, "Save");
   }
 
-  private async typeIntoModal(modalName: string, text: string) {
+  private async clickModalButton(modalName: string, buttonName: string) {
     const modal = this.page.getByRole("dialog", {
       name: modalName,
     });
-    await modal.getByRole("textbox").type(text);
-    await modal.getByText("Save").click();
+    await modal
+      .getByRole("button", {
+        name: buttonName,
+      })
+      .click();
+  }
+
+  private async typeIntoModal(
+    modalName: string,
+    textboxName: string,
+    text: string
+  ) {
+    const modal = this.page.getByRole("dialog", {
+      name: modalName,
+    });
+    await modal
+      .getByRole("textbox", {
+        name: textboxName,
+      })
+      .type(text);
   }
 
   async switchPage(pageName: string) {
     await this.pagesPanel
       .getByRole("button", {
         name: pageName,
+        exact: true,
       })
       .click();
   }
