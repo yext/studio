@@ -1,4 +1,4 @@
-import BasicPage from "./pages/BasicPage";
+import BasicPage from "./templates/BasicPage";
 
 function App() {
   return (

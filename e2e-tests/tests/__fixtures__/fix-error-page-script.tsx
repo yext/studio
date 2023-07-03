@@ -1,9 +1,9 @@
 import { GetPath, TemplateProps } from "@yext/pages";
 
 export const getPath: GetPath<TemplateProps> = () => {
-  return "index.html";
+  return "error-page";
 };
 
-export default function BasicPage() {
-  return <div />;
+export default function ErrorPage() {
+  return <></>;
 }
