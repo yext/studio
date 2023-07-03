@@ -1,0 +1,98 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "UniversalPage",
+    "streamId": "my-stream-id",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Grosse Pointe Farms",
+    "countryCode": "US",
+    "line1": "107 Kercheval Avenue",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Michigan",
+    "postalCode": "48236",
+    "region": "MI"
+  },
+  "businessId": 3350634,
+  "geocodedCoordinate": {
+    "latitude": 42.395651,
+    "longitude": -82.902968
+  },
+  "hours": {
+    "friday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "monday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "saturday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "sunday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "thursday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "tuesday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "wednesday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    }
+  },
+  "id": "04368",
+  "key": "0:UniversalPage:knowledgeGraph:18715007:en",
+  "locale": "en",
+  "mainPhone": "+13138865655",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "name": "Grosse Pointe Farms",
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "uid": 18715007
+}
