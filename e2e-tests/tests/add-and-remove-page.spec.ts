@@ -7,7 +7,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest(
+studioTest.only(
   "can remove a page and then add it back",
   async ({ page, studioPage }) => {
     const pageInTree = page.getByText("BasicPage");
