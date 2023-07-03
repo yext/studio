@@ -3,11 +3,11 @@ import { studioTest } from "./infra/studioTest.js";
 import fs from "fs";
 
 const expectedPage = fs.readFileSync(
-  "./tests/__fixtures__/add-and-remove-page-expected-page.tsx",
+  "./tests/__fixtures__/add-and-remove-static-page-expected-page.tsx",
   "utf-8"
 );
 
-studioTest.only(
+studioTest(
   "can remove a page and then add it back",
   async ({ page, studioPage }) => {
     const pageInTree = page.getByText("BasicPage");
