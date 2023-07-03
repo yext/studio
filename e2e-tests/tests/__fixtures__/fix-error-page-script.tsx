@@ -4,4 +4,6 @@ export const getPath: GetPath<TemplateProps> = () => {
   return "error-page";
 };
 
-export default function ErrorPage() { return <></>; }
+export default function ErrorPage() {
+  return <></>;
+}
