@@ -8,7 +8,7 @@ const errorPageScript = fs.readFileSync(
 );
 
 studioTest("can fix an error page", async ({ page, studioPage }) => {
-  fs.writeFileSync("./src/pages/ErrorPage.tsx", errorPageScript);
+  fs.writeFileSync("./src/templates/ErrorPage.tsx", errorPageScript);
   await page.getByRole("button", { name: "ErrorPage", exact: true }).click();
   await expect(studioPage.saveButton.button).toBeDisabled();
   await expect(page).toHaveScreenshot();

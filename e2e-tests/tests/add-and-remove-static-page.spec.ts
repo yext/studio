@@ -15,7 +15,7 @@ studioTest(
     await studioPage.removePage("BasicPage");
     await expect(pageInTree).toHaveCount(0);
     await studioPage.saveButton.click();
-    expect(fs.existsSync("./src/pages/BasicPage.tsx")).toBeFalsy();
+    expect(fs.existsSync("./src/templates/BasicPage.tsx")).toBeFalsy();
     await expect(page).toHaveScreenshot();
 
     // Ensure that the page is still deleted after a browser refresh.
@@ -27,7 +27,7 @@ studioTest(
     await expect(pageInTree).toHaveCount(1);
     await expect(page).toHaveScreenshot();
     await studioPage.saveButton.click();
-    const expectedPagePath = "./src/pages/BasicPage.tsx";
+    const expectedPagePath = "./src/templates/BasicPage.tsx";
     await expect(expectedPagePath).toHaveContents(expectedPage);
     await expect(page).toHaveScreenshot();
   }
