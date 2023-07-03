@@ -45,9 +45,8 @@ export default class StudioActions {
     this.addRepeater = repeaterActions.addRepeater;
     this.removeRepeater = repeaterActions.removeRepeater;
     this.addComponent = new AddComponentAction(this).addComponent;
-    this.createComponentState = new CreateComponentStateAction(
-      getStudioConfig
-    ).createComponentState;
+    this.createComponentState =
+      new CreateComponentStateAction().createComponentState;
     this.updateActivePage = new UpdateActivePageAction(
       getPages,
       getStudioConfig

@@ -4,7 +4,7 @@ import {
   PropValueType,
   TypeGuards,
 } from "@yext/studio-plugin";
-import { ChangeEvent, useCallback, useLayoutEffect } from "react";
+import { ChangeEvent, useCallback } from "react";
 import Toggle from "./common/Toggle";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
@@ -15,7 +15,6 @@ interface PropInputProps<T = string | number | boolean> {
   propType: PropType;
   propValue?: T;
   onChange: (value: T) => void;
-  unionValues?: string[];
   propKind: PropValueKind;
 }
 
@@ -34,10 +33,9 @@ export default function PropInput({
   propType,
   propValue,
   onChange,
-  unionValues,
   propKind,
 }: PropInputProps): JSX.Element {
-  const { type } = propType;
+  const { type, unionValues } = propType;
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       const getValue = () => {
@@ -60,7 +58,7 @@ export default function PropInput({
     },
     [onChange, propKind, type]
   );
-  const displayValue = useDisplayValue(propValue, type, propKind, onChange);
+  const displayValue = getDisplayValue(propValue, propType, propKind);
 
   const appendField = useCallback(
     (fieldId: string) => {
@@ -134,18 +132,11 @@ export default function PropInput({
   }
 }
 
-function useDisplayValue(
+function getDisplayValue(
   propValue: string | number | boolean | undefined,
-  propType: PropValueType,
-  propKind: PropValueKind,
-  onChange: (value: string | number | boolean) => void
+  propType: PropType,
+  propKind: PropValueKind
 ) {
-  useLayoutEffect(() => {
-    if (propValue === undefined) {
-      onChange(PropValueHelpers.getPropInputDefaultValue(propType, propKind));
-    }
-  }, [propValue, onChange, propType, propKind]);
-
   const propValueWithDefaulting =
     propValue ?? PropValueHelpers.getPropInputDefaultValue(propType, propKind);
   if (propKind === PropValueKind.Expression) {
@@ -154,7 +145,7 @@ function useDisplayValue(
         `Only strings are supported as the value for expression props. Received: "${propValueWithDefaulting}".`
       );
     }
-    if (propType === PropValueType.string) {
+    if (propType.type === PropValueType.string) {
       return TemplateExpressionFormatter.getTemplateStringDisplayValue(
         propValueWithDefaulting
       );
