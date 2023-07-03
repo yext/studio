@@ -9,7 +9,7 @@ export const getPath: GetPath<TemplateProps> = () => {
 export default function BasicPage() {
   return (
     <>
-      <Banner />
+      <Banner bool={false} num={0} />
       <div>
         <Container />
       </div>

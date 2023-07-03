@@ -14,7 +14,7 @@ export default function BasicPage() {
       <Button className="px-4" />
       <div>
         <Container>
-          <Banner />
+          <Banner bool={false} num={0} />
         </Container>
       </div>
     </>

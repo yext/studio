@@ -32,7 +32,7 @@ export default function PropEditor({
   onPropChange,
   isNested,
 }: PropEditorProps) {
-  const { type, doc, unionValues } = propMetadata;
+  const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
 
   return (
@@ -53,7 +53,6 @@ export default function PropEditor({
             onChange,
             propKind,
           }}
-          unionValues={unionValues}
         />
       </label>
       {doc && (

@@ -12,7 +12,7 @@ export default function BasicPage() {
       <Container />
       <div>
         <Container>
-          <Banner />
+          <Banner bool={false} num={0} />
         </Container>
       </div>
     </>

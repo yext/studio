@@ -30,11 +30,10 @@ it("requires backticks for template string expressions", () => {
 it("correctly renders String Union Prop", () => {
   render(
     <PropInput
-      propType={{ type: PropValueType.string }}
+      propType={{ type: PropValueType.string, unionValues: ["a", "b", "c"] }}
       propValue="c"
       propKind={PropValueKind.Literal}
       onChange={jest.fn()}
-      unionValues={["a", "b", "c"]}
     />
   );
   expect(
