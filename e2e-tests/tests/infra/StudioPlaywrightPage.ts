@@ -118,11 +118,9 @@ export default class StudioPlaywrightPage {
     const modal = this.page.getByRole("dialog", {
       name: modalName,
     });
-    const textbox = modal.getByRole("textbox", {
+    await modal.getByRole("textbox", {
       name: textboxName,
-    });
-    await textbox.fill("");
-    await textbox.type(text);
+    }).fill(text);
   }
 
   async switchPage(pageName: string) {

@@ -8,7 +8,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest("can add an entity page", async ({ page, studioPage }) => {
+studioTest("can add an entity page and then remove it", async ({ page, studioPage }) => {
   const pageInTree = page.getByText("EntityPage");
   await expect(pageInTree).toHaveCount(0);
   await expect(page).toHaveScreenshot();
