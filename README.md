@@ -1,7 +1,3 @@
-# Studio Bug Bash
-
-Welcome to the Bug Bash for Studio! This README will help you get setup with Studio and acquaint you with its features. You can find the Issue/Enhancement Submission form [here](https://docs.google.com/forms/d/e/1FAIpQLScV8tnR7pS6DnBStRaw2CLnupd5ogOpWSHln82EdOqWg_cFMw/viewform). You can see what's already been submitted in this [Sheet](https://docs.google.com/spreadsheets/d/1YYUOtUm8qtELUlnCJ2Btb72irirRy0iHiC6Vo5uh7p0/edit?usp=sharing).
-
 ## What is Studio?
 
 Studio is a tool that lets Admins and Developers alike build React Applications with ease. For now, we're focused on Applications corresponding to a Site. But, that may change in the future. It provides a no-code, visual Editor that allows users to add and remove pages, add and remove Components to pages, and configure Components on a page. Here's a screenshot of Studio in action:
