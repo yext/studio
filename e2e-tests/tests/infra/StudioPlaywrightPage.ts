@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
+import { StreamScopeForm } from "../../../packages/studio/src/utils/StreamScopeParser";
 
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
@@ -48,6 +49,26 @@ export default class StudioPlaywrightPage {
     await expect(this.page).toHaveScreenshot();
     await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
     await this.typeIntoModal(basicDataModal, "Specify the URL slug:", urlSlug);
+    await expect(this.page).toHaveScreenshot();
+    await this.clickModalButton(basicDataModal, "Save");
+  }
+
+  async addEntityPage(pageName: string, streamScopeForm: Required<StreamScopeForm>, urlSlug?: string) {
+    const pageTypeModal = "Select Page Type";
+    const streamScopeModal = "Specify the Stream Scope";
+    const basicDataModal = "Specify Page Name and URL";
+    await this.addPageButton.click();
+    const entityRadioButton = this.page.getByRole("radio", { name: "Entity" });
+    await entityRadioButton.click();
+    await expect(this.page).toHaveScreenshot();
+    await this.clickModalButton(pageTypeModal, "Next");
+    await expect(this.page).toHaveScreenshot();
+    await this.typeIntoModal(streamScopeModal, "Entity IDs:", streamScopeForm.entityIds);
+    await this.typeIntoModal(streamScopeModal, "Entity Types:", streamScopeForm.entityTypes);
+    await this.typeIntoModal(streamScopeModal, "Saved Filter IDs::", streamScopeForm.savedFilterIds);
+    await expect(this.page).toHaveScreenshot();
+    await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
+    if(urlSlug) await this.typeIntoModal(basicDataModal, "Specify the URL slug:", urlSlug);
     await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(basicDataModal, "Save");
   }
