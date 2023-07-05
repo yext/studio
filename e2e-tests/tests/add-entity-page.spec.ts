@@ -8,7 +8,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest.only(
+studioTest(
   "can add an entity page",
   async ({ page, studioPage }) => {
     const pageInTree = page.getByText("EntityPage");
