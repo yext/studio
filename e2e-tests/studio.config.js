@@ -7,4 +7,5 @@ export default {
   paths: {
     pages: path.resolve("./src/templates"),
   },
+  openBrowser: false
 };

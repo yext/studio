@@ -24,14 +24,13 @@ export interface StudioConfig {
   paths?: Partial<UserPaths>;
   /** The port number for studio to run on. Defaults to 8080. */
   port?: number;
+  /** Whether to automatically open a browser window. Defaults to true. */
+  openBrowser?: boolean;
 }
 
 /** The StudioConfig merged with defaults. */
-export type StudioConfigWithDefaulting = StudioConfig & StudioConfigDefaults;
+export type StudioConfigWithDefaulting = DeepRequired<Required<StudioConfig>>;
 
-/** The default configuration we apply. */
-export type StudioConfigDefaults = {
-  isPagesJSRepo: boolean;
-  paths: UserPaths;
-  port: number;
-};
+export type DeepRequired<T> = {
+  [K in keyof T]: Required<DeepRequired<T[K]>>
+}

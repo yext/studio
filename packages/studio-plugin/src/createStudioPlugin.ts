@@ -6,7 +6,7 @@ import ParsingOrchestrator, {
 } from "./ParsingOrchestrator";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
-import { UserPaths } from "./types";
+import { CliArgs, UserPaths } from "./types";
 import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
@@ -18,6 +18,7 @@ import { readdirSync, existsSync, lstatSync } from "fs";
 import path from "path";
 import lodash from "lodash";
 import { UserConfig } from "vite";
+import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 
 /**
  * Handles server-client communication.
@@ -28,9 +29,12 @@ import { UserConfig } from "vite";
 export default async function createStudioPlugin(
   args: ConfigEnv
 ): Promise<Plugin> {
+  const cliArgs: CliArgs = JSON.parse(
+    process.env[STUDIO_PROCESS_ARGS_OBJ] as string
+  );
   const pathToUserProjectRoot = process.cwd();
 
-  const studioConfig = await getStudioConfig(pathToUserProjectRoot);
+  const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
   const gitWrapper = new GitWrapper(
     simpleGit({
       config: [
@@ -65,7 +69,7 @@ export default async function createStudioPlugin(
   return {
     name: "yext-studio-vite-plugin",
     buildStart() {
-      if (args.mode === "development" && args.command === "serve") {
+      if (args.mode === "development" && args.command === "serve" && studioConfig.openBrowser) {
         openBrowser(`http://localhost:${studioConfig.port}/`);
       }
       const watchDir = (dirPath: string) => {
@@ -117,3 +121,4 @@ export default async function createStudioPlugin(
     handleHotUpdate: createHandleHotUpdate(hmrManager),
   };
 }
+

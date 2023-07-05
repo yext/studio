@@ -1,6 +1,6 @@
 import {
+  CliArgs,
   StudioConfig,
-  StudioConfigDefaults,
   StudioConfigWithDefaulting,
 } from "../types";
 import fs from "fs";
@@ -22,10 +22,11 @@ import { dynamicImport } from "../utils/dynamicImport";
  * @throws {@link ParsingError|FileIOError}
  */
 export default async function getStudioConfig(
-  pathToProjectRoot: string
+  pathToProjectRoot: string,
+  cliArgs: CliArgs
 ): Promise<StudioConfigWithDefaulting> {
   try {
-    return getStudioConfigInternal(pathToProjectRoot);
+    return getStudioConfigInternal(pathToProjectRoot, cliArgs);
   } catch (err: unknown) {
     err instanceof StudioError &&
       prettyPrintError("Failed to start Studio", err.message);
@@ -34,12 +35,14 @@ export default async function getStudioConfig(
 }
 
 async function getStudioConfigInternal(
-  pathToProjectRoot: string
+  pathToProjectRoot: string,
+  cliArgs: CliArgs
 ): Promise<StudioConfigWithDefaulting> {
-  const defaultConfig: StudioConfigDefaults = {
+  const defaultConfig: StudioConfigWithDefaulting = {
     isPagesJSRepo: false,
     paths: getUserPaths(pathToProjectRoot),
     port: 8080,
+    openBrowser: true
   };
 
   const absConfigFilepath = path.join(pathToProjectRoot, "studio.config.js");
@@ -48,7 +51,9 @@ async function getStudioConfigInternal(
   }
   const studioConfig = await importExistingConfig(absConfigFilepath);
 
-  return lodash.merge({}, defaultConfig, studioConfig);
+  return lodash.merge({}, defaultConfig, studioConfig, {
+    port: cliArgs.port
+  });
 }
 
 /**

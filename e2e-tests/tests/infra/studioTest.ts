@@ -1,6 +1,6 @@
 import { test as base } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
-import setupGitBranch from "./setupGitBranch.js";
+import setup from "./setup.js";
 
 type Fixtures = {
   /**
@@ -21,10 +21,10 @@ type Fixtures = {
 export const studioTest = base.extend<Fixtures>({
   createRemote: false,
   studioPage: async ({ page, createRemote }, use, testInfo) => {
-    await setupGitBranch(testInfo, createRemote, async () => {
-      await page.goto("./");
+    await setup(testInfo, createRemote, async (port: number) => {
+      await page.goto("localhost:" + port);
       await page.waitForLoadState("networkidle");
-      const studioPage = new StudioPlaywrightPage(page);
+      const studioPage = new StudioPlaywrightPage(page, port);
       await use(studioPage);
     });
   },

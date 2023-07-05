@@ -10,7 +10,7 @@ export default class StudioPlaywrightPage {
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
 
-  constructor(private page: Page) {
+  constructor(private page: Page, private port: number) {
     this.addPageButton = page.getByRole("button", {
       name: "Add Page",
     });
