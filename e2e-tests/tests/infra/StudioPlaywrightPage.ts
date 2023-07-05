@@ -62,7 +62,7 @@ export default class StudioPlaywrightPage {
     const streamScopeModal = "Specify the Stream Scope";
     const basicDataModal = "Specify Page Name and URL";
     await this.addPageButton.click();
-    const entityRadioButton = this.page.getByRole("radio", { checked : false });
+    const entityRadioButton = this.page.getByRole("radio", { checked: false });
     await entityRadioButton.check();
     await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(pageTypeModal, "Next");
@@ -114,11 +114,10 @@ export default class StudioPlaywrightPage {
     const modal = this.page.getByRole("dialog", {
       name: modalName,
     });
-    const textbox = modal
-    .getByRole("textbox", {
+    const textbox = modal.getByRole("textbox", {
       name: textboxName,
     });
-    await textbox.fill('');
+    await textbox.fill("");
     await textbox.type(text);
   }
 
