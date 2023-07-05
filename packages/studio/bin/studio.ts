@@ -13,7 +13,7 @@ const NODE_OPTIONS = 'NODE_OPTIONS="--experimental-specifier-resolution=node"';
 const cli = cac();
 
 cli
-  .command("start dev server")
+  .command("", "start dev server")
   .option("--root <directory>", `[string] path to the root directory`)
   .action((options: CliArgs) => {
     execSync(
