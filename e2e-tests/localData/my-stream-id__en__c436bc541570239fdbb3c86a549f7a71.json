@@ -1,0 +1,99 @@
+{
+	"__": {
+		"entityPageSet": {
+			"plugin": {}
+		},
+		"name": "UniversalPage",
+		"streamId": "my-stream-id",
+		"templateType": "JS"
+	},
+	"address": {
+		"city": "McLean",
+		"countryCode": "US",
+		"line1": "7900 Westpark Drive",
+		"line2": "Suite T200",
+		"localizedCountryName": "United States",
+		"localizedRegionName": "Virginia",
+		"postalCode": "22102",
+		"region": "VA"
+	},
+	"businessId": 3350634,
+	"description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
+	"geocodedCoordinate": {
+		"latitude": 38.9246498,
+		"longitude": -77.2169181
+	},
+	"hours": {
+		"friday": {
+			"openIntervals": [
+				{
+					"end": "14:00",
+					"start": "12:00"
+				}
+			]
+		},
+		"monday": {
+			"openIntervals": [
+				{
+					"end": "14:00",
+					"start": "01:00"
+				}
+			]
+		},
+		"saturday": {
+			"openIntervals": [
+				{
+					"end": "13:00",
+					"start": "12:00"
+				}
+			]
+		},
+		"sunday": {
+			"isClosed": true
+		},
+		"thursday": {
+			"isClosed": true
+		},
+		"tuesday": {
+			"openIntervals": [
+				{
+					"end": "15:00",
+					"start": "02:00"
+				},
+				{
+					"end": "17:00",
+					"start": "16:00"
+				}
+			]
+		},
+		"wednesday": {
+			"openIntervals": [
+				{
+					"end": "23:59",
+					"start": "00:00"
+				}
+			]
+		}
+	},
+	"id": "2917513710699998040",
+	"key": "0:UniversalPage:knowledgeGraph:18714998:en",
+	"locale": "en",
+	"mainPhone": "+18884442988",
+	"meta": {
+		"entityType": {
+			"id": "location",
+			"uid": 0
+		},
+		"locale": "en"
+	},
+	"name": "Office Space",
+	"services": [
+		"Dogs",
+		"Cats",
+		"Sleep"
+	],
+	"siteDomain": "",
+	"siteId": 0,
+	"siteInternalHostName": "",
+	"uid": 18714998
+}
