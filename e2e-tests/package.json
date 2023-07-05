@@ -10,7 +10,6 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.32.0",
-    "@yext/pages": "^1.0.0-beta.15",
     "@yext/studio": "*",
     "vite": "^4.3.9"
   }
