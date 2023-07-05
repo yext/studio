@@ -1,6 +1,10 @@
 import { Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
-import { StreamScopeForm } from "../../../packages/studio/src/utils/StreamScopeParser";
+import { StreamScope } from "@yext/studio-plugin";
+
+export type StreamScopeForm = {
+  [key in keyof StreamScope]: string;
+};
 
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;

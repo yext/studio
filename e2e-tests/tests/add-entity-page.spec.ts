@@ -1,6 +1,6 @@
 import { expect } from "@playwright/test";
 import { studioTest } from "./infra/studioTest.js";
-import { StreamScopeForm } from "../../packages/studio/src/utils/StreamScopeParser";
+import { StreamScopeForm } from "./infra/StudioPlaywrightPage.js";
 import fs from "fs";
 
 const expectedPage = fs.readFileSync(
@@ -8,7 +8,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest.only("can add an entity page", async ({ page, studioPage }) => {
+studioTest("can add an entity page", async ({ page, studioPage }) => {
   const pageInTree = page.getByText("EntityPage");
   await expect(pageInTree).toHaveCount(0);
   await expect(page).toHaveScreenshot();
