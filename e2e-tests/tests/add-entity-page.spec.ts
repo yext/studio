@@ -15,8 +15,8 @@ studioTest("can add an entity page", async ({ page, studioPage }) => {
 
   const streamScopeForm: Required<StreamScopeForm> = {
     entityIds: "",
-    entityTypes: "test1",
-    savedFilterIds: "test2,test3",
+    entityTypes: "entity1",
+    savedFilterIds: "entity2,entity3",
   };
   await studioPage.addEntityPage("EntityPage", streamScopeForm, "entity-page");
   await expect(pageInTree).toHaveCount(1);
@@ -24,5 +24,12 @@ studioTest("can add an entity page", async ({ page, studioPage }) => {
   await studioPage.saveButton.click();
   const expectedPagePath = "./src/templates/EntityPage.tsx";
   await expect(expectedPagePath).toHaveContents(expectedPage);
+  await expect(page).toHaveScreenshot();
+
+  // remove entity page and save
+  await studioPage.removePage("EntityPage");
+  await expect(pageInTree).toHaveCount(0);
+  await studioPage.saveButton.click();
+  expect(fs.existsSync("./src/templates/EntityPage.tsx")).toBeFalsy();
   await expect(page).toHaveScreenshot();
 });

@@ -79,7 +79,7 @@ export default class StudioPlaywrightPage {
     );
     await this.typeIntoModal(
       streamScopeModal,
-      "Saved Filter IDs::",
+      "Saved Filter IDs:",
       streamScopeForm.savedFilterIds
     );
     await expect(this.page).toHaveScreenshot();
