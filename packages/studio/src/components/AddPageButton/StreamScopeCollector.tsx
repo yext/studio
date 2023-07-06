@@ -10,19 +10,19 @@ const formData: FormData<StreamScopeForm> = {
   entityIds: {
     description: "Entity IDs",
     optional: true,
-    tooltip: "On Yext, navigate to Knowledge Graph > Entities.",
+    tooltip: "In the Yext platform, navigate to Content > Entities",
   },
   entityTypes: {
     description: "Entity Type IDs",
     optional: true,
     tooltip:
-      "On Yext, navigate to Knowledge Graph > Configuration > Entity Types and then select an entity type.", //TODO: this doesn't fit in the modal box
+      "In the Yext platform, navigate to Content > Configuration > Entity Types", //todo: update EntitypageModal
   },
   savedFilterIds: {
     description: "Saved Filter IDs",
     optional: true,
     tooltip:
-      "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.",
+      "In the Yext platform, navigate to Content > Configuration > Saved Filters",
   },
 };
 
@@ -46,8 +46,8 @@ export default function StreamScopeCollector({
   return (
     <FormModal
       isOpen={isOpen}
-      title="Specify the Entities"
-      instructions="Use the optional fields below to specify which entities this page will use. Values should be separated by commas."
+      title="Content Scope"
+      instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas."
       formData={formData}
       closeOnConfirm={false}
       confirmButtonText="Next"

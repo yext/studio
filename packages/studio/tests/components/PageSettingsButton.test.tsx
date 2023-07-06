@@ -62,7 +62,7 @@ it("displays the original getPath value when the modal is opened", async () => {
   render(<PageSettingsButton pageName="universal" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug" });
+  const textbox = screen.getByRole("textbox", { name: "URL Slug" });
   expect(textbox).toHaveValue("index");
 });
 
@@ -70,7 +70,7 @@ it("disables the Save button if new getPath value is blank or matches original",
   render(<PageSettingsButton pageName="universal" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug" });
+  const textbox = screen.getByRole("textbox", { name: "URL Slug" });
   await userEvent.clear(textbox);
   const saveButton = screen.getByRole("button", { name: "Save" });
   expect(saveButton).toBeDisabled();
@@ -88,7 +88,7 @@ it("closes the modal when the getPath value is updated", async () => {
   render(<PageSettingsButton pageName="universal" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug" });
+  const textbox = screen.getByRole("textbox", { name: "URL Slug" });
   await userEvent.type(textbox, ".html");
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
@@ -107,7 +107,7 @@ it("updates getPath value with square and curly bracket expression", async () =>
   render(<PageSettingsButton pageName="product" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
-  const textbox = screen.getByRole("textbox", { name: "URL slug" });
+  const textbox = screen.getByRole("textbox", { name: "URL Slug" });
   expect(textbox).toHaveValue("[[slug]]");
   // userEvent treats `[` and `{` as special characters. To type each in the
   // input, the character must be doubled in the string.
@@ -173,7 +173,7 @@ async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlTextbox = screen.getByPlaceholderText(
-    "<URL slug is defined by developer>"
+    "<URL slug is not editable in Studio. Consult a developer>"
   );
   const testUrl = "test-url";
   await userEvent.type(urlTextbox, testUrl);
