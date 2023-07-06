@@ -12,6 +12,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 /**
+ * Spawns a studio instance for the test that will not be shared
+ * with any other tests. This instance runs in a temporary folder.
  */
 export default async function setup(
   opts: {
