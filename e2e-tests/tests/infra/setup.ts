@@ -29,8 +29,9 @@ export default async function setup(
       remoteBranch = await createRemoteBranch(testInfo);
     }
     tmpDir = createTempWorkingDir(testInfo);
-    const port = await spawnStudio(tmpDir, debug, testInfo);
+    const { port, kill } = await spawnStudio(tmpDir, debug, testInfo);
     await run(port, tmpDir);
+    kill();
   } finally {
     if (!debug) {
       tmpDir && fsExtra.rmdirSync(tmpDir, { recursive: true });

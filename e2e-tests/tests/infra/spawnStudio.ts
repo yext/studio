@@ -21,7 +21,7 @@ export default async function spawnStudio(
   debug: boolean,
   testInfo: TestInfo
 ) {
-  const port = 5173 + getTestNumber(testInfo);
+  const port = await getPort(testInfo);
   const child = spawn(
     "npx",
     ["studio", "--port", port.toString(), "--root", rootDir],
@@ -32,26 +32,36 @@ export default async function spawnStudio(
     child.stdout?.on("data", process.stdout.write);
   }
   await waitForPort(port);
+  return { port, kill: () => child.kill() };
+}
+
+async function getPort(testInfo: TestInfo) {
+  let port = 5173 + getTestNumber(testInfo);
+  const totalNumTests = getNumTests();
+  while (await serverExistsForPort(port)) {
+    port += totalNumTests;
+  }
   return port;
 }
 
-async function waitForPort(port: number): Promise<void> {
-  const checkIfAvailable = () =>
-    new Promise<boolean>((resolve) => {
-      const conn = net.connect(port, "127.0.0.1");
-      conn
-        .on("error", () => resolve(false))
-        .on("connect", () => {
-          conn.end();
-          resolve(true);
-        });
-    });
+async function serverExistsForPort(port: number) {
+  return new Promise<boolean>((resolve) => {
+    const conn = net.connect(port, "127.0.0.1");
+    conn
+      .on("error", () => resolve(false))
+      .on("connect", () => {
+        conn.end();
+        resolve(true);
+      });
+  });
+}
 
+async function waitForPort(port: number): Promise<void> {
   const timeout = 30_000;
   const cancellationToken = { canceled: false };
   setTimeout(() => (cancellationToken.canceled = true), timeout);
   while (!cancellationToken.canceled) {
-    const isReady = await checkIfAvailable();
+    const isReady = await serverExistsForPort(port);
     if (isReady) {
       return;
     }
@@ -66,4 +76,8 @@ function getTestNumber(testInfo: TestInfo) {
     path.resolve(__dirname, "../**/*.spec.ts")
   ).sort();
   return testAbsolutePaths.indexOf(testInfo.file);
+}
+
+function getNumTests() {
+  return globSync(path.resolve(__dirname, "../**/*.spec.ts")).length;
 }
