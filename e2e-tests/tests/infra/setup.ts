@@ -7,7 +7,6 @@ import fs from "fs";
 import fsExtra from "fs-extra";
 import { spawn } from "child_process";
 import net from "net";
-import getPort, { portNumbers } from "get-port";
 
 const git = simpleGit();
 const __filename = fileURLToPath(import.meta.url);
@@ -31,7 +30,7 @@ export default async function setup(
       remoteBranch = await createRemoteBranch(testInfo);
     }
     tmpDir = createTempWorkingDir(testInfo);
-    const port = await spawnStudio(tmpDir, debug);
+    const port = await spawnStudio(tmpDir, debug, testInfo);
     await run(port, tmpDir);
   } finally {
     if (!debug) {
@@ -48,8 +47,8 @@ export default async function setup(
  * stdio is piped instead of inherited because Playwright does not seem to work with inherit
  * (it will work fine if ran through a regular node program).
  */
-async function spawnStudio(rootDir: string, debug: boolean): Promise<number> {
-  const port = await getPort({ port: portNumbers(5173, 6000) });
+async function spawnStudio(rootDir: string, debug: boolean, testInfo: TestInfo): Promise<number> {
+  const port = 5173 + testInfo.parallelIndex;
   const child = spawn(
     "npx",
     ["studio", "--port", port.toString(), "--root", rootDir],
