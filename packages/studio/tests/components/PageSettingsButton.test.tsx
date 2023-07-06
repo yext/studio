@@ -173,7 +173,7 @@ async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlTextbox = screen.getByPlaceholderText(
-    "<URL slug is not editable in Studio. Consult a developer>"
+    "<URL slug is defined by developer>"
   );
   const testUrl = "test-url";
   await userEvent.type(urlTextbox, testUrl);

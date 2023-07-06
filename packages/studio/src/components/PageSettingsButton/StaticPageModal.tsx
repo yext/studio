@@ -34,7 +34,7 @@ export default function StaticPageModal({
         description: "URL Slug",
         optional: isPathUndefined,
         placeholder: isPathUndefined
-          ? "<URL slug is not editable in Studio. Consult a developer>"
+          ? "<URL slug is defined by developer>"
           : "",
       },
     }),
