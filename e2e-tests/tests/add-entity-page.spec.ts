@@ -30,5 +30,12 @@ studioTest(
     const expectedPagePath = "./src/templates/EntityPage.tsx";
     await expect(expectedPagePath).toHaveContents(expectedPage);
     await expect(page).toHaveScreenshot();
+
+    // remove entity page and save
+    await studioPage.removePage("EntityPage");
+    await expect(pageInTree).toHaveCount(0);
+    await studioPage.saveButton.click();
+    expect(fs.existsSync("./src/templates/EntityPage.tsx")).toBeFalsy();
+    await expect(page).toHaveScreenshot();
   }
 );
