@@ -6,7 +6,7 @@ import StreamScopeParser, {
   StreamScopeForm,
 } from "../../utils/StreamScopeParser";
 
-const formData: FormData<StreamScopeForm> = {
+export const streamScopeFormData: FormData<StreamScopeForm> = {
   entityIds: {
     description: "Entity IDs",
     optional: true,
@@ -48,7 +48,7 @@ export default function StreamScopeCollector({
       isOpen={isOpen}
       title="Content Scope"
       instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas."
-      formData={formData}
+      formData={streamScopeFormData}
       closeOnConfirm={false}
       confirmButtonText="Next"
       handleClose={handleClose}

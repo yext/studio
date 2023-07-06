@@ -9,6 +9,7 @@ import StreamScopeParser, {
 } from "../../utils/StreamScopeParser";
 import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
+import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector"
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -41,32 +42,16 @@ export default function EntityPageModal({
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
-      url: {
+      ...{url: {
         description: "URL Slug",
         optional: isPathUndefined,
         placeholder: isPathUndefined
           ? "<URL slug is not editable in Studio. Consult a developer>"
           : "",
-      },
-      entityIds: {
-        description: "Entity IDs",
-        optional: true,
-        tooltip: "In the Yext platform, navigate to Content > Entities",
-      },
-      entityTypes: {
-        description: "Entity Type IDs",
-        optional: true,
-        tooltip:
-          "In the Yext platform, navigate to Content > Configuration > Entity Types",
-      },
-      savedFilterIds: {
-        description: "Saved Filter IDs",
-        optional: true,
-        tooltip:
-          "In the Yext platform, navigate to Content > Configuration > Saved Filters",
-      },
+      }},
+      ...streamScopeFormData
     }),
-    [isPathUndefined]
+    [isPathUndefined, streamScopeFormData]
   );
 
   const handleModalSave = useCallback(

@@ -23,7 +23,6 @@ const customReactModalStyles = {
     marginRight: "-95%",
     maxWidth: "600px",
     transform: "translate(-50%, -50%)",
-    overflow: "visible",
   },
   overlay: {
     zIndex: 1000,
