@@ -62,7 +62,8 @@ export default function EntityPageModal({
       savedFilterIds: {
         description: "Saved Filter IDs",
         optional: true,
-        tooltip: "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters."
+        tooltip:
+          "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.",
       },
     }),
     [isPathUndefined]
