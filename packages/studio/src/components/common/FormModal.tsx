@@ -184,7 +184,7 @@ function FormField({
         value={value}
         onChange={handleChange}
       />
-      {tooltip && <Tooltip anchorId={inputId} content={tooltip}/>}
+      {tooltip && <Tooltip anchorId={inputId} content={tooltip} />}
     </>
   );
 }
