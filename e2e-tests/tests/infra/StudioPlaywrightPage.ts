@@ -45,16 +45,9 @@ export default class StudioPlaywrightPage {
   }
 
   async addStaticPage(pageName: string, urlSlug: string) {
-    const pageTypeModal = "Select Page Type";
-    const basicDataModal = "Specify Page Name and URL";
     await this.addPageButton.click();
-    await expect(this.page).toHaveScreenshot();
-    await this.clickModalButton(pageTypeModal, "Next");
-    await expect(this.page).toHaveScreenshot();
-    await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
-    await this.typeIntoModal(basicDataModal, "Specify the URL slug:", urlSlug);
-    await expect(this.page).toHaveScreenshot();
-    await this.clickModalButton(basicDataModal, "Save");
+    await this.selectPageType(false);
+    await this.enterBasicData(pageName, urlSlug);
   }
 
   async addEntityPage(
@@ -62,14 +55,23 @@ export default class StudioPlaywrightPage {
     streamScopeForm: Required<StreamScopeForm>,
     urlSlug?: string
   ) {
-    const pageTypeModal = "Select Page Type";
-    const streamScopeModal = "Specify the Stream Scope";
-    const basicDataModal = "Specify Page Name and URL";
     await this.addPageButton.click();
-    const entityRadioButton = this.page.getByRole("radio", { checked: false });
-    await entityRadioButton.check();
+    await this.selectPageType(true);
+    await this.enterStreamScope(streamScopeForm);
+    await this.enterBasicData(pageName, urlSlug)
+  }
+
+  private async selectPageType(isEntityPage: boolean) {
+    const pageTypeModal = "Select Page Type";
+    if (isEntityPage) {
+      await this.page.getByRole("radio", { checked: false }).check();
+    }
     await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(pageTypeModal, "Next");
+  }
+
+  private async enterStreamScope(streamScopeForm: Required<StreamScopeForm>) {
+    const streamScopeModal = "Specify the Stream Scope";
     await expect(this.page).toHaveScreenshot();
     await this.typeIntoModal(
       streamScopeModal,
@@ -88,6 +90,10 @@ export default class StudioPlaywrightPage {
     );
     await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(streamScopeModal, "Next");
+  }
+
+  private async enterBasicData(pageName: string, urlSlug?: string) {
+    const basicDataModal = "Specify Page Name and URL";
     await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
     if (urlSlug)
       await this.typeIntoModal(
