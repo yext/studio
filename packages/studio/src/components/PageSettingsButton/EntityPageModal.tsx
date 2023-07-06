@@ -9,7 +9,7 @@ import StreamScopeParser, {
 } from "../../utils/StreamScopeParser";
 import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
-import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector"
+import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -42,14 +42,16 @@ export default function EntityPageModal({
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
-      ...{url: {
-        description: "URL Slug",
-        optional: isPathUndefined,
-        placeholder: isPathUndefined
-          ? "<URL slug is defined by developer>"
-          : "",
-      }},
-      ...streamScopeFormData
+      ...{
+        url: {
+          description: "URL Slug",
+          optional: isPathUndefined,
+          placeholder: isPathUndefined
+            ? "<URL slug is defined by developer>"
+            : "",
+        },
+      },
+      ...streamScopeFormData,
     }),
     [isPathUndefined]
   );
