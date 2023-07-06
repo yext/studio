@@ -172,9 +172,7 @@ function FormField({
 
   return (
     <>
-      <label htmlFor={inputId}>
-        {description}
-      </label>
+      <label htmlFor={inputId}>{description}</label>
       <input
         id={inputId}
         type="text"
