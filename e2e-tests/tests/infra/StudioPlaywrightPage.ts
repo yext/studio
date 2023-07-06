@@ -94,6 +94,7 @@ export default class StudioPlaywrightPage {
 
   private async enterBasicData(pageName: string, urlSlug?: string) {
     const basicDataModal = "Specify Page Name and URL";
+    await expect(this.page).toHaveScreenshot();
     await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
     if (urlSlug)
       await this.typeIntoModal(
