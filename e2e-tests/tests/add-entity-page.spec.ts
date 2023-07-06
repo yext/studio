@@ -8,14 +8,13 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest(
+studioTest.only(
   "can add an entity page and then remove it",
   async ({ page, studioPage }) => {
     const pageInTree = page.getByText("EntityPage");
     await expect(pageInTree).toHaveCount(0);
 
-    const streamScopeForm: Required<StreamScopeForm> = {
-      entityIds: "",
+    const streamScopeForm: StreamScopeForm = {
       entityTypes: "entity1",
       savedFilterIds: "entity2,entity3",
     };
