@@ -16,7 +16,7 @@ const formData: FormData<StreamScopeForm> = {
     description: "Entity Type IDs",
     optional: true,
     tooltip:
-      "In the Yext platform, navigate to Content > Configuration > Entity Types", //todo: update EntitypageModal
+      "In the Yext platform, navigate to Content > Configuration > Entity Types",
   },
   savedFilterIds: {
     description: "Saved Filter IDs",
