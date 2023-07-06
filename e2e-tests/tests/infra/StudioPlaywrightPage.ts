@@ -58,7 +58,7 @@ export default class StudioPlaywrightPage {
     await this.addPageButton.click();
     await this.selectPageType(true);
     await this.enterStreamScope(streamScopeForm);
-    await this.enterBasicData(pageName, urlSlug)
+    await this.enterBasicData(pageName, urlSlug);
   }
 
   private async selectPageType(isEntityPage: boolean) {
