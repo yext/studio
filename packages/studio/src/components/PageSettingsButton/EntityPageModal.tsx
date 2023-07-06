@@ -51,7 +51,7 @@ export default function EntityPageModal({
       }},
       ...streamScopeFormData
     }),
-    [isPathUndefined, streamScopeFormData]
+    [isPathUndefined]
   );
 
   const handleModalSave = useCallback(
