@@ -85,14 +85,6 @@ export default class StudioPlaywrightPage {
         streamScopeForm[field]
       );
     }
-    // await Promise.all(Object.entries(this.page.getByRole('textbox').all()).forEach(async (textbox) => {
-    //   await textbox.fill(text);
-    //   // await this.typeIntoModal(
-    //   //   streamScopeModal,
-    //   //   streamScopeTextboxNames[field],
-    //   //   val
-    //   // );
-    // }));
     await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(streamScopeModal, "Next");
   }
