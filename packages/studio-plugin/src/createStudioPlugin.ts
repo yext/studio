@@ -32,7 +32,7 @@ export default async function createStudioPlugin(
   const cliArgs: CliArgs = JSON.parse(
     process.env[STUDIO_PROCESS_ARGS_OBJ] as string
   );
-  const pathToUserProjectRoot = process.cwd();
+  const pathToUserProjectRoot = getProjectRoot(cliArgs);
 
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
   const gitWrapper = new GitWrapper(
@@ -69,7 +69,11 @@ export default async function createStudioPlugin(
   return {
     name: "yext-studio-vite-plugin",
     buildStart() {
-      if (args.mode === "development" && args.command === "serve" && studioConfig.openBrowser) {
+      if (
+        args.mode === "development" &&
+        args.command === "serve" &&
+        studioConfig.openBrowser
+      ) {
         openBrowser(`http://localhost:${studioConfig.port}/`);
       }
       const watchDir = (dirPath: string) => {
@@ -122,3 +126,11 @@ export default async function createStudioPlugin(
   };
 }
 
+function getProjectRoot(cliArgs: CliArgs) {
+  if (!cliArgs.root) {
+    return process.cwd();
+  } else if (path.isAbsolute(cliArgs.root)) {
+    return cliArgs.root;
+  }
+  return path.join(process.cwd(), cliArgs.root);
+}

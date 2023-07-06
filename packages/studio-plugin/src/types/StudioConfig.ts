@@ -32,5 +32,5 @@ export interface StudioConfig {
 export type StudioConfigWithDefaulting = DeepRequired<Required<StudioConfig>>;
 
 export type DeepRequired<T> = {
-  [K in keyof T]: Required<DeepRequired<T[K]>>
-}
+  [K in keyof T]: Required<DeepRequired<T[K]>>;
+};

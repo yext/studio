@@ -17,6 +17,6 @@ studioTest("can remove a container component", async ({ page, studioPage }) => {
   await expect(childPreviews).toHaveCount(0);
   await expect(page).toHaveScreenshot();
   await studioPage.saveButton.click();
-  await expect("./src/templates/BasicPage.tsx").toHaveContents(expectedPage);
+  await studioPage.assertPageContents("BasicPage", expectedPage);
   await expect(page).toHaveScreenshot();
 });

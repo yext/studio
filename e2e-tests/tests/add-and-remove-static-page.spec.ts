@@ -27,8 +27,7 @@ studioTest(
     await expect(pageInTree).toHaveCount(1);
     await expect(page).toHaveScreenshot();
     await studioPage.saveButton.click();
-    const expectedPagePath = "./src/templates/BasicPage.tsx";
-    await expect(expectedPagePath).toHaveContents(expectedPage);
+    await studioPage.assertPageContents("BasicPage", expectedPage);
     await expect(page).toHaveScreenshot();
   }
 );

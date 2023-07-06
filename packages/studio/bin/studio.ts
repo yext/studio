@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { spawn } from "child_process";
+import { spawnSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import cac from "cac";
@@ -15,8 +15,9 @@ const cli = cac();
 cli
   .command("", "start dev server")
   .option("--port <port>", "[number] port to run studio")
+  .option("--root <directory>", `[string] path to the root directory`)
   .action((options: CliArgs) => {
-    spawn(
+    spawnSync(
       "npx",
       ["cross-env", NODE_OPTIONS, "npx", "vite", "--config", pathToViteConfig],
       {

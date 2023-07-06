@@ -1,8 +1,4 @@
-import {
-  CliArgs,
-  StudioConfig,
-  StudioConfigWithDefaulting,
-} from "../types";
+import { CliArgs, StudioConfig, StudioConfigWithDefaulting } from "../types";
 import fs from "fs";
 import path from "path";
 import getUserPaths from "./getUserPaths";
@@ -42,18 +38,39 @@ async function getStudioConfigInternal(
     isPagesJSRepo: false,
     paths: getUserPaths(pathToProjectRoot),
     port: 8080,
-    openBrowser: true
+    openBrowser: true,
   };
-
   const absConfigFilepath = path.join(pathToProjectRoot, "studio.config.js");
   if (!fs.existsSync(absConfigFilepath)) {
     return defaultConfig;
   }
   const studioConfig = await importExistingConfig(absConfigFilepath);
 
-  return lodash.merge({}, defaultConfig, studioConfig, {
-    port: cliArgs.port
+  const mergedConfig: StudioConfigWithDefaulting = lodash.merge(
+    {},
+    defaultConfig,
+    studioConfig,
+    {
+      port: cliArgs.port,
+    }
+  );
+  return convertPathsToAbsolute(mergedConfig, pathToProjectRoot);
+}
+
+function convertPathsToAbsolute(
+  config: StudioConfigWithDefaulting,
+  pathToProjectRoot: string
+): StudioConfigWithDefaulting {
+  const updatedConfig = lodash.cloneDeep(config);
+
+  Object.keys(updatedConfig.paths).forEach((pathType) => {
+    const userPath = updatedConfig.paths[pathType];
+    if (!path.isAbsolute(userPath)) {
+      updatedConfig.paths[pathType] = path.join(pathToProjectRoot, userPath);
+    }
   });
+
+  return updatedConfig;
 }
 
 /**

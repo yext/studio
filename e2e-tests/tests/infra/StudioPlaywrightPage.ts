@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
+import path from "path";
 
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
@@ -10,7 +11,7 @@ export default class StudioPlaywrightPage {
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
 
-  constructor(private page: Page, private port: number) {
+  constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
       name: "Add Page",
     });
@@ -145,5 +146,10 @@ export default class StudioPlaywrightPage {
     await this.page.getByRole("button", { name: "Props" }).click();
     const input = this.page.getByRole("textbox", { name: propName });
     return input.getAttribute("value");
+  }
+
+  async assertPageContents(pageName: string, expectedPage: string) {
+    const pagePath = path.join(this.tmpDir, "src/templates", pageName + ".tsx");
+    await expect(pagePath).toHaveContents(expectedPage);
   }
 }

@@ -12,6 +12,8 @@ type Fixtures = {
    * If true, the remote branch will be cleaned up at the end of the testrun.
    */
   createRemote: boolean;
+  /** Flag to turn on logging and prevent cleanup of temp folders. */
+  debug: boolean;
 };
 
 /**
@@ -20,11 +22,13 @@ type Fixtures = {
  */
 export const studioTest = base.extend<Fixtures>({
   createRemote: false,
-  studioPage: async ({ page, createRemote }, use, testInfo) => {
-    await setup(testInfo, createRemote, async (port: number) => {
+  debug: false,
+  studioPage: async ({ page, createRemote, debug }, use, testInfo) => {
+    const opts = { createRemote, debug, testInfo };
+    await setup(opts, async (port: number, tmpDir: string) => {
       await page.goto("localhost:" + port);
       await page.waitForLoadState("networkidle");
-      const studioPage = new StudioPlaywrightPage(page, port);
+      const studioPage = new StudioPlaywrightPage(page, tmpDir);
       await use(studioPage);
     });
   },
