@@ -51,19 +51,19 @@ export default function EntityPageModal({
       entityIds: {
         description: "Entity IDs",
         optional: true,
-        tooltip: "On Yext, navigate to Knowledge Graph > Entities.",
+        tooltip: "In the Yext platform, navigate to Content > Entities",
       },
       entityTypes: {
         description: "Entity Type IDs",
         optional: true,
         tooltip:
-          "On Yext, navigate to Knowledge Graph > Configuration > Entity Types and then select an entity type.",
+          "In the Yext platform, navigate to Content > Configuration > Entity Types",
       },
       savedFilterIds: {
         description: "Saved Filter IDs",
         optional: true,
         tooltip:
-          "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.",
+          "In the Yext platform, navigate to Content > Configuration > Saved Filters",
       },
     }),
     [isPathUndefined]
@@ -88,8 +88,7 @@ export default function EntityPageModal({
     <FormModal
       isOpen={isOpen}
       title="Page Settings"
-      instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas. 
-        Changing the scope of the stream (entity IDs, entity type IDs, and saved filter IDs) may result in entity data references being invalid or out of date."
+      instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas. Changing the scope of the stream (entity IDs, entity type IDs, and saved filter IDs) may result in entity data references being invalid or out of date."
       formData={entityFormData}
       initialFormValue={initialFormValue}
       requireChangesToSubmit={true}
