@@ -26,7 +26,8 @@ studioTest(
     ).toEqual("px-4 py-2 text-lg border-4 border-green-500");
     await expect(page).toHaveScreenshot();
 
-    fs.writeFileSync("./src/components/Button.tsx", updatedComponent);
+    const buttonPath = studioPage.getComponentPath("Button");
+    fs.writeFileSync(buttonPath, updatedComponent);
 
     await studioPage.addElement("Button", "Components");
     await expect(buttonPreviews).toHaveCount(2);
@@ -38,7 +39,8 @@ studioTest(
     await expect(page).toHaveScreenshot();
 
     await studioPage.saveButton.click();
-    await studioPage.assertPageContents("BasicPage", expectedPage);
+    const pagePath = studioPage.getPagePath("BasicPage");
+    await expect(pagePath).toHaveContents(expectedPage);
     await expect(page).toHaveScreenshot();
   }
 );

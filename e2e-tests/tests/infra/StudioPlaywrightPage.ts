@@ -148,8 +148,11 @@ export default class StudioPlaywrightPage {
     return input.getAttribute("value");
   }
 
-  async assertPageContents(pageName: string, expectedPage: string) {
-    const pagePath = path.join(this.tmpDir, "src/templates", pageName + ".tsx");
-    await expect(pagePath).toHaveContents(expectedPage);
+  getPagePath(pageName: string) {
+    return path.join(this.tmpDir, "src/templates", pageName + ".tsx");
+  }
+
+  getComponentPath(componentName: string) {
+    return path.join(this.tmpDir, "src/components", componentName + ".tsx");
   }
 }
