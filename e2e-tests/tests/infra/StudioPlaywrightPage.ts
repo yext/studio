@@ -72,13 +72,13 @@ export default class StudioPlaywrightPage {
 
   private async enterStreamScope(streamScopeForm: StreamScopeForm) {
     const streamScopeModal = "Specify the Stream Scope";
-    const streamScopeTextboxNames : StreamScopeForm = {
+    const streamScopeTextboxNames: StreamScopeForm = {
       entityIds: "Entity IDs:",
       entityTypes: "Entity Types:",
       savedFilterIds: "Saved Filter IDs:",
-    }
+    };
     await expect(this.page).toHaveScreenshot();
-    for (let field in streamScopeForm) {
+    for (const field in streamScopeForm) {
       await this.typeIntoModal(
         streamScopeModal,
         streamScopeTextboxNames[field],
