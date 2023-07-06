@@ -169,11 +169,10 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
-  const labelId = `${field}-label`;
 
   return (
     <>
-      <label id={labelId} htmlFor={inputId}>
+      <label htmlFor={inputId}>
         {description}
       </label>
       <input
