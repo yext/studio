@@ -22,7 +22,7 @@ const formData: FormData<StreamScopeForm> = {
     description: "Saved Filter IDs",
     optional: true,
     tooltip:
-      "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.", //TODO: add this to EntityPageModal and StaticPageModal
+      "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters.",
   },
 };
 

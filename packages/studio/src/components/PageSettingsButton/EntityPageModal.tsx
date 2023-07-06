@@ -51,14 +51,18 @@ export default function EntityPageModal({
       entityIds: {
         description: "Entity IDs",
         optional: true,
+        tooltip: "On Yext, navigate to Knowledge Graph > Entities.",
       },
       entityTypes: {
         description: "Entity Type IDs",
         optional: true,
+        tooltip:
+          "On Yext, navigate to Knowledge Graph > Configuration > Entity Types and then select an entity type.",
       },
       savedFilterIds: {
         description: "Saved Filter IDs",
         optional: true,
+        tooltip: "On Yext, navigate to Knowledge Graph > Configuration > Saved Filters."
       },
     }),
     [isPathUndefined]
