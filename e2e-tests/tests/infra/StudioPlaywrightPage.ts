@@ -42,7 +42,13 @@ export default class StudioPlaywrightPage {
       "Deploy Changes to Repository"
     );
 
-    const git = simpleGit({ baseDir: tmpDir });
+    const git = simpleGit({
+      baseDir: tmpDir,
+      config: [
+        'user.name="Acceptance Tests"',
+        'user.email="slapshot@yext.com"',
+      ],
+    });
     this.gitOps = new GitOperations(git);
   }
 
