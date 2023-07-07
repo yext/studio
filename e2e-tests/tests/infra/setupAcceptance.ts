@@ -49,7 +49,9 @@ export default async function setup(
  * then pushes it to the remote.
  */
 async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
-  const git = simpleGit(tmpDir);
+  const git = simpleGit(tmpDir, {
+    config: ['user.name="Acceptance Tests"', 'user.email="slapshot@yext.com"'],
+  });
   const remoteURL = (await git.getConfig("remote.origin.url")).value;
   if (!remoteURL) {
     throw new Error("no remote.origin.url found");
