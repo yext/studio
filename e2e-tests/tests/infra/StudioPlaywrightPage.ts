@@ -52,7 +52,7 @@ export default class StudioPlaywrightPage {
 
   async addEntityPage(
     pageName: string,
-    streamScopeForm: StreamScopeForm,
+    streamScopeForm?: StreamScopeForm,
     urlSlug?: string
   ) {
     await this.addPageButton.click();
@@ -70,7 +70,7 @@ export default class StudioPlaywrightPage {
     await this.clickModalButton(pageTypeModal, "Next");
   }
 
-  private async enterStreamScope(streamScopeForm: StreamScopeForm) {
+  private async enterStreamScope(streamScopeForm?: StreamScopeForm) {
     const streamScopeModal = "Specify the Stream Scope";
     const streamScopeTextboxNames: StreamScopeForm = {
       entityIds: "Entity IDs:",
