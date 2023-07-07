@@ -60,9 +60,11 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
   const testBranch = `e2e-test_${testFile}_${dateString}`;
   await git.init(['--initial-branch', testBranch]);
   await git.addRemote('origin', remoteURL);
+  await git.add('-A');
+  await git.commit('initial commit for ' + testBranch);
   await git.push(["-u", "origin", "HEAD"]);
   return async () => {
-    // await git.push(["--delete", "origin", testBranch])
+    await git.push(["--delete", "origin", testBranch])
   };
 }
 
@@ -80,6 +82,7 @@ function createTempWorkingDir(testInfo: TestInfo) {
   copy("src");
   copy("localData");
   copy("studio.config.js");
+  console.log('created dir', tmpDir)
   return tmpDir;
 }
 

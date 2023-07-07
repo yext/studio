@@ -4,7 +4,7 @@ import simpleGit from "simple-git";
 const git = simpleGit();
 
 studioTest.use({
-  createRemote: true,
+  createRemote: true
 });
 
 studioTest.only("can deploy changes", async ({ page, studioPage }) => {
