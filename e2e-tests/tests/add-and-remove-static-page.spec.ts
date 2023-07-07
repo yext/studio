@@ -8,7 +8,7 @@ const expectedPage = fs.readFileSync(
 );
 
 studioTest(
-  "can remove a page and then add it back",
+  "can remove a static page and then add it back",
   async ({ page, studioPage }) => {
     const pageInTree = page.getByText("BasicPage");
     await expect(pageInTree).toHaveCount(1);
