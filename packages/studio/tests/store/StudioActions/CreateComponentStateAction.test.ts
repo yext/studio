@@ -29,51 +29,49 @@ it("creates the expected component state", () => {
   expect(actualState).toEqual(expectedState);
 });
 
-describe("isPagesJSRepo behavior", () => {
-  it("adds document prop to modules when isPageJSRepo = true", () => {
-    useStudioStore.setState((state) => {
-      state.studioConfig.isPagesJSRepo = true;
-    });
+it("adds default values for required props", () => {
+  const moduleMetadata: ModuleMetadata = {
+    kind: FileMetadataKind.Module,
+    filepath: "./ModuleLol.tsx",
+    componentTree: [],
+    metadataUUID: "unused",
+    propShape: {
+      document: {
+        type: PropValueType.Record,
+        recordKey: "string",
+        recordValue: "any",
+        required: true,
+      },
+      optionalArr: {
+        type: PropValueType.Array,
+        itemType: { type: PropValueType.number },
+        required: false,
+      },
+      requiredString: {
+        type: PropValueType.string,
+        required: true,
+      },
+    },
+  };
 
-    const moduleMetadata: ModuleMetadata = {
-      kind: FileMetadataKind.Module,
-      filepath: "./ModuleLol.tsx",
-      componentTree: [],
-      metadataUUID: "unused",
-    };
+  const actualState = useStudioStore
+    .getState()
+    .actions.createComponentState(moduleMetadata);
 
-    const actualState = useStudioStore
-      .getState()
-      .actions.createComponentState(moduleMetadata);
-
-    expect(actualState).toEqual(
-      expect.objectContaining({
-        props: {
-          document: {
-            kind: PropValueKind.Expression,
-            value: "document",
-            valueType: PropValueType.Record,
-          },
+  expect(actualState).toEqual(
+    expect.objectContaining({
+      props: {
+        document: {
+          kind: PropValueKind.Expression,
+          value: "document",
+          valueType: PropValueType.Record,
         },
-      })
-    );
-  });
-
-  it("doesn't add document prop to regular components when isPageJSRepo = true", () => {
-    useStudioStore.setState((state) => {
-      state.studioConfig.isPagesJSRepo = true;
-    });
-    const actualState = useStudioStore.getState().actions.createComponentState({
-      kind: FileMetadataKind.Component,
-      filepath: "./blah/Component.tsx",
-      propShape: {},
-      metadataUUID: "-metadatUUID-",
-    });
-
-    expect(actualState).toEqual(
-      expect.objectContaining({
-        props: {},
-      })
-    );
-  });
+        requiredString: {
+          kind: PropValueKind.Literal,
+          value: "",
+          valueType: PropValueType.string,
+        },
+      },
+    })
+  );
 });

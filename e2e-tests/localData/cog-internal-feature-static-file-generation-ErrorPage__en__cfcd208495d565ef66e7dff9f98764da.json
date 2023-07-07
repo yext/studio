@@ -1,0 +1,18 @@
+{
+  "__": {
+    "name": "ErrorPage",
+    "staticPage": {
+      "plugin": {}
+    },
+    "templateType": "JS"
+  },
+  "businessId": 3350634,
+  "key": "0:ErrorPage:knowledgeGraph:0:en",
+  "locale": "en",
+  "meta": {
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": ""
+}

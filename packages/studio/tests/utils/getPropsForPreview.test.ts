@@ -124,7 +124,7 @@ it("returns value as is for primitive prop of type Literal", () => {
   });
 });
 
-it("uses default value for props with unspecified/undefined value", () => {
+it("respects undefined for props with unspecified/undefined value", () => {
   const transformedProps = getPropsForPreview(
     {},
     {
@@ -135,9 +135,7 @@ it("uses default value for props with unspecified/undefined value", () => {
     },
     expressionSources
   );
-  expect(transformedProps).toEqual({
-    bgColor: "#FFFFFF",
-  });
+  expect(transformedProps).toEqual({});
 });
 
 it("logs a warning when transformed value type doesn't match from the expected type", () => {

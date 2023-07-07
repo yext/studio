@@ -1,5 +1,10 @@
 import { Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
+import { StreamScope } from "@yext/studio-plugin";
+
+export type StreamScopeForm = {
+  [key in keyof StreamScope]: string;
+};
 
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
@@ -39,24 +44,96 @@ export default class StudioPlaywrightPage {
     );
   }
 
-  async addPage(pageName: string) {
+  async addStaticPage(pageName: string, urlSlug: string) {
     await this.addPageButton.click();
-    await expect(this.page).toHaveScreenshot();
-    await this.typeIntoModal("Add Page Modal", pageName);
+    await this.selectPageType(false);
+    await this.enterBasicPageData(pageName, urlSlug);
   }
 
-  private async typeIntoModal(modalName: string, text: string) {
+  async addEntityPage(
+    pageName: string,
+    streamScopeForm?: StreamScopeForm,
+    urlSlug?: string
+  ) {
+    await this.addPageButton.click();
+    await this.selectPageType(true);
+    await this.enterStreamScope(streamScopeForm);
+    await this.enterBasicPageData(pageName, urlSlug);
+  }
+
+  private async selectPageType(isEntityPage: boolean) {
+    const pageTypeModal = "Select Page Type";
+    if (isEntityPage) {
+      await this.page.getByRole("radio", { checked: false }).check();
+    }
+    await expect(this.page).toHaveScreenshot();
+    await this.clickModalButton(pageTypeModal, "Next");
+  }
+
+  private async enterStreamScope(streamScopeForm?: StreamScopeForm) {
+    const streamScopeModal = "Specify the Stream Scope";
+    const streamScopeTextboxNames: StreamScopeForm = {
+      entityIds: "Entity IDs:",
+      entityTypes: "Entity Types:",
+      savedFilterIds: "Saved Filter IDs:",
+    };
+    await expect(this.page).toHaveScreenshot();
+    for (const field in streamScopeForm) {
+      await this.typeIntoModal(
+        streamScopeModal,
+        streamScopeTextboxNames[field],
+        streamScopeForm[field]
+      );
+    }
+    await expect(this.page).toHaveScreenshot();
+    await this.clickModalButton(streamScopeModal, "Next");
+  }
+
+  private async enterBasicPageData(pageName: string, urlSlug?: string) {
+    const basicDataModal = "Specify Page Name and URL";
+    await expect(this.page).toHaveScreenshot();
+    await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
+    if (urlSlug)
+      await this.typeIntoModal(
+        basicDataModal,
+        "Specify the URL slug:",
+        urlSlug
+      );
+    await expect(this.page).toHaveScreenshot();
+    await this.clickModalButton(basicDataModal, "Save");
+  }
+
+  private async clickModalButton(modalName: string, buttonName: string) {
     const modal = this.page.getByRole("dialog", {
       name: modalName,
     });
-    await modal.getByRole("textbox").type(text);
-    await modal.getByText("Save").click();
+    await modal
+      .getByRole("button", {
+        name: buttonName,
+      })
+      .click();
+  }
+
+  private async typeIntoModal(
+    modalName: string,
+    textboxName: string,
+    text: string
+  ) {
+    const modal = this.page.getByRole("dialog", {
+      name: modalName,
+    });
+    await modal
+      .getByRole("textbox", {
+        name: textboxName,
+      })
+      .fill(text);
   }
 
   async switchPage(pageName: string) {
     await this.pagesPanel
       .getByRole("button", {
         name: pageName,
+        exact: true,
       })
       .click();
   }

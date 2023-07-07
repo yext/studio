@@ -1,6 +1,11 @@
+import { GetPath, TemplateProps } from "@yext/pages";
 import Banner from "../components/Banner";
 import Button from "../components/Button";
 import Container from "../components/Container";
+
+export const getPath: GetPath<TemplateProps> = () => {
+  return "index.html";
+};
 
 export default function BasicPage() {
   return (
@@ -9,7 +14,7 @@ export default function BasicPage() {
       <Button className="px-4" />
       <div>
         <Container>
-          <Banner />
+          <Banner bool={false} num={0} />
         </Container>
       </div>
     </>

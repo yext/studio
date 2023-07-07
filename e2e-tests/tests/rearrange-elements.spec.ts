@@ -23,6 +23,6 @@ studioTest("can rearrange elements in tree", async ({ page, studioPage }) => {
   await expect(page).toHaveScreenshot();
 
   await studioPage.saveButton.click();
-  await expect("./src/pages/BasicPage.tsx").toHaveContents(expectedPage);
+  await expect("./src/templates/BasicPage.tsx").toHaveContents(expectedPage);
   await expect(page).toHaveScreenshot();
 });

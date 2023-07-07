@@ -10,7 +10,7 @@ import {
   PropType,
   SiteSettingsVal,
 } from "@yext/studio-plugin";
-import React, { useCallback, useMemo } from "react";
+import React, { useCallback } from "react";
 import { startCase } from "lodash";
 import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
@@ -60,17 +60,15 @@ function renderSiteSettings(
   );
 
   return sortedShape.map(([propName, propMetadata], index) => {
-    const valueType = propMetadata.type;
     const propVal: SiteSettingsVal | undefined = siteSettingsValues[propName];
-    if (valueType !== PropValueType.Object) {
+    if (propMetadata.type !== PropValueType.Object) {
       return (
         <SimplePropInput
           propName={propName}
           key={propName}
-          valueType={valueType}
+          propType={propMetadata}
           value={propVal?.value as string | number | boolean}
           updateValues={updateValues}
-          unionValues={propMetadata["unionValues"]}
         />
       );
     }
@@ -124,19 +122,18 @@ function RecursiveGroup(props: {
 }
 
 function SimplePropInput(props: {
-  valueType: Exclude<SiteSettingsPropValueType, PropValueType.Object>;
+  propType: PropType<Exclude<SiteSettingsPropValueType, PropValueType.Object>>;
   value?: string | number | boolean;
   updateValues: (propName: string, updatedProp: SiteSettingsVal) => void;
   propName: string;
-  unionValues?: string[];
 }) {
-  const { value, valueType, updateValues, propName, unionValues } = props;
+  const { value, propType, updateValues, propName } = props;
   const handleUpdate = useCallback(
     (rawValue: string | number | boolean) => {
       const updatedValue = {
         kind: PropValueKind.Literal,
         value: rawValue,
-        valueType,
+        valueType: propType.type,
       };
       if (!TypeGuards.isValidPropVal(updatedValue)) {
         console.error(
@@ -147,14 +144,7 @@ function SimplePropInput(props: {
       }
       updateValues(propName, updatedValue);
     },
-    [propName, updateValues, valueType]
-  );
-
-  const propType: PropType = useMemo(
-    () => ({
-      type: valueType,
-    }),
-    [valueType]
+    [propName, updateValues, propType]
   );
 
   return (
@@ -164,7 +154,6 @@ function SimplePropInput(props: {
         propType={propType}
         propValue={value}
         onChange={handleUpdate}
-        unionValues={unionValues}
         propKind={PropValueKind.Literal}
       />
     </label>
