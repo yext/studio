@@ -7,7 +7,6 @@ import fs from "fs";
 import fsExtra from "fs-extra";
 import spawnStudio from "./spawnStudio.js";
 
-const git = simpleGit();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -24,21 +23,24 @@ export default async function setup(
   run: (port: number, tmpDir: string) => Promise<void>
 ) {
   const { createRemote, testInfo, debug } = opts;
-  let remoteBranch: string | null = null;
+  let cleanupChildProcess: (() => boolean) | null = null;
+  let gitCleanup: (() => Promise<void>) | null = null;
   let tmpDir: string | null = null;
+
   try {
-    if (createRemote) {
-      remoteBranch = await createRemoteBranch(testInfo);
-    }
     tmpDir = createTempWorkingDir(testInfo);
-    const { port, kill } = await spawnStudio(tmpDir, debug, testInfo);
-    await run(port, tmpDir);
-    kill();
-  } finally {
-    if (!debug) {
-      tmpDir && fsExtra.rmdirSync(tmpDir, { recursive: true });
+    if (createRemote) {
+      gitCleanup = await createRemoteBranch(testInfo, tmpDir);
     }
-    remoteBranch && (await git.push(["--delete", "origin", remoteBranch]));
+    const { port, kill } = await spawnStudio(tmpDir, debug, testInfo);
+    cleanupChildProcess = kill;
+    await run(port, tmpDir);
+  } finally {
+    if (!debug && tmpDir) {
+      fsExtra.rmdirSync(tmpDir, { recursive: true });
+    }
+    cleanupChildProcess?.()
+    await gitCleanup?.();
   }
 }
 
@@ -46,12 +48,22 @@ export default async function setup(
  * Creates and checks out a new branch for the test,
  * then pushes it to the remote.
  */
-async function createRemoteBranch(testInfo: TestInfo) {
+async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
+  const git = simpleGit(tmpDir);
+  const remoteURL = (await git.getConfig('remote.origin.url')).value;
+  if (!remoteURL) {
+    throw new Error('no remote.origin.url found');
+  }
   const testFile = getTestFilename(testInfo);
-  const testBranch = `e2e-test_${testFile}_${Date.now()}`;
-  await git.checkout(["-b", testBranch]);
+  const date = new Date();
+  const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`
+  const testBranch = `e2e-test_${testFile}_${dateString}`;
+  await git.init(['--initial-branch', testBranch]);
+  await git.addRemote('origin', remoteURL);
   await git.push(["-u", "origin", "HEAD"]);
-  return testBranch;
+  return async () => {
+    // await git.push(["--delete", "origin", testBranch])
+  };
 }
 
 /**
