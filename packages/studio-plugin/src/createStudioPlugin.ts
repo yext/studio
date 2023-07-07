@@ -37,6 +37,7 @@ export default async function createStudioPlugin(
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
   const gitWrapper = new GitWrapper(
     simpleGit({
+      baseDir: pathToUserProjectRoot,
       config: [
         'user.name="Yext Studio"',
         'user.email="studio-placeholder@yext.com"',
