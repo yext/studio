@@ -6,15 +6,13 @@ type Form = {
   [field: string]: string;
 };
 
-type FieldData = {
-  description: string;
-  optional?: boolean;
-  placeholder?: string;
-  tooltip?: string;
-}
-
 export type FormData<T extends Form> = {
-  [field in keyof T]: FieldData;
+  [field in keyof T]: {
+    description: string;
+    optional?: boolean;
+    placeholder?: string;
+    tooltip?: string;
+  };
 };
 
 interface FormModalProps<T extends Form> {
@@ -100,7 +98,7 @@ export default function FormModal<T extends Form>({
             key={field}
             field={field}
             value={val}
-            fieldData={formData[field]}
+            {...formData[field]}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
           />
@@ -146,13 +144,17 @@ function getIsFormFilled<T extends Form>(
 function FormField({
   field,
   value,
-  fieldData,
+  description,
+  placeholder,
+  tooltip,
   updateFormField,
   transformOnChangeValue,
 }: {
   field: string;
   value: string;
-  fieldData: FieldData;
+  description: string;
+  placeholder?: string;
+  tooltip?: string;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -168,16 +170,16 @@ function FormField({
 
   return (
     <>
-      <label htmlFor={inputId}>{fieldData.description}</label>
+      <label htmlFor={inputId}>{description}</label>
       <input
         id={inputId}
         type="text"
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
-        placeholder={fieldData.placeholder}
+        placeholder={placeholder}
         value={value}
         onChange={handleChange}
       />
-      {fieldData.tooltip && <Tooltip anchorId={inputId} content={fieldData.tooltip} />}
+      {tooltip && <Tooltip anchorId={inputId} content={tooltip} />}
     </>
   );
 }
