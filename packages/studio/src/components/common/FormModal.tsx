@@ -167,11 +167,12 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
-  const divId = `${field}-div`;
+  const labelId = `${field}-label`;
 
   return (
-    <div id={divId}>
-      <label htmlFor={inputId}>{description}</label>
+    <>
+      <label id={labelId} htmlFor={inputId}>{description}</label>
+      {tooltip && <Tooltip anchorId={labelId} content={tooltip} />}
       <input
         id={inputId}
         type="text"
@@ -180,7 +181,6 @@ function FormField({
         value={value}
         onChange={handleChange}
       />
-      {tooltip && <Tooltip anchorId={divId} content={tooltip} />}
-    </div>
+    </>
   );
 }
