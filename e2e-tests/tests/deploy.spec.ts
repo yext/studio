@@ -1,18 +1,16 @@
 import { expect } from "@playwright/test";
 import { studioTest } from "./infra/studioTest.js";
-import simpleGit from "simple-git";
-const git = simpleGit();
 
 studioTest.use({
-  createRemote: true
+  createRemote: true,
 });
 
 studioTest.only("can deploy changes", async ({ page, studioPage }) => {
-  const startingRef = await git.revparse(["HEAD"]);
+  const gitOps = studioPage.gitOps;
+  const startingRef = await gitOps.getCurrentRef();
   await studioPage.addElement("Container", "Containers");
   await expect(page).toHaveScreenshot();
 
-  const gitOps = studioPage.gitOps;
   const numCommitsBeforeDeploy = await gitOps.getNumCommitsFromRef(startingRef);
   expect(numCommitsBeforeDeploy).toEqual(0);
   await studioPage.deployButton.click();

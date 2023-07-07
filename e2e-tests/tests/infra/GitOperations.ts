@@ -1,4 +1,4 @@
-import { SimpleGit } from 'simple-git'
+import { SimpleGit } from "simple-git";
 
 export default class GitOperations {
   constructor(private git: SimpleGit) {}
@@ -6,7 +6,9 @@ export default class GitOperations {
    * Gets the numbers of commits between the current remote branch and the given ref.
    */
   async getNumCommitsFromRef(ref: string): Promise<number> {
-    const branchName = (await this.git.raw(["branch", "--show-current"])).trim();
+    const branchName = (
+      await this.git.raw(["branch", "--show-current"])
+    ).trim();
     const rawOutput = await this.git.raw([
       "rev-list",
       `${ref}..origin/${branchName}`,
@@ -16,6 +18,10 @@ export default class GitOperations {
   }
 
   async getCommitMessage(): Promise<string> {
-    return this.git.raw(["show-branch", "--no-name", "HEAD"])
+    return this.git.raw(["show-branch", "--no-name", "HEAD"]);
+  }
+
+  async getCurrentRef(): Promise<string> {
+    return this.git.revparse(["HEAD"]);
   }
 }

@@ -36,11 +36,11 @@ export default async function setup(
     cleanupChildProcess = kill;
     await run(port, tmpDir);
   } finally {
+    cleanupChildProcess?.();
+    await gitCleanup?.();
     if (!debug && tmpDir) {
       fsExtra.rmdirSync(tmpDir, { recursive: true });
     }
-    cleanupChildProcess?.()
-    await gitCleanup?.();
   }
 }
 
@@ -50,21 +50,21 @@ export default async function setup(
  */
 async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
   const git = simpleGit(tmpDir);
-  const remoteURL = (await git.getConfig('remote.origin.url')).value;
+  const remoteURL = (await git.getConfig("remote.origin.url")).value;
   if (!remoteURL) {
-    throw new Error('no remote.origin.url found');
+    throw new Error("no remote.origin.url found");
   }
   const testFile = getTestFilename(testInfo);
   const date = new Date();
-  const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`
+  const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`;
   const testBranch = `e2e-test_${testFile}_${dateString}`;
-  await git.init(['--initial-branch', testBranch]);
-  await git.addRemote('origin', remoteURL);
-  await git.add('-A');
-  await git.commit('initial commit for ' + testBranch);
+  await git.init(["--initial-branch", testBranch]);
+  await git.addRemote("origin", remoteURL);
+  await git.add("-A");
+  await git.commit("initial commit for " + testBranch);
   await git.push(["-u", "origin", "HEAD"]);
   return async () => {
-    await git.push(["--delete", "origin", testBranch])
+    await git.push(["--delete", "origin", testBranch]);
   };
 }
 
@@ -82,7 +82,6 @@ function createTempWorkingDir(testInfo: TestInfo) {
   copy("src");
   copy("localData");
   copy("studio.config.js");
-  console.log('created dir', tmpDir)
   return tmpDir;
 }
 
