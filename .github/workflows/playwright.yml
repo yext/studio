@@ -4,6 +4,7 @@ on: push
 
 jobs:
   acceptance:
+    name: Playwright Tests (${{ matrix.shard }}/3)
     timeout-minutes: 30
     strategy:
       matrix:
