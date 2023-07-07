@@ -11,7 +11,7 @@ type FieldData = {
   optional?: boolean;
   placeholder?: string;
   tooltip?: string;
-}
+};
 
 export type FormData<T extends Form> = {
   [field in keyof T]: FieldData;
@@ -177,7 +177,9 @@ function FormField({
         value={value}
         onChange={handleChange}
       />
-      {fieldData.tooltip && <Tooltip anchorId={inputId} content={fieldData.tooltip} />}
+      {fieldData.tooltip && (
+        <Tooltip anchorId={inputId} content={fieldData.tooltip} />
+      )}
     </>
   );
 }
