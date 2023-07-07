@@ -12,6 +12,7 @@ import { useCallback } from "react";
 import NestedPropEditors from "./NestedPropEditors";
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
+import UndefinedMenuButton from "./UndefinedMenuButton";
 
 export default function PropEditors(props: {
   propShape: PropShape;
@@ -21,11 +22,17 @@ export default function PropEditors(props: {
 }) {
   const { propShape, propValues, updateProps, isNested } = props;
   const updateSpecificProp = useCallback(
-    (propName: string, propVal: PropVal) => {
-      updateProps({
-        ...propValues,
-        [propName]: propVal,
-      });
+    (propName: string) => (propVal: PropVal | undefined) => {
+      if (!propVal) {
+        const updatedPropValues = { ...propValues };
+        delete updatedPropValues[propName];
+        updateProps(updatedPropValues);
+      } else {
+        updateProps({
+          ...propValues,
+          [propName]: propVal,
+        });
+      }
     },
     [propValues, updateProps]
   );
@@ -33,11 +40,11 @@ export default function PropEditors(props: {
   const numProps = Object.keys(propShape).length;
   const propEditors = Object.entries(propShape).map(
     ([propName, propMetadata], index) => {
-      const editor = renderPropEditor(
+      const editor = renderWrappedPropEditor(
         propName,
         propMetadata,
         propValues[propName],
-        updateSpecificProp,
+        updateSpecificProp(propName),
         isNested
       );
       if (isNested) {
@@ -61,11 +68,39 @@ export default function PropEditors(props: {
   return <>{propEditors}</>;
 }
 
+function renderWrappedPropEditor(
+  propName: string,
+  propMetadata: PropMetadata,
+  propVal: PropVal | undefined,
+  updateProp: (propVal: PropVal | undefined) => void,
+  isNested?: boolean
+) {
+  const editor = renderPropEditor(
+    propName,
+    propMetadata,
+    propVal,
+    updateProp,
+    isNested
+  );
+  if (propMetadata.required) {
+    return editor;
+  }
+  return (
+    <UndefinedMenuButton
+      propType={propMetadata}
+      isUndefined={!propVal}
+      updateProp={updateProp}
+    >
+      {editor}
+    </UndefinedMenuButton>
+  );
+}
+
 export function renderPropEditor(
   propName: string,
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
-  updateSpecificProp: (propName: string, propVal: PropVal) => void,
+  updateProp: (propVal: PropVal) => void,
   isNested?: boolean
 ) {
   if (propMetadata.type === PropValueType.Object) {
@@ -81,7 +116,7 @@ export function renderPropEditor(
         propValues={propVal?.value}
         propType={propMetadata}
         propName={propName}
-        updateSpecificProp={updateSpecificProp}
+        updateProp={updateProp}
         isNested={isNested}
       />
     );
@@ -98,7 +133,7 @@ export function renderPropEditor(
         propName={propName}
         propMetadata={propMetadata}
         propValue={propVal?.value}
-        onPropChange={updateSpecificProp}
+        onPropChange={updateProp}
         isNested={isNested}
       />
     );
@@ -107,7 +142,7 @@ export function renderPropEditor(
   const propKind = getPropKind(propMetadata);
   return (
     <PropEditor
-      onPropChange={updateSpecificProp}
+      onPropChange={updateProp}
       propKind={propKind}
       propName={propName}
       propMetadata={propMetadata}

@@ -555,3 +555,82 @@ describe("Array prop", () => {
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
 });
+
+describe("undefined menu", () => {
+  const propShape: PropShape = {
+    bool: {
+      type: PropValueType.boolean,
+      required: false,
+    },
+  };
+  const state: StandardComponentState = {
+    ...activeComponentState,
+    props: {
+      bool: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.boolean,
+        value: true,
+      },
+    },
+  };
+
+  beforeEach(() => {
+    mockStoreActiveComponent({
+      activeComponent: state,
+      activeComponentMetadata: {
+        ...activeComponentMetadata,
+        propShape,
+      },
+    });
+  });
+
+  it("renders icon for optional prop", () => {
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={state}
+        propShape={propShape}
+      />
+    );
+    expect(screen.getByLabelText("Toggle undefined value menu")).toBeDefined();
+  });
+
+  it("does not render icon for required prop", () => {
+    const propShape: PropShape = {
+      bool: {
+        type: PropValueType.boolean,
+        required: true,
+      },
+    };
+    mockStoreActiveComponent({
+      activeComponent: state,
+      activeComponentMetadata: {
+        ...activeComponentMetadata,
+        propShape,
+      },
+    });
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={state}
+        propShape={propShape}
+      />
+    );
+    expect(screen.queryByLabelText("Toggle undefined value menu")).toBeFalsy();
+  });
+
+  it("sets prop value to undefined", async () => {
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={state}
+        propShape={propShape}
+      />
+    );
+    expect(getComponentProps().bool).toEqual({
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.boolean,
+      value: true,
+    });
+    await userEvent.click(screen.getByLabelText("Toggle undefined value menu"));
+    await userEvent.click(screen.getByText("Set as Undefined"));
+    expect(getComponentProps().bool).toBeUndefined();
+  });
+});

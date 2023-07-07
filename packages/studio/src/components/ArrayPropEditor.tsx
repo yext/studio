@@ -21,7 +21,7 @@ interface ArrayPropEditorProps {
   propName: string;
   propMetadata: Extract<PropMetadata, ArrayPropType>;
   propValue?: string | PropVal[];
-  onPropChange: (propName: string, propVal: PropVal) => void;
+  onPropChange: (propVal: PropVal) => void;
   isNested?: boolean;
 }
 
@@ -47,9 +47,8 @@ export default function ArrayPropEditor({
   );
 
   const onChange = useCallback(
-    (value: string | PropVal[]) =>
-      onPropChange(propName, createArrayPropVal(value)),
-    [onPropChange, propName]
+    (value: string | PropVal[]) => onPropChange(createArrayPropVal(value)),
+    [onPropChange]
   );
 
   const onExpressionChange = useCallback(
@@ -122,7 +121,7 @@ function LiteralEditor({
   );
 
   const updateItem = useCallback(
-    (itemName: string, itemVal: PropVal) =>
+    (itemName: string) => (itemVal: PropVal) =>
       updateItems(Object.values({ ...propValues, [itemName]: itemVal })),
     [propValues, updateItems]
   );
@@ -155,7 +154,7 @@ function LiteralEditor({
               name,
               { ...itemType, required: false },
               propVal,
-              updateItem,
+              updateItem(name),
               true
             );
             return (

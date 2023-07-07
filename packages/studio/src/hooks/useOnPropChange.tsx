@@ -12,7 +12,7 @@ import { useCallback } from "react";
 export default function useOnPropChange(
   propKind: PropValueKind,
   propName: string,
-  onPropChange: (propName: string, propVal: PropVal) => void,
+  onPropChange: (propVal: PropVal) => void,
   valueType: PropValueType
 ) {
   return useCallback(
@@ -25,7 +25,7 @@ export default function useOnPropChange(
         );
         return;
       }
-      onPropChange(propName, newPropVal);
+      onPropChange(newPropVal);
     },
     [onPropChange, propKind, propName, valueType]
   );
