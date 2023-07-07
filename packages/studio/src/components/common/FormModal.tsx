@@ -167,7 +167,7 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
-  const divId = `$${field}-div`
+  const divId = `$${field}-div`;
 
   return (
     <div id={divId}>
