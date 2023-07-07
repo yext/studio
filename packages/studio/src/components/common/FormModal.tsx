@@ -98,9 +98,9 @@ export default function FormModal<T extends Form>({
             key={field}
             field={field}
             value={val}
-            {...formData[field]}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
+            {...formData[field]}
           />
         ))}
       </>
@@ -144,19 +144,19 @@ function getIsFormFilled<T extends Form>(
 function FormField({
   field,
   value,
+  updateFormField,
+  transformOnChangeValue,
   description,
   placeholder,
   tooltip,
-  updateFormField,
-  transformOnChangeValue,
 }: {
   field: string;
   value: string;
+  updateFormField: (field: string, value: string) => void;
+  transformOnChangeValue?: (value: string, field: string) => string;
   description: string;
   placeholder?: string;
   tooltip?: string;
-  updateFormField: (field: string, value: string) => void;
-  transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
