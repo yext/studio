@@ -42,11 +42,8 @@ export default class StudioPlaywrightPage {
       "Deploy Changes to Repository"
     );
 
-    this.gitOps = new GitOperations(
-      simpleGit({
-        baseDir: tmpDir,
-      })
-    );
+    const git = simpleGit({ baseDir: tmpDir });
+    this.gitOps = new GitOperations(git);
   }
 
   async addStaticPage(pageName: string, urlSlug: string) {
