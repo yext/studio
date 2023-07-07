@@ -19,7 +19,7 @@ import { dynamicImport } from "../utils/dynamicImport";
  */
 export default async function getStudioConfig(
   pathToProjectRoot: string,
-  cliArgs: CliArgs
+  cliArgs: CliArgs = {}
 ): Promise<StudioConfigWithDefaulting> {
   try {
     return getStudioConfigInternal(pathToProjectRoot, cliArgs);
