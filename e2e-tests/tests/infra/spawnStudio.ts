@@ -57,7 +57,7 @@ async function serverExistsForPort(port: number) {
 }
 
 async function waitForPort(port: number): Promise<void> {
-  const timeout = 30_000;
+  const timeout = 45_000;
   const cancellationToken = { canceled: false };
   setTimeout(() => (cancellationToken.canceled = true), timeout);
   while (!cancellationToken.canceled) {

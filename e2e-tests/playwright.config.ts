@@ -1,5 +1,6 @@
 import { PlaywrightTestConfig, expect } from "@playwright/test";
 import fs from "fs";
+import os from "os";
 
 expect.extend({
   async toHaveContents(filepath: string, expectedContents: string) {
@@ -41,7 +42,7 @@ const config: PlaywrightTestConfig = {
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
   fullyParallel: true,
-  workers: process.env.ci ? 2 : undefined,
+  workers: process.env.ci ? 2 : Math.floor(os.cpus().length / 2),
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
