@@ -6,13 +6,15 @@ type Form = {
   [field: string]: string;
 };
 
+type FieldData = {
+  description: string;
+  optional?: boolean;
+  placeholder?: string;
+  tooltip?: string;
+}
+
 export type FormData<T extends Form> = {
-  [field in keyof T]: {
-    description: string;
-    optional?: boolean;
-    placeholder?: string;
-    tooltip?: string;
-  };
+  [field in keyof T]: FieldData;
 };
 
 interface FormModalProps<T extends Form> {
@@ -97,10 +99,8 @@ export default function FormModal<T extends Form>({
           <FormField
             key={field}
             field={field}
-            description={formData[field].description}
             value={val}
-            placeholder={formData[field].placeholder}
-            tooltip={formData[field].tooltip}
+            fieldData={formData[field]}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
           />
@@ -145,18 +145,14 @@ function getIsFormFilled<T extends Form>(
 
 function FormField({
   field,
-  description,
   value,
-  placeholder,
-  tooltip,
+  fieldData,
   updateFormField,
   transformOnChangeValue,
 }: {
   field: string;
-  description: string;
   value: string;
-  placeholder?: string;
-  tooltip?: string;
+  fieldData: FieldData;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
 }): JSX.Element {
@@ -172,16 +168,16 @@ function FormField({
 
   return (
     <>
-      <label htmlFor={inputId}>{description}</label>
+      <label htmlFor={inputId}>{fieldData.description}</label>
       <input
         id={inputId}
         type="text"
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
-        placeholder={placeholder}
+        placeholder={fieldData.placeholder}
         value={value}
         onChange={handleChange}
       />
-      {tooltip && <Tooltip anchorId={inputId} content={tooltip} />}
+      {fieldData.tooltip && <Tooltip anchorId={inputId} content={fieldData.tooltip} />}
     </>
   );
 }

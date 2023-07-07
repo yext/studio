@@ -42,14 +42,12 @@ export default function EntityPageModal({
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
-      ...{
-        url: {
-          description: "URL Slug",
-          optional: isPathUndefined,
-          placeholder: isPathUndefined
-            ? "<URL slug is defined by developer>"
-            : "",
-        },
+      url: {
+        description: "URL Slug",
+        optional: isPathUndefined,
+        placeholder: isPathUndefined
+          ? "<URL slug is defined by developer>"
+          : "",
       },
       ...streamScopeFormData,
     }),
