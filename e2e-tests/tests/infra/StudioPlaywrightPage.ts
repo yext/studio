@@ -71,11 +71,11 @@ export default class StudioPlaywrightPage {
   }
 
   private async enterStreamScope(streamScopeForm?: StreamScopeForm) {
-    const streamScopeModal = "Specify the Stream Scope";
+    const streamScopeModal = "Content Scope";
     const streamScopeTextboxNames: StreamScopeForm = {
-      entityIds: "Entity IDs:",
-      entityTypes: "Entity Types:",
-      savedFilterIds: "Saved Filter IDs:",
+      entityIds: "Entity IDs",
+      entityTypes: "Entity Type IDs",
+      savedFilterIds: "Saved Filter IDs",
     };
     await expect(this.page).toHaveScreenshot();
     for (const field in streamScopeForm) {
@@ -90,13 +90,13 @@ export default class StudioPlaywrightPage {
   }
 
   private async enterBasicPageData(pageName: string, urlSlug?: string) {
-    const basicDataModal = "Specify Page Name and URL";
+    const basicDataModal = "Page Name and URL";
     await expect(this.page).toHaveScreenshot();
-    await this.typeIntoModal(basicDataModal, "Give the page a name:", pageName);
+    await this.typeIntoModal(basicDataModal, "Page Name", pageName);
     if (urlSlug)
       await this.typeIntoModal(
         basicDataModal,
-        "Specify the URL slug:",
+        "URL Slug",
         urlSlug
       );
     await expect(this.page).toHaveScreenshot();
