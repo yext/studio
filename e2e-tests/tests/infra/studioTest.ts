@@ -1,6 +1,7 @@
 import { test as base } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
 import setupAcceptance from "./setupAcceptance.js";
+import GitOperations from './GitOperations.js';
 
 type Fixtures = {
   /**

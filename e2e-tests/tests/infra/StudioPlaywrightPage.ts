@@ -1,6 +1,8 @@
 import { Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
 import path from "path";
+import GitOperations from './GitOperations.js';
+import simpleGit from 'simple-git'
 
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
@@ -10,6 +12,7 @@ export default class StudioPlaywrightPage {
   readonly removeElementButton: Locator;
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
+  readonly gitOps: GitOperations;
 
   constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
@@ -38,6 +41,10 @@ export default class StudioPlaywrightPage {
       "Deployed successfully.",
       "Deploy Changes to Repository"
     );
+
+    this.gitOps = new GitOperations(simpleGit({
+      baseDir: tmpDir
+    }))
   }
 
   async addStaticPage(pageName: string, urlSlug: string) {
