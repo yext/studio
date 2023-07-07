@@ -171,7 +171,9 @@ function FormField({
 
   return (
     <>
-      <label id={labelId} htmlFor={inputId}>{description}</label>
+      <label id={labelId} htmlFor={inputId}>
+        {description}
+      </label>
       {tooltip && <Tooltip anchorId={labelId} content={tooltip} />}
       <input
         id={inputId}
