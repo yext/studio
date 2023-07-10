@@ -33,6 +33,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
+          cache: npm
       - run: npm ci
       - name: Regenerate Full Tailwind Bundle
         run: npx tailwindcss -o src/tailwind-full.css -c ../../.github/tailwind-safelist-all.config.js --minify
