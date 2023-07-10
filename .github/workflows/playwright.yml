@@ -19,7 +19,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/Library/Caches/ms-playwright
-          key: ${{ hashFiles('node_modules/@playwright/test/package.json') }}
+          key: playwright-browsers-${{ hashFiles('node_modules/@playwright/test/package.json') }}
       - run: npx playwright install
       - run: npm i
       - name: Run Playwright
