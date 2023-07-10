@@ -7,7 +7,7 @@ import { FileMetadataKind } from "@yext/studio-plugin";
 
 export enum ElementType {
   Components = "Components",
-  Containers = "Containers",
+  Containers = "Layouts",
   Modules = "Modules",
 }
 /**
@@ -67,7 +67,7 @@ function ElementTypeButton(props: {
 }) {
   const { isActiveType, elementType, handleClick } = props;
   const onClick = useCallback(() => {
-    handleClick(ElementType[elementType]);
+    handleClick(elementType);
   }, [elementType, handleClick]);
   return (
     <button

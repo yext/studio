@@ -9,7 +9,7 @@ studioTest.use({
 
 studioTest("can deploy changes", async ({ page, studioPage }) => {
   const startingRef = await git.revparse(["HEAD"]);
-  await studioPage.addElement("Container", "Containers");
+  await studioPage.addElement("Container", "Layouts");
   await expect(page).toHaveScreenshot();
 
   const numCommitsBeforeDeploy = await getNumCommitsFromRef(startingRef);
