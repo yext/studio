@@ -64,7 +64,7 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
   // await git.init(["--initial-branch", testBranch]);
   // await git.addRemote("origin", remoteURL);
   await git.add("-A");
-  await git.checkout(['-b', testBranch]);
+  await git.checkout(["-b", testBranch]);
   await git.commit("initial commit for " + testBranch);
   await git.push(["-u", "origin", "HEAD"]);
   return async () => {
