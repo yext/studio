@@ -6,6 +6,7 @@ import { TestInfo } from "@playwright/test";
 import fs from "fs";
 import fsExtra from "fs-extra";
 import spawnStudio from "./spawnStudio.js";
+import { execSync } from 'child_process'
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -62,6 +63,7 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
   const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`;
   const testBranch = `e2e-test_${testFile}_${dateString}`;
   await git.init(["--initial-branch", testBranch]);
+  execSync('gh auth login', { stdio: 'inherit' });
   await git.addRemote("origin", remoteURL);
   await git.add("-A");
   await git.commit("initial commit for " + testBranch);
