@@ -54,9 +54,10 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
   const date = new Date();
   const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`;
   const testBranch = `e2e-test_${testFile}_${dateString}`;
-  const tmpDirGitPath = path.join(tmpDir, '.git');
-  fsExtra.mkdirSync(tmpDirGitPath)
-  fsExtra.cpSync(tmpDirGitPath, '.git', { recursive: true })
+  const tmpDirGitPath = path.join(tmpDir, ".git");
+  fsExtra.mkdirSync(tmpDirGitPath);
+  fsExtra.cpSync(".git", tmpDirGitPath, { recursive: true });
+  await git.checkout(["-b", testBranch]);
   await git.add("-A");
   await git.commit("initial commit for " + testBranch);
   await git.push(["-u", "origin", "HEAD"]);
