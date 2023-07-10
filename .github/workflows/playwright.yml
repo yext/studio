@@ -13,7 +13,8 @@ jobs:
           node-version: 18
           cache: npm
       - run: npm ci
-      - run: npm run build
+      - run: npm run build -w=packages/studio-plugin
+      - run: npm run build -w=packages/studio
       - name: Cache playwright browsers
         uses: actions/cache@v3
         with:
