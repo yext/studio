@@ -12,7 +12,7 @@ import { PropType, PropVal, PropValueType } from "@yext/studio-plugin";
 import PropValueHelpers from "../utils/PropValueHelpers";
 
 const listStyles: CSSProperties = {
-  minWidth: "145px",
+  minWidth: "130px",
   right: "9.5em",
 };
 
@@ -57,7 +57,7 @@ export default function UndefinedMenuButton({
     "mt-5": propType.type === PropValueType.Array,
   });
   const undefinedMenuText = isUndefined
-    ? "Remove Undefined"
+    ? "Reset to Default"
     : "Set as Undefined";
 
   return (

@@ -8,14 +8,14 @@ describe("prop with undefined value", () => {
   it("correctly renders menu when icon is clicked", async () => {
     renderUndefinedMenuButton(true);
     await userEvent.click(screen.getByLabelText("Toggle undefined value menu"));
-    expect(screen.getByText("Remove Undefined")).toBeDefined();
+    expect(screen.getByText("Reset to Default")).toBeDefined();
   });
 
   it("updates value to a default when menu is clicked", async () => {
     const updateProp = jest.fn();
     renderUndefinedMenuButton(true, updateProp);
     await userEvent.click(screen.getByLabelText("Toggle undefined value menu"));
-    await userEvent.click(screen.getByText("Remove Undefined"));
+    await userEvent.click(screen.getByText("Reset to Default"));
     expect(updateProp).toBeCalledTimes(1);
     const defaultPropVal: PropVal = {
       kind: PropValueKind.Literal,
@@ -46,9 +46,9 @@ describe("prop with defined value", () => {
 it("closes menu when clicking outside menu", async () => {
   renderUndefinedMenuButton(true, jest.fn(), <>Test</>);
   await userEvent.click(screen.getByLabelText("Toggle undefined value menu"));
-  expect(screen.getByText("Remove Undefined")).toBeDefined();
+  expect(screen.getByText("Reset to Default")).toBeDefined();
   await userEvent.click(screen.getByText("Test"));
-  expect(screen.queryByText("Remove Undefined")).toBeFalsy();
+  expect(screen.queryByText("Reset to Default")).toBeFalsy();
 });
 
 function renderUndefinedMenuButton(
