@@ -38,7 +38,7 @@ Now that you have a page, you probably want to do some things with it. Specifica
 
 ![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+9.18.10+AM.png)
 
-These are the various Components that can be added to your page. For now, you can ignore Containers and Modules. Those will be described later. Once you select a Component, such as `Banner`, it will appear in the middle preview pane and on the left-hand side under `Layers`:
+These are the various Components that can be added to your page. For now, you can ignore Layouts and Modules. Those will be described later. Once you select a Component, such as `Banner`, it will appear in the middle preview pane and on the left-hand side under `Layers`:
 
 ![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-03+at+9.41.51+AM.png)
 
@@ -123,15 +123,15 @@ Users may find that they use a certain combination of Components often across pa
 
 ### Creating a Module
 
-Creating a Module is simple and can be done entirely within Studio. No Developer intervention is needed! To start, you will need to add a Container. This is done by clicking the same Icon you did for adding a Component:
+Creating a Module is simple and can be done entirely within Studio. No Developer intervention is needed! To start, you will need to add a Layout. This is done by clicking the same Icon you did for adding a Component:
 
 ![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+12.38.01+PM.png)
 
-As the name suggests, a Container groups a set of Studio Components. Once the Container is in place on the page, add the Components that you want in the Container. The Components will initially be siblings of the Container. In the `Layers` pane, you will need to drag the Components under Container.
+A Layout groups a set of Studio Components. Once the Layout is in place on the page, add the Components that you want in the Layout. The Components will initially be siblings of the Layout. In the `Layers` pane, you will need to drag the Components under Layout.
 
 ![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+1.07.06+PM.png)
 
-Once the Container has all the necessary Components, click it and you will see a `Create Module` button appear:
+Once the Layout has all the necessary Components, click it and you will see a `Create Module` button appear:
 
 ![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+1.00.17+PM.png)
 

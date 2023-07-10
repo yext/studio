@@ -152,7 +152,7 @@ export default class StudioPlaywrightPage {
 
   async addElement(
     elementName: string,
-    category: "Components" | "Containers" | "Modules"
+    category: "Components" | "Layouts" | "Modules"
   ) {
     await this.addElementButton.click();
     await expect(this.page).toHaveScreenshot();

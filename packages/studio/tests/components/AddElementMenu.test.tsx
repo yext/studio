@@ -62,9 +62,9 @@ it("can add a component to the tree", async () => {
   expect(closeMenu).toBeCalledTimes(1);
 });
 
-it("can switch to Containers", async () => {
+it("can switch to Layouts", async () => {
   render(<AddElementMenu closeMenu={closeMenu} />);
-  await userEvent.click(screen.getByText("Containers"));
+  await userEvent.click(screen.getByText("Layouts"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.getByText("Mock-Container")).toBeDefined();
   expect(screen.queryByText("Mock-Module")).toBeNull();
@@ -73,7 +73,7 @@ it("can switch to Containers", async () => {
 
 it("can add a container to the tree", async () => {
   render(<AddElementMenu closeMenu={closeMenu} />);
-  await userEvent.click(screen.getByText("Containers"));
+  await userEvent.click(screen.getByText("Layouts"));
   await userEvent.click(screen.getByText("Mock-Container"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
