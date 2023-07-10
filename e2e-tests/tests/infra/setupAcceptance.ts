@@ -52,7 +52,8 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
   const git = simpleGit(tmpDir, {
     config: ['user.name="Acceptance Tests"', 'user.email="slapshot@yext.com"'],
   });
-  const remoteURL = (await git.getConfig("remote.origin.url")).value;
+  // const remoteURL = (await git.getConfig("remote.origin.url")).value;
+  const remoteURL = "git@github.com:yext/studio-prototype.git";
   if (!remoteURL) {
     throw new Error("no remote.origin.url found");
   }
