@@ -23,7 +23,7 @@ export default function PropEditors(props: {
   const { propShape, propValues, updateProps, isNested } = props;
   const updateSpecificProp = useCallback(
     (propName: string) => (propVal: PropVal | undefined) => {
-      if (!propVal) {
+      if (propVal === undefined) {
         const updatedPropValues = { ...propValues };
         delete updatedPropValues[propName];
         updateProps(updatedPropValues);
