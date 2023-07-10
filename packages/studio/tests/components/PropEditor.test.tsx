@@ -12,6 +12,7 @@ describe("trigger onChange from input interaction", () => {
         propName="age"
         propMetadata={{ type: PropValueType.number, required: false }}
         onPropChange={onPropChange}
+        propValue="``"
       />
     );
     const inputValue = "doc.age";
@@ -33,6 +34,7 @@ describe("trigger onChange from input interaction", () => {
         propName="title"
         propMetadata={{ type: PropValueType.string, required: false }}
         onPropChange={onPropChange}
+        propValue=""
       />
     );
     await userEvent.type(screen.getByLabelText("title"), "y");
@@ -51,6 +53,7 @@ describe("trigger onChange from input interaction", () => {
         propName="age"
         propMetadata={{ type: PropValueType.number, required: false }}
         onPropChange={onPropChange}
+        propValue={0}
       />
     );
     await userEvent.type(screen.getByLabelText("age"), "4");

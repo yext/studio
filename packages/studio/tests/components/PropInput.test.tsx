@@ -48,7 +48,33 @@ it("correctly renders String Union Prop", () => {
   expect(screen.getAllByRole("option").length).toBe(3);
 });
 
-function renderExpressionPropInput(propValue: string, onChange = jest.fn()) {
+describe("correctly renders prop inputs with undefined value", () => {
+  it("number prop", () => {
+    render(
+      <PropInput
+        propType={{ type: PropValueType.number }}
+        propValue={undefined}
+        propKind={PropValueKind.Literal}
+        onChange={jest.fn()}
+      />
+    );
+    const input = screen.getByRole("spinbutton");
+    expect(input).toHaveValue(null);
+    expect(input).toBeDisabled();
+  });
+
+  it("non-union string prop", () => {
+    renderExpressionPropInput(undefined);
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveValue("");
+    expect(input).toBeDisabled();
+  });
+});
+
+function renderExpressionPropInput(
+  propValue: string | undefined,
+  onChange = jest.fn()
+) {
   render(
     <PropInput
       propType={{ type: PropValueType.string }}

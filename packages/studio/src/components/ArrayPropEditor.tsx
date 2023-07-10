@@ -62,6 +62,7 @@ export default function ArrayPropEditor({
 
   const docTooltipId = `${propName}-doc`;
   const inputTooltipId = `${propName}-input`;
+  const isUndefinedValue = propValue === undefined;
 
   return (
     <div className={containerClasses}>
@@ -85,7 +86,7 @@ export default function ArrayPropEditor({
               handleFieldSelection={onChange}
               displayValue={isExpression ? value : ""}
               fieldFilter={fieldPickerFilter}
-              disabled={!isExpression}
+              disabled={!isExpression || isUndefinedValue}
             />
           </div>
           {!isExpression && (
@@ -97,11 +98,13 @@ export default function ArrayPropEditor({
             />
           )}
         </label>
-        <LiteralEditor
-          value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
-          itemType={propMetadata.itemType}
-          updateItems={onChange}
-        />
+        {!isUndefinedValue && (
+          <LiteralEditor
+            value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
+            itemType={propMetadata.itemType}
+            updateItems={onChange}
+          />
+        )}
       </div>
     </div>
   );
