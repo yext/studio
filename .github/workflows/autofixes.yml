@@ -13,7 +13,14 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18.x
-      - run: npm ci
+      - name: Cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: node_modules-${{ hashFiles('package_lock.json') }}
+      - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
+        run: npm ci
       - run: npm run autofix
       - name: Automated Linting
         uses: EndBug/add-and-commit@v9
@@ -34,7 +41,14 @@ jobs:
         with:
           node-version: 18.x
           cache: npm
-      - run: npm ci
+      - name: Cache node_modules
+        id: cache-node_modules
+        uses: actions/cache@v3
+        with:
+          path: "**/node_modules"
+          key: node_modules-${{ hashFiles('package_lock.json') }}
+      - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
+        run: npm ci
       - name: Regenerate Full Tailwind Bundle
         run: npx tailwindcss -o src/tailwind-full.css -c ../../.github/tailwind-safelist-all.config.js --minify
         working-directory: ./packages/studio
