@@ -53,22 +53,21 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
     config: ['user.name="Acceptance Tests"', 'user.email="slapshot@yext.com"'],
   });
   // const remoteURL = (await git.getConfig("remote.origin.url")).value;
-  // const remoteURL = "git@github.com:yext/studio-prototype.git";
-  // if (!remoteURL) {
-  //   throw new Error("no remote.origin.url found");
-  // }
+  const remoteURL = "git@github.com:yext/studio-prototype.git";
+  if (!remoteURL) {
+    throw new Error("no remote.origin.url found");
+  }
   const testFile = getTestFilename(testInfo);
   const date = new Date();
   const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`;
   const testBranch = `e2e-test_${testFile}_${dateString}`;
-  // await git.init(["--initial-branch", testBranch]);
-  // await git.addRemote("origin", remoteURL);
+  await git.init(["--initial-branch", testBranch]);
+  await git.addRemote("origin", remoteURL);
   await git.add("-A");
-  await git.checkout(["-b", testBranch]);
   await git.commit("initial commit for " + testBranch);
   await git.push(["-u", "origin", "HEAD"]);
   return async () => {
-    // await git.push(["--delete", "origin", testBranch]);
+    await git.push(["--delete", "origin", testBranch]);
   };
 }
 
