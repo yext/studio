@@ -6,18 +6,23 @@ import StreamScopeParser, {
   StreamScopeForm,
 } from "../../utils/StreamScopeParser";
 
-const formData: FormData<StreamScopeForm> = {
+export const streamScopeFormData: FormData<StreamScopeForm> = {
   entityIds: {
-    description: "Entity IDs:",
+    description: "Entity IDs",
     optional: true,
+    tooltip: "In the Yext platform, navigate to Content > Entities",
   },
   entityTypes: {
-    description: "Entity Types:",
+    description: "Entity Type IDs",
     optional: true,
+    tooltip:
+      "In the Yext platform, navigate to Content > Configuration > Entity Types",
   },
   savedFilterIds: {
-    description: "Saved Filter IDs:",
+    description: "Saved Filter IDs",
     optional: true,
+    tooltip:
+      "In the Yext platform, navigate to Content > Configuration > Saved Filters",
   },
 };
 
@@ -41,10 +46,9 @@ export default function StreamScopeCollector({
   return (
     <FormModal
       isOpen={isOpen}
-      title="Specify the Stream Scope"
-      instructions="Use the optional fields below to define the scope of the
-        stream for the entity page. Values should be separated by commas."
-      formData={formData}
+      title="Content Scope"
+      instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas."
+      formData={streamScopeFormData}
       closeOnConfirm={false}
       confirmButtonText="Next"
       handleClose={handleClose}

@@ -1,4 +1,5 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { Tooltip } from "react-tooltip";
 import Modal from "./Modal";
 
 type Form = {
@@ -10,6 +11,7 @@ export type FormData<T extends Form> = {
     description: string;
     optional?: boolean;
     placeholder?: string;
+    tooltip?: string;
   };
 };
 
@@ -95,11 +97,10 @@ export default function FormModal<T extends Form>({
           <FormField
             key={field}
             field={field}
-            description={formData[field].description}
             value={val}
-            placeholder={formData[field].placeholder}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
+            {...formData[field]}
           />
         ))}
       </>
@@ -142,18 +143,20 @@ function getIsFormFilled<T extends Form>(
 
 function FormField({
   field,
-  description,
   value,
-  placeholder,
   updateFormField,
   transformOnChangeValue,
+  description,
+  placeholder,
+  tooltip,
 }: {
   field: string;
-  description: string;
   value: string;
-  placeholder?: string;
   updateFormField: (field: string, value: string) => void;
   transformOnChangeValue?: (value: string, field: string) => string;
+  description: string;
+  placeholder?: string;
+  tooltip?: string;
 }): JSX.Element {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -164,10 +167,14 @@ function FormField({
     [field, updateFormField, transformOnChangeValue]
   );
   const inputId = `${field}-input`;
+  const labelId = `${field}-label`;
 
   return (
     <>
-      <label htmlFor={inputId}>{description}</label>
+      <label id={labelId} htmlFor={inputId}>
+        {description}
+      </label>
+      {tooltip && <Tooltip anchorId={labelId} content={tooltip} />}
       <input
         id={inputId}
         type="text"

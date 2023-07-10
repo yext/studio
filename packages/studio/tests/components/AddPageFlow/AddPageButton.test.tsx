@@ -27,7 +27,7 @@ beforeEach(() => {
 
 async function specifyName() {
   const nameTextbox = screen.getByRole("textbox", {
-    name: "Give the page a name:",
+    name: "Page Name",
   });
   await userEvent.type(nameTextbox, "test");
 }
@@ -55,7 +55,7 @@ describe("PagesJS repo", () => {
 
   async function specifyUrl(url: string) {
     const urlTextbox = screen.getByRole("textbox", {
-      name: "Specify the URL slug:",
+      name: "URL Slug",
     });
     await userEvent.type(urlTextbox, url);
   }
@@ -108,7 +108,7 @@ describe("PagesJS repo", () => {
 
       const nextButton = screen.getByRole("button", { name: "Next" });
       const entityTypesTextbox = screen.getByRole("textbox", {
-        name: "Entity Types:",
+        name: "Entity Type IDs",
       });
       await userEvent.type(entityTypesTextbox, "location, restaurant");
       await userEvent.click(nextButton);

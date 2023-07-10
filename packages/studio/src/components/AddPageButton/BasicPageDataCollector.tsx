@@ -25,8 +25,8 @@ export default function BasicPageDataCollector({
 
   const formData: FormData<BasicPageData> = useMemo(
     () => ({
-      pageName: { description: "Give the page a name:" },
-      ...(isPagesJSRepo && { url: { description: "Specify the URL slug:" } }),
+      pageName: { description: "Page Name" },
+      ...(isPagesJSRepo && { url: { description: "URL Slug" } }),
     }),
     [isPagesJSRepo]
   );
@@ -63,7 +63,7 @@ export default function BasicPageDataCollector({
     [isEntityPage]
   );
 
-  const modalTitle = isPagesJSRepo ? "Specify Page Name and URL" : "Add Page";
+  const modalTitle = isPagesJSRepo ? "Page Name and URL" : "Add Page";
 
   return (
     <FormModal

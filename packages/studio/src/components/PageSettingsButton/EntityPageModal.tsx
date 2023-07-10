@@ -9,6 +9,7 @@ import StreamScopeParser, {
 } from "../../utils/StreamScopeParser";
 import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
+import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -42,24 +43,13 @@ export default function EntityPageModal({
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
       url: {
-        description: "URL slug:",
+        description: "URL Slug",
         optional: isPathUndefined,
         placeholder: isPathUndefined
           ? "<URL slug is defined by developer>"
           : "",
       },
-      entityIds: {
-        description: "Entity IDs:",
-        optional: true,
-      },
-      entityTypes: {
-        description: "Entity Types:",
-        optional: true,
-      },
-      savedFilterIds: {
-        description: "Saved Filter IDs:",
-        optional: true,
-      },
+      ...streamScopeFormData,
     }),
     [isPathUndefined]
   );
@@ -83,7 +73,7 @@ export default function EntityPageModal({
     <FormModal
       isOpen={isOpen}
       title="Page Settings"
-      instructions="Changing the scope of the stream (entity IDs, entity types, and saved filter IDs) may result in entity data references being invalid or out of date."
+      instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas. Changing the scope of the stream (entity IDs, entity type IDs, and saved filter IDs) may result in entity data references being invalid or out of date."
       formData={entityFormData}
       initialFormValue={initialFormValue}
       requireChangesToSubmit={true}
