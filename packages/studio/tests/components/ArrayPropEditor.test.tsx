@@ -29,7 +29,7 @@ describe("expression value", () => {
     const onPropChange = jest.fn();
     renderArrayPropEditor("document.strings", onPropChange);
     await userEvent.type(screen.getByRole("textbox"), "s");
-    expect(onPropChange).toBeCalledWith("arrProp", {
+    expect(onPropChange).toBeCalledWith({
       kind: PropValueKind.Expression,
       valueType: PropValueType.Array,
       value: "document.stringss",
@@ -44,7 +44,7 @@ describe("expression value", () => {
       screen.getByRole("button", { name: "Toggle field picker" })
     );
     await userEvent.click(screen.getByText("Words"));
-    expect(onPropChange).toBeCalledWith("arrProp", {
+    expect(onPropChange).toBeCalledWith({
       kind: PropValueKind.Expression,
       valueType: PropValueType.Array,
       value: "document.words",
@@ -96,7 +96,7 @@ describe("literal value", () => {
     const onPropChange = jest.fn();
     renderArrayPropEditor(literalValue, onPropChange);
     await userEvent.type(screen.getByRole("textbox", { name: "Item 2" }), "!");
-    expect(onPropChange).toBeCalledWith("arrProp", {
+    expect(onPropChange).toBeCalledWith({
       kind: PropValueKind.Literal,
       valueType: PropValueType.Array,
       value: [

@@ -17,7 +17,7 @@ describe("trigger onChange from input interaction", () => {
     const inputValue = "doc.age";
     await userEvent.type(screen.getByLabelText("age"), inputValue);
     Array.from(inputValue).forEach((char) => {
-      expect(onPropChange).toBeCalledWith("age", {
+      expect(onPropChange).toBeCalledWith({
         kind: PropValueKind.Expression,
         valueType: PropValueType.number,
         value: "`" + char + "`",
@@ -36,7 +36,7 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     await userEvent.type(screen.getByLabelText("title"), "y");
-    expect(onPropChange).toBeCalledWith("title", {
+    expect(onPropChange).toBeCalledWith({
       kind: PropValueKind.Literal,
       valueType: PropValueType.string,
       value: "y",
@@ -54,7 +54,7 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     await userEvent.type(screen.getByLabelText("age"), "4");
-    expect(onPropChange).toBeCalledWith("age", {
+    expect(onPropChange).toBeCalledWith({
       kind: PropValueKind.Literal,
       valueType: PropValueType.number,
       value: 4,
@@ -72,7 +72,7 @@ describe("trigger onChange from input interaction", () => {
       />
     );
     await userEvent.click(screen.getByLabelText("is Yext employee?"));
-    expect(onPropChange).toBeCalledWith("is Yext employee?", {
+    expect(onPropChange).toBeCalledWith({
       kind: PropValueKind.Literal,
       valueType: PropValueType.boolean,
       value: true,
@@ -96,7 +96,7 @@ describe("trigger onChange from input interaction", () => {
     });
     await screen.findByDisplayValue("#abcdef");
     jest.advanceTimersByTime(100); //debounce time
-    expect(onPropChange).toBeCalledWith("background color", {
+    expect(onPropChange).toBeCalledWith({
       kind: PropValueKind.Literal,
       valueType: PropValueType.HexColor,
       value: "#abcdef",

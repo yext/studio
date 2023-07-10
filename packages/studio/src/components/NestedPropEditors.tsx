@@ -16,25 +16,25 @@ export default function NestedPropEditors(props: {
   propValues?: PropValues;
   propType: NestedPropType;
   propName: string;
-  updateSpecificProp: (propName: string, propVal: PropVal) => void;
+  updateProp: (propVal: PropVal) => void;
   isNested?: boolean;
 }) {
   const {
     propValues = EMPTY_PROP_VALUES,
     propType,
     propName,
-    updateSpecificProp,
+    updateProp,
     isNested,
   } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
-      updateSpecificProp(propName, {
+      updateProp({
         kind: PropValueKind.Literal,
         valueType: PropValueType.Object,
         value: updatedPropValues,
       });
     },
-    [propName, updateSpecificProp]
+    [updateProp]
   );
 
   const containerClasses = classNames("flex", {

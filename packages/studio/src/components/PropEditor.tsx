@@ -15,7 +15,7 @@ interface PropEditorProps {
   propMetadata: Exclude<PropMetadata, NestedPropType | ArrayPropType>;
   propValue?: string | number | boolean;
   propKind: PropValueKind;
-  onPropChange: (propName: string, propVal: PropVal) => void;
+  onPropChange: (propVal: PropVal) => void;
   isNested?: boolean;
 }
 
