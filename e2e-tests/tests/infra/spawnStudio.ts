@@ -75,7 +75,7 @@ async function waitForPort(port: number): Promise<void> {
     const pollingDelay = new Promise((resolve) => setTimeout(resolve, 500));
     await pollingDelay;
   }
-  throw new Error(`Timed out waiting ${timeout}ms for the studio server.`);
+  throw new Error(`Timed out waiting ${timeout}ms for the studio server on port ${port}.`);
 }
 
 const getTestGlob = () =>  globSync(
