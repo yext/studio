@@ -17,9 +17,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: "**/node_modules"
-          key: node_modules-${{ hashFiles('package_lock.json') }}
+          key: node_modules-${{ runner.os }}-${{ hashFiles('package_lock.json') }}
       - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
-        continue-on-error: true
         run: npm ci
       - run: npm run build -w=packages/studio-plugin
       - run: npm run build -w=packages/studio
