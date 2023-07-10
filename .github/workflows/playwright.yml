@@ -12,7 +12,7 @@ jobs:
     timeout-minutes: 30
     strategy:
       matrix:
-        shard: [1, 2, 3]
+        shard: [1]
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3

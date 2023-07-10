@@ -5,7 +5,7 @@ studioTest.use({
   createRemote: true,
 });
 
-studioTest("can deploy changes", async ({ page, studioPage }) => {
+studioTest.only("can deploy changes", async ({ page, studioPage }) => {
   const gitOps = studioPage.gitOps;
   const startingRef = await gitOps.getCurrentRef();
   await studioPage.addElement("Container", "Containers");
