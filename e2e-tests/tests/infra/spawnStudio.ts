@@ -43,10 +43,10 @@ async function getPort(testInfo: TestInfo) {
   let port = 5173 + getTestNumber(testInfo);
   const totalNumTests = getTestGlob().length;
 
-  let portIsOccupied = await serverExistsForPort(port)
+  let portIsOccupied = await serverExistsForPort(port);
   while (portIsOccupied) {
     port += totalNumTests;
-    portIsOccupied = await serverExistsForPort(port)
+    portIsOccupied = await serverExistsForPort(port);
   }
   return port;
 }
@@ -75,12 +75,12 @@ async function waitForPort(port: number): Promise<void> {
     const pollingDelay = new Promise((resolve) => setTimeout(resolve, 500));
     await pollingDelay;
   }
-  throw new Error(`Timed out waiting ${timeout}ms for the studio server on port ${port}.`);
+  throw new Error(
+    `Timed out waiting ${timeout}ms for the studio server on port ${port}.`
+  );
 }
 
-const getTestGlob = () =>  globSync(
-  path.resolve(__dirname, "../**/*.spec.ts")
-)
+const getTestGlob = () => globSync(path.resolve(__dirname, "../**/*.spec.ts"));
 
 function getTestNumber(testInfo: TestInfo) {
   const testAbsolutePaths = getTestGlob().sort();
