@@ -50,21 +50,12 @@ export default async function setup(
  * then pushes it to the remote.
  */
 async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
-  const git = simpleGit(tmpDir, {
-    config: ['user.name="Acceptance Tests"', 'user.email="slapshot@yext.com"'],
-  });
-  // const remoteURL = (await git.getConfig("remote.origin.url")).value;
-  const remoteURL = "git@github.com:yext/studio-prototype.git";
-  if (!remoteURL) {
-    throw new Error("no remote.origin.url found");
-  }
+  const git = simpleGit(tmpDir);
   const testFile = getTestFilename(testInfo);
   const date = new Date();
   const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`;
   const testBranch = `e2e-test_${testFile}_${dateString}`;
-  await git.init(["--initial-branch", testBranch]);
-  execSync('gh auth login', { stdio: 'inherit' });
-  await git.addRemote("origin", remoteURL);
+  fsExtra.cpSync(path.join(tmpDir, '.git'), '.git', { recursive: true })
   await git.add("-A");
   await git.commit("initial commit for " + testBranch);
   await git.push(["-u", "origin", "HEAD"]);
