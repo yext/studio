@@ -5,6 +5,7 @@ import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
+import { checkTooltipFunctionality } from "../__utils__/helpers";
 
 const basePageState: PageState = {
   componentTree: [],
@@ -163,6 +164,18 @@ it("updates the stream scope with user input when entity page's getPath value is
   expect(entityTypesTextbox).toHaveValue("kiwi");
   expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
 });
+
+it("shows a tooltip when hovering over the label", async () => {
+  const entityIdsMessage = "In the Yext platform, navigate to Content > Entities";
+  const entityTypesMessage = "In the Yext platform, navigate to Content > Configuration > Entity Types";
+  const savedFilterIdsMessage = "In the Yext platform, navigate to Content > Configuration > Saved Filters";
+  render(<PageSettingsButton pageName="fruits" />);
+  const pageSettingsButton = screen.getByRole("button");
+  await userEvent.click(pageSettingsButton);
+  await checkTooltipFunctionality(entityIdsMessage, screen.getByText("Entity IDs"));
+  await checkTooltipFunctionality(entityTypesMessage, screen.getByText("Entity Type IDs"));
+  await checkTooltipFunctionality(savedFilterIdsMessage, screen.getByText("Saved Filter IDs"));
+})
 
 async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
   const updateGetPathValueSpy = jest.spyOn(
