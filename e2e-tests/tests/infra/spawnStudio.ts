@@ -35,11 +35,18 @@ export default async function spawnStudio(
   return { port, kill: () => child.kill() };
 }
 
+/**
+ * Gets a bespoke port for this test.
+ * The port is guaranteed to only be used by this test.
+ */
 async function getPort(testInfo: TestInfo) {
   let port = 5173 + getTestNumber(testInfo);
-  const totalNumTests = getNumTests();
-  while (await serverExistsForPort(port)) {
+  const totalNumTests = getTestGlob().length;
+
+  let portIsOccupied = await serverExistsForPort(port)
+  while (portIsOccupied) {
     port += totalNumTests;
+    portIsOccupied = await serverExistsForPort(port)
   }
   return port;
 }
@@ -71,13 +78,11 @@ async function waitForPort(port: number): Promise<void> {
   throw new Error(`Timed out waiting ${timeout}ms for the studio server.`);
 }
 
-function getTestNumber(testInfo: TestInfo) {
-  const testAbsolutePaths = globSync(
-    path.resolve(__dirname, "../**/*.spec.ts")
-  ).sort();
-  return testAbsolutePaths.indexOf(testInfo.file);
-}
+const getTestGlob = () =>  globSync(
+  path.resolve(__dirname, "../**/*.spec.ts")
+)
 
-function getNumTests() {
-  return globSync(path.resolve(__dirname, "../**/*.spec.ts")).length;
+function getTestNumber(testInfo: TestInfo) {
+  const testAbsolutePaths = getTestGlob().sort();
+  return testAbsolutePaths.indexOf(testInfo.file);
 }

@@ -4,12 +4,12 @@
   "types": "./lib/types.d.ts",
   "type": "module",
   "bin": {
-    "studio": "./lib/bin/studio.js"
+    "studio": "./lib/bin/studio.mjs"
   },
   "scripts": {
     "dev": "tsc --watch --preserveWatchOutput -p tsconfig.node.json & tsc --watch --preserveWatchOutput -p tsconfig.json",
     "build": "run-script-os",
-    "build:default": "npm run build:windows && chmod 755 lib/bin/studio.js",
+    "build:default": "npm run build:windows && chmod 755 lib/bin/studio.mjs",
     "build:windows": "rimraf lib && tsc -p tsconfig.node.json && tsc -p tsconfig.json",
     "preview": "vite preview",
     "test": "jest",

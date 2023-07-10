@@ -3,13 +3,12 @@ import { spawnSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import cac from "cac";
-import { CliArgs } from "@yext/studio-plugin";
+import { CliArgs, STUDIO_PROCESS_ARGS_OBJ } from "@yext/studio-plugin";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const pathToViteConfig = path.resolve(__dirname, "../../vite.config.ts");
 const NODE_OPTIONS = 'NODE_OPTIONS="--experimental-specifier-resolution=node"';
-
 const cli = cac();
 
 cli
@@ -24,7 +23,7 @@ cli
         stdio: "inherit",
         env: {
           ...process.env,
-          YEXT_STUDIO_ARGS: JSON.stringify(options),
+          [STUDIO_PROCESS_ARGS_OBJ]: JSON.stringify(options),
         },
       }
     );
