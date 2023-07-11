@@ -17,7 +17,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: "**/node_modules"
-        key: node_modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+        key: node_modules-${{ runner.os }}-node-${{ inputs.node-version }}-${{ hashFiles('package-lock.json') }}
     - if: ${{ steps.cache-node_modules.outputs.cache-hit == 'false' }}
       run: npm ci
       shell: bash
