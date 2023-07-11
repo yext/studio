@@ -2,8 +2,9 @@ import { ChangeEvent, useCallback } from "react";
 
 interface UnionPropInputProps {
   unionValues: string[];
-  propValue: string;
+  propValue: string | undefined;
   onChange: (value: string) => void;
+  disabled?: boolean;
 }
 
 const selectCssClasses =
@@ -18,6 +19,7 @@ export default function UnionPropInput({
   unionValues,
   propValue,
   onChange,
+  disabled,
 }: UnionPropInputProps): JSX.Element {
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
@@ -30,8 +32,10 @@ export default function UnionPropInput({
     <select
       onChange={handleChangeEvent}
       className={selectCssClasses}
-      value={propValue}
+      value={propValue ?? ""}
+      disabled={disabled}
     >
+      {disabled && <option value="" />}
       {unionValues.map((val) => {
         return (
           <option value={val} key={val}>

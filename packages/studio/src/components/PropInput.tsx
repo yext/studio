@@ -51,8 +51,9 @@ export default function PropInput({
     return (
       <UnionPropInput
         unionValues={unionValues}
-        propValue={propValue as string}
+        propValue={propValue as string | undefined}
         onChange={onChange}
+        disabled={isUndefinedValue}
       />
     );
   }
