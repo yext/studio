@@ -20,7 +20,10 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import useActiveComponent from "../../src/hooks/useActiveComponent";
 import mockStore from "../__utils__/mockStore";
-import { checkTooltipFunctionality, openUndefinedMenu } from "../__utils__/helpers";
+import {
+  checkTooltipFunctionality,
+  openUndefinedMenu,
+} from "../__utils__/helpers";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,

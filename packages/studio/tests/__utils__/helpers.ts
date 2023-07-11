@@ -13,7 +13,9 @@ export async function checkTooltipFunctionality(
 
 export async function openUndefinedMenu(hoverElementText: string) {
   await userEvent.hover(screen.getByText(hoverElementText));
-  const menuButton = await waitFor(() => screen.getByLabelText("Toggle undefined value menu"));
+  const menuButton = await waitFor(() =>
+    screen.getByLabelText("Toggle undefined value menu")
+  );
   expect(menuButton).toBeDefined();
   await userEvent.click(menuButton);
 }
