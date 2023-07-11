@@ -82,6 +82,7 @@ export default function PropInput({
         <Toggle
           checked={displayValue as boolean}
           onToggle={handleChangeEvent}
+          disabled={isUndefinedValue}
         />
       );
     case PropValueType.HexColor:

@@ -69,6 +69,20 @@ describe("correctly renders prop inputs with undefined value", () => {
     expect(input).toHaveValue("");
     expect(input).toBeDisabled();
   });
+
+  it("boolean prop", () => {
+    render(
+      <PropInput
+        propType={{ type: PropValueType.boolean }}
+        propValue={undefined}
+        propKind={PropValueKind.Literal}
+        onChange={jest.fn()}
+      />
+    );
+    const input = screen.getByRole("checkbox");
+    expect(input).not.toBeChecked();
+    expect(input).toBeDisabled();
+  });
 });
 
 function renderExpressionPropInput(
