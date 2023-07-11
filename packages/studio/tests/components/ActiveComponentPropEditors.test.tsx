@@ -20,7 +20,7 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import useActiveComponent from "../../src/hooks/useActiveComponent";
 import mockStore from "../__utils__/mockStore";
-import { checkTooltipFunctionality } from "../__utils__/helpers";
+import { checkTooltipFunctionality, openUndefinedMenu } from "../__utils__/helpers";
 
 const activeComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -584,14 +584,14 @@ describe("undefined menu", () => {
     });
   });
 
-  it("renders icon for optional prop", () => {
+  it("renders icon for optional prop", async () => {
     render(
       <ActiveComponentPropEditors
         activeComponentState={state}
         propShape={propShape}
       />
     );
-    expect(screen.getByLabelText("Toggle undefined value menu")).toBeDefined();
+    await openUndefinedMenu("bool");
   });
 
   it("does not render icon for required prop", () => {
@@ -629,7 +629,7 @@ describe("undefined menu", () => {
       valueType: PropValueType.boolean,
       value: true,
     });
-    await userEvent.click(screen.getByLabelText("Toggle undefined value menu"));
+    await openUndefinedMenu("bool");
     await userEvent.click(screen.getByText("Set as Undefined"));
     expect(getComponentProps().bool).toBeUndefined();
   });

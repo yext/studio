@@ -1,8 +1,9 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import UndefinedMenuButton from "../../src/components/UndefinedMenuButton";
 import { PropVal, PropValueKind, PropValueType } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 import { ReactNode } from "react";
+import { openUndefinedMenu } from "../__utils__/helpers";
 
 describe("prop with undefined value", () => {
   it("correctly renders menu when icon is clicked", async () => {
@@ -65,9 +66,4 @@ function renderUndefinedMenuButton(
       {children}
     </UndefinedMenuButton>
   );
-}
-
-async function openUndefinedMenu(hoverElementText: string) {
-  await userEvent.hover(screen.getByText(hoverElementText));
-  await waitFor(() => userEvent.click(screen.getByLabelText("Toggle undefined value menu")));
 }
