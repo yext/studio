@@ -20,3 +20,4 @@ runs:
         key: node_modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
     - if: ${{ steps.cache-node_modules.outputs.cache-hit == 'false' }}
       run: npm ci
+      shell: bash
