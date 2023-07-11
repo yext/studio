@@ -1,6 +1,6 @@
 import { test as base } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
-import setup from "./setup.js";
+import setupAcceptance from "./setupAcceptance.js";
 
 type Fixtures = {
   /**
@@ -25,7 +25,7 @@ export const studioTest = base.extend<Fixtures>({
   debug: false,
   studioPage: async ({ page, createRemote, debug }, use, testInfo) => {
     const opts = { createRemote, debug, testInfo };
-    await setup(opts, async (port: number, tmpDir: string) => {
+    await setupAcceptance(opts, async (port: number, tmpDir: string) => {
       await page.goto("localhost:" + port);
       await page.waitForLoadState("networkidle");
       const studioPage = new StudioPlaywrightPage(page, tmpDir);
