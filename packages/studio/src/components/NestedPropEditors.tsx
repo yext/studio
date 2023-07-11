@@ -44,7 +44,6 @@ export default function NestedPropEditors(props: {
   });
   const undefinedObject = "\{\}";
 
-  
   return (
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
