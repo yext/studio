@@ -43,6 +43,7 @@ export default function PropInput({
     [onChange, type]
   );
 
+  const isUndefinedValue = propValue === undefined;
   const displayValue =
     propValue ?? PropValueHelpers.getPropInputDefaultValue(propType, propKind);
 
@@ -63,7 +64,8 @@ export default function PropInput({
           type="number"
           onChange={handleChangeEvent}
           className={inputBoxCssClasses}
-          value={displayValue as number}
+          value={(propValue ?? "") as number | string}
+          disabled={isUndefinedValue}
         />
       );
     case PropValueType.string:
@@ -72,6 +74,7 @@ export default function PropInput({
           onChange={onChange}
           value={displayValue as string}
           propKind={propKind}
+          disabled={isUndefinedValue}
         />
       );
     case PropValueType.boolean:

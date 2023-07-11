@@ -7,6 +7,7 @@ interface StringPropInputProps {
   value: string;
   onChange: (value: string) => void;
   propKind: PropValueKind;
+  disabled?: boolean;
 }
 
 /**
@@ -17,6 +18,7 @@ export default function StringPropInput({
   value,
   onChange,
   propKind,
+  disabled,
 }: StringPropInputProps): JSX.Element {
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +59,7 @@ export default function StringPropInput({
       handleFieldSelection={appendField}
       displayValue={displayValue}
       fieldFilter={fieldPickerFilter}
+      disabled={disabled}
     />
   );
 }

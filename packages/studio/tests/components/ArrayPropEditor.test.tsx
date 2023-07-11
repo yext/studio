@@ -9,7 +9,8 @@ it("renders correctly when prop has no value", () => {
   renderArrayPropEditor();
   const textbox = screen.getByRole("textbox");
   expect(textbox).toHaveValue("");
-  expect(textbox).toBeEnabled();
+  expect(textbox).toBeDisabled();
+  expect(screen.queryByText("Add Item")).toBeFalsy();
 });
 
 it("renders tooltip correctly when prop has doc", async () => {
@@ -23,6 +24,7 @@ describe("expression value", () => {
     const textbox = screen.getByRole("textbox");
     expect(textbox).toHaveValue("document.strings");
     expect(textbox).toBeEnabled();
+    expect(screen.getByText("Add Item")).toBeDefined();
   });
 
   it("updates value on type", async () => {
@@ -71,6 +73,7 @@ describe("literal value", () => {
     const textbox = screen.getByRole("textbox");
     expect(textbox).toHaveValue("");
     expect(textbox).toBeEnabled();
+    expect(screen.getByText("Add Item")).toBeDefined();
   });
 
   it("renders correctly when prop has items in array", async () => {
@@ -82,6 +85,7 @@ describe("literal value", () => {
     expect(screen.getByRole("textbox", { name: "Item 2" })).toHaveValue(
       "literal"
     );
+    expect(screen.getByText("Add Item")).toBeDefined();
     const expressionInput = screen.getByRole("textbox", {
       name: (text) => text.startsWith("arrProp"),
     });
