@@ -5,24 +5,18 @@ on:
     branches: main
   pull_request:
 
-
 jobs:
   unit_tests:
     strategy:
-      fail-fast: false
       matrix:
         os: [windows-latest, ubuntu-latest]
         node-version: [16.x, 18.x, 19.x]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - uses: ./.github/setup-ci
         with:
           node-version: ${{ matrix.node-version }}
-          registry-url: "https://registry.npmjs.org"
-      - run: npm ci --ignore-scripts
-      - run: npm rebuild
       - run: npm run build -w=packages/studio-plugin
       - run: npm test -w=packages/studio-plugin
       - run: npm test -w=packages/studio
@@ -35,12 +29,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-          registry-url: "https://registry.npmjs.org"
-      - run: npm ci --ignore-scripts
-      - run: npm rebuild
+      - uses: ./.github/setup-ci
       - run: npm run build
       - run: npm run typecheck-jest

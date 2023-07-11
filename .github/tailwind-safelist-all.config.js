@@ -1,4 +1,4 @@
-/** 
+/**
  * This config is used to generate the full tailwindcss bundle with all styles,
  * this way we can support users specifying tailwind classes at runtime
  * through the browser.
@@ -8,7 +8,7 @@
 module.exports = {
   safelist: [
     {
-      pattern: /.*/
-    }
-  ]
+      pattern: /.*/,
+    },
+  ],
 };

@@ -8,11 +8,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: ./.github/setup-ci
+      - run: npm run build -w=packages/studio-plugin
+      - run: npm run build -w=packages/studio
+      - uses: actions/cache@v3
         with:
-          node-version: 18
-      - run: npm ci
-      - run: npm run build
+          path: ~/Library/Caches/ms-playwright
+          key: playwright-browsers-${{ hashFiles('node_modules/@playwright/test/package.json') }}
       - run: npx playwright install
       - run: npm i
       - name: Run Playwright
