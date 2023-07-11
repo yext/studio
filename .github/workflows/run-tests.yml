@@ -15,19 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: npm
-      - name: Cache node_modules
-        id: cache-node_modules
-        uses: actions/cache@v3
-        with:
-          path: "**/node_modules"
-          key: node_modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
-        run: npm ci
+      - uses: ./.github/setup-ci
       - run: npm run build -w=packages/studio-plugin
       - run: npm test -w=packages/studio-plugin
       - run: npm test -w=packages/studio
@@ -40,18 +28,6 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: Use Node.js 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-          cache: npm
-      - name: Cache node_modules
-        id: cache-node_modules
-        uses: actions/cache@v3
-        with:
-          path: "**/node_modules"
-          key: node_modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
-        run: npm ci
+      - uses: ./.github/setup-ci
       - run: npm run build
       - run: npm run typecheck-jest

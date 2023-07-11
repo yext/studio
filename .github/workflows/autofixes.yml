@@ -10,17 +10,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-      - name: Cache node_modules
-        id: cache-node_modules
-        uses: actions/cache@v3
-        with:
-          path: "**/node_modules"
-          key: node_modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
-        run: npm ci
+      - uses: ./.github/setup-ci
       - run: npm run autofix
       - name: Automated Linting
         uses: EndBug/add-and-commit@v9
@@ -37,18 +27,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18.x
-          cache: npm
-      - name: Cache node_modules
-        id: cache-node_modules
-        uses: actions/cache@v3
-        with:
-          path: "**/node_modules"
-          key: node_modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-      - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
-        run: npm ci
+      - uses: ./.github/setup-ci
       - name: Regenerate Full Tailwind Bundle
         run: npx tailwindcss -o src/tailwind-full.css -c ../../.github/tailwind-safelist-all.config.js --minify
         working-directory: ./packages/studio
