@@ -33,6 +33,10 @@ export default function UndefinedMenuButton({
 
   useRootClose(menuItemRef, () => setIsOpen(false), { disabled: !isOpen });
 
+  const [isHovering, setIsHovering ] = useState(false);
+  const handleMouseOver = () => { setIsHovering(true) };
+  const handleMouseOut = () => { setIsHovering(false) };
+
   const onButtonClick = useCallback(() => {
     setIsOpen((isOpen) => !isOpen);
   }, []);
@@ -61,14 +65,14 @@ export default function UndefinedMenuButton({
     : "Set as Undefined";
 
   return (
-    <div className={containerClasses}>
+    <div className={containerClasses} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
       {children}
       <div className={buttonContainerClasses}>
-        <EllipsesIcon
+        {isHovering && <EllipsesIcon
           role="button"
           onClick={onButtonClick}
           aria-label="Toggle undefined value menu"
-        />
+        />}
         {isOpen && (
           <div className="absolute mt-3">
             <ul

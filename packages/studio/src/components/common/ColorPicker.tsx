@@ -6,6 +6,7 @@ import useTemporalStore from "../../store/useTemporalStore";
 interface ColorPickerProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  disabled: boolean;
 }
 
 /**
@@ -14,6 +15,7 @@ interface ColorPickerProps {
 export default function ColorPicker({
   value,
   onChange,
+  disabled,
 }: ColorPickerProps): JSX.Element {
   const [inputValue, setInputValue] = useState(value);
   const activeComponentUUID = useStudioStore().pages.activeComponentUUID;
@@ -40,5 +42,11 @@ export default function ColorPicker({
     };
   }, [onChange]);
 
-  return <input type="color" onChange={handleChange} value={inputValue} />;
+  return (
+    <div>
+      {disabled 
+      ? (<span className="text-sm text-gray-400 mt-0.5 mb-1">{"#RRGGBB"}</span>)
+      : (<input type="color" onChange={handleChange} value={inputValue} />)}
+    </div>
+  );
 }

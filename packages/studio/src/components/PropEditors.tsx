@@ -118,6 +118,7 @@ export function renderPropEditor(
         propName={propName}
         updateProp={updateProp}
         isNested={isNested}
+        disabled={propVal === undefined}
       />
     );
   } else if (propMetadata.type === PropValueType.Array) {
