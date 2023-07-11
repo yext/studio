@@ -42,7 +42,7 @@ export default function NestedPropEditors(props: {
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
   });
-  const undefinedObject = "\{\}";
+  const undefinedObject = "{}";
 
   return (
     <div className={containerClasses}>

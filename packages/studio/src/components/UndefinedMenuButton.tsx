@@ -33,9 +33,9 @@ export default function UndefinedMenuButton({
 
   useRootClose(menuItemRef, () => setIsOpen(false), { disabled: !isOpen });
 
-  const [isHovering, setIsHovering ] = useState(false);
-  const handleMouseOver = () => { setIsHovering(true) };
-  const handleMouseOut = () => { setIsHovering(false) };
+  const [isHovering, setIsHovering] = useState(false);
+  const handleMouseOver = useCallback(() => { setIsHovering(true) }, [setIsHovering]);
+  const handleMouseOut = useCallback(() => { setIsHovering(false) }, [setIsHovering]);
 
   const onButtonClick = useCallback(() => {
     setIsOpen((isOpen) => !isOpen);

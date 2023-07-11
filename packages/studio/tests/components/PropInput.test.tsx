@@ -48,6 +48,34 @@ it("correctly renders String Union Prop", () => {
   expect(screen.getAllByRole("option").length).toBe(3);
 });
 
+describe("correctly renders prop inputs with undefined value", () => {
+  it("boolean prop", () => {
+    render(
+      <PropInput
+        propType={{ type: PropValueType.boolean }}
+        propValue={undefined}
+        propKind={PropValueKind.Literal}
+        onChange={jest.fn()}
+      />
+    );
+    const input = screen.getByRole("checkbox");
+    expect(input).not.toBeChecked();
+    expect(input).toBeDisabled();
+  });
+
+  it("hex color prop", () => {
+    render(
+      <PropInput
+        propType={{ type: PropValueType.HexColor }}
+        propValue={undefined}
+        propKind={PropValueKind.Literal}
+        onChange={jest.fn()}
+      />
+    );
+    expect(screen.getByText("#RRGGBB"));
+  });
+});
+
 function renderExpressionPropInput(propValue: string, onChange = jest.fn()) {
   render(
     <PropInput
