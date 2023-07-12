@@ -25,7 +25,7 @@ export default function Banner(props: BannerData) {
   return (
     <div>
       <p style={{ backgroundColor: props.bgColor }}>{props.title}</p>
-      <p>{`${props.bool}`}</p>
+      <p>{`${!(props.bool === undefined) ? props.bool : ''}`}</p>
       <p>{props.num}</p>
       <h1>{props.obj && JSON.stringify(props.obj)}</h1>
       <p>
