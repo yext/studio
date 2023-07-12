@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import ActiveComponentPropEditors from "../../src/components/ActiveComponentPropEditors";
 import {
   ComponentState,
@@ -597,7 +597,7 @@ describe("undefined menu", () => {
     await openUndefinedMenu("bool");
   });
 
-  it("does not render icon for required prop", () => {
+  it("does not render icon for required prop", async () => {
     const propShape: PropShape = {
       bool: {
         type: PropValueType.boolean,
@@ -617,7 +617,11 @@ describe("undefined menu", () => {
         propShape={propShape}
       />
     );
-    expect(screen.queryByLabelText("Toggle undefined value menu")).toBeFalsy();
+    await userEvent.hover(screen.getByText("bool"));
+    const menuButton = await waitFor(() =>
+      screen.queryByLabelText("Toggle undefined value menu")
+    );
+    expect(menuButton).toBeFalsy();
   });
 
   it("sets prop value to undefined", async () => {
