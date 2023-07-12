@@ -48,14 +48,21 @@ export default function NestedPropEditors(props: {
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
-        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap">{propName}</span>
-        {disabled ? <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">{undefinedObjectText}</span>
-        : <PropEditors
-          propValues={propValues}
-          propShape={propType.shape}
-          updateProps={updateObjectProp}
-          isNested={true}
-        />}
+        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap">
+          {propName}
+        </span>
+        {disabled ? (
+          <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">
+            {undefinedObjectText}
+          </span>
+        ) : (
+          <PropEditors
+            propValues={propValues}
+            propShape={propType.shape}
+            updateProps={updateObjectProp}
+            isNested={true}
+          />
+        )}
       </div>
     </div>
   );
