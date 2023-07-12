@@ -34,7 +34,7 @@ export default function UniversalPage({ document }: TemplateProps) {
           nestedObj: { nestedNum: 333, nestedColor: "#FFFFFF" },
           nestedBool: false,
         }}
-        title=""
+        title={undefined}
         bgColor="#FFFFFF"
         bool={false}
         num={0}

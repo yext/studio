@@ -1,5 +1,5 @@
 /** @type {import('@yext/studio').StudioConfig} */
 export default {
-  isPagesJSRepo: true,
+  isPagesJSRepo: false, // TRUE
   port: 5173,
 };
