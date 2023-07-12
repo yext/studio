@@ -1,8 +1,7 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import UndefinedMenuButton from "../../src/components/UndefinedMenuButton";
 import { PropVal, PropValueKind, PropValueType } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
-import { ReactNode } from "react";
 import { openUndefinedMenu } from "../__utils__/helpers";
 
 describe("prop with undefined value", () => {
@@ -54,7 +53,7 @@ it("closes menu when clicking outside menu", async () => {
 
 function renderUndefinedMenuButton(
   isUndefined: boolean,
-  updateProp = jest.fn(),
+  updateProp = jest.fn()
 ) {
   render(
     <UndefinedMenuButton

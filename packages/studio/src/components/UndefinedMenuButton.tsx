@@ -57,16 +57,16 @@ export default function UndefinedMenuButton({
     "mt-2.5": propType.type === PropValueType.Object,
     "mt-5": propType.type === PropValueType.Array,
   });
-  const ellipsesClass = useMemo(() => 
-    isOpen ? "" : "invisible group-hover:visible", [isOpen]);
+  const ellipsesClass = useMemo(
+    () => (isOpen ? "" : "invisible group-hover:visible"),
+    [isOpen]
+  );
   const undefinedMenuText = isUndefined
     ? "Reset to Default"
     : "Set as Undefined";
 
   return (
-    <div
-      className={containerClasses}
-    >
+    <div className={containerClasses}>
       {children}
       <div className={buttonContainerClasses}>
         <EllipsesIcon

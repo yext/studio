@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 import ActiveComponentPropEditors from "../../src/components/ActiveComponentPropEditors";
 import {
   ComponentState,
@@ -618,8 +618,8 @@ describe("undefined menu", () => {
       />
     );
     await userEvent.hover(screen.getByText("bool"));
-    const menuButton = await waitFor(() =>
-      screen.queryByLabelText("Toggle undefined value menu")
+    const menuButton = await screen.findByLabelText(
+      "Toggle undefined value menu"
     );
     expect(menuButton).toBeFalsy();
   });
