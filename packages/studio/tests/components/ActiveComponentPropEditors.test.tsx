@@ -66,15 +66,50 @@ it("renders nested prop editors for component's prop of type Object", () => {
       },
     },
   };
+  const state: StandardComponentState = {
+    ...activeComponentState,
+    props: {
+      objProp: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          title: {
+            kind: PropValueKind.Expression,
+            value: "test",
+            valueType: PropValueType.string,
+          }
+        }
+      },
+    },
+  };
   render(
     <ActiveComponentPropEditors
-      activeComponentState={activeComponentState}
+      activeComponentState={state}
       propShape={propShape}
     />
   );
   expect(screen.getByText("objProp")).toBeTruthy();
   expect(screen.getByText("title")).toBeTruthy();
 });
+
+it("renders empty curly braces for an undefined nested prop", () => {
+  const propShape: PropShape = {
+    obj: {
+      type: PropValueType.Object,
+      required: false,
+      shape: {
+      }
+    }
+  };
+  render(
+    <ActiveComponentPropEditors
+      activeComponentState={activeComponentState}
+      propShape={propShape}
+    />
+  );
+  expect(screen.getByText("obj")).toBeTruthy();
+  expect(screen.getByText("{}")).toBeTruthy();
+})
 
 const activeComponentMetadata: FileMetadata = {
   kind: FileMetadataKind.Component,

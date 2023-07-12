@@ -18,6 +18,7 @@ export default function NestedPropEditors(props: {
   propName: string;
   updateProp: (propVal: PropVal) => void;
   isNested?: boolean;
+  disabled?: boolean;
 }) {
   const {
     propValues = EMPTY_PROP_VALUES,
@@ -25,6 +26,7 @@ export default function NestedPropEditors(props: {
     propName,
     updateProp,
     isNested,
+    disabled,
   } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
@@ -40,18 +42,20 @@ export default function NestedPropEditors(props: {
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
   });
+  const undefinedObjectText = "{}";
 
   return (
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
-        <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
-        <PropEditors
+        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap">{propName}</span>
+        {disabled ? <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">{undefinedObjectText}</span>
+        : <PropEditors
           propValues={propValues}
           propShape={propType.shape}
           updateProps={updateObjectProp}
           isNested={true}
-        />
+        />}
       </div>
     </div>
   );

@@ -110,6 +110,7 @@ export function renderPropEditor(
       );
       return null;
     }
+    const isUndefinedValue = propVal === undefined;
 
     return (
       <NestedPropEditors
@@ -118,6 +119,7 @@ export function renderPropEditor(
         propName={propName}
         updateProp={updateProp}
         isNested={isNested}
+        disabled={isUndefinedValue}
       />
     );
   } else if (propMetadata.type === PropValueType.Array) {
