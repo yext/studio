@@ -89,6 +89,7 @@ export default function PropInput({
         <ColorPicker
           onChange={handleChangeEvent}
           value={displayValue as string}
+          disabled={isUndefinedValue}
         />
       );
     default:

@@ -69,6 +69,18 @@ describe("correctly renders prop inputs with undefined value", () => {
     expect(input).toHaveValue("");
     expect(input).toBeDisabled();
   });
+
+  it("hex color prop", () => {
+    render(
+      <PropInput
+        propType={{ type: PropValueType.HexColor }}
+        propValue={undefined}
+        propKind={PropValueKind.Literal}
+        onChange={jest.fn()}
+      />
+    );
+    expect(screen.getByText("#RRGGBB"));
+  });
 });
 
 function renderExpressionPropInput(
