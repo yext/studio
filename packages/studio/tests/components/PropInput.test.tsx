@@ -79,7 +79,7 @@ describe("correctly renders prop inputs with undefined value", () => {
         onChange={jest.fn()}
       />
     );
-    expect(screen.getByText("#RRGGBB"));
+    expect(screen.getByText("#RRGGBB")).toBeVisible();
   });
 });
 
