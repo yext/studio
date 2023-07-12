@@ -34,6 +34,10 @@ export default function UndefinedMenuButton({
 
   useRootClose(menuItemRef, () => setIsOpen(false), { disabled: !isOpen });
 
+  const [isHovering, setIsHovering] = useState(false);
+  const handleMouseOver = useCallback(() => { setIsHovering(true) }, [setIsHovering]);
+  const handleMouseOut = useCallback(() => { setIsHovering(false) }, [setIsHovering]);
+
   const onButtonClick = useCallback(() => {
     setIsOpen((isOpen) => !isOpen);
   }, []);
@@ -45,7 +49,7 @@ export default function UndefinedMenuButton({
     setIsOpen(false);
   }, [isUndefined, updateProp, propType]);
 
-  const containerClasses = classNames("group flex", {
+  const containerClasses = classNames(`flex`, {
     "items-center":
       propType.type !== PropValueType.Object &&
       propType.type !== PropValueType.Array,
@@ -57,16 +61,19 @@ export default function UndefinedMenuButton({
     "mt-2.5": propType.type === PropValueType.Object,
     "mt-5": propType.type === PropValueType.Array,
   });
-  const ellipsesClass = useMemo(
-    () => classNames({ "invisible group-hover:visible": !isOpen }),
-    [isOpen]
-  );
+  // const ellipsesClass = useMemo(
+  //   () => classNames({[`invisible group-hover/${propName}:visible`]: !isOpen}),
+  //   [isOpen]
+  // );
+  const ellipsesClass = useMemo(() => 
+    classNames(isHovering ? "visible" : "invisible")
+  , [isHovering]);
   const undefinedMenuText = isUndefined
     ? "Reset to Default"
     : "Set as Undefined";
 
   return (
-    <div className={containerClasses}>
+    <div className={containerClasses} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
       {children}
       <div className={buttonContainerClasses}>
         <EllipsesIcon
