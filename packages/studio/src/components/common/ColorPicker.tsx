@@ -6,7 +6,7 @@ import useTemporalStore from "../../store/useTemporalStore";
 interface ColorPickerProps {
   value: string;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  disabled?:boolean;
+  disabled?: boolean;
 }
 
 /**
@@ -44,9 +44,11 @@ export default function ColorPicker({
 
   return (
     <div>
-      {disabled 
-      ? (<span className="text-sm text-gray-400 mt-0.5 mb-1">{"#RRGGBB"}</span>)
-      : (<input type="color" onChange={handleChange} value={inputValue} />)}
+      {disabled ? (
+        <span className="text-sm text-gray-400 mt-0.5 mb-1">#RRGGBB</span>
+      ) : (
+        <input type="color" onChange={handleChange} value={inputValue} />
+      )}
     </div>
   );
 }
