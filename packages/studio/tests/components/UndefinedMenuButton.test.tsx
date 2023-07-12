@@ -6,7 +6,7 @@ import { openUndefinedMenu } from "../__utils__/helpers";
 
 describe("prop with undefined value", () => {
   it("correctly renders menu when icon is clicked", async () => {
-    renderUndefinedMenuButton(true, jest.fn());
+    renderUndefinedMenuButton(true);
     await openUndefinedMenu("Test");
     expect(screen.getByText("Reset to Default")).toBeDefined();
   });
@@ -28,7 +28,7 @@ describe("prop with undefined value", () => {
 
 describe("prop with defined value", () => {
   it("correctly renders menu when icon is clicked", async () => {
-    renderUndefinedMenuButton(false, jest.fn());
+    renderUndefinedMenuButton(false);
     await openUndefinedMenu("Test");
     expect(screen.getByText("Set as Undefined")).toBeDefined();
   });
@@ -44,7 +44,7 @@ describe("prop with defined value", () => {
 });
 
 it("closes menu when clicking outside menu", async () => {
-  renderUndefinedMenuButton(true, jest.fn());
+  renderUndefinedMenuButton(true);
   await openUndefinedMenu("Test");
   expect(screen.getByText("Reset to Default")).toBeDefined();
   await userEvent.click(screen.getByText("Test"));
@@ -61,7 +61,7 @@ function renderUndefinedMenuButton(
       isUndefined={isUndefined}
       updateProp={updateProp}
     >
-      <>Test</>
+      Test
     </UndefinedMenuButton>
   );
 }
