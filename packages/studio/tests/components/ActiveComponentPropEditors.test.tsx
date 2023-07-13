@@ -170,7 +170,8 @@ function testStandardOrModuleComponentState(
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
     expect(screen.getByLabelText("bool")).toHaveAttribute("type", "checkbox");
-    expect(screen.getByLabelText("bgColor")).toHaveAttribute("type", "color");
+    expect(screen.getByText("bgColor"));
+    expect(screen.getByText("#RRGGBB"));
   });
 
   it(`renders tooltip for each of the active ${componentKindLabel}'s props with docs`, async () => {

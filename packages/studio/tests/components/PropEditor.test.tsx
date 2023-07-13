@@ -91,11 +91,9 @@ describe("trigger onChange from input interaction", () => {
         propName="background color"
         propMetadata={{ type: PropValueType.HexColor, required: false }}
         onPropChange={onPropChange}
+        propValue={'#ffffff'}
       />
     );
-    // await openUndefinedMenu();
-    // await userEvent.click(screen.getByText("Reset to Default"));
-    // userEvent doesn't support interaction with input of type "color"
     fireEvent.input(screen.getByLabelText("background color"), {
       target: { value: "#abcdef" },
     });
