@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
+import path from "path";
 import { StreamScope } from "@yext/studio-plugin";
 
 export type StreamScopeForm = {
@@ -15,7 +16,7 @@ export default class StudioPlaywrightPage {
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
 
-  constructor(private page: Page) {
+  constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
       name: "Add Page",
     });
@@ -191,5 +192,13 @@ export default class StudioPlaywrightPage {
     await this.page.getByRole("button", { name: "Props" }).click();
     const input = this.page.getByRole("textbox", { name: propName });
     return input.getAttribute("value");
+  }
+
+  getPagePath(pageName: string) {
+    return path.join(this.tmpDir, "src/templates", pageName + ".tsx");
+  }
+
+  getComponentPath(componentName: string) {
+    return path.join(this.tmpDir, "src/components", componentName + ".tsx");
   }
 }

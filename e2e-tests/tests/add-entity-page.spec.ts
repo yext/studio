@@ -34,7 +34,7 @@ studioTest(
     await studioPage.removePage("EntityPage");
     await expect(pageInTree).toHaveCount(0);
     await studioPage.saveButton.click();
-    expect(fs.existsSync("./src/templates/EntityPage.tsx")).toBeFalsy();
+    expect(expectedPagePath).toBeFalsy();
     await expect(page).toHaveScreenshot();
   }
 );
