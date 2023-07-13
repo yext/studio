@@ -11,7 +11,6 @@ import StudioSourceFileParser from "./StudioSourceFileParser";
 import { GET_PATH_FUNCTION_NAME } from "../constants";
 import TsMorphHelpers, { OneOf } from "./helpers/TsMorphHelpers";
 import { GetPathVal } from "../types";
-import { parse } from "uuid";
 
 const STRING_KINDS = [
   SyntaxKind.StringLiteral,
@@ -45,7 +44,7 @@ export default class GetPathParser {
       if (typeof value === "string") {
         return { kind, value };
       }
-    } 
+    }
   }
 
   /**

@@ -98,7 +98,9 @@ export default class StaticParsingHelpers {
     }
   }
 
-  static parseInitializer = (initializer: Expression): TypelessPropVal | undefined => {
+  static parseInitializer = (
+    initializer: Expression
+  ): TypelessPropVal | undefined => {
     if (initializer.isKind(SyntaxKind.StringLiteral)) {
       return {
         value: initializer.compilerNode.text,
@@ -134,7 +136,10 @@ export default class StaticParsingHelpers {
       };
     } else if (expression.isKind(SyntaxKind.ArrayLiteralExpression)) {
       return {
-        value: expression.getElements().map(this.parseInitializer).filter((el): el is TypelessPropVal => el !== undefined),
+        value: expression
+          .getElements()
+          .map(this.parseInitializer)
+          .filter((el): el is TypelessPropVal => el !== undefined),
         kind: PropValueKind.Literal,
       };
     } else {
@@ -305,13 +310,15 @@ export default class StaticParsingHelpers {
     return propName;
   }
 
-  static parseJsxAttribute(jsxAttribute: JsxAttributeLike): TypelessPropVal | undefined {
+  static parseJsxAttribute(
+    jsxAttribute: JsxAttributeLike
+  ): TypelessPropVal | undefined {
     this.assertIsJsxAttribute(jsxAttribute);
     const parsedProps = StaticParsingHelpers.parseInitializer(
       jsxAttribute.getInitializerOrThrow()
     );
     if (parsedProps !== undefined) {
-      const { value, kind } = parsedProps
+      const { value, kind } = parsedProps;
       if (kind === PropValueKind.Expression) {
         if (typeof value !== "string") {
           throw new Error(
@@ -324,7 +331,7 @@ export default class StaticParsingHelpers {
         value,
         kind: PropValueKind.Literal,
       };
-    };
+    }
   }
 
   static parseJsxElementName(

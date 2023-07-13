@@ -167,7 +167,8 @@ export default class ComponentTreeParser {
       const props: Record<string, TypelessPropVal> = {};
       attributes.forEach((attribute) => {
         const propName = StaticParsingHelpers.parseJsxAttributeName(attribute);
-        const parsedAttribute = StaticParsingHelpers.parseJsxAttribute(attribute)
+        const parsedAttribute =
+          StaticParsingHelpers.parseJsxAttribute(attribute);
         if (parsedAttribute !== undefined) {
           props[propName] = parsedAttribute;
         }
