@@ -65,7 +65,7 @@ export default function PropEditor({
           />
         )}
       </div>
-    )
+    );
   }
 
   return (
