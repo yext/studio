@@ -324,9 +324,7 @@ export default class StaticParsingHelpers {
         value,
         kind: PropValueKind.Literal,
       };
-    } else {
-      return;
-    }
+    };
   }
 
   static parseJsxElementName(
