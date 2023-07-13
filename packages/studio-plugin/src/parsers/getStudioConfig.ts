@@ -1,8 +1,4 @@
-import {
-  StudioConfig,
-  StudioConfigDefaults,
-  StudioConfigWithDefaulting,
-} from "../types";
+import { CliArgs, StudioConfig, StudioConfigWithDefaulting } from "../types";
 import fs from "fs";
 import path from "path";
 import getUserPaths from "./getUserPaths";
@@ -22,10 +18,11 @@ import { dynamicImport } from "../utils/dynamicImport";
  * @throws {@link ParsingError|FileIOError}
  */
 export default async function getStudioConfig(
-  pathToProjectRoot: string
+  pathToProjectRoot: string,
+  cliArgs: CliArgs = {}
 ): Promise<StudioConfigWithDefaulting> {
   try {
-    return getStudioConfigInternal(pathToProjectRoot);
+    return getStudioConfigInternal(pathToProjectRoot, cliArgs);
   } catch (err: unknown) {
     err instanceof StudioError &&
       prettyPrintError("Failed to start Studio", err.message);
@@ -34,21 +31,46 @@ export default async function getStudioConfig(
 }
 
 async function getStudioConfigInternal(
-  pathToProjectRoot: string
+  pathToProjectRoot: string,
+  cliArgs: CliArgs
 ): Promise<StudioConfigWithDefaulting> {
-  const defaultConfig: StudioConfigDefaults = {
+  const defaultConfig: StudioConfigWithDefaulting = {
     isPagesJSRepo: false,
     paths: getUserPaths(pathToProjectRoot),
     port: 8080,
+    openBrowser: true,
   };
-
   const absConfigFilepath = path.join(pathToProjectRoot, "studio.config.js");
   if (!fs.existsSync(absConfigFilepath)) {
     return defaultConfig;
   }
   const studioConfig = await importExistingConfig(absConfigFilepath);
 
-  return lodash.merge({}, defaultConfig, studioConfig);
+  const mergedConfig: StudioConfigWithDefaulting = lodash.merge(
+    {},
+    defaultConfig,
+    studioConfig,
+    {
+      port: cliArgs.port,
+    }
+  );
+  return convertPathsToAbsolute(mergedConfig, pathToProjectRoot);
+}
+
+function convertPathsToAbsolute(
+  config: StudioConfigWithDefaulting,
+  pathToProjectRoot: string
+): StudioConfigWithDefaulting {
+  const updatedConfig = lodash.cloneDeep(config);
+
+  Object.keys(updatedConfig.paths).forEach((pathType) => {
+    const userPath = updatedConfig.paths[pathType];
+    if (!path.isAbsolute(userPath)) {
+      updatedConfig.paths[pathType] = path.join(pathToProjectRoot, userPath);
+    }
+  });
+
+  return updatedConfig;
 }
 
 /**

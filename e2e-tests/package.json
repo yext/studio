@@ -6,12 +6,15 @@
   "scripts": {
     "playwright": "playwright test",
     "update-snapshots": "playwright test --update-snapshots",
-    "report": "playwright show-report "
+    "report": "playwright show-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.0",
-    "@yext/studio": "*",
+    "@types/fs-extra": "^11.0.1",
     "@yext/pages": "^1.0.0-beta.15",
+    "@yext/studio": "*",
+    "fs-extra": "^11.1.1",
+    "glob": "^10.3.1",
     "vite": "^4.3.9"
   }
 }

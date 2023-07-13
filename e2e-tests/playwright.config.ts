@@ -23,7 +23,7 @@ expect.extend({
 const config: PlaywrightTestConfig = {
   testDir: "./tests",
   /* Maximum time one test can run for. */
-  timeout: 60 * 1000,
+  timeout: 90 * 1000,
   snapshotPathTemplate: "__screenshots__/{testFilePath}/{arg}{ext}",
   expect: {
     /**
@@ -40,8 +40,7 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallellism since tests may manipulate the filesystem. */
-  workers: 1,
+  fullyParallel: true,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -51,11 +50,6 @@ const config: PlaywrightTestConfig = {
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: "on-first-retry",
     video: "on",
-  },
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    command: "npx studio",
-    port: 5173,
   },
 };
 
