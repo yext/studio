@@ -1,6 +1,7 @@
 import {
   PropValues,
   NestedPropType,
+  PropMetadata,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -15,20 +16,16 @@ const EMPTY_PROP_VALUES = {};
 
 export default function NestedPropEditors(props: {
   propValues?: PropValues;
-  propType: NestedPropType;
+  propMetadata: Extract<PropMetadata, NestedPropType>;
   propName: string;
   updateProp: (propVal: PropVal | undefined) => void;
-  isUndefinedValue: boolean;
-  required: boolean;
   isNested?: boolean;
 }) {
   const {
-    propValues = EMPTY_PROP_VALUES,
-    propType,
+    propValues,
+    propMetadata,
     propName,
     updateProp,
-    isUndefinedValue,
-    required,
     isNested,
   } = props;
   const updateObjectProp = useCallback(
@@ -41,6 +38,7 @@ export default function NestedPropEditors(props: {
     },
     [updateProp]
   );
+  const isUndefinedValue = propValues === undefined;
 
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
@@ -51,16 +49,16 @@ export default function NestedPropEditors(props: {
       {renderBranchUI(isNested)}
       <div>
         <UndefinedMenuButton
-          propType={propType}
+          propType={propMetadata}
           isUndefined={isUndefinedValue}
           updateProp={updateProp}
-          required={required}
+          required={propMetadata.required}
         >
           <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
         </UndefinedMenuButton>
         <PropEditors
-          propValues={propValues}
-          propShape={propType.shape}
+          propValues={propValues ?? EMPTY_PROP_VALUES}
+          propShape={propMetadata.shape}
           updateProps={updateObjectProp}
           isNested={true}
         />

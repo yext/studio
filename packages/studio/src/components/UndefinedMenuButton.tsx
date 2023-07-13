@@ -58,6 +58,7 @@ export default function UndefinedMenuButton({
     "mt-2": propType.type === PropValueType.Object,
     "mt-4": propType.type === PropValueType.Array,
   });
+  const ellipsesClass = classNames({ "invisible group-hover:visible": !isOpen });
   const undefinedMenuText = isUndefined
     ? "Reset to Default"
     : "Set as Undefined";
@@ -72,7 +73,7 @@ export default function UndefinedMenuButton({
       <div className={buttonContainerClasses}>
         <EllipsesIcon
           role="button"
-          className="invisible group-hover:visible"
+          className={ellipsesClass}
           onClick={onButtonClick}
           aria-label="Toggle undefined value menu"
         />
