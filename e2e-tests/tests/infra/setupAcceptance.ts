@@ -45,8 +45,13 @@ export default async function setup(
 }
 
 /**
- * Creates and checks out a new branch for the test,
- * then pushes it to the remote.
+ * Creates a separate branch for the temporary folder that is then pushed to the remote.
+ * This branch lives in it's own sub-repo, in order to separate out git state that is 
+ * modified during the test. 
+ * 
+ * The sub repo is created by copying the .git folder.
+ * This was done instead of doing a fresh git init or git clone to avoid issues with github workflow
+ * authentication not being passed to the sub-repo.
  */
 async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
   const git = simpleGit(tmpDir);
