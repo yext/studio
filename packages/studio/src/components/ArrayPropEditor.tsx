@@ -48,7 +48,8 @@ export default function ArrayPropEditor({
   );
 
   const onChange = useCallback(
-    (value: string | (PropVal | undefined)[]) => onPropChange(createArrayPropVal(value)),
+    (value: string | (PropVal | undefined)[]) =>
+      onPropChange(createArrayPropVal(value)),
     [onPropChange]
   );
 
