@@ -186,6 +186,51 @@ describe("parseJsxAttributes", () => {
     };
     expect(receivedPropValues).toEqual(expectedPropValues);
   });
+
+  it("parses the undefined keyword", () => {
+    const { sourceFile } = createTestSourceFile(
+      `<Banner title={undefined} />`
+    );
+    const jsxAttributes = sourceFile
+      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+      .getAttributes();
+
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues: PropValues = {};
+    expect(receivedPropValues).toEqual(expectedPropValues);
+  });
+
+
+  it("parses the undefined keyword in nested attributes", () => {
+    const { sourceFile } = createTestSourceFile(
+      `<Banner nested={{ expr: document.name, str: undefined }}  />`
+    );
+    const jsxAttributes = sourceFile
+      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+      .getAttributes();
+
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues: PropValues = {
+      nested: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          expr: {
+            kind: PropValueKind.Expression,
+            value: "document.name",
+            valueType: PropValueType.string,
+          }
+        },
+      },
+    };
+    expect(receivedPropValues).toEqual(expectedPropValues);
+  });
 });
 
 describe("unwrapParensExpression", () => {
