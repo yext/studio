@@ -16,12 +16,13 @@ import { ReactComponent as Plus } from "../icons/plus.svg";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import classNames from "classnames";
 import RemovableElement from "./RemovableElement";
+import UndefinedMenuButton from "./UndefinedMenuButton";
 
 interface ArrayPropEditorProps {
   propName: string;
   propMetadata: Extract<PropMetadata, ArrayPropType>;
   propValue?: string | PropVal[];
-  onPropChange: (propVal: PropVal) => void;
+  onPropChange: (propVal: PropVal | undefined) => void;
   isNested?: boolean;
 }
 
@@ -47,7 +48,7 @@ export default function ArrayPropEditor({
   );
 
   const onChange = useCallback(
-    (value: string | PropVal[]) => onPropChange(createArrayPropVal(value)),
+    (value: string | (PropVal | undefined)[]) => onPropChange(createArrayPropVal(value)),
     [onPropChange]
   );
 
@@ -69,9 +70,16 @@ export default function ArrayPropEditor({
       {renderBranchUI(isNested, "pt-2")}
       <div className="flex flex-col">
         <label className="flex h-10 items-center">
-          <p className="pr-2 font-semibold" id={docTooltipId}>
-            {propName}
-          </p>
+          <UndefinedMenuButton
+            propType={propMetadata}
+            isUndefined={isUndefinedValue}
+            updateProp={onPropChange}
+            required={propMetadata.required}
+          >
+            <p className="pr-2 font-semibold" id={docTooltipId}>
+              {propName}
+            </p>
+          </UndefinedMenuButton>
           {propMetadata.doc && (
             <Tooltip
               style={tooltipStyle}
@@ -189,7 +197,7 @@ function LiteralEditor({
   );
 }
 
-function createArrayPropVal(value: string | PropVal[]): PropVal {
+function createArrayPropVal(value: string | PropVal[]): PropVal | undefined {
   if (Array.isArray(value)) {
     return {
       kind: PropValueKind.Literal,

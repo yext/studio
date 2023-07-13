@@ -12,7 +12,6 @@ import { useCallback } from "react";
 import NestedPropEditors from "./NestedPropEditors";
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
-import UndefinedMenuButton from "./UndefinedMenuButton";
 
 export default function PropEditors(props: {
   propShape: PropShape;
@@ -40,7 +39,7 @@ export default function PropEditors(props: {
   const numProps = Object.keys(propShape).length;
   const propEditors = Object.entries(propShape).map(
     ([propName, propMetadata], index) => {
-      const editor = renderWrappedPropEditor(
+      const editor = renderPropEditor(
         propName,
         propMetadata,
         propValues[propName],
@@ -68,39 +67,39 @@ export default function PropEditors(props: {
   return <>{propEditors}</>;
 }
 
-function renderWrappedPropEditor(
-  propName: string,
-  propMetadata: PropMetadata,
-  propVal: PropVal | undefined,
-  updateProp: (propVal: PropVal | undefined) => void,
-  isNested?: boolean
-) {
-  const editor = renderPropEditor(
-    propName,
-    propMetadata,
-    propVal,
-    updateProp,
-    isNested
-  );
-  if (propMetadata.required) {
-    return editor;
-  }
-  return (
-    <UndefinedMenuButton
-      propType={propMetadata}
-      isUndefined={!propVal}
-      updateProp={updateProp}
-    >
-      {editor}
-    </UndefinedMenuButton>
-  );
-}
+// function renderWrappedPropEditor(
+//   propName: string,
+//   propMetadata: PropMetadata,
+//   propVal: PropVal | undefined,
+//   updateProp: (propVal: PropVal | undefined) => void,
+//   isNested?: boolean
+// ) {
+//   const editor = renderPropEditor(
+//     propName,
+//     propMetadata,
+//     propVal,
+//     updateProp,
+//     isNested
+//   );
+//   if (propMetadata.required) {
+//     return editor;
+//   }
+//   return (
+//     <UndefinedMenuButton
+//       propType={propMetadata}
+//       isUndefined={!propVal}
+//       updateProp={updateProp}
+//     >
+//       {editor}
+//     </UndefinedMenuButton>
+//   );
+// }
 
 export function renderPropEditor(
   propName: string,
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
-  updateProp: (propVal: PropVal) => void,
+  updateProp: (propVal: PropVal | undefined) => void,
   isNested?: boolean
 ) {
   if (propMetadata.type === PropValueType.Object) {
@@ -117,6 +116,8 @@ export function renderPropEditor(
         propType={propMetadata}
         propName={propName}
         updateProp={updateProp}
+        isUndefinedValue={propVal === undefined}
+        required={propMetadata.required}
         isNested={isNested}
       />
     );

@@ -2,7 +2,6 @@ import {
   CSSProperties,
   PropsWithChildren,
   useCallback,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -21,6 +20,7 @@ interface UndefinedMenuButtonProps {
   propType: PropType;
   isUndefined: boolean;
   updateProp: (propVal: PropVal | undefined) => void;
+  required: boolean;
 }
 
 export default function UndefinedMenuButton({
@@ -28,15 +28,16 @@ export default function UndefinedMenuButton({
   isUndefined,
   updateProp,
   children,
+  required,
 }: PropsWithChildren<UndefinedMenuButtonProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const menuItemRef = useRef<HTMLLIElement>(null);
 
   useRootClose(menuItemRef, () => setIsOpen(false), { disabled: !isOpen });
 
-  const [isHovering, setIsHovering] = useState(false);
-  const handleMouseOver = useCallback(() => { setIsHovering(true) }, [setIsHovering]);
-  const handleMouseOut = useCallback(() => { setIsHovering(false) }, [setIsHovering]);
+  // const [isHovering, setIsHovering] = useState(false);
+  // const handleMouseOver = useCallback(() => { setIsHovering(true) }, [setIsHovering]);
+  // const handleMouseOut = useCallback(() => { setIsHovering(false) }, [setIsHovering]);
 
   const onButtonClick = useCallback(() => {
     setIsOpen((isOpen) => !isOpen);
@@ -49,7 +50,7 @@ export default function UndefinedMenuButton({
     setIsOpen(false);
   }, [isUndefined, updateProp, propType]);
 
-  const containerClasses = classNames(`flex`, {
+  const containerClasses = classNames(`group flex`, {
     "items-center":
       propType.type !== PropValueType.Object &&
       propType.type !== PropValueType.Array,
@@ -58,27 +59,25 @@ export default function UndefinedMenuButton({
     "mb-2":
       propType.type !== PropValueType.Object &&
       propType.type !== PropValueType.Array,
-    "mt-2.5": propType.type === PropValueType.Object,
+    "mt-2": propType.type === PropValueType.Object,
     "mt-5": propType.type === PropValueType.Array,
   });
-  // const ellipsesClass = useMemo(
-  //   () => classNames({[`invisible group-hover/${propName}:visible`]: !isOpen}),
-  //   [isOpen]
-  // );
-  const ellipsesClass = useMemo(() => 
-    classNames(isHovering ? "visible" : "invisible")
-  , [isHovering]);
+  // const ellipsesClass = classNames(isHovering ? "visible" : "invisible"), [isHovering];
   const undefinedMenuText = isUndefined
     ? "Reset to Default"
     : "Set as Undefined";
 
+  if (required) {
+    return <>{children}</>;
+  }
+
   return (
-    <div className={containerClasses} onMouseOver={handleMouseOver} onMouseOut={handleMouseOut}>
+    <div className={containerClasses}>
       {children}
       <div className={buttonContainerClasses}>
         <EllipsesIcon
           role="button"
-          className={ellipsesClass}
+          className="invisible group-hover:visible"
           onClick={onButtonClick}
           aria-label="Toggle undefined value menu"
         />

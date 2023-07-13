@@ -9,6 +9,7 @@ import { useCallback } from "react";
 import PropEditors from "./PropEditors";
 import { renderBranchUI } from "./PropEditor";
 import classNames from "classnames";
+import UndefinedMenuButton from "./UndefinedMenuButton";
 
 const EMPTY_PROP_VALUES = {};
 
@@ -16,7 +17,9 @@ export default function NestedPropEditors(props: {
   propValues?: PropValues;
   propType: NestedPropType;
   propName: string;
-  updateProp: (propVal: PropVal) => void;
+  updateProp: (propVal: PropVal | undefined) => void;
+  isUndefinedValue: boolean;
+  required: boolean;
   isNested?: boolean;
 }) {
   const {
@@ -24,6 +27,8 @@ export default function NestedPropEditors(props: {
     propType,
     propName,
     updateProp,
+    isUndefinedValue,
+    required,
     isNested,
   } = props;
   const updateObjectProp = useCallback(
@@ -45,7 +50,14 @@ export default function NestedPropEditors(props: {
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
-        <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
+        <UndefinedMenuButton
+          propType={propType}
+          isUndefined={isUndefinedValue}
+          updateProp={updateProp}
+          required={required}
+        >
+          <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
+        </UndefinedMenuButton>
         <PropEditors
           propValues={propValues}
           propShape={propType.shape}

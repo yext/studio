@@ -9,13 +9,14 @@ import {
 import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
+import UndefinedMenuButton from "./UndefinedMenuButton";
 
 interface PropEditorProps {
   propName: string;
   propMetadata: Exclude<PropMetadata, NestedPropType | ArrayPropType>;
   propValue?: string | number | boolean;
   propKind: PropValueKind;
-  onPropChange: (propVal: PropVal) => void;
+  onPropChange: (propVal: PropVal | undefined) => void;
   isNested?: boolean;
 }
 
@@ -42,7 +43,14 @@ export default function PropEditor({
         className="flex h-10 items-center justify-self-start"
         id={propName}
       >
-        <p className="pr-2">{propName}</p>
+        <UndefinedMenuButton
+          propType={propMetadata}
+          isUndefined={propValue === undefined}
+          updateProp={onPropChange}
+          required={propMetadata.required}
+        >
+          <p className="pr-2">{propName}</p>
+        </UndefinedMenuButton>
         <PropInput
           {...{
             propType:
