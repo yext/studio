@@ -35,10 +35,6 @@ export default function UndefinedMenuButton({
 
   useRootClose(menuItemRef, () => setIsOpen(false), { disabled: !isOpen });
 
-  // const [isHovering, setIsHovering] = useState(false);
-  // const handleMouseOver = useCallback(() => { setIsHovering(true) }, [setIsHovering]);
-  // const handleMouseOut = useCallback(() => { setIsHovering(false) }, [setIsHovering]);
-
   const onButtonClick = useCallback(() => {
     setIsOpen((isOpen) => !isOpen);
   }, []);
@@ -60,9 +56,8 @@ export default function UndefinedMenuButton({
       propType.type !== PropValueType.Object &&
       propType.type !== PropValueType.Array,
     "mt-2": propType.type === PropValueType.Object,
-    "mt-5": propType.type === PropValueType.Array,
+    "mt-4": propType.type === PropValueType.Array,
   });
-  // const ellipsesClass = classNames(isHovering ? "visible" : "invisible"), [isHovering];
   const undefinedMenuText = isUndefined
     ? "Reset to Default"
     : "Set as Undefined";

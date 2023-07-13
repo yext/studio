@@ -48,7 +48,7 @@ export default function ArrayPropEditor({
   );
 
   const onChange = useCallback(
-    (value: string | (PropVal | undefined)[]) => onPropChange(createArrayPropVal(value)),
+    (value: string | PropVal[]) => onPropChange(createArrayPropVal(value)),
     [onPropChange]
   );
 
@@ -69,17 +69,16 @@ export default function ArrayPropEditor({
     <div className={containerClasses}>
       {renderBranchUI(isNested, "pt-2")}
       <div className="flex flex-col">
+        <UndefinedMenuButton
+          propType={propMetadata}
+          isUndefined={isUndefinedValue}
+          updateProp={onPropChange}
+          required={propMetadata.required}
+        >
         <label className="flex h-10 items-center">
-          <UndefinedMenuButton
-            propType={propMetadata}
-            isUndefined={isUndefinedValue}
-            updateProp={onPropChange}
-            required={propMetadata.required}
-          >
             <p className="pr-2 font-semibold" id={docTooltipId}>
               {propName}
             </p>
-          </UndefinedMenuButton>
           {propMetadata.doc && (
             <Tooltip
               style={tooltipStyle}
@@ -106,6 +105,7 @@ export default function ArrayPropEditor({
             />
           )}
         </label>
+        </UndefinedMenuButton>
         {!isUndefinedValue && (
           <LiteralEditor
             value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
@@ -132,8 +132,8 @@ function LiteralEditor({
   );
 
   const updateItem = useCallback(
-    (itemName: string) => (itemVal: PropVal) =>
-      updateItems(Object.values({ ...propValues, [itemName]: itemVal })),
+    (itemName: string) => (itemVal: PropVal | undefined) =>
+      updateItems(Object.values({ ...propValues, [itemName]: itemVal }).filter(notUndefined)),
     [propValues, updateItems]
   );
 
@@ -217,4 +217,8 @@ function getEditorValue(propValue: string | PropVal[] | undefined) {
     return propValue;
   }
   return "";
+}
+
+function notUndefined<T>(val: T | undefined): val is T {
+  return val !== undefined;
 }

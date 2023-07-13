@@ -37,20 +37,19 @@ export default function PropEditor({
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
 
   return (
+    <UndefinedMenuButton
+          propType={propMetadata}
+          isUndefined={propValue === undefined}
+          updateProp={onPropChange}
+          required={propMetadata.required}
+        >
     <div className="flex items-center mb-2 text-sm">
       {renderBranchUI(isNested)}
       <label
         className="flex h-10 items-center justify-self-start"
         id={propName}
       >
-        <UndefinedMenuButton
-          propType={propMetadata}
-          isUndefined={propValue === undefined}
-          updateProp={onPropChange}
-          required={propMetadata.required}
-        >
-          <p className="pr-2">{propName}</p>
-        </UndefinedMenuButton>
+        <p className="pr-2">{propName}</p>
         <PropInput
           {...{
             propType:
@@ -72,6 +71,7 @@ export default function PropEditor({
         />
       )}
     </div>
+    </UndefinedMenuButton>
   );
 }
 

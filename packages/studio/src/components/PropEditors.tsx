@@ -67,34 +67,6 @@ export default function PropEditors(props: {
   return <>{propEditors}</>;
 }
 
-// function renderWrappedPropEditor(
-//   propName: string,
-//   propMetadata: PropMetadata,
-//   propVal: PropVal | undefined,
-//   updateProp: (propVal: PropVal | undefined) => void,
-//   isNested?: boolean
-// ) {
-//   const editor = renderPropEditor(
-//     propName,
-//     propMetadata,
-//     propVal,
-//     updateProp,
-//     isNested
-//   );
-//   if (propMetadata.required) {
-//     return editor;
-//   }
-//   return (
-//     <UndefinedMenuButton
-//       propType={propMetadata}
-//       isUndefined={!propVal}
-//       updateProp={updateProp}
-//     >
-//       {editor}
-//     </UndefinedMenuButton>
-//   );
-// }
-
 export function renderPropEditor(
   propName: string,
   propMetadata: PropMetadata,
