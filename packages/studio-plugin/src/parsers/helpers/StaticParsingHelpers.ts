@@ -100,7 +100,7 @@ export default class StaticParsingHelpers {
 
   static parseInitializer = (initializer: Expression): TypelessPropVal | undefined => {
     if (initializer.isKind(SyntaxKind.StringLiteral)) {
-    return {
+      return {
         value: initializer.compilerNode.text,
         kind: PropValueKind.Literal,
       };
@@ -307,7 +307,6 @@ export default class StaticParsingHelpers {
 
   static parseJsxAttribute(jsxAttribute: JsxAttributeLike): TypelessPropVal | undefined {
     this.assertIsJsxAttribute(jsxAttribute);
-
     const parsedProps = StaticParsingHelpers.parseInitializer(
       jsxAttribute.getInitializerOrThrow()
     );
@@ -326,7 +325,7 @@ export default class StaticParsingHelpers {
         kind: PropValueKind.Literal,
       };
     } else {
-      return undefined;
+      return;
     }
   }
 
