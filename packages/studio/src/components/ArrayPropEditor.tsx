@@ -201,7 +201,7 @@ function LiteralEditor({
   );
 }
 
-function createArrayPropVal(value: string | PropVal[]): PropVal | undefined {
+function createArrayPropVal(value: string | PropVal[]): PropVal {
   if (Array.isArray(value)) {
     return {
       kind: PropValueKind.Literal,
