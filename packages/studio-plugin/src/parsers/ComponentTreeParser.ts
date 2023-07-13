@@ -168,7 +168,7 @@ export default class ComponentTreeParser {
       attributes.forEach((attribute) => {
         const propName = StaticParsingHelpers.parseJsxAttributeName(attribute);
         const parsedAttribute = StaticParsingHelpers.parseJsxAttribute(attribute)
-        if (parsedAttribute != undefined) {
+        if (parsedAttribute !== undefined) {
           props[propName] = parsedAttribute;
         }
       });

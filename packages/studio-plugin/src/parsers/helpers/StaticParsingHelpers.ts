@@ -108,7 +108,7 @@ export default class StaticParsingHelpers {
     const expression = initializer.isKind(SyntaxKind.JsxExpression)
       ? initializer.getExpressionOrThrow()
       : initializer;
-    if (expression.getSymbol()?.compilerSymbol.escapedName == "undefined") {
+    if (expression.getSymbol()?.compilerSymbol.escapedName === "undefined") {
       return;
     } else if (
       expression.isKind(SyntaxKind.PropertyAccessExpression) ||
@@ -134,7 +134,7 @@ export default class StaticParsingHelpers {
       };
     } else if (expression.isKind(SyntaxKind.ArrayLiteralExpression)) {
       return {
-        value: expression.getElements().map(this.parseInitializer).filter((el): el is TypelessPropVal => el != undefined),
+        value: expression.getElements().map(this.parseInitializer).filter((el): el is TypelessPropVal => el !== undefined),
         kind: PropValueKind.Literal,
       };
     } else {
@@ -159,7 +159,7 @@ export default class StaticParsingHelpers {
       const value = StaticParsingHelpers.parseInitializer(
         p.getInitializerOrThrow()
       );
-      if (value != undefined) {
+      if (value !== undefined) {
         parsedValues[key] = value;
       }
     });
@@ -270,7 +270,7 @@ export default class StaticParsingHelpers {
         );
       }
       const parsedAttributes = this.parseJsxAttribute(jsxAttribute);
-      if (parsedAttributes != undefined) {
+      if (parsedAttributes !== undefined) {
         const propValue = StaticParsingHelpers.addTypesToPropVal(
           parsedAttributes,
           propMetadata
@@ -310,7 +310,7 @@ export default class StaticParsingHelpers {
     const parsedProps = StaticParsingHelpers.parseInitializer(
       jsxAttribute.getInitializerOrThrow()
     );
-    if (parsedProps != undefined) {
+    if (parsedProps !== undefined) {
       const { value, kind } = parsedProps
       if (kind === PropValueKind.Expression) {
         if (typeof value !== "string") {
