@@ -91,7 +91,7 @@ describe("trigger onChange from input interaction", () => {
         propName="background color"
         propMetadata={{ type: PropValueType.HexColor, required: false }}
         onPropChange={onPropChange}
-        propValue={'#ffffff'}
+        propValue="#ffffff"
       />
     );
     fireEvent.input(screen.getByLabelText("background color"), {
