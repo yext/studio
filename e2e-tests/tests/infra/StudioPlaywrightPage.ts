@@ -1,6 +1,8 @@
 import { Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
 import path from "path";
+import GitOperations from "./GitOperations.js";
+import simpleGit from "simple-git";
 import { StreamScope } from "@yext/studio-plugin";
 
 export type StreamScopeForm = {
@@ -15,6 +17,7 @@ export default class StudioPlaywrightPage {
   readonly removeElementButton: Locator;
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
+  readonly gitOps: GitOperations;
 
   constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
@@ -43,6 +46,9 @@ export default class StudioPlaywrightPage {
       "Deployed successfully.",
       "Deploy Changes to Repository"
     );
+
+    const git = simpleGit(tmpDir);
+    this.gitOps = new GitOperations(git);
   }
 
   async addStaticPage(pageName: string, urlSlug: string) {

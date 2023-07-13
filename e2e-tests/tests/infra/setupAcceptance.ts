@@ -7,7 +7,6 @@ import fs from "fs";
 import fsExtra from "fs-extra";
 import spawnStudio from "./spawnStudio.js";
 
-const git = simpleGit();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
@@ -24,34 +23,54 @@ export default async function setup(
   run: (port: number, tmpDir: string) => Promise<void>
 ) {
   const { createRemote, testInfo, debug } = opts;
-  let remoteBranch: string | null = null;
+  let cleanupChildProcess: (() => boolean) | null = null;
+  let gitCleanup: (() => Promise<void>) | null = null;
   let tmpDir: string | null = null;
+
   try {
-    if (createRemote) {
-      remoteBranch = await createRemoteBranch(testInfo);
-    }
     tmpDir = createTempWorkingDir(testInfo);
-    const { port, kill } = await spawnStudio(tmpDir, debug, testInfo);
-    await run(port, tmpDir);
-    kill();
-  } finally {
-    if (!debug) {
-      tmpDir && fsExtra.rmdirSync(tmpDir, { recursive: true });
+    if (createRemote) {
+      gitCleanup = await createRemoteBranch(testInfo, tmpDir);
     }
-    remoteBranch && (await git.push(["--delete", "origin", remoteBranch]));
+    const { port, kill } = await spawnStudio(tmpDir, debug, testInfo);
+    cleanupChildProcess = kill;
+    await run(port, tmpDir);
+  } finally {
+    cleanupChildProcess?.();
+    await gitCleanup?.();
+    if (!debug && tmpDir) {
+      fsExtra.rmdirSync(tmpDir, { recursive: true });
+    }
   }
 }
 
 /**
- * Creates and checks out a new branch for the test,
- * then pushes it to the remote.
+ * Creates a separate branch for the temporary folder that is then pushed to the remote.
+ * This branch lives in it's own sub-repo, in order to separate out git state that is
+ * modified during the test.
+ *
+ * The sub repo is created by copying the .git folder.
+ * This was done instead of doing a fresh git init or git clone to avoid issues with github workflow
+ * authentication not being passed to the sub-repo.
  */
-async function createRemoteBranch(testInfo: TestInfo) {
+async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
+  const git = simpleGit(tmpDir);
   const testFile = getTestFilename(testInfo);
-  const testBranch = `e2e-test_${testFile}_${Date.now()}`;
+  const date = new Date();
+  const dateString = `${date.getMonth()}-${date.getDate()}-${date.getFullYear()}-${date.getMilliseconds()}`;
+  const testBranch = `e2e-test_${testFile}_${dateString}`;
+  const tmpDirGitPath = path.join(tmpDir, ".git");
+  fsExtra.mkdirSync(tmpDirGitPath);
+  fsExtra.cpSync(path.resolve(__dirname, "../../../.git"), tmpDirGitPath, {
+    recursive: true,
+  });
   await git.checkout(["-b", testBranch]);
+  await git.add("-A");
+  await git.commit("initial commit for " + testBranch);
   await git.push(["-u", "origin", "HEAD"]);
-  return testBranch;
+  return async () => {
+    await git.push(["--delete", "origin", testBranch]);
+  };
 }
 
 /**
