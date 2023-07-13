@@ -36,15 +36,9 @@ export default function PropEditor({
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
 
-  return (
-    <UndefinedMenuButton
-      propType={propMetadata}
-      isUndefined={propValue === undefined}
-      updateProp={onPropChange}
-      required={propMetadata.required}
-    >
-      <div className="flex items-center mb-2 text-sm">
-        {renderBranchUI(isNested)}
+  function renderPropInput() {
+    return (
+      <div>
         <label
           className="flex h-10 items-center justify-self-start"
           id={propName}
@@ -70,6 +64,20 @@ export default function PropEditor({
             place="top"
           />
         )}
+      </div>
+    )
+  }
+
+  return (
+    <UndefinedMenuButton
+      propType={propMetadata}
+      isUndefined={propValue === undefined}
+      updateProp={onPropChange}
+      required={propMetadata.required}
+    >
+      <div className="flex items-center mb-2 text-sm">
+        {renderBranchUI(isNested)}
+        {renderPropInput()}
       </div>
     </UndefinedMenuButton>
   );
