@@ -38,39 +38,39 @@ export default function PropEditor({
 
   return (
     <UndefinedMenuButton
-          propType={propMetadata}
-          isUndefined={propValue === undefined}
-          updateProp={onPropChange}
-          required={propMetadata.required}
+      propType={propMetadata}
+      isUndefined={propValue === undefined}
+      updateProp={onPropChange}
+      required={propMetadata.required}
+    >
+      <div className="flex items-center mb-2 text-sm">
+        {renderBranchUI(isNested)}
+        <label
+          className="flex h-10 items-center justify-self-start"
+          id={propName}
         >
-    <div className="flex items-center mb-2 text-sm">
-      {renderBranchUI(isNested)}
-      <label
-        className="flex h-10 items-center justify-self-start"
-        id={propName}
-      >
-        <p className="pr-2">{propName}</p>
-        <PropInput
-          {...{
-            propType:
-              propKind === PropValueKind.Expression
-                ? { type: PropValueType.string }
-                : propMetadata,
-            propValue,
-            onChange,
-            propKind,
-          }}
-        />
-      </label>
-      {doc && (
-        <Tooltip
-          style={tooltipStyle}
-          anchorId={propName}
-          content={doc}
-          place="top"
-        />
-      )}
-    </div>
+          <p className="pr-2">{propName}</p>
+          <PropInput
+            {...{
+              propType:
+                propKind === PropValueKind.Expression
+                  ? { type: PropValueType.string }
+                  : propMetadata,
+              propValue,
+              onChange,
+              propKind,
+            }}
+          />
+        </label>
+        {doc && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={propName}
+            content={doc}
+            place="top"
+          />
+        )}
+      </div>
     </UndefinedMenuButton>
   );
 }

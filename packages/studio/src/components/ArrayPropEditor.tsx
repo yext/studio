@@ -75,36 +75,36 @@ export default function ArrayPropEditor({
           updateProp={onPropChange}
           required={propMetadata.required}
         >
-        <label className="flex h-10 items-center">
+          <label className="flex h-10 items-center">
             <p className="pr-2 font-semibold" id={docTooltipId}>
               {propName}
             </p>
-          {propMetadata.doc && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={docTooltipId}
-              content={propMetadata.doc}
-              place="top"
-            />
-          )}
-          <div id={inputTooltipId}>
-            <FieldPickerInput
-              onInputChange={onExpressionChange}
-              handleFieldSelection={onChange}
-              displayValue={isExpression ? value : ""}
-              fieldFilter={fieldPickerFilter}
-              disabled={!isExpression || isUndefinedValue}
-            />
-          </div>
-          {!isExpression && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={inputTooltipId}
-              content="Disabled while items are present below"
-              place="top"
-            />
-          )}
-        </label>
+            {propMetadata.doc && (
+              <Tooltip
+                style={tooltipStyle}
+                anchorId={docTooltipId}
+                content={propMetadata.doc}
+                place="top"
+              />
+            )}
+            <div id={inputTooltipId}>
+              <FieldPickerInput
+                onInputChange={onExpressionChange}
+                handleFieldSelection={onChange}
+                displayValue={isExpression ? value : ""}
+                fieldFilter={fieldPickerFilter}
+                disabled={!isExpression || isUndefinedValue}
+              />
+            </div>
+            {!isExpression && (
+              <Tooltip
+                style={tooltipStyle}
+                anchorId={inputTooltipId}
+                content="Disabled while items are present below"
+                place="top"
+              />
+            )}
+          </label>
         </UndefinedMenuButton>
         {!isUndefinedValue && (
           <LiteralEditor
@@ -133,7 +133,11 @@ function LiteralEditor({
 
   const updateItem = useCallback(
     (itemName: string) => (itemVal: PropVal | undefined) =>
-      updateItems(Object.values({ ...propValues, [itemName]: itemVal }).filter(notUndefined)),
+      updateItems(
+        Object.values({ ...propValues, [itemName]: itemVal }).filter(
+          notUndefined
+        )
+      ),
     [propValues, updateItems]
   );
 
