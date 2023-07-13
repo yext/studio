@@ -21,13 +21,7 @@ export default function NestedPropEditors(props: {
   updateProp: (propVal: PropVal | undefined) => void;
   isNested?: boolean;
 }) {
-  const {
-    propValues,
-    propMetadata,
-    propName,
-    updateProp,
-    isNested,
-  } = props;
+  const { propValues, propMetadata, propName, updateProp, isNested } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
       updateProp({
