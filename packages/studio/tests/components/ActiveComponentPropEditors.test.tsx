@@ -618,7 +618,7 @@ describe("undefined menu", () => {
       />
     );
     await userEvent.hover(screen.getByText("bool"));
-    waitFor(() => expect(screen.queryByLabelText(
+    await waitFor(() => expect(screen.queryByLabelText(
       "Toggle undefined value menu"
     )).toBeFalsy());
   });
