@@ -115,11 +115,10 @@ export function renderPropEditor(
     return (
       <NestedPropEditors
         propValues={propVal?.value}
-        propType={propMetadata}
+        propMetadata={propMetadata}
         propName={propName}
         updateProp={updateProp}
         isNested={isNested}
-        disabled={isUndefinedValue}
       />
     );
   } else if (propMetadata.type === PropValueType.Array) {

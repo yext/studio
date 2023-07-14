@@ -1,6 +1,7 @@
 import {
   PropValues,
   NestedPropType,
+  PropMetadata,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -14,19 +15,17 @@ const EMPTY_PROP_VALUES = {};
 
 export default function NestedPropEditors(props: {
   propValues?: PropValues;
-  propType: NestedPropType;
+  propMetadata: Extract<PropMetadata, NestedPropType>;
   propName: string;
   updateProp: (propVal: PropVal) => void;
   isNested?: boolean;
-  disabled?: boolean;
 }) {
   const {
-    propValues = EMPTY_PROP_VALUES,
-    propType,
+    propValues,
+    propMetadata,
     propName,
     updateProp,
     isNested,
-    disabled,
   } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
@@ -38,6 +37,7 @@ export default function NestedPropEditors(props: {
     },
     [updateProp]
   );
+  const isUndefinedValue = propValues === undefined;
 
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
@@ -51,14 +51,14 @@ export default function NestedPropEditors(props: {
         <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap">
           {propName}
         </span>
-        {disabled ? (
+        {isUndefinedValue ? (
           <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">
             {undefinedObjectText}
           </span>
         ) : (
           <PropEditors
-            propValues={propValues}
-            propShape={propType.shape}
+            propValues={propValues ?? EMPTY_PROP_VALUES}
+            propShape={propMetadata.shape}
             updateProps={updateObjectProp}
             isNested={true}
           />
