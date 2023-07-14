@@ -161,7 +161,7 @@ function testStandardOrModuleComponentState(
   });
 
   it.only(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
-    const definedState : StandardOrModuleComponentState = {
+    const definedState: StandardOrModuleComponentState = {
       ...state,
       props: {
         bgColor: {
@@ -169,8 +169,8 @@ function testStandardOrModuleComponentState(
           valueType: PropValueType.HexColor,
           value: "#ffffff",
         },
-      }
-    }
+      },
+    };
     render(
       <ActiveComponentPropEditors
         activeComponentState={definedState}

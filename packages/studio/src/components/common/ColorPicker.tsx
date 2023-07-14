@@ -42,12 +42,9 @@ export default function ColorPicker({
     };
   }, [onChange]);
 
-  if(disabled) {
-    return (
-      <span className="text-sm text-gray-400 mt-0.5 mb-1">#RRGGBB</span>
-    );
-  }
-  else {
+  if (disabled) {
+    return <span className="text-sm text-gray-400 mt-0.5 mb-1">#RRGGBB</span>;
+  } else {
     return (
       <div data-testid="color-picker">
         <input type="color" onChange={handleChange} value={inputValue} />
