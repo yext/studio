@@ -72,7 +72,8 @@ export function renderPropEditor(
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal | undefined) => void,
-  isNested?: boolean
+  isNested?: boolean,
+  isRemovable?: boolean,
 ) {
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
@@ -89,6 +90,7 @@ export function renderPropEditor(
         propName={propName}
         updateProp={updateProp}
         isNested={isNested}
+        isRemovable={isRemovable}
       />
     );
   } else if (propMetadata.type === PropValueType.Array) {

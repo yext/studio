@@ -20,8 +20,9 @@ export default function NestedPropEditors(props: {
   propName: string;
   updateProp: (propVal: PropVal | undefined) => void;
   isNested?: boolean;
+  isRemovable?: boolean;
 }) {
-  const { propValues, propMetadata, propName, updateProp, isNested } = props;
+  const { propValues, propMetadata, propName, updateProp, isNested, isRemovable } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
       updateProp({
@@ -36,12 +37,13 @@ export default function NestedPropEditors(props: {
 
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
+    "w-full": !isRemovable,
   });
 
   return (
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
-      <div>
+      <div className="w-full">
         <UndefinedMenuButton
           propType={propMetadata}
           isUndefined={isUndefinedValue}

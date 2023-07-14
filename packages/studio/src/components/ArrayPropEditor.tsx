@@ -16,12 +16,13 @@ import { ReactComponent as Plus } from "../icons/plus.svg";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import classNames from "classnames";
 import RemovableElement from "./RemovableElement";
+import UndefinedMenuButton from "./UndefinedMenuButton";
 
 interface ArrayPropEditorProps {
   propName: string;
   propMetadata: Extract<PropMetadata, ArrayPropType>;
   propValue?: string | PropVal[];
-  onPropChange: (propVal: PropVal) => void;
+  onPropChange: (propVal: PropVal | undefined) => void;
   isNested?: boolean;
 }
 
@@ -56,7 +57,7 @@ export default function ArrayPropEditor({
     [onChange]
   );
 
-  const containerClasses = classNames("flex text-sm", {
+  const containerClasses = classNames("w-full flex text-sm", {
     "mb-2": !isNested,
   });
 
@@ -67,37 +68,15 @@ export default function ArrayPropEditor({
   return (
     <div className={containerClasses}>
       {renderBranchUI(isNested, "pt-2")}
-      <div className="flex flex-col">
-        <label className="flex h-10 items-center">
-          <p className="pr-2 font-semibold" id={docTooltipId}>
-            {propName}
-          </p>
-          {propMetadata.doc && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={docTooltipId}
-              content={propMetadata.doc}
-              place="top"
-            />
-          )}
-          <div id={inputTooltipId}>
-            <FieldPickerInput
-              onInputChange={onExpressionChange}
-              handleFieldSelection={onChange}
-              displayValue={isExpression ? value : ""}
-              fieldFilter={fieldPickerFilter}
-              disabled={!isExpression || isUndefinedValue}
-            />
-          </div>
-          {!isExpression && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={inputTooltipId}
-              content="Disabled while items are present below"
-              place="top"
-            />
-          )}
-        </label>
+      <div className="w-full flex flex-col">
+        <UndefinedMenuButton
+          propType={propMetadata}
+          isUndefined={isUndefinedValue}
+          updateProp={onPropChange}
+          required={propMetadata.required}
+        >
+          {renderFieldPickerInput()}
+        </UndefinedMenuButton>
         {!isUndefinedValue && (
           <LiteralEditor
             value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
@@ -108,6 +87,41 @@ export default function ArrayPropEditor({
       </div>
     </div>
   );
+
+  function renderFieldPickerInput() {
+    return (
+      <label className="flex h-10 items-center">
+        <p className="pr-2 font-semibold" id={docTooltipId}>
+          {propName}
+        </p>
+      {propMetadata.doc && (
+        <Tooltip
+          style={tooltipStyle}
+          anchorId={docTooltipId}
+          content={propMetadata.doc}
+          place="top"
+        />
+      )}
+      <div id={inputTooltipId}>
+        <FieldPickerInput
+          onInputChange={onExpressionChange}
+          handleFieldSelection={onChange}
+          displayValue={isExpression ? value : ""}
+          fieldFilter={fieldPickerFilter}
+          disabled={!isExpression || isUndefinedValue}
+        />
+      </div>
+      {!isExpression && (
+        <Tooltip
+          style={tooltipStyle}
+          anchorId={inputTooltipId}
+          content="Disabled while items are present below"
+          place="top"
+        />
+      )}
+    </label>
+    );
+  }
 }
 
 function LiteralEditor({
@@ -159,10 +173,11 @@ function LiteralEditor({
           {Object.entries(propValues).map(([name, propVal], index) => {
             const editor = renderPropEditor(
               name,
-              { ...itemType, required: false },
+              { ...itemType, required: true },
               propVal,
               updateItem(name),
-              true
+              true,
+              true,
             );
             return (
               <RemovableElement
