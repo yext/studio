@@ -110,7 +110,7 @@ export default class StaticParsingHelpers {
     const expression = initializer.isKind(SyntaxKind.JsxExpression)
       ? initializer.getExpressionOrThrow()
       : initializer;
-    if (expression.getSymbol()?.compilerSymbol.escapedName === "undefined") {
+    if (expression.getText() === "undefined") {
       return;
     } else if (
       expression.isKind(SyntaxKind.PropertyAccessExpression) ||
