@@ -274,10 +274,10 @@ export default class StaticParsingHelpers {
           )}`
         );
       }
-      const parsedAttributes = this.parseJsxAttribute(jsxAttribute);
-      if (parsedAttributes !== undefined) {
+      const parsedAttribute = this.parseJsxAttribute(jsxAttribute);
+      if (parsedAttribute !== undefined) {
         const propValue = StaticParsingHelpers.addTypesToPropVal(
-          parsedAttributes,
+          parsedAttribute,
           propMetadata
         );
         propValues[propName] = propValue;
