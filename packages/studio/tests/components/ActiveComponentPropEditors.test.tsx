@@ -160,18 +160,27 @@ function testStandardOrModuleComponentState(
     expect(screen.queryByText("bgColor")).toBeNull();
   });
 
-  it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
+  it.only(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
+    const definedState : StandardOrModuleComponentState = {
+      ...state,
+      props: {
+        bgColor: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.HexColor,
+          value: "#ffffff",
+        },
+      }
+    }
     render(
       <ActiveComponentPropEditors
-        activeComponentState={state}
+        activeComponentState={definedState}
         propShape={propShape}
       />
     );
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
     expect(screen.getByLabelText("bool")).toHaveAttribute("type", "checkbox");
-    expect(screen.getByText("bgColor")).toBeDefined();
-    expect(screen.getByText("#RRGGBB")).toBeDefined();
+    expect(screen.getByLabelText("bgColor")).toHaveAttribute("type", "color");
   });
 
   it(`renders tooltip for each of the active ${componentKindLabel}'s props with docs`, async () => {

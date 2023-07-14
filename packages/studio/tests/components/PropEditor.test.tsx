@@ -94,6 +94,7 @@ describe("trigger onChange from input interaction", () => {
         propValue="#ffffff"
       />
     );
+    // userEvent doesn't support interaction with input of type "color"
     fireEvent.input(screen.getByLabelText("background color"), {
       target: { value: "#abcdef" },
     });

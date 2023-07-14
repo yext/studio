@@ -80,6 +80,7 @@ describe("correctly renders prop inputs with undefined value", () => {
       />
     );
     expect(screen.getByText("#RRGGBB")).toBeVisible();
+    expect(screen.queryByTestId("color-picker")).toBeFalsy();
   });
 });
 
