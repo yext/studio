@@ -18,6 +18,7 @@ export default function Highlighter() {
   const red300 = "rgb(252 165 165)";
   const skyBlueFromMocks = "rgb(88,146,255)";
   const color = isErrorState ? red300 : skyBlueFromMocks;
+  console.log('render highligher', rect, componentName)
 
   const style: CSSProperties = useMemo(() => {
     if (!rect) {
