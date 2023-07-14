@@ -317,21 +317,22 @@ export default class StaticParsingHelpers {
     const parsedProp = StaticParsingHelpers.parseInitializer(
       jsxAttribute.getInitializerOrThrow()
     );
-    if (parsedProp !== undefined) {
-      const { value, kind } = parsedProp;
-      if (kind === PropValueKind.Expression) {
-        if (typeof value !== "string") {
-          throw new Error(
-            `Expected a string for expression prop ${jsxAttribute.getText()}.`
-          );
-        }
-        return { value, kind: PropValueKind.Expression };
-      }
-      return {
-        value,
-        kind: PropValueKind.Literal,
-      };
+    if (parsedProp === undefined) {
+      return;
     }
+    const { value, kind } = parsedProp;
+    if (kind === PropValueKind.Expression) {
+      if (typeof value !== "string") {
+        throw new Error(
+          `Expected a string for expression prop ${jsxAttribute.getText()}.`
+        );
+      }
+      return { value, kind: PropValueKind.Expression };
+    }
+    return {
+      value,
+      kind: PropValueKind.Literal,
+    };
   }
 
   static parseJsxElementName(
