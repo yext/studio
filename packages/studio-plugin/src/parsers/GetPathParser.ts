@@ -38,9 +38,9 @@ export default class GetPathParser {
     if (!stringNode) {
       return;
     }
-    const parsedProps = StaticParsingHelpers.parseInitializer(stringNode);
-    if (parsedProps !== undefined) {
-      const { kind, value } = parsedProps;
+    const parsedProp = StaticParsingHelpers.parseInitializer(stringNode);
+    if (parsedProp !== undefined) {
+      const { kind, value } = parsedProp;
       if (typeof value === "string") {
         return { kind, value };
       }

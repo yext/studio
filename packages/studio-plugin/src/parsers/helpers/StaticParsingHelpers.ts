@@ -314,11 +314,11 @@ export default class StaticParsingHelpers {
     jsxAttribute: JsxAttributeLike
   ): TypelessPropVal | undefined {
     this.assertIsJsxAttribute(jsxAttribute);
-    const parsedProps = StaticParsingHelpers.parseInitializer(
+    const parsedProp = StaticParsingHelpers.parseInitializer(
       jsxAttribute.getInitializerOrThrow()
     );
-    if (parsedProps !== undefined) {
-      const { value, kind } = parsedProps;
+    if (parsedProp !== undefined) {
+      const { value, kind } = parsedProp;
       if (kind === PropValueKind.Expression) {
         if (typeof value !== "string") {
           throw new Error(
