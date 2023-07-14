@@ -8,7 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
-import { useCallback } from "react";
+import { PropsWithChildren, useCallback } from "react";
 import NestedPropEditors from "./NestedPropEditors";
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
@@ -44,23 +44,10 @@ export default function PropEditors(props: {
         propMetadata,
         propValues[propName],
         updateSpecificProp(propName),
-        isNested
+        isNested,
+        index === numProps - 1,
       );
-      if (isNested) {
-        const isLastProp = index === numProps - 1;
-        const classes = classNames("flex flex-row ml-2", {
-          "border-l-2": !isLastProp,
-        });
-        return (
-          <div className={classes} key={propName}>
-            {isLastProp && (
-              <div className="before:border-l-2 before:pt-1"></div>
-            )}
-            {editor}
-          </div>
-        );
-      }
-      return <div key={propName}>{editor}</div>;
+      return {editor};
     }
   );
 
@@ -72,7 +59,8 @@ export function renderPropEditor(
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal | undefined) => void,
-  isNested?: boolean
+  isNested?: boolean,
+  isLastProp?: boolean,
 ) {
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
@@ -135,3 +123,19 @@ function getPropKind(propMetadata: PropMetadata) {
 
   return PropValueKind.Literal;
 }
+
+function nestedPropWrapper({isLastProp, propName, children} : PropsWithChildren<{isLastProp : boolean; propName : string}>) {
+  const classes = classNames("flex flex-row ml-2", {
+    "border-l-2": !isLastProp,
+  });
+  return (
+    <div className={classes} key={propName}>
+      {isLastProp && (
+        <div className="before:border-l-2 before:pt-1"></div>
+      )}
+      {children}
+    </div>
+  );
+}
+
+// return <div key={propName}>{children}</div>;

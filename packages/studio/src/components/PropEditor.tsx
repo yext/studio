@@ -32,6 +32,7 @@ export default function PropEditor({
   propKind,
   onPropChange,
   isNested,
+  isLastProp,
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
