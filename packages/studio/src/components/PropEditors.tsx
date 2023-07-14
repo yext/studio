@@ -110,7 +110,6 @@ export function renderPropEditor(
       );
       return null;
     }
-    const isUndefinedValue = propVal === undefined;
 
     return (
       <NestedPropEditors
