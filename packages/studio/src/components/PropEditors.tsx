@@ -45,9 +45,22 @@ export default function PropEditors(props: {
         propValues[propName],
         updateSpecificProp(propName),
         isNested,
-        index === numProps - 1,
       );
-      return {editor};
+      if(isNested) {
+        const isLastProp = index === numProps - 1;
+        const classes = classNames("flex flex-row ml-2", {
+          "border-l-2": !isLastProp,
+        });
+        return (
+          <div className={classes} key={propName}>
+            {isLastProp && (
+              <div className="before:border-l-2 before:pt-1"></div>
+            )}
+            {editor}
+          </div>
+        );
+      }
+      return <div key={propName}>{editor}</div>;
     }
   );
 
@@ -60,7 +73,6 @@ export function renderPropEditor(
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal | undefined) => void,
   isNested?: boolean,
-  isLastProp?: boolean,
 ) {
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
@@ -123,19 +135,3 @@ function getPropKind(propMetadata: PropMetadata) {
 
   return PropValueKind.Literal;
 }
-
-function nestedPropWrapper({isLastProp, propName, children} : PropsWithChildren<{isLastProp : boolean; propName : string}>) {
-  const classes = classNames("flex flex-row ml-2", {
-    "border-l-2": !isLastProp,
-  });
-  return (
-    <div className={classes} key={propName}>
-      {isLastProp && (
-        <div className="before:border-l-2 before:pt-1"></div>
-      )}
-      {children}
-    </div>
-  );
-}
-
-// return <div key={propName}>{children}</div>;

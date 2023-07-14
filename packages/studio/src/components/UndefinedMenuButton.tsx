@@ -46,12 +46,12 @@ export default function UndefinedMenuButton({
     setIsOpen(false);
   }, [isUndefined, updateProp, propType]);
 
-  const containerClasses = classNames(`group flex`, {
+  const containerClasses = classNames(`w-full flex flex-row group`, {
     "items-center":
       propType.type !== PropValueType.Object &&
       propType.type !== PropValueType.Array,
   });
-  const buttonContainerClasses = classNames("flex pl-2", {
+  const buttonContainerClasses = classNames("flex flex-row pl-2", {
     "mb-2":
       propType.type !== PropValueType.Object &&
       propType.type !== PropValueType.Array,

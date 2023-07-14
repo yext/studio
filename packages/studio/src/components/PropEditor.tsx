@@ -32,7 +32,6 @@ export default function PropEditor({
   propKind,
   onPropChange,
   isNested,
-  isLastProp,
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
@@ -44,7 +43,7 @@ export default function PropEditor({
       updateProp={onPropChange}
       required={propMetadata.required}
     >
-      <div className="flex items-center mb-2 text-sm">
+      <div className="flex flex-row items-center mb-2 text-sm">
         {renderBranchUI(isNested)}
         {renderPropInput()}
       </div>
