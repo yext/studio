@@ -25,7 +25,6 @@ export const initialProps: BannerProps = {
   title: "initial title",
   obj: {
     nestedLitArr: [true, false],
-    nestedObj: {},
   },
 };
 

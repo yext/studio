@@ -11,8 +11,6 @@ import PropEditors from "./PropEditors";
 import { renderBranchUI } from "./PropEditor";
 import classNames from "classnames";
 
-const EMPTY_PROP_VALUES = {};
-
 export default function NestedPropEditors(props: {
   propValues?: PropValues;
   propMetadata: Extract<PropMetadata, NestedPropType>;
@@ -57,7 +55,7 @@ export default function NestedPropEditors(props: {
           </span>
         ) : (
           <PropEditors
-            propValues={propValues ?? EMPTY_PROP_VALUES}
+            propValues={propValues}
             propShape={propMetadata.shape}
             updateProps={updateObjectProp}
             isNested={true}
