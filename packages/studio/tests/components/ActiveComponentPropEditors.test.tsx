@@ -160,7 +160,7 @@ function testStandardOrModuleComponentState(
     expect(screen.queryByText("bgColor")).toBeNull();
   });
 
-  it.only(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
+  it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
     const definedState: StandardOrModuleComponentState = {
       ...state,
       props: {
