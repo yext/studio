@@ -8,7 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
-import { PropsWithChildren, useCallback } from "react";
+import { useCallback } from "react";
 import NestedPropEditors from "./NestedPropEditors";
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
@@ -44,9 +44,9 @@ export default function PropEditors(props: {
         propMetadata,
         propValues[propName],
         updateSpecificProp(propName),
-        isNested,
+        isNested
       );
-      if(isNested) {
+      if (isNested) {
         const isLastProp = index === numProps - 1;
         const classes = classNames("flex flex-row ml-2", {
           "border-l-2": !isLastProp,
@@ -72,7 +72,7 @@ export function renderPropEditor(
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal | undefined) => void,
-  isNested?: boolean,
+  isNested?: boolean
 ) {
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
