@@ -73,7 +73,7 @@ export function renderPropEditor(
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal | undefined) => void,
   isNested?: boolean,
-  isRemovable?: boolean,
+  isRemovable?: boolean
 ) {
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {

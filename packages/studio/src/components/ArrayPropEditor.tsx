@@ -94,32 +94,32 @@ export default function ArrayPropEditor({
         <p className="pr-2 font-semibold" id={docTooltipId}>
           {propName}
         </p>
-      {propMetadata.doc && (
-        <Tooltip
-          style={tooltipStyle}
-          anchorId={docTooltipId}
-          content={propMetadata.doc}
-          place="top"
-        />
-      )}
-      <div id={inputTooltipId}>
-        <FieldPickerInput
-          onInputChange={onExpressionChange}
-          handleFieldSelection={onChange}
-          displayValue={isExpression ? value : ""}
-          fieldFilter={fieldPickerFilter}
-          disabled={!isExpression || isUndefinedValue}
-        />
-      </div>
-      {!isExpression && (
-        <Tooltip
-          style={tooltipStyle}
-          anchorId={inputTooltipId}
-          content="Disabled while items are present below"
-          place="top"
-        />
-      )}
-    </label>
+        {propMetadata.doc && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={docTooltipId}
+            content={propMetadata.doc}
+            place="top"
+          />
+        )}
+        <div id={inputTooltipId}>
+          <FieldPickerInput
+            onInputChange={onExpressionChange}
+            handleFieldSelection={onChange}
+            displayValue={isExpression ? value : ""}
+            fieldFilter={fieldPickerFilter}
+            disabled={!isExpression || isUndefinedValue}
+          />
+        </div>
+        {!isExpression && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={inputTooltipId}
+            content="Disabled while items are present below"
+            place="top"
+          />
+        )}
+      </label>
     );
   }
 }
@@ -177,7 +177,7 @@ function LiteralEditor({
               propVal,
               updateItem(name),
               true,
-              true,
+              true
             );
             return (
               <RemovableElement
