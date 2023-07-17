@@ -81,7 +81,7 @@ describe("parseJsxAttributes", () => {
 
   it("skips special React props", () => {
     const sourceFile = `function Test() { return <Banner title="Name" key={1} />; }`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile, propShape);
+    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -122,7 +122,7 @@ describe("parseJsxAttributes", () => {
 
   it("can parse nested objects with expressions and string literals", () => {
     const sourceFile = `<Banner nested={{ expr: document.name, str: 'cheese' }}  />`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile, propShape);
+    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -150,7 +150,7 @@ describe("parseJsxAttributes", () => {
 
   it("can parse arrays with expressions and string literals", () => {
     const sourceFile = `<Banner arr={[ document.name, 'cheese' ]} />`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile, propShape);
+    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -178,7 +178,7 @@ describe("parseJsxAttributes", () => {
 
   it("parses the undefined keyword", () => {
     const  sourceFile =`<Banner title={undefined} />`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile, propShape);
+    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -189,7 +189,7 @@ describe("parseJsxAttributes", () => {
 
   it("parses the undefined keyword in nested attributes", () => {
     const sourceFile = `<Banner nested={{ expr: document.name, str: undefined }} />`
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile, propShape);
+    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -313,8 +313,7 @@ describe("parseExportAssignment", () => {
 });
 
 function getJsxAttributesFromSource(
-  code: string,
-  propShape: PropShape
+  code: string
 ): JsxAttributeLike[] {
   const { sourceFile } = createTestSourceFile(code);
   const jsxAttributes = sourceFile
