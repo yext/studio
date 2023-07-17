@@ -3,7 +3,7 @@ import {
   ComponentStateKind,
   PropValueKind,
   TypelessPropVal,
-  GetPathVal
+  GetPathVal,
 } from "../types";
 import ComponentStateHelpers from "./ComponentStateHelpers";
 import ExpressionHelpers from "./ExpressionHelpers";
@@ -106,7 +106,7 @@ export default class ComponentTreeHelpers {
     //     : expressionPropValues;
     // });
 
-    const expressions : Set<string> = this.getUsedExpressions(componentTree)
+    const expressions: Set<string> = this.getUsedExpressions(componentTree);
     // console.log("these are the old expressions: ", expressions);
     // console.log("these are the new expressions: ", new_expressions);
 
@@ -115,7 +115,10 @@ export default class ComponentTreeHelpers {
     );
   }
 
-  static getUsedExpressions(componentTree: ComponentState[], getPathValue?: GetPathVal) : Set<string> {
+  static getUsedExpressions(
+    componentTree: ComponentState[],
+    getPathValue?: GetPathVal
+  ): Set<string> {
     const expressions = new Set<string>();
     componentTree.forEach((c) => {
       if (
@@ -138,9 +141,7 @@ export default class ComponentTreeHelpers {
           expressions.add(value)
         );
       }
-      expressionPropValues.forEach((value) =>
-        expressions.add(value)
-      );
+      expressionPropValues.forEach((value) => expressions.add(value));
     });
     return expressions;
   }

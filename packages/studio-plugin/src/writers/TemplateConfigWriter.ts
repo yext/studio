@@ -6,8 +6,7 @@ import {
   TEMPLATE_STRING_EXPRESSION_REGEX,
 } from "../constants";
 import TypeGuards from "../utils/TypeGuards";
-import { PropValueKind, TypelessPropVal } from "../types/PropValues";
-import { ComponentState, ComponentStateKind } from "../types/ComponentState";
+import { ComponentState } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
@@ -70,21 +69,28 @@ export default class TemplateConfigWriter {
     //   );
     // }
 
-    const expressions : Set<string> = ComponentTreeHelpers.getUsedExpressions(componentTree, getPathValue);
-    const new_streamDataExpressions : Set<StreamsDataExpression> = this.convertToStreamsDataExpression(expressions);
+    const expressions: Set<string> = ComponentTreeHelpers.getUsedExpressions(
+      componentTree,
+      getPathValue
+    );
+    const new_streamDataExpressions: Set<StreamsDataExpression> =
+      this.convertToStreamsDataExpression(expressions);
     // console.log("NEW: ", new_streamDataExpressions);
     // console.log("OLD: ", streamDataExpressions);
     return new_streamDataExpressions;
   }
 
   // todo: move into ComponentTreeHelpers, turn into arrays?
-  private convertToStreamsDataExpression(expressions : Set<string>) : Set<StreamsDataExpression> {
+  private convertToStreamsDataExpression(
+    expressions: Set<string>
+  ): Set<StreamsDataExpression> {
     const streamDataExpressions = Array.from(expressions).flatMap((value) => {
       if (TypeGuards.isTemplateString(value)) {
         return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
           .map((m) => m[1]) //todo: why???? also does this return an array or a single object?
-          .filter((m): m is StreamsDataExpression =>
-            TypeGuards.isStreamsDataExpression(m) //todo: do i need to flatMap()?
+          .filter(
+            (m): m is StreamsDataExpression =>
+              TypeGuards.isStreamsDataExpression(m) //todo: do i need to flatMap()?
           );
       }
       if (TypeGuards.isStreamsDataExpression(value)) return value;
