@@ -4,6 +4,7 @@ import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
+import { checkTooltipFunctionality } from "../__utils__/helpers";
 
 const basePageState: PageState = {
   componentTree: [],
@@ -11,7 +12,7 @@ const basePageState: PageState = {
   filepath: "mock-filepath",
 };
 
-it("displays ErrorPageStates in the ActivePagePanel with correct tooltips", () => {
+it("displays ErrorPageStates in the ActivePagePanel with correct tooltips", async () => {
   mockPageSliceStates({
     errorPages: {
       ErrorPage: {
@@ -21,8 +22,11 @@ it("displays ErrorPageStates in the ActivePagePanel with correct tooltips", () =
   });
   render(<ActivePagePanel />);
   expect(screen.getByText("ErrorPage")).toBeTruthy();
-  expect(screen.getByRole("tooltip")).toHaveTextContent(
-    "This message is the reason the page could not be rendered"
+  const tooltipMessage =
+    "This message is the reason the page could not be rendered";
+  await checkTooltipFunctionality(
+    tooltipMessage,
+    screen.getByText("ErrorPage")
   );
 });
 
