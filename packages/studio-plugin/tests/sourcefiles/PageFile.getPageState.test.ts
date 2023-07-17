@@ -25,9 +25,42 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
     };
   } else if (filepath?.includes("NestedBanner")) {
     propShape = {};
-  } else if (filepath?.includes("RequireTitle")) {
+  } else if (filepath?.includes("Required")) {
     propShape = {
       title: { type: PropValueType.string, doc: "jsdoc", required: true },
+      intervals: {
+        type: PropValueType.Array,
+        doc: "jsdoc",
+        required: false,
+        itemType: {
+          type: PropValueType.Object,
+            shape: {
+                end: {
+                    required: true,
+                    type: PropValueType.string
+                },
+                start: {
+                    required: true,
+                    type: PropValueType.string
+                }
+            }
+        }
+      },
+      obj: {
+        type: PropValueType.Object,
+        doc: "jsdoc",
+        required: false,
+        shape: {
+          firstName: {
+            required: true,
+            type: PropValueType.string
+          },
+          lastName: {
+              required: true,
+              type: PropValueType.string
+          },
+        }
+      }
     };
   }
 
@@ -199,7 +232,21 @@ describe("getPageState", () => {
   });
 
   it("gracefully handles missing props", () => {
-    const pageFile = createPageFile("BannerRequireTitlePage");
+    const pageFile = createPageFile("missingRequiredPropPage");
+    const result = pageFile.getPageState();
+    assertIsOk(result);
+    expect(result.value.componentTree[0].kind).toEqual("error");
+  })
+
+  it("gracefully handles missing array props", () => {
+    const pageFile = createPageFile("missingRequiredArrayItemPage");
+    const result = pageFile.getPageState();
+    assertIsOk(result);
+    expect(result.value.componentTree[0].kind).toEqual("error");
+  })
+
+  it("gracefully handles missing object props", () => {
+    const pageFile = createPageFile("missingRequiredObjectPropPage");
     const result = pageFile.getPageState();
     assertIsOk(result);
     expect(result.value.componentTree[0].kind).toEqual("error");
