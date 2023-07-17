@@ -80,8 +80,8 @@ describe("parseJsxAttributes", () => {
   };
 
   it("skips special React props", () => {
-    const sourceFile = `function Test() { return <Banner title="Name" key={1} />; }`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
+    const sourceCode = `function Test() { return <Banner title="Name" key={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -97,24 +97,24 @@ describe("parseJsxAttributes", () => {
   });
 
   it("throws an error if a prop type isn't found", () => {
-    const sourceFile = `function Test() { return <Banner num={1} />; }`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
+    const sourceCode = `function Test() { return <Banner num={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Could not find prop metadata for:/);
   });
 
   it("throws an error if a prop value is invalid", () => {
-    const sourceFile = `function Test() { return <Banner title={1} />; }`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
+    const sourceCode = `function Test() { return <Banner title={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Invalid prop value:/);
   });
 
   it("can parse nested objects with expressions and string literals", () => {
-    const sourceFile = `<Banner nested={{ expr: document.name, str: 'cheese' }}  />`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
+    const sourceCode = `<Banner nested={{ expr: document.name, str: 'cheese' }}  />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -141,8 +141,8 @@ describe("parseJsxAttributes", () => {
   });
 
   it("can parse arrays with expressions and string literals", () => {
-    const sourceFile = `<Banner arr={[ document.name, 'cheese' ]} />`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
+    const sourceCode = `<Banner arr={[ document.name, 'cheese' ]} />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -169,8 +169,8 @@ describe("parseJsxAttributes", () => {
   });
 
   it("parses the undefined keyword", () => {
-    const  sourceFile =`<Banner title={undefined} />`;
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
+    const  sourceCode =`<Banner title={undefined} />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -180,8 +180,8 @@ describe("parseJsxAttributes", () => {
   });
 
   it("parses the undefined keyword in nested attributes", () => {
-    const sourceFile = `<Banner nested={{ expr: document.name, str: undefined }} />`
-    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
+    const sourceCode = `<Banner nested={{ expr: document.name, str: undefined }} />`
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
