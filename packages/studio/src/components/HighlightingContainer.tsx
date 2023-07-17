@@ -104,7 +104,7 @@ class HighlightingClass extends Component<HighlightingProps> {
 
 /**
  * getDOMNode is a wrapper around findDOMNode.
- * 
+ *
  * It uses process of elimnation to check that the return type is an
  * instanceof Element instead of directly checking for instanceof Element.
  * This is necessary due to issues with instanceof within an iframed react portal.
@@ -112,7 +112,7 @@ class HighlightingClass extends Component<HighlightingProps> {
 function getDOMNode(instance: ReactInstance): Element | null {
   const childNode = findDOMNode(instance);
   if (!childNode || childNode instanceof Text) {
-    return null
+    return null;
   }
   return childNode;
 }
