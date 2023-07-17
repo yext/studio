@@ -1,7 +1,6 @@
 import {
   PropValues,
   NestedPropType,
-  PropMetadata,
   PropVal,
   PropValueKind,
   PropValueType,
