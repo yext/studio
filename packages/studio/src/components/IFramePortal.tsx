@@ -10,18 +10,7 @@ export default function IFramePortal(
 ) {
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null);
   const iframeDocument = iframeEl?.contentWindow?.document;
-
-  useEffect(() => {
-    if (iframeDocument) {
-      const inlineStyles = document.head.getElementsByTagName("style");
-      const stylesheets = document.head.querySelectorAll(
-        'link[rel="stylesheet"]'
-      );
-      for (const el of [...inlineStyles, ...stylesheets]) {
-        iframeDocument.head.appendChild(el.cloneNode(true));
-      }
-    }
-  }, [iframeDocument]);
+  useParentDocumentStyles(iframeDocument);
 
   return (
     <>
@@ -34,4 +23,18 @@ export default function IFramePortal(
       {iframeDocument && createPortal(props.children, iframeDocument.body)}
     </>
   );
+}
+
+function useParentDocumentStyles(iframeDocument: Document | undefined) {
+  useEffect(() => {
+    if (iframeDocument) {
+      const inlineStyles = document.head.getElementsByTagName("style");
+      const stylesheets = document.head.querySelectorAll(
+        'link[rel="stylesheet"]'
+      );
+      for (const el of [...inlineStyles, ...stylesheets]) {
+        iframeDocument.head.appendChild(el.cloneNode(true));
+      }
+    }
+  }, [iframeDocument]);
 }
