@@ -97,24 +97,16 @@ describe("parseJsxAttributes", () => {
   });
 
   it("throws an error if a prop type isn't found", () => {
-    const { sourceFile } = createTestSourceFile(
-      `function Test() { return <Banner num={1} />; }`
-    );
-    const jsxAttributes = sourceFile
-      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
-      .getAttributes();
+    const sourceFile = `function Test() { return <Banner num={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Could not find prop metadata for:/);
   });
 
   it("throws an error if a prop value is invalid", () => {
-    const { sourceFile } = createTestSourceFile(
-      `function Test() { return <Banner title={1} />; }`
-    );
-    const jsxAttributes = sourceFile
-      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
-      .getAttributes();
+    const sourceFile = `function Test() { return <Banner title={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceFile);
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Invalid prop value:/);
