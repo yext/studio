@@ -4,6 +4,7 @@ import DOMRectProperties from "../store/models/DOMRectProperties";
 import useStudioStore from "../store/useStudioStore";
 import rectToJson from "../utils/rectToJson";
 import { findDOMNode } from "react-dom";
+
 /**
  * HighlightingContainer is intended to be used as a wrapper around a
  * single rendered Studio component.
