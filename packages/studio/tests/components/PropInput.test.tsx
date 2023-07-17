@@ -83,6 +83,20 @@ describe("correctly renders prop inputs with undefined value", () => {
     expect(input).not.toBeChecked();
     expect(input).toBeDisabled();
   });
+
+  it("string union prop", () => {
+    render(
+      <PropInput
+        propType={{ type: PropValueType.string, unionValues: ["a", "b", "c"] }}
+        propValue={undefined}
+        propKind={PropValueKind.Literal}
+        onChange={jest.fn()}
+      />
+    );
+    const input = screen.getByRole("combobox");
+    expect(input).toHaveValue("");
+    expect(input).toBeDisabled();
+  });
 });
 
 function renderExpressionPropInput(
