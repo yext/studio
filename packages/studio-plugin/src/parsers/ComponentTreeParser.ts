@@ -194,10 +194,34 @@ export default class ComponentTreeParser {
       propShape
     );
 
+    if (hasPropMissing(props, propShape)) {
+      return {
+        kind: ComponentStateKind.Error,
+        metadataUUID: fileMetadata.metadataUUID,
+        uuid: v4(),
+        fullText: component.getFullText(),
+        message: "Error: Prop missing",
+        props,
+      }
+    }
+
     return {
       kind: componentStateKind,
       metadataUUID,
       props,
     };
   }
+}
+
+function hasPropMissing(props, propShape): boolean {
+  if (propShape) {
+    for (const propName of Object.keys(propShape)) {
+      const propIsRequired = propShape[propName].required;
+      const propIsUndefined = props[propName]
+      if (propIsRequired && propIsUndefined) {
+        return true
+      }
+    }
+  }
+  return false
 }
