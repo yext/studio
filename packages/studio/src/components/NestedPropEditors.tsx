@@ -13,12 +13,12 @@ import classNames from "classnames";
 
 export default function NestedPropEditors(props: {
   propValues?: PropValues;
-  propMetadata: Extract<PropMetadata, NestedPropType>;
+  propType: NestedPropType;
   propName: string;
   updateProp: (propVal: PropVal) => void;
   isNested?: boolean;
 }) {
-  const { propValues, propMetadata, propName, updateProp, isNested } = props;
+  const { propValues, propType, propName, updateProp, isNested } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
       updateProp({
@@ -53,7 +53,7 @@ export default function NestedPropEditors(props: {
         ) : (
           <PropEditors
             propValues={propValues}
-            propShape={propMetadata.shape}
+            propShape={propType.shape}
             updateProps={updateObjectProp}
             isNested={true}
           />

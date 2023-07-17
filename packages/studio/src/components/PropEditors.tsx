@@ -114,7 +114,7 @@ export function renderPropEditor(
     return (
       <NestedPropEditors
         propValues={propVal?.value}
-        propMetadata={propMetadata}
+        propType={propMetadata}
         propName={propName}
         updateProp={updateProp}
         isNested={isNested}
