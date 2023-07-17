@@ -92,7 +92,7 @@ describe("parseJsxAttributes", () => {
         valueType: PropValueType.string,
         value: "Name",
       },
-    }
+    };
     expect(receivedPropValues).toEqual(expectedPropValues);
   });
 
@@ -169,7 +169,7 @@ describe("parseJsxAttributes", () => {
   });
 
   it("parses the undefined keyword", () => {
-    const  sourceCode =`<Banner title={undefined} />`;
+    const sourceCode = `<Banner title={undefined} />`;
     const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
@@ -180,7 +180,7 @@ describe("parseJsxAttributes", () => {
   });
 
   it("parses the undefined keyword in nested attributes", () => {
-    const sourceCode = `<Banner nested={{ expr: document.name, str: undefined }} />`
+    const sourceCode = `<Banner nested={{ expr: document.name, str: undefined }} />`;
     const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
@@ -304,12 +304,10 @@ describe("parseExportAssignment", () => {
   });
 });
 
-function getJsxAttributesFromSource(
-  code: string
-): JsxAttributeLike[] {
+function getJsxAttributesFromSource(code: string): JsxAttributeLike[] {
   const { sourceFile } = createTestSourceFile(code);
   const jsxAttributes = sourceFile
     .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
     .getAttributes();
-  return jsxAttributes
+  return jsxAttributes;
 }
