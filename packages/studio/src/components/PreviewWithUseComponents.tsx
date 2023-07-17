@@ -12,9 +12,11 @@ export default function PreviewWithUseComponents() {
 
   return (
     <IFramePortal className='h-full w-full'>
-      <PreviewPanel />
-      <Highlighter />
       <link href="/src/tailwind-full.css.br" rel="stylesheet"/>
+      <div onClick={e => console.log(e)}>
+        <PreviewPanel />
+        <Highlighter />
+      </div>
     </IFramePortal>
   );
 }

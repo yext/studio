@@ -1,10 +1,9 @@
 import { isEqual } from "lodash";
 import { Component, PropsWithChildren, ReactInstance } from "react";
-import { findDOMNode } from "react-dom";
 import DOMRectProperties from "../store/models/DOMRectProperties";
 import useStudioStore from "../store/useStudioStore";
 import rectToJson from "../utils/rectToJson";
-
+import { findDOMNode } from "react-dom";
 /**
  * HighlightingContainer is intended to be used as a wrapper around a
  * single rendered Studio component.
@@ -59,6 +58,7 @@ class HighlightingClass extends Component<HighlightingProps> {
 
   highlightSelf = (e?: Event) => {
     e?.stopImmediatePropagation();
+    e?.preventDefault();
     const childNode = getDOMNode(this);
     if (!childNode) {
       return;
@@ -102,6 +102,13 @@ class HighlightingClass extends Component<HighlightingProps> {
   }
 }
 
+/**
+ * getDOMNode is a wrapper around findDOMNode.
+ * 
+ * It uses process of elimnation to check that the return type is an
+ * instanceof Element instead of directly checking for instanceof Element.
+ * This is necessary due to issues with instanceof within an iframed react portal.
+ */
 function getDOMNode(instance: ReactInstance): Element | null {
   const childNode = findDOMNode(instance);
   if (!childNode || childNode instanceof Text) {
