@@ -98,7 +98,7 @@ describe("correctly renders prop inputs with undefined value", () => {
     expect(input).toBeDisabled();
   });
 
-  it.only("hex color prop", () => {
+  it("hex color prop", () => {
     render(
       <div>
         <label>
