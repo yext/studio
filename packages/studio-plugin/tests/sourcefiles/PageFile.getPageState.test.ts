@@ -25,6 +25,10 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
     };
   } else if (filepath?.includes("NestedBanner")) {
     propShape = {};
+  } else if (filepath?.includes("RequireTitle")) {
+    propShape = {
+      title: { type: PropValueType.string, doc: "jsdoc", required: true },
+    };
   }
 
   return {
@@ -193,6 +197,13 @@ describe("getPageState", () => {
     assertIsOk(result);
     expect(result.value.componentTree).toEqual([]);
   });
+
+  it("gracefully handles missing props", () => {
+    const pageFile = createPageFile("BannerRequireTitlePage");
+    const result = pageFile.getPageState();
+    assertIsOk(result);
+    expect(result.value.componentTree[0].kind).toEqual("error");
+  })
 
   describe("throws errors", () => {
     beforeEach(() => {

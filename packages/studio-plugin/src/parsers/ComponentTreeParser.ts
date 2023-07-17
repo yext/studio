@@ -194,7 +194,7 @@ export default class ComponentTreeParser {
       propShape
     );
 
-    if (hasPropMissing(props, propShape)) {
+    if (isMissingRequiredProp(props, propShape)) {
       return {
         kind: ComponentStateKind.Error,
         metadataUUID: fileMetadata.metadataUUID,
@@ -213,11 +213,11 @@ export default class ComponentTreeParser {
   }
 }
 
-function hasPropMissing(props, propShape): boolean {
+function isMissingRequiredProp(props, propShape): boolean {
   if (propShape) {
     for (const propName of Object.keys(propShape)) {
       const propIsRequired = propShape[propName].required;
-      const propIsUndefined = props[propName]
+      const propIsUndefined = props[propName] === undefined
       if (propIsRequired && propIsUndefined) {
         return true
       }
