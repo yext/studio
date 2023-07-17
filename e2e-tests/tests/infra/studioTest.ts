@@ -1,6 +1,6 @@
 import { test as base } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
-import setupGitBranch from "./setupGitBranch.js";
+import setupAcceptance from "./setupAcceptance.js";
 
 type Fixtures = {
   /**
@@ -12,6 +12,8 @@ type Fixtures = {
    * If true, the remote branch will be cleaned up at the end of the testrun.
    */
   createRemote: boolean;
+  /** Flag to turn on logging and prevent cleanup of temp folders. */
+  debug: boolean;
 };
 
 /**
@@ -20,11 +22,13 @@ type Fixtures = {
  */
 export const studioTest = base.extend<Fixtures>({
   createRemote: false,
-  studioPage: async ({ page, createRemote }, use, testInfo) => {
-    await setupGitBranch(testInfo, createRemote, async () => {
-      await page.goto("./");
+  debug: false,
+  studioPage: async ({ page, createRemote, debug }, use, testInfo) => {
+    const opts = { createRemote, debug, testInfo };
+    await setupAcceptance(opts, async (port: number, tmpDir: string) => {
+      await page.goto("localhost:" + port);
       await page.waitForLoadState("networkidle");
-      const studioPage = new StudioPlaywrightPage(page);
+      const studioPage = new StudioPlaywrightPage(page, tmpDir);
       await use(studioPage);
     });
   },
