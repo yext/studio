@@ -3,6 +3,7 @@ import {
   ComponentStateKind,
   PropValueKind,
   TypelessPropVal,
+  GetPathVal
 } from "../types";
 import ComponentStateHelpers from "./ComponentStateHelpers";
 import ExpressionHelpers from "./ExpressionHelpers";
@@ -88,26 +89,60 @@ export default class ComponentTreeHelpers {
    * as `document` or `props`.
    */
   static usesExpressionSource(componentTree: ComponentState[], source: string) {
-    const expressions: string[] = componentTree.flatMap((c) => {
-      if (c.kind === ComponentStateKind.Error) {
-        return this.getExpressionUsagesFromProps(c.props);
-      }
+    // const expressions: string[] = componentTree.flatMap((c) => {
+    //   if (c.kind === ComponentStateKind.Error) {
+    //     return this.getExpressionUsagesFromProps(c.props);
+    //   }
 
-      if (!TypeGuards.isEditableComponentState(c)) {
-        return [];
+    //   if (!TypeGuards.isEditableComponentState(c)) {
+    //     return [];
+    //   }
+
+    //   const props = ComponentStateHelpers.extractRepeatedState(c).props;
+    //   const expressionPropValues = this.getExpressionUsagesFromProps(props);
+
+    //   return TypeGuards.isRepeaterState(c)
+    //     ? [...expressionPropValues, c.listExpression]
+    //     : expressionPropValues;
+    // });
+
+    const expressions : Set<string> = this.getUsedExpressions(componentTree)
+    // console.log("these are the old expressions: ", expressions);
+    // console.log("these are the new expressions: ", new_expressions);
+
+    return Array.from(expressions).some((e) =>
+      ExpressionHelpers.usesExpressionSource(e, source)
+    );
+  }
+
+  static getUsedExpressions(componentTree: ComponentState[], getPathValue?: GetPathVal) : Set<string> {
+    const expressions = new Set<string>();
+    componentTree.forEach((c) => {
+      if (
+        !TypeGuards.isEditableComponentState(c) &&
+        c.kind !== ComponentStateKind.Error
+      ) {
+        return;
       }
 
       const props = ComponentStateHelpers.extractRepeatedState(c).props;
       const expressionPropValues = this.getExpressionUsagesFromProps(props);
 
-      return TypeGuards.isRepeaterState(c)
-        ? [...expressionPropValues, c.listExpression]
-        : expressionPropValues;
+      if (TypeGuards.isRepeaterState(c)) {
+        if (TypeGuards.isStreamsDataExpression(c.listExpression)) {
+          expressions.add(c.listExpression);
+        }
+      }
+      if (getPathValue) {
+        this.getExpressionUsagesFromPropVal(getPathValue).forEach((value) =>
+          expressions.add(value)
+        );
+      }
+      expressionPropValues.forEach((value) =>
+        expressions.add(value)
+      );
     });
-
-    return expressions.some((e) =>
-      ExpressionHelpers.usesExpressionSource(e, source)
-    );
+    return expressions;
   }
 
   private static getExpressionUsagesFromProps(

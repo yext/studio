@@ -43,71 +43,92 @@ export default class TemplateConfigWriter {
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
   ): Set<StreamsDataExpression> {
-    const streamDataExpressions = new Set<StreamsDataExpression>();
-    componentTree.forEach((c) => {
-      if (
-        !TypeGuards.isEditableComponentState(c) &&
-        c.kind !== ComponentStateKind.Error
-      ) {
-        return;
-      }
-      if (TypeGuards.isRepeaterState(c)) {
-        if (TypeGuards.isStreamsDataExpression(c.listExpression)) {
-          streamDataExpressions.add(c.listExpression);
-        }
-        this.getPathsFromProps(c.repeatedComponent.props).forEach((value) =>
-          streamDataExpressions.add(value)
-        );
-      } else {
-        this.getPathsFromProps(c.props).forEach((value) =>
-          streamDataExpressions.add(value)
-        );
-      }
-    });
-    if (getPathValue) {
-      this.getPathsFromPropVal(getPathValue).forEach((value) =>
-        streamDataExpressions.add(value)
-      );
-    }
-    return streamDataExpressions;
+    // const streamDataExpressions = new Set<StreamsDataExpression>();
+    // componentTree.forEach((c) => {
+    //   if (
+    //     !TypeGuards.isEditableComponentState(c) &&
+    //     c.kind !== ComponentStateKind.Error
+    //   ) {
+    //     return;
+    //   }
+    //   if (TypeGuards.isRepeaterState(c)) {
+    //     if (TypeGuards.isStreamsDataExpression(c.listExpression)) {
+    //       streamDataExpressions.add(c.listExpression);
+    //     }
+    //     this.getPathsFromProps(c.repeatedComponent.props).forEach((value) =>
+    //       streamDataExpressions.add(value)
+    //     );
+    //   } else {
+    //     this.getPathsFromProps(c.props).forEach((value) =>
+    //       streamDataExpressions.add(value)
+    //     );
+    //   }
+    // });
+    // if (getPathValue) {
+    //   this.getPathsFromPropVal(getPathValue).forEach((value) =>
+    //     streamDataExpressions.add(value)
+    //   );
+    // }
+
+    const expressions : Set<string> = ComponentTreeHelpers.getUsedExpressions(componentTree, getPathValue);
+    const new_streamDataExpressions : Set<StreamsDataExpression> = this.convertToStreamsDataExpression(expressions);
+    // console.log("NEW: ", new_streamDataExpressions);
+    // console.log("OLD: ", streamDataExpressions);
+    return new_streamDataExpressions;
   }
 
-  private getPathsFromProps(
-    props: Record<string, TypelessPropVal>
-  ): StreamsDataExpression[] {
-    const dataExpressions: StreamsDataExpression[] = [];
-    Object.keys(props).forEach((propName) => {
-      const paths = this.getPathsFromPropVal(props[propName]);
-      dataExpressions.push(...paths);
-    });
-    return dataExpressions;
-  }
-
-  private getPathsFromPropVal = ({
-    value,
-    kind,
-  }: TypelessPropVal): StreamsDataExpression[] => {
-    if (typeof value === "object") {
-      if (Array.isArray(value)) {
-        return value.flatMap(this.getPathsFromPropVal);
-      } else {
-        return this.getPathsFromProps(value);
+  // todo: move into ComponentTreeHelpers, turn into arrays?
+  private convertToStreamsDataExpression(expressions : Set<string>) : Set<StreamsDataExpression> {
+    const streamDataExpressions = Array.from(expressions).flatMap((value) => {
+      if (TypeGuards.isTemplateString(value)) {
+        return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
+          .map((m) => m[1]) //todo: why???? also does this return an array or a single object?
+          .filter((m): m is StreamsDataExpression =>
+            TypeGuards.isStreamsDataExpression(m) //todo: do i need to flatMap()?
+          );
       }
-    }
-    if (kind !== PropValueKind.Expression) {
+      if (TypeGuards.isStreamsDataExpression(value)) return value;
       return [];
-    }
-    if (TypeGuards.isTemplateString(value)) {
-      return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
-        .map((m) => m[1])
-        .filter((m): m is StreamsDataExpression =>
-          TypeGuards.isStreamsDataExpression(m)
-        );
-    } else if (TypeGuards.isStreamsDataExpression(value)) {
-      return [value];
-    }
-    return [];
-  };
+    });
+    return new Set<StreamsDataExpression>(streamDataExpressions);
+  }
+
+  // private getPathsFromProps(
+  //   props: Record<string, TypelessPropVal>
+  // ): StreamsDataExpression[] {
+  //   const dataExpressions: StreamsDataExpression[] = [];
+  //   Object.keys(props).forEach((propName) => {
+  //     const paths = this.getPathsFromPropVal(props[propName]);
+  //     dataExpressions.push(...paths);
+  //   });
+  //   return dataExpressions;
+  // }
+
+  // private getPathsFromPropVal = ({
+  //   value,
+  //   kind,
+  // }: TypelessPropVal): StreamsDataExpression[] => {
+  //   if (typeof value === "object") {
+  //     if (Array.isArray(value)) {
+  //       return value.flatMap(this.getPathsFromPropVal);
+  //     } else {
+  //       return this.getPathsFromProps(value);
+  //     }
+  //   }
+  //   if (kind !== PropValueKind.Expression) {
+  //     return [];
+  //   }
+  //   if (TypeGuards.isTemplateString(value)) {
+  //     return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
+  //       .map((m) => m[1])
+  //       .filter((m): m is StreamsDataExpression =>
+  //         TypeGuards.isStreamsDataExpression(m)
+  //       );
+  //   } else if (TypeGuards.isStreamsDataExpression(value)) {
+  //     return [value];
+  //   }
+  //   return [];
+  // };
 
   /**
    * Creates a Pages template config by merging current template config, if
