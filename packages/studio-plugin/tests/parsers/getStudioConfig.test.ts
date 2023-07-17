@@ -7,6 +7,7 @@ it("returns default config when studio config file is not found", async () => {
   const studioConfig = await getStudioConfig("test-site");
   expect(studioConfig).toEqual({
     isPagesJSRepo: false,
+    openBrowser: true,
     paths: {
       components: path.normalize("test-site/src/components"),
       localData: path.normalize("test-site/localData"),
@@ -23,11 +24,12 @@ it("merges the user's studio config with the default config for unspecified fiel
   const studioConfig = await getStudioConfig(projectRoot);
   expect(studioConfig).toEqual({
     isPagesJSRepo: false,
+    openBrowser: true,
     paths: {
-      components: "custom/components/folder/path",
+      components: path.join(projectRoot, "custom/components/folder/path"),
       localData: path.join(projectRoot, "localData"),
       modules: path.join(projectRoot, "src", "modules"),
-      pages: "custom/pages/folder/path",
+      pages: path.join(projectRoot, "custom/pages/folder/path"),
       siteSettings: path.join(projectRoot, "src", "siteSettings.ts"),
     },
     port: 8080,
