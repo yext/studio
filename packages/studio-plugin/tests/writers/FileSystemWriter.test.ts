@@ -56,6 +56,7 @@ describe("syncFileMetadata", () => {
   const tsMorphProject: Project = createTsMorphProject();
   const orchestrator = new ParsingOrchestrator(tsMorphProject, {
     paths,
+    openBrowser: true,
     isPagesJSRepo: false,
     port: 8080,
   });

@@ -245,6 +245,7 @@ function createParsingOrchestrator(opts?: {
     tsMorphProject,
     {
       paths: paths ?? userPaths,
+      openBrowser: true,
       isPagesJSRepo: isPagesJS ?? false,
       port: 8080,
     },

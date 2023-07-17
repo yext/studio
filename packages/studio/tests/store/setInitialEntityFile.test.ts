@@ -20,6 +20,7 @@ jest.mock("virtual_yext-studio", () => {
     pageNameToErrorPageState: {},
     UUIDToFileMetadata: {},
     studioConfig: {
+      openBrowser: true,
       paths: {
         components: mockFilepath,
         pages: mockFilepath,
