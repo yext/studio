@@ -573,7 +573,7 @@ describe("Nested prop", () => {
     expect(screen.getByText("objProp")).toBeTruthy();
     expect(screen.getByText("title")).toBeTruthy();
   });
-  
+
   it("renders empty curly braces for an undefined nested prop", () => {
     render(
       <ActiveComponentPropEditors
