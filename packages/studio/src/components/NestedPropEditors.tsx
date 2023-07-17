@@ -34,7 +34,10 @@ export default function NestedPropEditors(props: {
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
   });
-  const undefinedObjectText = "{}";
+  const curlyBrackets = "{}"
+  const undefinedObjectDisplay = (<span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">
+    {curlyBrackets}
+  </span>);
 
   return (
     <div className={containerClasses}>
@@ -43,11 +46,8 @@ export default function NestedPropEditors(props: {
         <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap">
           {propName}
         </span>
-        {isUndefinedValue ? (
-          <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">
-            {undefinedObjectText}
-          </span>
-        ) : (
+        {isUndefinedValue ? undefinedObjectDisplay
+        : (
           <PropEditors
             propValues={propValues}
             propShape={propMetadata.shape}
