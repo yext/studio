@@ -69,7 +69,7 @@ describe("correctly renders prop inputs with undefined value", () => {
     expect(input).toHaveValue("");
     expect(input).toBeDisabled();
   });
-  
+
   it("boolean prop", () => {
     render(
       <PropInput
