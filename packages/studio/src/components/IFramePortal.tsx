@@ -1,22 +1,37 @@
 import { createPortal } from "react-dom";
-import { PropsWithChildren, useState } from "react";
+import { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
 
 export default function IFramePortal(
   props: PropsWithChildren<{
     className?: string;
+    title: string;
+    inlineStyles: CSSProperties;
   }>
 ) {
-  const [iframeRef, setIframeRef] = useState<HTMLIFrameElement | null>(null);
-  const body = iframeRef?.contentWindow?.document.body;
+  const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null);
+  const iframeDocument = iframeEl?.contentWindow?.document;
+
+  useEffect(() => {
+    if (iframeDocument) {
+      const inlineStyles = document.head.getElementsByTagName("style");
+      const stylesheets = document.head.querySelectorAll(
+        'link[rel="stylesheet"]'
+      );
+      for (const el of [...inlineStyles, ...stylesheets]) {
+        iframeDocument.head.appendChild(el.cloneNode(true));
+      }
+    }
+  }, [iframeDocument]);
 
   return (
     <>
       <iframe
-        title="PreviewPanel"
-        ref={setIframeRef}
+        title={props.title}
+        ref={setIframeEl}
         className={props.className}
+        style={props.inlineStyles}
       ></iframe>
-      {body && createPortal(props.children, body)}
+      {iframeDocument && createPortal(props.children, iframeDocument.body)}
     </>
   );
 }
