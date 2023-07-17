@@ -15,7 +15,7 @@ import {
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
-import { FileMetadataKind, TypelessPropVal } from "../types";
+import { FileMetadataKind, PropValueType, TypelessPropVal } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
@@ -213,13 +213,33 @@ export default class ComponentTreeParser {
   }
 }
 
-function isMissingRequiredProp(props, propShape): boolean {
+function isMissingRequiredProp(propValues, propShape): boolean {
   if (propShape) {
     for (const propName of Object.keys(propShape)) {
       const propIsRequired = propShape[propName].required;
-      const propIsUndefined = props[propName] === undefined
+      const propIsUndefined = propValues[propName] === undefined
       if (propIsRequired && propIsUndefined) {
         return true
+      }
+      
+      if (propIsUndefined) {
+        continue;
+      }
+
+      const propType = propShape[propName].type
+      if (propType === PropValueType.Array) {
+        const arrayValues = propValues[propName].value
+        const arrayShapes = propShape[propName].itemType.shape
+        for (const value of arrayValues) {
+          if (isMissingRequiredProp(value.value, arrayShapes)) {
+            return true;
+          }
+        }
+      } else if (propType === PropValueType.Object) {
+        const objectPropShape = propShape[propName].shape
+        if (isMissingRequiredProp(propValues[propName].value, objectPropShape)) {
+          return true
+        }
       }
     }
   }
