@@ -3,7 +3,6 @@
   "include": ["**/*"],
   "compilerOptions": {
     "noEmit": true,
-    "jsx": "react-jsx",
     "types": [
       "node",
       "jest",
