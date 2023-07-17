@@ -72,6 +72,7 @@ describe("trigger onChange from input interaction", () => {
         propName="is Yext employee?"
         propMetadata={{ type: PropValueType.boolean, required: false }}
         onPropChange={onPropChange}
+        propValue={false}
       />
     );
     await userEvent.click(screen.getByLabelText("is Yext employee?"));
