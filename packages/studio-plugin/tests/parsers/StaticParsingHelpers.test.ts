@@ -1,4 +1,4 @@
-import { SyntaxKind } from "ts-morph";
+import { JsxAttributeLike, SyntaxKind } from "ts-morph";
 import { PropShape } from "../../src/types/PropShape";
 import {
   PropValueKind,
@@ -80,55 +80,41 @@ describe("parseJsxAttributes", () => {
   };
 
   it("skips special React props", () => {
-    const { sourceFile } = createTestSourceFile(
-      `function Test() { return <Banner title="Name" key={1} />; }`
+    const sourceCode = `function Test() { return <Banner title="Name" key={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
     );
-    const jsxAttributes = sourceFile
-      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
-      .getAttributes();
-    expect(
-      StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
-    ).toEqual({
+    const expectedPropValues = {
       title: {
         kind: PropValueKind.Literal,
         valueType: PropValueType.string,
         value: "Name",
       },
-    });
+    };
+    expect(receivedPropValues).toEqual(expectedPropValues);
   });
 
   it("throws an error if a prop type isn't found", () => {
-    const { sourceFile } = createTestSourceFile(
-      `function Test() { return <Banner num={1} />; }`
-    );
-    const jsxAttributes = sourceFile
-      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
-      .getAttributes();
+    const sourceCode = `function Test() { return <Banner num={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Could not find prop metadata for:/);
   });
 
   it("throws an error if a prop value is invalid", () => {
-    const { sourceFile } = createTestSourceFile(
-      `function Test() { return <Banner title={1} />; }`
-    );
-    const jsxAttributes = sourceFile
-      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
-      .getAttributes();
+    const sourceCode = `function Test() { return <Banner title={1} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
     ).toThrowError(/^Invalid prop value:/);
   });
 
   it("can parse nested objects with expressions and string literals", () => {
-    const { sourceFile } = createTestSourceFile(
-      `<Banner nested={{ expr: document.name, str: 'cheese' }}  />`
-    );
-    const jsxAttributes = sourceFile
-      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
-      .getAttributes();
-
+    const sourceCode = `<Banner nested={{ expr: document.name, str: 'cheese' }}  />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -155,13 +141,8 @@ describe("parseJsxAttributes", () => {
   });
 
   it("can parse arrays with expressions and string literals", () => {
-    const { sourceFile } = createTestSourceFile(
-      `<Banner arr={[ document.name, 'cheese' ]} />`
-    );
-    const jsxAttributes = sourceFile
-      .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
-      .getAttributes();
-
+    const sourceCode = `<Banner arr={[ document.name, 'cheese' ]} />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
       propShape
@@ -182,6 +163,40 @@ describe("parseJsxAttributes", () => {
             valueType: PropValueType.string,
           },
         ],
+      },
+    };
+    expect(receivedPropValues).toEqual(expectedPropValues);
+  });
+
+  it("parses the undefined keyword", () => {
+    const sourceCode = `<Banner title={undefined} />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues: PropValues = {};
+    expect(receivedPropValues).toEqual(expectedPropValues);
+  });
+
+  it("parses the undefined keyword in nested attributes", () => {
+    const sourceCode = `<Banner nested={{ expr: document.name, str: undefined }} />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues: PropValues = {
+      nested: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          expr: {
+            kind: PropValueKind.Expression,
+            value: "document.name",
+            valueType: PropValueType.string,
+          },
+        },
       },
     };
     expect(receivedPropValues).toEqual(expectedPropValues);
@@ -288,3 +303,11 @@ describe("parseExportAssignment", () => {
     ).toThrowError(/^Could not find a child of kind/);
   });
 });
+
+function getJsxAttributesFromSource(code: string): JsxAttributeLike[] {
+  const { sourceFile } = createTestSourceFile(code);
+  const jsxAttributes = sourceFile
+    .getFirstDescendantByKindOrThrow(SyntaxKind.JsxSelfClosingElement)
+    .getAttributes();
+  return jsxAttributes;
+}
