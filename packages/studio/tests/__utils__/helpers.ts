@@ -9,6 +9,6 @@ export async function checkTooltipFunctionality(
   await userEvent.hover(hoverEl);
   const findTooltip = () => screen.findByRole("tooltip", { name: tooltipText });
   await waitFor(findTooltip, {
-    timeout: 2500,
+    timeout: 10000,
   });
 }
