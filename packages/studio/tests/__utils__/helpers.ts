@@ -1,14 +1,11 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 export async function checkTooltipFunctionality(
   tooltipText: string,
   hoverEl: HTMLElement
 ) {
-  const queryForTooltip = () =>
-    screen.queryByRole("tooltip", { name: tooltipText });
-  expect(queryForTooltip()).toBeNull();
+  expect(screen.queryByRole("tooltip", { name: tooltipText })).toBeNull();
   await userEvent.hover(hoverEl);
-  const tooltip = await waitFor(queryForTooltip);
-  expect(tooltip).toBeDefined();
+  await screen.findByRole("tooltip", { name: tooltipText }, { timeout: 1000 });
 }
