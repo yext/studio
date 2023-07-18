@@ -15,7 +15,7 @@ import {
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
-import { FileMetadataKind, PropValueType, TypelessPropVal } from "../types";
+import { FileMetadataKind, PropShape, PropValueType, PropValues, TypelessPropVal, PropValueKind } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
@@ -215,7 +215,10 @@ export default class ComponentTreeParser {
   }
 }
 
-function getMissingRequiredProps(propValues, propShape): string[] {
+function getMissingRequiredProps(
+  propValues: PropValues, 
+  propShape: PropShape | undefined
+): string[] {
   const missingProps: string[] = [];
   if (propShape) {
     for (const propName of Object.keys(propShape)) {
@@ -228,19 +231,29 @@ function getMissingRequiredProps(propValues, propShape): string[] {
       if (propIsUndefined) {
         continue;
       }
-
-      const propType = propShape[propName].type
-      if (propType === PropValueType.Array) {
-        const arrayValues = propValues[propName].value
-        const arrayShapes = propShape[propName].itemType.shape
-        for (const value of arrayValues) {
-          const missingArrayProps = getMissingRequiredProps(value.value, arrayShapes);
-          missingProps.push(...missingArrayProps)
+      const shapeMetadata = propShape[propName]
+      const valueMetadata = propValues[propName]
+      if (shapeMetadata.type === PropValueType.Array) {
+        if (        
+          shapeMetadata.itemType.type !== PropValueType.Object ||
+          valueMetadata.valueType !== PropValueType.Array ||
+          valueMetadata.kind !== PropValueKind.Literal 
+        ) {
+          continue;
         }
-      } else if (propType === PropValueType.Object) {
-        const objectPropShape = propShape[propName].shape
-        const missingArrayProps = getMissingRequiredProps(propValues[propName].value, objectPropShape);
-        missingProps.push(...missingArrayProps)
+        const arrayShapes = shapeMetadata.itemType.shape
+        for (const value of valueMetadata.value) {
+          if (value.valueType === PropValueType.Object) {
+            const missingArrayProps = getMissingRequiredProps(value.value, arrayShapes);
+            missingProps.push(...missingArrayProps)
+          }
+        }
+      } else if (shapeMetadata.type === PropValueType.Object) {
+        if (valueMetadata.valueType === PropValueType.Object) {
+          const objectShape = shapeMetadata.shape
+          const missingObjectProps = getMissingRequiredProps(valueMetadata.value, objectShape);
+          missingProps.push(...missingObjectProps)
+        }
       }
     }
   }
