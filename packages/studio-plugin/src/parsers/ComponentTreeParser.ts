@@ -227,10 +227,10 @@ function getMissingRequiredProps(
       if (propIsRequired && propIsUndefined) {
         missingProps.push(propName)
       }
-      
       if (propIsUndefined) {
         continue;
       }
+
       const shapeMetadata = propShape[propName]
       const valueMetadata = propValues[propName]
       if (shapeMetadata.type === PropValueType.Array) {
