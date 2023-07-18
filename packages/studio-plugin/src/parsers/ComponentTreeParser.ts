@@ -194,13 +194,15 @@ export default class ComponentTreeParser {
       propShape
     );
 
-    if (isMissingRequiredProp(props, propShape)) {
+    const missingProps = getMissingRequiredProps(props, propShape)
+    const missingPropsString = missingProps.join(', ')
+    if (missingProps.length) {
       return {
         kind: ComponentStateKind.Error,
         metadataUUID: fileMetadata.metadataUUID,
         uuid: v4(),
         fullText: component.getFullText(),
-        message: "Error: Prop missing",
+        message: "Props missing: " + missingPropsString,
         props,
       }
     }
@@ -213,13 +215,14 @@ export default class ComponentTreeParser {
   }
 }
 
-function isMissingRequiredProp(propValues, propShape): boolean {
+function getMissingRequiredProps(propValues, propShape): string[] {
+  const missingProps: string[] = [];
   if (propShape) {
     for (const propName of Object.keys(propShape)) {
       const propIsRequired = propShape[propName].required;
       const propIsUndefined = propValues[propName] === undefined
       if (propIsRequired && propIsUndefined) {
-        return true
+        missingProps.push(propName)
       }
       
       if (propIsUndefined) {
@@ -231,17 +234,15 @@ function isMissingRequiredProp(propValues, propShape): boolean {
         const arrayValues = propValues[propName].value
         const arrayShapes = propShape[propName].itemType.shape
         for (const value of arrayValues) {
-          if (isMissingRequiredProp(value.value, arrayShapes)) {
-            return true;
-          }
+          const missingArrayProps = getMissingRequiredProps(value.value, arrayShapes);
+          missingProps.push(...missingArrayProps)
         }
       } else if (propType === PropValueType.Object) {
         const objectPropShape = propShape[propName].shape
-        if (isMissingRequiredProp(propValues[propName].value, objectPropShape)) {
-          return true
-        }
+        const missingArrayProps = getMissingRequiredProps(propValues[propName].value, objectPropShape);
+        missingProps.push(...missingArrayProps)
       }
     }
   }
-  return false
+  return missingProps
 }
