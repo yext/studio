@@ -8,7 +8,7 @@ on:
 
 jobs:
   acceptance:
-    name: (${{ matrix.shard }}/3)
+    name: ${{ matrix.os }} (${{ matrix.shard }}/3)
     timeout-minutes: 30
     strategy:
       matrix:
