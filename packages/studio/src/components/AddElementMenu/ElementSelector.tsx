@@ -70,7 +70,10 @@ function Option({
 }: {
   metadata: ValidFileMetadata;
 } & ElementSelectorProps) {
-  const componentName = path.basename(metadata.filepath, ".tsx");
+  const componentName = path.basename(
+    metadata.filepath.replaceAll(/\\/g, "/"),
+    ".tsx"
+  );
   const moduleMetadataBeingEdited = useStudioStore((store) =>
     store.actions.getModuleMetadataBeingEdited()
   );
