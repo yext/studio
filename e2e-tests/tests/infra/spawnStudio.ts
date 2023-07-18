@@ -28,9 +28,7 @@ export default async function spawnStudio(
     { stdio: "pipe", shell: true }
   );
 
-  child.on("error", function (err) {
-    console.error(err);
-  });
+  child.on("error", console.error);
   if (debug) {
     child.stderr?.on("data", process.stderr.write);
     child.stdout?.on("data", process.stdout.write);

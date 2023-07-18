@@ -13,7 +13,8 @@ jobs:
     strategy:
       matrix:
         shard: [1, 2, 3]
-    runs-on: macos-latest
+        os: [windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/setup-ci
