@@ -25,7 +25,7 @@ cli
           ...process.env,
           YEXT_STUDIO_ARGS: JSON.stringify(options),
         },
-        shell: true
+        shell: true,
       }
     );
   });

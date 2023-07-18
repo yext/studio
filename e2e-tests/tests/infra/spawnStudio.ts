@@ -27,8 +27,10 @@ export default async function spawnStudio(
     ["studio", "--port", port.toString(), "--root", rootDir],
     { stdio: "pipe", shell: true }
   );
-  
-  child.on('error', function( err ){ console.error(err) });
+
+  child.on("error", function (err) {
+    console.error(err);
+  });
   if (debug) {
     child.stderr?.on("data", process.stderr.write);
     child.stdout?.on("data", process.stdout.write);
@@ -87,8 +89,8 @@ const getTestGlob = () => globSync("./tests/**/*.spec.ts");
 
 function getTestNumber(testInfo: TestInfo) {
   const testPaths = getTestGlob().sort();
-  return testPaths.findIndex(testPath => {
-    const absolutePath = path.resolve(__dirname, '../..', testPath)
-    return absolutePath === testInfo.file
+  return testPaths.findIndex((testPath) => {
+    const absolutePath = path.resolve(__dirname, "../..", testPath);
+    return absolutePath === testInfo.file;
   });
 }
