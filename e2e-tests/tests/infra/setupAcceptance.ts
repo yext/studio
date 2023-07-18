@@ -91,5 +91,5 @@ function createTempWorkingDir(testInfo: TestInfo) {
 }
 
 function getTestFilename(testInfo: TestInfo): string {
-  return testInfo.file.split("/").at(-1) ?? "";
+  return testInfo.file.split(path.sep).at(-1) ?? "";
 }

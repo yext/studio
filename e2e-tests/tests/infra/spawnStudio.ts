@@ -25,12 +25,15 @@ export default async function spawnStudio(
   const child = spawn(
     "npx",
     ["studio", "--port", port.toString(), "--root", rootDir],
-    { stdio: "pipe" }
+    { stdio: "pipe", shell: true }
   );
+  
+  child.on('error', function( err ){ console.error(err) });
   if (debug) {
     child.stderr?.on("data", process.stderr.write);
     child.stdout?.on("data", process.stdout.write);
   }
+
   await waitForPort(port);
   return { port, kill: () => child.kill() };
 }
@@ -80,9 +83,12 @@ async function waitForPort(port: number): Promise<void> {
   );
 }
 
-const getTestGlob = () => globSync(path.resolve(__dirname, "../**/*.spec.ts"));
+const getTestGlob = () => globSync("./tests/**/*.spec.ts");
 
 function getTestNumber(testInfo: TestInfo) {
-  const testAbsolutePaths = getTestGlob().sort();
-  return testAbsolutePaths.indexOf(testInfo.file);
+  const testPaths = getTestGlob().sort();
+  return testPaths.findIndex(testPath => {
+    const absolutePath = path.resolve(__dirname, '../..', testPath)
+    return absolutePath === testInfo.file
+  });
 }
