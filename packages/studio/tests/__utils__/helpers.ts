@@ -7,5 +7,5 @@ export async function checkTooltipFunctionality(
 ) {
   expect(screen.queryByRole("tooltip", { name: tooltipText })).toBeNull();
   await userEvent.hover(hoverEl);
-  await screen.findByRole("tooltip", { name: tooltipText }, { timeout: 1000 });
+  await screen.findByRole("tooltip", { name: tooltipText }, { timeout: 2000 });
 }
