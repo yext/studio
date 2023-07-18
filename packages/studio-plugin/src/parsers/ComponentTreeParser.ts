@@ -15,7 +15,14 @@ import {
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
-import { FileMetadataKind, PropShape, PropValueType, PropValues, TypelessPropVal, PropValueKind } from "../types";
+import {
+  FileMetadataKind,
+  PropShape,
+  PropValueType,
+  PropValues,
+  TypelessPropVal,
+  PropValueKind,
+} from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
@@ -194,8 +201,8 @@ export default class ComponentTreeParser {
       propShape
     );
 
-    const missingProps = getMissingRequiredProps(props, propShape)
-    const missingPropsString = missingProps.join(', ')
+    const missingProps = getMissingRequiredProps(props, propShape);
+    const missingPropsString = missingProps.join(", ");
     if (missingProps.length) {
       return {
         kind: ComponentStateKind.Error,
@@ -204,7 +211,7 @@ export default class ComponentTreeParser {
         fullText: component.getFullText(),
         message: "Props missing: " + missingPropsString,
         props,
-      }
+      };
     }
 
     return {
@@ -216,46 +223,52 @@ export default class ComponentTreeParser {
 }
 
 function getMissingRequiredProps(
-  propValues: PropValues, 
+  propValues: PropValues,
   propShape: PropShape | undefined
 ): string[] {
   const missingProps: string[] = [];
   if (propShape) {
     for (const propName of Object.keys(propShape)) {
       const propIsRequired = propShape[propName].required;
-      const propIsUndefined = propValues[propName] === undefined
+      const propIsUndefined = propValues[propName] === undefined;
       if (propIsRequired && propIsUndefined) {
-        missingProps.push(propName)
+        missingProps.push(propName);
       }
       if (propIsUndefined) {
         continue;
       }
 
-      const shapeMetadata = propShape[propName]
-      const valueMetadata = propValues[propName]
+      const shapeMetadata = propShape[propName];
+      const valueMetadata = propValues[propName];
       if (shapeMetadata.type === PropValueType.Array) {
-        if (        
+        if (
           shapeMetadata.itemType.type !== PropValueType.Object ||
           valueMetadata.valueType !== PropValueType.Array ||
-          valueMetadata.kind !== PropValueKind.Literal 
+          valueMetadata.kind !== PropValueKind.Literal
         ) {
           continue;
         }
-        const arrayShapes = shapeMetadata.itemType.shape
+        const arrayShapes = shapeMetadata.itemType.shape;
         for (const value of valueMetadata.value) {
           if (value.valueType === PropValueType.Object) {
-            const missingArrayProps = getMissingRequiredProps(value.value, arrayShapes);
-            missingProps.push(...missingArrayProps)
+            const missingArrayProps = getMissingRequiredProps(
+              value.value,
+              arrayShapes
+            );
+            missingProps.push(...missingArrayProps);
           }
         }
       } else if (shapeMetadata.type === PropValueType.Object) {
         if (valueMetadata.valueType === PropValueType.Object) {
-          const objectShape = shapeMetadata.shape
-          const missingObjectProps = getMissingRequiredProps(valueMetadata.value, objectShape);
-          missingProps.push(...missingObjectProps)
+          const objectShape = shapeMetadata.shape;
+          const missingObjectProps = getMissingRequiredProps(
+            valueMetadata.value,
+            objectShape
+          );
+          missingProps.push(...missingObjectProps);
         }
       }
     }
   }
-  return missingProps
+  return missingProps;
 }
