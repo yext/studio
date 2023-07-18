@@ -230,7 +230,7 @@ function getMissingRequiredProps(
   if (!propShape) {
     return [];
   }
-  
+
   for (const propName of Object.keys(propShape)) {
     const propIsRequired = propShape[propName].required;
     const propIsUndefined = propValues[propName] === undefined;
