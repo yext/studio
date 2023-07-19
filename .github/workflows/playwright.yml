@@ -11,6 +11,7 @@ jobs:
     name: ${{ matrix.os }} (${{ matrix.shard }}/3)
     timeout-minutes: 30
     strategy:
+      fail-fast: false
       matrix:
         shard: [1, 2, 3]
         os: [windows-latest, macos-latest]
@@ -47,7 +48,7 @@ jobs:
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
           message: Commit new snapshots for ${{ matrix.os }}
-          add: e2e-test/__screenshots__/*
+          add: e2e-tests/__screenshots__/*
           push: true
           pull: --rebase --autostash
           default_author: github_actions
