@@ -92,7 +92,7 @@ function PageItem({ pageName }: { pageName: string }) {
 
   return (
     <ListItem>
-      <RemovableElement onRemove = {handleButtonClick} buttonClasses="ml-3">
+      <RemovableElement onRemove={handleButtonClick} buttonClasses="ml-3">
         <div className="flex grow justify-between">
           <div className="flex items-center overflow-auto">
             <Check className={checkClasses} />
@@ -109,7 +109,6 @@ function PageItem({ pageName }: { pageName: string }) {
         {renderModal(showModal, handleModalClose)}
       </RemovableElement>
     </ListItem>
-
   );
 }
 
@@ -134,6 +133,7 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
 
 function ListItem(props: PropsWithChildren<{ additionalClassNames?: string }>) {
   const additionalClassNames = props.additionalClassNames ?? "";
-  const className = "flex grow justify-between pb-4 px-2 " + additionalClassNames;
+  const className =
+    "flex grow justify-between pb-4 px-2 " + additionalClassNames;
   return <li className={className}>{props.children}</li>;
 }
