@@ -52,7 +52,7 @@ jobs:
         if: ${{ failure() && github.ref_name != 'main' }}
         with:
           message: Commit new snapshots for ${{ matrix.os }}
-          add: e2e-tests/__screenshots__/*
+          add: e2e-tests/__screenshots__/*.png
           push: true
           pull: --rebase --autostash
           default_author: github_actions
