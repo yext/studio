@@ -98,7 +98,9 @@ export default class StaticParsingHelpers {
     }
   }
 
-  static parseInitializer = (initializer: Expression): TypelessPropVal => {
+  static parseInitializer = (
+    initializer: Expression
+  ): TypelessPropVal | undefined => {
     if (initializer.isKind(SyntaxKind.StringLiteral)) {
       return {
         value: initializer.compilerNode.text,
@@ -108,7 +110,9 @@ export default class StaticParsingHelpers {
     const expression = initializer.isKind(SyntaxKind.JsxExpression)
       ? initializer.getExpressionOrThrow()
       : initializer;
-    if (
+    if (expression.getText() === "undefined") {
+      return;
+    } else if (
       expression.isKind(SyntaxKind.PropertyAccessExpression) ||
       expression.isKind(SyntaxKind.TemplateExpression) ||
       expression.isKind(SyntaxKind.ElementAccessExpression) ||
@@ -132,7 +136,10 @@ export default class StaticParsingHelpers {
       };
     } else if (expression.isKind(SyntaxKind.ArrayLiteralExpression)) {
       return {
-        value: expression.getElements().map(this.parseInitializer),
+        value: expression
+          .getElements()
+          .map(this.parseInitializer)
+          .filter((el): el is TypelessPropVal => el !== undefined),
         kind: PropValueKind.Literal,
       };
     } else {
@@ -157,7 +164,9 @@ export default class StaticParsingHelpers {
       const value = StaticParsingHelpers.parseInitializer(
         p.getInitializerOrThrow()
       );
-      parsedValues[key] = value;
+      if (value !== undefined) {
+        parsedValues[key] = value;
+      }
     });
     return parsedValues;
   }
@@ -265,11 +274,14 @@ export default class StaticParsingHelpers {
           )}`
         );
       }
-      const propValue = StaticParsingHelpers.addTypesToPropVal(
-        this.parseJsxAttribute(jsxAttribute),
-        propMetadata
-      );
-      propValues[propName] = propValue;
+      const parsedAttribute = this.parseJsxAttribute(jsxAttribute);
+      if (parsedAttribute !== undefined) {
+        const propValue = StaticParsingHelpers.addTypesToPropVal(
+          parsedAttribute,
+          propMetadata
+        );
+        propValues[propName] = propValue;
+      }
     });
     return propValues;
   }
@@ -298,11 +310,17 @@ export default class StaticParsingHelpers {
     return propName;
   }
 
-  static parseJsxAttribute(jsxAttribute: JsxAttributeLike): TypelessPropVal {
+  static parseJsxAttribute(
+    jsxAttribute: JsxAttributeLike
+  ): TypelessPropVal | undefined {
     this.assertIsJsxAttribute(jsxAttribute);
-    const { value, kind } = StaticParsingHelpers.parseInitializer(
+    const parsedProp = StaticParsingHelpers.parseInitializer(
       jsxAttribute.getInitializerOrThrow()
     );
+    if (parsedProp === undefined) {
+      return;
+    }
+    const { value, kind } = parsedProp;
     if (kind === PropValueKind.Expression) {
       if (typeof value !== "string") {
         throw new Error(

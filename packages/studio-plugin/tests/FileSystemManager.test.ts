@@ -36,6 +36,7 @@ paths.modules = path.join(projectRoot, "modules");
 
 const orchestrator = new ParsingOrchestrator(tsMorphProject, {
   paths,
+  openBrowser: true,
   isPagesJSRepo: false,
   port: 8080,
 });
