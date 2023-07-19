@@ -28,6 +28,9 @@ jobs:
           key: playwright-browsers_${{ runner.os }}-${{ hashFiles('node_modules/@playwright/test/package.json') }}
       - run: npx playwright install
       - run: npm i
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - run: npm run playwright -- --shard=${{ matrix.shard }}/3
         working-directory: e2e-tests
