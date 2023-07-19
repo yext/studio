@@ -88,7 +88,10 @@ export default class ComponentTreeHelpers {
    * Checks whether the component tree uses a specific expression source, such
    * as `document` or `props`.
    */
-  static usesExpressionSource(componentTree: ComponentState[], source: string) : boolean {
+  static usesExpressionSource(
+    componentTree: ComponentState[],
+    source: string
+  ): boolean {
     const expressions: string[] = this.getUsedExpressions(componentTree);
     return expressions.some((e) =>
       ExpressionHelpers.usesExpressionSource(e, source)

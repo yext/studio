@@ -11,7 +11,12 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
-import { GetPathVal, PagesJsState, PropValueKind, TypelessPropVal } from "../types";
+import {
+  GetPathVal,
+  PagesJsState,
+  PropValueKind,
+  TypelessPropVal,
+} from "../types";
 import TemplateConfigParser from "../parsers/TemplateConfigParser";
 import { ComponentTreeHelpers } from "../utils";
 
@@ -96,9 +101,8 @@ export default class TemplateConfigWriter {
       if (TypeGuards.isTemplateString(value)) {
         return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
           .map((m) => m[1])
-          .filter(
-            (m): m is StreamsDataExpression =>
-              TypeGuards.isStreamsDataExpression(m)
+          .filter((m): m is StreamsDataExpression =>
+            TypeGuards.isStreamsDataExpression(m)
           );
       }
       if (TypeGuards.isStreamsDataExpression(value)) return value;
