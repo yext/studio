@@ -90,7 +90,7 @@ export default function PropInput({
       return (
         <ColorPicker
           onChange={handleChangeEvent}
-          value={displayValue as string}
+          value={propValue as string | undefined}
         />
       );
     default:

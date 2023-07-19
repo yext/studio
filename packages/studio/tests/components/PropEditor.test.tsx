@@ -92,6 +92,7 @@ describe("trigger onChange from input interaction", () => {
         propName="background color"
         propMetadata={{ type: PropValueType.HexColor, required: false }}
         onPropChange={onPropChange}
+        propValue="#ffffff"
       />
     );
     // userEvent doesn't support interaction with input of type "color"
