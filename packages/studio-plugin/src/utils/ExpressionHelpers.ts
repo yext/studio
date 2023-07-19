@@ -21,7 +21,7 @@ export default class ExpressionHelpers {
   }
 
   /**
-   * Takes in an expression or a template string containing expressions and 
+   * Takes in an expression or a template string containing expressions and
    * filters it into an array of expressions containing the specified source.
    */
   static filterExpressionWithSource(

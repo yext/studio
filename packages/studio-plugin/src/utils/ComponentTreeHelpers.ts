@@ -108,7 +108,7 @@ export default class ComponentTreeHelpers {
     componentTree: ComponentState[],
     source: string,
     getPathValue?: GetPathVal
-  ) : string[] {
+  ): string[] {
     const expressions: string[] = this.getExpressions(
       componentTree,
       getPathValue
