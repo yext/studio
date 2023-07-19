@@ -1,10 +1,12 @@
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as Check } from "../icons/check.svg";
 import classNames from "classnames";
-import { PropsWithChildren, useMemo } from "react";
-import RemovePageButton from "./RemovePageButton";
+import { PropsWithChildren, useCallback, useMemo, useState } from "react";
 import { Tooltip } from "react-tooltip";
 import PageSettingsButton from "./PageSettingsButton/PageSettingsButton";
+import RemovableElement from "./RemovableElement";
+import { renderModalFunction } from "./common/ButtonWithModal";
+import Modal from "./common/Modal";
 
 /**
  * ActivePagePanel displays the available pages and allows the user to switch
@@ -59,6 +61,35 @@ function PageItem({ pageName }: { pageName: string }) {
     void updateActivePage(pageName);
   }
 
+  const removePage = useStudioStore((store) => store.pages.removePage);
+  const renderModal: renderModalFunction = useCallback(
+    (isOpen, handleClose) => {
+      async function handleConfirm() {
+        removePage(pageName);
+        await handleClose();
+      }
+      return (
+        <Modal
+          isOpen={isOpen}
+          title="Delete Page"
+          body={<div>Are you sure you want to remove page "{pageName}"?</div>}
+          confirmButtonText="Delete"
+          handleClose={handleClose}
+          handleConfirm={handleConfirm}
+        />
+      );
+    },
+    [pageName, removePage]
+  );
+
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const handleButtonClick = useCallback(() => {
+    setShowModal(true);
+  }, [setShowModal]);
+  const handleModalClose = useCallback(() => {
+    setShowModal(false);
+  }, [setShowModal]);
+
   return (
     <ListItem>
       <div className="flex items-center overflow-auto">
@@ -73,9 +104,11 @@ function PageItem({ pageName }: { pageName: string }) {
       </div>
       <div className="flex items-center space-x-3">
         {isPagesJSRepo && <PageSettingsButton pageName={pageName} />}
-        <RemovePageButton pageName={pageName} />
+        <RemovableElement onRemove = {handleButtonClick}/>
       </div>
+      {renderModal(showModal, handleModalClose)}
     </ListItem>
+
   );
 }
 
@@ -85,7 +118,7 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
 
   return (
     <ListItem additionalClassNames="text-red-300">
-      <div className="flex items-center overflow-auto" id={anchorId}>
+      <div id={anchorId}>
         <Tooltip
           anchorSelect={`#${anchorId}`}
           content={errorMessage}

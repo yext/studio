@@ -82,8 +82,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const buttonStyles = classNames({ hidden: !isActiveComponent });
 
   return (
-      <div className={componentNodeClasses} style={componentNodeStyle}>
-        <RemovableElement onRemove={handleRemove} buttonClasses={buttonStyles}>
+    <div className={componentNodeClasses} style={componentNodeStyle}>
+      <RemovableElement onRemove={handleRemove} buttonClasses={buttonStyles}>
         <div
           className="flex grow items-center cursor-pointer"
           onClick={handleClick}
@@ -105,6 +105,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
           )}
         </div>
       </RemovableElement>
-      </div>
+    </div>
   );
 }
