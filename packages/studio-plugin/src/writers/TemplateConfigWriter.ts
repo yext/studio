@@ -3,19 +3,14 @@ import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import {
   PAGESJS_TEMPLATE_PROPS_TYPE,
   TEMPLATE_CONFIG_VARIABLE_NAME,
-  TEMPLATE_STRING_EXPRESSION_REGEX,
 } from "../constants";
-import TypeGuards from "../utils/TypeGuards";
 import { ComponentState } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
-import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
 import {
   GetPathVal,
   PagesJsState,
-  PropValueKind,
-  TypelessPropVal,
 } from "../types";
 import TemplateConfigParser from "../parsers/TemplateConfigParser";
 import { ComponentTreeHelpers } from "../utils";
@@ -39,76 +34,21 @@ export default class TemplateConfigWriter {
   /**
    * Extracts stream's data expressions used in the provided component tree,
    * in the form of `document.${string}`.
-   *
-   * @param componentsState - the states of the page's component tree
+   * 
+   * @param componentTree - the states of the page's component tree
+   * @param getPathValue - the return value of the getPath function
    * @returns a set of stream's data expressions
    */
   private getUsedStreamDocumentPaths(
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
-  ): Set<StreamsDataExpression> {
-    const expressions: string[] = ComponentTreeHelpers.getUsedExpressions(
+  ): Set<string> {
+    const streamDataExpressions: string[] = ComponentTreeHelpers.getExpressionsWithSource(
       componentTree,
+      'document',
       getPathValue
     );
-    const streamDataExpressions: Set<StreamsDataExpression> =
-      this.convertToStreamsDataExpressions(expressions);
-    return streamDataExpressions;
-  }
-
-  private getPathsFromProps(
-    props: Record<string, TypelessPropVal>
-  ): StreamsDataExpression[] {
-    const dataExpressions: StreamsDataExpression[] = [];
-    Object.keys(props).forEach((propName) => {
-      const paths = this.getPathsFromPropVal(props[propName]);
-      dataExpressions.push(...paths);
-    });
-    return dataExpressions;
-  }
-
-  private getPathsFromPropVal = ({
-    value,
-    kind,
-  }: TypelessPropVal): StreamsDataExpression[] => {
-    if (typeof value === "object") {
-      if (Array.isArray(value)) {
-        return value.flatMap(this.getPathsFromPropVal);
-      } else {
-        return this.getPathsFromProps(value);
-      }
-    }
-    if (kind !== PropValueKind.Expression) {
-      return [];
-    }
-    if (TypeGuards.isTemplateString(value)) {
-      return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
-        .map((m) => m[1])
-        .filter((m): m is StreamsDataExpression =>
-          TypeGuards.isStreamsDataExpression(m)
-        );
-    } else if (TypeGuards.isStreamsDataExpression(value)) {
-      return [value];
-    }
-    return [];
-  };
-
-  // docs?
-  private convertToStreamsDataExpressions(
-    expressions: string[]
-  ): Set<StreamsDataExpression> {
-    const streamDataExpressions = Array.from(expressions).flatMap((value) => {
-      if (TypeGuards.isTemplateString(value)) {
-        return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
-          .map((m) => m[1])
-          .filter((m): m is StreamsDataExpression =>
-            TypeGuards.isStreamsDataExpression(m)
-          );
-      }
-      if (TypeGuards.isStreamsDataExpression(value)) return value;
-      return [];
-    });
-    return new Set<StreamsDataExpression>(streamDataExpressions);
+    return new Set<string>(streamDataExpressions);
   }
 
   /**

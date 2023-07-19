@@ -92,42 +92,47 @@ export default class ComponentTreeHelpers {
     componentTree: ComponentState[],
     source: string
   ): boolean {
-    const expressions: string[] = this.getUsedExpressions(componentTree);
-    return expressions.some((e) =>
-      ExpressionHelpers.usesExpressionSource(e, source)
-    );
+    const sourceExpressions = this.getExpressionsWithSource(componentTree, source);
+    if(sourceExpressions.length === 0) return false;
+    return true;
   }
 
-  //docs
-  static getUsedExpressions(
+  /**
+   * Returns an array of the paths used in the component tree 
+   * (and optionally in the getPath function) with the specified source
+   */
+  static getExpressionsWithSource(componentTree: ComponentState[], source: string, getPathValue?: GetPathVal) {
+    const expressions: string[] = this.getExpressions(componentTree, getPathValue);
+    return expressions.flatMap(e => ExpressionHelpers.convertsExpressionToPaths(e, source));
+  }
+
+  /**
+   * Returns an array of the expressions used in the component tree 
+   * (and optionally in the getPath function)
+   */
+  private static getExpressions(
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
   ): string[] {
-    const expressions = new Set<string>();
-    componentTree.forEach((c) => {
+    const expressions : string[] = componentTree.flatMap((c) => {
       if (
         !TypeGuards.isEditableComponentState(c) &&
         c.kind !== ComponentStateKind.Error
       ) {
-        return;
+        return [];
       }
 
       const props = ComponentStateHelpers.extractRepeatedState(c).props;
       const expressionPropValues = this.getExpressionUsagesFromProps(props);
 
-      if (TypeGuards.isRepeaterState(c)) {
-        if (TypeGuards.isStreamsDataExpression(c.listExpression)) {
-          expressions.add(c.listExpression);
-        }
-      }
-      expressionPropValues.forEach((value) => expressions.add(value));
+      return TypeGuards.isRepeaterState(c)
+        ? [...expressionPropValues, c.listExpression]
+        : expressionPropValues;
     });
     if (getPathValue) {
-      this.getExpressionUsagesFromPropVal(getPathValue).forEach((value) =>
-        expressions.add(value)
-      );
+      return expressions.concat(this.getExpressionUsagesFromPropVal(getPathValue));
     }
-    return Array.from(expressions);
+    return expressions;
   }
 
   private static getExpressionUsagesFromProps(
