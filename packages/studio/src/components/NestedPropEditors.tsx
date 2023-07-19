@@ -56,7 +56,7 @@ export default function NestedPropEditors(props: {
   );
 }
 
-export function renderUndefinedObject() {
+function renderUndefinedObject() {
   const curlyBrackets = "{}";
   return (
     <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">
