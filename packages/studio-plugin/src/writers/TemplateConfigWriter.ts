@@ -11,7 +11,7 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import { StreamsDataExpression } from "../types/Expression";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
-import { GetPathVal, PagesJsState } from "../types";
+import { GetPathVal, PagesJsState, PropValueKind, TypelessPropVal } from "../types";
 import TemplateConfigParser from "../parsers/TemplateConfigParser";
 import { ComponentTreeHelpers } from "../utils";
 
@@ -42,55 +42,63 @@ export default class TemplateConfigWriter {
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
   ): Set<StreamsDataExpression> {
-    // const streamDataExpressions = new Set<StreamsDataExpression>();
-    // componentTree.forEach((c) => {
-    //   if (
-    //     !TypeGuards.isEditableComponentState(c) &&
-    //     c.kind !== ComponentStateKind.Error
-    //   ) {
-    //     return;
-    //   }
-    //   if (TypeGuards.isRepeaterState(c)) {
-    //     if (TypeGuards.isStreamsDataExpression(c.listExpression)) {
-    //       streamDataExpressions.add(c.listExpression);
-    //     }
-    //     this.getPathsFromProps(c.repeatedComponent.props).forEach((value) =>
-    //       streamDataExpressions.add(value)
-    //     );
-    //   } else {
-    //     this.getPathsFromProps(c.props).forEach((value) =>
-    //       streamDataExpressions.add(value)
-    //     );
-    //   }
-    // });
-    // if (getPathValue) {
-    //   this.getPathsFromPropVal(getPathValue).forEach((value) =>
-    //     streamDataExpressions.add(value)
-    //   );
-    // }
-
-    const expressions: Set<string> = ComponentTreeHelpers.getUsedExpressions(
+    const expressions: string[] = ComponentTreeHelpers.getUsedExpressions(
       componentTree,
       getPathValue
     );
-    const new_streamDataExpressions: Set<StreamsDataExpression> =
-      this.convertToStreamsDataExpression(expressions);
-    // console.log("NEW: ", new_streamDataExpressions);
-    // console.log("OLD: ", streamDataExpressions);
-    return new_streamDataExpressions;
+    const streamDataExpressions: Set<StreamsDataExpression> =
+      this.convertToStreamsDataExpressions(expressions);
+    return streamDataExpressions;
   }
 
-  // todo: move into ComponentTreeHelpers, turn into arrays?
-  private convertToStreamsDataExpression(
-    expressions: Set<string>
+  private getPathsFromProps(
+    props: Record<string, TypelessPropVal>
+  ): StreamsDataExpression[] {
+    const dataExpressions: StreamsDataExpression[] = [];
+    Object.keys(props).forEach((propName) => {
+      const paths = this.getPathsFromPropVal(props[propName]);
+      dataExpressions.push(...paths);
+    });
+    return dataExpressions;
+  }
+
+  private getPathsFromPropVal = ({
+    value,
+    kind,
+  }: TypelessPropVal): StreamsDataExpression[] => {
+    if (typeof value === "object") {
+      if (Array.isArray(value)) {
+        return value.flatMap(this.getPathsFromPropVal);
+      } else {
+        return this.getPathsFromProps(value);
+      }
+    }
+    if (kind !== PropValueKind.Expression) {
+      return [];
+    }
+    if (TypeGuards.isTemplateString(value)) {
+      return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
+        .map((m) => m[1])
+        .filter((m): m is StreamsDataExpression =>
+          TypeGuards.isStreamsDataExpression(m)
+        );
+    } else if (TypeGuards.isStreamsDataExpression(value)) {
+      return [value];
+    }
+    return [];
+  };
+
+  // docs?
+  private convertToStreamsDataExpressions(
+    expressions: string[]
   ): Set<StreamsDataExpression> {
     const streamDataExpressions = Array.from(expressions).flatMap((value) => {
       if (TypeGuards.isTemplateString(value)) {
         return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
-          .map((m) => m[1]) //todo: why???? also does this return an array or a single object?
+          .map((m) => m[1])
           .filter(
             (m): m is StreamsDataExpression =>
-              TypeGuards.isStreamsDataExpression(m) //todo: do i need to flatMap()?
+              TypeGuards.isStreamsDataExpression(m)
           );
       }
       if (TypeGuards.isStreamsDataExpression(value)) return value;
@@ -98,43 +106,6 @@ export default class TemplateConfigWriter {
     });
     return new Set<StreamsDataExpression>(streamDataExpressions);
   }
-
-  // private getPathsFromProps(
-  //   props: Record<string, TypelessPropVal>
-  // ): StreamsDataExpression[] {
-  //   const dataExpressions: StreamsDataExpression[] = [];
-  //   Object.keys(props).forEach((propName) => {
-  //     const paths = this.getPathsFromPropVal(props[propName]);
-  //     dataExpressions.push(...paths);
-  //   });
-  //   return dataExpressions;
-  // }
-
-  // private getPathsFromPropVal = ({
-  //   value,
-  //   kind,
-  // }: TypelessPropVal): StreamsDataExpression[] => {
-  //   if (typeof value === "object") {
-  //     if (Array.isArray(value)) {
-  //       return value.flatMap(this.getPathsFromPropVal);
-  //     } else {
-  //       return this.getPathsFromProps(value);
-  //     }
-  //   }
-  //   if (kind !== PropValueKind.Expression) {
-  //     return [];
-  //   }
-  //   if (TypeGuards.isTemplateString(value)) {
-  //     return [...value.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
-  //       .map((m) => m[1])
-  //       .filter((m): m is StreamsDataExpression =>
-  //         TypeGuards.isStreamsDataExpression(m)
-  //       );
-  //   } else if (TypeGuards.isStreamsDataExpression(value)) {
-  //     return [value];
-  //   }
-  //   return [];
-  // };
 
   /**
    * Creates a Pages template config by merging current template config, if

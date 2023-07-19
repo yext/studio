@@ -88,37 +88,18 @@ export default class ComponentTreeHelpers {
    * Checks whether the component tree uses a specific expression source, such
    * as `document` or `props`.
    */
-  static usesExpressionSource(componentTree: ComponentState[], source: string) {
-    // const expressions: string[] = componentTree.flatMap((c) => {
-    //   if (c.kind === ComponentStateKind.Error) {
-    //     return this.getExpressionUsagesFromProps(c.props);
-    //   }
-
-    //   if (!TypeGuards.isEditableComponentState(c)) {
-    //     return [];
-    //   }
-
-    //   const props = ComponentStateHelpers.extractRepeatedState(c).props;
-    //   const expressionPropValues = this.getExpressionUsagesFromProps(props);
-
-    //   return TypeGuards.isRepeaterState(c)
-    //     ? [...expressionPropValues, c.listExpression]
-    //     : expressionPropValues;
-    // });
-
-    const expressions: Set<string> = this.getUsedExpressions(componentTree);
-    // console.log("these are the old expressions: ", expressions);
-    // console.log("these are the new expressions: ", new_expressions);
-
-    return Array.from(expressions).some((e) =>
+  static usesExpressionSource(componentTree: ComponentState[], source: string) : boolean {
+    const expressions: string[] = this.getUsedExpressions(componentTree);
+    return expressions.some((e) =>
       ExpressionHelpers.usesExpressionSource(e, source)
     );
   }
 
+  //docs
   static getUsedExpressions(
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
-  ): Set<string> {
+  ): string[] {
     const expressions = new Set<string>();
     componentTree.forEach((c) => {
       if (
@@ -136,14 +117,14 @@ export default class ComponentTreeHelpers {
           expressions.add(c.listExpression);
         }
       }
-      if (getPathValue) {
-        this.getExpressionUsagesFromPropVal(getPathValue).forEach((value) =>
-          expressions.add(value)
-        );
-      }
       expressionPropValues.forEach((value) => expressions.add(value));
     });
-    return expressions;
+    if (getPathValue) {
+      this.getExpressionUsagesFromPropVal(getPathValue).forEach((value) =>
+        expressions.add(value)
+      );
+    }
+    return Array.from(expressions);
   }
 
   private static getExpressionUsagesFromProps(
