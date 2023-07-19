@@ -546,24 +546,24 @@ describe("Nested prop", () => {
       },
     },
   };
-  const objState: StandardComponentState = {
-    ...activeComponentState,
-    props: {
-      objProp: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.Object,
-        value: {
-          title: {
-            kind: PropValueKind.Expression,
-            value: "test",
-            valueType: PropValueType.string,
+
+  it("renders nested prop editors for component's prop of type Object", () => {
+    const objState: StandardComponentState = {
+      ...activeComponentState,
+      props: {
+        objProp: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            title: {
+              kind: PropValueKind.Expression,
+              value: "test",
+              valueType: PropValueType.string,
+            },
           },
         },
       },
-    },
-  };
-
-  it("renders nested prop editors for component's prop of type Object", () => {
+    };
     render(
       <ActiveComponentPropEditors
         activeComponentState={objState}
