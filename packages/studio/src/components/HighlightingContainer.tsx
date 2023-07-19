@@ -82,6 +82,10 @@ class HighlightingClass extends Component<HighlightingProps> {
     this.resizeObserver.observe(document.body);
   }
 
+  componentDidMount(): void {
+    this.attachListenerToChild();
+  }
+
   componentDidUpdate(): void {
     this.attachListenerToChild();
     if (this.props.uuid === this.props.activeComponentUUID) {
