@@ -126,7 +126,7 @@ export default class ComponentTreeHelpers {
       const expressionPropValues = this.getExpressionUsagesFromProps(props);
 
       return TypeGuards.isRepeaterState(c)
-        ? [...expressionPropValues, c.listExpression]
+        ? [c.listExpression, ...expressionPropValues]
         : expressionPropValues;
     });
     if (getPathValue) {
