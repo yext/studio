@@ -21,10 +21,10 @@ export default class ExpressionHelpers {
   }
 
   /**
-   * Takes in an expression or template string and parses it into an array of
-   * only expressions containing the specified source.
+   * Takes in an expression or a template string containing expressions and 
+   * filters it into an array of expressions containing the specified source.
    */
-  static convertsExpressionToPaths(
+  static filterExpressionWithSource(
     expression: string,
     source: string
   ): string[] {

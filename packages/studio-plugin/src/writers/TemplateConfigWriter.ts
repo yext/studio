@@ -34,7 +34,7 @@ export default class TemplateConfigWriter {
    *
    * @param componentTree - the states of the page's component tree
    * @param getPathValue - the return value of the getPath function
-   * @returns a set of stream's data expressions
+   * @returns a set of the stream's data expressions
    */
   private getUsedStreamDocumentPaths(
     componentTree: ComponentState[],

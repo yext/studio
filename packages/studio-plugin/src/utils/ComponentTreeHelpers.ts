@@ -96,25 +96,25 @@ export default class ComponentTreeHelpers {
       componentTree,
       source
     );
-    if (sourceExpressions.length === 0) return false;
-    return true;
+    if (sourceExpressions.length > 0) return true;
+    return false;
   }
 
   /**
-   * Returns an array of the paths used in the component tree
+   * Returns an array of the expressions used in the component tree
    * (and optionally in the getPath function) with the specified source
    */
   static getExpressionsWithSource(
     componentTree: ComponentState[],
     source: string,
     getPathValue?: GetPathVal
-  ) {
+  ) : string[] {
     const expressions: string[] = this.getExpressions(
       componentTree,
       getPathValue
     );
     return expressions.flatMap((e) =>
-      ExpressionHelpers.convertsExpressionToPaths(e, source)
+      ExpressionHelpers.filterExpressionWithSource(e, source)
     );
   }
 
