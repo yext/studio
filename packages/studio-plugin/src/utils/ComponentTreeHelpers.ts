@@ -92,29 +92,41 @@ export default class ComponentTreeHelpers {
     componentTree: ComponentState[],
     source: string
   ): boolean {
-    const sourceExpressions = this.getExpressionsWithSource(componentTree, source);
-    if(sourceExpressions.length === 0) return false;
+    const sourceExpressions = this.getExpressionsWithSource(
+      componentTree,
+      source
+    );
+    if (sourceExpressions.length === 0) return false;
     return true;
   }
 
   /**
-   * Returns an array of the paths used in the component tree 
+   * Returns an array of the paths used in the component tree
    * (and optionally in the getPath function) with the specified source
    */
-  static getExpressionsWithSource(componentTree: ComponentState[], source: string, getPathValue?: GetPathVal) {
-    const expressions: string[] = this.getExpressions(componentTree, getPathValue);
-    return expressions.flatMap(e => ExpressionHelpers.convertsExpressionToPaths(e, source));
+  static getExpressionsWithSource(
+    componentTree: ComponentState[],
+    source: string,
+    getPathValue?: GetPathVal
+  ) {
+    const expressions: string[] = this.getExpressions(
+      componentTree,
+      getPathValue
+    );
+    return expressions.flatMap((e) =>
+      ExpressionHelpers.convertsExpressionToPaths(e, source)
+    );
   }
 
   /**
-   * Returns an array of the expressions used in the component tree 
+   * Returns an array of the expressions used in the component tree
    * (and optionally in the getPath function)
    */
   private static getExpressions(
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
   ): string[] {
-    const expressions : string[] = componentTree.flatMap((c) => {
+    const expressions: string[] = componentTree.flatMap((c) => {
       if (
         !TypeGuards.isEditableComponentState(c) &&
         c.kind !== ComponentStateKind.Error
@@ -130,7 +142,9 @@ export default class ComponentTreeHelpers {
         : expressionPropValues;
     });
     if (getPathValue) {
-      return expressions.concat(this.getExpressionUsagesFromPropVal(getPathValue));
+      return expressions.concat(
+        this.getExpressionUsagesFromPropVal(getPathValue)
+      );
     }
     return expressions;
   }

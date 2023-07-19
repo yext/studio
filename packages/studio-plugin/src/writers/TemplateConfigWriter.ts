@@ -8,10 +8,7 @@ import { ComponentState } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
 import PagesJsWriter from "./PagesJsWriter";
-import {
-  GetPathVal,
-  PagesJsState,
-} from "../types";
+import { GetPathVal, PagesJsState } from "../types";
 import TemplateConfigParser from "../parsers/TemplateConfigParser";
 import { ComponentTreeHelpers } from "../utils";
 
@@ -34,7 +31,7 @@ export default class TemplateConfigWriter {
   /**
    * Extracts stream's data expressions used in the provided component tree,
    * in the form of `document.${string}`.
-   * 
+   *
    * @param componentTree - the states of the page's component tree
    * @param getPathValue - the return value of the getPath function
    * @returns a set of stream's data expressions
@@ -43,11 +40,12 @@ export default class TemplateConfigWriter {
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
   ): Set<string> {
-    const streamDataExpressions: string[] = ComponentTreeHelpers.getExpressionsWithSource(
-      componentTree,
-      'document',
-      getPathValue
-    );
+    const streamDataExpressions: string[] =
+      ComponentTreeHelpers.getExpressionsWithSource(
+        componentTree,
+        "document",
+        getPathValue
+      );
     return new Set<string>(streamDataExpressions);
   }
 
