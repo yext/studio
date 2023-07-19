@@ -92,20 +92,21 @@ function PageItem({ pageName }: { pageName: string }) {
 
   return (
     <ListItem>
-      <div className="flex items-center overflow-auto">
-        <Check className={checkClasses} />
-        <button
-          disabled={isActivePage}
-          onClick={handleSelectPage}
-          className="ml-2"
-        >
-          {pageName}
-        </button>
-      </div>
-      <div className="flex items-center space-x-3">
-        {isPagesJSRepo && <PageSettingsButton pageName={pageName} />}
-        <RemovableElement onRemove = {handleButtonClick}/>
-      </div>
+      <RemovableElement onRemove = {handleButtonClick} buttonClasses="ml-3">
+        <div className="flex grow justify-between">
+          <div className="flex items-center overflow-auto">
+            <Check className={checkClasses} />
+            <button
+              disabled={isActivePage}
+              onClick={handleSelectPage}
+              className="ml-2"
+            >
+              {pageName}
+            </button>
+          </div>
+          {isPagesJSRepo && <PageSettingsButton pageName={pageName} />}
+        </div>
+      </RemovableElement>
       {renderModal(showModal, handleModalClose)}
     </ListItem>
 
@@ -133,6 +134,6 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
 
 function ListItem(props: PropsWithChildren<{ additionalClassNames?: string }>) {
   const additionalClassNames = props.additionalClassNames ?? "";
-  const className = "flex justify-between pb-4 px-2 " + additionalClassNames;
+  const className = "flex grow justify-between pb-4 px-2 " + additionalClassNames;
   return <li className={className}>{props.children}</li>;
 }
