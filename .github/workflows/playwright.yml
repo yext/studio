@@ -49,7 +49,7 @@ jobs:
       # This step will commit any new snapshots that weren't taken locally.
       - name: Commit New Snapshots
         uses: EndBug/add-and-commit@v9
-        if: ${{ failure() && github.ref_name != 'main' }}
+        if: ${{ failure() && github.event_name == 'pull_request' }}
         with:
           message: Commit new snapshots for ${{ matrix.os }}
           add: e2e-tests/__screenshots__/*.png
