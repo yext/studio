@@ -106,8 +106,8 @@ function PageItem({ pageName }: { pageName: string }) {
           </div>
           {isPagesJSRepo && <PageSettingsButton pageName={pageName} />}
         </div>
+        {renderModal(showModal, handleModalClose)}
       </RemovableElement>
-      {renderModal(showModal, handleModalClose)}
     </ListItem>
 
   );
