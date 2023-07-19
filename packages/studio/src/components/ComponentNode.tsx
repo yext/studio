@@ -8,9 +8,9 @@ import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
 import { useCallback, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
-import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import { Tooltip } from "react-tooltip";
+import RemovableElement from "./RemovableElement";
 
 interface ComponentNodeProps {
   /** The ComponentState this node represents in a ComponentTree. */
@@ -71,31 +71,40 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
+  const removeComponent = useStudioStore(
+    (store) => store.actions.removeComponent
+  );
+
+  const handleRemove = useCallback(() => {
+    removeComponent(componentState.uuid);
+  }, [componentState.uuid, removeComponent]);
+
+  const buttonStyles = classNames({ hidden: !isActiveComponent });
+
   return (
-    <div className={componentNodeClasses} style={componentNodeStyle}>
-      <div
-        className="flex grow items-center cursor-pointer"
-        onClick={handleClick}
-        id={anchorId}
-      >
-        <Vector className={vectorClassName} onClick={handleToggle} />
-        <div className="pl-2">
-          <ComponentKindIcon componentState={componentState} />
+      <div className={componentNodeClasses} style={componentNodeStyle}>
+        <RemovableElement onRemove={handleRemove} buttonClasses={buttonStyles}>
+        <div
+          className="flex grow items-center cursor-pointer"
+          onClick={handleClick}
+          id={anchorId}
+        >
+          <Vector className={vectorClassName} onClick={handleToggle} />
+          <div className="pl-2">
+            <ComponentKindIcon componentState={componentState} />
+          </div>
+          <span className="pl-1.5">
+            {getComponentDisplayName(componentState)}
+          </span>
+          {isErrorState && (
+            <Tooltip
+              content={extractedState.message}
+              anchorId={anchorId}
+              place="right"
+            />
+          )}
         </div>
-        <span className="pl-1.5">
-          {getComponentDisplayName(componentState)}
-        </span>
-        {isErrorState && (
-          <Tooltip
-            content={extractedState.message}
-            anchorId={anchorId}
-            place="right"
-          />
-        )}
+      </RemovableElement>
       </div>
-      {isActiveComponent && (
-        <RemoveElementButton elementUUID={componentState.uuid} />
-      )}
-    </div>
   );
 }
