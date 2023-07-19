@@ -236,6 +236,7 @@ function getMissingRequiredProps(
     const propIsUndefined = propValues[propName] === undefined;
     if (propIsRequired && propIsUndefined) {
       missingProps.push(propName);
+      continue;
     }
     if (propIsUndefined) {
       continue;
