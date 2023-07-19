@@ -161,7 +161,7 @@ function testStandardOrModuleComponentState(
   });
 
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
-    const definedState: StandardOrModuleComponentState = {
+    const activeState: StandardOrModuleComponentState = {
       ...state,
       props: {
         bgColor: {
@@ -173,7 +173,7 @@ function testStandardOrModuleComponentState(
     };
     render(
       <ActiveComponentPropEditors
-        activeComponentState={definedState}
+        activeComponentState={activeState}
         propShape={propShape}
       />
     );
