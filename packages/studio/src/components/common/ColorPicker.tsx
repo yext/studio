@@ -4,9 +4,8 @@ import useStudioStore from "../../store/useStudioStore";
 import useTemporalStore from "../../store/useTemporalStore";
 
 interface ColorPickerProps {
-  value: string;
+  value: string | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  disabled?: boolean;
 }
 
 /**
@@ -15,7 +14,6 @@ interface ColorPickerProps {
 export default function ColorPicker({
   value,
   onChange,
-  disabled,
 }: ColorPickerProps): JSX.Element {
   const [inputValue, setInputValue] = useState(value);
   const activeComponentUUID = useStudioStore().pages.activeComponentUUID;
@@ -24,6 +22,7 @@ export default function ColorPicker({
   );
   const activeComponentUUIDRef = useRef(activeComponentUUID);
   const numFutureStatesRef = useRef(numFutureStates);
+  const isUndefinedValue = value === undefined;
 
   useEffect(() => {
     if (
@@ -42,7 +41,7 @@ export default function ColorPicker({
     };
   }, [onChange]);
 
-  if (disabled) {
+  if (isUndefinedValue) {
     return <span className="text-sm text-gray-400 mt-0.5 mb-1">#RRGGBB</span>;
   } else {
     return <input type="color" onChange={handleChange} value={inputValue} />;
