@@ -16,6 +16,9 @@ export interface BannerProps {
       nestedExpArr?: string[];
     };
   };
+  undefinedObj?: {
+    undefinedBool?: boolean;
+  };
 }
 
 export const initialProps: BannerProps = {
@@ -25,6 +28,7 @@ export const initialProps: BannerProps = {
   title: "initial title",
   obj: {
     nestedLitArr: [true, false],
+    nestedObj: {},
   },
 };
 
