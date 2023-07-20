@@ -4,7 +4,7 @@ import useStudioStore from "../../store/useStudioStore";
 import useTemporalStore from "../../store/useTemporalStore";
 
 interface ColorPickerProps {
-  value: string;
+  value: string | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -22,6 +22,7 @@ export default function ColorPicker({
   );
   const activeComponentUUIDRef = useRef(activeComponentUUID);
   const numFutureStatesRef = useRef(numFutureStates);
+  const isUndefinedValue = value === undefined;
 
   useEffect(() => {
     if (
@@ -40,5 +41,9 @@ export default function ColorPicker({
     };
   }, [onChange]);
 
-  return <input type="color" onChange={handleChange} value={inputValue} />;
+  if (isUndefinedValue) {
+    return <span className="text-sm text-gray-400 mt-0.5 mb-1">#RRGGBB</span>;
+  } else {
+    return <input type="color" onChange={handleChange} value={inputValue} />;
+  }
 }
