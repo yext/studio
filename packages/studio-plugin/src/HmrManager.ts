@@ -2,6 +2,7 @@ import ParsingOrchestrator from "./ParsingOrchestrator";
 import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
 import { ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID";
+import path from "path";
 
 /**
  * HmrManager is responsible for handling studio specific HMR updates.
@@ -18,7 +19,7 @@ export default class HmrManager {
    * update the StudioData and send a custom HMR event to the frontend.
    */
   handleHotUpdate(server: ViteDevServer, filepath: string) {
-    if (!filepath.startsWith(this.pathToUserProjectRoot)) {
+    if (!path.normalize(filepath).startsWith(this.pathToUserProjectRoot)) {
       return;
     }
     this.orchestrator.reloadFile(filepath);
