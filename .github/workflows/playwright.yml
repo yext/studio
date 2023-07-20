@@ -42,7 +42,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: playwright-report--${{ matrix.os }}-${{matrix.shard}}/3
+          name: playwright-report--${{ matrix.os }}-(${{matrix.shard}} of 3)
           path: ./e2e-tests/playwright-report/
           retention-days: 30
 
@@ -51,7 +51,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: ${{ failure() && github.event_name == 'pull_request' }}
         with:
-          message: Nnew snapshots for ${{ matrix.os }} ${{ matrix.shard }}/3
+          message: New snapshots for ${{ matrix.os }} ${{ matrix.shard }}/3
           add: e2e-tests/__screenshots__/*.png
           push: true
           pull: --rebase --autostash
