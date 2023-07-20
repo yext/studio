@@ -4,4 +4,4 @@ export const getPath: GetPath<TemplateProps> = () => {
   return "index.html";
 };
 
-export default function BasicPage() {}
+export default function NewStaticPage() {}

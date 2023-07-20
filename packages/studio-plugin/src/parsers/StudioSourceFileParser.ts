@@ -18,6 +18,7 @@ import TypeNodeParsingHelper, {
 import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup";
 import { TypelessPropVal } from "../types";
+import upath from "upath";
 
 /**
  * StudioSourceFileParser contains shared business logic for
@@ -33,8 +34,11 @@ export default class StudioSourceFileParser {
     this.sourceFile = project.getSourceFileOrThrow(filepath);
   }
 
+  /**
+   * Returns the filepath with posix path separators.
+   */
   getFilepath() {
-    return this.filepath;
+    return upath.toUnix(this.filepath);
   }
 
   getFilename() {

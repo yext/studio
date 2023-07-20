@@ -100,7 +100,9 @@ export default class StudioPlaywrightPage {
     const basicDataModal = "Page Name and URL";
     await expect(this.page).toHaveScreenshot();
     await this.typeIntoModal(basicDataModal, "Page Name", pageName);
-    if (urlSlug) await this.typeIntoModal(basicDataModal, "URL Slug", urlSlug);
+    if (urlSlug) {
+      await this.typeIntoModal(basicDataModal, "URL Slug", urlSlug);
+    }
     await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(basicDataModal, "Save");
   }

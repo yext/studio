@@ -35,7 +35,7 @@ export default async function spawnStudio(
   }
 
   await waitForPort(port);
-  return { port, kill: () => child.kill() };
+  return port;
 }
 
 /**

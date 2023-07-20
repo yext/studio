@@ -23,7 +23,7 @@ export default class FileSystemManager {
   }
 
   updatePageFile(filepath: string, pageState: PageState): void {
-    if (filepath.startsWith(this.paths.pages)) {
+    if (path.relative(filepath, this.paths.pages) !== "") {
       FileSystemWriter.openFile(filepath);
       return this.writer.writeToPageFile(
         path.basename(filepath, ".tsx"),
