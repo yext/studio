@@ -8,8 +8,8 @@ const expectedPage = fs.readFileSync(
 );
 
 studioTest("can remove a container component", async ({ page, studioPage }) => {
-  const containerPreviews = page.getByText("I'm a container:");
-  const childPreviews = page.getByText("false");
+  const containerPreviews = studioPage.preview.getByText("I'm a container:");
+  const childPreviews = studioPage.preview.getByText("false");
   await expect(containerPreviews).toHaveCount(1);
   await expect(childPreviews).toHaveCount(1);
   await studioPage.removeElement("Container");

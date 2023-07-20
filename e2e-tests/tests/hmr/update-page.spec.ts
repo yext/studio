@@ -10,9 +10,9 @@ const updatedPage = fs.readFileSync(
 studioTest(
   "can update page file and see changes in UI via HMR",
   async ({ page, studioPage }) => {
-    const containerPreviews = page.getByText("I'm a container:");
+    const containerPreviews = studioPage.preview.getByText("I'm a container:");
     await expect(containerPreviews).toHaveCount(1);
-    const buttonPreviews = page.getByText("Press me!");
+    const buttonPreviews = studioPage.preview.getByText("Press me!");
     await expect(buttonPreviews).toHaveCount(0);
     const pagePath = studioPage.getPagePath("BasicPage");
     fs.writeFileSync(pagePath, updatedPage);

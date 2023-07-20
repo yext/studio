@@ -3,6 +3,7 @@ import Banner from "../components/Banner";
 import Button from "../components/Button";
 import Container from "../components/Container";
 import Cta from "../components/Cta";
+import FixedText from "../components/FixedText";
 
 export const config: TemplateConfig = {
   stream: {
@@ -21,6 +22,7 @@ export const getPath: GetPath<TemplateProps> = ({
 export default function UniversalPage({ document }: TemplateProps) {
   return (
     <>
+      <FixedText />
       <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
       {document.services.map((item, index) => (
         <Banner title={`${item}!`} key={index} />
