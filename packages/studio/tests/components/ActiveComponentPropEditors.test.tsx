@@ -593,6 +593,7 @@ describe("Nested prop", () => {
     );
     expect(screen.getByText("objProp")).toBeTruthy();
     expect(screen.getByText("{}")).toBeTruthy();
+    expect(screen.queryByText("title")).toBeNull();
   });
 });
 
