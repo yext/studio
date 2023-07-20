@@ -42,7 +42,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
-          name: playwright-report--${{ matrix.os }}-(${{matrix.shard}} of 3)
+          name: playwright-report--${{ matrix.os }}-${{matrix.shard}}
           path: ./e2e-tests/playwright-report/
           retention-days: 30
 
