@@ -389,14 +389,8 @@ describe("Array prop", () => {
     },
   };
 
-  function ActiveComponentPropEditorsWrapper() {
-    const state = useStudioStore().pages.pages["index"].componentTree[0];
-    return (
-      <ActiveComponentPropEditors
-        activeComponentState={state as StandardComponentState}
-        propShape={propShape}
-      />
-    );
+  function renderWrapper() {
+    render(<ActiveComponentPropEditorsWrapper propShape={propShape} />);
   }
 
   it("correctly updates expression value using field picker", async () => {
@@ -407,7 +401,7 @@ describe("Array prop", () => {
         props: { arr: expressionPropVal },
       },
     });
-    render(<ActiveComponentPropEditorsWrapper />);
+    renderWrapper();
 
     expect(screen.getByRole("textbox")).toHaveValue("document.strings");
     await userEvent.click(
@@ -431,7 +425,7 @@ describe("Array prop", () => {
         props: { arr: expressionPropVal },
       },
     });
-    render(<ActiveComponentPropEditorsWrapper />);
+    renderWrapper();
 
     const expressionInput = screen.getByRole("textbox");
     await userEvent.click(screen.getByRole("button", { name: "Add Item" }));
@@ -460,7 +454,7 @@ describe("Array prop", () => {
         props: { arr: literalPropVal },
       },
     });
-    render(<ActiveComponentPropEditorsWrapper />);
+    renderWrapper();
 
     await userEvent.click(screen.getByRole("button", { name: "Add Item" }));
     expect(getComponentProps()).toEqual({
@@ -500,7 +494,7 @@ describe("Array prop", () => {
         props: { arr: propVal },
       },
     });
-    render(<ActiveComponentPropEditorsWrapper />);
+    renderWrapper();
 
     await userEvent.click(
       screen.getByRole("button", { name: "Remove Item 1" })
@@ -524,7 +518,7 @@ describe("Array prop", () => {
         props: { arr: literalPropVal },
       },
     });
-    render(<ActiveComponentPropEditorsWrapper />);
+    renderWrapper();
 
     await userEvent.click(
       screen.getByRole("button", { name: "Remove Item 1" })
@@ -674,4 +668,56 @@ describe("undefined menu", () => {
     await userEvent.click(screen.getByText("Set as Undefined"));
     expect(getComponentProps().bool).toBeUndefined();
   });
+
+  it("resets color picker value to default", async () => {
+    const propShape: PropShape = {
+      bgColor: {
+        type: PropValueType.HexColor,
+        required: false,
+      },
+    };
+    const state: StandardComponentState = {
+      ...activeComponentState,
+      props: {
+        bgColor: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.HexColor,
+          value: "#000000",
+        },
+      },
+    };
+    mockStoreActiveComponent({
+      activeComponent: state,
+      activeComponentMetadata: {
+        ...activeComponentMetadata,
+        propShape,
+      },
+    });
+    render(<ActiveComponentPropEditorsWrapper propShape={propShape} />);
+    expect(screen.getByLabelText("bgColor")).toHaveValue("#000000");
+
+    await userEvent.click(screen.getByLabelText("Toggle undefined value menu"));
+    await userEvent.click(screen.getByText("Set as Undefined"));
+    expect(screen.queryByLabelText("bgColor")).toBeFalsy();
+    expect(getComponentProps().bgColor).toBeUndefined();
+
+    await userEvent.click(screen.getByLabelText("Toggle undefined value menu"));
+    await userEvent.click(screen.getByText("Reset to Default"));
+    expect(screen.getByLabelText("bgColor")).toHaveValue("#ffffff");
+    expect(getComponentProps().bgColor).toEqual({
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.HexColor,
+      value: "#FFFFFF",
+    });
+  })
 });
+
+function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape}) {
+  const state = useStudioStore().pages.pages["index"].componentTree[0];
+  return (
+    <ActiveComponentPropEditors
+      activeComponentState={state as StandardOrModuleComponentState}
+      propShape={props.propShape}
+    />
+  );
+}
