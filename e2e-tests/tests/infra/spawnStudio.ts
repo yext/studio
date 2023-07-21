@@ -3,7 +3,7 @@ import net from "net";
 import { globSync } from "glob";
 import { TestInfo } from "@playwright/test";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { dirname, resolve } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -87,7 +87,7 @@ const getTestGlob = () => globSync("./tests/**/*.spec.ts");
 function getTestNumber(testInfo: TestInfo) {
   const testPaths = getTestGlob().sort();
   return testPaths.findIndex((testPath) => {
-    const absolutePath = path.resolve(__dirname, "../..", testPath);
+    const absolutePath = resolve(__dirname, "../..", testPath);
     return absolutePath === testInfo.file;
   });
 }

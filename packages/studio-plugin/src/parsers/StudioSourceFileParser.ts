@@ -37,7 +37,7 @@ export default class StudioSourceFileParser {
    * Returns the filepath with posix path separators.
    */
   getFilepath() {
-    return this.filepath;
+    return upath.normalize(this.filepath);
   }
 
   getFilename() {
