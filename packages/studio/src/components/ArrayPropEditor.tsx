@@ -22,7 +22,7 @@ interface ArrayPropEditorProps {
   propMetadata: Extract<PropMetadata, ArrayPropType>;
   propValue?: string | PropVal[];
   onPropChange: (propVal: PropVal) => void;
-  containers: string[];
+  containers?: string[];
   isNested?: boolean;
 }
 
@@ -37,7 +37,7 @@ export default function ArrayPropEditor({
   propMetadata,
   propValue,
   onPropChange,
-  containers,
+  containers=[],
   isNested,
 }: ArrayPropEditorProps) {
   const value = getEditorValue(propValue);

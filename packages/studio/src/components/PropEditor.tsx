@@ -16,7 +16,7 @@ interface PropEditorProps {
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propVal: PropVal) => void;
-  containers: string[];
+  containers?: string[];
   isNested?: boolean;
 }
 
@@ -31,7 +31,7 @@ export default function PropEditor({
   propValue,
   propKind,
   onPropChange,
-  containers,
+  containers = [],
   isNested,
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
