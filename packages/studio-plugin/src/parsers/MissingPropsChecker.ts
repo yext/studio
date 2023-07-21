@@ -40,7 +40,7 @@ export default class MissingPropsChecker {
 		return missingProps;
 	} 
 
-	getMissingPropsInArray(
+	private getMissingPropsInArray(
 		valueMetadata: PropVal,
 		shapeMetadata: PropMetadata
 	): string[]{
@@ -74,7 +74,7 @@ export default class MissingPropsChecker {
 		return missingProps;
 	}
 
-	getMissingPropsInObject(
+	private getMissingPropsInObject(
 		valueMetadata: PropVal,
 		shapeMetadata: PropMetadata
 	): string[]{
@@ -92,7 +92,7 @@ export default class MissingPropsChecker {
 		return missingProps;
 	}
 
-	getMissingPropsInNestedArrays(
+	private getMissingPropsInNestedArrays(
 		valueArray: PropVal[], 
 		shape: PropType
 	): string[] {
