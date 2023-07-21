@@ -112,16 +112,21 @@ export default class ComponentTreeHelpers {
     const expressions: string[] = this.getExpressions(componentTree);
     if (getPathValue)
       expressions.push(...this.getExpressionUsagesFromPropVal(getPathValue));
-    return expressions.flatMap(e => {
-      if (TypeGuards.isTemplateString(e)) {
-        return [...e.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
+    return expressions.flatMap(e => filterExpressionWithSource(e, source));
+
+    const filterExpressionWithSource = (
+      expression: string,
+      source: string
+    ) => {
+      if (TypeGuards.isTemplateString(expression)) {
+        return [...expression.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
           .map((m) => m[1])
           .filter((m) => ExpressionHelpers.usesExpressionSource(m, source));
       }
-      if (ExpressionHelpers.usesExpressionSource(e, source))
-        return [e];
+      if (ExpressionHelpers.usesExpressionSource(expression, source))
+        return [expression];
       return [];
-    });
+    }
   }
 
   /**
