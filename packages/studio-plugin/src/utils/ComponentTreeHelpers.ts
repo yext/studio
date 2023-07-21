@@ -109,7 +109,6 @@ export default class ComponentTreeHelpers {
     source: string,
     getPathValue?: GetPathVal
   ): string[] {
-    
     const filterExpressionWithSource = (expression: string, source: string) => {
       if (TypeGuards.isTemplateString(expression)) {
         return [...expression.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
