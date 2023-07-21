@@ -102,7 +102,7 @@ export default class ComponentTreeHelpers {
 
   /**
    * Returns an array of the expressions used in the component tree
-   * (and optionally in the getPath function) with the specified source
+   * (and optionally in the getPath function) with the specified source.
    */
   static getExpressionsWithSource(
     componentTree: ComponentState[],
