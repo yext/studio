@@ -198,8 +198,7 @@ export default class ComponentTreeParser {
       propShape
     );
 
-    const missingPropsChecker: MissingPropsChecker = new MissingPropsChecker();
-    const missingProps = missingPropsChecker.getMissingRequiredProps(props, propShape);
+    const missingProps = MissingPropsChecker.getMissingRequiredProps(props, propShape);
     const missingPropsString = missingProps.join(", ");
     if (missingProps.length) {
       return {

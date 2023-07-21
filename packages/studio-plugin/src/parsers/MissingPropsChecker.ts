@@ -10,7 +10,7 @@ import {
 
 export default class MissingPropsChecker {
 
-	getMissingRequiredProps(
+	static getMissingRequiredProps(
 		propValues: PropValues,
 		propShape: PropShape | undefined
 	): string[] {
@@ -43,7 +43,7 @@ export default class MissingPropsChecker {
 		return missingProps;
 	} 
 
-	private getMissingPropsInArray(
+	private static getMissingPropsInArray(
 		valueMetadata: PropVal,
 		shapeMetadata: PropMetadata
 	): string[]{
@@ -73,7 +73,7 @@ export default class MissingPropsChecker {
 		return missingProps;
 	}
 
-	private getMissingPropsInObject(
+	private static getMissingPropsInObject(
 		valueMetadata: PropVal,
 		shapeMetadata: PropMetadata
 	): string[]{
@@ -90,7 +90,7 @@ export default class MissingPropsChecker {
 		return missingProps;
 	}
 
-	private getMissingPropsInNestedArrays(
+	private static getMissingPropsInNestedArrays(
 		valueArray: PropVal[], 
 		shapeItemType: PropType
 	): string[] {
