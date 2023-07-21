@@ -8,6 +8,7 @@ import {
 import ComponentStateHelpers from "./ComponentStateHelpers";
 import ExpressionHelpers from "./ExpressionHelpers";
 import TypeGuards from "./TypeGuards";
+import { TEMPLATE_STRING_EXPRESSION_REGEX } from "../constants";
 
 /**
  * A static class for housing various util functions related to component state used by Studio.
@@ -96,8 +97,7 @@ export default class ComponentTreeHelpers {
       componentTree,
       source
     );
-    if (sourceExpressions.length > 0) return true;
-    return false;
+    return sourceExpressions.length > 0;
   }
 
   /**
@@ -110,21 +110,32 @@ export default class ComponentTreeHelpers {
     getPathValue?: GetPathVal
   ): string[] {
     const expressions: string[] = this.getExpressions(
-      componentTree,
-      getPathValue
+      componentTree
     );
+    if(getPathValue) expressions.push(...this.getExpressionUsagesFromPropVal(getPathValue));
     return expressions.flatMap((e) =>
-      ExpressionHelpers.filterExpressionWithSource(e, source)
+      filterExpressionWithSource(e, source)
     );
+
+    function filterExpressionWithSource(
+      expression: string,
+      source: string
+    ): string[] {
+      if (TypeGuards.isTemplateString(expression)) {
+        return [...expression.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
+          .map((m) => m[1])
+          .filter((m) => ExpressionHelpers.usesExpressionSource(m, source));
+      }
+      if (ExpressionHelpers.usesExpressionSource(expression, source)) return [expression];
+      return [];
+    }
   }
 
   /**
-   * Returns an array of the expressions used in the component tree
-   * (and optionally in the getPath function).
+   * Returns an array of the expressions used in the component tree.
    */
   private static getExpressions(
-    componentTree: ComponentState[],
-    getPathValue?: GetPathVal
+    componentTree: ComponentState[]
   ): string[] {
     const expressions: string[] = componentTree.flatMap((c) => {
       if (
@@ -141,11 +152,6 @@ export default class ComponentTreeHelpers {
         ? [c.listExpression, ...expressionPropValues]
         : expressionPropValues;
     });
-    if (getPathValue) {
-      return expressions.concat(
-        this.getExpressionUsagesFromPropVal(getPathValue)
-      );
-    }
     return expressions;
   }
 
