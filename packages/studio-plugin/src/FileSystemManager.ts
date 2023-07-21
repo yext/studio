@@ -6,6 +6,7 @@ import {
 } from "./types";
 import path from "path";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
+import upath from "upath";
 
 /**
  * Handles file removal and content update in user's repo
@@ -23,18 +24,17 @@ export default class FileSystemManager {
   }
 
   updatePageFile(filepath: string, pageState: PageState): void {
-    if (path.relative(filepath, this.paths.pages) !== "") {
-      FileSystemWriter.openFile(filepath);
-      return this.writer.writeToPageFile(
-        path.basename(filepath, ".tsx"),
-        pageState
-      );
-    } else {
+    if (!filepath.startsWith(upath.toUnix(this.paths.pages))) {
       throw new Error(
         `Cannot update page file: filepath "${filepath}" is not within the` +
           ` expected path for pages "${this.paths.pages}".`
       );
     }
+    FileSystemWriter.openFile(filepath);
+    return this.writer.writeToPageFile(
+      path.basename(filepath, ".tsx"),
+      pageState
+    );
   }
 
   updateSiteSettings(siteSettingsValues: SiteSettingsValues) {
