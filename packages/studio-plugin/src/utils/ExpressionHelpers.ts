@@ -9,7 +9,7 @@ export default class ExpressionHelpers {
   static usesExpressionSource(expression: string, source: string) {
     // This is used to create the regex: /\${source\..*}/
     const regexStr = "\\${" + source + "\\..*}";
-    const templateStringRegex = new RegExp(regexStr, "g");
+    const templateStringRegex = new RegExp(regexStr);
     return (
       expression === source ||
       expression.startsWith(source + ".") ||
