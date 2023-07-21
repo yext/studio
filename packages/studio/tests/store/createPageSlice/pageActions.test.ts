@@ -1,9 +1,9 @@
 import useStudioStore from "../../../src/store/useStudioStore";
+import path from "path";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 import mockStore from "../../__utils__/mockStore";
 import { PropValueKind } from "@yext/studio-plugin";
-import path from "path";
 
 const pages: PagesRecord = {
   universal: {
