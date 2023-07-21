@@ -15,10 +15,7 @@ import {
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
-import {
-  FileMetadataKind,
-  TypelessPropVal,
-} from "../types";
+import { FileMetadataKind, TypelessPropVal } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
@@ -198,7 +195,10 @@ export default class ComponentTreeParser {
       propShape
     );
 
-    const missingProps = MissingPropsChecker.getMissingRequiredProps(props, propShape);
+    const missingProps = MissingPropsChecker.getMissingRequiredProps(
+      props,
+      propShape
+    );
     const missingPropsString = missingProps.join(", ");
     if (missingProps.length) {
       return {
@@ -218,4 +218,3 @@ export default class ComponentTreeParser {
     };
   }
 }
-
