@@ -109,13 +109,10 @@ export default class ComponentTreeHelpers {
     source: string,
     getPathValue?: GetPathVal
   ): string[] {
-    const expressions: string[] = this.getExpressions(
-      componentTree
-    );
-    if(getPathValue) expressions.push(...this.getExpressionUsagesFromPropVal(getPathValue));
-    return expressions.flatMap((e) =>
-      filterExpressionWithSource(e, source)
-    );
+    const expressions: string[] = this.getExpressions(componentTree);
+    if (getPathValue)
+      expressions.push(...this.getExpressionUsagesFromPropVal(getPathValue));
+    return expressions.flatMap((e) => filterExpressionWithSource(e, source));
 
     function filterExpressionWithSource(
       expression: string,
@@ -126,7 +123,8 @@ export default class ComponentTreeHelpers {
           .map((m) => m[1])
           .filter((m) => ExpressionHelpers.usesExpressionSource(m, source));
       }
-      if (ExpressionHelpers.usesExpressionSource(expression, source)) return [expression];
+      if (ExpressionHelpers.usesExpressionSource(expression, source))
+        return [expression];
       return [];
     }
   }
@@ -134,9 +132,7 @@ export default class ComponentTreeHelpers {
   /**
    * Returns an array of the expressions used in the component tree.
    */
-  private static getExpressions(
-    componentTree: ComponentState[]
-  ): string[] {
+  private static getExpressions(componentTree: ComponentState[]): string[] {
     const expressions: string[] = componentTree.flatMap((c) => {
       if (
         !TypeGuards.isEditableComponentState(c) &&
