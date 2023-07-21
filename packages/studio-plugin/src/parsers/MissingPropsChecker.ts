@@ -1,4 +1,5 @@
 import {
+	PropMetadata,
 	PropShape,
 	PropType,
 	PropVal,
@@ -31,46 +32,67 @@ export default class MissingPropsChecker {
 
 			const shapeMetadata = propShape[propName];
 			const valueMetadata = propValues[propName];
-			if (shapeMetadata.type === PropValueType.Array) {
-				if (
-					shapeMetadata.itemType.type === PropValueType.Object &&
-					valueMetadata.valueType === PropValueType.Array &&
-					valueMetadata.kind === PropValueKind.Literal
-				) {
-					const arrayShapes = shapeMetadata.itemType.shape;
-					for (const value of valueMetadata.value) {
-						if (value.valueType === PropValueType.Object) {
-							const missingArrayProps = this.getMissingRequiredProps(
-								value.value,
-								arrayShapes
-							);
-							missingProps.push(...missingArrayProps);
-						}
+			const arrayMissingProps = this.getMissingPropsInArray(valueMetadata, shapeMetadata);
+			const objectMissingProps = this.getMissingPropsInObject(valueMetadata, shapeMetadata);
+			missingProps.push(...arrayMissingProps)
+			missingProps.push(...objectMissingProps)
+		}
+		return missingProps;
+	} 
+
+	getMissingPropsInArray(
+		valueMetadata: PropVal,
+		shapeMetadata: PropMetadata
+	): string[]{
+		const missingProps: string[] = [];
+		if (shapeMetadata.type === PropValueType.Array) {
+			if (
+				shapeMetadata.itemType.type === PropValueType.Object &&
+				valueMetadata.valueType === PropValueType.Array &&
+				valueMetadata.kind === PropValueKind.Literal
+			) {
+				const arrayShapes = shapeMetadata.itemType.shape;
+				for (const value of valueMetadata.value) {
+					if (value.valueType === PropValueType.Object) {
+						const missingArrayProps = this.getMissingRequiredProps(
+							value.value,
+							arrayShapes
+						);
+						missingProps.push(...missingArrayProps);
 					}
-				} else if (
-					shapeMetadata.itemType.type === PropValueType.Array &&
-					valueMetadata.valueType === PropValueType.Array &&
-					valueMetadata.kind === PropValueKind.Literal
-				) {
-					const arrayShapes = shapeMetadata.itemType;
-					const missingArrayProps = this.handleNestedArrays(valueMetadata.value, arrayShapes)
-					missingProps.push(...missingArrayProps);
 				}
-			} else if (shapeMetadata.type === PropValueType.Object) {
-				if (valueMetadata.valueType === PropValueType.Object) {
-					const objectShape = shapeMetadata.shape;
-					const missingObjectProps = this.getMissingRequiredProps(
-						valueMetadata.value,
-						objectShape
-					);
-					missingProps.push(...missingObjectProps);
-				}
+			} else if (
+				shapeMetadata.itemType.type === PropValueType.Array &&
+				valueMetadata.valueType === PropValueType.Array &&
+				valueMetadata.kind === PropValueKind.Literal
+			) {
+				const arrayShapes = shapeMetadata.itemType;
+				const missingArrayProps = this.getMissingPropsInNestedArrays(valueMetadata.value, arrayShapes)
+				missingProps.push(...missingArrayProps);
 			}
 		}
 		return missingProps;
-	}   
+	}
 
-	handleNestedArrays(
+	getMissingPropsInObject(
+		valueMetadata: PropVal,
+		shapeMetadata: PropMetadata
+	): string[]{
+		const missingProps: string[] = [];
+		if (shapeMetadata.type === PropValueType.Object) {
+			if (valueMetadata.valueType === PropValueType.Object) {
+				const objectShape = shapeMetadata.shape;
+				const missingObjectProps = this.getMissingRequiredProps(
+					valueMetadata.value,
+					objectShape
+				);
+				missingProps.push(...missingObjectProps);
+			}
+		}
+		return missingProps;
+	}
+
+	getMissingPropsInNestedArrays(
 		valueArray: PropVal[], 
 		shape: PropType
 	): string[] {
@@ -87,7 +109,7 @@ export default class MissingPropsChecker {
 				value.valueType === PropValueType.Array &&
 				shape.type === PropValueType.Array
 			) {
-				const missingObjectProps = this.handleNestedArrays(value.value, shape.itemType);
+				const missingObjectProps = this.getMissingPropsInNestedArrays(value.value, shape.itemType);
 				missingProps.push(...missingObjectProps);
 			}
 		}
