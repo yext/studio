@@ -2,6 +2,7 @@ import useStudioStore from "../../../src/store/useStudioStore";
 import { PageSliceStates } from "../../../src/store/models/slices/PageSlice";
 import { searchBarComponent } from "../../__fixtures__/componentStates";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
+import path from "path";
 
 describe("active entity file actions", () => {
   const initialState: Partial<PageSliceStates> = {
