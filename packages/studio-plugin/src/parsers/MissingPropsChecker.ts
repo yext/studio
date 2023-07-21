@@ -14,11 +14,11 @@ export default class MissingPropsChecker {
 		propValues: PropValues,
 		propShape: PropShape | undefined
 	): string[] {
-		const missingProps: string[] = [];
 		if (!propShape) {
 			return [];
 		}
 
+		const missingProps: string[] = [];
 		for (const propName of Object.keys(propShape)) {
 			const propIsRequired = propShape[propName].required;
 			const propIsUndefined = propValues[propName] === undefined;
