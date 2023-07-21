@@ -120,7 +120,7 @@ export default class ComponentTreeHelpers {
 
   /**
    * Returns an array of the expressions used in the component tree
-   * (and optionally in the getPath function)
+   * (and optionally in the getPath function).
    */
   private static getExpressions(
     componentTree: ComponentState[],
