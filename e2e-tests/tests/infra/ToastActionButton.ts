@@ -4,11 +4,7 @@ export default class ToastActionButton {
   private readonly successToast: Locator;
   readonly button: Locator;
 
-  constructor(
-    page: Page,
-    successToastText: string,
-    buttonAriaLabel: string
-  ) {
+  constructor(page: Page, successToastText: string, buttonAriaLabel: string) {
     this.successToast = page
       .getByRole("alert")
       .filter({ hasText: successToastText });
