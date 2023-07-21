@@ -16,6 +16,7 @@ interface PropEditorProps {
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propVal: PropVal) => void;
+  containers: string[];
   isNested?: boolean;
 }
 
@@ -30,17 +31,19 @@ export default function PropEditor({
   propValue,
   propKind,
   onPropChange,
+  containers,
   isNested,
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
+  const labelTooltipId = `[${containers}]-${propName}-label`
 
   return (
     <div className="flex items-center mb-2 text-sm">
       {renderBranchUI(isNested)}
       <label
         className="flex h-10 items-center justify-self-start"
-        id={propName}
+        id={labelTooltipId}
       >
         <p className="pr-2">{propName}</p>
         <PropInput
@@ -58,7 +61,7 @@ export default function PropEditor({
       {doc && (
         <Tooltip
           style={tooltipStyle}
-          anchorId={propName}
+          anchorId={labelTooltipId}
           content={doc}
           place="top"
         />

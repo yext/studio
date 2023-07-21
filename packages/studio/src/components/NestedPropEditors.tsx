@@ -17,6 +17,7 @@ export default function NestedPropEditors(props: {
   propType: NestedPropType;
   propName: string;
   updateProp: (propVal: PropVal) => void;
+  containers: string[];
   isNested?: boolean;
 }) {
   const {
@@ -24,6 +25,7 @@ export default function NestedPropEditors(props: {
     propType,
     propName,
     updateProp,
+    containers,
     isNested,
   } = props;
   const updateObjectProp = useCallback(
@@ -50,6 +52,7 @@ export default function NestedPropEditors(props: {
           propValues={propValues}
           propShape={propType.shape}
           updateProps={updateObjectProp}
+          containers={containers.concat(propName)}
           isNested={true}
         />
       </div>

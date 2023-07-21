@@ -22,6 +22,7 @@ interface ArrayPropEditorProps {
   propMetadata: Extract<PropMetadata, ArrayPropType>;
   propValue?: string | PropVal[];
   onPropChange: (propVal: PropVal) => void;
+  containers: string[];
   isNested?: boolean;
 }
 
@@ -36,6 +37,7 @@ export default function ArrayPropEditor({
   propMetadata,
   propValue,
   onPropChange,
+  containers,
   isNested,
 }: ArrayPropEditorProps) {
   const value = getEditorValue(propValue);
@@ -60,8 +62,8 @@ export default function ArrayPropEditor({
     "mb-2": !isNested,
   });
 
-  const docTooltipId = `${propName}-doc`;
-  const inputTooltipId = `${propName}-input`;
+  const docTooltipId = `[${containers}]-${propName}-doc`;
+  const inputTooltipId = `[${containers}]-${propName}-input`;
   const isUndefinedValue = propValue === undefined;
 
   return (
@@ -103,6 +105,7 @@ export default function ArrayPropEditor({
             value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
             itemType={propMetadata.itemType}
             updateItems={onChange}
+            containers={containers.concat(propName)}
           />
         )}
       </div>
@@ -114,10 +117,12 @@ function LiteralEditor({
   value,
   itemType,
   updateItems,
+  containers,
 }: {
   value: PropVal[];
   itemType: PropType;
   updateItems: (value: PropVal[]) => void;
+  containers: string[];
 }) {
   const propValues = Object.fromEntries(
     value.map((propVal, index) => [`Item ${index + 1}`, propVal])
@@ -158,7 +163,8 @@ function LiteralEditor({
               { ...itemType, required: false },
               propVal,
               updateItem(name),
-              true
+              containers.concat(name),
+              true,
             );
             return (
               <RemovableElement
