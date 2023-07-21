@@ -19,7 +19,7 @@ export default function NestedPropEditors(props: {
   isNested?: boolean;
 }) {
   const {
-    propValues = EMPTY_PROP_VALUES,
+    propValues,
     propType,
     propName,
     updateProp,
@@ -56,6 +56,7 @@ export default function NestedPropEditors(props: {
             propValues={propValues}
             propShape={propType.shape}
             updateProps={updateObjectProp}
+            containers={containers.concat(propName)}
             isNested={true}
           />
         )}
