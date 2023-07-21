@@ -709,10 +709,10 @@ describe("undefined menu", () => {
       valueType: PropValueType.HexColor,
       value: "#FFFFFF",
     });
-  })
+  });
 });
 
-function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape}) {
+function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape }) {
   const state = useStudioStore().pages.pages["index"].componentTree[0];
   return (
     <ActiveComponentPropEditors
