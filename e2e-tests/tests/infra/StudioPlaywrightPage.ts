@@ -1,4 +1,4 @@
-import { Locator, Page, expect } from "@playwright/test";
+import { FrameLocator, Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
 import path from "path";
 import GitOperations from "./GitOperations.js";
@@ -15,6 +15,7 @@ export default class StudioPlaywrightPage {
   readonly componentTree: Locator;
   readonly addElementButton: Locator;
   readonly removeElementButton: Locator;
+  readonly preview: FrameLocator;
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
   readonly gitOps: GitOperations;
@@ -34,6 +35,8 @@ export default class StudioPlaywrightPage {
     this.removeElementButton = page.getByRole("button", {
       name: "Remove Element",
     });
+
+    this.preview = page.frameLocator('[title="PreviewPanel"]');
 
     this.saveButton = new ToastActionButton(
       this.page,

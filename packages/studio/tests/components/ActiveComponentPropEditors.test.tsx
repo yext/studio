@@ -53,29 +53,6 @@ it("does not render a prop editor for component's prop of type ReactNode", () =>
   );
 });
 
-it("renders nested prop editors for component's prop of type Object", () => {
-  const propShape: PropShape = {
-    objProp: {
-      type: PropValueType.Object,
-      required: false,
-      shape: {
-        title: {
-          type: PropValueType.string,
-          required: false,
-        },
-      },
-    },
-  };
-  render(
-    <ActiveComponentPropEditors
-      activeComponentState={activeComponentState}
-      propShape={propShape}
-    />
-  );
-  expect(screen.getByText("objProp")).toBeTruthy();
-  expect(screen.getByText("title")).toBeTruthy();
-});
-
 const activeComponentMetadata: FileMetadata = {
   kind: FileMetadataKind.Component,
   metadataUUID: "banner-metadata-uuid",
@@ -563,6 +540,60 @@ describe("Array prop", () => {
     expect(expressionInput).toHaveValue("");
     expect(expressionInput).toBeEnabled();
     expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+});
+
+describe("Nested prop", () => {
+  const objPropShape: PropShape = {
+    objProp: {
+      type: PropValueType.Object,
+      required: false,
+      shape: {
+        title: {
+          type: PropValueType.string,
+          required: false,
+        },
+      },
+    },
+  };
+
+  it("renders nested prop editors for component's prop of type Object", () => {
+    const objState: StandardComponentState = {
+      ...activeComponentState,
+      props: {
+        objProp: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            title: {
+              kind: PropValueKind.Expression,
+              value: "test",
+              valueType: PropValueType.string,
+            },
+          },
+        },
+      },
+    };
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={objState}
+        propShape={objPropShape}
+      />
+    );
+    expect(screen.getByText("objProp")).toBeTruthy();
+    expect(screen.getByText("title")).toBeTruthy();
+  });
+
+  it("renders empty curly braces for an undefined nested prop", () => {
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={activeComponentState}
+        propShape={objPropShape}
+      />
+    );
+    expect(screen.getByText("objProp")).toBeTruthy();
+    expect(screen.getByText("{}")).toBeTruthy();
+    expect(screen.queryByText("title")).toBeNull();
   });
 });
 

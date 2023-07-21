@@ -14,7 +14,7 @@ const expectedPage = fs.readFileSync(
 studioTest(
   "can update initial props of a component and see UI is updated via HMR",
   async ({ page, studioPage }) => {
-    const buttonPreviews = page.getByText("Press me!");
+    const buttonPreviews = studioPage.preview.getByText("Press me!");
     await expect(buttonPreviews).toHaveCount(0);
 
     await studioPage.addElement("Button", "Components");

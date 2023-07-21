@@ -5,8 +5,10 @@ export async function checkTooltipFunctionality(
   tooltipText: string,
   hoverEl: HTMLElement
 ) {
-  const tooltip = screen.getByRole("tooltip", { name: tooltipText });
-  const tooltipClasses = tooltip.className;
+  const queryForTooltip = () =>
+    screen.queryByRole("tooltip", { name: tooltipText });
+  expect(queryForTooltip()).toBeNull();
   await userEvent.hover(hoverEl);
-  await waitFor(() => expect(tooltipClasses).not.toEqual(tooltip.className));
+  const tooltip = await waitFor(queryForTooltip);
+  expect(tooltip).toBeDefined();
 }

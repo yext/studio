@@ -1,9 +1,9 @@
 import { isEqual } from "lodash";
-import { Component, PropsWithChildren } from "react";
-import { findDOMNode } from "react-dom";
+import { Component, PropsWithChildren, ReactInstance } from "react";
 import DOMRectProperties from "../store/models/DOMRectProperties";
 import useStudioStore from "../store/useStudioStore";
 import rectToJson from "../utils/rectToJson";
+import { findDOMNode } from "react-dom";
 
 /**
  * HighlightingContainer is intended to be used as a wrapper around a
@@ -59,8 +59,9 @@ class HighlightingClass extends Component<HighlightingProps> {
 
   highlightSelf = (e?: Event) => {
     e?.stopImmediatePropagation();
-    const childNode = findDOMNode(this);
-    if (!(childNode instanceof HTMLElement)) {
+    e?.preventDefault();
+    const childNode = getDOMNode(this);
+    if (!childNode) {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
@@ -73,12 +74,16 @@ class HighlightingClass extends Component<HighlightingProps> {
   };
 
   private attachListenerToChild() {
-    const childNode = findDOMNode(this);
-    if (!childNode || !(childNode instanceof HTMLElement)) {
+    const childNode = getDOMNode(this);
+    if (!childNode) {
       return;
     }
     childNode.addEventListener("click", this.highlightSelf);
     this.resizeObserver.observe(document.body);
+  }
+
+  componentDidMount(): void {
+    this.attachListenerToChild();
   }
 
   componentDidUpdate(): void {
@@ -89,8 +94,8 @@ class HighlightingClass extends Component<HighlightingProps> {
   }
 
   componentWillUnmount(): void {
-    const childNode = findDOMNode(this);
-    if (!childNode || !(childNode instanceof HTMLElement)) {
+    const childNode = getDOMNode(this);
+    if (!childNode) {
       return;
     }
     childNode.removeEventListener("click", this.highlightSelf);
@@ -100,4 +105,19 @@ class HighlightingClass extends Component<HighlightingProps> {
   render() {
     return <>{this.props.children}</>;
   }
+}
+
+/**
+ * getDOMNode is a wrapper around findDOMNode.
+ *
+ * It uses process of elimnation to check that the return type is an
+ * instanceof Element instead of directly checking for instanceof Element.
+ * This is necessary due to issues with instanceof within an iframed react portal.
+ */
+function getDOMNode(instance: ReactInstance): Element | null {
+  const childNode = findDOMNode(instance);
+  if (!childNode || childNode instanceof Text) {
+    return null;
+  }
+  return childNode;
 }

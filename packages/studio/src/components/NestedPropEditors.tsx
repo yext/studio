@@ -10,8 +10,6 @@ import PropEditors from "./PropEditors";
 import { renderBranchUI } from "./PropEditor";
 import classNames from "classnames";
 
-const EMPTY_PROP_VALUES = {};
-
 export default function NestedPropEditors(props: {
   propValues?: PropValues;
   propType: NestedPropType;
@@ -38,6 +36,7 @@ export default function NestedPropEditors(props: {
     },
     [updateProp]
   );
+  const isUndefinedValue = propValues === undefined;
 
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
@@ -47,15 +46,29 @@ export default function NestedPropEditors(props: {
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
-        <div className="text-sm font-semibold mt-0.5 mb-1">{propName}</div>
-        <PropEditors
-          propValues={propValues}
-          propShape={propType.shape}
-          updateProps={updateObjectProp}
-          containers={containers.concat(propName)}
-          isNested={true}
-        />
+        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap">
+          {propName}
+        </span>
+        {isUndefinedValue ? (
+          renderUndefinedObject()
+        ) : (
+          <PropEditors
+            propValues={propValues}
+            propShape={propType.shape}
+            updateProps={updateObjectProp}
+            isNested={true}
+          />
+        )}
       </div>
     </div>
+  );
+}
+
+function renderUndefinedObject() {
+  const curlyBrackets = "{}";
+  return (
+    <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">
+      {curlyBrackets}
+    </span>
   );
 }
