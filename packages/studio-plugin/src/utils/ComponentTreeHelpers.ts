@@ -109,11 +109,7 @@ export default class ComponentTreeHelpers {
     source: string,
     getPathValue?: GetPathVal
   ): string[] {
-    const expressions: string[] = this.getExpressions(componentTree);
-    if (getPathValue)
-      expressions.push(...this.getExpressionUsagesFromPropVal(getPathValue));
-    return expressions.flatMap((e) => filterExpressionWithSource(e, source));
-
+    
     const filterExpressionWithSource = (expression: string, source: string) => {
       if (TypeGuards.isTemplateString(expression)) {
         return [...expression.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
@@ -124,6 +120,11 @@ export default class ComponentTreeHelpers {
         return [expression];
       return [];
     };
+
+    const expressions: string[] = this.getExpressions(componentTree);
+    if (getPathValue)
+      expressions.push(...this.getExpressionUsagesFromPropVal(getPathValue));
+    return expressions.flatMap((e) => filterExpressionWithSource(e, source));
   }
 
   /**
