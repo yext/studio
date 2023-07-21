@@ -1,5 +1,6 @@
 import { FrameLocator, Locator, Page, expect } from "@playwright/test";
 import ToastActionButton from "./ToastActionButton.js";
+import path from "path";
 import GitOperations from "./GitOperations.js";
 import simpleGit from "simple-git";
 import { StreamScope } from "@yext/studio-plugin";
