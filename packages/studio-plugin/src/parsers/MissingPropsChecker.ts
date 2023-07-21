@@ -32,10 +32,13 @@ export default class MissingPropsChecker {
 
 			const shapeMetadata = propShape[propName];
 			const valueMetadata = propValues[propName];
-			const arrayMissingProps = this.getMissingPropsInArray(valueMetadata, shapeMetadata);
-			const objectMissingProps = this.getMissingPropsInObject(valueMetadata, shapeMetadata);
-			missingProps.push(...arrayMissingProps)
-			missingProps.push(...objectMissingProps)
+			if (shapeMetadata.type === PropValueType.Array) {
+				const arrayMissingProps = this.getMissingPropsInArray(valueMetadata, shapeMetadata);
+				missingProps.push(...arrayMissingProps);
+			} else if (shapeMetadata.type === PropValueType.Object) {
+				const objectMissingProps = this.getMissingPropsInObject(valueMetadata, shapeMetadata);
+				missingProps.push(...objectMissingProps);
+			}
 		}
 		return missingProps;
 	} 
@@ -46,12 +49,13 @@ export default class MissingPropsChecker {
 	): string[]{
 		const missingProps: string[] = [];
 		if (shapeMetadata.type === PropValueType.Array) {
-			if (
-				shapeMetadata.itemType.type === PropValueType.Object &&
-				valueMetadata.valueType === PropValueType.Array &&
-				valueMetadata.kind === PropValueKind.Literal
-			) {
-				const arrayShapes = shapeMetadata.itemType.shape;
+			const shapeItemType = shapeMetadata.itemType
+			const valueIsKindLiteral = valueMetadata.kind === PropValueKind.Literal
+			const isAnArrayOfObjects = shapeItemType.type === PropValueType.Object && valueMetadata.valueType === PropValueType.Array
+			const isAnArrayOfArrays = shapeItemType.type === PropValueType.Array && valueMetadata.valueType === PropValueType.Array
+
+			if (isAnArrayOfObjects && valueIsKindLiteral) {
+				const arrayShapes = shapeItemType.shape;
 				for (const value of valueMetadata.value) {
 					if (value.valueType === PropValueType.Object) {
 						const missingArrayProps = this.getMissingRequiredProps(
@@ -61,11 +65,7 @@ export default class MissingPropsChecker {
 						missingProps.push(...missingArrayProps);
 					}
 				}
-			} else if (
-				shapeMetadata.itemType.type === PropValueType.Array &&
-				valueMetadata.valueType === PropValueType.Array &&
-				valueMetadata.kind === PropValueKind.Literal
-			) {
+			} else if (isAnArrayOfArrays && valueIsKindLiteral) {
 				const arrayShapes = shapeMetadata.itemType;
 				const missingArrayProps = this.getMissingPropsInNestedArrays(valueMetadata.value, arrayShapes)
 				missingProps.push(...missingArrayProps);
@@ -79,15 +79,15 @@ export default class MissingPropsChecker {
 		shapeMetadata: PropMetadata
 	): string[]{
 		const missingProps: string[] = [];
-		if (shapeMetadata.type === PropValueType.Object) {
-			if (valueMetadata.valueType === PropValueType.Object) {
-				const objectShape = shapeMetadata.shape;
-				const missingObjectProps = this.getMissingRequiredProps(
-					valueMetadata.value,
-					objectShape
-				);
-				missingProps.push(...missingObjectProps);
-			}
+		const valueAndShapeAreObjects = valueMetadata.valueType === PropValueType.Object && shapeMetadata.type === PropValueType.Object 
+
+		if (valueAndShapeAreObjects) {
+			const objectShape = shapeMetadata.shape;
+			const missingObjectProps = this.getMissingRequiredProps(
+				valueMetadata.value,
+				objectShape
+			);
+			missingProps.push(...missingObjectProps)
 		}
 		return missingProps;
 	}
@@ -98,17 +98,14 @@ export default class MissingPropsChecker {
 	): string[] {
 		const missingProps: string[] = [];
 		for (const value of valueArray) {
-			if (
-				value.valueType === PropValueType.Object &&
-				shape.type == PropValueType.Object
-			) {
+			const valueKindIsLiteral = value.kind === PropValueKind.Literal
+			const valueAndShapeAreObjects = value.valueType === PropValueType.Object && shape.type === PropValueType.Object
+			const valueAndShapeAreArrays = value.valueType === PropValueType.Array && shape.type === PropValueType.Array
+
+			if (valueAndShapeAreObjects) {
 				const missingObjectProps = this.getMissingRequiredProps(value.value, shape.shape)
 				missingProps.push(...missingObjectProps);
-			} else if (
-				value.kind === PropValueKind.Literal &&
-				value.valueType === PropValueType.Array &&
-				shape.type === PropValueType.Array
-			) {
+			} else if (valueAndShapeAreArrays && valueKindIsLiteral) {
 				const missingObjectProps = this.getMissingPropsInNestedArrays(value.value, shape.itemType);
 				missingProps.push(...missingObjectProps);
 			}
