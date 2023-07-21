@@ -5,7 +5,6 @@ import {
 } from "@yext/studio-plugin";
 import useImportedComponents from "../../src/hooks/useImportedComponents";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
-import path from "path";
 import { waitFor, renderHook } from "@testing-library/react";
 import useStudioStore from "../../src/store/useStudioStore";
 

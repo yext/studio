@@ -1,7 +1,7 @@
-import path from "path";
+import upath from "upath";
 import { fileURLToPath } from "url";
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const __dirname = upath.dirname(fileURLToPath(import.meta.url));
 
 export function dynamicImport(absFilepath: string): Promise<unknown> {
   const relativeFilepath = getWindowsCompatiblePath(absFilepath);
@@ -22,5 +22,5 @@ export async function dynamicImportJson(absFilepath: string): Promise<any> {
  * with forward slashes for windows support.
  */
 function getWindowsCompatiblePath(absFilepath: string): string {
-  return path.relative(__dirname, absFilepath).replaceAll("\\", "/");
+  return upath.relative(__dirname, absFilepath).replaceAll("\\", "/");
 }

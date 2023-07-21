@@ -3,7 +3,7 @@ import { Result } from "true-myth";
 import { PageState } from "../types";
 import TemplateConfigWriter from "../writers/TemplateConfigWriter";
 import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
-import path from "path";
+import upath from "upath";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import StudioSourceFileWriter from "../writers/StudioSourceFileWriter";
 import ComponentTreeParser, {
@@ -37,7 +37,7 @@ export default class PageFile {
     entityFiles?: string[]
   ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
-    const pageComponentName = path.basename(
+    const pageComponentName = upath.basename(
       this.studioSourceFileParser.getFilepath(),
       ".tsx"
     );

@@ -3,7 +3,7 @@ import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
 import { ParsedTypeKind } from "../../src/parsers/helpers/TypeNodeParsingHelper";
-import path from "path";
+import upath from "upath";
 
 describe("parseExportedObjectLiteral", () => {
   it("throws when the variable is not an ObjectLiteralExpression", () => {
@@ -359,7 +359,7 @@ it("checkForSyntaxErrors throws when a tsx file has a syntax error", () => {
 });
 
 function createParser(sourceCode: string) {
-  const filepath = path.resolve(__dirname, "test.tsx");
+  const filepath = upath.resolve(__dirname, "test.tsx");
   const { project } = createTestSourceFile(sourceCode, filepath);
   return new StudioSourceFileParser(filepath, project);
 }

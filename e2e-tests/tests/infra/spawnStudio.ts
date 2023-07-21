@@ -1,7 +1,6 @@
 import { spawn } from "child_process";
 import net from "net";
 import { globSync } from "glob";
-import path from "path";
 import { TestInfo } from "@playwright/test";
 import { fileURLToPath } from "url";
 import { dirname } from "path";

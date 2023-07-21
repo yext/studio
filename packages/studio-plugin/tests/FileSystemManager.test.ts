@@ -4,7 +4,7 @@ import ParsingOrchestrator, {
   createTsMorphProject,
 } from "../src/ParsingOrchestrator";
 import getUserPaths from "../src/parsers/getUserPaths";
-import path from "path";
+import upath from "upath";
 import fs from "fs";
 import { FileSystemWriter } from "../src/writers/FileSystemWriter";
 import {
@@ -28,11 +28,14 @@ const pageState: PageState = {
   filepath: "some/file/path",
 };
 
-const projectRoot = path.resolve(__dirname, "./__fixtures__/FileSystemManager");
+const projectRoot = upath.resolve(
+  __dirname,
+  "./__fixtures__/FileSystemManager"
+);
 const tsMorphProject: Project = createTsMorphProject();
 const paths = getUserPaths(projectRoot);
-paths.pages = path.join(projectRoot, "pages");
-paths.modules = path.join(projectRoot, "modules");
+paths.pages = upath.join(projectRoot, "pages");
+paths.modules = upath.join(projectRoot, "modules");
 
 const orchestrator = new ParsingOrchestrator(tsMorphProject, {
   paths,
@@ -45,7 +48,7 @@ const fileManager = new FileSystemManager(
   new FileSystemWriter(orchestrator, tsMorphProject)
 );
 
-const bannerFilepath = path.join(paths.components, "Banner.tsx");
+const bannerFilepath = upath.join(paths.components, "Banner.tsx");
 jest
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   .spyOn(ParsingOrchestrator.prototype as any, "initFilepathToFileMetadata")
@@ -74,13 +77,13 @@ describe("updatePageFile", () => {
       .mockImplementation();
 
     fileManager.updatePageFile(
-      path.join(paths.pages, "NewPage.tsx"),
+      upath.join(paths.pages, "NewPage.tsx"),
       pageState
     );
 
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
       expect.stringContaining("NewPage.tsx"),
-      fs.readFileSync(path.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
+      fs.readFileSync(upath.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
     );
   });
 
@@ -94,7 +97,7 @@ describe("updatePageFile", () => {
       .spyOn(fs, "writeFileSync")
       .mockImplementation();
 
-    const pageFilepath = path.join(paths.pages, "NewPage.tsx");
+    const pageFilepath = upath.join(paths.pages, "NewPage.tsx");
     fileManager.updatePageFile(pageFilepath, pageState);
 
     expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.pages, {
@@ -103,7 +106,7 @@ describe("updatePageFile", () => {
     expect(fsOpenSyncSpy).toHaveBeenCalledWith(pageFilepath, "w");
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
       expect.stringContaining("NewPage.tsx"),
-      fs.readFileSync(path.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
+      fs.readFileSync(upath.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
     );
   });
 });

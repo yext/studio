@@ -15,7 +15,7 @@ import HmrManager from "./HmrManager";
 import getLocalDataMapping from "./parsers/getLocalDataMapping";
 import openBrowser from "react-dev-utils/openBrowser";
 import { readdirSync, existsSync, lstatSync } from "fs";
-import path from "path";
+import upath from "upath";
 import lodash from "lodash";
 import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
@@ -80,7 +80,7 @@ export default async function createStudioPlugin(
       const watchDir = (dirPath: string) => {
         if (existsSync(dirPath)) {
           readdirSync(dirPath).forEach((filename) => {
-            const filepath = path.join(dirPath, filename);
+            const filepath = upath.join(dirPath, filename);
             if (lstatSync(filepath).isDirectory()) {
               watchDir(filepath);
             } else {
@@ -129,9 +129,9 @@ export default async function createStudioPlugin(
 
 function getProjectRoot(cliArgs: CliArgs) {
   if (!cliArgs.root) {
-    return process.cwd();
-  } else if (path.isAbsolute(cliArgs.root)) {
-    return cliArgs.root;
+    return upath.normalize(process.cwd());
+  } else if (upath.isAbsolute(cliArgs.root)) {
+    return upath.normalize(cliArgs.root);
   }
-  return path.join(process.cwd(), cliArgs.root);
+  return upath.join(process.cwd(), cliArgs.root);
 }

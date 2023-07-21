@@ -1,5 +1,5 @@
 import SimpleBanner from "../../ComponentFile/SimpleBanner";
-import path from "path";
+import upath from "upath";
 
 export default function IndexPage() {
   return <></>;
