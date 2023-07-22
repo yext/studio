@@ -33,7 +33,7 @@ export default class MissingPropsChecker {
 
       const shapeMetadata = propShape[propName];
       const propVal = propValues[propName];
-      const valueIsTypeArray =  propVal.valueType === PropValueType.Array;
+      const valueIsTypeArray = propVal.valueType === PropValueType.Array;
       const valueIsTypeObject = propVal.valueType === PropValueType.Object;
       const valueKindIsLiteral = propVal.kind === PropValueKind.Literal;
 
@@ -111,7 +111,7 @@ export default class MissingPropsChecker {
       const isTypeArray =
         value.valueType === PropValueType.Array &&
         shapeItemType.type === PropValueType.Array;
-	    const isTypeObject =
+      const isTypeObject =
         value.valueType === PropValueType.Object &&
         shapeItemType.type === PropValueType.Object;
 
