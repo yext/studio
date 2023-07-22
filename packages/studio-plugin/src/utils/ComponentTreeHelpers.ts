@@ -93,23 +93,23 @@ export default class ComponentTreeHelpers {
     componentTree: ComponentState[],
     source: string
   ): boolean {
-    const sourceExpressions = this.getExpressionsWithSource(
-      componentTree,
+    const expressions: string[] = this.getExpressions(componentTree);
+    const sourceExpressions = this.selectExpressionsWithSource(
+      expressions,
       source
     );
     return sourceExpressions.length > 0;
   }
 
   /**
-   * Returns an array of the expressions used in the component tree
-   * (and optionally in the getPath function) with the specified source.
+   * Selects expressions containing the specified source from an array of 
+   * expressions, parsing expressions from template strings if necessary.
    */
-  static getExpressionsWithSource(
-    componentTree: ComponentState[],
+  static selectExpressionsWithSource(
+    expressions: string[],
     source: string,
-    getPathValue?: GetPathVal
   ): string[] {
-    const filterExpressionWithSource = (expression: string, source: string) => {
+    return expressions.flatMap((expression) => {
       if (TypeGuards.isTemplateString(expression)) {
         return [...expression.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
           .map((m) => m[1])
@@ -118,18 +118,13 @@ export default class ComponentTreeHelpers {
       if (ExpressionHelpers.usesExpressionSource(expression, source))
         return [expression];
       return [];
-    };
-
-    const expressions: string[] = this.getExpressions(componentTree);
-    if (getPathValue)
-      expressions.push(...this.getExpressionUsagesFromPropVal(getPathValue));
-    return expressions.flatMap((e) => filterExpressionWithSource(e, source));
+    });
   }
 
   /**
    * Returns an array of the expressions used in the component tree.
    */
-  private static getExpressions(componentTree: ComponentState[]): string[] {
+  static getExpressions(componentTree: ComponentState[]): string[] {
     const expressions: string[] = componentTree.flatMap((c) => {
       if (
         !TypeGuards.isEditableComponentState(c) &&
@@ -154,7 +149,7 @@ export default class ComponentTreeHelpers {
     return Object.values(props).flatMap(this.getExpressionUsagesFromPropVal);
   }
 
-  private static getExpressionUsagesFromPropVal = ({
+  static getExpressionUsagesFromPropVal = ({
     kind,
     value,
   }: TypelessPropVal): string[] => {

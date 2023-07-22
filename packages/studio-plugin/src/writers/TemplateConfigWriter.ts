@@ -40,11 +40,14 @@ export default class TemplateConfigWriter {
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
   ): Set<string> {
+    const expressions: string[] = ComponentTreeHelpers.getExpressions(componentTree);
+    if(getPathValue) {
+      expressions.push(...ComponentTreeHelpers.getExpressionUsagesFromPropVal(getPathValue));
+    }
     const streamDataExpressions: string[] =
-      ComponentTreeHelpers.getExpressionsWithSource(
-        componentTree,
+      ComponentTreeHelpers.selectExpressionsWithSource(
+        expressions,
         "document",
-        getPathValue
       );
     return new Set<string>(streamDataExpressions);
   }
