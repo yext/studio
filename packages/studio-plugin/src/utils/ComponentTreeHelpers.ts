@@ -3,7 +3,6 @@ import {
   ComponentStateKind,
   PropValueKind,
   TypelessPropVal,
-  GetPathVal,
 } from "../types";
 import ComponentStateHelpers from "./ComponentStateHelpers";
 import ExpressionHelpers from "./ExpressionHelpers";
@@ -102,12 +101,12 @@ export default class ComponentTreeHelpers {
   }
 
   /**
-   * Selects expressions containing the specified source from an array of 
+   * Selects expressions containing the specified source from an array of
    * expressions, parsing expressions from template strings if necessary.
    */
   static selectExpressionsWithSource(
     expressions: string[],
-    source: string,
+    source: string
   ): string[] {
     return expressions.flatMap((expression) => {
       if (TypeGuards.isTemplateString(expression)) {
