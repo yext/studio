@@ -41,7 +41,7 @@ export default class TemplateConfigWriter {
     getPathValue?: GetPathVal
   ): Set<string> {
     const expressions: string[] =
-      ComponentTreeHelpers.getExpressions(componentTree);
+      ComponentTreeHelpers.getComponentTreeExpressions(componentTree);
     if (getPathValue) {
       expressions.push(
         ...ComponentTreeHelpers.getExpressionUsagesFromPropVal(getPathValue)
