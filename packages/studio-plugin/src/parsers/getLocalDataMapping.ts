@@ -1,4 +1,4 @@
-import { join } from "path";
+import { join } from "upath";
 import { existsSync } from "fs";
 import { dynamicImportJson } from "../utils/dynamicImport";
 
