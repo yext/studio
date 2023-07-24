@@ -9,20 +9,20 @@ import {
 } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 import { renderBranchUI } from "./PropEditor";
 import { renderPropEditor } from "./PropEditors";
 import { ReactComponent as Plus } from "../icons/plus.svg";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import classNames from "classnames";
 import RemovableElement from "./RemovableElement";
+import { v4 } from "uuid";
 
 interface ArrayPropEditorProps {
   propName: string;
   propMetadata: Extract<PropMetadata, ArrayPropType>;
   propValue?: string | PropVal[];
   onPropChange: (propVal: PropVal) => void;
-  propIdentifier?: string;
   isNested?: boolean;
 }
 
@@ -37,11 +37,11 @@ export default function ArrayPropEditor({
   propMetadata,
   propValue,
   onPropChange,
-  propIdentifier = "",
   isNested,
 }: ArrayPropEditorProps) {
   const value = getEditorValue(propValue);
   const isExpression = typeof value === "string";
+  const uniqueId = useMemo(() => v4(), []);
 
   const fieldPickerFilter = useCallback(
     (value: unknown) => TypeGuards.valueMatchesPropType(propMetadata, value),
@@ -62,8 +62,8 @@ export default function ArrayPropEditor({
     "mb-2": !isNested,
   });
 
-  const docTooltipId = `[${propIdentifier}]-${propName}-doc`;
-  const inputTooltipId = `[${propIdentifier}]-${propName}-input`;
+  const docTooltipId = `${uniqueId}-doc`;
+  const inputTooltipId = `${uniqueId}-input`;
   const isUndefinedValue = propValue === undefined;
 
   return (
@@ -105,7 +105,6 @@ export default function ArrayPropEditor({
             value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
             itemType={propMetadata.itemType}
             updateItems={onChange}
-            propIdentifier={[propIdentifier, propName].join(",")}
           />
         )}
       </div>
@@ -117,12 +116,10 @@ function LiteralEditor({
   value,
   itemType,
   updateItems,
-  propIdentifier,
 }: {
   value: PropVal[];
   itemType: PropType;
   updateItems: (value: PropVal[]) => void;
-  propIdentifier: string;
 }) {
   const propValues = Object.fromEntries(
     value.map((propVal, index) => [`Item ${index + 1}`, propVal])
@@ -163,7 +160,6 @@ function LiteralEditor({
               { ...itemType, required: false },
               propVal,
               updateItem(name),
-              [propIdentifier, name].join(","),
               true
             );
             return (

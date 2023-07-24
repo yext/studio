@@ -9,6 +9,8 @@ import {
 import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
+import { v4 } from "uuid";
+import { useMemo } from "react";
 
 interface PropEditorProps {
   propName: string;
@@ -16,7 +18,6 @@ interface PropEditorProps {
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propVal: PropVal) => void;
-  propIdentifier?: string;
   isNested?: boolean;
 }
 
@@ -31,12 +32,12 @@ export default function PropEditor({
   propValue,
   propKind,
   onPropChange,
-  propIdentifier = "",
   isNested,
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
-  const labelTooltipId = `[${propIdentifier}]-${propName}-label`;
+  const uniqueId = useMemo(() => v4(), []);
+  const labelTooltipId = `${uniqueId}-label`;
 
   return (
     <div className="flex items-center mb-2 text-sm">

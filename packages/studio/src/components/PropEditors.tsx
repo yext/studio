@@ -18,10 +18,9 @@ export default function PropEditors(props: {
   propShape: PropShape;
   propValues: PropValues;
   updateProps: (propValues: PropValues) => void;
-  propIdentifier: string;
   isNested?: boolean;
 }) {
-  const { propShape, propValues, updateProps, propIdentifier, isNested } =
+  const { propShape, propValues, updateProps, isNested } =
     props;
   const updateSpecificProp = useCallback(
     (propName: string) => (propVal: PropVal | undefined) => {
@@ -47,7 +46,6 @@ export default function PropEditors(props: {
         propMetadata,
         propValues[propName],
         updateSpecificProp(propName),
-        propIdentifier,
         isNested
       );
       if (isNested) {
@@ -76,7 +74,6 @@ function renderWrappedPropEditor(
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal | undefined) => void,
-  propIdentifier: string,
   isNested?: boolean
 ) {
   const editor = renderPropEditor(
@@ -84,7 +81,6 @@ function renderWrappedPropEditor(
     propMetadata,
     propVal,
     updateProp,
-    propIdentifier,
     isNested
   );
   if (propMetadata.required) {
@@ -106,7 +102,6 @@ export function renderPropEditor(
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal) => void,
-  propIdentifier: string,
   isNested?: boolean
 ) {
   if (propMetadata.type === PropValueType.Object) {
@@ -123,7 +118,6 @@ export function renderPropEditor(
         propType={propMetadata}
         propName={propName}
         updateProp={updateProp}
-        propIdentifier={propIdentifier}
         isNested={isNested}
       />
     );
@@ -141,7 +135,6 @@ export function renderPropEditor(
         propMetadata={propMetadata}
         propValue={propVal?.value}
         onPropChange={updateProp}
-        propIdentifier={propIdentifier}
         isNested={isNested}
       />
     );
@@ -155,7 +148,6 @@ export function renderPropEditor(
       propName={propName}
       propMetadata={propMetadata}
       propValue={PropValueHelpers.getPropValue(propVal, propKind)}
-      propIdentifier={propIdentifier}
       isNested={isNested}
     />
   );
