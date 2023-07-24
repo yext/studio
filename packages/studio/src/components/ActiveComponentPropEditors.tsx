@@ -30,12 +30,13 @@ export default function ActiveComponentPropEditors(props: {
   }
 
   const propValues = activeComponentState.props;
+  const emptyContainers = [];
   return (
     <PropEditors
       propShape={filteredPropShape}
       propValues={propValues}
       updateProps={updateActiveComponentProps}
-      containers={[]}
+      containers={emptyContainers}
     />
   );
 }
