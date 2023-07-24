@@ -4,7 +4,7 @@ import {
   SiteSettingsValues,
   UserPaths,
 } from "./types";
-import path from "path";
+import upath from "upath";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 
 /**
@@ -23,18 +23,17 @@ export default class FileSystemManager {
   }
 
   updatePageFile(filepath: string, pageState: PageState): void {
-    if (filepath.startsWith(this.paths.pages)) {
-      FileSystemWriter.openFile(filepath);
-      return this.writer.writeToPageFile(
-        path.basename(filepath, ".tsx"),
-        pageState
-      );
-    } else {
+    if (!filepath.startsWith(this.paths.pages)) {
       throw new Error(
         `Cannot update page file: filepath "${filepath}" is not within the` +
           ` expected path for pages "${this.paths.pages}".`
       );
     }
+    FileSystemWriter.openFile(filepath);
+    return this.writer.writeToPageFile(
+      upath.basename(filepath, ".tsx"),
+      pageState
+    );
   }
 
   updateSiteSettings(siteSettingsValues: SiteSettingsValues) {

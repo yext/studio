@@ -3,7 +3,7 @@ import ParsingOrchestrator, {
   createTsMorphProject,
 } from "../../src/ParsingOrchestrator";
 import getUserPaths from "../../src/parsers/getUserPaths";
-import path from "path";
+import upath from "upath";
 import fs from "fs";
 import { FileSystemWriter } from "../../src/writers/FileSystemWriter";
 import {
@@ -20,13 +20,13 @@ jest.mock("fs", () => {
   };
 });
 
-const projectRoot = path.resolve(
+const projectRoot = upath.resolve(
   __dirname,
   "../__fixtures__/FileSystemManager"
 );
 const paths = getUserPaths(projectRoot);
-paths.pages = path.join(projectRoot, "pages");
-paths.modules = path.join(projectRoot, "modules");
+paths.pages = upath.join(projectRoot, "pages");
+paths.modules = upath.join(projectRoot, "modules");
 
 const bannerComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -49,7 +49,7 @@ const moduleMetadata: ModuleMetadata = {
     },
   ],
   metadataUUID: "metadata-uuid",
-  filepath: path.join(paths.modules, "UpdatedModule.tsx"),
+  filepath: upath.join(paths.modules, "UpdatedModule.tsx"),
 };
 
 describe("syncFileMetadata", () => {
@@ -71,12 +71,12 @@ describe("syncFileMetadata", () => {
 
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
       expect.stringContaining("UpdatedModule.tsx"),
-      fs.readFileSync(path.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
+      fs.readFileSync(upath.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
     );
   });
 
   it("creates a new module file and adds a component based on new state", () => {
-    const moduleFilepath = path.join(paths.modules, "UpdatedModule.tsx");
+    const moduleFilepath = upath.join(paths.modules, "UpdatedModule.tsx");
 
     jest.spyOn(fs, "existsSync").mockImplementation(() => false);
     const fsWriteFileSyncSpy = jest

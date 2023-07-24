@@ -6,6 +6,8 @@ import { TestInfo } from "@playwright/test";
 import fs from "fs";
 import fsExtra from "fs-extra";
 import spawnStudio from "./spawnStudio.js";
+import { globSync } from "glob";
+import killPort from "kill-port";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -23,7 +25,7 @@ export default async function setup(
   run: (port: number, tmpDir: string) => Promise<void>
 ) {
   const { createRemote, testInfo, debug } = opts;
-  let cleanupChildProcess: (() => boolean) | null = null;
+  let port: number | null = null;
   let gitCleanup: (() => Promise<void>) | null = null;
   let tmpDir: string | null = null;
 
@@ -32,16 +34,26 @@ export default async function setup(
     if (createRemote) {
       gitCleanup = await createRemoteBranch(testInfo, tmpDir);
     }
-    const { port, kill } = await spawnStudio(tmpDir, debug, testInfo);
-    cleanupChildProcess = kill;
+    port = await spawnStudio(tmpDir, debug, testInfo);
     await run(port, tmpDir);
   } finally {
-    cleanupChildProcess?.();
+    port && (await killPort(port));
     await gitCleanup?.();
     if (!debug && tmpDir) {
-      fsExtra.rmdirSync(tmpDir, { recursive: true });
+      rmdirRecursive(tmpDir);
     }
   }
+}
+
+/**
+ * rmSync with recursive: true runs into ENOTEMPTY on Windows (even though it shouldn't).
+ * As a workaround we can remove all files first.
+ */
+function rmdirRecursive(dir: string) {
+  for (const file of globSync(`${dir}/**/*.{ts,tsx,js,json}`)) {
+    fs.rmSync(file);
+  }
+  fs.rmSync(dir, { recursive: true });
 }
 
 /**
@@ -91,5 +103,5 @@ function createTempWorkingDir(testInfo: TestInfo) {
 }
 
 function getTestFilename(testInfo: TestInfo): string {
-  return testInfo.file.split("/").at(-1) ?? "";
+  return testInfo.file.split(path.sep).at(-1) ?? "";
 }

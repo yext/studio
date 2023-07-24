@@ -7,6 +7,7 @@ const mockStudioData: StudioData = {
   pageNameToErrorPageState: {},
   UUIDToFileMetadata: {},
   studioConfig: {
+    openBrowser: true,
     paths: {
       components: mockFilepath,
       pages: mockFilepath,

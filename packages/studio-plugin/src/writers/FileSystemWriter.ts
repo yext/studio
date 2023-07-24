@@ -8,7 +8,7 @@ import {
 } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
-import path from "path";
+import upath from "upath";
 import { TypeGuards } from "../utils";
 import areEqualFileMetadata from "../utils/areEqualFileMetadata";
 
@@ -98,7 +98,7 @@ export class FileSystemWriter {
 
   static openFile(filepath: string) {
     if (!fs.existsSync(filepath)) {
-      const dirname = path.dirname(filepath);
+      const dirname = upath.dirname(filepath);
       if (!fs.existsSync(dirname)) {
         fs.mkdirSync(dirname, { recursive: true });
       }
