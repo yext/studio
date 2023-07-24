@@ -22,5 +22,5 @@ export async function dynamicImportJson(absFilepath: string): Promise<any> {
  * with forward slashes for windows support.
  */
 function getWindowsCompatiblePath(absFilepath: string): string {
-  return upath.relative(__dirname, absFilepath).replaceAll("\\", "/");
+  return upath.relative(__dirname, absFilepath);
 }
