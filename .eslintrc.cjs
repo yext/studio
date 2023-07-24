@@ -70,5 +70,11 @@ module.exports = {
         "tsdoc/syntax": "off",
       },
     },
+    {
+      files: ["packages/studio-plugin/**/*.ts"],
+      rules: {
+        "no-restricted-imports": ["warn", "path"],
+      },
+    },
   ],
 };

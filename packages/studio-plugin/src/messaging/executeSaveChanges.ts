@@ -1,6 +1,6 @@
 import FileSystemManager from "../FileSystemManager";
 import { SaveChangesPayload } from "../types";
-import path from "path";
+import upath from "upath";
 import ParsingOrchestrator from "../ParsingOrchestrator";
 
 export default function executeSaveChanges(
@@ -17,7 +17,7 @@ export default function executeSaveChanges(
   fileManager.syncFileMetadata(UUIDToFileMetadata);
   pendingChanges.pagesToRemove.forEach((pageToRemove) => {
     const filepath =
-      path.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
+      upath.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";
     fileManager.removeFile(filepath);
     orchestrator.reloadFile(filepath);
   });

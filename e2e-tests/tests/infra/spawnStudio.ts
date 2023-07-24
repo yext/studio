@@ -1,10 +1,9 @@
 import { spawn } from "child_process";
 import net from "net";
 import { globSync } from "glob";
-import path from "path";
 import { TestInfo } from "@playwright/test";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { dirname, resolve } from "path";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -25,14 +24,17 @@ export default async function spawnStudio(
   const child = spawn(
     "npx",
     ["studio", "--port", port.toString(), "--root", rootDir],
-    { stdio: "pipe" }
+    { stdio: "pipe", shell: true }
   );
+
+  child.on("error", console.error);
   if (debug) {
     child.stderr?.on("data", process.stderr.write);
     child.stdout?.on("data", process.stdout.write);
   }
+
   await waitForPort(port);
-  return { port, kill: () => child.kill() };
+  return port;
 }
 
 /**
@@ -80,9 +82,12 @@ async function waitForPort(port: number): Promise<void> {
   );
 }
 
-const getTestGlob = () => globSync(path.resolve(__dirname, "../**/*.spec.ts"));
+const getTestGlob = () => globSync("./tests/**/*.spec.ts");
 
 function getTestNumber(testInfo: TestInfo) {
-  const testAbsolutePaths = getTestGlob().sort();
-  return testAbsolutePaths.indexOf(testInfo.file);
+  const testPaths = getTestGlob().sort();
+  return testPaths.findIndex((testPath) => {
+    const absolutePath = resolve(__dirname, "../..", testPath);
+    return absolutePath === testInfo.file;
+  });
 }

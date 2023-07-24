@@ -1,6 +1,6 @@
 import { CliArgs, StudioConfig, StudioConfigWithDefaulting } from "../types";
 import fs from "fs";
-import path from "path";
+import upath from "upath";
 import getUserPaths from "./getUserPaths";
 import lodash from "lodash";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
@@ -22,7 +22,8 @@ export default async function getStudioConfig(
   cliArgs: CliArgs = {}
 ): Promise<StudioConfigWithDefaulting> {
   try {
-    return getStudioConfigInternal(pathToProjectRoot, cliArgs);
+    const config = await getStudioConfigInternal(pathToProjectRoot, cliArgs);
+    return normalizePaths(config, pathToProjectRoot);
   } catch (err: unknown) {
     err instanceof StudioError &&
       prettyPrintError("Failed to start Studio", err.message);
@@ -40,7 +41,7 @@ async function getStudioConfigInternal(
     port: 8080,
     openBrowser: true,
   };
-  const absConfigFilepath = path.join(pathToProjectRoot, "studio.config.js");
+  const absConfigFilepath = upath.join(pathToProjectRoot, "studio.config.js");
   if (!fs.existsSync(absConfigFilepath)) {
     return defaultConfig;
   }
@@ -54,20 +55,26 @@ async function getStudioConfigInternal(
       port: cliArgs.port,
     }
   );
-  return convertPathsToAbsolute(mergedConfig, pathToProjectRoot);
+  return mergedConfig;
 }
 
-function convertPathsToAbsolute(
+/**
+ * Converts paths to normalized absolute paths.
+ */
+function normalizePaths(
   config: StudioConfigWithDefaulting,
   pathToProjectRoot: string
 ): StudioConfigWithDefaulting {
   const updatedConfig = lodash.cloneDeep(config);
 
   Object.keys(updatedConfig.paths).forEach((pathType) => {
-    const userPath = updatedConfig.paths[pathType];
-    if (!path.isAbsolute(userPath)) {
-      updatedConfig.paths[pathType] = path.join(pathToProjectRoot, userPath);
+    const userPath: string = updatedConfig.paths[pathType];
+    if (!upath.isAbsolute(userPath)) {
+      updatedConfig.paths[pathType] = upath.join(pathToProjectRoot, userPath);
     }
+    updatedConfig.paths[pathType] = upath.normalize(
+      updatedConfig.paths[pathType]
+    );
   });
 
   return updatedConfig;

@@ -1,4 +1,4 @@
-import path from "path";
+import upath from "upath";
 
 /**
  * Calculates the import needed to import a file into another;
@@ -9,13 +9,13 @@ export default function getImportSpecifier(
   baseFilePath: string,
   filePathToBeImported: string
 ) {
-  const baseFileDir = path.dirname(baseFilePath);
-  const toBeImportedDir = path.dirname(filePathToBeImported);
-  const relativePath = path.relative(baseFileDir, toBeImportedDir);
-  const importName = path.parse(filePathToBeImported).name;
-  const importPath = path.join(relativePath, importName);
+  const baseFileDir = upath.dirname(baseFilePath);
+  const toBeImportedDir = upath.dirname(filePathToBeImported);
+  const relativePath = upath.relative(baseFileDir, toBeImportedDir);
+  const importName = upath.parse(filePathToBeImported).name;
+  const importPath = upath.join(relativePath, importName);
   // We need to add a leading ./ if there is none present.
-  if (path.dirname(importPath) === "." && !importPath.startsWith(".")) {
+  if (upath.dirname(importPath) === "." && !importPath.startsWith(".")) {
     return "./" + importPath;
   }
   return importPath;

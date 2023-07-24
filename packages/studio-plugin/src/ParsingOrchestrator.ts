@@ -1,4 +1,4 @@
-import path from "path";
+import upath from "upath";
 import {
   FileMetadata,
   UserPaths,
@@ -62,7 +62,7 @@ export default class ParsingOrchestrator {
   private createPageFile(pageName: string) {
     const pageEntityFiles = this.localDataMapping?.[pageName];
     return new PageFile(
-      path.join(this.paths.pages, pageName + ".tsx"),
+      upath.join(this.paths.pages, pageName + ".tsx"),
       this.getFileMetadata,
       this.project,
       this.studioConfig.isPagesJSRepo,
@@ -125,7 +125,7 @@ export default class ParsingOrchestrator {
         this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
       }
     } else if (filepath.startsWith(this.paths.pages)) {
-      const pageName = path.basename(filepath, ".tsx");
+      const pageName = upath.basename(filepath, ".tsx");
       delete this.pageNameToPageFile[pageName];
       if (sourceFile) {
         this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
@@ -179,7 +179,7 @@ export default class ParsingOrchestrator {
         return;
       }
       fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
-        const absPath = path.join(folderPath, filename);
+        const absPath = upath.join(folderPath, filename);
         if (fs.lstatSync(absPath).isDirectory()) {
           addDirectoryToMapping(absPath);
         } else {
@@ -239,7 +239,7 @@ export default class ParsingOrchestrator {
     }
     const files = fs.readdirSync(this.paths.pages, "utf-8");
     return files.reduce((pageMap, filename) => {
-      const pageName = path.basename(filename, ".tsx");
+      const pageName = upath.basename(filename, ".tsx");
       pageMap[pageName] = this.getPageFile(pageName);
       return pageMap;
     }, {} as Record<string, PageFile>);
