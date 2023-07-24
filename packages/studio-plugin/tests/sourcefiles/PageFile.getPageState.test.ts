@@ -65,18 +65,18 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
         required: false,
         type: PropValueType.Array,
         itemType: {
-            type: PropValueType.Array,
-            itemType: {
-                type: PropValueType.Object,
-                shape: {
-                  name: {
-                      required: true,
-                      type: PropValueType.string
-                  }
-                }
-            }
-        }
-      }
+          type: PropValueType.Array,
+          itemType: {
+            type: PropValueType.Object,
+            shape: {
+              name: {
+                required: true,
+                type: PropValueType.string,
+              },
+            },
+          },
+        },
+      },
     };
   }
 
@@ -273,7 +273,7 @@ describe("getPageState", () => {
     const result = pageFile.getPageState();
     assertIsOk(result);
     expect(result.value.componentTree[0].kind).toEqual("error");
-  })
+  });
 
   describe("throws errors", () => {
     beforeEach(() => {

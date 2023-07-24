@@ -9,7 +9,7 @@ export interface BannerRequiredPropsProps {
     lastName: string;
   };
   doublyNestedArray?: {
-    name: string
+    name: string;
   }[][];
 }
 
