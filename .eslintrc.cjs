@@ -73,8 +73,8 @@ module.exports = {
     {
       files: ["packages/studio-plugin/**/*.ts"],
       rules: {
-        "no-restricted-imports": ["warn", "path"]
-      }
-    }
+        "no-restricted-imports": ["warn", "path"],
+      },
+    },
   ],
 };
