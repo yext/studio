@@ -544,7 +544,7 @@ describe("Array prop", () => {
         props: { arr: literalPropVal, secondArr: literalPropVal },
       },
     });
-    const propShapeTwo: PropShape = {
+    const twoArrayPropShape: PropShape = {
       arr: {
         type: PropValueType.Array,
         itemType: {
@@ -562,10 +562,10 @@ describe("Array prop", () => {
         doc: "this is another array item",
       },
     };
-    render(<ActiveComponentPropEditorsWrapper propShape={propShapeTwo} />);
-    const titles = screen.getAllByText("Item 1");
-    await checkTooltipFunctionality("this is an array item", titles[0]);
-    await checkTooltipFunctionality("this is another array item", titles[1]);
+    render(<ActiveComponentPropEditorsWrapper propShape={twoArrayPropShape} />);
+    const propLabels = screen.getAllByText("Item 1");
+    await checkTooltipFunctionality("this is an array item", propLabels[0]);
+    await checkTooltipFunctionality("this is another array item", propLabels[1]);
   });
 });
 
