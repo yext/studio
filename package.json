@@ -39,8 +39,5 @@
     "react": "^18",
     "react-dom": "^18"
   },
-  "packageManager": "npm@8.5.5",
-  "dependencies": {
-    "react-tooltip": "^5.18.1"
-  }
+  "packageManager": "npm@8.5.5"
 }
