@@ -61,6 +61,22 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
           },
         },
       },
+      doublyNestedArray: {
+        required: false,
+        type: PropValueType.Array,
+        itemType: {
+            type: PropValueType.Array,
+            itemType: {
+                type: PropValueType.Object,
+                shape: {
+                  name: {
+                      required: true,
+                      type: PropValueType.string
+                  }
+                }
+            }
+        }
+      }
     };
   }
 
@@ -251,6 +267,13 @@ describe("getPageState", () => {
     assertIsOk(result);
     expect(result.value.componentTree[0].kind).toEqual("error");
   });
+
+  it("gracefully handles missing objects in nested arrays", () => {
+    const pageFile = createPageFile("missingRequiredPropDoublyNestedArray");
+    const result = pageFile.getPageState();
+    assertIsOk(result);
+    expect(result.value.componentTree[0].kind).toEqual("error");
+  })
 
   describe("throws errors", () => {
     beforeEach(() => {

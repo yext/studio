@@ -8,6 +8,9 @@ export interface BannerRequiredPropsProps {
     firstName: string;
     lastName: string;
   };
+  doublyNestedArray?: {
+    name: string
+  }[][];
 }
 
 export default function BannerRequiredProps(props: BannerRequiredPropsProps) {
@@ -19,6 +22,7 @@ export default function BannerRequiredProps(props: BannerRequiredPropsProps) {
       )}
       {props.obj?.firstName}
       {props.obj?.lastName}
+      {props.doublyNestedArray}
     </div>
   );
 }
