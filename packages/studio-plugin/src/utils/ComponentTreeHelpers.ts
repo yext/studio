@@ -7,6 +7,7 @@ import {
 import ComponentStateHelpers from "./ComponentStateHelpers";
 import ExpressionHelpers from "./ExpressionHelpers";
 import TypeGuards from "./TypeGuards";
+import { TEMPLATE_STRING_EXPRESSION_REGEX } from "../constants";
 
 /**
  * A static class for housing various util functions related to component state used by Studio.
@@ -87,13 +88,50 @@ export default class ComponentTreeHelpers {
    * Checks whether the component tree uses a specific expression source, such
    * as `document` or `props`.
    */
-  static usesExpressionSource(componentTree: ComponentState[], source: string) {
-    const expressions: string[] = componentTree.flatMap((c) => {
-      if (c.kind === ComponentStateKind.Error) {
-        return this.getExpressionUsagesFromProps(c.props);
-      }
+  static usesExpressionSource(
+    componentTree: ComponentState[],
+    source: string
+  ): boolean {
+    const expressions: string[] =
+      this.getComponentTreeExpressions(componentTree);
+    const sourceExpressions = this.selectExpressionsWithSource(
+      expressions,
+      source
+    );
+    return sourceExpressions.length > 0;
+  }
 
-      if (!TypeGuards.isEditableComponentState(c)) {
+  /**
+   * Selects expressions containing the specified source from an array of
+   * expressions, parsing expressions from template strings if necessary.
+   */
+  static selectExpressionsWithSource(
+    expressions: string[],
+    source: string
+  ): string[] {
+    return expressions.flatMap((expression) => {
+      if (TypeGuards.isTemplateString(expression)) {
+        return [...expression.matchAll(TEMPLATE_STRING_EXPRESSION_REGEX)]
+          .map((m) => m[1])
+          .filter((m) => ExpressionHelpers.usesExpressionSource(m, source));
+      }
+      if (ExpressionHelpers.usesExpressionSource(expression, source))
+        return [expression];
+      return [];
+    });
+  }
+
+  /**
+   * Returns an array of the expressions used in the component tree.
+   */
+  static getComponentTreeExpressions(
+    componentTree: ComponentState[]
+  ): string[] {
+    const expressions: string[] = componentTree.flatMap((c) => {
+      if (
+        !TypeGuards.isEditableComponentState(c) &&
+        c.kind !== ComponentStateKind.Error
+      ) {
         return [];
       }
 
@@ -101,13 +139,10 @@ export default class ComponentTreeHelpers {
       const expressionPropValues = this.getExpressionUsagesFromProps(props);
 
       return TypeGuards.isRepeaterState(c)
-        ? [...expressionPropValues, c.listExpression]
+        ? [c.listExpression, ...expressionPropValues]
         : expressionPropValues;
     });
-
-    return expressions.some((e) =>
-      ExpressionHelpers.usesExpressionSource(e, source)
-    );
+    return expressions;
   }
 
   private static getExpressionUsagesFromProps(
@@ -116,7 +151,7 @@ export default class ComponentTreeHelpers {
     return Object.values(props).flatMap(this.getExpressionUsagesFromPropVal);
   }
 
-  private static getExpressionUsagesFromPropVal = ({
+  static getExpressionUsagesFromPropVal = ({
     kind,
     value,
   }: TypelessPropVal): string[] => {

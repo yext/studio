@@ -1,7 +1,12 @@
-import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import { debounce } from "lodash";
-import useStudioStore from "../../store/useStudioStore";
-import useTemporalStore from "../../store/useTemporalStore";
+import PropValueHelpers from "../../utils/PropValueHelpers";
+import { PropValueKind, PropValueType } from "@yext/studio-plugin";
+
+const defaultValue = PropValueHelpers.getPropInputDefaultValue(
+  { type: PropValueType.HexColor },
+  PropValueKind.Literal
+) as string;
 
 interface ColorPickerProps {
   value: string | undefined;
@@ -16,22 +21,11 @@ export default function ColorPicker({
   onChange,
 }: ColorPickerProps): JSX.Element {
   const [inputValue, setInputValue] = useState(value);
-  const activeComponentUUID = useStudioStore().pages.activeComponentUUID;
-  const numFutureStates = useTemporalStore(
-    (store) => store.futureStates.length
-  );
-  const activeComponentUUIDRef = useRef(activeComponentUUID);
-  const numFutureStatesRef = useRef(numFutureStates);
   const isUndefinedValue = value === undefined;
 
   useEffect(() => {
-    if (
-      activeComponentUUID !== activeComponentUUIDRef.current ||
-      numFutureStates !== numFutureStatesRef.current
-    ) {
-      setInputValue(value);
-    }
-  }, [activeComponentUUID, numFutureStates, value]);
+    setInputValue(value ?? defaultValue);
+  }, [value]);
 
   const handleChange = useMemo(() => {
     const debouncedOnChange = debounce(onChange, 100);
