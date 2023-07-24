@@ -1,6 +1,6 @@
 import {
   PropValues,
-  NestedPropType,
+  ObjectPropType,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -12,7 +12,7 @@ import classNames from "classnames";
 
 export default function NestedPropEditors(props: {
   propValues?: PropValues;
-  propType: NestedPropType;
+  propType: ObjectPropType;
   propName: string;
   updateProp: (propVal: PropVal) => void;
   isNested?: boolean;
