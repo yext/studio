@@ -552,28 +552,29 @@ describe("Nested prop", () => {
         title: {
           type: PropValueType.string,
           required: false,
+          doc: "this is a title"
+        },
+      },
+    },
+  };
+  const objState: StandardComponentState = {
+    ...activeComponentState,
+    props: {
+      objProp: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          title: {
+            kind: PropValueKind.Expression,
+            value: "test",
+            valueType: PropValueType.string,
+          },
         },
       },
     },
   };
 
   it("renders nested prop editors for component's prop of type Object", () => {
-    const objState: StandardComponentState = {
-      ...activeComponentState,
-      props: {
-        objProp: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.Object,
-          value: {
-            title: {
-              kind: PropValueKind.Expression,
-              value: "test",
-              valueType: PropValueType.string,
-            },
-          },
-        },
-      },
-    };
     render(
       <ActiveComponentPropEditors
         activeComponentState={objState}
@@ -582,6 +583,54 @@ describe("Nested prop", () => {
     );
     expect(screen.getByText("objProp")).toBeTruthy();
     expect(screen.getByText("title")).toBeTruthy();
+  });
+
+  it("correctly creates different tooltips for object subfields with the same name", async () => {
+    const objPropShapeTwo: PropShape = {
+      objPropTwo: {
+        type: PropValueType.Object,
+        required: false,
+        shape: {
+          title: {
+            type: PropValueType.string,
+            required: false,
+            doc: "this is another title"
+          },
+        },
+      }
+    };
+    const twoObjState: StandardComponentState = {
+      ...activeComponentState,
+      props: {
+        ...objState.props,
+        objPropTwo: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            title: {
+              kind: PropValueKind.Expression,
+              value: "test-two",
+              valueType: PropValueType.string,
+            },
+          },
+        }
+      },
+    };
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={twoObjState}
+        propShape={{...objPropShape, ...objPropShapeTwo}}
+      />
+    );
+    const titles = screen.getAllByText("title");
+    await checkTooltipFunctionality(
+      "this is a title",
+      titles[0]
+    );
+    await checkTooltipFunctionality(
+      "this is another title",
+      titles[1]
+    );
   });
 
   it("renders empty curly braces for an undefined nested prop", () => {
