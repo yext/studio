@@ -92,7 +92,8 @@ export default class ComponentTreeHelpers {
     componentTree: ComponentState[],
     source: string
   ): boolean {
-    const expressions: string[] = this.getComponentTreeExpressions(componentTree);
+    const expressions: string[] =
+      this.getComponentTreeExpressions(componentTree);
     const sourceExpressions = this.selectExpressionsWithSource(
       expressions,
       source
@@ -123,7 +124,9 @@ export default class ComponentTreeHelpers {
   /**
    * Returns an array of the expressions used in the component tree.
    */
-  static getComponentTreeExpressions(componentTree: ComponentState[]): string[] {
+  static getComponentTreeExpressions(
+    componentTree: ComponentState[]
+  ): string[] {
     const expressions: string[] = componentTree.flatMap((c) => {
       if (
         !TypeGuards.isEditableComponentState(c) &&
