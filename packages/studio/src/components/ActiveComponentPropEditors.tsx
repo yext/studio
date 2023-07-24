@@ -31,11 +31,13 @@ export default function ActiveComponentPropEditors(props: {
 
   const propValues = activeComponentState.props;
   return (
-    <PropEditors
+    <div className="overflow-auto">
+      <PropEditors
       propShape={filteredPropShape}
       propValues={propValues}
       updateProps={updateActiveComponentProps}
-    />
+      />
+    </div>
   );
 }
 

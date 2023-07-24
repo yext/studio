@@ -77,22 +77,24 @@ export default function ComponentTree(): JSX.Element | null {
   }
 
   return (
-    <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-      <Tree
-        tree={tree}
-        rootId={ROOT_ID}
-        classes={TREE_CSS_CLASSES}
-        dropTargetOffset={4}
-        initialOpen={initialOpen}
-        sort={false}
-        insertDroppableFirst={false}
-        onDrop={handleDrop}
-        canDrop={canDrop}
-        render={renderNodeCallback}
-        dragPreviewRender={renderDragPreview}
-        placeholderRender={renderPlaceholder}
-      />
-    </DndProvider>
+    <div className="overflow-auto">
+      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+        <Tree
+          tree={tree}
+          rootId={ROOT_ID}
+          classes={TREE_CSS_CLASSES}
+          dropTargetOffset={4}
+          initialOpen={initialOpen}
+          sort={false}
+          insertDroppableFirst={false}
+          onDrop={handleDrop}
+          canDrop={canDrop}
+          render={renderNodeCallback}
+          dragPreviewRender={renderDragPreview}
+          placeholderRender={renderPlaceholder}
+        />
+      </DndProvider>
+    </div>
   );
 }
 
