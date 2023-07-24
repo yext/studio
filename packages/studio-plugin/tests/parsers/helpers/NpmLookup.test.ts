@@ -1,11 +1,11 @@
 /* eslint-disable jest/no-mocks-import */
-import path from "path";
+import upath from "upath";
 import NpmLookup from "../../../src/parsers/helpers/NpmLookup";
 
 it("resolves the source file for the import specifier", () => {
   const npmLookup = new NpmLookup("@yext/search-ui-react", __filename);
   expect(npmLookup.getResolvedFilepath()).toBe(
-    path.resolve(
+    upath.resolve(
       __dirname,
       "../../../../../node_modules/@yext/search-ui-react/lib/esm/index.d.ts"
     )
@@ -23,7 +23,7 @@ it("can resolve relative filepaths", () => {
   const relativePath = "../../__fixtures__/NpmLookup/sourceFileToLookup";
   const npmLookup = new NpmLookup(relativePath, __filename);
   expect(npmLookup.getResolvedFilepath()).toEqual(
-    path.resolve(__dirname, relativePath + ".ts")
+    upath.resolve(__dirname, relativePath + ".ts")
   );
 });
 

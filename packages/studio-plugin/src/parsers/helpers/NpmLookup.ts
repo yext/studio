@@ -1,5 +1,5 @@
 import fs from "fs";
-import path from "path";
+import upath from "upath";
 import typescript, { ModuleResolutionHost } from "typescript";
 const { resolveModuleName: resolveTypescriptModule } = typescript;
 
@@ -13,17 +13,17 @@ export default class NpmLookup {
     private importSpecifier: string,
     private initialSearchRoot: string
   ) {
-    const searchRootDir = path.dirname(initialSearchRoot);
+    const searchRootDir = upath.dirname(initialSearchRoot);
     this.resolvedFilepath = this.resolveImportSpecifier(searchRootDir);
   }
 
   private resolveImportSpecifier(searchRoot: string): string {
     const customModuleResolutionHost: ModuleResolutionHost = {
       fileExists(filepath) {
-        return fs.existsSync(path.join(searchRoot, filepath));
+        return fs.existsSync(upath.join(searchRoot, filepath));
       },
       readFile(filepath) {
-        return fs.readFileSync(path.join(searchRoot, filepath), "utf-8");
+        return fs.readFileSync(upath.join(searchRoot, filepath), "utf-8");
       },
     };
 
@@ -36,7 +36,7 @@ export default class NpmLookup {
 
     if (!resolvedModule) {
       const isLocalFileImport = this.importSpecifier.startsWith(".");
-      const parent = path.normalize(path.join(searchRoot, ".."));
+      const parent = upath.join(searchRoot, "..");
       if (isLocalFileImport || searchRoot === parent) {
         throw Error(
           `The import specifier "${this.importSpecifier}" could not be resolved from ${this.initialSearchRoot}.`
@@ -45,7 +45,7 @@ export default class NpmLookup {
       return this.resolveImportSpecifier(parent);
     }
 
-    return path.join(searchRoot, resolvedModule.resolvedFileName);
+    return upath.join(searchRoot, resolvedModule.resolvedFileName);
   }
 
   getResolvedFilepath(): string {

@@ -1,4 +1,4 @@
-import path from "path";
+import upath from "upath";
 import { ModuleMetadata } from "../types/ModuleMetadata";
 import { FileMetadataKind } from "../types/FileMetadata";
 import FileMetadataParser from "../parsers/FileMetadataParser";
@@ -34,7 +34,7 @@ export default class ModuleFile {
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
     );
-    const componentName = path.basename(
+    const componentName = upath.basename(
       this.studioSourceFileParser.getFilepath(),
       ".tsx"
     );
@@ -86,7 +86,7 @@ export default class ModuleFile {
   ): void {
     const defaultImports = moduleDependencies?.map((filepath) => {
       return {
-        name: path.basename(filepath, ".tsx"),
+        name: upath.basename(filepath, ".tsx"),
         moduleSpecifier: getImportSpecifier(moduleMetadata.filepath, filepath),
       };
     });

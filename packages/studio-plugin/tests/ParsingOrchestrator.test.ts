@@ -2,7 +2,7 @@ import ParsingOrchestrator, {
   createTsMorphProject,
 } from "../src/ParsingOrchestrator";
 import getUserPaths from "../src/parsers/getUserPaths";
-import path from "path";
+import upath from "upath";
 import {
   ComponentStateKind,
   FileMetadataKind,
@@ -19,7 +19,7 @@ import { assertIsOk } from "./__utils__/asserts";
 
 jest.mock("../src/errors/prettyPrintError");
 
-const projectRoot = path.resolve(
+const projectRoot = upath.resolve(
   __dirname,
   "./__fixtures__/ParsingOrchestrator"
 );
@@ -72,26 +72,20 @@ describe("aggregates data as expected", () => {
     expect(fileMetadataArray).toHaveLength(4);
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(
-          path.normalize("components/Card.tsx")
-        ),
+        filepath: expect.stringContaining("components/Card.tsx"),
         kind: FileMetadataKind.Component,
       })
     );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(
-          path.normalize("components/NestedBanner.tsx")
-        ),
+        filepath: expect.stringContaining("components/NestedBanner.tsx"),
         kind: FileMetadataKind.Component,
         acceptsChildren: true,
       })
     );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(
-          path.normalize("modules/BannerWithCard.tsx")
-        ),
+        filepath: expect.stringContaining("modules/BannerWithCard.tsx"),
         kind: FileMetadataKind.Module,
         componentTree: [
           expect.objectContaining({ componentName: "NestedBanner" }),
@@ -101,9 +95,7 @@ describe("aggregates data as expected", () => {
     );
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
-        filepath: expect.stringContaining(
-          path.normalize("modules/a/b/NestedModule.tsx")
-        ),
+        filepath: expect.stringContaining("modules/a/b/NestedModule.tsx"),
         kind: FileMetadataKind.Module,
         componentTree: [
           expect.objectContaining({ kind: ComponentStateKind.Fragment }),
@@ -161,7 +153,7 @@ describe("aggregates data as expected", () => {
 
 it("throws an error when the page imports components from unexpected folders", () => {
   const userPaths = getUserPaths("thisFolderDoesNotExist");
-  userPaths.pages = path.resolve(
+  userPaths.pages = upath.resolve(
     __dirname,
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
@@ -175,7 +167,7 @@ it("throws an error when the page imports components from unexpected folders", (
 
 it("throws when the pages folder does not exist", () => {
   const userPaths = getUserPaths(
-    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
+    upath.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
   );
   userPaths.pages = "thisFolderDoesNotExist";
   expect(() => createParsingOrchestrator({ paths: userPaths })).toThrow(
@@ -185,9 +177,9 @@ it("throws when the pages folder does not exist", () => {
 
 describe("reloadFile", () => {
   const userPaths = getUserPaths(
-    path.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
+    upath.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
   );
-  const modulePath = path.join(userPaths.modules, "BannerModule.tsx");
+  const modulePath = upath.join(userPaths.modules, "BannerModule.tsx");
   const originalFile = fs.readFileSync(modulePath, "utf-8");
   const orchestrator = createParsingOrchestrator({ paths: userPaths });
 

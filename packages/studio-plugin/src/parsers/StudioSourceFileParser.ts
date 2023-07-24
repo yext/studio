@@ -10,7 +10,7 @@ import {
   ArrowFunction,
 } from "ts-morph";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
-import path from "path";
+import upath from "upath";
 import vm from "vm";
 import TypeNodeParsingHelper, {
   ParsedType,
@@ -33,12 +33,15 @@ export default class StudioSourceFileParser {
     this.sourceFile = project.getSourceFileOrThrow(filepath);
   }
 
+  /**
+   * Returns the filepath with posix path separators.
+   */
   getFilepath() {
-    return this.filepath;
+    return upath.normalize(this.filepath);
   }
 
   getFilename() {
-    return path.basename(this.filepath);
+    return upath.basename(this.filepath);
   }
 
   checkForSyntaxErrors() {
@@ -83,11 +86,11 @@ export default class StudioSourceFileParser {
     const defaultImports = this.parseDefaultImports();
     return Object.entries(defaultImports).reduce(
       (imports, [importIdentifier, importName]) => {
-        if (path.isAbsolute(importIdentifier)) {
+        if (upath.isAbsolute(importIdentifier)) {
           imports[importIdentifier] = importName;
         } else {
           const absoluteFilepath =
-            path.resolve(this.filepath, "..", importIdentifier) + ".tsx";
+            upath.resolve(this.filepath, "..", importIdentifier) + ".tsx";
           imports[absoluteFilepath] = importName;
         }
         return imports;

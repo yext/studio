@@ -1,4 +1,4 @@
-import path from "path";
+import upath from "upath";
 import { UserPaths } from "../types";
 
 /**
@@ -8,12 +8,12 @@ import { UserPaths } from "../types";
  * @param pathToProjectRoot - An absolute path to the project's root folder.
  */
 export default function getUserPaths(pathToProjectRoot: string): UserPaths {
-  const pathToSrc = path.join(pathToProjectRoot, "src");
+  const pathToSrc = upath.join(pathToProjectRoot, "src");
   return {
-    pages: path.join(pathToSrc, "pages"),
-    modules: path.join(pathToSrc, "modules"),
-    components: path.join(pathToSrc, "components"),
-    siteSettings: path.join(pathToSrc, "siteSettings.ts"),
-    localData: path.join(pathToProjectRoot, "localData"),
+    pages: upath.join(pathToSrc, "pages"),
+    modules: upath.join(pathToSrc, "modules"),
+    components: upath.join(pathToSrc, "components"),
+    siteSettings: upath.join(pathToSrc, "siteSettings.ts"),
+    localData: upath.join(pathToProjectRoot, "localData"),
   };
 }
