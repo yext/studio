@@ -1,4 +1,4 @@
-import { join } from "upath";
+import upath from "upath";
 import { existsSync } from "fs";
 import { dynamicImportJson } from "../utils/dynamicImport";
 
@@ -9,7 +9,7 @@ export default async function getLocalDataMapping(
   localDataPath: string
 ): Promise<Record<string, string[]>> {
   const streamMappingFile = "mapping.json";
-  const localDataMappingFilepath = join(localDataPath, streamMappingFile);
+  const localDataMappingFilepath = upath.join(localDataPath, streamMappingFile);
   if (!existsSync(localDataMappingFilepath)) {
     throw new Error(
       `The localData's ${streamMappingFile} does not exist, expected the file to be at "${localDataMappingFilepath}".`
