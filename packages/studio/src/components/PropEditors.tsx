@@ -84,7 +84,7 @@ function renderWrappedPropEditor(
     propVal,
     updateProp,
     containers,
-    isNested,
+    isNested
   );
   if (propMetadata.required) {
     return editor;
@@ -106,7 +106,7 @@ export function renderPropEditor(
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal) => void,
   containers: string[],
-  isNested?: boolean,
+  isNested?: boolean
 ) {
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {

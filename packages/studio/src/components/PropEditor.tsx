@@ -36,7 +36,7 @@ export default function PropEditor({
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
-  const labelTooltipId = `[${containers}]-${propName}-label`
+  const labelTooltipId = `[${containers}]-${propName}-label`;
 
   return (
     <div className="flex items-center mb-2 text-sm">

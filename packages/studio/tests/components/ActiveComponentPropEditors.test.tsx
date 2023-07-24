@@ -552,7 +552,7 @@ describe("Nested prop", () => {
         title: {
           type: PropValueType.string,
           required: false,
-          doc: "this is a title"
+          doc: "this is a title",
         },
       },
     },
@@ -594,10 +594,10 @@ describe("Nested prop", () => {
           title: {
             type: PropValueType.string,
             required: false,
-            doc: "this is another title"
+            doc: "this is another title",
           },
         },
-      }
+      },
     };
     const twoObjState: StandardComponentState = {
       ...activeComponentState,
@@ -613,24 +613,18 @@ describe("Nested prop", () => {
               valueType: PropValueType.string,
             },
           },
-        }
+        },
       },
     };
     render(
       <ActiveComponentPropEditors
         activeComponentState={twoObjState}
-        propShape={{...objPropShape, ...objPropShapeTwo}}
+        propShape={{ ...objPropShape, ...objPropShapeTwo }}
       />
     );
     const titles = screen.getAllByText("title");
-    await checkTooltipFunctionality(
-      "this is a title",
-      titles[0]
-    );
-    await checkTooltipFunctionality(
-      "this is another title",
-      titles[1]
-    );
+    await checkTooltipFunctionality("this is a title", titles[0]);
+    await checkTooltipFunctionality("this is another title", titles[1]);
   });
 
   it("renders empty curly braces for an undefined nested prop", () => {

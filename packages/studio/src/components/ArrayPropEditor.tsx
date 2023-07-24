@@ -37,7 +37,7 @@ export default function ArrayPropEditor({
   propMetadata,
   propValue,
   onPropChange,
-  containers=[],
+  containers = [],
   isNested,
 }: ArrayPropEditorProps) {
   const value = getEditorValue(propValue);
@@ -164,7 +164,7 @@ function LiteralEditor({
               propVal,
               updateItem(name),
               containers.concat(name),
-              true,
+              true
             );
             return (
               <RemovableElement
