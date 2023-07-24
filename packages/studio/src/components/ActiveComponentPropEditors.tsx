@@ -35,7 +35,7 @@ export default function ActiveComponentPropEditors(props: {
       propShape={filteredPropShape}
       propValues={propValues}
       updateProps={updateActiveComponentProps}
-      propIdentifier={""}
+      propIdentifier=""
     />
   );
 }

@@ -21,7 +21,8 @@ export default function PropEditors(props: {
   propIdentifier: string;
   isNested?: boolean;
 }) {
-  const { propShape, propValues, updateProps, propIdentifier, isNested } = props;
+  const { propShape, propValues, updateProps, propIdentifier, isNested } =
+    props;
   const updateSpecificProp = useCallback(
     (propName: string) => (propVal: PropVal | undefined) => {
       if (propVal === undefined) {

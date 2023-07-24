@@ -56,7 +56,7 @@ export default function NestedPropEditors(props: {
             propValues={propValues}
             propShape={propType.shape}
             updateProps={updateObjectProp}
-            propIdentifier={[propIdentifier,propName].join(",")}
+            propIdentifier={[propIdentifier, propName].join(",")}
             isNested={true}
           />
         )}

@@ -105,7 +105,7 @@ export default function ArrayPropEditor({
             value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
             itemType={propMetadata.itemType}
             updateItems={onChange}
-            propIdentifier={[propIdentifier,propName].join(",")}
+            propIdentifier={[propIdentifier, propName].join(",")}
           />
         )}
       </div>
@@ -163,7 +163,7 @@ function LiteralEditor({
               { ...itemType, required: false },
               propVal,
               updateItem(name),
-              [propIdentifier,name].join(","),
+              [propIdentifier, name].join(","),
               true
             );
             return (
