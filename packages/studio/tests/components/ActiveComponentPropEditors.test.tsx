@@ -386,15 +386,16 @@ describe("Array prop", () => {
         type: PropValueType.string,
       },
       required: false,
+      doc: "this is an array item",
     },
   };
 
-  function ActiveComponentPropEditorsWrapper() {
+  function ActiveComponentPropEditorsWrapper(props: {propShapeArg?: PropShape}) {
     const state = useStudioStore().pages.pages["index"].componentTree[0];
     return (
       <ActiveComponentPropEditors
         activeComponentState={state as StandardComponentState}
-        propShape={propShape}
+        propShape={props.propShapeArg ?? propShape}
       />
     );
   }
@@ -540,6 +541,37 @@ describe("Array prop", () => {
     expect(expressionInput).toHaveValue("");
     expect(expressionInput).toBeEnabled();
     expect(screen.queryByRole("tooltip")).toBeNull();
+  });
+
+  it("correctly creates different tooltips for two array items with the same name", async () => {
+    mockStoreActiveComponent({
+      activeComponent: {
+        ...activeComponentState,
+        props: { arr: literalPropVal, secondArr: literalPropVal },
+      },
+    });
+    const propShapeTwo: PropShape = {
+      arr: {
+        type: PropValueType.Array,
+        itemType: {
+          type: PropValueType.string,
+        },
+        required: false,
+        doc: "this is an array item",
+      },
+      secondArr: {
+        type: PropValueType.Array,
+        itemType: {
+          type: PropValueType.string,
+        },
+        required: false,
+        doc: "this is another array item",
+      },
+    };
+    render(<ActiveComponentPropEditorsWrapper propShapeArg={propShapeTwo}/>);
+    const titles = screen.getAllByText("Item 1");
+    await checkTooltipFunctionality("this is an array item", titles[0]);
+    await checkTooltipFunctionality("this is another array item", titles[1]);
   });
 });
 
