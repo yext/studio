@@ -59,6 +59,7 @@ export default class ModuleFile {
 
   private _getModuleMetadata = (): ModuleMetadata => {
     this.studioSourceFileParser.checkForSyntaxErrors();
+    this.studioSourceFileParser.checkForMissingImports();
     const absPathDefaultImports =
       this.studioSourceFileParser.getAbsPathDefaultImports();
     const componentTree = this.componentTreeParser.parseComponentTree(

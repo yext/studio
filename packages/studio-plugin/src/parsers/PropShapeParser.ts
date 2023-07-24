@@ -1,5 +1,5 @@
 import { PropMetadata, PropShape, PropType } from "../types/PropShape";
-import TypeGuards from "../utils/TypeGuards";
+import TypeGuards, { StudioPropValueType } from "../utils/TypeGuards";
 import { STUDIO_PACKAGE_NAME } from "../constants";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import { PropValueType } from "../types";
@@ -9,17 +9,23 @@ import {
   ParsedType,
   ParsedTypeKind,
 } from "./helpers/TypeNodeParsingHelper";
+import { NamedImport } from "./helpers/StaticParsingHelpers";
+
+type StudioPropTypeImport = NamedImport & { name: StudioPropValueType };
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
  */
 export default class PropShapeParser {
-  private studioImports: string[];
+  private studioPropTypeImports: StudioPropTypeImport[];
 
   constructor(private studioSourceFileParser: StudioSourceFileParser) {
-    this.studioImports =
-      this.studioSourceFileParser.parseNamedImports()[STUDIO_PACKAGE_NAME] ??
-      [];
+    this.studioPropTypeImports =
+      this.studioSourceFileParser
+        .parseNamedImports()
+        [STUDIO_PACKAGE_NAME]?.filter((i): i is StudioPropTypeImport =>
+          TypeGuards.isStudioPropValueType(i.name)
+        ) ?? [];
   }
 
   /**
@@ -93,32 +99,36 @@ export default class PropShapeParser {
         recordKey: "string",
         recordValue: "any",
       };
-    } else if (
-      !TypeGuards.isPropValueType(type) ||
-      type === PropValueType.Object ||
-      type === PropValueType.Array
-    ) {
-      throw new Error(
-        `Unrecognized type ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}`
-      );
-    } else if (type === PropValueType.Record) {
-      throw new Error("Only Records of Record<string, any> are supported.");
-    } else if (
-      !TypeGuards.isPrimitiveProp(type) &&
-      !this.studioImports.includes(type)
-    ) {
-      throw new Error(
-        `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}.`
-      );
-    } else if (unionValues) {
-      return {
-        type: PropValueType.string,
-        unionValues,
-      };
     } else {
-      return {
-        type,
-      };
+      const matchingImport = this.studioPropTypeImports.find(
+        (i) => type === (i.alias ?? i.name)
+      );
+      if (matchingImport) {
+        return { type: matchingImport.name };
+      } else if (TypeGuards.isStudioPropValueType(type)) {
+        throw new Error(
+          `Prop type ${type} is invalid since it is not imported from ${STUDIO_PACKAGE_NAME}`
+        );
+      } else if (
+        !TypeGuards.isPropValueType(type) ||
+        type === PropValueType.Object ||
+        type === PropValueType.Array
+      ) {
+        throw new Error(
+          `Unrecognized type ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}`
+        );
+      } else if (type === PropValueType.Record) {
+        throw new Error("Only Records of Record<string, any> are supported.");
+      } else if (unionValues) {
+        return {
+          type: PropValueType.string,
+          unionValues,
+        };
+      } else {
+        return {
+          type,
+        };
+      }
     }
   }
 }

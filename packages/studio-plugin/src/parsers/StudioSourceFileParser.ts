@@ -8,8 +8,11 @@ import {
   Identifier,
   ArrayLiteralExpression,
   ArrowFunction,
+  LanguageService,
 } from "ts-morph";
-import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
+import StaticParsingHelpers, {
+  NamedImport,
+} from "./helpers/StaticParsingHelpers";
 import path from "path";
 import vm from "vm";
 import TypeNodeParsingHelper, {
@@ -19,18 +22,26 @@ import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup";
 import { TypelessPropVal } from "../types";
 
+type ParsedImport = {
+  importSource: string;
+  importName: string;
+  isDefault: boolean;
+};
+
 /**
  * StudioSourceFileParser contains shared business logic for
  * parsing source files used by Studio.
  */
 export default class StudioSourceFileParser {
   private sourceFile: SourceFile;
+  private languageService: LanguageService;
 
   constructor(private filepath: string, project: Project) {
     if (!project.getSourceFile(filepath)) {
       project.addSourceFileAtPath(filepath);
     }
     this.sourceFile = project.getSourceFileOrThrow(filepath);
+    this.languageService = project.getLanguageService();
   }
 
   getFilepath() {
@@ -52,8 +63,18 @@ export default class StudioSourceFileParser {
     });
   }
 
-  parseNamedImports(): Record<string, string[]> {
-    const importPathToImportNames: Record<string, string[]> = {};
+  checkForMissingImports() {
+    const codeActions = this.languageService.getCombinedCodeFix(
+      this.sourceFile,
+      "fixMissingImport"
+    );
+    if (codeActions.getChanges().length) {
+      throw new Error(`Missing import statement(s) in ${this.getFilename()}`);
+    }
+  }
+
+  parseNamedImports(): Record<string, NamedImport[]> {
+    const importPathToImportNames: Record<string, NamedImport[]> = {};
 
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source, namedImports } =
@@ -156,12 +177,18 @@ export default class StudioSourceFileParser {
     return vm.runInNewContext("(" + objectLiteralExp.getText() + ")");
   }
 
-  private getImportSourceForIdentifier(identifier: string) {
+  private getImportForIdentifier(identifier: string): ParsedImport | undefined {
     const namedImports = this.parseNamedImports();
     for (const importSource of Object.keys(namedImports)) {
-      if (namedImports[importSource].includes(identifier)) {
+      const matchingNamedImport = namedImports[importSource].find(
+        (namedImport) =>
+          identifier === namedImport.alias ||
+          (!namedImport.alias && identifier === namedImport.name)
+      );
+      if (matchingNamedImport) {
         return {
           importSource,
+          importName: matchingNamedImport.name,
           isDefault: false,
         };
       }
@@ -171,17 +198,18 @@ export default class StudioSourceFileParser {
       if (defaultImports[importSource] === identifier) {
         return {
           importSource,
+          importName: identifier,
           isDefault: true,
         };
       }
     }
   }
 
-  private parseImportedShape(
-    identifier: string,
-    importSource: string,
-    isDefault: boolean
-  ) {
+  private parseImportedShape({
+    importName: identifier,
+    importSource,
+    isDefault,
+  }: ParsedImport) {
     const typesFile = new NpmLookup(
       importSource,
       this.filepath
@@ -221,13 +249,9 @@ export default class StudioSourceFileParser {
       );
     }
 
-    const importData = this.getImportSourceForIdentifier(identifier);
+    const importData = this.getImportForIdentifier(identifier);
     if (importData) {
-      return this.parseImportedShape(
-        identifier,
-        importData.importSource,
-        importData.isDefault
-      );
+      return this.parseImportedShape(importData);
     }
   };
 

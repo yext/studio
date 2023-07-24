@@ -87,6 +87,7 @@ export default class PageFile {
 
   private _getPageState = (): PageState => {
     this.studioSourceFileParser.checkForSyntaxErrors();
+    this.studioSourceFileParser.checkForMissingImports();
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
     });
