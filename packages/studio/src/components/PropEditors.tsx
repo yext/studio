@@ -18,10 +18,10 @@ export default function PropEditors(props: {
   propShape: PropShape;
   propValues: PropValues;
   updateProps: (propValues: PropValues) => void;
-  containers: string[];
+  propIdentifier: string;
   isNested?: boolean;
 }) {
-  const { propShape, propValues, updateProps, containers, isNested } = props;
+  const { propShape, propValues, updateProps, propIdentifier, isNested } = props;
   const updateSpecificProp = useCallback(
     (propName: string) => (propVal: PropVal | undefined) => {
       if (propVal === undefined) {
@@ -46,7 +46,7 @@ export default function PropEditors(props: {
         propMetadata,
         propValues[propName],
         updateSpecificProp(propName),
-        containers,
+        propIdentifier,
         isNested
       );
       if (isNested) {
@@ -75,7 +75,7 @@ function renderWrappedPropEditor(
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal | undefined) => void,
-  containers: string[],
+  propIdentifier: string,
   isNested?: boolean
 ) {
   const editor = renderPropEditor(
@@ -83,7 +83,7 @@ function renderWrappedPropEditor(
     propMetadata,
     propVal,
     updateProp,
-    containers,
+    propIdentifier,
     isNested
   );
   if (propMetadata.required) {
@@ -105,7 +105,7 @@ export function renderPropEditor(
   propMetadata: PropMetadata,
   propVal: PropVal | undefined,
   updateProp: (propVal: PropVal) => void,
-  containers: string[],
+  propIdentifier: string,
   isNested?: boolean
 ) {
   if (propMetadata.type === PropValueType.Object) {
@@ -122,7 +122,7 @@ export function renderPropEditor(
         propType={propMetadata}
         propName={propName}
         updateProp={updateProp}
-        containers={containers}
+        propIdentifier={propIdentifier}
         isNested={isNested}
       />
     );
@@ -140,7 +140,7 @@ export function renderPropEditor(
         propMetadata={propMetadata}
         propValue={propVal?.value}
         onPropChange={updateProp}
-        containers={containers}
+        propIdentifier={propIdentifier}
         isNested={isNested}
       />
     );
@@ -154,7 +154,7 @@ export function renderPropEditor(
       propName={propName}
       propMetadata={propMetadata}
       propValue={PropValueHelpers.getPropValue(propVal, propKind)}
-      containers={containers}
+      propIdentifier={propIdentifier}
       isNested={isNested}
     />
   );

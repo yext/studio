@@ -16,7 +16,7 @@ interface PropEditorProps {
   propValue?: string | number | boolean;
   propKind: PropValueKind;
   onPropChange: (propVal: PropVal) => void;
-  containers?: string[];
+  propIdentifier?: string;
   isNested?: boolean;
 }
 
@@ -31,12 +31,12 @@ export default function PropEditor({
   propValue,
   propKind,
   onPropChange,
-  containers = [],
+  propIdentifier = "",
   isNested,
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
-  const labelTooltipId = `[${containers}]-${propName}-label`;
+  const labelTooltipId = `[${propIdentifier}]-${propName}-label`;
 
   return (
     <div className="flex items-center mb-2 text-sm">

@@ -8,8 +8,6 @@ import useStudioStore from "../store/useStudioStore";
 import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
 import PropEditors from "./PropEditors";
 
-const emptyContainers = [];
-
 export default function ActiveComponentPropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
@@ -37,7 +35,7 @@ export default function ActiveComponentPropEditors(props: {
       propShape={filteredPropShape}
       propValues={propValues}
       updateProps={updateActiveComponentProps}
-      containers={emptyContainers}
+      propIdentifier={""}
     />
   );
 }
