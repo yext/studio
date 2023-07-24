@@ -8,6 +8,8 @@ import useStudioStore from "../store/useStudioStore";
 import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
 import PropEditors from "./PropEditors";
 
+const emptyContainers = [];
+
 export default function ActiveComponentPropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
   propShape: PropShape;
@@ -30,7 +32,6 @@ export default function ActiveComponentPropEditors(props: {
   }
 
   const propValues = activeComponentState.props;
-  const emptyContainers = [];
   return (
     <PropEditors
       propShape={filteredPropShape}
