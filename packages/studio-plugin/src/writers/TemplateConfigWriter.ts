@@ -40,15 +40,15 @@ export default class TemplateConfigWriter {
     componentTree: ComponentState[],
     getPathValue?: GetPathVal
   ): Set<string> {
-    const expressions: string[] = ComponentTreeHelpers.getExpressions(componentTree);
-    if(getPathValue) {
-      expressions.push(...ComponentTreeHelpers.getExpressionUsagesFromPropVal(getPathValue));
+    const expressions: string[] =
+      ComponentTreeHelpers.getExpressions(componentTree);
+    if (getPathValue) {
+      expressions.push(
+        ...ComponentTreeHelpers.getExpressionUsagesFromPropVal(getPathValue)
+      );
     }
     const streamDataExpressions: string[] =
-      ComponentTreeHelpers.selectExpressionsWithSource(
-        expressions,
-        "document",
-      );
+      ComponentTreeHelpers.selectExpressionsWithSource(expressions, "document");
     return new Set<string>(streamDataExpressions);
   }
 
