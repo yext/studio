@@ -390,14 +390,8 @@ describe("Array prop", () => {
     },
   };
 
-  function ActiveComponentPropEditorsWrapper(props: {propShapeArg?: PropShape}) {
-    const state = useStudioStore().pages.pages["index"].componentTree[0];
-    return (
-      <ActiveComponentPropEditors
-        activeComponentState={state as StandardComponentState}
-        propShape={props.propShapeArg ?? propShape}
-      />
-    );
+  function renderWrapper() {
+    render(<ActiveComponentPropEditorsWrapper propShape={propShape} />);
   }
 
   it("correctly updates expression value using field picker", async () => {
@@ -568,7 +562,7 @@ describe("Array prop", () => {
         doc: "this is another array item",
       },
     };
-    render(<ActiveComponentPropEditorsWrapper propShapeArg={propShapeTwo}/>);
+    render(<ActiveComponentPropEditorsWrapper propShape={propShapeTwo}/>);
     const titles = screen.getAllByText("Item 1");
     await checkTooltipFunctionality("this is an array item", titles[0]);
     await checkTooltipFunctionality("this is another array item", titles[1]);
