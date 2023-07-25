@@ -4,7 +4,6 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
-import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
 
 const basePageState: PageState = {
@@ -194,7 +193,7 @@ it("displays URL placeholder and can edit URL when static page's getPath value i
     useStudioStore.getState().pages,
     "updateGetPathValue"
   );
-  render(<PageSettingsButton pageName={"index"} />);
+  render(<PageSettingsButton pageName="index" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlTextbox = screen.getByPlaceholderText(
@@ -214,7 +213,7 @@ it("displays URL placeholder and can edit URL when static page's getPath value i
 });
 
 it("displays URL placeholder and cannot edit URL when entity page's getPath value isn't document.slug", async () => {
-  render(<PageSettingsButton pageName={"fruits"} />);
+  render(<PageSettingsButton pageName="fruits" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlTextbox = screen.getByPlaceholderText(
