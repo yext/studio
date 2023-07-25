@@ -21,30 +21,36 @@ export default class MissingPropsChecker {
       const propMetadata = propShape[propName];
       if (propVal === undefined) {
         if (propMetadata.required) {
-         return propName
+          return propName;
         }
-        return []
+        return [];
       }
-      return this.handleArrayAndObjectProps(propVal, propMetadata)
-    })
+      return this.handleArrayAndObjectProps(propVal, propMetadata);
+    });
   }
 
-  private static handleArrayAndObjectProps(propVal: PropVal, propMetadata: PropType): string[] {
+  private static handleArrayAndObjectProps(
+    propVal: PropVal,
+    propMetadata: PropType
+  ): string[] {
     if (propVal.kind === PropValueKind.Expression) {
-      return []
+      return [];
     }
 
-    if (propVal.valueType === PropValueType.Array && propMetadata.type ===  PropValueType.Array) {
+    if (
+      propVal.valueType === PropValueType.Array &&
+      propMetadata.type === PropValueType.Array
+    ) {
       const itemType: PropType = propMetadata.itemType;
-      return propVal.value.flatMap(val => {
-        return this.handleArrayAndObjectProps(val, itemType)
+      return propVal.value.flatMap((val) => {
+        return this.handleArrayAndObjectProps(val, itemType);
       });
-    } else if (propVal.valueType === PropValueType.Object && propMetadata.type ===  PropValueType.Object) {
-      return this.getMissingRequiredProps(
-        propVal.value,
-        propMetadata.shape
-      );
+    } else if (
+      propVal.valueType === PropValueType.Object &&
+      propMetadata.type === PropValueType.Object
+    ) {
+      return this.getMissingRequiredProps(propVal.value, propMetadata.shape);
     }
-    return []
+    return [];
   }
 }

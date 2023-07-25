@@ -3,9 +3,5 @@ export interface BannerRequiredPropsProps {
 }
 
 export default function BannerRequiredProps(props: BannerRequiredPropsProps) {
-  return (
-    <div>
-      {props.title}
-    </div>
-  );
+  return <div>{props.title}</div>;
 }

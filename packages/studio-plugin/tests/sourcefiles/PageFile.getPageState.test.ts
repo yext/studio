@@ -29,8 +29,8 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
     propShape = {
       title: { type: PropValueType.string, doc: "jsdoc", required: true },
     };
-  } 
-  
+  }
+
   return {
     kind: FileMetadataKind.Component,
     metadataUUID: filepath,
@@ -204,7 +204,7 @@ describe("getPageState", () => {
     assertIsOk(result);
     expect(result.value.componentTree[0].kind).toEqual("error");
   });
-  
+
   describe("throws errors", () => {
     beforeEach(() => {
       jest.spyOn(console, "error").mockImplementation();
