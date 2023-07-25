@@ -98,7 +98,7 @@ export default function FormModal<T extends Form>({
           <FormField
             key={field}
             field={field}
-            value={val}
+            value={formData[field].disabled ? "" : val}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
             {...formData[field]}
