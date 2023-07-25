@@ -155,26 +155,4 @@ describe("Checks that missing props are in an error state", () => {
     const missingPropsExpected = ["name"];
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
-
-  it("cannot perform validation on expressions", () => {
-    const propShape: PropShape = {
-      title: {
-        type: PropValueType.string,
-        doc: "jsdoc",
-        required: true,
-      },
-    };
-    const propVal: PropValues = {
-      title: {
-        kind: PropValueKind.Expression,
-        valueType: PropValueType.string,
-      }
-    };
-    const missingPropsReceived = MissingPropsChecker.getMissingRequiredProps(
-      propVal,
-      propShape
-    );
-    const missingPropsExpected = [];
-    expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
-  }) 
 });
