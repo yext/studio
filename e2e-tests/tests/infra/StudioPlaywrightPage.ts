@@ -179,10 +179,9 @@ export default class StudioPlaywrightPage {
 
   async removeElement(elementName: string, hasText: string, index?: number) {
     const removeButton = this.page
-    .getByRole('listitem')
-    .filter({ hasText: hasText })
-    .getByRole('button', { name: 'Remove Element' }
-    );
+      .getByRole("listitem")
+      .filter({ hasText: hasText })
+      .getByRole("button", { name: "Remove Element" });
     await this.setActiveComponent(elementName, index);
     await removeButton.click();
   }
