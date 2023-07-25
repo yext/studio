@@ -42,12 +42,14 @@ export default function EntityPageModal({
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
-      url: {
+      url: isPathEditable ? {
         description: "URL Slug",
-        optional: !isPathEditable,
-        placeholder: isPathEditable
-          ? ""
-          : "<URL slug is not editable in Studio. Consult a developer>",
+        optional: false,
+      } : {
+        description: "URL Slug",
+        optional: true,
+        placeholder: "<URL slug is not editable in Studio. Consult a developer>",
+        disabled: true,
       },
       ...streamScopeFormData,
     }),
