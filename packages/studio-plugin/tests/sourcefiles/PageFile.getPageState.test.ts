@@ -203,7 +203,9 @@ describe("getPageState", () => {
     const result = pageFile.getPageState();
     assertIsOk(result);
     expect(result.value.componentTree).toHaveLength(1);
-    expect(result.value.componentTree[0].kind).toEqual(ComponentStateKind.Error);
+    expect(result.value.componentTree[0].kind).toEqual(
+      ComponentStateKind.Error
+    );
   });
 
   describe("throws errors", () => {

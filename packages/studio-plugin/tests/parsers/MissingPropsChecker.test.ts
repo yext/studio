@@ -163,10 +163,10 @@ describe("Checks that missing props are in an error state", () => {
     };
     const propVal: PropValues = {
       title: {
-        kind: PropValueKind.Expression, 
+        kind: PropValueKind.Expression,
         valueType: PropValueType.string,
-        value: "document.nothing"
-      }
+        value: "document.nothing",
+      },
     };
     const missingPropsReceived = MissingPropsChecker.getMissingRequiredProps(
       propVal,
