@@ -19,7 +19,7 @@ import ComponentNode from "./ComponentNode";
 
 const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
-  root: "py-2",
+  root: "overflow-auto py-2",
   placeholder: "relative",
   listItem: "relative",
 };
@@ -77,24 +77,22 @@ export default function ComponentTree(): JSX.Element | null {
   }
 
   return (
-    <div className="overflow-auto">
-      <DndProvider backend={MultiBackend} options={getBackendOptions()}>
-        <Tree
-          tree={tree}
-          rootId={ROOT_ID}
-          classes={TREE_CSS_CLASSES}
-          dropTargetOffset={4}
-          initialOpen={initialOpen}
-          sort={false}
-          insertDroppableFirst={false}
-          onDrop={handleDrop}
-          canDrop={canDrop}
-          render={renderNodeCallback}
-          dragPreviewRender={renderDragPreview}
-          placeholderRender={renderPlaceholder}
-        />
-      </DndProvider>
-    </div>
+    <DndProvider backend={MultiBackend} options={getBackendOptions()}>
+      <Tree
+        tree={tree}
+        rootId={ROOT_ID}
+        classes={TREE_CSS_CLASSES}
+        dropTargetOffset={4}
+        initialOpen={initialOpen}
+        sort={false}
+        insertDroppableFirst={false}
+        onDrop={handleDrop}
+        canDrop={canDrop}
+        render={renderNodeCallback}
+        dragPreviewRender={renderDragPreview}
+        placeholderRender={renderPlaceholder}
+      />
+    </DndProvider>
   );
 }
 
