@@ -199,8 +199,8 @@ export default class ComponentTreeParser {
       props,
       propShape
     );
-    const missingPropsString = missingProps.join(", ");
     if (missingProps.length) {
+      const missingPropsString = missingProps.join(", ");
       return {
         kind: ComponentStateKind.Error,
         metadataUUID: fileMetadata.metadataUUID,
