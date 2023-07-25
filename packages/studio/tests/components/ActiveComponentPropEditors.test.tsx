@@ -586,9 +586,12 @@ describe("Nested prop", () => {
           },
         },
       },
-    }
+    };
   }
-  const objPropShape: PropShape = createObjPropShape("objProp", "this is a title");
+  const objPropShape: PropShape = createObjPropShape(
+    "objProp",
+    "this is a title"
+  );
   const objState: StandardComponentState = {
     ...activeComponentState,
     props: {
@@ -618,7 +621,10 @@ describe("Nested prop", () => {
   });
 
   it("correctly creates different tooltips for object subfields with the same name", async () => {
-    const objPropShapeTwo: PropShape = createObjPropShape("objPropTwo", "this is another title");
+    const objPropShapeTwo: PropShape = createObjPropShape(
+      "objPropTwo",
+      "this is another title"
+    );
     const twoObjState: StandardComponentState = {
       ...activeComponentState,
       props: {
