@@ -11,7 +11,6 @@ describe("Checks that missing props are in an error state", () => {
     const propShape: PropShape = {
       title: {
         type: PropValueType.string,
-        doc: "jsdoc",
         required: true,
       },
     };
@@ -28,7 +27,6 @@ describe("Checks that missing props are in an error state", () => {
     const propShape: PropShape = {
       obj: {
         type: PropValueType.Object,
-        doc: "jsdoc",
         required: false,
         shape: {
           firstName: {
@@ -153,6 +151,28 @@ describe("Checks that missing props are in an error state", () => {
       propShape
     );
     const missingPropsExpected = ["name"];
+    expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
+  });
+
+  it("does not perform checking on expression values", () => {
+    const propShape: PropShape = {
+      title: {
+        type: PropValueType.string,
+        required: true,
+      },
+    };
+    const propVal: PropValues = {
+      title: {
+        kind: PropValueKind.Expression, 
+        valueType: PropValueType.string,
+        value: undefined
+      }
+    };
+    const missingPropsReceived = MissingPropsChecker.getMissingRequiredProps(
+      propVal,
+      propShape
+    );
+    const missingPropsExpected = [];
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 });
