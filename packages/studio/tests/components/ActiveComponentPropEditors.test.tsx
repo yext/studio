@@ -573,19 +573,22 @@ describe("Array prop", () => {
 });
 
 describe("Nested prop", () => {
-  const objPropShape: PropShape = {
-    objProp: {
-      type: PropValueType.Object,
-      required: false,
-      shape: {
-        title: {
-          type: PropValueType.string,
-          required: false,
-          doc: "this is a title",
+  function createObjPropShape(objName: string, doc: string): PropShape {
+    return {
+      [objName]: {
+        type: PropValueType.Object,
+        required: false,
+        shape: {
+          title: {
+            type: PropValueType.string,
+            required: false,
+            doc,
+          },
         },
       },
-    },
-  };
+    }
+  }
+  const objPropShape: PropShape = createObjPropShape("objProp", "this is a title");
   const objState: StandardComponentState = {
     ...activeComponentState,
     props: {
@@ -615,19 +618,7 @@ describe("Nested prop", () => {
   });
 
   it("correctly creates different tooltips for object subfields with the same name", async () => {
-    const objPropShapeTwo: PropShape = {
-      objPropTwo: {
-        type: PropValueType.Object,
-        required: false,
-        shape: {
-          title: {
-            type: PropValueType.string,
-            required: false,
-            doc: "this is another title",
-          },
-        },
-      },
-    };
+    const objPropShapeTwo: PropShape = createObjPropShape("objPropTwo", "this is another title");
     const twoObjState: StandardComponentState = {
       ...activeComponentState,
       props: {
@@ -651,9 +642,9 @@ describe("Nested prop", () => {
         propShape={{ ...objPropShape, ...objPropShapeTwo }}
       />
     );
-    const titles = screen.getAllByText("title");
-    await checkTooltipFunctionality("this is a title", titles[0]);
-    await checkTooltipFunctionality("this is another title", titles[1]);
+    const propLabels = screen.getAllByText("title");
+    await checkTooltipFunctionality("this is a title", propLabels[0]);
+    await checkTooltipFunctionality("this is another title", propLabels[1]);
   });
 
   it("renders empty curly braces for an undefined nested prop", () => {
