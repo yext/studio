@@ -12,7 +12,7 @@ studioTest("can remove a container component", async ({ page, studioPage }) => {
   const childPreviews = studioPage.preview.getByText("false");
   await expect(containerPreviews).toHaveCount(1);
   await expect(childPreviews).toHaveCount(1);
-  await studioPage.removeElement("Container");
+  await studioPage.removeElement("Container", "divContainerBanner");
   await expect(containerPreviews).toHaveCount(0);
   await expect(childPreviews).toHaveCount(0);
   await expect(page).toHaveScreenshot();

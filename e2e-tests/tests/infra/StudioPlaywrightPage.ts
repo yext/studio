@@ -14,7 +14,6 @@ export default class StudioPlaywrightPage {
   readonly pagesPanel: Locator;
   readonly componentTree: Locator;
   readonly addElementButton: Locator;
-  readonly removeElementButton: Locator;
   readonly preview: FrameLocator;
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
@@ -30,10 +29,6 @@ export default class StudioPlaywrightPage {
 
     this.addElementButton = page.getByRole("button", {
       name: "Open Add Element Menu",
-    });
-
-    this.removeElementButton = page.getByRole("button", {
-      name: "Remove Element",
     });
 
     this.preview = page.frameLocator('[title="PreviewPanel"]');
@@ -150,7 +145,7 @@ export default class StudioPlaywrightPage {
       .getByRole("listitem")
       .filter({ hasText: pageName })
       .getByRole("button", {
-        name: "Remove Page",
+        name: "Remove Element",
       })
       .click();
     await expect(this.page).toHaveScreenshot();
@@ -182,9 +177,14 @@ export default class StudioPlaywrightPage {
       .click();
   }
 
-  async removeElement(elementName: string, index?: number) {
+  async removeElement(elementName: string, hasText: string, index?: number) {
+    const removeButton = this.page
+    .getByRole('listitem')
+    .filter({ hasText: hasText })
+    .getByRole('button', { name: 'Remove Element' }
+    );
     await this.setActiveComponent(elementName, index);
-    await this.removeElementButton.click();
+    await removeButton.click();
   }
 
   async setActiveComponent(componentName: string, componentIndex = 0) {

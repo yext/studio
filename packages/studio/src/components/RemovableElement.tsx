@@ -18,7 +18,7 @@ export default function RemovableElement(
       <button
         onClick={onRemove}
         className={buttonClasses}
-        aria-label={ariaLabel}
+        aria-label={ariaLabel ? ariaLabel : "Remove Element"}
       >
         <X />
       </button>
