@@ -573,21 +573,6 @@ describe("Array prop", () => {
 });
 
 describe("Nested prop", () => {
-  function createObjPropShape(objName: string, doc: string): PropShape {
-    return {
-      [objName]: {
-        type: PropValueType.Object,
-        required: false,
-        shape: {
-          title: {
-            type: PropValueType.string,
-            required: false,
-            doc,
-          },
-        },
-      },
-    };
-  }
   const objPropShape: PropShape = createObjPropShape(
     "objProp",
     "this is a title"
@@ -795,4 +780,20 @@ function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape }) {
       propShape={props.propShape}
     />
   );
+}
+
+function createObjPropShape(objName: string, doc: string): PropShape {
+  return {
+    [objName]: {
+      type: PropValueType.Object,
+      required: false,
+      shape: {
+        title: {
+          type: PropValueType.string,
+          required: false,
+          doc,
+        },
+      },
+    },
+  };
 }
