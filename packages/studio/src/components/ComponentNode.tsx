@@ -40,6 +40,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
+  const anchorId = `ComponentNode-${componentState.uuid}`;
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
@@ -48,7 +49,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleClick = useCallback(() => {
     setActiveComponentUUID(componentState.uuid);
-  }, [componentState.uuid, setActiveComponentUUID]);
+    document.getElementById(anchorId)?.focus();
+  }, [componentState.uuid, setActiveComponentUUID, anchorId]);
 
   const componentNodeStyle = useMemo(
     () => ({ paddingLeft: `${depth}em` }),
@@ -65,7 +67,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       "text-red-500": isErrorState,
     }
   );
-  const anchorId = `ComponentNode-${componentState.uuid}`;
 
   const handleToggle = useCallback(() => {
     onToggle(componentState.uuid, !isOpen);
@@ -76,6 +77,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       <div
         className="flex grow items-center cursor-pointer"
         onClick={handleClick}
+        tabIndex={0}
         id={anchorId}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />

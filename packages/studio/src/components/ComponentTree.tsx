@@ -12,7 +12,7 @@ import {
   Tree,
 } from "@minoru/react-dnd-treeview";
 import { ComponentState, TypeGuards } from "@yext/studio-plugin";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useEffect } from "react";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
@@ -30,6 +30,14 @@ const TREE_CSS_CLASSES: Readonly<Classes> = {
 export default function ComponentTree(): JSX.Element | null {
   const tree: NodeModel<ComponentState>[] | undefined = useTree();
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
+  const [activeComponentUUID, removeComponent] = useStudioStore(
+    (store) => {
+      return [
+        store.pages.activeComponentUUID,
+        store.actions.removeComponent,
+      ];
+    }
+  );
   const initialOpen = useMemo(() => {
     return (
       tree?.reduce((prev, curr) => {
@@ -71,6 +79,20 @@ export default function ComponentTree(): JSX.Element | null {
     },
     [onToggle]
   );
+
+  const handleKeyPress = useCallback((event) => {
+    if(event.key === "Backspace" && activeComponentUUID) {
+      const activeComponentNode = document.getElementById(`ComponentNode-${activeComponentUUID}`);
+      if (activeComponentNode == document.activeElement) {
+        removeComponent(activeComponentUUID);
+      }
+    }
+  }, [activeComponentUUID, removeComponent]);
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyPress);
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [handleKeyPress]);
 
   if (!tree) {
     return null;
