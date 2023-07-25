@@ -47,7 +47,6 @@ export default function EntityPageModal({
       url: isPathEditable
         ? {
             description: "URL Slug",
-            optional: false,
           }
         : {
             description: "URL Slug",

@@ -189,32 +189,6 @@ it("shows a tooltip when hovering over the label", async () => {
   );
 });
 
-async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
-  const updateGetPathValueSpy = jest.spyOn(
-    useStudioStore.getState().pages,
-    "updateGetPathValue"
-  );
-  render(<PageSettingsButton pageName={pageName} />);
-  const pageSettingsButton = screen.getByRole("button");
-  await userEvent.click(pageSettingsButton);
-  const urlTextbox = screen.getByPlaceholderText(
-    "<URL slug is defined by developer>"
-  );
-  const testUrl = "test-url";
-  await userEvent.type(urlTextbox, testUrl);
-  const saveButton = screen.getByRole("button", { name: "Save" });
-  await userEvent.click(saveButton);
-  const updatedUrl = isEntityPage
-    ? TemplateExpressionFormatter.addBackticks(testUrl)
-    : testUrl;
-  expect(updateGetPathValueSpy).toBeCalledWith(pageName, {
-    kind: isEntityPage ? PropValueKind.Expression : PropValueKind.Literal,
-    value: updatedUrl,
-  });
-  await userEvent.click(pageSettingsButton);
-  expect(urlTextbox).toHaveValue(testUrl);
-}
-
 it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
   const updateGetPathValueSpy = jest.spyOn(
     useStudioStore.getState().pages,

@@ -98,7 +98,7 @@ export default function FormModal<T extends Form>({
           <FormField
             key={field}
             field={field}
-            value={formData[field].disabled ? "" : val}
+            value={val}
             updateFormField={updateFormField}
             transformOnChangeValue={transformOnChangeValue}
             {...formData[field]}
@@ -183,7 +183,7 @@ function FormField({
         type="text"
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
         placeholder={placeholder}
-        value={value}
+        value={disabled ? "" : value}
         onChange={handleChange}
         disabled={disabled}
       />
