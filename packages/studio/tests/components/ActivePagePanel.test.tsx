@@ -1,10 +1,13 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import ActivePagePanel from "../../src/components/ActivePagePanel";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
-import { PageState, PropValueKind } from "@yext/studio-plugin";
+import { ComponentStateKind, PageState, PropValueKind } from "@yext/studio-plugin";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
+import RemovableElement from "../../src/components/RemovableElement";
+import userEvent from "@testing-library/user-event";
+
 
 const basePageState: PageState = {
   componentTree: [],
@@ -60,4 +63,21 @@ it("renders page settings button in PagesJS repo", () => {
   expect(
     screen.getByRole("button", { name: "Edit Universal Page Settings" })
   ).toBeDefined();
+});
+
+it("removes the page when page delete button is clicked", async () => {
+  mockPageSliceStates({ pages: { Universal: basePageState } })
+  const removePageSpy = jest.spyOn(
+    useStudioStore.getState().pages,
+    "removePage"
+  );
+  render(<ActivePagePanel />);
+  const removePageButton = screen.getByRole("button", {name: "Remove Element"});
+  await userEvent.click(removePageButton);
+  expect(useStudioStore.getState().pages.pages["Universal"]).toBeDefined();
+  const deleteButton = screen.getByRole("button", { name: "Delete" });
+  await userEvent.click(deleteButton);
+  expect(removePageSpy).toBeCalledWith("Universal");
+  await waitFor(() => expect(screen.queryByText("Delete")).toBeNull());
+  expect(useStudioStore.getState().pages.pages["Universal"]).toBeUndefined();
 });
