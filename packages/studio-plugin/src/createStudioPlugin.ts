@@ -7,7 +7,6 @@ import ParsingOrchestrator, {
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 import { CliArgs, UserPaths } from "./types";
-import createHandleHotUpdate from "./handleHotUpdate";
 import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
@@ -121,9 +120,10 @@ export default async function createStudioPlugin(
     configureServer: createConfigureStudioServer(
       fileSystemManager,
       gitWrapper,
-      orchestrator
+      orchestrator,
+      pathToUserProjectRoot
     ),
-    handleHotUpdate: createHandleHotUpdate(hmrManager),
+    handleHotUpdate: (ctx) => hmrManager.handleHotUpdate(ctx),
   };
 }
 

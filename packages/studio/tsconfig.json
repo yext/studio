@@ -14,6 +14,7 @@
     "jsx": "react-jsx",
     "target": "ESNext",
     "outDir": "lib",
+    "noEmit": true,
     "types": [
       "vite/client",
       "@yext/studio-plugin/virtual-module",
