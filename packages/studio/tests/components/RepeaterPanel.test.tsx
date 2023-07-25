@@ -24,7 +24,7 @@ it("does not render panel for non-repeater component", () => {
   expect(container).toBeEmptyDOMElement();
 });
 
-it("renders message for repeated component", () => {
+it("only renders message for repeated component", () => {
   mockRepeaterActiveComponent();
   render(<RepeaterPanel />);
   expect(
@@ -32,4 +32,8 @@ it("renders message for repeated component", () => {
       "This component is repeated in a list. Please contact a developer to edit the list settings."
     )
   ).toBeDefined();
+  expect(screen.queryByText("List")).toBeFalsy();
+  expect(screen.queryByRole("checkbox")).toBeFalsy();
+  expect(screen.queryByText("List Field")).toBeFalsy();
+  expect(screen.queryByRole("textbox")).toBeFalsy();
 });
