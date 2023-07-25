@@ -83,7 +83,7 @@ export default function ComponentTree(): JSX.Element | null {
   const handleKeyPress = useCallback((event) => {
     if(event.key === "Backspace" && activeComponentUUID) {
       const activeComponentNode = document.getElementById(`ComponentNode-${activeComponentUUID}`);
-      if (activeComponentNode == document.activeElement) {
+      if (activeComponentNode === document.activeElement) {
         removeComponent(activeComponentUUID);
       }
     }
