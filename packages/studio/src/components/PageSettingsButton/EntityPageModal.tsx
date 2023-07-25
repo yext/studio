@@ -30,7 +30,9 @@ export default function EntityPageModal({
       store.pages.pages[pageName].pagesJS?.streamScope,
       store.pages.updateStreamScope,
     ]);
-  const isPathEditable = currGetPathValue?.kind === PropValueKind.Expression && currGetPathValue?.value === "document.slug";
+  const isPathEditable =
+    currGetPathValue?.kind === PropValueKind.Expression &&
+    currGetPathValue?.value === "document.slug";
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
@@ -42,15 +44,18 @@ export default function EntityPageModal({
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
-      url: isPathEditable ? {
-        description: "URL Slug",
-        optional: false,
-      } : {
-        description: "URL Slug",
-        optional: true,
-        placeholder: "<URL slug is not editable in Studio. Consult a developer>",
-        disabled: true,
-      },
+      url: isPathEditable
+        ? {
+            description: "URL Slug",
+            optional: false,
+          }
+        : {
+            description: "URL Slug",
+            optional: true,
+            placeholder:
+              "<URL slug is not editable in Studio. Consult a developer>",
+            disabled: true,
+          },
       ...streamScopeFormData,
     }),
     [isPathEditable]
