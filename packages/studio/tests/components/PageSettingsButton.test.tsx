@@ -216,9 +216,37 @@ async function editUndefinedURL(pageName: string, isEntityPage: boolean) {
 }
 
 it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
-  await editUndefinedURL("index", false);
+  const updateGetPathValueSpy = jest.spyOn(
+    useStudioStore.getState().pages,
+    "updateGetPathValue"
+  );
+  render(<PageSettingsButton pageName={"index"} />);
+  const pageSettingsButton = screen.getByRole("button");
+  await userEvent.click(pageSettingsButton);
+  const urlTextbox = screen.getByPlaceholderText(
+    "<URL slug is defined by developer>"
+  );
+  const testUrl = "test-url";
+  await userEvent.type(urlTextbox, testUrl);
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  await userEvent.click(saveButton);
+  const updatedUrl = testUrl;
+  expect(updateGetPathValueSpy).toBeCalledWith("index", {
+    kind: PropValueKind.Literal,
+    value: updatedUrl,
+  });
+  await userEvent.click(pageSettingsButton);
+  expect(urlTextbox).toHaveValue(testUrl);
 });
 
-it("displays URL placeholder and can edit URL when entity page's getPath value is undefined", async () => {
-  await editUndefinedURL("fruits", true);
+it("displays URL placeholder and cannot edit URL when entity page's getPath value isn't document.slug", async () => {
+  render(<PageSettingsButton pageName={"fruits"} />);
+  const pageSettingsButton = screen.getByRole("button");
+  await userEvent.click(pageSettingsButton);
+  const urlTextbox = screen.getByPlaceholderText(
+    "<URL slug is not editable in Studio. Consult a developer>"
+  );
+  expect(urlTextbox).toBeDisabled();
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  expect(saveButton).toBeDisabled();
 });
