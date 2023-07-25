@@ -156,29 +156,25 @@ describe("Checks that missing props are in an error state", () => {
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
-
-  // IS IT POSSIBLE TO HAVE AN UNDEFINED EXPRESSION?
-
-  // it("only checks that expressions are not undefined", () => {
-  //   const propShape: PropShape = {
-  //     title: {
-  //       type: PropValueType.string,
-  //       doc: "jsdoc",
-  //       required: true,
-  //     },
-  //   };
-  //   const propVal: PropValues = {
-  //     title: {
-  //       kind: PropValueKind.Expression,
-  //       valueType: PropValueType.string,
-  //       value: ''
-  //     }
-  //   };
-  //   const missingPropsReceived = MissingPropsChecker.getMissingRequiredProps(
-  //     propVal,
-  //     propShape
-  //   );
-  //   const missingPropsExpected = ["title"];
-  //   expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
-  // }) 
+  it("cannot perform validation on expressions", () => {
+    const propShape: PropShape = {
+      title: {
+        type: PropValueType.string,
+        doc: "jsdoc",
+        required: true,
+      },
+    };
+    const propVal: PropValues = {
+      title: {
+        kind: PropValueKind.Expression,
+        valueType: PropValueType.string,
+      }
+    };
+    const missingPropsReceived = MissingPropsChecker.getMissingRequiredProps(
+      propVal,
+      propShape
+    );
+    const missingPropsExpected = [];
+    expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
+  }) 
 });
