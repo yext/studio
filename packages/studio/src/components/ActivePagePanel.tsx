@@ -118,7 +118,7 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
 
   return (
     <ListItem additionalClassNames="text-red-300">
-      <div id={anchorId}>
+      <div className="flex items-center overflow-auto" id={anchorId}>
         <Tooltip
           anchorSelect={`#${anchorId}`}
           content={errorMessage}
