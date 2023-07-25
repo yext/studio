@@ -165,7 +165,7 @@ describe("Checks that missing props are in an error state", () => {
       title: {
         kind: PropValueKind.Expression, 
         valueType: PropValueType.string,
-        value: undefined
+        value: "document.nothing"
       }
     };
     const missingPropsReceived = MissingPropsChecker.getMissingRequiredProps(
