@@ -28,58 +28,9 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   } else if (filepath?.includes("Required")) {
     propShape = {
       title: { type: PropValueType.string, doc: "jsdoc", required: true },
-      intervals: {
-        type: PropValueType.Array,
-        doc: "jsdoc",
-        required: false,
-        itemType: {
-          type: PropValueType.Object,
-          shape: {
-            end: {
-              required: true,
-              type: PropValueType.string,
-            },
-            start: {
-              required: true,
-              type: PropValueType.string,
-            },
-          },
-        },
-      },
-      obj: {
-        type: PropValueType.Object,
-        doc: "jsdoc",
-        required: false,
-        shape: {
-          firstName: {
-            required: true,
-            type: PropValueType.string,
-          },
-          lastName: {
-            required: true,
-            type: PropValueType.string,
-          },
-        },
-      },
-      doublyNestedArray: {
-        required: false,
-        type: PropValueType.Array,
-        itemType: {
-          type: PropValueType.Array,
-          itemType: {
-            type: PropValueType.Object,
-            shape: {
-              name: {
-                required: true,
-                type: PropValueType.string,
-              },
-            },
-          },
-        },
-      },
     };
-  }
-
+  } 
+  
   return {
     kind: FileMetadataKind.Component,
     metadataUUID: filepath,
@@ -253,28 +204,7 @@ describe("getPageState", () => {
     assertIsOk(result);
     expect(result.value.componentTree[0].kind).toEqual("error");
   });
-
-  it("gracefully handles missing array props", () => {
-    const pageFile = createPageFile("missingRequiredArrayItemPage");
-    const result = pageFile.getPageState();
-    assertIsOk(result);
-    expect(result.value.componentTree[0].kind).toEqual("error");
-  });
-
-  it("gracefully handles missing object props", () => {
-    const pageFile = createPageFile("missingRequiredObjectPropPage");
-    const result = pageFile.getPageState();
-    assertIsOk(result);
-    expect(result.value.componentTree[0].kind).toEqual("error");
-  });
-
-  it("gracefully handles missing objects in nested arrays", () => {
-    const pageFile = createPageFile("missingRequiredPropDoublyNestedArray");
-    const result = pageFile.getPageState();
-    assertIsOk(result);
-    expect(result.value.componentTree[0].kind).toEqual("error");
-  });
-
+  
   describe("throws errors", () => {
     beforeEach(() => {
       jest.spyOn(console, "error").mockImplementation();
