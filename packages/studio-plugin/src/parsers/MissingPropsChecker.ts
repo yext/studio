@@ -10,7 +10,8 @@ import {
 export default class MissingPropsChecker {
   static getMissingRequiredProps(
     propValues: PropValues,
-    propShape: PropShape | undefined
+    propShape: PropShape | undefined,
+    path?: string
   ): string[] {
     if (!propShape) {
       return [];
@@ -19,19 +20,22 @@ export default class MissingPropsChecker {
     return Object.keys(propShape).flatMap((propName) => {
       const propVal = propValues[propName];
       const propMetadata = propShape[propName];
+      const pathToPropName = path ? this.getExtendedFieldPath(path, propName) : propName
       if (propVal === undefined) {
         if (propMetadata.required) {
-          return propName;
+          return pathToPropName;
         }
         return [];
       }
-      return this.getMissingFieldsFromProp(propVal, propMetadata);
+
+      return this.getMissingFieldsFromProp(propVal, propMetadata, pathToPropName);
     });
   }
 
   private static getMissingFieldsFromProp(
     propVal: PropVal,
-    propMetadata: PropType
+    propMetadata: PropType,
+    path: string
   ): string[] {
     if (propVal.kind === PropValueKind.Expression) {
       return [];
@@ -43,14 +47,18 @@ export default class MissingPropsChecker {
     ) {
       const itemType: PropType = propMetadata.itemType;
       return propVal.value.flatMap((val) => {
-        return this.getMissingFieldsFromProp(val, itemType);
+        return this.getMissingFieldsFromProp(val, itemType, path);
       });
     } else if (
       propVal.valueType === PropValueType.Object &&
       propMetadata.type === PropValueType.Object
     ) {
-      return this.getMissingRequiredProps(propVal.value, propMetadata.shape);
+      return this.getMissingRequiredProps(propVal.value, propMetadata.shape, path);
     }
     return [];
+  }
+
+  private static getExtendedFieldPath(currentPath: string, newPropName: string): string {
+    return currentPath.concat('.').concat(newPropName)
   }
 }

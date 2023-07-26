@@ -9,7 +9,7 @@ import {
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import { useCallback } from "react";
-import ObjectPropEditors from "./NestedPropEditors";
+import ObjectPropEditor from "./ObjectPropEditors";
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
 import UndefinedMenuButton from "./UndefinedMenuButton";
@@ -112,7 +112,7 @@ export function renderPropEditor(
     }
 
     return (
-      <ObjectPropEditors
+      <ObjectPropEditor
         propValues={propVal?.value}
         propType={propMetadata}
         propName={propName}
