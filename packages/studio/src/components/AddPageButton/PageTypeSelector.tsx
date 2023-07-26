@@ -29,14 +29,16 @@ export default function PageTypeSelector({
       <div className="ml-4">
         {Object.values(PageType).map((pageType) => (
           <div key={pageType}>
-            <input
-              type="radio"
-              className="mr-2"
-              onChange={onChange}
-              checked={pageType === PageType.Static ? isStatic : !isStatic}
-              name={pageType}
-            />
-            {pageType} Page
+            <label>
+              <input
+                type="radio"
+                className="mr-2"
+                onChange={onChange}
+                checked={pageType === PageType.Static ? isStatic : !isStatic}
+                name={pageType}
+              />
+              {pageType} Page
+            </label>
           </div>
         ))}
       </div>

@@ -3,7 +3,8 @@
   "compilerOptions": {
     "module": "ESNext",
     "outDir": "lib/bin",
-    "types": ["node"]
+    "types": ["node"],
+    "noEmit": false
   },
   "include": ["bin"]
 }
