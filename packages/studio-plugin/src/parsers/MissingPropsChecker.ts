@@ -53,7 +53,7 @@ export default class MissingPropsChecker {
     ) {
       const itemType: PropType = propMetadata.itemType;
       return propVal.value.flatMap((val, index) => {
-        const pathWithArrayIndex = `${path}[${index}]`
+        const pathWithArrayIndex = `${path}[${index}]`;
         return this.getMissingFieldsFromProp(val, itemType, pathWithArrayIndex);
       });
     } else if (
@@ -73,6 +73,6 @@ export default class MissingPropsChecker {
     currentPath: string,
     propName: string
   ): string {
-    return `${currentPath}.${propName}`
+    return `${currentPath}.${propName}`;
   }
 }
