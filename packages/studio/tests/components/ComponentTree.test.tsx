@@ -3,7 +3,7 @@ import useStudioStore from "../../src/store/useStudioStore";
 import userEvent from "@testing-library/user-event";
 import ComponentTree from "../../src/components/ComponentTree";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
-import { ComponentStateKind } from "@yext/studio-plugin";
+import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
 
 it("removes the page when page delete button is clicked", async () => {
   mockStoreActiveComponent({
@@ -14,18 +14,22 @@ it("removes the page when page delete button is clicked", async () => {
       uuid: "mock-uuid-1",
       metadataUUID: "mock-metadata-uuid-1",
     },
+    activeComponentMetadata: {
+      kind: FileMetadataKind.Component,
+      metadataUUID: "mock-metadata-uuid-1",
+      filepath: "mock-filepath",
+    }
   });
   const removeComponentSpy = jest.spyOn(
     useStudioStore.getState().actions,
     "removeComponent"
   );
 
-  render(<ComponentTree />); // ERROR HERE
-  // const componentElement = screen.getByText("name");
+  render(<ComponentTree />);
   const removeComponentButton = screen.getByRole("button", {
     name: "Remove Element",
   });
-  // await userEvent.click(componentElement);
+  expect(useStudioStore.getState().pages.activeComponentUUID).toBeDefined();
   await userEvent.click(removeComponentButton);
   expect(removeComponentSpy).toBeCalledWith("mock-uuid-1");
   expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
