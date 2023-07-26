@@ -206,7 +206,7 @@ export default class ComponentTreeParser {
         metadataUUID: fileMetadata.metadataUUID,
         uuid: v4(),
         fullText: component.getFullText(),
-        message: "Props missing: " + missingPropsString,
+        message: "Prop(s) missing: " + missingPropsString,
         props,
       };
     }
