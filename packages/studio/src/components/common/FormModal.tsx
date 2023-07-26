@@ -183,7 +183,7 @@ function FormField({
         type="text"
         className="border border-gray-500 rounded-lg mt-2 mb-4 px-2 py-1 w-full"
         placeholder={placeholder}
-        value={disabled ? "" : value}
+        value={value}
         onChange={handleChange}
         disabled={disabled}
       />
