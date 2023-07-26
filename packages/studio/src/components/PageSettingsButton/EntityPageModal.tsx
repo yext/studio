@@ -45,8 +45,9 @@ export default function EntityPageModal({
       url: {
         description: "URL Slug",
         optional: isPathUndefined,
-        placeholder: isPathUndefined ? 
-          "<URL slug is not editable in Studio. Consult a developer>" : "",
+        placeholder: isPathUndefined
+          ? "<URL slug is not editable in Studio. Consult a developer>"
+          : "",
         disabled: isPathUndefined,
       },
       ...streamScopeFormData,
