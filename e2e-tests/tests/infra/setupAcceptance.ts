@@ -98,6 +98,7 @@ function createTempWorkingDir(testInfo: TestInfo) {
   };
   copy("src");
   copy("localData");
+  copy("sites-config");
   copy("studio.config.js");
   return tmpDir;
 }

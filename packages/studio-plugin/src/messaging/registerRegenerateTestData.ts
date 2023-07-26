@@ -23,8 +23,7 @@ export default function registerRegenerateTestData(
       const entityFeature = getEntityFeature(pageName, streamId);
       const featuresJson = readFeaturesJson(pathToUserProjectRoot);
 
-      regenerateTestData(stream, entityFeature, featuresJson);
-      return "Successfully regenerated test data";
+      return regenerateTestData(stream, entityFeature, featuresJson);
     }
   );
 }
@@ -75,7 +74,7 @@ function regenerateTestData(
 ) {
   featuresJson.streams.push(stream);
   featuresJson.features.push(entityFeature);
-  generateTestData(featuresJson);
+  return generateTestData(featuresJson);
 }
 
 /**
@@ -83,7 +82,7 @@ function regenerateTestData(
  */
 function generateTestData(featuresJson: FeaturesJson) {
   const stringifiedFeaturesJson = `'${JSON.stringify(featuresJson)}'`;
-  spawnSync(
+  const output = spawnSync(
     "yext",
     [
       "pages",
@@ -98,6 +97,10 @@ function generateTestData(featuresJson: FeaturesJson) {
       windowsVerbatimArguments: true,
     }
   );
+  if (output.status !== 0) {
+    return "Could not generate test data, but page was still created.";
+  }
+  return "Successfully regenerated test data.";
 }
 
 interface FeaturesJson {
