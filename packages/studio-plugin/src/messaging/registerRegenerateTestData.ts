@@ -81,7 +81,15 @@ function regenerateTestData(
  * Spawns a `yext pages generate-test-data -a` call with the given FeaturesJson.
  */
 function generateTestData(featuresJson: FeaturesJson) {
-  const stringifiedFeaturesJson = `'${JSON.stringify(featuresJson)}'`;
+  const prepareJsonForCmd = (json: FeaturesJson) => {
+    if (process.platform === "win32") {
+      return `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`;
+    } else {
+      return `'${JSON.stringify(json)}'`;
+    }
+  };
+  const stringifiedFeaturesJson = prepareJsonForCmd(featuresJson);
+
   const output = spawnSync(
     "yext",
     [
@@ -97,6 +105,7 @@ function generateTestData(featuresJson: FeaturesJson) {
       windowsVerbatimArguments: true,
     }
   );
+
   if (output.status !== 0) {
     return "Could not generate test data, but page was still created.";
   }
