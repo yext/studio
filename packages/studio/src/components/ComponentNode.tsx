@@ -6,7 +6,7 @@ import {
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useRef } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
@@ -41,6 +41,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
   const anchorId = `ComponentNode-${componentState.uuid}`;
+  const componentNodeRef = useRef<HTMLDivElement>(null);
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
@@ -49,8 +50,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleClick = useCallback(() => {
     setActiveComponentUUID(componentState.uuid);
-    document.getElementById(anchorId)?.focus();
-  }, [componentState.uuid, setActiveComponentUUID, anchorId]);
+    componentNodeRef.current?.focus();
+  }, [componentState.uuid, setActiveComponentUUID]);
 
   const componentNodeStyle = useMemo(
     () => ({ paddingLeft: `${depth}em` }),
@@ -78,6 +79,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         className="flex grow items-center cursor-pointer"
         onClick={handleClick}
         tabIndex={0}
+        ref={componentNodeRef}
         id={anchorId}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
