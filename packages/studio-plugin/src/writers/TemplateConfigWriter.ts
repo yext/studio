@@ -2,6 +2,7 @@ import { TemplateConfig } from "@yext/pages";
 import { ArrowFunction, FunctionDeclaration } from "ts-morph";
 import {
   PAGESJS_TEMPLATE_PROPS_TYPE,
+  STREAM_LOCALIZATION,
   TEMPLATE_CONFIG_VARIABLE_NAME,
 } from "../constants";
 import { ComponentState } from "../types/ComponentState";
@@ -82,10 +83,7 @@ export default class TemplateConfigWriter {
       ...currentTemplateConfig,
       stream: {
         $id: "studio-stream-id",
-        localization: {
-          locales: ["en"],
-          primary: false,
-        },
+        localization: STREAM_LOCALIZATION,
         ...currentTemplateConfig?.stream,
         filter: entityPageState.streamScope,
         fields: pagesJSFieldsMerger(currentFields, newFields),

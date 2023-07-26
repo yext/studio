@@ -5,6 +5,7 @@ import upath from "upath";
 import { registerListener } from "./registerListener";
 import { ViteDevServer } from "vite";
 import { MessageID, RegenerateTestDataPayload, StreamScope } from "../types";
+import { STREAM_LOCALIZATION } from '../constants';
 
 /**
  * Registers a listener for regenerating test data.
@@ -34,10 +35,7 @@ function getStreamFromStreamScope(
 ): Stream {
   return {
     $id: streamId,
-    localization: {
-      locales: ["en"],
-      primary: false,
-    },
+    localization: STREAM_LOCALIZATION,
     filter: streamScope,
     // We will be requesting all fields with the `-a` flag.
     fields: ["meta"],
@@ -52,9 +50,7 @@ function getEntityFeature(pageName: string, streamId: string): EntityFeature {
     name: pageName,
     streamId: streamId,
     templateType: "JS",
-    entityPageSet: {
-      plugin: {},
-    },
+    entityPageSet: {},
   };
 }
 
@@ -119,9 +115,7 @@ interface FeaturesJson {
 
 type Feature = EntityFeature | StaticFeature;
 interface EntityFeature extends FeatureBase {
-  entityPageSet: {
-    plugin: Record<string, never>;
-  };
+  entityPageSet: Record<string, never>
 }
 interface StaticFeature extends FeatureBase {
   staticPage: {
