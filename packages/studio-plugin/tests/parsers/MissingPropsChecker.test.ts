@@ -23,13 +23,17 @@ describe("Checks that missing props are in an error state", () => {
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
-  it("detects a missing required prop inside object", () => {
+  it("detects missing required props inside object", () => {
     const propShape: PropShape = {
       obj: {
         type: PropValueType.Object,
         required: false,
         shape: {
           firstName: {
+            required: true,
+            type: PropValueType.string,
+          },
+          middleName: {
             required: true,
             type: PropValueType.string,
           },
@@ -57,11 +61,11 @@ describe("Checks that missing props are in an error state", () => {
       propVal,
       propShape
     );
-    const missingPropsExpected = ["obj.lastName"];
+    const missingPropsExpected = ["obj.middleName", "obj.lastName"];
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
-  it("can detect more than one missing required prop within an object in an array", () => {
+  it("detects a missing required prop within an object in an array", () => {
     const propShape: PropShape = {
       names: {
         required: false,
@@ -91,18 +95,7 @@ describe("Checks that missing props are in an error state", () => {
             valueType: PropValueType.Object,
             value: {
               first: {
-                value: "Al",
-                kind: PropValueKind.Literal,
-                valueType: PropValueType.string,
-              },
-            },
-          },
-          {
-            kind: PropValueKind.Literal,
-            valueType: PropValueType.Object,
-            value: {
-              last: {
-                value: "Dente",
+                value: "John",
                 kind: PropValueKind.Literal,
                 valueType: PropValueType.string,
               },
@@ -115,7 +108,7 @@ describe("Checks that missing props are in an error state", () => {
       propVal,
       propShape
     );
-    const missingPropsExpected = ["names[0].last", "names[1].first"];
+    const missingPropsExpected = ["names[0].last"];
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
