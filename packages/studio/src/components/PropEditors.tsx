@@ -9,7 +9,7 @@ import {
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import { useCallback } from "react";
-import ObjectPropEditor from "./ObjectPropEditors";
+import ObjectPropEditor from "./ObjectPropEditor"; 
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
 import UndefinedMenuButton from "./UndefinedMenuButton";
