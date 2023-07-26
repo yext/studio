@@ -70,8 +70,8 @@ export default class MissingPropsChecker {
 
   private static getExtendedFieldPath(
     currentPath: string,
-    newPropName: string
+    propName: string
   ): string {
-    return currentPath.concat(".").concat(newPropName);
+    return currentPath.concat(".").concat(propName);
   }
 }
