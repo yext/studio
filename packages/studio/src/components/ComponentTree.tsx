@@ -12,7 +12,7 @@ import {
   Tree,
 } from "@minoru/react-dnd-treeview";
 import { ComponentState, TypeGuards } from "@yext/studio-plugin";
-import { useCallback, useMemo, useState, useEffect } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
