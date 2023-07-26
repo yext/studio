@@ -52,8 +52,9 @@ export default class MissingPropsChecker {
       propMetadata.type === PropValueType.Array
     ) {
       const itemType: PropType = propMetadata.itemType;
-      return propVal.value.flatMap((val) => {
-        return this.getMissingFieldsFromProp(val, itemType, path);
+      return propVal.value.flatMap((val, index) => {
+        const pathWithArrayIndex = path.concat("[").concat(String(index)).concat("]")
+        return this.getMissingFieldsFromProp(val, itemType, pathWithArrayIndex);
       });
     } else if (
       propVal.valueType === PropValueType.Object &&

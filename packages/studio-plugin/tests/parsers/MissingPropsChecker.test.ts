@@ -104,7 +104,7 @@ describe("Checks that missing props are in an error state", () => {
       propVal,
       propShape
     );
-    const missingPropsExpected = ["names.last"];
+    const missingPropsExpected = ["names[0].last"];
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
@@ -150,7 +150,7 @@ describe("Checks that missing props are in an error state", () => {
       propVal,
       propShape
     );
-    const missingPropsExpected = ["doublyNestedArray.name"];
+    const missingPropsExpected = ["doublyNestedArray[0][0].name"];
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
