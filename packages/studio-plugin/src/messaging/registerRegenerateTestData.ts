@@ -5,7 +5,7 @@ import upath from "upath";
 import { registerListener } from "./registerListener";
 import { ViteDevServer } from "vite";
 import { MessageID, RegenerateTestDataPayload, StreamScope } from "../types";
-import { STREAM_LOCALIZATION } from '../constants';
+import { STREAM_LOCALIZATION } from "../constants";
 
 /**
  * Registers a listener for regenerating test data.
@@ -115,7 +115,7 @@ interface FeaturesJson {
 
 type Feature = EntityFeature | StaticFeature;
 interface EntityFeature extends FeatureBase {
-  entityPageSet: Record<string, never>
+  entityPageSet: Record<string, never>;
 }
 interface StaticFeature extends FeatureBase {
   staticPage: {
