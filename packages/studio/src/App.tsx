@@ -3,8 +3,10 @@ import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
 import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
+import useKeyListener from "./hooks/useKeyListener";
 
 export default function App() {
+  useKeyListener();
   return (
     <div className="App">
       <Toast />
