@@ -30,34 +30,28 @@ export default function EntityPageModal({
       store.pages.pages[pageName].pagesJS?.streamScope,
       store.pages.updateStreamScope,
     ]);
-  const isPathEditable =
-    currGetPathValue?.kind === PropValueKind.Expression &&
-    currGetPathValue?.value === "document.slug";
+  const isPathUndefined = !currGetPathValue;
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
-      url: isPathEditable ? getUrlDisplayValue(currGetPathValue) : "",
+      url: getUrlDisplayValue(currGetPathValue),
       ...StreamScopeParser.convertStreamScopeToForm(streamScope),
     }),
-    [currGetPathValue, streamScope, isPathEditable]
+    [currGetPathValue, streamScope]
   );
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
-      url: isPathEditable
-        ? {
-            description: "URL Slug",
-          }
-        : {
-            description: "URL Slug",
-            optional: true,
-            placeholder:
-              "<URL slug is not editable in Studio. Consult a developer>",
-            disabled: true,
-          },
+      url: {
+        description: "URL Slug",
+        optional: isPathUndefined,
+        placeholder: isPathUndefined ? 
+          "<URL slug is not editable in Studio. Consult a developer>" : "",
+        disabled: isPathUndefined,
+      },
       ...streamScopeFormData,
     }),
-    [isPathEditable]
+    [isPathUndefined]
   );
 
   const handleModalSave = useCallback(
