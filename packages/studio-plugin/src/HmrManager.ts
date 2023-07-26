@@ -21,8 +21,9 @@ export default class HmrManager {
   }
 
   /**
-   * If the file can be recognized as one of the user's src files,
-   * update the StudioData and send a custom HMR event to the frontend.
+   * A custom handler for vite hot updates.
+   *
+   * See import('vite').Plugin.handleHotUpdate
    */
   async handleHotUpdate(ctx: HmrContext) {
     const { server, file } = ctx;
