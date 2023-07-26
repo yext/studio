@@ -16,7 +16,7 @@ export interface BannerData {
 
 export const initialProps: BannerData = {
   bgColor: "#abcdef",
-  num: 5,
+  num: 53,
   bool: true,
   title: "initial title",
 };
