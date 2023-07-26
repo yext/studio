@@ -16,6 +16,7 @@ import { useCallback, useMemo, useState } from "react";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
+import useKeyListener from "../hooks/useKeyListener";
 
 const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
@@ -71,6 +72,8 @@ export default function ComponentTree(): JSX.Element | null {
     },
     [onToggle]
   );
+
+  useKeyListener();
 
   if (!tree) {
     return null;
