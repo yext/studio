@@ -1,28 +1,21 @@
-import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
-import useStudioStore from "../store/useStudioStore";
-import filterEntityData from "../utils/filterEntityData";
+import { TypeGuards } from "@yext/studio-plugin";
 import Divider from "./common/Divider";
-import RepeaterEditor from "./RepeaterEditor";
+import useActiveComponent from "../hooks/useActiveComponent";
+import MessageBubble from "./common/MessageBubble";
 
 export default function RepeaterPanel() {
-  const entityHasArrayFields = useStudioStore((store) => {
-    const filteredData = filterEntityData(
-      Array.isArray,
-      store.pages.activeEntityData
-    );
-    return Object.keys(filteredData).length > 0;
-  });
-
-  const activeComponentWithProps = useActiveComponentWithProps();
-  if (!activeComponentWithProps || !entityHasArrayFields) {
+  const { activeComponentState } = useActiveComponent();
+  if (
+    !activeComponentState ||
+    !TypeGuards.isRepeaterState(activeComponentState)
+  ) {
     return null;
   }
 
-  const { activeComponentState } = activeComponentWithProps;
   return (
     <div className="mt-6">
       <Divider />
-      <RepeaterEditor componentState={activeComponentState} />
+      <MessageBubble message="This component is repeated in a list. Please contact a developer to edit the list settings." />
     </div>
   );
 }
