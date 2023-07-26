@@ -25,11 +25,11 @@ export default class MissingPropsChecker {
         }
         return [];
       }
-      return this.handleArrayAndObjectProps(propVal, propMetadata);
+      return this.getMissingFieldsFromProp(propVal, propMetadata);
     });
   }
 
-  private static handleArrayAndObjectProps(
+  private static getMissingFieldsFromProp(
     propVal: PropVal,
     propMetadata: PropType
   ): string[] {
@@ -43,7 +43,7 @@ export default class MissingPropsChecker {
     ) {
       const itemType: PropType = propMetadata.itemType;
       return propVal.value.flatMap((val) => {
-        return this.handleArrayAndObjectProps(val, itemType);
+        return this.getMissingFieldsFromProp(val, itemType);
       });
     } else if (
       propVal.valueType === PropValueType.Object &&

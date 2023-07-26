@@ -10,7 +10,7 @@ import PropEditors from "./PropEditors";
 import { renderBranchUI } from "./PropEditor";
 import classNames from "classnames";
 
-export default function NestedPropEditors(props: {
+export default function ObjectPropEditors(props: {
   propValues?: PropValues;
   propType: ObjectPropType;
   propName: string;
