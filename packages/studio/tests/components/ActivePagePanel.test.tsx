@@ -3,9 +3,8 @@ import ActivePagePanel from "../../src/components/ActivePagePanel";
 import { mockPageSliceStates } from "../__utils__/mockPageSliceState";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
-import { ComponentStateKind, PageState, PropValueKind } from "@yext/studio-plugin";
+import { PageState, PropValueKind } from "@yext/studio-plugin";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
-import RemovableElement from "../../src/components/RemovableElement";
 import userEvent from "@testing-library/user-event";
 
 
