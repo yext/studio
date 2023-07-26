@@ -3,7 +3,7 @@ import {
   SiteSettingsValues,
   SiteSettingsShape,
   ObjectProp,
-  NestedPropType,
+  ObjectPropType,
   TypeGuards,
   PropValueKind,
   SiteSettingsPropValueType,
@@ -97,7 +97,7 @@ function renderSiteSettings(
  */
 function RecursiveGroup(props: {
   propVal: ObjectProp<SiteSettingsValues>;
-  propType: NestedPropType<SiteSettingsPropValueType>;
+  propType: ObjectPropType<SiteSettingsPropValueType>;
   updateValues: (propName: string, updatedProp: SiteSettingsVal) => void;
   propName: string;
 }) {

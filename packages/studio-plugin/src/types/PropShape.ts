@@ -21,7 +21,7 @@ export type PropMetadata<T extends PropValueType = PropValueType> =
   };
 
 export type PropType<T extends PropValueType = PropValueType> =
-  | NestedPropType<T>
+  | ObjectPropType<T>
   | NonUnionPropType<T>
   | StringUnionPropType
   | (PropValueType.Record extends T ? RecordPropType : never)
@@ -51,7 +51,7 @@ type StringUnionPropType = {
   unionValues?: string[];
 };
 
-export type NestedPropType<T extends PropValueType = PropValueType> = {
+export type ObjectPropType<T extends PropValueType = PropValueType> = {
   type: PropValueType.Object;
   shape: PropShape<T>;
   unionValues?: never;
