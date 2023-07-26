@@ -9,7 +9,6 @@ import {
   PageState,
   PagesJsState,
   PropValues,
-  RepeaterState,
   StreamScope,
   TypeGuards,
 } from "@yext/studio-plugin";
@@ -22,7 +21,6 @@ import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
-import RepeaterActions from "./StudioActions/RepeaterActions";
 import AddComponentAction from "./StudioActions/AddComponentAction";
 import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
@@ -30,8 +28,6 @@ import ImportComponentAction from "./StudioActions/ImportComponentAction";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
 
 export default class StudioActions {
-  public addRepeater: RepeaterActions["addRepeater"];
-  public removeRepeater: RepeaterActions["removeRepeater"];
   public addComponent: AddComponentAction["addComponent"];
   public createComponentState: CreateComponentStateAction["createComponentState"];
   public updateActivePage: UpdateActivePageAction["updateActivePage"];
@@ -44,9 +40,6 @@ export default class StudioActions {
     private getPreviousSave: () => PreviousSaveSlice,
     private getStudioConfig: () => StudioConfigSlice
   ) {
-    const repeaterActions = new RepeaterActions(this);
-    this.addRepeater = repeaterActions.addRepeater;
-    this.removeRepeater = repeaterActions.removeRepeater;
     this.addComponent = new AddComponentAction(this).addComponent;
     this.createComponentState =
       new CreateComponentStateAction().createComponentState;
@@ -133,14 +126,6 @@ export default class StudioActions {
       activeComponentState.uuid,
       updatedComponentState
     );
-  };
-
-  updateRepeaterListExpression = (
-    listExpression: string,
-    repeaterState: RepeaterState
-  ) => {
-    const updatedComponentState = { ...repeaterState, listExpression };
-    this.replaceComponentState(repeaterState.uuid, updatedComponentState);
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {

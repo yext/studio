@@ -9,6 +9,8 @@ import {
 import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
+import { v4 } from "uuid";
+import { useMemo } from "react";
 
 interface PropEditorProps {
   propName: string;
@@ -34,13 +36,15 @@ export default function PropEditor({
 }: PropEditorProps) {
   const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
+  const uniqueId = useMemo(() => v4(), []);
+  const labelTooltipId = `${uniqueId}-label`;
 
   return (
     <div className="flex items-center mb-2 text-sm">
       {renderBranchUI(isNested)}
       <label
         className="flex h-10 items-center justify-self-start"
-        id={propName}
+        id={labelTooltipId}
       >
         <p className="pr-2">{propName}</p>
         <PropInput
@@ -58,7 +62,7 @@ export default function PropEditor({
       {doc && (
         <Tooltip
           style={tooltipStyle}
-          anchorId={propName}
+          anchorId={labelTooltipId}
           content={doc}
           place="top"
         />

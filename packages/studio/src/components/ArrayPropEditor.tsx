@@ -9,13 +9,14 @@ import {
 } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 import { renderBranchUI } from "./PropEditor";
 import { renderPropEditor } from "./PropEditors";
 import { ReactComponent as Plus } from "../icons/plus.svg";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import classNames from "classnames";
 import RemovableElement from "./RemovableElement";
+import { v4 } from "uuid";
 
 interface ArrayPropEditorProps {
   propName: string;
@@ -40,6 +41,7 @@ export default function ArrayPropEditor({
 }: ArrayPropEditorProps) {
   const value = getEditorValue(propValue);
   const isExpression = typeof value === "string";
+  const uniqueId = useMemo(() => v4(), []);
 
   const fieldPickerFilter = useCallback(
     (value: unknown) => TypeGuards.valueMatchesPropType(propMetadata, value),
@@ -60,8 +62,8 @@ export default function ArrayPropEditor({
     "mb-2": !isNested,
   });
 
-  const docTooltipId = `${propName}-doc`;
-  const inputTooltipId = `${propName}-input`;
+  const docTooltipId = `${uniqueId}-doc`;
+  const inputTooltipId = `${uniqueId}-input`;
   const isUndefinedValue = propValue === undefined;
 
   return (
