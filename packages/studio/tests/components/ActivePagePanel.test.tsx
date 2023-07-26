@@ -7,7 +7,6 @@ import { PageState, PropValueKind } from "@yext/studio-plugin";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
 import userEvent from "@testing-library/user-event";
 
-
 const basePageState: PageState = {
   componentTree: [],
   cssImports: [],
@@ -65,13 +64,15 @@ it("renders page settings button in PagesJS repo", () => {
 });
 
 it("removes the page when page delete button is clicked", async () => {
-  mockPageSliceStates({ pages: { Universal: basePageState } })
+  mockPageSliceStates({ pages: { Universal: basePageState } });
   const removePageSpy = jest.spyOn(
     useStudioStore.getState().pages,
     "removePage"
   );
   render(<ActivePagePanel />);
-  const removePageButton = screen.getByRole("button", {name: "Remove Element"});
+  const removePageButton = screen.getByRole("button", {
+    name: "Remove Element",
+  });
   await userEvent.click(removePageButton);
   expect(useStudioStore.getState().pages.pages["Universal"]).toBeDefined();
   const deleteButton = screen.getByRole("button", { name: "Delete" });
