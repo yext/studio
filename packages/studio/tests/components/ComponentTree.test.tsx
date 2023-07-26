@@ -18,7 +18,7 @@ it("removes the page when page delete button is clicked", async () => {
       kind: FileMetadataKind.Component,
       metadataUUID: "mock-metadata-uuid-1",
       filepath: "mock-filepath",
-    }
+    },
   });
   const removeComponentSpy = jest.spyOn(
     useStudioStore.getState().actions,
