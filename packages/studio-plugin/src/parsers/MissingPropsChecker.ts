@@ -20,7 +20,9 @@ export default class MissingPropsChecker {
     return Object.keys(propShape).flatMap((propName) => {
       const propVal = propValues[propName];
       const propMetadata = propShape[propName];
-      const pathToPropName = path ? this.getExtendedFieldPath(path, propName) : propName
+      const pathToPropName = path
+        ? this.getExtendedFieldPath(path, propName)
+        : propName;
       if (propVal === undefined) {
         if (propMetadata.required) {
           return pathToPropName;
@@ -28,7 +30,11 @@ export default class MissingPropsChecker {
         return [];
       }
 
-      return this.getMissingFieldsFromProp(propVal, propMetadata, pathToPropName);
+      return this.getMissingFieldsFromProp(
+        propVal,
+        propMetadata,
+        pathToPropName
+      );
     });
   }
 
@@ -53,12 +59,19 @@ export default class MissingPropsChecker {
       propVal.valueType === PropValueType.Object &&
       propMetadata.type === PropValueType.Object
     ) {
-      return this.getMissingRequiredProps(propVal.value, propMetadata.shape, path);
+      return this.getMissingRequiredProps(
+        propVal.value,
+        propMetadata.shape,
+        path
+      );
     }
     return [];
   }
 
-  private static getExtendedFieldPath(currentPath: string, newPropName: string): string {
-    return currentPath.concat('.').concat(newPropName)
+  private static getExtendedFieldPath(
+    currentPath: string,
+    newPropName: string
+  ): string {
+    return currentPath.concat(".").concat(newPropName);
   }
 }
