@@ -61,7 +61,7 @@ describe("Checks that missing props are in an error state", () => {
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
-  it("detects a missing required prop within an object in an array", () => {
+  it("can detect more than one missing required prop within an object in an array", () => {
     const propShape: PropShape = {
       names: {
         required: false,
@@ -91,7 +91,18 @@ describe("Checks that missing props are in an error state", () => {
             valueType: PropValueType.Object,
             value: {
               first: {
-                value: "John",
+                value: "Al",
+                kind: PropValueKind.Literal,
+                valueType: PropValueType.string,
+              },
+            },
+          },
+          {
+            kind: PropValueKind.Literal,
+            valueType: PropValueType.Object,
+            value: {
+              last: {
+                value: "Dente",
                 kind: PropValueKind.Literal,
                 valueType: PropValueType.string,
               },
@@ -104,7 +115,7 @@ describe("Checks that missing props are in an error state", () => {
       propVal,
       propShape
     );
-    const missingPropsExpected = ["names[0].last"];
+    const missingPropsExpected = ["names[0].last", "names[1].first"];
     expect(missingPropsReceived).toStrictEqual(missingPropsExpected);
   });
 
