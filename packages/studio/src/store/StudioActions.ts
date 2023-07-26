@@ -314,7 +314,7 @@ export default class StudioActions {
       filepath,
     };
     if (isPagesJSRepo && getPathValue) {
-      const pagesJsState: PagesJsState = { getPathValue };
+      const pagesJsState: PagesJsState = { getPathValue, streamScope };
       if (streamScope) {
         await this.regenerateTestData(streamScope, pageName);
         const mappingJsonPath = path.join(
