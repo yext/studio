@@ -36,8 +36,12 @@ export default class ImportComponentAction {
     await this.importStandardOrModuleComponentState(componentState);
   };
 
-  private importStandardOrModuleComponentState = async ( // maybe editable single componenent state? 
-    componentState: StandardOrModuleComponentState | NonrecoverableErrorComponentState | RecoverableErrorComponentState // ADDED RecoverableErrorComponentState
+  private importStandardOrModuleComponentState = async (
+    // maybe editable single componenent state?
+    componentState:
+      | StandardOrModuleComponentState
+      | NonrecoverableErrorComponentState
+      | RecoverableErrorComponentState // ADDED RecoverableErrorComponentState
   ) => {
     const { metadataUUID, componentName } = componentState;
     const { getFileMetadata, UUIDToImportedComponent } =

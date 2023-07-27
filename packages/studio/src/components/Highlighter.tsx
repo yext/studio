@@ -13,7 +13,8 @@ export default function Highlighter() {
   const componentName = useActiveComponentName();
   const isErrorState = useStudioStore(
     (store) =>
-      store.actions.getActiveComponentState()?.kind === ComponentStateKind.NonrecoverableError
+      store.actions.getActiveComponentState()?.kind ===
+      ComponentStateKind.NonrecoverableError
   );
   const red300 = "rgb(252 165 165)";
   const skyBlueFromMocks = "rgb(88,146,255)";

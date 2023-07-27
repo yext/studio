@@ -11,7 +11,8 @@ import PropValueHelpers from "../../utils/PropValueHelpers";
 export default class CreateComponentStateAction {
   createComponentState = (
     metadata: ValidFileMetadata
-  ): EditableSingleComponentState => { // MAYBE NOT NEED TO CHANGE
+  ): EditableSingleComponentState => {
+    // MAYBE NOT NEED TO CHANGE
     const componentName = path.basename(metadata.filepath, ".tsx");
     const componentState: EditableSingleComponentState = {
       kind:

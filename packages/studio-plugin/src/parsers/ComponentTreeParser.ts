@@ -124,7 +124,7 @@ export default class ComponentTreeParser {
         "Error parsing map expression: repetition of built-in components is not supported."
       );
     }
-    
+
     return {
       kind: ComponentStateKind.Repeater,
       listExpression,
@@ -143,7 +143,7 @@ export default class ComponentTreeParser {
     | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
     | Pick<BuiltInState, "kind" | "props">
     | Omit<NonrecoverableErrorComponentState, "componentName">
-    | Omit<RecoverableErrorComponentState, "componentName">  {
+    | Omit<RecoverableErrorComponentState, "componentName"> {
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
     )

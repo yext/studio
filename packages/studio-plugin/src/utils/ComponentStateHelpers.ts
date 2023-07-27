@@ -1,4 +1,8 @@
-import { ComponentState, NonrecoverableErrorComponentState, RepeaterState } from "../types";
+import {
+  ComponentState,
+  NonrecoverableErrorComponentState,
+  RepeaterState,
+} from "../types";
 import TypeGuards from "./TypeGuards";
 
 /**
