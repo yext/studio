@@ -24,15 +24,16 @@ export default function StaticPageModal({
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const validateURL = (input: string) => {
-    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g)
-    if(input.match(blackListURLChars)) {
+    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
+    if (input.match(blackListURLChars)) {
       throw new Error("URL slug contains invalid characters.");
     }
-  }
+  };
   const isPathEditable = useMemo(() => {
-    if(!currGetPathValue) return false;
-    try { validateURL(currGetPathValue.value) }
-    catch (error) {
+    if (!currGetPathValue) return false;
+    try {
+      validateURL(currGetPathValue.value);
+    } catch (error) {
       return false;
     }
     return true;
@@ -48,7 +49,9 @@ export default function StaticPageModal({
       url: {
         description: "URL Slug",
         optional: !isPathEditable,
-        placeholder: isPathEditable ? "" : "<URL slug is not editable in Studio. Consult a developer>",
+        placeholder: isPathEditable
+          ? ""
+          : "<URL slug is not editable in Studio. Consult a developer>",
         disabled: !isPathEditable,
       },
     }),
@@ -61,8 +64,9 @@ export default function StaticPageModal({
         kind: PropValueKind.Literal,
         value: form.url,
       };
-      try { validateURL(getPathValue.value); }
-      catch (error) {
+      try {
+        validateURL(getPathValue.value);
+      } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
           return false;

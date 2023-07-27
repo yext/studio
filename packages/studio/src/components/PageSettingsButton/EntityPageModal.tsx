@@ -1,7 +1,11 @@
 import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
-import { ExpressionHelpers, GetPathVal, PropValueKind } from "@yext/studio-plugin";
+import {
+  ExpressionHelpers,
+  GetPathVal,
+  PropValueKind,
+} from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
 import PropValueHelpers from "../../utils/PropValueHelpers";
 import StreamScopeParser, {
@@ -31,20 +35,21 @@ export default function EntityPageModal({
       store.pages.updateStreamScope,
     ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  
+
   const validateURL = (input: string) => {
-    if(ExpressionHelpers.usesExpressionSource(input, "document")) {
+    if (ExpressionHelpers.usesExpressionSource(input, "document")) {
       return;
     }
-    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g)
-    if(input.match(blackListURLChars)) {
+    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
+    if (input.match(blackListURLChars)) {
       throw new Error("URL slug contains invalid characters.");
     }
-  }
+  };
   const isPathEditable = useMemo(() => {
-    if(!currGetPathValue) return false;
-    try { validateURL(currGetPathValue.value) }
-    catch (error) {
+    if (!currGetPathValue) return false;
+    try {
+      validateURL(currGetPathValue.value);
+    } catch (error) {
       return false;
     }
     return true;
@@ -63,7 +68,9 @@ export default function EntityPageModal({
       url: {
         description: "URL Slug",
         optional: !isPathEditable,
-        placeholder: isPathEditable ? "" : "<URL slug is not editable in Studio. Consult a developer>",
+        placeholder: isPathEditable
+          ? ""
+          : "<URL slug is not editable in Studio. Consult a developer>",
         disabled: !isPathEditable,
       },
       ...streamScopeFormData,
@@ -77,8 +84,9 @@ export default function EntityPageModal({
         kind: PropValueKind.Expression,
         value: TemplateExpressionFormatter.getRawValue(form.url),
       };
-      try { validateURL(getPathValue.value); }
-      catch (error) {
+      try {
+        validateURL(getPathValue.value);
+      } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
           return false;

@@ -4,7 +4,6 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
-import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
 
 const basePageState: PageState = {
@@ -224,5 +223,7 @@ it("throws an error when user enters an invalid URL slug", async () => {
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
   expect(saveButton).toBeDisabled();
-  expect(screen.getByText("URL slug contains invalid characters.")).toBeDefined();
+  expect(
+    screen.getByText("URL slug contains invalid characters.")
+  ).toBeDefined();
 });
