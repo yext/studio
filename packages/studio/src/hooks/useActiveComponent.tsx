@@ -17,7 +17,7 @@ export default function useActiveComponent(): {
     const activeComponentState = store.actions.getActiveComponentState();
     const activeComponentMetadata =
       activeComponentState &&
-      (TypeGuards.isStandardOrModuleComponentState(activeComponentState) || TypeGuards.isRecoverableErrorState(activeComponentState))
+      (TypeGuards.isEditableSingleComponentState(activeComponentState))
         ? store.fileMetadatas.getFileMetadata(activeComponentState.metadataUUID)
         : activeComponentState?.kind === ComponentStateKind.Repeater
         ? store.fileMetadatas.getFileMetadata(

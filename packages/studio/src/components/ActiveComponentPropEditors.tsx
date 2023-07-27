@@ -1,7 +1,7 @@
 import {
-  StandardOrModuleComponentState,
   PropShape,
   PropMetadata,
+  EditableSingleComponentState,
 } from "@yext/studio-plugin";
 import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
@@ -10,7 +10,7 @@ import PropEditors from "./PropEditors";
 import MessageBubble from "./common/MessageBubble";
 
 export default function ActiveComponentPropEditors(props: {
-  activeComponentState: StandardOrModuleComponentState;
+  activeComponentState: EditableSingleComponentState;
   propShape: PropShape;
   shouldRenderProp?: (propMetadata: PropMetadata) => boolean;
 }) {

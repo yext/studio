@@ -8,6 +8,7 @@ import {
   ComponentState,
   ComponentStateKind,
   EditableComponentState,
+  EditableSingleComponentState,
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
@@ -194,6 +195,16 @@ export default class TypeGuards {
     return (
       componentState.kind === ComponentStateKind.Module ||
       componentState.kind === ComponentStateKind.Standard
+    );
+  }
+
+  static isEditableSingleComponentState(
+    componentState: ComponentState
+  ): componentState is EditableSingleComponentState {
+    return (
+      componentState.kind === ComponentStateKind.Module ||
+      componentState.kind === ComponentStateKind.Standard ||
+      componentState.kind === ComponentStateKind.RecoverableError // this check is used to see what is rendered in preview and prop editor.
     );
   }
 

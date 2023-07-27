@@ -31,7 +31,7 @@ export default function usePreviewProps(
       }, {});
     }
 
-    if (!c || !(TypeGuards.isStandardOrModuleComponentState(c)  || TypeGuards.isRecoverableErrorState(c))) {
+    if (!c || !TypeGuards.isEditableSingleComponentState(c)) {
       return {};
     }
 

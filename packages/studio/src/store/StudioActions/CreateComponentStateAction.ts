@@ -1,7 +1,7 @@
 import {
   ComponentStateKind,
+  EditableSingleComponentState,
   FileMetadataKind,
-  StandardOrModuleComponentState,
   ValidFileMetadata,
 } from "@yext/studio-plugin";
 import path from "path-browserify";
@@ -11,9 +11,9 @@ import PropValueHelpers from "../../utils/PropValueHelpers";
 export default class CreateComponentStateAction {
   createComponentState = (
     metadata: ValidFileMetadata
-  ): StandardOrModuleComponentState => {
+  ): EditableSingleComponentState => { // MAYBE NOT NEED TO CHANGE
     const componentName = path.basename(metadata.filepath, ".tsx");
-    const componentState: StandardOrModuleComponentState = {
+    const componentState: EditableSingleComponentState = {
       kind:
         metadata.kind === FileMetadataKind.Module
           ? ComponentStateKind.Module

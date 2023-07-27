@@ -5,17 +5,18 @@ export type ComponentState =
   | FragmentState
   | BuiltInState
   | NonrecoverableErrorComponentState
-  | RecoverableErrorComponentState;
 
 export type EditableComponentState =
-  | StandardOrModuleComponentState
   | RepeaterState
-  | RecoverableErrorComponentState;
+  | EditableSingleComponentState;
 
 export type StandardOrModuleComponentState =
   | StandardComponentState
-  // | RecoverableErrorComponentState // ADDED RECOVERABLE
   | ModuleState;
+
+  export type EditableSingleComponentState =
+  | StandardOrModuleComponentState
+  | RecoverableErrorComponentState
 
 export enum ComponentStateKind {
   Standard = "standard",
