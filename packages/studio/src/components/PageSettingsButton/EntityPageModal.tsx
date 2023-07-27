@@ -1,7 +1,7 @@
 import useStudioStore from "../../store/useStudioStore";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
-import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
+import { ExpressionHelpers, GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
 import PropValueHelpers from "../../utils/PropValueHelpers";
 import StreamScopeParser, {
@@ -30,11 +30,29 @@ export default function EntityPageModal({
       store.pages.pages[pageName].pagesJS?.streamScope,
       store.pages.updateStreamScope,
     ]);
-  const isPathUndefined = !currGetPathValue;
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  
+  const validateURL = (input: string) => {
+    if(ExpressionHelpers.usesExpressionSource(input, "document")) {
+      return;
+    }
+    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g)
+    if(input.match(blackListURLChars)) {
+      throw new Error("URL slug contains invalid characters.");
+    }
+  }
+  const isPathEditable = useMemo(() => {
+    if(!currGetPathValue) return false;
+    try { validateURL(currGetPathValue.value) }
+    catch (error) {
+      return false;
+    }
+    return true;
+  }, [currGetPathValue]);
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
-      url: getUrlDisplayValue(currGetPathValue),
+      url: isPathEditable ? getUrlDisplayValue(currGetPathValue) : "",
       ...StreamScopeParser.convertStreamScopeToForm(streamScope),
     }),
     [currGetPathValue, streamScope]
@@ -44,15 +62,13 @@ export default function EntityPageModal({
     () => ({
       url: {
         description: "URL Slug",
-        optional: isPathUndefined,
-        placeholder: isPathUndefined
-          ? "<URL slug is not editable in Studio. Consult a developer>"
-          : "",
-        disabled: isPathUndefined,
+        optional: !isPathEditable,
+        placeholder: isPathEditable ? "" : "<URL slug is not editable in Studio. Consult a developer>",
+        disabled: !isPathEditable,
       },
       ...streamScopeFormData,
     }),
-    [isPathUndefined]
+    [isPathEditable]
   );
 
   const handleModalSave = useCallback(
@@ -61,6 +77,15 @@ export default function EntityPageModal({
         kind: PropValueKind.Expression,
         value: TemplateExpressionFormatter.getRawValue(form.url),
       };
+      try { validateURL(getPathValue.value); }
+      catch (error) {
+        if (error instanceof Error) {
+          setErrorMessage(error.message);
+          return false;
+        } else {
+          throw error;
+        }
+      }
       if (form.url || currGetPathValue) {
         updateGetPathValue(pageName, getPathValue);
       }
@@ -77,6 +102,7 @@ export default function EntityPageModal({
       instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas. Changing the scope of the stream (entity IDs, entity type IDs, and saved filter IDs) may result in entity data references being invalid or out of date."
       formData={entityFormData}
       initialFormValue={initialFormValue}
+      errorMessage={errorMessage}
       requireChangesToSubmit={true}
       handleClose={handleClose}
       handleConfirm={handleModalSave}
