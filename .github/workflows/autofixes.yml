@@ -32,7 +32,7 @@ jobs:
         working-directory: apps/test-site
       - run: npx pages generate features
         working-directory: e2e-tests
-      - name: Automated Linting
+      - name: Automated features.json update
         uses: EndBug/add-and-commit@v9
         with:
           message: "Automated linting update"
@@ -40,7 +40,6 @@ jobs:
           push: true
           default_author: github_actions
         
-
   update-tailwind-full:
     runs-on: ubuntu-latest
     steps:
