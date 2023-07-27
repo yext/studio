@@ -56,7 +56,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
   const extractedState =
     ComponentStateHelpers.extractRepeatedState(componentState);
-  const isErrorState = extractedState.kind === ComponentStateKind.NonrecoverableError;
+  const isErrorState = extractedState.kind === ComponentStateKind.NonrecoverableError || extractedState.kind === ComponentStateKind.RecoverableError;
   const componentNodeClasses = classNames(
     "flex pr-4 items-center justify-between h-9",
     {
