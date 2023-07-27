@@ -33,15 +33,14 @@ export default class ImportComponentAction {
     }
 
     const componentState = ComponentStateHelpers.extractRepeatedState(c);
-    await this.importStandardOrModuleComponentState(componentState);
+    await this.importEditableSingleComponentState(componentState);
   };
 
-  private importStandardOrModuleComponentState = async (
-    // maybe editable single componenent state?
+  private importEditableSingleComponentState = async (
     componentState:
       | StandardOrModuleComponentState
       | NonrecoverableErrorComponentState
-      | RecoverableErrorComponentState // ADDED RecoverableErrorComponentState
+      | RecoverableErrorComponentState
   ) => {
     const { metadataUUID, componentName } = componentState;
     const { getFileMetadata, UUIDToImportedComponent } =
