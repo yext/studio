@@ -29,6 +29,7 @@ export default function StaticPageModal({
       throw new Error("URL slug contains invalid characters.");
     }
   };
+  
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {

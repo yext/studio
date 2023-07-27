@@ -41,6 +41,7 @@ export default function EntityPageModal({
       throw new Error("URL slug contains invalid characters.");
     }
   };
+  
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {
