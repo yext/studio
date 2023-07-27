@@ -1,4 +1,4 @@
-import UniversalPage from "./pages/UniversalPage";
+import UniversalPage from "./templates/UniversalPage";
 
 function App() {
   return (
