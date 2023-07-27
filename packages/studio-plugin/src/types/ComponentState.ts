@@ -118,7 +118,7 @@ export type RecoverableErrorComponentState = {
    * ErrorComponentStates do not fully support props since we're unable to
    * get the underlying type even if props are specified.
    */
-  props: Record<string, TypelessPropVal>;
+  props: PropValues;
   uuid: string;
   metadataUUID: string;
   parentUUID?: string;

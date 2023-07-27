@@ -142,7 +142,8 @@ export default class ComponentTreeParser {
   ):
     | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
     | Pick<BuiltInState, "kind" | "props">
-    | Omit<NonrecoverableErrorComponentState | RecoverableErrorComponentState, "componentName"> {
+    | Omit<NonrecoverableErrorComponentState, "componentName">
+    | Omit<RecoverableErrorComponentState, "componentName">  {
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
     )
