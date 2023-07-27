@@ -11,6 +11,7 @@ import {
   ComponentState,
   ComponentStateKind,
   NonrecoverableErrorComponentState,
+  RecoverableErrorComponentState,
   RepeaterState,
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
@@ -123,6 +124,7 @@ export default class ComponentTreeParser {
         "Error parsing map expression: repetition of built-in components is not supported."
       );
     }
+    
     return {
       kind: ComponentStateKind.Repeater,
       listExpression,
@@ -140,7 +142,7 @@ export default class ComponentTreeParser {
   ):
     | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
     | Pick<BuiltInState, "kind" | "props">
-    | Omit<NonrecoverableErrorComponentState, "componentName"> {
+    | Omit<NonrecoverableErrorComponentState | RecoverableErrorComponentState, "componentName"> {
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
     )
@@ -202,7 +204,7 @@ export default class ComponentTreeParser {
     if (missingProps.length) {
       const missingPropsString = missingProps.join(", ");
       return {
-        kind: ComponentStateKind.NonrecoverableError,
+        kind: ComponentStateKind.RecoverableError,
         metadataUUID: fileMetadata.metadataUUID,
         uuid: v4(),
         fullText: component.getFullText(),

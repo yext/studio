@@ -14,6 +14,7 @@ export type EditableComponentState =
 
 export type StandardOrModuleComponentState =
   | StandardComponentState
+  // | RecoverableErrorComponentState // ADDED RECOVERABLE
   | ModuleState;
 
 export enum ComponentStateKind {
@@ -69,7 +70,7 @@ export type RepeaterState = {
    **/
   repeatedComponent:
     | Omit<StandardOrModuleComponentState, "uuid" | "parentUUID">
-    | Omit<NonrecoverableErrorComponentState, "uuid" | "parentUUID">;
+    | Omit<NonrecoverableErrorComponentState | RecoverableErrorComponentState, "uuid" | "parentUUID">;
   /** A unique UUID for this specific component instance. */
   uuid: string;
   /** The UUID of the parent component in the tree, if one exists. */
