@@ -5,7 +5,6 @@ import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
 
 export default function App() {
-  
   return (
     <div className="App">
       <Toast />
