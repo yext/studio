@@ -23,17 +23,13 @@ export default function UniversalPage({ document }: TemplateProps) {
   return (
     <>
       <FixedText />
+      <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
       {document.services.map((item, index) => (
         <Banner title={`${item}!`} key={index} />
       ))}
       <Container>
         <Button />
       </Container>
-      <Banner
-      >
-      <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
-
-      </Banner>
       <Banner
         obj={{
           nestedString: `hello ${document.address.city}  ${document.id}`,
