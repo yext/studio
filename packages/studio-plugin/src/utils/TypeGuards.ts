@@ -18,6 +18,7 @@ import {
   PropValueKind,
   PropValues,
   PropValueType,
+  RecoverableErrorComponentState,
   RepeaterState,
   SiteSettingsShape,
   SiteSettingsValues,
@@ -192,8 +193,15 @@ export default class TypeGuards {
   ): componentState is StandardOrModuleComponentState {
     return (
       componentState.kind === ComponentStateKind.Module ||
-      componentState.kind === ComponentStateKind.RecoverableError ||
       componentState.kind === ComponentStateKind.Standard
+    );
+  }
+
+  static isRecoverableErrorState(
+    componentState: ComponentState
+  ): componentState is RecoverableErrorComponentState {
+    return (
+      componentState.kind === ComponentStateKind.RecoverableError // this check is used to see what is rendered in preview and prop editor.
     );
   }
 
