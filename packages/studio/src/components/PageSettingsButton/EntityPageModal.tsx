@@ -1,10 +1,7 @@
 import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
-import {
-  GetPathVal,
-  PropValueKind,
-} from "@yext/studio-plugin";
+import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
 import PropValueHelpers from "../../utils/PropValueHelpers";
 import StreamScopeParser, {
