@@ -116,10 +116,6 @@ export type NonrecoverableErrorComponentState = {
 export type RecoverableErrorComponentState = {
   kind: ComponentStateKind.RecoverableError;
   componentName: string;
-  /**
-   * ErrorComponentStates do not fully support props since we're unable to
-   * get the underlying type even if props are specified.
-   */
   props: PropValues;
   uuid: string;
   metadataUUID: string;
