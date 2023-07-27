@@ -55,7 +55,7 @@ export default function EntityPageModal({
       url: isPathEditable ? getUrlDisplayValue(currGetPathValue) : "",
       ...StreamScopeParser.convertStreamScopeToForm(streamScope),
     }),
-    [currGetPathValue, streamScope]
+    [currGetPathValue, streamScope, isPathEditable]
   );
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(

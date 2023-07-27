@@ -4,6 +4,7 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
+import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
 
 const basePageState: PageState = {
@@ -188,32 +189,12 @@ it("shows a tooltip when hovering over the label", async () => {
   );
 });
 
-it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
+async function editUndefinedURL(pageName: string) {
   const updateGetPathValueSpy = jest.spyOn(
     useStudioStore.getState().pages,
     "updateGetPathValue"
   );
-  render(<PageSettingsButton pageName="index" />);
-  const pageSettingsButton = screen.getByRole("button");
-  await userEvent.click(pageSettingsButton);
-  const urlTextbox = screen.getByPlaceholderText(
-    "<URL slug is defined by developer>"
-  );
-  const testUrl = "test-url";
-  await userEvent.type(urlTextbox, testUrl);
-  const saveButton = screen.getByRole("button", { name: "Save" });
-  await userEvent.click(saveButton);
-  const updatedUrl = testUrl;
-  expect(updateGetPathValueSpy).toBeCalledWith("index", {
-    kind: PropValueKind.Literal,
-    value: updatedUrl,
-  });
-  await userEvent.click(pageSettingsButton);
-  expect(urlTextbox).toHaveValue(testUrl);
-});
-
-it("displays URL placeholder and cannot edit URL when entity page's getPath value isn't document.slug", async () => {
-  render(<PageSettingsButton pageName="fruits" />);
+  render(<PageSettingsButton pageName={pageName} />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
   const urlTextbox = screen.getByPlaceholderText(
@@ -222,4 +203,26 @@ it("displays URL placeholder and cannot edit URL when entity page's getPath valu
   expect(urlTextbox).toBeDisabled();
   const saveButton = screen.getByRole("button", { name: "Save" });
   expect(saveButton).toBeDisabled();
+  expect(updateGetPathValueSpy).toBeCalledTimes(0);
+}
+
+it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
+  await editUndefinedURL("index");
+});
+
+it("displays URL placeholder and cannot edit URL when entity page's getPath value is undefined", async () => {
+  await editUndefinedURL("fruits");
+});
+
+it("throws an error when user enters an invalid URL slug", async () => {
+  render(<PageSettingsButton pageName="product" />);
+  const pageSettingsButton = screen.getByRole("button");
+  await userEvent.click(pageSettingsButton);
+  const urlTextbox = screen.getByRole("textbox", { name: "URL Slug" });
+  expect(urlTextbox).toHaveValue("[[slug]]");
+  await userEvent.type(urlTextbox, "{backspace}");
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  await userEvent.click(saveButton);
+  expect(saveButton).toBeDisabled();
+  expect(screen.getByText("URL slug contains invalid characters.")).toBeDefined();
 });

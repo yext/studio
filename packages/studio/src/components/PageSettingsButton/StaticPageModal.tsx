@@ -1,5 +1,5 @@
 import useStudioStore from "../../store/useStudioStore";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import { PageSettingsModalProps } from "./PageSettingsButton";
@@ -21,7 +21,22 @@ export default function StaticPageModal({
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
   ]);
-  const isPathUndefined = !currGetPathValue;
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const validateURL = (input: string) => {
+    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g)
+    if(input.match(blackListURLChars)) {
+      throw new Error("URL slug contains invalid characters.");
+    }
+  }
+  const isPathEditable = useMemo(() => {
+    if(!currGetPathValue) return false;
+    try { validateURL(currGetPathValue.value) }
+    catch (error) {
+      return false;
+    }
+    return true;
+  }, [currGetPathValue]);
 
   const initialFormValue: StaticPageSettings = useMemo(
     () => ({ url: currGetPathValue?.value ?? "" }),
@@ -32,13 +47,12 @@ export default function StaticPageModal({
     () => ({
       url: {
         description: "URL Slug",
-        optional: isPathUndefined,
-        placeholder: isPathUndefined
-          ? "<URL slug is defined by developer>"
-          : "",
+        optional: !isPathEditable,
+        placeholder: isPathEditable ? "" : "<URL slug is not editable in Studio. Consult a developer>",
+        disabled: !isPathEditable,
       },
     }),
-    [isPathUndefined]
+    [isPathEditable]
   );
 
   const handleModalSave = useCallback(
@@ -47,6 +61,15 @@ export default function StaticPageModal({
         kind: PropValueKind.Literal,
         value: form.url,
       };
+      try { validateURL(getPathValue.value); }
+      catch (error) {
+        if (error instanceof Error) {
+          setErrorMessage(error.message);
+          return false;
+        } else {
+          throw error;
+        }
+      }
       updateGetPathValue(pageName, getPathValue);
       return true;
     },
@@ -59,6 +82,7 @@ export default function StaticPageModal({
       title="Page Settings"
       formData={staticFormData}
       initialFormValue={initialFormValue}
+      errorMessage={errorMessage}
       requireChangesToSubmit={true}
       handleClose={handleClose}
       handleConfirm={handleModalSave}
