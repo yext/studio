@@ -9,7 +9,7 @@ import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources } from "../utils/getPropsForPreview";
 import RepeaterPreview from "./RepeaterPreview";
-import NonrecoverableErrorComponentPreview from "./ErrorComponentPreview";
+import NonrecoverableErrorComponentPreview from "./NonrecoverableErrorComponentPreview";
 import ModulePreview from "./ModulePreview";
 
 interface ComponentPreviewProps {
