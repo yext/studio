@@ -27,15 +27,13 @@ export default function RepeaterPreview({
   );
 
   const renderRepeatedElement = useCallback(
-    () => (
-    // (item: unknown, key: number | string) => (
-      <p />
-      // <ComponentPreview
-      //   componentState={repeatedElementState}
-      //   expressionSources={expressionSources}
-      //   parentItem={item}
-      //   key={key}
-      // />
+    (item: unknown, key: number | string) => (
+      <ComponentPreview
+        componentState={repeatedElementState}
+        expressionSources={expressionSources}
+        parentItem={item}
+        key={key}
+      />
     ),
     [repeatedElementState, expressionSources]
   );

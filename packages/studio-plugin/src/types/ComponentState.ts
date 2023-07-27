@@ -71,7 +71,8 @@ export type RepeaterState = {
    **/
   repeatedComponent:
     | Omit<StandardOrModuleComponentState, "uuid" | "parentUUID">
-    | Omit<NonrecoverableErrorComponentState | RecoverableErrorComponentState, "uuid" | "parentUUID">;
+    | Omit<NonrecoverableErrorComponentState, "uuid" | "parentUUID">
+    | Omit<RecoverableErrorComponentState, "uuid" | "parentUUID">;
   /** A unique UUID for this specific component instance. */
   uuid: string;
   /** The UUID of the parent component in the tree, if one exists. */
