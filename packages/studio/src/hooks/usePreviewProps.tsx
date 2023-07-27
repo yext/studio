@@ -24,7 +24,7 @@ export default function usePreviewProps(
     (store) => store.fileMetadatas.getFileMetadata
   );
   return useMemo(() => {
-    if (c?.kind === ComponentStateKind.Error) {
+    if (c?.kind === ComponentStateKind.NonrecoverableError) {
       return Object.keys(c.props).reduce((prev, curr) => {
         prev[curr] = c.props[curr].value;
         return prev;

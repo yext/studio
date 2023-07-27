@@ -120,7 +120,7 @@ export default class ReactComponentFileWriter {
     const elements = ComponentTreeHelpers.mapComponentTree<string>(
       componentTree,
       (c, children): string => {
-        if (c.kind === ComponentStateKind.Error) {
+        if (c.kind === ComponentStateKind.NonrecoverableError) {
           return c.fullText;
         } else if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";

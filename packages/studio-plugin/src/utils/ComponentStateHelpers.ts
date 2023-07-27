@@ -1,4 +1,4 @@
-import { ComponentState, ErrorComponentState, RepeaterState } from "../types";
+import { ComponentState, NonrecoverableErrorComponentState, RepeaterState } from "../types";
 import TypeGuards from "./TypeGuards";
 
 /**
@@ -8,13 +8,13 @@ import TypeGuards from "./TypeGuards";
 export default class ComponentStateHelpers {
   static extractRepeatedState<T extends Exclude<ComponentState, RepeaterState>>(
     c: T | RepeaterState
-  ): T | ErrorComponentState {
+  ): T | NonrecoverableErrorComponentState {
     if (TypeGuards.isRepeaterState(c)) {
       const repeatedState = {
         ...c.repeatedComponent,
         uuid: c.uuid,
         parentUUID: c.parentUUID,
-      } as T | ErrorComponentState;
+      } as T | NonrecoverableErrorComponentState;
       return repeatedState;
     }
     return c;

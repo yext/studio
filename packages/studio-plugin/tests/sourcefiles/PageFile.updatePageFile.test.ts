@@ -340,7 +340,7 @@ describe("updatePageFile", () => {
         ...entityPageState,
         componentTree: [
           {
-            kind: ComponentStateKind.Error,
+            kind: ComponentStateKind.NonrecoverableError,
             props: {
               title: {
                 kind: PropValueKind.Expression,

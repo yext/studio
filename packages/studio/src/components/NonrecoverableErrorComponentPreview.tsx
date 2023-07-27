@@ -1,11 +1,11 @@
-import { ErrorComponentState } from "@yext/studio-plugin";
+import { NonrecoverableErrorComponentState } from "@yext/studio-plugin";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { v4 } from "uuid";
 import ErrorBoundary from "./common/ErrorBoundary";
 import { Tooltip } from "react-tooltip";
 
-export default function ErrorComponentPreview(props: {
-  errorComponentState: ErrorComponentState;
+export default function NonrecoverableErrorComponentPreview(props: {
+  errorComponentState: NonrecoverableErrorComponentState;
   element: JSX.Element | null;
 }) {
   const { errorComponentState, element } = props;

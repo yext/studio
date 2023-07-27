@@ -4,11 +4,13 @@ export type ComponentState =
   | EditableComponentState
   | FragmentState
   | BuiltInState
-  | ErrorComponentState;
+  | NonrecoverableErrorComponentState
+  | RecoverableErrorComponentState;
 
 export type EditableComponentState =
   | StandardOrModuleComponentState
-  | RepeaterState;
+  | RepeaterState
+  | RecoverableErrorComponentState;
 
 export type StandardOrModuleComponentState =
   | StandardComponentState
@@ -20,7 +22,8 @@ export enum ComponentStateKind {
   Fragment = "fragment", // when the component is a React.Fragment,
   BuiltIn = "builtIn", // for built in elements like div and img
   Repeater = "repeater", // for a list repeater (map function)
-  Error = "error", // when the component file could not be parsed
+  NonrecoverableError = "nonrecoverableError", // when the component file could not be parsed, and cannot be fixed through the studio UI
+  RecoverableError = "recoverableError", // when the component file has an error that can be fixed through the studio UI
 }
 
 export type StandardComponentState = {
@@ -66,7 +69,7 @@ export type RepeaterState = {
    **/
   repeatedComponent:
     | Omit<StandardOrModuleComponentState, "uuid" | "parentUUID">
-    | Omit<ErrorComponentState, "uuid" | "parentUUID">;
+    | Omit<NonrecoverableErrorComponentState, "uuid" | "parentUUID">;
   /** A unique UUID for this specific component instance. */
   uuid: string;
   /** The UUID of the parent component in the tree, if one exists. */
@@ -92,8 +95,23 @@ export type BuiltInState = {
   metadataUUID?: never;
 };
 
-export type ErrorComponentState = {
-  kind: ComponentStateKind.Error;
+export type NonrecoverableErrorComponentState = {
+  kind: ComponentStateKind.NonrecoverableError;
+  componentName: string;
+  /**
+   * ErrorComponentStates do not fully support props since we're unable to
+   * get the underlying type even if props are specified.
+   */
+  props: Record<string, TypelessPropVal>;
+  uuid: string;
+  metadataUUID: string;
+  parentUUID?: string;
+  fullText: string;
+  message: string;
+};
+
+export type RecoverableErrorComponentState = {
+  kind: ComponentStateKind.RecoverableError;
   componentName: string;
   /**
    * ErrorComponentStates do not fully support props since we're unable to

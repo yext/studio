@@ -204,7 +204,7 @@ describe("getPageState", () => {
     assertIsOk(result);
     expect(result.value.componentTree).toHaveLength(1);
     expect(result.value.componentTree[0].kind).toEqual(
-      ComponentStateKind.Error
+      ComponentStateKind.NonrecoverableError
     );
   });
 

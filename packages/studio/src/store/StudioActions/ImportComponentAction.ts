@@ -2,12 +2,13 @@ import {
   ComponentState,
   ComponentStateHelpers,
   ComponentStateKind,
-  ErrorComponentState,
+  NonrecoverableErrorComponentState,
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
   StandardOrModuleComponentState,
   TypeGuards,
+  RecoverableErrorComponentState,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { ImportType } from "../models/ImportType";
@@ -26,7 +27,7 @@ export default class ImportComponentAction {
   importComponent = async (c: ComponentState): Promise<void> => {
     if (
       !TypeGuards.isEditableComponentState(c) &&
-      c.kind !== ComponentStateKind.Error
+      c.kind !== ComponentStateKind.NonrecoverableError
     ) {
       return;
     }
@@ -36,7 +37,7 @@ export default class ImportComponentAction {
   };
 
   private importStandardOrModuleComponentState = async (
-    componentState: StandardOrModuleComponentState | ErrorComponentState
+    componentState: StandardOrModuleComponentState | NonrecoverableErrorComponentState | RecoverableErrorComponentState // ADDED RecoverableErrorComponentState
   ) => {
     const { metadataUUID, componentName } = componentState;
     const { getFileMetadata, UUIDToImportedComponent } =

@@ -9,7 +9,7 @@ import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources } from "../utils/getPropsForPreview";
 import RepeaterPreview from "./RepeaterPreview";
-import ErrorComponentPreview from "./ErrorComponentPreview";
+import NonrecoverableErrorComponentPreview from "./ErrorComponentPreview";
 import ModulePreview from "./ModulePreview";
 
 interface ComponentPreviewProps {
@@ -52,9 +52,9 @@ export default function ComponentPreview({
         expressionSources={expressionSources}
       />
     );
-  } else if (componentState.kind === ComponentStateKind.Error) {
+  } else if (componentState.kind === ComponentStateKind.NonrecoverableError) {
     return (
-      <ErrorComponentPreview
+      <NonrecoverableErrorComponentPreview
         element={element}
         errorComponentState={componentState}
       />

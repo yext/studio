@@ -27,7 +27,7 @@ export default function useActiveComponentWithProps() {
   const extractedComponentState =
     ComponentStateHelpers.extractRepeatedState(activeComponentState);
 
-  if (extractedComponentState.kind === ComponentStateKind.Error) {
+  if (extractedComponentState.kind === ComponentStateKind.NonrecoverableError) {
     return null;
   }
 

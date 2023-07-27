@@ -10,7 +10,7 @@ import {
   BuiltInState,
   ComponentState,
   ComponentStateKind,
-  ErrorComponentState,
+  NonrecoverableErrorComponentState,
   RepeaterState,
   StandardOrModuleComponentState,
 } from "../types/ComponentState";
@@ -140,7 +140,7 @@ export default class ComponentTreeParser {
   ):
     | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
     | Pick<BuiltInState, "kind" | "props">
-    | Omit<ErrorComponentState, "componentName"> {
+    | Omit<NonrecoverableErrorComponentState, "componentName"> {
     const attributes: JsxAttributeLike[] = component.isKind(
       SyntaxKind.JsxSelfClosingElement
     )
@@ -176,7 +176,7 @@ export default class ComponentTreeParser {
       });
 
       return {
-        kind: ComponentStateKind.Error,
+        kind: ComponentStateKind.NonrecoverableError,
         metadataUUID: fileMetadata.metadataUUID,
         uuid: v4(),
         fullText: component.getFullText(),
@@ -202,7 +202,7 @@ export default class ComponentTreeParser {
     if (missingProps.length) {
       const missingPropsString = missingProps.join(", ");
       return {
-        kind: ComponentStateKind.Error,
+        kind: ComponentStateKind.NonrecoverableError,
         metadataUUID: fileMetadata.metadataUUID,
         uuid: v4(),
         fullText: component.getFullText(),

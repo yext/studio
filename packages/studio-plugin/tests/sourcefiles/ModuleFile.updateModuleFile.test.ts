@@ -97,7 +97,7 @@ describe("updateModuleFile", () => {
       kind: FileMetadataKind.Module,
       componentTree: [
         {
-          kind: ComponentStateKind.Error,
+          kind: ComponentStateKind.NonrecoverableError,
           componentName: "ErrBanner",
           props: childPropValues,
           fullText: "<ErrBanner title={document.name}/>",
