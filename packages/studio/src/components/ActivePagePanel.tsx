@@ -85,14 +85,16 @@ function ErrorPageItem(props: { pageName: string; errorMessage: string }) {
 
   return (
     <ListItem additionalClassNames="text-red-300">
-      <div className="flex items-center overflow-auto" id={anchorId}>
+      <div className="flex items-center overflow-auto">
+        <Check className="invisible" />
+        <div className="ml-2" id={anchorId}>
+          {pageName}
+        </div>
         <Tooltip
           anchorSelect={`#${anchorId}`}
           content={errorMessage}
-          className="max-w-lg text-xs"
+          className="max-w-lg text-xs z-20"
         />
-        <Check className="invisible" />
-        <div className="ml-2">{pageName}</div>
       </div>
     </ListItem>
   );
