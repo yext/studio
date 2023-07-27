@@ -37,9 +37,11 @@ export default function EntityPageModal({
     const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
     const errorChars = cleanInput.match(blackListURLChars);
     if (errorChars) {
-      throw new Error(`URL slug contains invalid characters: ${[
-        ...new Set(errorChars),
-      ].join("")}`);
+      throw new Error(
+        `URL slug contains invalid characters: ${[...new Set(errorChars)].join(
+          ""
+        )}`
+      );
     }
   };
 
