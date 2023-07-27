@@ -18,6 +18,7 @@ jobs:
           message: "Automated linting update"
           add: "*"
           push: true
+          pull: --rebase --autostash
           default_author: github_actions
 
   update-features-json:
@@ -38,6 +39,7 @@ jobs:
           message: "Update features.json files"
           add: "*"
           push: true
+          pull: --rebase --autostash
           default_author: github_actions
         
   update-tailwind-full:
