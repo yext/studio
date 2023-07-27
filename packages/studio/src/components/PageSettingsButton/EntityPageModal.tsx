@@ -2,7 +2,6 @@ import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import {
-  ExpressionHelpers,
   GetPathVal,
   PropValueKind,
 } from "@yext/studio-plugin";
@@ -37,7 +36,7 @@ export default function EntityPageModal({
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const validateURL = (input: string) => {
-    if (ExpressionHelpers.usesExpressionSource(input, "document")) {
+    if (input.match(/^\${document\..*}$/)) {
       return;
     }
     const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
