@@ -285,7 +285,7 @@ export default class StudioActions {
       throw new Error(
         `Error adding page: pageName ${pageName} cannot contain the characters: ${[
           ...new Set(errorChars),
-        ]}`
+        ].join("")}`
       );
     }
     if (pageName.endsWith(".")) {

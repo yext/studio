@@ -224,6 +224,11 @@ it("throws an error when user enters an invalid URL slug", async () => {
   await userEvent.click(saveButton);
   expect(saveButton).toBeDisabled();
   expect(
-    screen.getByText("URL slug contains invalid characters.")
+    screen.getByText("URL slug contains invalid characters: []")
   ).toBeDefined();
+  await userEvent.type(urlTextbox, "]-[[field]]");
+  expect(
+    screen.queryByText("URL slug contains invalid characters: []")
+  ).toBeNull();
+  expect(saveButton).toBeEnabled();
 });
