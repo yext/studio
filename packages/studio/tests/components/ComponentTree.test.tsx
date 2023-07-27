@@ -3,9 +3,14 @@ import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import ComponentTree from "../../src/components/ComponentTree";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
-import { ComponentStateKind, FileMetadata, FileMetadataKind, StandardComponentState } from "@yext/studio-plugin";
+import {
+  ComponentStateKind,
+  FileMetadata,
+  FileMetadataKind,
+  StandardComponentState,
+} from "@yext/studio-plugin";
 
-const mockActiveComponent: StandardComponentState= {
+const mockActiveComponent: StandardComponentState = {
   kind: ComponentStateKind.Standard,
   componentName: "component-name",
   props: {},
@@ -21,8 +26,8 @@ const mockactiveComponentMetadata: FileMetadata = {
 describe("delete key shortcut", () => {
   beforeEach(() => {
     mockStoreActiveComponent({
-      activeComponent: mockActiveComponent, 
-      activeComponentMetadata: mockactiveComponentMetadata
+      activeComponent: mockActiveComponent,
+      activeComponentMetadata: mockactiveComponentMetadata,
     });
   });
 
@@ -36,13 +41,13 @@ describe("delete key shortcut", () => {
     document.addEventListener = jest.fn((event, cb) => {
       map[event] = cb;
     });
-    render(
-      <ComponentTree />
-    );
+    render(<ComponentTree />);
     const activeComponent = screen.getByText("component-name");
     activeComponent.click();
-    expect(useStudioStore.getState().pages.activeComponentUUID).toBe("mock-uuid-1");
-    await act(() => map['keydown']({ key: 'Backspace' }));
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "mock-uuid-1"
+    );
+    await act(() => map["keydown"]({ key: "Backspace" }));
     expect(removeComponentSpy).toBeCalledWith("mock-uuid-1");
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
     expect(screen.queryByText("component-name")).toBeNull();
@@ -53,24 +58,24 @@ describe("delete key shortcut", () => {
       useStudioStore.getState().actions,
       "removeComponent"
     );
-    const handleChange = () => {return false};
+    const handleChange = () => {
+      return false;
+    };
     render(
       <>
-      <ComponentTree />
-      <input
-        type="text"
-        value={"erase me"}
-        onChange={handleChange}
-      />
+        <ComponentTree />
+        <input type="text" value="erase me" onChange={handleChange} />
       </>
     );
     const activeComponent = screen.getByText("component-name");
     activeComponent.click();
-    expect(useStudioStore.getState().pages.activeComponentUUID).toBe("mock-uuid-1");
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "mock-uuid-1"
+    );
     const textInput = screen.getByRole("textbox");
     await userEvent.type(textInput, "{backspace}");
     expect(removeComponentSpy).toBeCalledTimes(0);
     expect(textInput).toHaveValue("erase m");
     expect(screen.getByText("component-name")).toBeDefined();
   });
-})
+});
