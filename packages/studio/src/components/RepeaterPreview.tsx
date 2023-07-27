@@ -27,7 +27,8 @@ export default function RepeaterPreview({
   );
 
   const renderRepeatedElement = useCallback(
-    (item: unknown, key: number | string) => (
+    () => (
+    // (item: unknown, key: number | string) => (
       <p />
       // <ComponentPreview
       //   componentState={repeatedElementState}
