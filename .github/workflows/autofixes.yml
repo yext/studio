@@ -33,6 +33,8 @@ jobs:
         working-directory: apps/test-site
       - run: npx pages generate features
         working-directory: e2e-tests
+      # The features.json files do not match our prettier setup
+      - run: npm run autofix
       - name: Automated features.json update
         uses: EndBug/add-and-commit@v9
         with:
