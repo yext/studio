@@ -75,7 +75,7 @@ export default function PropInput({
           onChange={onChange}
           value={displayValue as string}
           propKind={propKind}
-          disabled={isUndefinedValue}
+          disabled={isUndefinedValue} // remove if we wanted to change undefined props.
         />
       );
     case PropValueType.boolean:
