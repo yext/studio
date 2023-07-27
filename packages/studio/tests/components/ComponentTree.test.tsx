@@ -71,6 +71,6 @@ describe("delete key shortcut", () => {
     await userEvent.type(textInput, "{backspace}");
     expect(removeComponentSpy).toBeCalledTimes(0);
     expect(textInput).toHaveValue("erase m");
-    expect(screen.queryByText("component-name")).toBeDefined();
+    expect(screen.getByText("component-name")).toBeDefined();
   });
 })
