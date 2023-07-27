@@ -40,7 +40,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
-  const anchorId = `ComponentNode-${componentState.uuid}`;
   const componentNodeRef = useRef<HTMLDivElement>(null);
 
   const vectorClassName = classNames("cursor-pointer", {
@@ -68,6 +67,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       "text-red-500": isErrorState,
     }
   );
+  const anchorId = `ComponentNode-${componentState.uuid}`;
 
   const handleToggle = useCallback(() => {
     onToggle(componentState.uuid, !isOpen);

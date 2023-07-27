@@ -4,7 +4,7 @@ import useStudioStore from "../store/useStudioStore";
 /**
  * A useEffect for adding a keydown event listener to the document.
  */
-export default function useKeyListener() {
+export default function useDeleteKeyListener() {
   const [activeComponentUUID, removeComponent] = useStudioStore((store) => {
     return [store.pages.activeComponentUUID, store.actions.removeComponent];
   });

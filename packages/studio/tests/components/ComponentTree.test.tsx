@@ -1,7 +1,8 @@
-import { act, render, screen } from "@testing-library/react";
+import { act, render, screen, renderHook } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import ComponentTree from "../../src/components/ComponentTree";
+import useDeleteKeyListener from "../../src/hooks/useDeleteKeyListener";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import {
   ComponentStateKind,
@@ -42,6 +43,7 @@ describe("delete key shortcut", () => {
       map[event] = cb;
     });
     render(<ComponentTree />);
+    renderHook(() => useDeleteKeyListener());
     const activeComponent = screen.getByText("component-name");
     activeComponent.click();
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
@@ -67,6 +69,7 @@ describe("delete key shortcut", () => {
         <input type="text" value="erase me" onChange={handleChange} />
       </>
     );
+    renderHook(() => useDeleteKeyListener());
     const activeComponent = screen.getByText("component-name");
     activeComponent.click();
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
