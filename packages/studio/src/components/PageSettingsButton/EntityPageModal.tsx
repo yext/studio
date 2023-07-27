@@ -33,11 +33,9 @@ export default function EntityPageModal({
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const validateURL = (input: string) => {
-    if (input.match(/\${document\..*}/)) {
-      return;
-    }
+    const cleanInput = input.replace(/\${document\..*?}/g, "");
     const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
-    if (input.match(blackListURLChars)) {
+    if (cleanInput.match(blackListURLChars)) {
       throw new Error("URL slug contains invalid characters.");
     }
   };
