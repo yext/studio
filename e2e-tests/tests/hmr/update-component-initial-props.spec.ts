@@ -28,6 +28,8 @@ studioTest(
 
     const buttonPath = studioPage.getComponentPath("Button");
     fs.writeFileSync(buttonPath, updatedComponent);
+    // Wait for the HMR to complete
+    await page.waitForResponse(/Button\.tsx/, { timeout: 5000 });
 
     await studioPage.addElement("Button", "Components");
     await expect(buttonPreviews).toHaveCount(2);

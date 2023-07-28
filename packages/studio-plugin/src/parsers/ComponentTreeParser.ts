@@ -20,6 +20,7 @@ import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
 import TypeGuards from "../utils/TypeGuards";
 import ParsingOrchestrator from "../ParsingOrchestrator";
+import MissingPropsChecker from "./MissingPropsChecker";
 
 export type GetFileMetadata = ParsingOrchestrator["getFileMetadata"];
 
@@ -193,6 +194,22 @@ export default class ComponentTreeParser {
       attributes,
       propShape
     );
+
+    const missingProps = MissingPropsChecker.getMissingRequiredProps(
+      props,
+      propShape
+    );
+    if (missingProps.length) {
+      const missingPropsString = missingProps.join(", ");
+      return {
+        kind: ComponentStateKind.Error,
+        metadataUUID: fileMetadata.metadataUUID,
+        uuid: v4(),
+        fullText: component.getFullText(),
+        message: "Prop(s) missing: " + missingPropsString,
+        props,
+      };
+    }
 
     return {
       kind: componentStateKind,

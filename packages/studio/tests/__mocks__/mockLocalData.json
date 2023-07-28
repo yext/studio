@@ -1,0 +1,10 @@
+{
+  "__": {
+    "entityPageSet": {
+      "plugin": {}
+    },
+    "name": "UniversalPage",
+    "streamId": "my-stream-id",
+    "templateType": "JS"
+  }
+}

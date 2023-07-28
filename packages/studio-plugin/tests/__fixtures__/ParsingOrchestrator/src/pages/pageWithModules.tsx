@@ -19,7 +19,7 @@ export const getPath: GetPath<TemplateProps> = ({
 
 export default function IndexPage() {
   return (
-    <NestedBanner>
+    <NestedBanner text="nestedBanner">
       <NestedModule />
     </NestedBanner>
   );

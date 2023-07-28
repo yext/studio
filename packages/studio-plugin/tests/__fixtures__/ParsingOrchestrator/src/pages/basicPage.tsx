@@ -6,7 +6,7 @@ export default function IndexPage() {
   return (
     <div>
       <Card text="first!" />
-      <Card />
+      <Card text="second!" />
     </div>
   );
 }

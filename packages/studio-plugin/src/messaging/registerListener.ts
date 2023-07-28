@@ -9,7 +9,7 @@ import { IncomingMessage } from "http";
 export function registerListener<T extends MessageID>(
   server: ViteDevServer,
   messageId: T,
-  listener: (data: StudioEventMap[T]) => Promise<string>
+  listener: (data: StudioEventMap[T]) => Promise<string> | string
 ) {
   server.middlewares.use(async (req, res, next) => {
     if (req.url === `/${messageId}`) {
@@ -27,7 +27,7 @@ export function registerListener<T extends MessageID>(
 
 async function getResponsePayload<T extends MessageID>(
   messageId: T,
-  handler: () => Promise<string>
+  handler: () => Promise<string> | string
 ): Promise<ResponseEventMap[T]> {
   try {
     const msg = await handler();
