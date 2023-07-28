@@ -82,7 +82,7 @@ function renderWrappedPropEditor(
     updateProp,
     isNested
   );
-  if (propMetadata.required) {
+  if (propMetadata.required && propVal) {
     return editor;
   }
   return (
