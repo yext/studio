@@ -105,7 +105,7 @@ describe("updateModuleFile", () => {
           message: "could not render ErrBanner",
           uuid: "errbanner-uuid",
           metadataUUID: "errbanner-metadata",
-          errorKind: ErrorKind.Nonrecoverable
+          errorKind: ErrorKind.Nonrecoverable,
         },
       ],
       propShape: {

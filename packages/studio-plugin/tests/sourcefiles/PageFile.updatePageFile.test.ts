@@ -352,7 +352,7 @@ describe("updatePageFile", () => {
             uuid: "error-banner-uuid",
             metadataUUID: "error-banner-metadataUUID",
             message: "could not parse banner",
-            errorKind: ErrorKind.Nonrecoverable
+            errorKind: ErrorKind.Nonrecoverable,
           },
         ],
       });
