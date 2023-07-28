@@ -32,11 +32,13 @@ export default function ActiveComponentPropEditors(props: {
 
   const propValues = activeComponentState.props;
   return (
-    <PropEditors
-      propShape={filteredPropShape}
-      propValues={propValues}
-      updateProps={updateActiveComponentProps}
-    />
+    <div className="overflow-x-auto">
+      <PropEditors
+        propShape={filteredPropShape}
+        propValues={propValues}
+        updateProps={updateActiveComponentProps}
+      />
+    </div>
   );
 }
 
