@@ -30,12 +30,11 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const [activeComponentUUID, setActiveComponentUUID, removeComponent] =
+  const [activeComponentUUID, setActiveComponentUUID] =
     useStudioStore((store) => {
       return [
         store.pages.activeComponentUUID,
         store.pages.setActiveComponentUUID,
-        store.actions.removeComponent,
       ];
     });
 
@@ -71,14 +70,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
-  const handleKeyDown = useCallback(
-    (event) => {
-      if (isActiveComponent && event.key === "Backspace") {
-        removeComponent(activeComponentUUID);
-      }
-    },
-    [isActiveComponent, activeComponentUUID, removeComponent]
-  );
+  const handleKeyDown = useDeleteKeyListener(isActiveComponent, activeComponentUUID);
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
@@ -111,3 +103,17 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     </div>
   );
 }
+
+function useDeleteKeyListener(isActiveComponent, activeComponentUUID) {
+  const removeComponent = useStudioStore((store) => {
+    return store.actions.removeComponent;
+  });
+  return useCallback(
+    (event) => {
+      if (isActiveComponent && event.key === "Backspace") {
+        removeComponent(activeComponentUUID);
+      }
+    },
+    [isActiveComponent, activeComponentUUID, removeComponent]
+  );
+};
