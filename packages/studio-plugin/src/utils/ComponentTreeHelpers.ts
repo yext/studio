@@ -1,9 +1,4 @@
-import {
-  ComponentState,
-  ComponentStateKind,
-  PropValueKind,
-  TypelessPropVal,
-} from "../types";
+import { ComponentState, PropValueKind, TypelessPropVal } from "../types";
 import ComponentStateHelpers from "./ComponentStateHelpers";
 import ExpressionHelpers from "./ExpressionHelpers";
 import TypeGuards from "./TypeGuards";

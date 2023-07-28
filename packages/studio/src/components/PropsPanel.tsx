@@ -22,7 +22,7 @@ export default function PropsPanel(): JSX.Element | null {
 
   const isModule = extractedComponentState.kind === ComponentStateKind.Module;
 
-  if(TypeGuards.isNonrecoverableError(extractedComponentState)) {
+  if (TypeGuards.isNonrecoverableError(extractedComponentState)) {
     return null;
   }
 

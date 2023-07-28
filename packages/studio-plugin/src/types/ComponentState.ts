@@ -4,7 +4,7 @@ export type ComponentState =
   | EditableComponentState
   | FragmentState
   | BuiltInState
-  | NonrecoverableErrorState 
+  | NonrecoverableErrorState;
 
 export type EditableComponentState =
   | StandardOrModuleComponentState
@@ -26,7 +26,7 @@ export enum ComponentStateKind {
 
 export enum ErrorKind {
   Recoverable = "recoverable",
-  Nonrecoverable = "nonrecoverable"
+  Nonrecoverable = "nonrecoverable",
 }
 
 export type StandardComponentState = {
@@ -99,7 +99,7 @@ export type BuiltInState = {
   metadataUUID?: never;
 };
 
-export type ErrorComponentState = 
+export type ErrorComponentState =
   | RecoverableErrorState
   | NonrecoverableErrorState;
 
@@ -113,7 +113,7 @@ export type RecoverableErrorState = {
   fullText: string;
   message: string;
   errorKind: ErrorKind.Recoverable;
-}
+};
 
 export type NonrecoverableErrorState = {
   kind: ComponentStateKind.Error;
@@ -129,4 +129,4 @@ export type NonrecoverableErrorState = {
   fullText: string;
   message: string;
   errorKind: ErrorKind.Nonrecoverable;
-}
+};
