@@ -30,13 +30,14 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const [activeComponentUUID, setActiveComponentUUID] =
-    useStudioStore((store) => {
+  const [activeComponentUUID, setActiveComponentUUID] = useStudioStore(
+    (store) => {
       return [
         store.pages.activeComponentUUID,
         store.pages.setActiveComponentUUID,
       ];
-    });
+    }
+  );
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
 
@@ -70,7 +71,10 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
-  const handleKeyDown = useDeleteKeyListener(isActiveComponent, activeComponentUUID);
+  const handleKeyDown = useDeleteKeyListener(
+    isActiveComponent,
+    activeComponentUUID
+  );
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
@@ -116,4 +120,4 @@ function useDeleteKeyListener(isActiveComponent, activeComponentUUID) {
     },
     [isActiveComponent, activeComponentUUID, removeComponent]
   );
-};
+}
