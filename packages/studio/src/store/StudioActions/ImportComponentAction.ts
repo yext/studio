@@ -1,7 +1,6 @@
 import {
   ComponentState,
   ComponentStateHelpers,
-  ComponentStateKind,
   ErrorComponentState,
   FileMetadata,
   FileMetadataKind,
@@ -25,7 +24,8 @@ export default class ImportComponentAction {
 
   importComponent = async (c: ComponentState): Promise<void> => {
     if (
-      !TypeGuards.isEditableComponentState(c)  // Need to rethink this.
+      !TypeGuards.isEditableComponentState(c) &&
+      !TypeGuards.isNonrecoverableError(c)
     ) {
       return;
     }
