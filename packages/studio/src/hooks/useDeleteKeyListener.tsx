@@ -12,7 +12,9 @@ export default function useDeleteKeyListener() {
   const handleKeyPress = useCallback(
     (event) => {
       if (event.key === "Backspace" && activeComponentUUID) {
-        if (document.activeElement?.id === `ComponentNode-${activeComponentUUID}`) {
+        if (
+          document.activeElement?.id === `ComponentNode-${activeComponentUUID}`
+        ) {
           removeComponent(activeComponentUUID);
         }
       }
