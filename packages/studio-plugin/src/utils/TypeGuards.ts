@@ -196,7 +196,8 @@ export default class TypeGuards {
     return (
       componentState.kind === ComponentStateKind.Module ||
       componentState.kind === ComponentStateKind.Standard ||
-      componentState.kind === ComponentStateKind.Error // is this OK?
+      (componentState.kind === ComponentStateKind.Error &&
+        componentState.errorKind == ErrorKind.Recoverable)
     );
   }
 
@@ -212,8 +213,9 @@ export default class TypeGuards {
     return (
       componentState.kind === ComponentStateKind.Module ||
       componentState.kind === ComponentStateKind.Standard ||
-      componentState.kind === ComponentStateKind.Error || // is this OK?
-      componentState.kind === ComponentStateKind.Repeater
+      componentState.kind === ComponentStateKind.Repeater ||
+      (componentState.kind === ComponentStateKind.Error &&
+        componentState.errorKind == ErrorKind.Recoverable)
     );
   }
 

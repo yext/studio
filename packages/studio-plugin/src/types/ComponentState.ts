@@ -4,10 +4,11 @@ export type ComponentState =
   | EditableComponentState
   | FragmentState
   | BuiltInState
+  | NonrecoverableErrorState 
 
 export type EditableComponentState =
   | StandardOrModuleComponentState
-  | ErrorComponentState // rethink this
+  | RecoverableErrorState
   | RepeaterState;
 
 export type StandardOrModuleComponentState =
