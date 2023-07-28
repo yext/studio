@@ -4,7 +4,7 @@ import GitWrapper from "./git/GitWrapper";
 import registerDeployListener from "./messaging/registerDeployListener";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
 import ParsingOrchestrator from "./ParsingOrchestrator";
-import registerRegenerateTestData from "./messaging/registerRegenerateTestData";
+import registerGenerateTestData from "./messaging/registerGenerateTestData";
 
 /**
  * A factory method for our vite plugin's configureServer handler.
@@ -12,8 +12,7 @@ import registerRegenerateTestData from "./messaging/registerRegenerateTestData";
 export default function createConfigureStudioServer(
   fileSystemManager: FileSystemManager,
   gitWrapper: GitWrapper,
-  orchestrator: ParsingOrchestrator,
-  pathToUserProjectRoot: string
+  orchestrator: ParsingOrchestrator
 ) {
   /**
    * Sets up websocket listeners.
@@ -26,6 +25,6 @@ export default function createConfigureStudioServer(
       orchestrator
     );
     registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
-    registerRegenerateTestData(server, pathToUserProjectRoot);
+    registerGenerateTestData(server);
   };
 }

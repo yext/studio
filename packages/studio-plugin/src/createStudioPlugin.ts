@@ -115,8 +115,7 @@ export default async function createStudioPlugin(
     configureServer: createConfigureStudioServer(
       fileSystemManager,
       gitWrapper,
-      orchestrator,
-      pathToUserProjectRoot
+      orchestrator
     ),
     handleHotUpdate: (ctx) => hmrManager.handleHotUpdate(ctx),
   };

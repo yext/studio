@@ -19,6 +19,8 @@ const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
 )?.sort()[0];
 
+console.log(firstPageEntry);
+
 const initialStates: PageSliceStates = {
   pages: removeTopLevelFragments(initialStudioData.pageNameToPageState),
   errorPages: initialStudioData.pageNameToErrorPageState,
@@ -101,6 +103,21 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           pagesJS.streamScope = newStreamScope;
           store.pendingChanges.pagesToUpdate.add(pageName);
         }
+      });
+    },
+    updateEntityFiles: (pageName: string, entityFiles: string[]) => {
+      set((store) => {
+        const pageState = store.pages[pageName];
+        if (!pageState.pagesJS) {
+          throw new Error(
+            `Tried to updateEntityFiles for non PagesJS page ${pageName}.`
+          );
+        }
+        pageState.pagesJS = {
+          ...pageState.pagesJS,
+          entityFiles,
+        };
+        store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },
     clearPendingChanges: () => {
