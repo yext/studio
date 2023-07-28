@@ -6,7 +6,7 @@ import {
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo, useRef } from "react";
+import { useCallback, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
@@ -30,17 +30,17 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const [activeComponentUUID, setActiveComponentUUID] = useStudioStore(
+  const [activeComponentUUID, setActiveComponentUUID, removeComponent] = useStudioStore(
     (store) => {
       return [
         store.pages.activeComponentUUID,
         store.pages.setActiveComponentUUID,
+        store.actions.removeComponent,
       ];
     }
   );
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
-  const componentNodeRef = useRef<HTMLDivElement>(null);
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
@@ -49,7 +49,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleClick = useCallback(() => {
     setActiveComponentUUID(componentState.uuid);
-    componentNodeRef.current?.focus();
   }, [componentState.uuid, setActiveComponentUUID]);
 
   const componentNodeStyle = useMemo(
@@ -73,13 +72,22 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (isActiveComponent && event.key === "Backspace") {
+        removeComponent(activeComponentUUID);
+      }
+    },
+    [isActiveComponent, activeComponentUUID, removeComponent]
+  );
+
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
       <div
         className="flex grow items-center cursor-pointer"
         onClick={handleClick}
-        tabIndex={0}
-        ref={componentNodeRef}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}  
         id={anchorId}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />

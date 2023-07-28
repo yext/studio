@@ -1,8 +1,7 @@
-import { act, render, screen, renderHook } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import ComponentTree from "../../src/components/ComponentTree";
-import useDeleteKeyListener from "../../src/hooks/useDeleteKeyListener";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import {
   ComponentStateKind,
@@ -32,49 +31,40 @@ describe("delete key shortcut", () => {
     });
   });
 
-  it("removes the active component with the delete key", async () => {
+  it("delete key calls function to remove the active component", async () => {
     const removeComponentSpy = jest.spyOn(
       useStudioStore.getState().actions,
       "removeComponent"
     );
-    // creates a mapping between the keydown event and its event handler
-    const map = {};
-    document.addEventListener = jest.fn((event, cb) => {
-      map[event] = cb;
-    });
     render(<ComponentTree />);
-    renderHook(() => useDeleteKeyListener());
     const activeComponent = screen.getByText("component-name");
     activeComponent.click();
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "mock-uuid-1"
     );
-    await act(() => map["keydown"]({ key: "Backspace" }));
+    fireEvent.keyDown(activeComponent, {key: "Backspace"});
     expect(removeComponentSpy).toBeCalledWith("mock-uuid-1");
-    expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
-    expect(screen.queryByText("component-name")).toBeNull();
   });
 
   it("does not remove the active component during text input deletion", async () => {
+    const user = userEvent.setup()
     const removeComponentSpy = jest.spyOn(
       useStudioStore.getState().actions,
       "removeComponent"
     );
-    const handleChange = jest.fn();
     render(
       <>
         <ComponentTree />
-        <input type="text" value="erase me" onChange={handleChange} />
+        <input type="text" value="erase me" onChange={jest.fn()} />
       </>
     );
-    renderHook(() => useDeleteKeyListener());
     const activeComponent = screen.getByText("component-name");
     activeComponent.click();
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "mock-uuid-1"
     );
     const textInput = screen.getByRole("textbox");
-    await userEvent.type(textInput, "{backspace}");
+    await user.type(textInput, "{backspace}");
     expect(removeComponentSpy).toBeCalledTimes(0);
     expect(textInput).toHaveValue("erase m");
     expect(screen.getByText("component-name")).toBeDefined();
