@@ -42,12 +42,12 @@ describe("delete key shortcut", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "mock-uuid-1"
     );
-    fireEvent.keyDown(activeComponent, {key: "Backspace"});
+    fireEvent.keyDown(activeComponent, { key: "Backspace" });
     expect(removeComponentSpy).toBeCalledWith("mock-uuid-1");
   });
 
   it("does not remove the active component during text input deletion", async () => {
-    const user = userEvent.setup()
+    const user = userEvent.setup();
     const removeComponentSpy = jest.spyOn(
       useStudioStore.getState().actions,
       "removeComponent"

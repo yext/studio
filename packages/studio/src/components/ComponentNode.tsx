@@ -30,15 +30,14 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const [activeComponentUUID, setActiveComponentUUID, removeComponent] = useStudioStore(
-    (store) => {
+  const [activeComponentUUID, setActiveComponentUUID, removeComponent] =
+    useStudioStore((store) => {
       return [
         store.pages.activeComponentUUID,
         store.pages.setActiveComponentUUID,
         store.actions.removeComponent,
       ];
-    }
-  );
+    });
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
 
@@ -87,7 +86,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         className="flex grow items-center cursor-pointer"
         onClick={handleClick}
         onKeyDown={handleKeyDown}
-        tabIndex={0}  
+        tabIndex={0}
         id={anchorId}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
