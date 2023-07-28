@@ -2,7 +2,6 @@ import {
   TypeGuards,
   ComponentState,
   FileMetadataKind,
-  ComponentStateKind,
 } from "@yext/studio-plugin";
 import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
