@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import { PageSettingsModalProps } from "./PageSettingsButton";
+import PageDataValidator from "../../utils/PageDataValidator";
 
 export type StaticPageSettings = {
   url: string;
@@ -23,17 +24,10 @@ export default function StaticPageModal({
   ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const validateURL = (input: string) => {
-    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
-    if (input.match(blackListURLChars)) {
-      throw new Error("URL slug contains invalid characters.");
-    }
-  };
-
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {
-      validateURL(currGetPathValue.value);
+      PageDataValidator.validateURLSlug(currGetPathValue.value);
     } catch (error) {
       return false;
     }
@@ -66,7 +60,7 @@ export default function StaticPageModal({
         value: form.url,
       };
       try {
-        validateURL(getPathValue.value);
+        PageDataValidator.validateURLSlug(getPathValue.value);
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);

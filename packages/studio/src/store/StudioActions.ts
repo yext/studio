@@ -25,6 +25,7 @@ import AddComponentAction from "./StudioActions/AddComponentAction";
 import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
 import ImportComponentAction from "./StudioActions/ImportComponentAction";
+import PageDataValidator from "../utils/PageDataValidator";
 
 export default class StudioActions {
   public addRepeater: RepeaterActions["addRepeater"];
@@ -272,32 +273,12 @@ export default class StudioActions {
     if (isPagesJSRepo && !getPathValue) {
       throw new Error("Error adding page: a getPath value is required.");
     }
-    if (!pageName) {
-      throw new Error("Error adding page: a pageName is required.");
-    }
     const pagesPath = this.getStudioConfig().paths.pages;
     const filepath = path.join(pagesPath, pageName + ".tsx");
     if (!filepath.startsWith(pagesPath)) {
       throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
-    const errorChars = pageName.match(/[\\/?%*:|"<>]/g);
-    if (errorChars) {
-      throw new Error(
-        `Error adding page: pageName ${pageName} cannot contain the characters: ${[
-          ...new Set(errorChars),
-        ].join("")}`
-      );
-    }
-    if (pageName.endsWith(".")) {
-      throw new Error(
-        `Error adding page: pageName ${pageName} cannot end with a period.`
-      );
-    }
-    if (pageName.length > 255) {
-      throw new Error(
-        "Error adding page: pageName must be 255 characters or less."
-      );
-    }
+    PageDataValidator.validatePageName(pageName);
     this.getPages().addPage(pageName, {
       componentTree: [],
       cssImports: [],

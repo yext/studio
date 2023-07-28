@@ -10,6 +10,7 @@ import StreamScopeParser, {
 import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
 import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
+import PageDataValidator from "../../utils/PageDataValidator";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -32,23 +33,10 @@ export default function EntityPageModal({
     ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  const validateURL = (input: string) => {
-    const cleanInput = input.replace(/\${document\..*?}/g, "");
-    const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
-    const errorChars = cleanInput.match(blackListURLChars);
-    if (errorChars) {
-      throw new Error(
-        `URL slug contains invalid characters: ${[...new Set(errorChars)].join(
-          ""
-        )}`
-      );
-    }
-  };
-
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {
-      validateURL(currGetPathValue.value);
+      PageDataValidator.validateURLSlug(currGetPathValue.value, true);
     } catch (error) {
       return false;
     }
@@ -85,7 +73,7 @@ export default function EntityPageModal({
         value: TemplateExpressionFormatter.getRawValue(form.url),
       };
       try {
-        validateURL(getPathValue.value);
+        PageDataValidator.validateURLSlug(getPathValue.value, true);
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);

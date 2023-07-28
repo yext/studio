@@ -161,6 +161,26 @@ describe("PagesJS repo", () => {
         },
       });
     });
+
+    it("gives an error if the URL slug contains document expression and is invalid", async () => {
+      render(<AddPageButton />);
+      const addPageButton = screen.getByRole("button");
+      await userEvent.click(addPageButton);
+      await selectEntityPageType();
+      const nextButton = screen.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+      await userEvent.click(nextButton);
+      await specifyName();
+      await specifyUrl("=<>[[[[field]]");
+      const urlTextbox = screen.getByRole("textbox", {
+        name: "URL Slug",
+      });
+      const saveButton = screen.getByRole("button", { name: "Save" });
+      await userEvent.click(saveButton);
+
+      expect(screen.getByText("URL slug contains invalid characters: <>")).toBeDefined();
+      expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    })
   });
 });
 
