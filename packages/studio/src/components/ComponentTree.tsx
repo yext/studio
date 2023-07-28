@@ -19,7 +19,7 @@ import ComponentNode from "./ComponentNode";
 
 const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
-  root: "py-2",
+  root: "overflow-x-auto py-2",
   placeholder: "relative",
   listItem: "relative",
 };

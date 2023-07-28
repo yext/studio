@@ -1,5 +1,5 @@
 import {
-  NestedPropType,
+  ObjectPropType,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -8,7 +8,7 @@ import PropValueHelpers from "../../src/utils/PropValueHelpers";
 
 describe("getDefaultPropVal", () => {
   it("can generate default PropVal for complex object prop type", () => {
-    const propType: NestedPropType = {
+    const propType: ObjectPropType = {
       type: PropValueType.Object,
       shape: {
         bool: { type: PropValueType.boolean, required: false },

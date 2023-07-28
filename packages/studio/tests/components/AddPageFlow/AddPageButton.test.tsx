@@ -5,6 +5,10 @@ import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
 
+jest.mock("../../__mocks__/mapping.json", () => ({
+  test: ["mockLocalData.json"],
+}));
+
 const basicPageState: PageState = {
   componentTree: [],
   cssImports: [],
@@ -128,9 +132,17 @@ describe("PagesJS repo", () => {
             value: "`${document.slug}-${document.id}`",
           },
           streamScope: { entityTypes: ["location", "restaurant"] },
+          entityFiles: ["mockLocalData.json"],
         },
       });
       await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
+
+      expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
+        "mockLocalData.json"
+      );
+      expect(useStudioStore.getState().pages.activeEntityData).toEqual({
+        __: expect.anything(),
+      });
     });
 
     it("does not require changes to stream scope or url slug", async () => {
@@ -158,7 +170,15 @@ describe("PagesJS repo", () => {
             value: "`${document.slug}`",
           },
           streamScope: {},
+          entityFiles: ["mockLocalData.json"],
         },
+      });
+
+      expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
+        "mockLocalData.json"
+      );
+      expect(useStudioStore.getState().pages.activeEntityData).toEqual({
+        __: expect.anything(),
       });
     });
 

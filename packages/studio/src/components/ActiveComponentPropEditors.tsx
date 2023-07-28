@@ -7,6 +7,7 @@ import { useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 import createIsSupportedPropMetadata from "../utils/createIsSupportedPropMetadata";
 import PropEditors from "./PropEditors";
+import MessageBubble from "./common/MessageBubble";
 
 export default function ActiveComponentPropEditors(props: {
   activeComponentState: StandardOrModuleComponentState;
@@ -31,11 +32,13 @@ export default function ActiveComponentPropEditors(props: {
 
   const propValues = activeComponentState.props;
   return (
-    <PropEditors
-      propShape={filteredPropShape}
-      propValues={propValues}
-      updateProps={updateActiveComponentProps}
-    />
+    <div className="overflow-x-auto">
+      <PropEditors
+        propShape={filteredPropShape}
+        propValues={propValues}
+        updateProps={updateActiveComponentProps}
+      />
+    </div>
   );
 }
 
@@ -46,8 +49,8 @@ export default function ActiveComponentPropEditors(props: {
  */
 function renderNoEditableProps(componentName: string) {
   return (
-    <div className="text-sm bg-gray-100 p-4 border text-gray-500 rounded-lg text-center mb-2">
-      {componentName} has no Editable Properties in this Panel.
-    </div>
+    <MessageBubble
+      message={`${componentName} has no Editable Properties in this Panel.`}
+    />
   );
 }

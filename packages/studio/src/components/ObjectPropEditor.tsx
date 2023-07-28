@@ -1,6 +1,6 @@
 import {
   PropValues,
-  NestedPropType,
+  ObjectPropType,
   PropVal,
   PropValueKind,
   PropValueType,
@@ -10,9 +10,9 @@ import PropEditors from "./PropEditors";
 import { renderBranchUI } from "./PropEditor";
 import classNames from "classnames";
 
-export default function NestedPropEditors(props: {
+export default function ObjectPropEditor(props: {
   propValues?: PropValues;
-  propType: NestedPropType;
+  propType: ObjectPropType;
   propName: string;
   updateProp: (propVal: PropVal) => void;
   isNested?: boolean;

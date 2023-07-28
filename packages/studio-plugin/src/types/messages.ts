@@ -1,9 +1,11 @@
 import { SiteSettingsValues } from "./SiteSettings";
 import { StudioData } from "./StudioData";
+import { StreamScope } from "./PageState";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
   Deploy = "studio:deploy",
+  RegenerateTestData = "studio:regenerateTestData",
 }
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
@@ -18,6 +20,11 @@ export interface SaveChangesPayload
   };
 }
 
+export interface RegenerateTestDataPayload {
+  streamScope: StreamScope;
+  pageName: string;
+}
+
 export interface StudioHMRPayload {
   updateType: "siteSettings" | "components" | "modules" | "pages" | "full";
   studioData: StudioData;
@@ -26,6 +33,7 @@ export interface StudioHMRPayload {
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
   [MessageID.Deploy]: SaveChangesPayload;
+  [MessageID.RegenerateTestData]: RegenerateTestDataPayload;
 };
 
 export type ResponseEventMap = {

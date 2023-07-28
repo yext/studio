@@ -386,6 +386,7 @@ describe("Array prop", () => {
         type: PropValueType.string,
       },
       required: false,
+      doc: "this is an array item",
     },
   };
 
@@ -535,39 +536,65 @@ describe("Array prop", () => {
     expect(expressionInput).toBeEnabled();
     expect(screen.queryByRole("tooltip")).toBeNull();
   });
+
+  it("correctly creates different tooltips for two array items with the same name", async () => {
+    mockStoreActiveComponent({
+      activeComponent: {
+        ...activeComponentState,
+        props: { arr: literalPropVal, secondArr: literalPropVal },
+      },
+    });
+    const twoArrayPropShape: PropShape = {
+      arr: {
+        type: PropValueType.Array,
+        itemType: {
+          type: PropValueType.string,
+        },
+        required: false,
+        doc: "this is an array item",
+      },
+      secondArr: {
+        type: PropValueType.Array,
+        itemType: {
+          type: PropValueType.string,
+        },
+        required: false,
+        doc: "this is another array item",
+      },
+    };
+    render(<ActiveComponentPropEditorsWrapper propShape={twoArrayPropShape} />);
+    const propLabels = screen.getAllByText("Item 1");
+    await checkTooltipFunctionality("this is an array item", propLabels[0]);
+    await checkTooltipFunctionality(
+      "this is another array item",
+      propLabels[1]
+    );
+  });
 });
 
 describe("Nested prop", () => {
-  const objPropShape: PropShape = {
-    objProp: {
-      type: PropValueType.Object,
-      required: false,
-      shape: {
-        title: {
-          type: PropValueType.string,
-          required: false,
+  const objPropShape: PropShape = createObjPropShape(
+    "objProp",
+    "this is a title"
+  );
+  const objState: StandardComponentState = {
+    ...activeComponentState,
+    props: {
+      objProp: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.Object,
+        value: {
+          title: {
+            kind: PropValueKind.Expression,
+            value: "test",
+            valueType: PropValueType.string,
+          },
         },
       },
     },
   };
 
   it("renders nested prop editors for component's prop of type Object", () => {
-    const objState: StandardComponentState = {
-      ...activeComponentState,
-      props: {
-        objProp: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.Object,
-          value: {
-            title: {
-              kind: PropValueKind.Expression,
-              value: "test",
-              valueType: PropValueType.string,
-            },
-          },
-        },
-      },
-    };
     render(
       <ActiveComponentPropEditors
         activeComponentState={objState}
@@ -576,6 +603,39 @@ describe("Nested prop", () => {
     );
     expect(screen.getByText("objProp")).toBeTruthy();
     expect(screen.getByText("title")).toBeTruthy();
+  });
+
+  it("correctly creates different tooltips for object subfields with the same name", async () => {
+    const objPropShapeTwo: PropShape = createObjPropShape(
+      "objPropTwo",
+      "this is another title"
+    );
+    const twoObjState: StandardComponentState = {
+      ...activeComponentState,
+      props: {
+        ...objState.props,
+        objPropTwo: {
+          kind: PropValueKind.Literal,
+          valueType: PropValueType.Object,
+          value: {
+            title: {
+              kind: PropValueKind.Expression,
+              value: "test-two",
+              valueType: PropValueType.string,
+            },
+          },
+        },
+      },
+    };
+    render(
+      <ActiveComponentPropEditors
+        activeComponentState={twoObjState}
+        propShape={{ ...objPropShape, ...objPropShapeTwo }}
+      />
+    );
+    const propLabels = screen.getAllByText("title");
+    await checkTooltipFunctionality("this is a title", propLabels[0]);
+    await checkTooltipFunctionality("this is another title", propLabels[1]);
   });
 
   it("renders empty curly braces for an undefined nested prop", () => {
@@ -720,4 +780,20 @@ function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape }) {
       propShape={props.propShape}
     />
   );
+}
+
+function createObjPropShape(objName: string, doc: string): PropShape {
+  return {
+    [objName]: {
+      type: PropValueType.Object,
+      required: false,
+      shape: {
+        title: {
+          type: PropValueType.string,
+          required: false,
+          doc,
+        },
+      },
+    },
+  };
 }

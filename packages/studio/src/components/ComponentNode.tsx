@@ -90,6 +90,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
             content={extractedState.message}
             anchorId={anchorId}
             place="right"
+            positionStrategy="fixed"
           />
         )}
       </div>

@@ -84,6 +84,8 @@ describe("Repeaters", () => {
   it("renders repeated component's props", () => {
     mockRepeaterActiveComponent();
     render(<PropsPanel />);
+    screen.getByText("text");
+    expect(screen.getAllByRole("textbox")[0]).toHaveValue("test");
     screen.getByText("num");
     expect(screen.getByRole("spinbutton")).toHaveValue(5);
   });
@@ -109,11 +111,4 @@ describe("Repeaters", () => {
     });
     expect(deleteButton).toBeDisabled();
   });
-});
-
-it("renders repeated component's props for a Repeater", () => {
-  mockRepeaterActiveComponent();
-  render(<PropsPanel />);
-  screen.getByText("text");
-  expect(screen.getAllByRole("textbox")[0]).toHaveValue("test");
 });

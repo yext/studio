@@ -6,8 +6,9 @@ import {
   MessageID,
   ModuleMetadata,
   ModuleState,
+  PageState,
+  PagesJsState,
   PropValues,
-  RepeaterState,
   StreamScope,
   TypeGuards,
 } from "@yext/studio-plugin";
@@ -20,16 +21,14 @@ import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
-import RepeaterActions from "./StudioActions/RepeaterActions";
 import AddComponentAction from "./StudioActions/AddComponentAction";
 import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
 import ImportComponentAction from "./StudioActions/ImportComponentAction";
+import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
 import PageDataValidator from "../utils/PageDataValidator";
 
 export default class StudioActions {
-  public addRepeater: RepeaterActions["addRepeater"];
-  public removeRepeater: RepeaterActions["removeRepeater"];
   public addComponent: AddComponentAction["addComponent"];
   public createComponentState: CreateComponentStateAction["createComponentState"];
   public updateActivePage: UpdateActivePageAction["updateActivePage"];
@@ -42,9 +41,6 @@ export default class StudioActions {
     private getPreviousSave: () => PreviousSaveSlice,
     private getStudioConfig: () => StudioConfigSlice
   ) {
-    const repeaterActions = new RepeaterActions(this);
-    this.addRepeater = repeaterActions.addRepeater;
-    this.removeRepeater = repeaterActions.removeRepeater;
     this.addComponent = new AddComponentAction(this).addComponent;
     this.createComponentState =
       new CreateComponentStateAction().createComponentState;
@@ -131,14 +127,6 @@ export default class StudioActions {
       activeComponentState.uuid,
       updatedComponentState
     );
-  };
-
-  updateRepeaterListExpression = (
-    listExpression: string,
-    repeaterState: RepeaterState
-  ) => {
-    const updatedComponentState = { ...repeaterState, listExpression };
-    this.replaceComponentState(repeaterState.uuid, updatedComponentState);
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
@@ -234,6 +222,13 @@ export default class StudioActions {
     this.getPages().clearPendingChanges();
   };
 
+  regenerateTestData = async (streamScope: StreamScope, pageName: string) => {
+    await sendMessage(MessageID.RegenerateTestData, {
+      pageName,
+      streamScope,
+    });
+  };
+
   private updatePreviousSave = () => {
     const { UUIDToFileMetadata } = this.getFileMetadatas();
     const { values } = this.getSiteSettings();
@@ -279,18 +274,37 @@ export default class StudioActions {
       throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
     PageDataValidator.validatePageName(pageName);
-    this.getPages().addPage(pageName, {
+    const pageState: PageState = {
       componentTree: [],
       cssImports: [],
       filepath,
-      ...(isPagesJSRepo &&
-        getPathValue && {
-          pagesJS: {
-            getPathValue,
-            ...(streamScope && { streamScope }),
-          },
-        }),
-    });
+    };
+    if (isPagesJSRepo && getPathValue) {
+      const pagesJsState: PagesJsState = { getPathValue, streamScope };
+      if (streamScope) {
+        await this.regenerateTestData(streamScope, pageName);
+        const mappingJsonPath = path.join(
+          this.getStudioConfig().paths.localData,
+          "mapping.json"
+        );
+        const mappingJson = await dynamicImportFromBrowser(mappingJsonPath);
+        const entityFilesForPage: string[] = mappingJson?.[pageName];
+        if (!Array.isArray(entityFilesForPage)) {
+          console.error(
+            `Error getting entity files for ${pageName} from ${JSON.stringify(
+              mappingJson,
+              null,
+              2
+            )}`
+          );
+        } else {
+          pagesJsState.entityFiles = entityFilesForPage;
+        }
+      }
+      pageState.pagesJS = pagesJsState;
+    }
+    this.getPages().addPage(pageName, pageState);
+
     await this.updateActivePage(pageName);
   };
 }
