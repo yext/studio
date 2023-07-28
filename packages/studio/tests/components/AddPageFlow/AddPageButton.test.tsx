@@ -192,9 +192,6 @@ describe("PagesJS repo", () => {
       await userEvent.click(nextButton);
       await specifyName();
       await specifyUrl("=<>[[[[field]]");
-      const urlTextbox = screen.getByRole("textbox", {
-        name: "URL Slug",
-      });
       const saveButton = screen.getByRole("button", { name: "Save" });
       await userEvent.click(saveButton);
 
