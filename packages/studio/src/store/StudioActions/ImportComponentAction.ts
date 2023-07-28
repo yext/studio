@@ -25,8 +25,7 @@ export default class ImportComponentAction {
 
   importComponent = async (c: ComponentState): Promise<void> => {
     if (
-      !TypeGuards.isEditableComponentState(c) &&
-      c.kind !== ComponentStateKind.Error
+      !TypeGuards.isEditableComponentState(c)  // Need to rethink this.
     ) {
       return;
     }

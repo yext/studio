@@ -1,6 +1,6 @@
 import useActiveComponentWithProps from "../hooks/useActiveComponentWithProps";
 import ActiveComponentPropEditors from "./ActiveComponentPropEditors";
-import { ComponentStateKind } from "@yext/studio-plugin";
+import { ComponentStateKind, TypeGuards } from "@yext/studio-plugin";
 import ModuleActions from "./ModuleActions";
 import RepeaterPanel from "./RepeaterPanel";
 import Divider from "./common/Divider";
@@ -21,6 +21,10 @@ export default function PropsPanel(): JSX.Element | null {
   } = activeComponentWithProps;
 
   const isModule = extractedComponentState.kind === ComponentStateKind.Module;
+
+  if(TypeGuards.isNonrecoverableError(extractedComponentState)) {
+    return null;
+  }
 
   return (
     <>

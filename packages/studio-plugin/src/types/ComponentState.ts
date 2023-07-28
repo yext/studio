@@ -4,10 +4,10 @@ export type ComponentState =
   | EditableComponentState
   | FragmentState
   | BuiltInState
-  | ErrorComponentState;
 
 export type EditableComponentState =
   | StandardOrModuleComponentState
+  | ErrorComponentState // rethink this
   | RepeaterState;
 
 export type StandardOrModuleComponentState =
@@ -21,6 +21,11 @@ export enum ComponentStateKind {
   BuiltIn = "builtIn", // for built in elements like div and img
   Repeater = "repeater", // for a list repeater (map function)
   Error = "error", // when the component file could not be parsed
+}
+
+export enum ErrorKind {
+  Recoverable = "recoverable",
+  Nonrecoverable = "nonrecoverable"
 }
 
 export type StandardComponentState = {
@@ -66,7 +71,8 @@ export type RepeaterState = {
    **/
   repeatedComponent:
     | Omit<StandardOrModuleComponentState, "uuid" | "parentUUID">
-    | Omit<ErrorComponentState, "uuid" | "parentUUID">;
+    | Omit<RecoverableErrorState, "uuid" | "parentUUID">
+    | Omit<NonrecoverableErrorState, "uuid" | "parentUUID">;
   /** A unique UUID for this specific component instance. */
   uuid: string;
   /** The UUID of the parent component in the tree, if one exists. */
@@ -92,7 +98,23 @@ export type BuiltInState = {
   metadataUUID?: never;
 };
 
-export type ErrorComponentState = {
+export type ErrorComponentState = 
+  | RecoverableErrorState
+  | NonrecoverableErrorState;
+
+export type RecoverableErrorState = {
+  kind: ComponentStateKind.Error;
+  componentName: string;
+  props: PropValues;
+  uuid: string;
+  metadataUUID: string;
+  parentUUID?: string;
+  fullText: string;
+  message: string;
+  errorKind: ErrorKind.Recoverable;
+}
+
+export type NonrecoverableErrorState = {
   kind: ComponentStateKind.Error;
   componentName: string;
   /**
@@ -105,4 +127,5 @@ export type ErrorComponentState = {
   parentUUID?: string;
   fullText: string;
   message: string;
-};
+  errorKind: ErrorKind.Nonrecoverable;
+}

@@ -1,6 +1,5 @@
 import {
   ComponentStateHelpers,
-  ComponentStateKind,
   FileMetadataKind,
   TypeGuards,
 } from "@yext/studio-plugin";
@@ -27,7 +26,7 @@ export default function useActiveComponentWithProps() {
   const extractedComponentState =
     ComponentStateHelpers.extractRepeatedState(activeComponentState);
 
-  if (extractedComponentState.kind === ComponentStateKind.Error) {
+  if (TypeGuards.isNonrecoverableError(extractedComponentState)) {
     return null;
   }
 

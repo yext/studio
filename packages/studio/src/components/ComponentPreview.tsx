@@ -52,7 +52,7 @@ export default function ComponentPreview({
         expressionSources={expressionSources}
       />
     );
-  } else if (componentState.kind === ComponentStateKind.Error) {
+  } else if (TypeGuards.isNonrecoverableError(componentState)) {
     return (
       <ErrorComponentPreview
         element={element}

@@ -129,8 +129,8 @@ export default class ComponentTreeHelpers {
   ): string[] {
     const expressions: string[] = componentTree.flatMap((c) => {
       if (
-        !TypeGuards.isEditableComponentState(c) &&
-        c.kind !== ComponentStateKind.Error
+        !TypeGuards.isEditableComponentState(c)  // Also need to rethink this.
+        // c.kind !== ComponentStateKind.Error
       ) {
         return [];
       }

@@ -8,16 +8,19 @@ import {
   ComponentState,
   ComponentStateKind,
   EditableComponentState,
+  ErrorKind,
   FileMetadata,
   FileMetadataKind,
   ModuleMetadata,
   ModuleState,
+  NonrecoverableErrorState,
   PropShape,
   PropType,
   PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
+  RecoverableErrorState,
   RepeaterState,
   SiteSettingsShape,
   SiteSettingsValues,
@@ -192,7 +195,8 @@ export default class TypeGuards {
   ): componentState is StandardOrModuleComponentState {
     return (
       componentState.kind === ComponentStateKind.Module ||
-      componentState.kind === ComponentStateKind.Standard
+      componentState.kind === ComponentStateKind.Standard ||
+      componentState.kind === ComponentStateKind.Error // is this OK?
     );
   }
 
@@ -208,7 +212,26 @@ export default class TypeGuards {
     return (
       componentState.kind === ComponentStateKind.Module ||
       componentState.kind === ComponentStateKind.Standard ||
+      componentState.kind === ComponentStateKind.Error || // is this OK?
       componentState.kind === ComponentStateKind.Repeater
+    );
+  }
+
+  static isNonrecoverableError(
+    componentState: ComponentState
+  ): componentState is NonrecoverableErrorState {
+    return (
+      componentState.kind === ComponentStateKind.Error &&
+      componentState.errorKind === ErrorKind.Nonrecoverable
+    );
+  }
+
+  static isRecoverableError(
+    componentState: ComponentState
+  ): componentState is RecoverableErrorState {
+    return (
+      componentState.kind === ComponentStateKind.Error &&
+      componentState.errorKind === ErrorKind.Recoverable
     );
   }
 
