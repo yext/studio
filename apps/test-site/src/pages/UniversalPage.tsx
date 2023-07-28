@@ -43,7 +43,7 @@ export default function UniversalPage({ document }: TemplateProps) {
         intervals={[
           {
             start: "01:00",
-            // end: document.hours.monday.openIntervals[0].end,
+            end: document.hours.monday.openIntervals[0].end,
           },
         ]}
       />
