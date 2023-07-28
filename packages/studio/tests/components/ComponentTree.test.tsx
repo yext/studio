@@ -47,7 +47,6 @@ describe("delete key shortcut", () => {
   });
 
   it("does not remove the active component during text input deletion", async () => {
-    const user = userEvent.setup();
     const removeComponentSpy = jest.spyOn(
       useStudioStore.getState().actions,
       "removeComponent"
@@ -55,7 +54,7 @@ describe("delete key shortcut", () => {
     render(
       <>
         <ComponentTree />
-        <input type="text" value="erase me" onChange={jest.fn()} />
+        <input type="text" defaultValue="erase me" />
       </>
     );
     const activeComponent = screen.getByText("component-name");
@@ -64,9 +63,9 @@ describe("delete key shortcut", () => {
       "mock-uuid-1"
     );
     const textInput = screen.getByRole("textbox");
-    await user.type(textInput, "{backspace}");
+    await userEvent.type(textInput, "{backspace}");
     expect(removeComponentSpy).toBeCalledTimes(0);
-    expect(textInput).toHaveValue("erase m");
     expect(screen.getByText("component-name")).toBeDefined();
+    expect(textInput).toHaveValue("erase m");
   });
 });
