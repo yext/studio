@@ -1,6 +1,6 @@
 /**
- * TemplateExpressionFormatter contains various static utility methods
- * for validation of p
+ * PageDataValidator contains various static utility methods
+ * for validation of user-inputted page data. 
  */
 export default class PageDataValidator {
   /**
