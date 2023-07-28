@@ -178,8 +178,6 @@ export default class ComponentTreeParser {
         }
       });
 
-      console.log("NONRE");
-
       return {
         kind: ComponentStateKind.Error,
         metadataUUID: fileMetadata.metadataUUID,
