@@ -9,6 +9,7 @@ import {
   PropValues,
   PropValueType,
   PropShape,
+  ErrorKind,
 } from "../../src/types";
 import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
@@ -104,6 +105,7 @@ describe("updateModuleFile", () => {
           message: "could not render ErrBanner",
           uuid: "errbanner-uuid",
           metadataUUID: "errbanner-metadata",
+          errorKind: ErrorKind.Nonrecoverable
         },
       ],
       propShape: {

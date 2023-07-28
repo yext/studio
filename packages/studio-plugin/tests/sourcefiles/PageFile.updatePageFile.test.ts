@@ -1,5 +1,5 @@
 import PageFile from "../../src/sourcefiles/PageFile";
-import { ComponentStateKind } from "../../src/types/ComponentState";
+import { ComponentStateKind, ErrorKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 import * as uuidUtils from "uuid";
@@ -352,6 +352,7 @@ describe("updatePageFile", () => {
             uuid: "error-banner-uuid",
             metadataUUID: "error-banner-metadataUUID",
             message: "could not parse banner",
+            errorKind: ErrorKind.Nonrecoverable
           },
         ],
       });
