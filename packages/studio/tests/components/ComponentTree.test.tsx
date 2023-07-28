@@ -60,9 +60,7 @@ describe("delete key shortcut", () => {
       useStudioStore.getState().actions,
       "removeComponent"
     );
-    const handleChange = () => {
-      return false;
-    };
+    const handleChange = jest.fn();
     render(
       <>
         <ComponentTree />
