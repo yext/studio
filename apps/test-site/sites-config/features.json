@@ -30,7 +30,9 @@
         "locales": ["en"],
         "primary": false
       },
-      "filter": {},
+      "filter": {
+        "entityTypes": ["location"]
+      },
       "fields": ["services", "address", "hours", "slug"]
     }
   ]
