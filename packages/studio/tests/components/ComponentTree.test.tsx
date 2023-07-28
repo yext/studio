@@ -31,7 +31,7 @@ describe("delete key shortcut", () => {
     });
   });
 
-  it("delete key calls function to remove the active component", async () => {
+  it("delete key calls function to remove the active component", () => {
     const removeComponentSpy = jest.spyOn(
       useStudioStore.getState().actions,
       "removeComponent"
