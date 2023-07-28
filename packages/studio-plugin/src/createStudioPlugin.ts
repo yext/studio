@@ -12,7 +12,6 @@ import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
 import HmrManager from "./HmrManager";
 import getLocalDataMapping from "./parsers/getLocalDataMapping";
-import openBrowser from "react-dev-utils/openBrowser";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import upath from "upath";
 import lodash from "lodash";
@@ -69,13 +68,6 @@ export default async function createStudioPlugin(
   return {
     name: "yext-studio-vite-plugin",
     buildStart() {
-      if (
-        args.mode === "development" &&
-        args.command === "serve" &&
-        studioConfig.openBrowser
-      ) {
-        openBrowser(`http://localhost:${studioConfig.port}/`);
-      }
       const watchDir = (dirPath: string) => {
         if (existsSync(dirPath)) {
           readdirSync(dirPath).forEach((filename) => {
@@ -100,7 +92,10 @@ export default async function createStudioPlugin(
       const serverConfig: UserConfig = {
         server: {
           port: studioConfig.port,
-          strictPort: true,
+          open:
+            args.mode === "development" &&
+            args.command === "serve" &&
+            studioConfig.openBrowser,
         },
       };
       return lodash.merge({}, config, serverConfig);
