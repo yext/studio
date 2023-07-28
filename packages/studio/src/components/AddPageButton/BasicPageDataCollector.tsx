@@ -42,7 +42,8 @@ export default function BasicPageDataCollector({
         const getPathValue = data.url
           ? createGetPathVal(data.url, isEntityPage)
           : undefined;
-        if (getPathValue) PageDataValidator.validateURLSlug(getPathValue.value, isEntityPage);
+        if (getPathValue)
+          PageDataValidator.validateURLSlug(getPathValue.value, isEntityPage);
         await handleConfirm(data.pageName, getPathValue);
         return true;
       } catch (err: unknown) {

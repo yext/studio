@@ -195,9 +195,11 @@ describe("PagesJS repo", () => {
       const saveButton = screen.getByRole("button", { name: "Save" });
       await userEvent.click(saveButton);
 
-      expect(screen.getByText("URL slug contains invalid characters: <>")).toBeDefined();
+      expect(
+        screen.getByText("URL slug contains invalid characters: <>")
+      ).toBeDefined();
       expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
-    })
+    });
   });
 });
 
