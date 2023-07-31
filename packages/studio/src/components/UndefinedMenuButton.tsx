@@ -50,7 +50,7 @@ export default function UndefinedMenuButton({
       propType.type !== PropValueType.Array,
   });
   const buttonContainerClasses = classNames("flex pl-2", {
-    "mb-2":
+    "mt-3":
       propType.type !== PropValueType.Object &&
       propType.type !== PropValueType.Array,
     "mt-2": propType.type === PropValueType.Object,

@@ -46,7 +46,6 @@ export default function PropEditor({
         className="flex h-10 items-center justify-self-start"
         id={labelTooltipId}
       >
-        <p className="pr-2">{propName}</p>
         <PropInput
           {...{
             propType:

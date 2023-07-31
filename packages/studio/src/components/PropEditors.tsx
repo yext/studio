@@ -86,13 +86,13 @@ function renderWrappedPropEditor(
     return editor;
   }
   return (
-    <UndefinedMenuButton
-      propType={propMetadata}
-      isUndefined={!propVal}
-      updateProp={updateProp}
-    >
-      {editor}
-    </UndefinedMenuButton>
+      <UndefinedMenuButton
+        propType={propMetadata}
+        isUndefined={!propVal}
+        updateProp={updateProp}
+      >
+        {editor}
+      </UndefinedMenuButton>
   );
 }
 
@@ -140,15 +140,21 @@ export function renderPropEditor(
   }
 
   const propKind = getPropKind(propMetadata);
+  const titleStyling = classNames('text-sm pb-1', {
+    "pl-4": isNested
+  })
   return (
-    <PropEditor
-      onPropChange={updateProp}
-      propKind={propKind}
-      propName={propName}
-      propMetadata={propMetadata}
-      propValue={PropValueHelpers.getPropValue(propVal, propKind)}
-      isNested={isNested}
-    />
+    <div className="flex-col">
+      <p className={titleStyling}>{propName}</p> 
+      <PropEditor
+        onPropChange={updateProp}
+        propKind={propKind}
+        propName={propName}
+        propMetadata={propMetadata}
+        propValue={PropValueHelpers.getPropValue(propVal, propKind)}
+        isNested={isNested}
+      />
+  </ div>
   );
 }
 
