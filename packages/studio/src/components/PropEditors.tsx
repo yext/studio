@@ -14,7 +14,6 @@ import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
 import UndefinedMenuButton from "./UndefinedMenuButton";
 
-
 export default function PropEditors(props: {
   propShape: PropShape;
   propValues: PropValues;

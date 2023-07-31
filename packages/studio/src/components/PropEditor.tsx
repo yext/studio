@@ -43,37 +43,40 @@ export default function PropEditor({
 
   return (
     <div className="flex items-center mb-2 text-sm">
-      {renderBranchUI(isNested,  "pt-5")}
+      {renderBranchUI(isNested, "pt-5")}
       <label
         className="flex-col items-center justify-self-start"
         id={labelTooltipId}
       >
-      <p className="pb-1">{propName}</p>
-          <PropInput
-            {...{
-              propType:
-                propKind === PropValueKind.Expression
-                  ? { type: PropValueType.string }
-                  : propMetadata,
-              propValue,
-              onChange,
-              propKind,
-            }}
-          />
-      {doc && (
-        <Tooltip
-          style={tooltipStyle}
-          anchorId={labelTooltipId}
-          content={doc}
-          place="left"
+        <p className="pb-1">{propName}</p>
+        <PropInput
+          {...{
+            propType:
+              propKind === PropValueKind.Expression
+                ? { type: PropValueType.string }
+                : propMetadata,
+            propValue,
+            onChange,
+            propKind,
+          }}
         />
-      )}
+        {doc && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={labelTooltipId}
+            content={doc}
+            place="left"
+          />
+        )}
       </label>
     </div>
   );
 }
 
 export function renderBranchUI(isNested?: boolean, additionalClasses = "") {
-  const classes = classNames("mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap", additionalClasses)
+  const classes = classNames(
+    "mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap",
+    additionalClasses
+  );
   return isNested && <div className={classes}>---</div>;
 }
