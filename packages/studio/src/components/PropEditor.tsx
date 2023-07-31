@@ -62,13 +62,13 @@ export default function PropEditor({
         />
       </label>
       {doc && (
-          <Tooltip
-            style={tooltipStyle}
-            anchorId={labelTooltipId}
-            content={doc}
-            place="left"
-          />
-        )}
+        <Tooltip
+          style={tooltipStyle}
+          anchorId={labelTooltipId}
+          content={doc}
+          place="left"
+        />
+      )}
     </div>
   );
 }
