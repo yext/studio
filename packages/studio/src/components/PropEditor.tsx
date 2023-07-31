@@ -60,7 +60,8 @@ export default function PropEditor({
             propKind,
           }}
         />
-        {doc && (
+      </label>
+      {doc && (
           <Tooltip
             style={tooltipStyle}
             anchorId={labelTooltipId}
@@ -68,7 +69,6 @@ export default function PropEditor({
             place="left"
           />
         )}
-      </label>
     </div>
   );
 }
