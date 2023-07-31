@@ -1,6 +1,6 @@
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
-import { HmrContext, ModuleNode, ViteDevServer } from "vite";
+import { HmrContext, ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID";
 import upath from "upath";
 
@@ -22,7 +22,7 @@ export default class HmrManager {
    */
   handleHotUpdate = async (
     ctx: HmrContext
-  ): Promise<Array<ModuleNode> | void> => {
+  ): Promise<void> => {
     const { server, file } = ctx;
 
     await HmrManager.reloadAssociatedModules(ctx);
