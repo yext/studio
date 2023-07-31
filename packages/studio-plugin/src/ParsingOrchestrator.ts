@@ -44,7 +44,7 @@ export default class ParsingOrchestrator {
   constructor(
     private project: Project,
     private studioConfig: StudioConfigWithDefaulting,
-    private getLocalDataMapping: () => Promise<Record<string, string[]> | undefined>
+    private getMapping: () => Record<string, string[]> | undefined
   ) {
     this.paths = studioConfig.paths;
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
@@ -60,7 +60,7 @@ export default class ParsingOrchestrator {
   }
 
   private createPageFile(pageName: string) {
-    const pageEntityFiles = this.getLocalDataMapping()?.[pageName];
+    const pageEntityFiles = this.getMapping()?.[pageName];
     return new PageFile(
       upath.join(this.paths.pages, pageName + ".tsx"),
       this.getFileMetadata,

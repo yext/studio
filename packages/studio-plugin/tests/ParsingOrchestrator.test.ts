@@ -122,7 +122,7 @@ describe("aggregates data as expected", () => {
 
   describe("PagesJS state", () => {
     it("aggregates pageNameToPageState as expected when receives a localDataMapping", async () => {
-      const localDataMapping = await getLocalDataMapping(userPaths.localData);
+      const localDataMapping = await getMapping(userPaths.localData);
       const orchestrator = createParsingOrchestrator({
         localDataMapping,
         isPagesJS: true,

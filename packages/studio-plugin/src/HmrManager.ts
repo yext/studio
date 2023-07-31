@@ -26,7 +26,7 @@ export default class HmrManager {
     console.log('hmr update ---', ctx.file)
     const { server, file } = ctx;
     if (upath.normalize(file) === this.mappingManager.mappingPath) {
-      await this.mappingManager.refreshMapping();
+      this.mappingManager.refreshMapping();
       return [];
     }
 
@@ -53,17 +53,9 @@ export default class HmrManager {
    */
   shouldExcludeFromWatch = (filepath: string): boolean => {
     const isLocalDataFile = upath.normalize(filepath).startsWith(this.localDataFolder)
-    return isLocalDataFile
     return isLocalDataFile && upath.basename(filepath) !== 'mapping.json'
   }
 
-  /**
-   * 
-   */
-  private handleMappingJsonUpdate(ctx: HmrContext) {
-    // this.lo
-    return [];
-  }
 
   private static async reloadAssociatedModules(ctx: HmrContext) {
     const reloadModulePromises = ctx.modules.map((m) => {

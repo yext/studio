@@ -1,24 +1,24 @@
 import upath from "upath";
 import { existsSync } from "fs";
-import { dynamicImportJson } from "./utils/dynamicImport";
+import fs from "fs";
 
 export default class LocalDataMappingManager {
-  private localDataMapping?: Record<string, string[]>
+  private localDataMapping: Record<string, string[]>
   mappingPath: string
 
   constructor(localDataPath: string, private isPagesJSRepo: boolean) {
     this.mappingPath = upath.join(localDataPath, 'mapping.json')
+    this.localDataMapping = this.readLocalDataMapping()
   }
 
-  getLocalDataMapping = async () => {
-    if (!this.localDataMapping) {
-      this.localDataMapping = await this.readLocalDataMapping()
-    }
+  getMapping = () => {
+    console.log('getMappping')
     return this.localDataMapping
   }
 
-  async refreshMapping() {
-    this.localDataMapping = await this.readLocalDataMapping()
+  refreshMapping() {
+    console.log('refresh mappign')
+    this.localDataMapping = this.readLocalDataMapping()
   }
   
   private readLocalDataMapping() { 
@@ -27,6 +27,7 @@ export default class LocalDataMappingManager {
         `The localData's mapping.json does not exist, expected the file to be at "${this.mappingPath}".`
       );
     }
-    return dynamicImportJson(this.mappingPath);
+    const jsonString = fs.readFileSync(this.mappingPath, 'utf-8')
+    return JSON.parse(jsonString);
   }
 }
