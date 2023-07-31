@@ -17,7 +17,7 @@ interface ComponentNodeProps {
   componentState: ComponentState;
   /** The depth of this node inside ComponentTree.*/
   depth: number;
-  /** Whether this node's children are visible, if it h das children. */
+  /** Whether this node's children are visible, if it has children. */
   isOpen: boolean;
   /** Toggle callback to open/close the node. */
   onToggle: (nodeId: string, newOpenValue: boolean) => void;
