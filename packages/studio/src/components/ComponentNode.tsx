@@ -31,16 +31,11 @@ interface ComponentNodeProps {
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
   const [activeComponentUUID, selectedComponentUUIDs, setActiveComponentUUID, addSelectedComponentUUID, removeSelectedComponentUUID, clearSelectedComponentUUIDs] = useStudioStore(
-  const [activeComponentUUID, selectedComponentUUIDs, setActiveComponentUUID, addSelectedComponentUUID, removeSelectedComponentUUID, clearSelectedComponentUUIDs] = useStudioStore(
     (store) => {
       return [
         store.pages.activeComponentUUID,
         store.pages.selectedComponentUUIDs,
-        store.pages.selectedComponentUUIDs,
         store.pages.setActiveComponentUUID,
-        store.pages.addSelectedComponentUUID,
-        store.pages.removeSelectedComponentUUID,
-        store.pages.clearSelectedComponentUUIDs,
         store.pages.addSelectedComponentUUID,
         store.pages.removeSelectedComponentUUID,
         store.pages.clearSelectedComponentUUIDs,
@@ -49,7 +44,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
-  const isSelectedComponent = selectedComponentUUIDs.includes(componentState.uuid);
   const isSelectedComponent = selectedComponentUUIDs.includes(componentState.uuid);
 
   const vectorClassName = classNames("cursor-pointer", {
@@ -79,7 +73,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const extractedState =
     ComponentStateHelpers.extractRepeatedState(componentState);
   const isErrorState = extractedState.kind === ComponentStateKind.Error;
-  console.log(componentState.uuid, " isActive", isActiveComponent, " isSelected", isSelectedComponent);
   const componentNodeClasses = classNames(
     "flex pr-4 items-center justify-between h-9",
     {

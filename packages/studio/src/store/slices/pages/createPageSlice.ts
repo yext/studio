@@ -27,7 +27,6 @@ const initialStates: PageSliceStates = {
   activeComponentUUID: undefined,
   activeComponentRect: undefined,
   selectedComponentUUIDs: [],
-  selectedComponentUUIDs: [],
   pendingChanges: {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
