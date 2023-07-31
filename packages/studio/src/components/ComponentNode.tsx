@@ -108,7 +108,10 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 }
 
-function useDeleteKeyListener(isActiveComponent: boolean, componentStateUUID: string) {
+function useDeleteKeyListener(
+  isActiveComponent: boolean,
+  componentStateUUID: string
+) {
   const removeComponent = useStudioStore((store) => {
     return store.actions.removeComponent;
   });
