@@ -48,7 +48,7 @@ export default function PropEditor({
         className="flex-col items-center justify-self-start"
         id={labelTooltipId}
       >
-      <p className="text-sm pb-1">{propName}</p>
+      <p className="pb-1">{propName}</p>
           <PropInput
             {...{
               propType:
