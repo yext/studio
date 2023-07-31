@@ -73,7 +73,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleKeyDown = useDeleteKeyListener(
     isActiveComponent,
-    activeComponentUUID
+    componentState.uuid
   );
 
   return (
@@ -108,16 +108,16 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 }
 
-function useDeleteKeyListener(isActiveComponent, activeComponentUUID) {
+function useDeleteKeyListener(isActiveComponent: boolean, componentStateUUID: string) {
   const removeComponent = useStudioStore((store) => {
     return store.actions.removeComponent;
   });
   return useCallback(
     (event) => {
       if (isActiveComponent && event.key === "Backspace") {
-        removeComponent(activeComponentUUID);
+        removeComponent(componentStateUUID);
       }
     },
-    [isActiveComponent, activeComponentUUID, removeComponent]
+    [isActiveComponent, componentStateUUID, removeComponent]
   );
 }
