@@ -147,7 +147,7 @@ function LiteralEditor({
 
   const buttonClasses = classNames("ml-3", {
     "self-start mt-2": itemType.type === PropValueType.Object,
-    "mb-2": itemType.type !== PropValueType.Object,
+    "mt-2": itemType.type !== PropValueType.Object,
   });
 
   return (
