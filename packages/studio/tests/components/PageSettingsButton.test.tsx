@@ -49,6 +49,16 @@ beforeEach(() => {
             },
           },
         },
+        invalid_slug: {
+          ...basePageState,
+          pagesJS: {
+            getPathValue: {
+              kind: PropValueKind.Expression,
+              value: "iaminvalid<>|||||{document.no}",
+            },
+            streamScope: {},
+          },
+        },
       },
     },
     studioConfig: {
@@ -188,7 +198,7 @@ it("shows a tooltip when hovering over the label", async () => {
   );
 });
 
-async function editUndefinedURL(pageName: string) {
+async function cannotEditURL(pageName: string) {
   const updateGetPathValueSpy = jest.spyOn(
     useStudioStore.getState().pages,
     "updateGetPathValue"
@@ -205,12 +215,16 @@ async function editUndefinedURL(pageName: string) {
   expect(updateGetPathValueSpy).toBeCalledTimes(0);
 }
 
-it("displays URL placeholder and can edit URL when static page's getPath value is undefined", async () => {
-  await editUndefinedURL("index");
+it("displays URL placeholder and cannot edit URL when static page's getPath value is undefined", async () => {
+  await cannotEditURL("index");
 });
 
 it("displays URL placeholder and cannot edit URL when entity page's getPath value is undefined", async () => {
-  await editUndefinedURL("fruits");
+  await cannotEditURL("fruits");
+});
+
+it("displays URL placeholder and cannot edit URL when entity page's getPath value is invalid", async () => {
+  await cannotEditURL("invalid_slug");
 });
 
 it("throws an error when user enters an invalid URL slug and allows user to fix", async () => {
