@@ -99,8 +99,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         tabIndex={0}
-        onKeyDown={handleKeyDown}
-        tabIndex={0}
         id={anchorId}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
@@ -141,36 +139,5 @@ function useDeleteKeyListener(
       }
     },
     [isActiveComponent, componentStateUUID, removeComponent]
-  );
-}
-
-function useDeleteKeyListener(
-  isActiveComponent: boolean,
-  componentStateUUID: string
-) {
-  const removeComponent = useStudioStore((store) => {
-    return store.actions.removeComponent;
-  });
-  return useCallback(
-    (event: KeyboardEvent<HTMLDivElement>) => {
-      if (isActiveComponent && event.key === "Backspace") {
-        removeComponent(componentStateUUID);
-      }
-    },
-    [isActiveComponent, componentStateUUID, removeComponent]
-  );
-}
-
-function useDeleteKeyListener(isActiveComponent, activeComponentUUID) {
-  const removeComponent = useStudioStore((store) => {
-    return store.actions.removeComponent;
-  });
-  return useCallback(
-    (event) => {
-      if (event.key === "Backspace" && isActiveComponent) {
-        removeComponent(activeComponentUUID);
-      }
-    },
-    [isActiveComponent, activeComponentUUID, removeComponent]
   );
 }
