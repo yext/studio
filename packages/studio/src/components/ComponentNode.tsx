@@ -30,25 +30,41 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const [activeComponentUUID, setActiveComponentUUID] = useStudioStore(
+  const [activeComponentUUID, selectedComponentUUIDs, setActiveComponentUUID, addSelectedComponentUUID, removeSelectedComponentUUID, clearSelectedComponentUUIDs] = useStudioStore(
     (store) => {
       return [
         store.pages.activeComponentUUID,
+        store.pages.selectedComponentUUIDs,
         store.pages.setActiveComponentUUID,
+        store.pages.addSelectedComponentUUID,
+        store.pages.removeSelectedComponentUUID,
+        store.pages.clearSelectedComponentUUIDs,
       ];
     }
   );
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
+  const isSelectedComponent = selectedComponentUUIDs.includes(componentState.uuid);
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
     invisible: !hasChild,
   });
 
-  const handleClick = useCallback(() => {
+  const handleClick = useCallback((event) => {
+    if (event.shiftKey) {
+      if (isSelectedComponent) {
+        removeSelectedComponentUUID(componentState.uuid);
+        return;
+      }
+      else addSelectedComponentUUID(componentState.uuid);
+    }
+    else {
+      clearSelectedComponentUUIDs();
+      addSelectedComponentUUID(componentState.uuid);
+    }
     setActiveComponentUUID(componentState.uuid);
-  }, [componentState.uuid, setActiveComponentUUID]);
+  }, [componentState.uuid, isSelectedComponent, isActiveComponent, setActiveComponentUUID, addSelectedComponentUUID, removeSelectedComponentUUID, clearSelectedComponentUUIDs]);
 
   const componentNodeStyle = useMemo(
     () => ({ paddingLeft: `${depth}em` }),
@@ -57,11 +73,12 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const extractedState =
     ComponentStateHelpers.extractRepeatedState(componentState);
   const isErrorState = extractedState.kind === ComponentStateKind.Error;
+  console.log(componentState.uuid, " isActive", isActiveComponent, " isSelected", isSelectedComponent);
   const componentNodeClasses = classNames(
     "flex pr-4 items-center justify-between h-9",
     {
-      "bg-blue-100": isActiveComponent,
-      "hover:bg-gray-100": !isActiveComponent,
+      "bg-blue-100": isActiveComponent || isSelectedComponent,
+      "hover:bg-gray-100": !isActiveComponent && !isSelectedComponent,
       "text-red-500": isErrorState,
     }
   );
@@ -71,11 +88,18 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
+  const handleKeyDown = useDeleteKeyListener(
+    isActiveComponent,
+    activeComponentUUID
+  );
+
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
       <div
         className="flex grow items-center cursor-pointer"
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
         id={anchorId}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
@@ -98,5 +122,19 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         <RemoveElementButton elementUUID={componentState.uuid} />
       )}
     </div>
+  );
+}
+
+function useDeleteKeyListener(isActiveComponent, activeComponentUUID) {
+  const removeComponent = useStudioStore((store) => {
+    return store.actions.removeComponent;
+  });
+  return useCallback(
+    (event) => {
+      if (event.key === "Backspace" && isActiveComponent) {
+        removeComponent(activeComponentUUID);
+      }
+    },
+    [isActiveComponent, activeComponentUUID, removeComponent]
   );
 }

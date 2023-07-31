@@ -31,6 +31,8 @@ export interface PageSliceStates {
    * The part of state that tracks which pages have been interacted with from
    * the UI and have changes pending on commit.
    */
+  /** The uuids of the currently selected components in Studio (including the active component). */
+  selectedComponentUUIDs: string[];
   pendingChanges: {
     /** The names of pages that need to be removed from the user's file system. */
     pagesToRemove: Set<string>;
@@ -66,6 +68,10 @@ interface PageSliceActions {
     parentFolder: string,
     activeEntityFile?: string
   ) => Promise<void>;
+
+  addSelectedComponentUUID: (selectedComponentUUID: string) => void;
+  removeSelectedComponentUUID: (selectedComponentUUID: string) => void;
+  clearSelectedComponentUUIDs: () => void;
 
   clearPendingChanges: () => void;
   detachAllModuleInstances: (metadata: ModuleMetadata) => void;

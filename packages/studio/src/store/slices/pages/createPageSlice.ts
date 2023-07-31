@@ -26,6 +26,7 @@ const initialStates: PageSliceStates = {
   activeEntityFile: undefined,
   activeComponentUUID: undefined,
   activeComponentRect: undefined,
+  selectedComponentUUIDs: [],
   pendingChanges: {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
@@ -147,6 +148,34 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       return activePageState.componentTree.find(
         (component) => component.uuid === activeComponentUUID
       );
+    },
+    addSelectedComponentUUID: (selectedComponentUUID: string) => {
+      console.log("add");
+      set((store) => {
+        const selectedComponentUUIDs = store.selectedComponentUUIDs;
+        if (selectedComponentUUIDs.includes(selectedComponentUUID)) {
+          throw new Error(
+            `Error selecting component: component is already selected.`
+          );
+        }
+        selectedComponentUUIDs.push(selectedComponentUUID);
+      });
+    },
+    removeSelectedComponentUUID: (selectedComponentUUID: string) => {
+      console.log("remove");
+      set((store) => {
+        const selectedComponentUUIDs = store.selectedComponentUUIDs;
+        if (!selectedComponentUUIDs.includes(selectedComponentUUID)) {
+          throw new Error(
+            `Error removing component: component is not selected.`
+          );
+        }
+        store.selectedComponentUUIDs = selectedComponentUUIDs.filter(uuid => uuid !== selectedComponentUUID);
+      });
+    },
+    clearSelectedComponentUUIDs: () => {
+      console.log("clear");
+      set({ selectedComponentUUIDs: [] });
     },
   };
 
