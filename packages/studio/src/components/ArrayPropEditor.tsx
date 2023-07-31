@@ -70,7 +70,7 @@ export default function ArrayPropEditor({
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div className="flex flex-col">
-        <label className="flex items-center">
+        <label className="flex-col items-center">
           <p className="pr-2 font-semibold" id={docTooltipId}>
             {propName}
           </p>
