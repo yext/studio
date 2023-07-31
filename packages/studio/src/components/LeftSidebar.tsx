@@ -12,7 +12,7 @@ import useStudioStore from "../store/useStudioStore";
  * modules in the component tree of the active page.
  */
 export default function LeftSidebar(): JSX.Element {
-  const file = useStudioStore(store => store.pages.activeEntityFile)
+  const file = useStudioStore((store) => store.pages.activeEntityFile);
   return (
     <div className="flex flex-col w-1/4 px-4">
       file: {file}

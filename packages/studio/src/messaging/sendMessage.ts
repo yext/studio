@@ -19,7 +19,8 @@ export default async function sendMessage<T extends MessageID>(
     method: "POST",
     body: JSON.stringify(payload),
   });
-  const responseData: ResponseEventMap[T] | ErrorResponse = await response.json();
+  const responseData: ResponseEventMap[T] | ErrorResponse =
+    await response.json();
   if (responseData.type === "error") {
     toast.error(responseData.msg);
     throw new Error(responseData.msg);

@@ -5,7 +5,6 @@ import {
   PagesJsState,
 } from "@yext/studio-plugin";
 import path from "path-browserify";
-import dynamicImportFromBrowser from "../../utils/dynamicImportFromBrowser";
 import StudioConfigSlice from "../models/slices/StudioConfigSlice";
 import PageSlice from "../models/slices/PageSlice";
 import StudioActions from "../StudioActions";

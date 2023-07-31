@@ -36,19 +36,19 @@ export type StudioEventMap = {
 };
 
 type BaseResponse = {
-  type: "success",
+  type: "success";
   msg: string;
 };
 
 export type ErrorResponse = {
-  type: "error",
-  msg: string
-}
+  type: "error";
+  msg: string;
+};
 
 export type ResponseEventMap = {
-  [MessageID.Deploy]: BaseResponse
-  [MessageID.SaveChanges]: BaseResponse
+  [MessageID.Deploy]: BaseResponse;
+  [MessageID.SaveChanges]: BaseResponse;
   [MessageID.GenerateTestData]: BaseResponse & {
-    mappingJson: Record<string, string[]>
-  }
+    mappingJson: Record<string, string[]>;
+  };
 };

@@ -13,7 +13,6 @@ import {
 } from "../src/types";
 import { Project } from "ts-morph";
 import fs from "fs";
-import getLocalDataMapping from "../src/parsers/getLocalDataMapping";
 import prettyPrintError from "../src/errors/prettyPrintError";
 import { assertIsOk } from "./__utils__/asserts";
 

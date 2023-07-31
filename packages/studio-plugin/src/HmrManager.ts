@@ -20,8 +20,10 @@ export default class HmrManager {
    *
    * See import('vite').Plugin.handleHotUpdate
    */
-  handleHotUpdate = async (ctx: HmrContext): Promise<Array<ModuleNode> | void> => {
-    console.log('hmr update ---', ctx.file)
+  handleHotUpdate = async (
+    ctx: HmrContext
+  ): Promise<Array<ModuleNode> | void> => {
+    console.log("hmr update ---", ctx.file);
     const { server, file } = ctx;
 
     await HmrManager.reloadAssociatedModules(ctx);
@@ -37,18 +39,17 @@ export default class HmrManager {
       event: StudioHMRUpdateID,
       data,
     });
-  }
+  };
 
   /**
    * Whether or not a given file should be excluded from being watched.
-   * 
+   *
    * Currently we ignore all files under localData, to avoid a full page refresh when
    * the generate-test-data yext CLI command is called
    */
   shouldExcludeFromWatch = (filepath: string): boolean => {
-    return upath.normalize(filepath).startsWith(this.localDataFolder)
-  }
-
+    return upath.normalize(filepath).startsWith(this.localDataFolder);
+  };
 
   private static async reloadAssociatedModules(ctx: HmrContext) {
     const reloadModulePromises = ctx.modules.map((m) => {

@@ -46,7 +46,10 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
-  const mappingManager = new LocalDataMappingManager(studioConfig.paths.localData, studioConfig.isPagesJSRepo);
+  const mappingManager = new LocalDataMappingManager(
+    studioConfig.paths.localData,
+    studioConfig.isPagesJSRepo
+  );
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig,
@@ -96,8 +99,8 @@ export default async function createStudioPlugin(
             args.command === "serve" &&
             studioConfig.openBrowser,
           watch: {
-            ignored: hmrManager.shouldExcludeFromWatch
-          }
+            ignored: hmrManager.shouldExcludeFromWatch,
+          },
         },
       };
       return lodash.merge({}, config, serverConfig);
@@ -109,7 +112,7 @@ export default async function createStudioPlugin(
     },
     load(id) {
       if (id === mappingManager.mappingPath) {
-        return `${JSON.stringify(mappingManager.getMapping())}`
+        return `${JSON.stringify(mappingManager.getMapping())}`;
       }
       if (id === "\0" + VirtualModuleID.StudioData) {
         return `export default ${JSON.stringify(orchestrator.getStudioData())}`;

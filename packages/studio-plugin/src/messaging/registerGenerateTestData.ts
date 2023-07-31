@@ -8,14 +8,17 @@ import LocalDataMappingManager from "../LocalDataMappingManager";
 /**
  * Registers a listener for regenerating test data.
  */
-export default function registerRegenerateTestData(server: ViteDevServer, mappingManager: LocalDataMappingManager) {
+export default function registerRegenerateTestData(
+  server: ViteDevServer,
+  mappingManager: LocalDataMappingManager
+) {
   registerListener(
     server,
     MessageID.GenerateTestData,
     ({ featuresJson }: GenerateTestDataPayload) => {
       const msg = generateTestData(featuresJson);
       mappingManager.refreshMapping();
-      return { type: 'success', msg, mappingJson: mappingManager.getMapping() };
+      return { type: "success", msg, mappingJson: mappingManager.getMapping() };
     }
   );
 }
