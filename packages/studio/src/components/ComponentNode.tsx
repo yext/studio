@@ -6,7 +6,7 @@ import {
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, KeyboardEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
@@ -17,7 +17,7 @@ interface ComponentNodeProps {
   componentState: ComponentState;
   /** The depth of this node inside ComponentTree.*/
   depth: number;
-  /** Whether this node's children are visible, if it has children. */
+  /** Whether this node's children are visible, if it h das children. */
   isOpen: boolean;
   /** Toggle callback to open/close the node. */
   onToggle: (nodeId: string, newOpenValue: boolean) => void;
@@ -116,7 +116,7 @@ function useDeleteKeyListener(
     return store.actions.removeComponent;
   });
   return useCallback(
-    (event) => {
+    (event: KeyboardEvent<HTMLDivElement>) => {
       if (isActiveComponent && event.key === "Backspace") {
         removeComponent(componentStateUUID);
       }
