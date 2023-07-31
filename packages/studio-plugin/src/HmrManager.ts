@@ -20,9 +20,7 @@ export default class HmrManager {
    *
    * See import('vite').Plugin.handleHotUpdate
    */
-  handleHotUpdate = async (
-    ctx: HmrContext
-  ): Promise<void> => {
+  handleHotUpdate = async (ctx: HmrContext): Promise<void> => {
     const { server, file } = ctx;
 
     await HmrManager.reloadAssociatedModules(ctx);
