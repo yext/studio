@@ -5,6 +5,7 @@ import registerDeployListener from "./messaging/registerDeployListener";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import registerGenerateTestData from "./messaging/registerGenerateTestData";
+import LocalDataMappingManager from "./LocalDataMappingManager";
 
 /**
  * A factory method for our vite plugin's configureServer handler.
@@ -12,7 +13,8 @@ import registerGenerateTestData from "./messaging/registerGenerateTestData";
 export default function createConfigureStudioServer(
   fileSystemManager: FileSystemManager,
   gitWrapper: GitWrapper,
-  orchestrator: ParsingOrchestrator
+  orchestrator: ParsingOrchestrator,
+  mappingManager: LocalDataMappingManager
 ) {
   /**
    * Sets up websocket listeners.
@@ -25,6 +27,6 @@ export default function createConfigureStudioServer(
       orchestrator
     );
     registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
-    registerGenerateTestData(server);
+    registerGenerateTestData(server, mappingManager);
   };
 }

@@ -3,16 +3,19 @@ import { registerListener } from "./registerListener";
 import { ViteDevServer } from "vite";
 import { MessageID, GenerateTestDataPayload } from "../types";
 import { FeaturesJson } from "../types/PagesJS";
+import LocalDataMappingManager from "../LocalDataMappingManager";
 
 /**
  * Registers a listener for regenerating test data.
  */
-export default function registerRegenerateTestData(server: ViteDevServer) {
+export default function registerRegenerateTestData(server: ViteDevServer, mappingManager: LocalDataMappingManager) {
   registerListener(
     server,
     MessageID.GenerateTestData,
     ({ featuresJson }: GenerateTestDataPayload) => {
-      return generateTestData(featuresJson);
+      const msg = generateTestData(featuresJson);
+      mappingManager.refreshMapping();
+      return { type: 'success', msg, mappingJson: mappingManager.getMapping() };
     }
   );
 }

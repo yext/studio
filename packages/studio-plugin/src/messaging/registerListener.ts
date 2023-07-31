@@ -1,5 +1,5 @@
 import { ViteDevServer } from "vite";
-import { MessageID, ResponseEventMap, StudioEventMap } from "../types";
+import { ErrorResponse, MessageID, ResponseEventMap, StudioEventMap } from "../types";
 import { IncomingMessage } from "http";
 
 /**
@@ -9,7 +9,7 @@ import { IncomingMessage } from "http";
 export function registerListener<T extends MessageID>(
   server: ViteDevServer,
   messageId: T,
-  listener: (data: StudioEventMap[T]) => Promise<string> | string
+  listener: (data: StudioEventMap[T]) => Promise<ResponseEventMap[T]> | ResponseEventMap[T]
 ) {
   server.middlewares.use(async (req, res, next) => {
     if (req.url === `/${messageId}`) {
@@ -27,14 +27,10 @@ export function registerListener<T extends MessageID>(
 
 async function getResponsePayload<T extends MessageID>(
   messageId: T,
-  handler: () => Promise<string> | string
-): Promise<ResponseEventMap[T]> {
+  handler: () => Promise<ResponseEventMap[T]> | ResponseEventMap[T]
+): Promise<ResponseEventMap[T] | ErrorResponse> {
   try {
-    const msg = await handler();
-    return {
-      type: "success",
-      msg,
-    };
+    return handler();
   } catch (error: unknown) {
     let msg = `Error occurred for event ${messageId}`;
     if (typeof error === "string") {

@@ -60,12 +60,7 @@ export default class CreatePageAction {
   }
 
   private async regenerateTestData(pageName: string) {
-    await this.studioActions.generateTestData();
-    const mappingJsonPath = path.join(
-      this.getStudioConfigSlice().paths.localData,
-      "mapping.json"
-    );
-    const mappingJson = await dynamicImportFromBrowser(mappingJsonPath);
+    const mappingJson = await this.studioActions.generateTestData();
     const entityFilesForPage: string[] = mappingJson?.[pageName];
     if (!Array.isArray(entityFilesForPage)) {
       console.error(

@@ -54,7 +54,6 @@ export default async function createStudioPlugin(
   );
   const hmrManager = new HmrManager(
     orchestrator,
-    mappingManager,
     pathToUserProjectRoot,
     studioConfig.paths,
     studioConfig.paths.localData
@@ -121,7 +120,8 @@ export default async function createStudioPlugin(
     configureServer: createConfigureStudioServer(
       fileSystemManager,
       gitWrapper,
-      orchestrator
+      orchestrator,
+      mappingManager
     ),
     handleHotUpdate: hmrManager.handleHotUpdate,
   };

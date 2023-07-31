@@ -12,7 +12,7 @@ import sendMessage from "../../messaging/sendMessage";
 export default class GenerateTestDataAction {
   constructor(private getPageSlice: () => PageSlice) {}
 
-  generateTestData = async () => {
+  generateTestData = async (): Promise<Record<string, string[]>> => {
     const featuresJson = Object.entries(
       this.getPageSlice().pages
     ).reduce<FeaturesJson>(
@@ -36,9 +36,10 @@ export default class GenerateTestDataAction {
         features: [],
       }
     );
-    await sendMessage(MessageID.GenerateTestData, {
+    const response = await sendMessage(MessageID.GenerateTestData, {
       featuresJson,
     });
+    return response.mappingJson;
   };
 
   private static getStreamId(pageName: string) {

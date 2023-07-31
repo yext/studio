@@ -3,7 +3,6 @@ import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
 import { HmrContext, ModuleNode, ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID";
 import upath from "upath";
-import LocalDataMappingManager from "./LocalDataMappingManager";
 
 /**
  * HmrManager is responsible for handling studio specific HMR updates.
@@ -11,7 +10,6 @@ import LocalDataMappingManager from "./LocalDataMappingManager";
 export default class HmrManager {
   constructor(
     private orchestrator: ParsingOrchestrator,
-    private mappingManager: LocalDataMappingManager,
     private pathToUserProjectRoot: string,
     private userPaths: UserPaths,
     private localDataFolder: string
@@ -25,10 +23,6 @@ export default class HmrManager {
   handleHotUpdate = async (ctx: HmrContext): Promise<Array<ModuleNode> | void> => {
     console.log('hmr update ---', ctx.file)
     const { server, file } = ctx;
-    if (upath.normalize(file) === this.mappingManager.mappingPath) {
-      this.mappingManager.refreshMapping();
-      return [];
-    }
 
     await HmrManager.reloadAssociatedModules(ctx);
     if (!file.startsWith(this.pathToUserProjectRoot)) {
@@ -49,11 +43,10 @@ export default class HmrManager {
    * Whether or not a given file should be excluded from being watched.
    * 
    * Currently we ignore all files under localData, to avoid a full page refresh when
-   * generate-test-data is called, except for the mapping.json file
+   * the generate-test-data yext CLI command is called
    */
   shouldExcludeFromWatch = (filepath: string): boolean => {
-    const isLocalDataFile = upath.normalize(filepath).startsWith(this.localDataFolder)
-    return isLocalDataFile && upath.basename(filepath) !== 'mapping.json'
+    return upath.normalize(filepath).startsWith(this.localDataFolder)
   }
 
 

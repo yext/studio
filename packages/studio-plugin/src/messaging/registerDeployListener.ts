@@ -20,7 +20,7 @@ export default function registerDeployListener(
       executeSaveChanges(saveData, fileManager, orchestrator);
       await gitWrapper.deploy();
       await reloadGitData(gitWrapper, server);
-      return "Deployed successfully.";
+      return { type: 'success', msg: "Deployed successfully." };
     }
   );
 }

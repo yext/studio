@@ -35,9 +35,20 @@ export type StudioEventMap = {
   [MessageID.GenerateTestData]: GenerateTestDataPayload;
 };
 
+type BaseResponse = {
+  type: "success",
+  msg: string;
+};
+
+export type ErrorResponse = {
+  type: "error",
+  msg: string
+}
+
 export type ResponseEventMap = {
-  [key in MessageID]: {
-    type: "success" | "error";
-    msg: string;
-  };
+  [MessageID.Deploy]: BaseResponse
+  [MessageID.SaveChanges]: BaseResponse
+  [MessageID.GenerateTestData]: BaseResponse & {
+    mappingJson: Record<string, string[]>
+  }
 };
