@@ -54,7 +54,7 @@ beforeEach(() => {
           pagesJS: {
             getPathValue: {
               kind: PropValueKind.Expression,
-              value: "iaminvalid<>|||||{document.no}",
+              value: "iaminvalid<>||||$|{document.no}",
             },
             streamScope: {},
           },
