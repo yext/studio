@@ -68,7 +68,7 @@ export default function ArrayPropEditor({
 
   return (
     <div className={containerClasses}>
-      {renderBranchUI(isNested, "pt-2")}
+      {renderBranchUI(isNested)}
       <div className="flex flex-col">
         <label className="flex-col items-center">
           <p className="pr-2 font-semibold" id={docTooltipId}>
