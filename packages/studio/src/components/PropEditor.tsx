@@ -6,9 +6,9 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
+import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
-import { Tooltip } from "react-tooltip";
 import { v4 } from "uuid";
 import classNames from "classnames";
 import { useMemo } from "react";
