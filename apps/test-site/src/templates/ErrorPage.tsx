@@ -4,3 +4,5 @@
 export default function ErrorPage() {
   return null;
 }
+
+export const getPath = () => undefined;

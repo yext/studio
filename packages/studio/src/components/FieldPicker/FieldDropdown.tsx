@@ -28,7 +28,7 @@ export default function FieldDropdown(props: FieldDropdownProps) {
 
   return (
     <ul
-      className="absolute w-max bg-white mt-2 rounded border z-10 shadow-2xl"
+      className="absolute w-max bg-white mt-2 rounded border shadow-2xl"
       style={listStyles}
     >
       {Object.keys(props.fieldIdToValue).map((subfieldId) => {

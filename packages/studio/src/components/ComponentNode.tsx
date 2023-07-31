@@ -6,7 +6,7 @@ import {
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, KeyboardEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
@@ -89,7 +89,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleKeyDown = useDeleteKeyListener(
     isActiveComponent,
-    activeComponentUUID
+    componentState.uuid
   );
 
   return (
@@ -97,6 +97,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       <div
         className="flex grow items-center cursor-pointer"
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
         onKeyDown={handleKeyDown}
         tabIndex={0}
         id={anchorId}
@@ -114,6 +116,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
             anchorId={anchorId}
             place="right"
             positionStrategy="fixed"
+            className="z-20"
           />
         )}
       </div>
@@ -121,6 +124,40 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         <RemoveElementButton elementUUID={componentState.uuid} />
       )}
     </div>
+  );
+}
+
+function useDeleteKeyListener(
+  isActiveComponent: boolean,
+  componentStateUUID: string
+) {
+  const removeComponent = useStudioStore((store) => {
+    return store.actions.removeComponent;
+  });
+  return useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (isActiveComponent && event.key === "Backspace") {
+        removeComponent(componentStateUUID);
+      }
+    },
+    [isActiveComponent, componentStateUUID, removeComponent]
+  );
+}
+
+function useDeleteKeyListener(
+  isActiveComponent: boolean,
+  componentStateUUID: string
+) {
+  const removeComponent = useStudioStore((store) => {
+    return store.actions.removeComponent;
+  });
+  return useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (isActiveComponent && event.key === "Backspace") {
+        removeComponent(componentStateUUID);
+      }
+    },
+    [isActiveComponent, componentStateUUID, removeComponent]
   );
 }
 
