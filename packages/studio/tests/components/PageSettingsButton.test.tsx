@@ -213,7 +213,7 @@ it("displays URL placeholder and cannot edit URL when entity page's getPath valu
   await editUndefinedURL("fruits");
 });
 
-it("throws an error when user enters an invalid URL slug", async () => {
+it("throws an error when user enters an invalid URL slug and allows user to fix", async () => {
   render(<PageSettingsButton pageName="product" />);
   const pageSettingsButton = screen.getByRole("button");
   await userEvent.click(pageSettingsButton);
