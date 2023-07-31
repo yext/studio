@@ -90,13 +90,13 @@ function renderWrappedPropEditor(
     return editor;
   }
   return (
-      <UndefinedMenuButton
-        propType={propMetadata}
-        isUndefined={!propVal}
-        updateProp={updateProp}
-      >
-        {editor}
-      </UndefinedMenuButton>
+    <UndefinedMenuButton
+      propType={propMetadata}
+      isUndefined={!propVal}
+      updateProp={updateProp}
+    >
+      {editor}
+    </UndefinedMenuButton>
   );
 }
 
@@ -144,17 +144,17 @@ export function renderPropEditor(
   }
 
   const propKind = getPropKind(propMetadata);
-  const titleStyling = classNames('text-sm pb-1', {
-    "pl-4": isNested
-  })
+  const titleStyling = classNames("text-sm pb-1", {
+    "pl-4": isNested,
+  });
 
-const uniqueId = v4();
-const labelTooltipId = `${uniqueId}-label`;
-const doc = propMetadata.doc;
+  const uniqueId = v4();
+  const labelTooltipId = `${uniqueId}-label`;
+  const doc = propMetadata.doc;
 
   return (
     <div className="flex-col" id={labelTooltipId}>
-      <p className={titleStyling}>{propName}</p> 
+      <p className={titleStyling}>{propName}</p>
       <PropEditor
         onPropChange={updateProp}
         propKind={propKind}
@@ -171,7 +171,7 @@ const doc = propMetadata.doc;
           place="left"
         />
       )}
-  </ div>
+    </div>
   );
 }
 
@@ -187,4 +187,3 @@ function getPropKind(propMetadata: PropMetadata) {
 
   return PropValueKind.Literal;
 }
-
