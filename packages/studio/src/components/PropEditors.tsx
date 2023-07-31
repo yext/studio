@@ -140,7 +140,6 @@ export function renderPropEditor(
   }
 
   const propKind = getPropKind(propMetadata);
-
   return (
     <PropEditor
       onPropChange={updateProp}
