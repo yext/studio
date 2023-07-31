@@ -22,7 +22,7 @@ describe("getActiveComponentState", () => {
     );
   });
 
-  it("can get the current active componentwithin a page", () => {
+  it("can get the current active component within a page", () => {
     mockInitialStore(false);
     const componentState = useStudioStore
       .getState()

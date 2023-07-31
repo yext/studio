@@ -6,7 +6,7 @@ import {
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, KeyboardEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
@@ -71,11 +71,18 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
+  const handleKeyDown = useDeleteKeyListener(
+    isActiveComponent,
+    componentState.uuid
+  );
+
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
       <div
         className="flex grow items-center cursor-pointer"
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        tabIndex={0}
         id={anchorId}
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
@@ -99,5 +106,22 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         <RemoveElementButton elementUUID={componentState.uuid} />
       )}
     </div>
+  );
+}
+
+function useDeleteKeyListener(
+  isActiveComponent: boolean,
+  componentStateUUID: string
+) {
+  const removeComponent = useStudioStore((store) => {
+    return store.actions.removeComponent;
+  });
+  return useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      if (isActiveComponent && event.key === "Backspace") {
+        removeComponent(componentStateUUID);
+      }
+    },
+    [isActiveComponent, componentStateUUID, removeComponent]
   );
 }
