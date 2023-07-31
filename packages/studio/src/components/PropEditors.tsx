@@ -13,6 +13,10 @@ import ObjectPropEditor from "./ObjectPropEditor";
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
 import UndefinedMenuButton from "./UndefinedMenuButton";
+import { Tooltip } from "react-tooltip";
+import { v4 } from "uuid";
+
+const tooltipStyle = { backgroundColor: "black" };
 
 export default function PropEditors(props: {
   propShape: PropShape;
@@ -143,8 +147,13 @@ export function renderPropEditor(
   const titleStyling = classNames('text-sm pb-1', {
     "pl-4": isNested
   })
+
+const uniqueId = v4();
+const labelTooltipId = `${uniqueId}-label`;
+const doc = propMetadata.doc;
+
   return (
-    <div className="flex-col">
+    <div className="flex-col" id={labelTooltipId}>
       <p className={titleStyling}>{propName}</p> 
       <PropEditor
         onPropChange={updateProp}
@@ -154,6 +163,14 @@ export function renderPropEditor(
         propValue={PropValueHelpers.getPropValue(propVal, propKind)}
         isNested={isNested}
       />
+      {doc && (
+        <Tooltip
+          style={tooltipStyle}
+          anchorId={labelTooltipId}
+          content={doc}
+          place="left"
+        />
+      )}
   </ div>
   );
 }
@@ -170,3 +187,4 @@ function getPropKind(propMetadata: PropMetadata) {
 
   return PropValueKind.Literal;
 }
+

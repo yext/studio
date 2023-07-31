@@ -6,7 +6,6 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
 import { v4 } from "uuid";
@@ -21,8 +20,6 @@ interface PropEditorProps {
   isNested?: boolean;
 }
 
-const tooltipStyle = { backgroundColor: "black" };
-
 /**
  * Renders an input editor for a single prop of a component or module.
  */
@@ -34,7 +31,7 @@ export default function PropEditor({
   onPropChange,
   isNested,
 }: PropEditorProps) {
-  const { type, doc } = propMetadata;
+  const { type } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
   const uniqueId = useMemo(() => v4(), []);
   const labelTooltipId = `${uniqueId}-label`;
@@ -58,14 +55,6 @@ export default function PropEditor({
           }}
         />
       </label>
-      {doc && (
-        <Tooltip
-          style={tooltipStyle}
-          anchorId={labelTooltipId}
-          content={doc}
-          place="top"
-        />
-      )}
     </div>
   );
 }
