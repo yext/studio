@@ -42,7 +42,7 @@ export default function PropEditor({
 
   return (
     <div className="flex items-center mb-2 text-sm">
-      {renderBranchUI(isNested, "pt-5")}
+      {renderBranchUI(isNested, "pb-10")}
       <label
         className="flex-col items-center justify-self-start"
         id={labelTooltipId}
