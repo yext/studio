@@ -11,12 +11,12 @@ import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
 import HmrManager from "./HmrManager";
-import getLocalDataMapping from "./parsers/getLocalDataMapping";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import upath from "upath";
 import lodash from "lodash";
 import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
+import LocalDataMappingManager from "./LocalDataMappingManager";
 
 /**
  * Handles server-client communication.
@@ -46,18 +46,18 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
-  const localDataMapping = studioConfig.isPagesJSRepo
-    ? await getLocalDataMapping(studioConfig.paths.localData)
-    : undefined;
+  const localDataMappingManager = new LocalDataMappingManager(studioConfig.paths.localData, studioConfig.isPagesJSRepo);
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig,
-    localDataMapping
+    localDataMappingManager.getLocalDataMapping
   );
   const hmrManager = new HmrManager(
     orchestrator,
+    localDataMappingManager,
     pathToUserProjectRoot,
-    studioConfig.paths
+    studioConfig.paths,
+    studioConfig.paths.localData
   );
 
   const fileSystemManager = new FileSystemManager(
@@ -96,6 +96,9 @@ export default async function createStudioPlugin(
             args.mode === "development" &&
             args.command === "serve" &&
             studioConfig.openBrowser,
+          watch: {
+            ignored: hmrManager.shouldExcludeFromWatch
+          }
         },
       };
       return lodash.merge({}, config, serverConfig);
@@ -105,7 +108,11 @@ export default async function createStudioPlugin(
         return "\0" + id;
       }
     },
-    load(id) {
+    async load(id) {
+      if (id === localDataMappingManager.mappingPath) {
+        const mapping = await localDataMappingManager.getLocalDataMapping()
+        return `${JSON.stringify(mapping)}`
+      }
       if (id === "\0" + VirtualModuleID.StudioData) {
         return `export default ${JSON.stringify(orchestrator.getStudioData())}`;
       } else if (id === "\0" + VirtualModuleID.GitData) {
@@ -117,7 +124,7 @@ export default async function createStudioPlugin(
       gitWrapper,
       orchestrator
     ),
-    handleHotUpdate: (ctx) => hmrManager.handleHotUpdate(ctx),
+    handleHotUpdate: hmrManager.handleHotUpdate,
   };
 }
 

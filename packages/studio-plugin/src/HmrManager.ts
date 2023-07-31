@@ -1,34 +1,33 @@
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
-import { HmrContext, ViteDevServer } from "vite";
+import { HmrContext, ModuleNode, ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID";
 import upath from "upath";
+import LocalDataMappingManager from "./LocalDataMappingManager";
 
 /**
  * HmrManager is responsible for handling studio specific HMR updates.
  */
 export default class HmrManager {
-  private localDataFolder: string;
-  private mappingJsonPath: string;
-
   constructor(
     private orchestrator: ParsingOrchestrator,
+    private mappingManager: LocalDataMappingManager,
     private pathToUserProjectRoot: string,
-    private userPaths: UserPaths
-  ) {
-    this.localDataFolder = upath.join(pathToUserProjectRoot, "localData");
-    this.mappingJsonPath = upath.join(this.localDataFolder, "mapping.json");
-  }
+    private userPaths: UserPaths,
+    private localDataFolder: string
+  ) {}
 
   /**
    * A custom handler for vite hot updates.
    *
    * See import('vite').Plugin.handleHotUpdate
    */
-  async handleHotUpdate(ctx: HmrContext) {
+  handleHotUpdate = async (ctx: HmrContext): Promise<Array<ModuleNode> | void> => {
+    console.log('hmr update ---', ctx.file)
     const { server, file } = ctx;
-    if (file.startsWith(this.localDataFolder)) {
-      return this.handleLocalDataUpdate(ctx);
+    if (upath.normalize(file) === this.mappingManager.mappingPath) {
+      await this.mappingManager.refreshMapping();
+      return [];
     }
 
     await HmrManager.reloadAssociatedModules(ctx);
@@ -47,22 +46,22 @@ export default class HmrManager {
   }
 
   /**
-   * When any file under localData is updated, invalidate the associated
-   * modules for the file and also the mapping.json file.
-   *
-   * Return an empty array to prevent vite's default HMR behavior, which
-   * would cause the page to reload.
+   * Whether or not a given file should be excluded from being watched.
+   * 
+   * Currently we ignore all files under localData, to avoid a full page refresh when
+   * generate-test-data is called, except for the mapping.json file
    */
-  private handleLocalDataUpdate(ctx: HmrContext) {
-    ctx.modules?.forEach((m) => {
-      ctx.server.moduleGraph.invalidateModule(m);
-    });
-    const mappingJsonModules = ctx.server.moduleGraph.getModulesByFile(
-      this.mappingJsonPath
-    );
-    mappingJsonModules?.forEach((m) => {
-      ctx.server.moduleGraph.invalidateModule(m);
-    });
+  shouldExcludeFromWatch = (filepath: string): boolean => {
+    const isLocalDataFile = upath.normalize(filepath).startsWith(this.localDataFolder)
+    return isLocalDataFile
+    return isLocalDataFile && upath.basename(filepath) !== 'mapping.json'
+  }
+
+  /**
+   * 
+   */
+  private handleMappingJsonUpdate(ctx: HmrContext) {
+    // this.lo
     return [];
   }
 

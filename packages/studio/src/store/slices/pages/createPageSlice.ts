@@ -19,8 +19,6 @@ const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
 )?.sort()[0];
 
-console.log(firstPageEntry);
-
 const initialStates: PageSliceStates = {
   pages: removeTopLevelFragments(initialStudioData.pageNameToPageState),
   errorPages: initialStudioData.pageNameToErrorPageState,
