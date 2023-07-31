@@ -18,8 +18,32 @@ jobs:
           message: "Automated linting update"
           add: "*"
           push: true
+          pull: --rebase --autostash
           default_author: github_actions
 
+  update-features-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
+      - uses: ./.github/setup-ci
+      - run: npx pages generate features
+        working-directory: apps/test-site
+      - run: npx pages generate features
+        working-directory: e2e-tests
+      # The features.json files do not match our prettier setup
+      - run: npm run autofix
+      - name: Automated features.json update
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Update features.json files"
+          add: "*"
+          push: true
+          pull: --rebase --autostash
+          default_author: github_actions
+        
   update-tailwind-full:
     runs-on: ubuntu-latest
     steps:

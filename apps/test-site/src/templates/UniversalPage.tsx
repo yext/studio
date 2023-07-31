@@ -9,7 +9,9 @@ export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id",
     localization: { locales: ["en"], primary: false },
-    filter: {},
+    filter: {
+      entityTypes: ["location"],
+    },
     fields: ["services", "address", "hours", "slug"],
   },
 };
