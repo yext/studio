@@ -34,7 +34,7 @@ export default class CreatePageAction {
     this.getPageSlice().addPage(pageName, pageState);
 
     if (streamScope) {
-      await this.regenerateTestData(pageName);
+      await this.generateTestData(pageName);
     }
 
     await this.studioActions.updateActivePage(pageName);
@@ -58,7 +58,7 @@ export default class CreatePageAction {
     return pageState;
   }
 
-  private async regenerateTestData(pageName: string) {
+  private async generateTestData(pageName: string) {
     const mappingJson = await this.studioActions.generateTestData();
     const entityFilesForPage: string[] = mappingJson?.[pageName];
     if (!Array.isArray(entityFilesForPage)) {

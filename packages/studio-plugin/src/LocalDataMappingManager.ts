@@ -12,12 +12,10 @@ export default class LocalDataMappingManager {
   }
 
   getMapping = () => {
-    console.log("getMappping");
     return this.localDataMapping;
   };
 
   refreshMapping() {
-    console.log("refresh mappign");
     this.localDataMapping = this.readLocalDataMapping();
   }
 

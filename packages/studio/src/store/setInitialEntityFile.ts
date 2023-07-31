@@ -12,7 +12,6 @@ export default async function setInitialEntityFile(
 ): Promise<void> {
   const pageSlice = useStudioStore.getState().pages;
   const activePageState = pageSlice.getActivePageState();
-  console.log(activePageState);
   const firstAcceptedEntityFile = activePageState?.pagesJS?.entityFiles?.[0];
   if (firstAcceptedEntityFile) {
     const localDataFolder =

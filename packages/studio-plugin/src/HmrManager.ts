@@ -23,7 +23,6 @@ export default class HmrManager {
   handleHotUpdate = async (
     ctx: HmrContext
   ): Promise<Array<ModuleNode> | void> => {
-    console.log("hmr update ---", ctx.file);
     const { server, file } = ctx;
 
     await HmrManager.reloadAssociatedModules(ctx);
