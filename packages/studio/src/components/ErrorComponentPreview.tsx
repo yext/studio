@@ -32,7 +32,7 @@ export default function ErrorComponentPreview(props: {
     <div
       ref={containerRef}
       id={anchorId}
-      className="hover:shadow-sm border hover:border-red-300 border-transparent"
+      className="hover:shadow-sm border hover:border-red-300 border-transparent relative z-20"
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >

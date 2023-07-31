@@ -91,6 +91,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
             anchorId={anchorId}
             place="right"
             positionStrategy="fixed"
+            className="z-20"
           />
         )}
       </div>

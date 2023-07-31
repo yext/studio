@@ -80,12 +80,14 @@ export default function FieldPicker({
         aria-label="Toggle field picker"
       />
       {!fieldPickerIsClosed && (
-        <FieldDropdown
-          fieldIdToValue={filteredEntityData}
-          handleFieldSelection={handleFieldDropdownSelection}
-          handleNestedObjectSelection={handleNestedObjectSelection}
-          isExpandedFieldId={isExpandedFieldId}
-        />
+        <div className="fixed z-10">
+          <FieldDropdown
+            fieldIdToValue={filteredEntityData}
+            handleFieldSelection={handleFieldDropdownSelection}
+            handleNestedObjectSelection={handleNestedObjectSelection}
+            isExpandedFieldId={isExpandedFieldId}
+          />
+        </div>
       )}
     </div>
   );
