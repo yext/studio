@@ -35,11 +35,10 @@ export default function PropEditor({
   onPropChange,
   isNested,
 }: PropEditorProps) {
-  const { type } = propMetadata;
+  const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
   const uniqueId = useMemo(() => v4(), []);
   const labelTooltipId = `${uniqueId}-label`;
-  const doc = propMetadata.doc;
 
   return (
     <div className="flex items-center mb-2 text-sm">
