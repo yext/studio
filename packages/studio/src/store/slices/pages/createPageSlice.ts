@@ -168,7 +168,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
             `Error removing component: component is not selected.`
           );
         }
-        store.selectedComponentUUIDs = selectedComponentUUIDs.filter(uuid => uuid !== selectedComponentUUID);
+        store.selectedComponentUUIDs = selectedComponentUUIDs.filter(
+          (uuid) => uuid !== selectedComponentUUID
+        );
       });
     },
     clearSelectedComponentUUIDs: () => {

@@ -30,41 +30,57 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const [activeComponentUUID, selectedComponentUUIDs, setActiveComponentUUID, addSelectedComponentUUID, removeSelectedComponentUUID, clearSelectedComponentUUIDs] = useStudioStore(
-    (store) => {
-      return [
-        store.pages.activeComponentUUID,
-        store.pages.selectedComponentUUIDs,
-        store.pages.setActiveComponentUUID,
-        store.pages.addSelectedComponentUUID,
-        store.pages.removeSelectedComponentUUID,
-        store.pages.clearSelectedComponentUUIDs,
-      ];
-    }
-  );
+  const [
+    activeComponentUUID,
+    selectedComponentUUIDs,
+    setActiveComponentUUID,
+    addSelectedComponentUUID,
+    removeSelectedComponentUUID,
+    clearSelectedComponentUUIDs,
+  ] = useStudioStore((store) => {
+    return [
+      store.pages.activeComponentUUID,
+      store.pages.selectedComponentUUIDs,
+      store.pages.setActiveComponentUUID,
+      store.pages.addSelectedComponentUUID,
+      store.pages.removeSelectedComponentUUID,
+      store.pages.clearSelectedComponentUUIDs,
+    ];
+  });
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
-  const isSelectedComponent = selectedComponentUUIDs.includes(componentState.uuid);
+  const isSelectedComponent = selectedComponentUUIDs.includes(
+    componentState.uuid
+  );
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,
     invisible: !hasChild,
   });
 
-  const handleClick = useCallback((event) => {
-    if (isActiveComponent) return;
-    else if (event.shiftKey) {
-      if (isSelectedComponent) {
-        removeSelectedComponentUUID(componentState.uuid);
+  const handleClick = useCallback(
+    (event) => {
+      if (isActiveComponent) return;
+      else if (event.shiftKey) {
+        if (isSelectedComponent) {
+          removeSelectedComponentUUID(componentState.uuid);
+        } else addSelectedComponentUUID(componentState.uuid);
+      } else {
+        clearSelectedComponentUUIDs();
+        addSelectedComponentUUID(componentState.uuid);
+        setActiveComponentUUID(componentState.uuid);
       }
-      else addSelectedComponentUUID(componentState.uuid);
-    }
-    else {
-      clearSelectedComponentUUIDs();
-      addSelectedComponentUUID(componentState.uuid);
-      setActiveComponentUUID(componentState.uuid);
-    }
-  }, [componentState.uuid, isSelectedComponent, isActiveComponent, setActiveComponentUUID, addSelectedComponentUUID, removeSelectedComponentUUID, clearSelectedComponentUUIDs]);
+    },
+    [
+      componentState.uuid,
+      isSelectedComponent,
+      isActiveComponent,
+      setActiveComponentUUID,
+      addSelectedComponentUUID,
+      removeSelectedComponentUUID,
+      clearSelectedComponentUUIDs,
+    ]
+  );
 
   const componentNodeStyle = useMemo(
     () => ({ paddingLeft: `${depth}em` }),
