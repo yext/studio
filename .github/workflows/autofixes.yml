@@ -19,7 +19,7 @@ jobs:
       - name: Automated Linting
         uses: EndBug/add-and-commit@v9
         with:
-          message: "Automated linting update"
+          message: "Automated linting update and features.json sync"
           add: "*"
           push: true
           pull: --rebase --autostash
