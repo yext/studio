@@ -16,7 +16,7 @@ export interface BannerData {
   intervals?: {
     end: string;
     start: string;
-  };
+  }[];
 }
 
 export const initialProps: BannerData = {
@@ -33,6 +33,11 @@ export default function Banner(props: BannerData) {
       <p>{`${props.bool}`}</p>
       <p>{props.num}</p>
       <h1>{props.obj && JSON.stringify(props.obj)}</h1>
+      <p>
+        {props.intervals?.map(
+          (interval) => `Start: ${interval.start} End: ${interval.end}, `
+        )}
+      </p>
     </div>
   );
 }
