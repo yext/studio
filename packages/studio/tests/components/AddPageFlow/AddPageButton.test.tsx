@@ -228,7 +228,9 @@ describe("errors", () => {
     const saveButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(saveButton);
     expect(
-      screen.getByText("Error adding page: pageName *** cannot contain the characters: *")
+      screen.getByText(
+        "Error adding page: pageName *** cannot contain the characters: *"
+      )
     ).toBeDefined();
   });
 });
