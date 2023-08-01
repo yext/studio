@@ -26,8 +26,8 @@ export default function Highlighter() {
     return {
       position: "absolute",
       zIndex: "10",
-      left: `${window.scrollX + rect.left}px`,
-      top: `${window.scrollY + rect.top}px`,
+      left: `${rect.left}px`,
+      top: `${rect.top}px`,
       width: `${rect.width}px`,
       height: `${rect.height}px`,
       boxSizing: "border-box",
