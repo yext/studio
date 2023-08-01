@@ -26,7 +26,6 @@ import CreateComponentStateAction from "./StudioActions/CreateComponentStateActi
 import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
 import ImportComponentAction from "./StudioActions/ImportComponentAction";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
-import PageDataValidator from "../utils/PageDataValidator";
 
 export default class StudioActions {
   public addComponent: AddComponentAction["addComponent"];
@@ -273,7 +272,6 @@ export default class StudioActions {
     if (!filepath.startsWith(pagesPath)) {
       throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
     }
-    PageDataValidator.validatePageName(pageName);
     const pageState: PageState = {
       componentTree: [],
       cssImports: [],
