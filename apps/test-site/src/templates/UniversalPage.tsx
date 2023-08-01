@@ -9,10 +9,8 @@ export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id-UniversalPage",
     localization: { locales: ["en"], primary: false },
-    filter: {
-      entityTypes: ["location"],
-    },
-    fields: ["services", "address", "hours", "slug"],
+    filter: { entityTypes: ["location"] },
+    fields: ["services", "slug"],
   },
 };
 export const getPath: GetPath<TemplateProps> = ({
@@ -24,18 +22,18 @@ export const getPath: GetPath<TemplateProps> = ({
 export default function UniversalPage({ document }: TemplateProps) {
   return (
     <>
-      <FixedText />
       <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
+      <FixedText />
       {document.services.map((item, index) => (
-        <Banner title={`${item}!`} key={index} />
+        <Banner title={`dogs`} key={index} />
       ))}
       <Container>
         <Button />
       </Container>
       <Banner
         obj={{
-          nestedString: `hello ${document.address.city}  ${document.id}`,
-          nestedObj: { nestedNum: 333, nestedColor: "#FFFFFF" },
+          nestedString: ``,
+          nestedObj: { nestedNum: 2, nestedColor: "#FFFFFF" },
           nestedBool: false,
         }}
         title=""
@@ -45,7 +43,7 @@ export default function UniversalPage({ document }: TemplateProps) {
         intervals={[
           {
             start: "01:00",
-            end: document.hours.monday.openIntervals[0].end,
+            end: `some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... some fake text.... `,
           },
         ]}
       />
