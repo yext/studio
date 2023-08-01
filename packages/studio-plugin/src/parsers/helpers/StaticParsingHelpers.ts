@@ -35,7 +35,7 @@ import {
 } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
-import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
+import RepeaterParsingHelpers from "./RepeaterParsingHelpers"; 
 
 export type ParsedImport = {
   source: string;
