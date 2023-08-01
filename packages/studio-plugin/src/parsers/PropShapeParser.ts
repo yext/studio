@@ -60,9 +60,10 @@ export default class PropShapeParser {
     identifier: string,
     onProp?: (propName: string) => boolean
   ): PropMetadata {
-    const { required, doc } = rawProp;
+    const { required, doc, displayName } = rawProp;
     return {
       ...(doc && { doc }),
+      ...(displayName && { displayName }),
       required,
       ...this.getPropType(rawProp, identifier, onProp),
     };

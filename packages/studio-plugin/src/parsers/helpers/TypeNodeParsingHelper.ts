@@ -8,8 +8,6 @@ import {
   TypeReferenceNode,
   Node,
   TypeNode,
-  JSDocStructure,
-  OptionalKind,
 } from "ts-morph";
 import { PropValueType } from "../../types";
 import StaticParsingHelpers from "./StaticParsingHelpers";
@@ -50,6 +48,7 @@ export type ParsedShape = { [key: string]: ParsedProperty };
 
 export type ParsedProperty = ParsedType & {
   doc?: string;
+  displayName?: string;
   required: boolean;
 };
 
@@ -144,10 +143,12 @@ export default class TypeNodeParsingHelper {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
       const parsedType = this.parseShapeNode(p, parseTypeReference);
       const doc = this.getTooltip(p);
+      const displayName = this.getDisplayName(p);
       parsedShape[propertyName] = {
         ...parsedType,
         required: !p.hasQuestionToken(),
         ...(doc && { doc }),
+        ...(displayName && { displayName }),
       };
     });
     return {
@@ -198,7 +199,7 @@ export default class TypeNodeParsingHelper {
     };
   }
 
-  private static getTooltip(propertySignature: PropertySignature) {
+  private static getTooltip(propertySignature: PropertySignature): string {
     const docs = propertySignature.getJsDocs()
     const tooltips: string[] = []
     docs?.forEach((doc) => {
@@ -212,15 +213,16 @@ export default class TypeNodeParsingHelper {
     return tooltips.join("\n");
   }
 
-  private static getPropDisplayNames(propertySignature: PropertySignature) {;
+  private static getDisplayName(propertySignature: PropertySignature): string {
     const docs = propertySignature.getJsDocs()
-    docs?.forEach((doc) => {
-      doc.getTags().forEach((tag) => {
+    for (const doc of docs) {
+      for (const tag of doc.getTags()) {
         const commentText = tag.getCommentText()
         if (tag.getTagName() === "DisplayName" && commentText) {
           return commentText
         }
-      })
-    })
+      }
+    }
+    return ""
   }
 }
