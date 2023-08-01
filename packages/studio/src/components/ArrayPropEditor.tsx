@@ -79,7 +79,7 @@ export default function ArrayPropEditor({
               style={tooltipStyle}
               anchorId={docTooltipId}
               content={propMetadata.doc}
-              place="top"
+              place="left"
             />
           )}
           <div id={inputTooltipId}>
@@ -96,7 +96,7 @@ export default function ArrayPropEditor({
               style={tooltipStyle}
               anchorId={inputTooltipId}
               content="Disabled while items are present below"
-              place="top"
+              place="left"
             />
           )}
         </label>

@@ -4,20 +4,25 @@ import {
   PropVal,
   PropValueKind,
   PropValueType,
+  PropMetadata,
 } from "@yext/studio-plugin";
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import PropEditors from "./PropEditors";
 import { renderBranchUI } from "./PropEditor";
 import classNames from "classnames";
+import { Tooltip } from "react-tooltip";
+import { v4 } from "uuid";
+
+const tooltipStyle = { backgroundColor: "black" };
 
 export default function ObjectPropEditor(props: {
   propValues?: PropValues;
-  propType: ObjectPropType;
+  propMetadata: Extract<PropMetadata, ObjectPropType>;
   propName: string;
   updateProp: (propVal: PropVal) => void;
   isNested?: boolean;
 }) {
-  const { propValues, propType, propName, updateProp, isNested } = props;
+  const { propValues, propMetadata , propName, updateProp, isNested } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
       updateProp({
@@ -33,20 +38,31 @@ export default function ObjectPropEditor(props: {
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
   });
+  
+  const uniqueId = useMemo(() => v4(), []);
+  const docTooltipId = `${uniqueId}-doc`;
 
   return (
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
-        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap">
+        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap" id={docTooltipId}>
           {propName}
         </span>
+        {propMetadata.doc && (
+            <Tooltip
+              style={tooltipStyle}
+              anchorId={docTooltipId}
+              content={propMetadata.doc}
+              place="left"
+            />
+          )}
         {isUndefinedValue ? (
           renderUndefinedObject()
         ) : (
           <PropEditors
             propValues={propValues}
-            propShape={propType.shape}
+            propShape={propMetadata.shape}
             updateProps={updateObjectProp}
             isNested={true}
           />

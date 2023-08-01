@@ -35,7 +35,7 @@ export default function PropEditor({
   onPropChange,
   isNested,
 }: PropEditorProps) {
-  const { type, doc, displayName = propName } = propMetadata;
+  const { type, doc } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
   const uniqueId = useMemo(() => v4(), []);
   const labelTooltipId = `${uniqueId}-label`;
@@ -47,7 +47,7 @@ export default function PropEditor({
         className="flex-col items-center justify-self-start"
         id={labelTooltipId}
       >
-        <p className="pb-1">{displayName}</p>
+        <p className="pb-1">{propName}</p>
         <PropInput
           {...{
             propType:

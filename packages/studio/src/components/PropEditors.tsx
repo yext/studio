@@ -103,6 +103,7 @@ export function renderPropEditor(
   updateProp: (propVal: PropVal) => void,
   isNested?: boolean
 ) {
+  const {displayName = propName} = propMetadata
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
       console.error(
@@ -114,8 +115,8 @@ export function renderPropEditor(
     return (
       <ObjectPropEditor
         propValues={propVal?.value}
-        propType={propMetadata}
-        propName={propName}
+        propMetadata={propMetadata}
+        propName={displayName}
         updateProp={updateProp}
         isNested={isNested}
       />
@@ -130,7 +131,7 @@ export function renderPropEditor(
 
     return (
       <ArrayPropEditor
-        propName={propName}
+        propName={displayName}
         propMetadata={propMetadata}
         propValue={propVal?.value}
         onPropChange={updateProp}
@@ -144,7 +145,7 @@ export function renderPropEditor(
     <PropEditor
       onPropChange={updateProp}
       propKind={propKind}
-      propName={propName}
+      propName={displayName}
       propMetadata={propMetadata}
       propValue={PropValueHelpers.getPropValue(propVal, propKind)}
       isNested={isNested}
