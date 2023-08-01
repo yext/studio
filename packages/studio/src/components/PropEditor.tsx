@@ -10,6 +10,7 @@ import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
 import { v4 } from "uuid";
+import classNames from "classnames";
 import { useMemo } from "react";
 
 interface PropEditorProps {
@@ -41,12 +42,12 @@ export default function PropEditor({
 
   return (
     <div className="flex items-center mb-2 text-sm">
-      {renderBranchUI(isNested)}
+      {renderBranchUI(isNested, "pb-10")}
       <label
-        className="flex h-10 items-center justify-self-start"
+        className="flex-col items-center justify-self-start"
         id={labelTooltipId}
       >
-        <p className="pr-2">{propName}</p>
+        <p className="pb-1">{propName}</p>
         <PropInput
           {...{
             propType:
@@ -64,7 +65,7 @@ export default function PropEditor({
           style={tooltipStyle}
           anchorId={labelTooltipId}
           content={doc}
-          place="top"
+          place="left"
         />
       )}
     </div>
@@ -72,8 +73,9 @@ export default function PropEditor({
 }
 
 export function renderBranchUI(isNested?: boolean, additionalClasses = "") {
-  const classes =
-    "mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap " +
-    additionalClasses;
+  const classes = classNames(
+    "mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap",
+    additionalClasses
+  );
   return isNested && <div className={classes}>---</div>;
 }
