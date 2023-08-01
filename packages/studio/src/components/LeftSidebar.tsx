@@ -2,7 +2,6 @@ import ComponentTree from "./ComponentTree";
 import Divider from "./common/Divider";
 import AddPageButton from "./AddPageButton/AddPageButton";
 import ActivePagePanel from "./ActivePagePanel";
-import useStudioStore from "../store/useStudioStore";
 
 /**
  * Renders the left sidebar of Studio, which lists all pages, indicates which
@@ -12,10 +11,8 @@ import useStudioStore from "../store/useStudioStore";
  * modules in the component tree of the active page.
  */
 export default function LeftSidebar(): JSX.Element {
-  const file = useStudioStore((store) => store.pages.activeEntityFile);
   return (
     <div className="flex flex-col w-1/4 px-4">
-      file: {file}
       <div className="flex flex-row font-bold py-4 pr-2 justify-between items-center">
         Pages
         <AddPageButton />
