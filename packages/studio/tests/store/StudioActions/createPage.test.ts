@@ -11,9 +11,9 @@ describe("non-PagesJS repo", () => {
   });
 
   it("gives an error for an invalid pagename", async () => {
-    const createPage = useStudioStore.getState().actions.createPage("***");
+    const createPage = useStudioStore.getState().actions.createPage("../test");
     await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName *** cannot contain the characters: *"
+      "Error adding page: pageName is invalid: ../test"
     );
   });
 

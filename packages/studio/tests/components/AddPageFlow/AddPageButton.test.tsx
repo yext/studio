@@ -224,11 +224,11 @@ describe("errors", () => {
     const addPageButton = screen.getByRole("button");
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
-    await userEvent.type(textbox, "../test");
+    await userEvent.type(textbox, "***");
     const saveButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(saveButton);
     expect(
-      screen.getByText("Error adding page: pageName is invalid: ../test")
+      screen.getByText("Error adding page: pageName *** cannot contain the characters: *")
     ).toBeDefined();
   });
 });
