@@ -3,7 +3,7 @@ import { NestedProp } from "../types/exportedTypes";
 
 export interface BannerData {
   /**
-   * Banner's title
+   * @Tooltip Banner's title
    * @DisplayName Title
    */
   title?: string;
