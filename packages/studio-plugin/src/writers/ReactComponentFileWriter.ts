@@ -203,7 +203,7 @@ export default class ReactComponentFileWriter {
           name: key,
           type: getTypeString(propMetadata),
           hasQuestionToken: !propMetadata.required,
-          ...(propMetadata.doc && { docs: [propMetadata.doc] }),
+          ...(propMetadata.tooltip && { docs: [propMetadata.tooltip] }),
         };
       });
     const properties = getProperties(propShape);

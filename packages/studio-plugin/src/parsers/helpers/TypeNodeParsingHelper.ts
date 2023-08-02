@@ -47,7 +47,7 @@ type ArrayParsedType = {
 export type ParsedShape = { [key: string]: ParsedProperty };
 
 export type ParsedProperty = ParsedType & {
-  doc?: string;
+  tooltip?: string;
   displayName?: string;
   required: boolean;
 };
@@ -142,12 +142,12 @@ export default class TypeNodeParsingHelper {
     properties.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
       const parsedType = this.parseShapeNode(p, parseTypeReference);
-      const doc = this.getTooltip(p);
+      const tooltip = this.getTooltip(p);
       const displayName = this.getDisplayName(p);
       parsedShape[propertyName] = {
         ...parsedType,
         required: !p.hasQuestionToken(),
-        ...(doc && { doc }),
+        ...(tooltip && { tooltip }),
         ...(displayName && { displayName }),
       };
     });

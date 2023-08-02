@@ -40,20 +40,20 @@ export default function ObjectPropEditor(props: {
   });
   
   const uniqueId = useMemo(() => v4(), []);
-  const docTooltipId = `${uniqueId}-doc`;
+  const propTooltipId = `${uniqueId}-prop-tooltip`;
 
   return (
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
-        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap" id={docTooltipId}>
+        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap" id={propTooltipId}>
           {propName}
         </span>
-        {propMetadata.doc && (
+        {propMetadata.tooltip && (
             <Tooltip
               style={tooltipStyle}
-              anchorId={docTooltipId}
-              content={propMetadata.doc}
+              anchorId={propTooltipId}
+              content={propMetadata.tooltip}
               place="left"
             />
           )}

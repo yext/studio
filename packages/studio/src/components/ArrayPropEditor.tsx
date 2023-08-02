@@ -62,8 +62,8 @@ export default function ArrayPropEditor({
     "mb-2": !isNested,
   });
 
-  const docTooltipId = `${uniqueId}-doc`;
-  const inputTooltipId = `${uniqueId}-input`;
+  const propTooltipId = `${uniqueId}-prop-tooltip`;
+  const inputTooltipId = `${uniqueId}-input-tooltip`;
   const isUndefinedValue = propValue === undefined;
 
   return (
@@ -71,14 +71,14 @@ export default function ArrayPropEditor({
       {renderBranchUI(isNested)}
       <div className="flex flex-col">
         <label className="flex-col items-center">
-          <p className="pr-2 font-semibold" id={docTooltipId}>
+          <p className="pr-2 font-semibold" id={propTooltipId}>
             {propName}
           </p>
-          {propMetadata.doc && (
+          {propMetadata.tooltip && (
             <Tooltip
               style={tooltipStyle}
-              anchorId={docTooltipId}
-              content={propMetadata.doc}
+              anchorId={propTooltipId}
+              content={propMetadata.tooltip}
               place="left"
             />
           )}
