@@ -395,7 +395,12 @@ describe("Array prop", () => {
   }
 
   it("correctly updates expression value using field picker", async () => {
-    mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
+    mockStore({
+      pages: {
+        activeEntityFile: "entityFile.json",
+        activePageEntities: { "entityFile.json": { strings: [], words: [] } },
+      },
+    });
     mockStoreActiveComponent({
       activeComponent: {
         ...activeComponentState,

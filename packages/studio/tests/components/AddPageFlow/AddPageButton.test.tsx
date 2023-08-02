@@ -140,7 +140,7 @@ describe("PagesJS repo", () => {
       expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
         "mockLocalData.json"
       );
-      expect(useStudioStore.getState().pages.activeEntityData).toEqual({
+      expect(useStudioStore.getState().pages.getActiveEntityData()).toEqual({
         __: expect.anything(),
       });
     });
@@ -177,7 +177,7 @@ describe("PagesJS repo", () => {
       expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
         "mockLocalData.json"
       );
-      expect(useStudioStore.getState().pages.activeEntityData).toEqual({
+      expect(useStudioStore.getState().pages.getActiveEntityData()).toEqual({
         __: expect.anything(),
       });
     });
