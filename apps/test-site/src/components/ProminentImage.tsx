@@ -1,11 +1,11 @@
 export interface ProminentImageProps {
-  src: string,
-  altText?: string
+  src: string;
+  altText?: string;
 }
 
 export const initialProps: ProminentImageProps = {
-  src: "https://images.ctfassets.net/n2ifzifcqscw/10wJSHT2Zvj5G1Z3GYHUqv/882e93cefece92d25d25933d56598903/telluride_shutterstock_2074692298.jpg"
-}
+  src: "https://images.ctfassets.net/n2ifzifcqscw/10wJSHT2Zvj5G1Z3GYHUqv/882e93cefece92d25d25933d56598903/telluride_shutterstock_2074692298.jpg",
+};
 
 export default function ProminentImage({ src, altText }: ProminentImageProps) {
   return (
@@ -16,5 +16,5 @@ export default function ProminentImage({ src, altText }: ProminentImageProps) {
         alt={altText}
       />
     </div>
-  )
+  );
 }

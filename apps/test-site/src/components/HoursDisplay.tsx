@@ -8,12 +8,12 @@ export default function HoursDisplay(hours: Hours) {
   );
 }
 
-function DayHours(name:string, day: Day) {
+function DayHours(name: string, day: Day) {
   return (
     <div className="flex flex-row">
       <span className="pr-2 font-bold">{name}</span>
       <div className="flex flex-col">
-        {day.openIntervals.map(interval => {
+        {day.openIntervals.map((interval) => {
           return (
             <span>
               {interval.start} - {interval.end}
@@ -22,5 +22,5 @@ function DayHours(name:string, day: Day) {
         })}
       </div>
     </div>
-  )
+  );
 }
