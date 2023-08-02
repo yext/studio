@@ -31,6 +31,7 @@ const propShapeMultiFields: PropShape = {
   complexBannerText: {
     type: PropValueType.string,
     tooltip: "some banner title!",
+    displayName: "Title!",
     required: false,
   },
   complexBannerBool: {
