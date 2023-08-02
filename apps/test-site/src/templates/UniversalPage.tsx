@@ -25,7 +25,7 @@ export default function UniversalPage({ document }: TemplateProps) {
       <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
       <FixedText />
       {document.services.map((item, index) => (
-        <Banner title={`dogs`} key={index} />
+        <Banner title="dogs" key={index} />
       ))}
       <Container>
         <Button />
