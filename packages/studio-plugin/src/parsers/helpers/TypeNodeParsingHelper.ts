@@ -8,6 +8,7 @@ import {
   TypeReferenceNode,
   Node,
   TypeNode,
+  JSDoc,
 } from "ts-morph";
 import { PropValueType } from "../../types";
 import StaticParsingHelpers from "./StaticParsingHelpers";
@@ -202,13 +203,11 @@ export default class TypeNodeParsingHelper {
   private static getTooltip(propertySignature: PropertySignature): string {
     const docs = propertySignature.getJsDocs();
     const tooltips: string[] = [];
-    docs?.forEach((doc) => {
-      doc.getTags().forEach((tag) => {
-        const commentText = tag.getCommentText();
-        if (tag.getTagName() === "Tooltip" && commentText) {
-          tooltips.push(commentText);
-        }
-      });
+    docs?.forEach((doc: JSDoc) => {
+      const commentText = doc.getCommentText();
+      if (commentText) {
+        tooltips.push(commentText);
+      }
     });
     return tooltips.join("\n");
   }

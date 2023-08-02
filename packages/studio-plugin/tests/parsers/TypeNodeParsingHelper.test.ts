@@ -89,10 +89,10 @@ it("can parse an object property", () => {
     hello: {
       kind: ParsedTypeKind.Object,
       required: true,
-      doc: "the hello prop",
+      tooltip: "the hello prop",
       type: {
         world: {
-          doc: "the world sub-property",
+          tooltip: "the world sub-property",
           kind: ParsedTypeKind.Simple,
           required: true,
           type: "string",
@@ -123,12 +123,12 @@ it("can parse an ArrayType", () => {
     arr: {
       kind: ParsedTypeKind.Array,
       required: true,
-      doc: "array prop",
+      tooltip: "array prop",
       type: {
         kind: ParsedTypeKind.Object,
         type: {
           someKey: {
-            doc: "an item field",
+            tooltip: "an item field",
             kind: ParsedTypeKind.Array,
             required: true,
             type: {
@@ -160,7 +160,7 @@ it("can parse an Array TypeReference", () => {
     arr: {
       kind: ParsedTypeKind.Array,
       required: true,
-      doc: "array prop",
+      tooltip: "array prop",
       type: {
         kind: ParsedTypeKind.Simple,
         type: "string",

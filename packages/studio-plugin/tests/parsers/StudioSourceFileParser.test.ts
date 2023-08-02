@@ -75,19 +75,19 @@ describe("getDefaultExport", () => {
 describe("parseShape", () => {
   const ctaDataShape = {
     label: {
-      doc: "The display label for the CTA element.",
+      tooltip: "The display label for the CTA element.",
       kind: ParsedTypeKind.Simple,
       required: true,
       type: "string",
     },
     link: {
-      doc: "The CTA link source.",
+      tooltip: "The CTA link source.",
       kind: ParsedTypeKind.Simple,
       required: true,
       type: "string",
     },
     linkType: {
-      doc: "The CTA link type (e.g. URL, Phone, Email, Other).",
+      tooltip: "The CTA link type (e.g. URL, Phone, Email, Other).",
       kind: ParsedTypeKind.Simple,
       required: true,
       type: "string",
@@ -222,10 +222,10 @@ describe("parseShape", () => {
                 kind: ParsedTypeKind.Simple,
                 required: false,
                 type: "string",
-                doc: "The label for the button, defaults to 'Apply Filters'",
+                tooltip: "The label for the button, defaults to 'Apply Filters'",
               },
               customCssClasses: {
-                doc: "CSS classes for customizing the component styling.",
+                tooltip: "CSS classes for customizing the component styling.",
                 kind: ParsedTypeKind.Object,
                 required: false,
                 type: {

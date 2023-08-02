@@ -57,7 +57,7 @@ describe("getComponentMetadata", () => {
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Component,
       propShape: {
-        title: { type: PropValueType.string, doc: "jsdoc", required: false },
+        title: { type: PropValueType.string, tooltip: "jsdoc tooltip", required: false },
         num: { type: PropValueType.number, required: false },
         bool: { type: PropValueType.boolean, required: false },
         bgColor: { type: PropValueType.HexColor, required: false },
@@ -68,24 +68,24 @@ describe("getComponentMetadata", () => {
             link: {
               type: PropValueType.string,
               required: true,
-              doc: "The CTA link source.",
+              tooltip: "The CTA link source.",
             },
             label: {
               type: PropValueType.string,
               required: true,
-              doc: "The display label for the CTA element.",
+              tooltip: "The display label for the CTA element.",
             },
             linkType: {
               type: PropValueType.string,
               required: true,
-              doc: "The CTA link type (e.g. URL, Phone, Email, Other).",
+              tooltip: "The CTA link type (e.g. URL, Phone, Email, Other).",
             },
           },
         },
         colorArr: {
           type: PropValueType.Array,
           required: false,
-          doc: "array doc",
+          tooltip: "array tooltip",
           itemType: { type: PropValueType.HexColor },
         },
       },

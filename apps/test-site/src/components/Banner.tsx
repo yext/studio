@@ -3,7 +3,7 @@ import { NestedProp } from "../types/exportedTypes";
 
 export interface BannerData {
   /**
-   * @Tooltip Banner's title
+   * Banner's title
    * @DisplayName Title
    */
   title?: string;
@@ -11,7 +11,7 @@ export interface BannerData {
   bool?: boolean;
   bgColor?: HexColor;
   obj?: NestedProp;
-  /** @Tooltip  Start and End are required for each interval. */
+  /** Start and End are required for each interval. */
   /** @DisplayName Intervals */
   intervals?: {
     end: string;
