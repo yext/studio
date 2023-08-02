@@ -6,11 +6,7 @@ import IFramePortal from "./IFramePortal";
 import { CSSProperties } from "react";
 
 const inlineStyles: CSSProperties = {
-  transform: "translateY(-50px)",
-};
-
-const innerIframeStyles: CSSProperties = {
-  transform: "translateY(50px)",
+  overflow: "scroll",
 };
 
 export default function PreviewWithUseComponents() {
@@ -25,9 +21,9 @@ export default function PreviewWithUseComponents() {
       title="PreviewPanel"
       inlineStyles={inlineStyles}
     >
-      <div style={innerIframeStyles}>
+      <div>
         <PreviewPanel />
-        <div className="absolute top-[-50px]">
+        <div className="absolute top-0">
           <Highlighter />
         </div>
       </div>
