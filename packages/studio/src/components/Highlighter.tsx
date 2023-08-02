@@ -27,8 +27,12 @@ export default function Highlighter() {
     return {
       position: "absolute",
       zIndex: "10",
-      left: `${IFrame ? IFrame.contentWindow?.scrollX : 0 + rect.left}px`,
-      top: `${IFrame ? IFrame.contentWindow?.scrollY : 0 + rect.top}px`,
+      left: `${
+        (IFrame?.contentWindow ? IFrame.contentWindow.scrollX : 0) + rect.left
+      }px`,
+      top: `${
+        (IFrame?.contentWindow ? IFrame.contentWindow.scrollY : 0) + rect.top
+      }px`,
       width: `${rect.width}px`,
       height: `${rect.height}px`,
       boxSizing: "border-box",
