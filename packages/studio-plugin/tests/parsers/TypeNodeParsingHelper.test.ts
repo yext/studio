@@ -71,9 +71,9 @@ it("can parse a type literal", () => {
 it("can parse an object property", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** the hello prop */
+      /** @Tooltip the hello prop */
       hello: {
-        /** the world sub-property */
+        /** @Tooltip the world sub-property */
         world: string
       }
   }`
@@ -105,9 +105,9 @@ it("can parse an object property", () => {
 it("can parse an ArrayType", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** array prop */
+      /** @Tooltip array prop */
       arr: {
-        /** an item field */
+        /** @Tooltip an item field */
         someKey: string[]
       }[];
   }`
@@ -145,7 +145,7 @@ it("can parse an ArrayType", () => {
 it("can parse an Array TypeReference", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** array prop */
+      /** @Tooltip array prop */
       arr: Array<string>;
     }`
   );
@@ -172,7 +172,7 @@ it("can parse an Array TypeReference", () => {
 it("throws an error if Array TypeReference is missing a type param", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** array prop */
+      /** @Tooltip array prop */
       arr: Array;
     }`
   );
@@ -182,4 +182,82 @@ it("throws an error if Array TypeReference is missing a type param", () => {
   expect(() =>
     TypeNodeParsingHelper.parseShape(typeAlias, externalShapeParser)
   ).toThrowError("One type param expected for Array type. Found 0.");
+});
+
+it("can parse a tooltip without the @Tooltip tag", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** Pen pineapple, apple pen. */
+      fruit: string
+  }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    fruit: {
+      kind: ParsedTypeKind.Simple,
+      type: "string",
+      required: true,
+      tooltip: "Pen pineapple, apple pen."
+    },
+  });
+});
+
+it("will prioritize the @Tooltip tag over a tagless JSDoc", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** Ignore this
+       * @Tooltip Pen pineapple, apple pen. 
+       * */
+      fruit: string
+  }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    fruit: {
+      kind: ParsedTypeKind.Simple,
+      type: "string",
+      required: true,
+      tooltip: "Pen pineapple, apple pen."
+    },
+  });
+});
+
+it("can parse the @DisplayName tag", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** 
+       * @Tooltip Tip
+       * @DisplayName My Fav Fruit 
+       */
+      fruit: string
+  }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    fruit: {
+      kind: ParsedTypeKind.Simple,
+      type: "string",
+      required: true,
+      displayName: "My Fav Fruit",
+      tooltip: "Tip"
+    },
+  });
 });
