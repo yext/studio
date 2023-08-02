@@ -3,8 +3,8 @@ import { CtaData } from "@yext/search-ui-react";
 import "./index.css";
 
 export interface ComplexBannerProps {
-  /** 
-   * @Tooltip jsdoc 
+  /**
+   * @Tooltip jsdoc
    * @DisplayName Display Title
    */
   title?: string;

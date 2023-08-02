@@ -203,7 +203,7 @@ it("can parse a tooltip without the @Tooltip tag", () => {
       kind: ParsedTypeKind.Simple,
       type: "string",
       required: true,
-      tooltip: "Pen pineapple, apple pen."
+      tooltip: "Pen pineapple, apple pen.",
     },
   });
 });
@@ -229,7 +229,7 @@ it("will prioritize the @Tooltip tag over a tagless JSDoc", () => {
       kind: ParsedTypeKind.Simple,
       type: "string",
       required: true,
-      tooltip: "Pen pineapple, apple pen."
+      tooltip: "Pen pineapple, apple pen.",
     },
   });
 });
@@ -257,7 +257,7 @@ it("can parse the @DisplayName tag", () => {
       type: "string",
       required: true,
       displayName: "My Fav Fruit",
-      tooltip: "Tip"
+      tooltip: "Tip",
     },
   });
 });
