@@ -8,6 +8,7 @@ import path from "path-browserify";
 import StudioConfigSlice from "../models/slices/StudioConfigSlice";
 import PageSlice from "../models/slices/PageSlice";
 import StudioActions from "../StudioActions";
+import { toast } from "react-toastify";
 
 export default class CreatePageAction {
   constructor(
@@ -34,7 +35,12 @@ export default class CreatePageAction {
     this.getPageSlice().addPage(pageName, pageState);
 
     if (streamScope) {
-      await this.generateTestData(pageName);
+      try {
+        const mappingJson = await this.studioActions.generateTestData();
+        this.updateEntityFiles(pageName, mappingJson);
+      } catch {
+        toast.warn("Could not generate test data, but page was still created.");
+      }
     }
 
     await this.studioActions.updateActivePage(pageName);
@@ -58,8 +64,10 @@ export default class CreatePageAction {
     return pageState;
   }
 
-  private async generateTestData(pageName: string) {
-    const mappingJson = await this.studioActions.generateTestData();
+  private updateEntityFiles(
+    pageName: string,
+    mappingJson: Record<string, string[]>
+  ) {
     const entityFilesForPage: string[] = mappingJson?.[pageName];
     if (!Array.isArray(entityFilesForPage)) {
       console.error(

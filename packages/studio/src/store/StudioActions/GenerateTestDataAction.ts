@@ -8,7 +8,6 @@ import {
 import { Stream } from "@yext/pages";
 import PageSlice from "../models/slices/PageSlice";
 import sendMessage from "../../messaging/sendMessage";
-import { toast } from "react-toastify";
 
 export default class GenerateTestDataAction {
   constructor(private getPageSlice: () => PageSlice) {}
@@ -37,21 +36,16 @@ export default class GenerateTestDataAction {
         features: [],
       }
     );
-    try {
-      const response = await sendMessage(
-        MessageID.GenerateTestData,
-        {
-          featuresJson,
-        },
-        {
-          displayErrorToast: false,
-        }
-      );
-      return response.mappingJson;
-    } catch {
-      toast.warn("Could not generate test data, but page was still created.");
-      return {};
-    }
+    const response = await sendMessage(
+      MessageID.GenerateTestData,
+      {
+        featuresJson,
+      },
+      {
+        displayErrorToast: false,
+      }
+    );
+    return response.mappingJson;
   };
 
   private static getStreamId(pageName: string) {
