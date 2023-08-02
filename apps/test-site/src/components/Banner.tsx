@@ -2,9 +2,9 @@ import { HexColor } from "@yext/studio";
 import { NestedProp } from "../types/exportedTypes";
 
 export interface BannerData {
-  /** 
+  /**
    * @Tooltip Banner's title
-   * @DisplayName Title 
+   * @DisplayName Title
    */
   title?: string;
   num?: number;

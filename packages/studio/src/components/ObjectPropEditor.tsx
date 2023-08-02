@@ -22,7 +22,7 @@ export default function ObjectPropEditor(props: {
   updateProp: (propVal: PropVal) => void;
   isNested?: boolean;
 }) {
-  const { propValues, propMetadata , propName, updateProp, isNested } = props;
+  const { propValues, propMetadata, propName, updateProp, isNested } = props;
   const updateObjectProp = useCallback(
     (updatedPropValues: PropValues) => {
       updateProp({
@@ -38,7 +38,7 @@ export default function ObjectPropEditor(props: {
   const containerClasses = classNames("flex", {
     "mb-2": !isNested,
   });
-  
+
   const uniqueId = useMemo(() => v4(), []);
   const propTooltipId = `${uniqueId}-prop-tooltip`;
 
@@ -46,17 +46,20 @@ export default function ObjectPropEditor(props: {
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
       <div>
-        <span className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap" id={propTooltipId}>
+        <span
+          className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap"
+          id={propTooltipId}
+        >
           {propName}
         </span>
         {propMetadata.tooltip && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={propTooltipId}
-              content={propMetadata.tooltip}
-              place="left"
-            />
-          )}
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={propTooltipId}
+            content={propMetadata.tooltip}
+            place="left"
+          />
+        )}
         {isUndefinedValue ? (
           renderUndefinedObject()
         ) : (

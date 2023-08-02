@@ -103,7 +103,7 @@ export function renderPropEditor(
   updateProp: (propVal: PropVal) => void,
   isNested?: boolean
 ) {
-  const {displayName = propName} = propMetadata
+  const { displayName = propName } = propMetadata;
   if (propMetadata.type === PropValueType.Object) {
     if (propVal?.valueType && propVal.valueType !== PropValueType.Object) {
       console.error(

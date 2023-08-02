@@ -200,29 +200,29 @@ export default class TypeNodeParsingHelper {
   }
 
   private static getTooltip(propertySignature: PropertySignature): string {
-    const docs = propertySignature.getJsDocs()
-    const tooltips: string[] = []
+    const docs = propertySignature.getJsDocs();
+    const tooltips: string[] = [];
     docs?.forEach((doc) => {
       doc.getTags().forEach((tag) => {
-        const commentText = tag.getCommentText()
+        const commentText = tag.getCommentText();
         if (tag.getTagName() === "Tooltip" && commentText) {
-          tooltips.push(commentText)
+          tooltips.push(commentText);
         }
-      })
-    })
+      });
+    });
     return tooltips.join("\n");
   }
 
   private static getDisplayName(propertySignature: PropertySignature): string {
-    const docs = propertySignature.getJsDocs()
+    const docs = propertySignature.getJsDocs();
     for (const doc of docs) {
       for (const tag of doc.getTags()) {
-        const commentText = tag.getCommentText()
+        const commentText = tag.getCommentText();
         if (tag.getTagName() === "DisplayName" && commentText) {
-          return commentText
+          return commentText;
         }
       }
     }
-    return ""
+    return "";
   }
 }
