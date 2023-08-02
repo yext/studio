@@ -15,7 +15,7 @@ export default function IFramePortal(
   return (
     <>
       <iframe
-        id = "iframe"
+        id="iframe"
         title={props.title}
         ref={setIframeEl}
         className={props.className}
