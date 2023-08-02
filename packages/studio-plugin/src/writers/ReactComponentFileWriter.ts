@@ -1,6 +1,8 @@
 import {
   ArrowFunction,
   FunctionDeclaration,
+  JSDocableNodeStructure,
+  StructureKind,
   SyntaxKind,
   VariableDeclaration,
   WriterFunction,
@@ -199,11 +201,12 @@ export default class ReactComponentFileWriter {
     const interfaceName = `${this.componentName}Props`;
     const getProperties = (propShape: PropShape) =>
       Object.entries(propShape).map(([key, propMetadata]) => {
+        const docs = this.reconstructDocs(propMetadata.tooltip, propMetadata.displayName)
         return {
           name: key,
           type: getTypeString(propMetadata),
           hasQuestionToken: !propMetadata.required,
-          ...(propMetadata.tooltip && { tooltip: [propMetadata.tooltip] }),
+          ...docs,
         };
       });
     const properties = getProperties(propShape);
@@ -286,5 +289,20 @@ export default class ReactComponentFileWriter {
       defaultImports
     );
     this.studioSourceFileWriter.writeToFile();
+  }
+  
+  reconstructDocs(tooltip?: string, displayName?: string): JSDocableNodeStructure | undefined{
+    if (!tooltip && !displayName) {
+      return
+    }
+    return{
+      docs:[{
+        tags: [
+          ...( tooltip ? [{ tagName: "Tooltip", text: tooltip }] : []),
+          ...( displayName ? [{ tagName: "DisplayName", text: displayName }] : [])
+        ], 
+        kind: StructureKind.JSDoc
+      }]
+    }
   }
 }
