@@ -9,8 +9,10 @@ export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id-UniversalPage",
     localization: { locales: ["en"], primary: false },
-    filter: { entityTypes: ["location"] },
-    fields: ["services", "slug"],
+    filter: {
+      entityTypes: ["location"],
+    },
+    fields: ["services", "address", "hours", "slug"],
   },
 };
 export const getPath: GetPath<TemplateProps> = ({
