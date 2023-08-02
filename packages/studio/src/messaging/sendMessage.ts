@@ -13,7 +13,10 @@ import { toast } from "react-toastify";
  */
 export default async function sendMessage<T extends MessageID>(
   messageId: T,
-  payload: StudioEventMap[T]
+  payload: StudioEventMap[T],
+  options?: {
+    displayErrorToast?: boolean;
+  }
 ): Promise<ResponseEventMap[T]> {
   const response = await fetch(window.location.href + messageId, {
     method: "POST",
@@ -22,7 +25,7 @@ export default async function sendMessage<T extends MessageID>(
   const responseData: ResponseEventMap[T] | ErrorResponse =
     await response.json();
   if (responseData.type === "error") {
-    toast.error(responseData.msg);
+    options?.displayErrorToast && toast.error(responseData.msg);
     throw new Error(responseData.msg);
   }
   toast.success(responseData.msg);

@@ -11,8 +11,7 @@ export default class HmrManager {
   constructor(
     private orchestrator: ParsingOrchestrator,
     private pathToUserProjectRoot: string,
-    private userPaths: UserPaths,
-    private localDataFolder: string
+    private userPaths: UserPaths
   ) {}
 
   /**
@@ -45,7 +44,7 @@ export default class HmrManager {
    * the generate-test-data yext CLI command is called
    */
   shouldExcludeFromWatch = (filepath: string): boolean => {
-    return upath.normalize(filepath).startsWith(this.localDataFolder);
+    return upath.normalize(filepath).startsWith(this.userPaths.localData);
   };
 
   private static async reloadAssociatedModules(ctx: HmrContext) {

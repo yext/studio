@@ -6,7 +6,7 @@ export default class LocalDataMappingManager {
   private localDataMapping: Record<string, string[]>;
   mappingPath: string;
 
-  constructor(localDataPath: string, private isPagesJSRepo: boolean) {
+  constructor(localDataPath: string) {
     this.mappingPath = upath.join(localDataPath, "mapping.json");
     this.localDataMapping = this.readLocalDataMapping();
   }

@@ -47,19 +47,17 @@ export default async function createStudioPlugin(
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
   const mappingManager = new LocalDataMappingManager(
-    studioConfig.paths.localData,
-    studioConfig.isPagesJSRepo
+    studioConfig.paths.localData
   );
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig,
-    mappingManager.getMapping
+    studioConfig.isPagesJSRepo ? mappingManager.getMapping : undefined
   );
   const hmrManager = new HmrManager(
     orchestrator,
     pathToUserProjectRoot,
-    studioConfig.paths,
-    studioConfig.paths.localData
+    studioConfig.paths
   );
 
   const fileSystemManager = new FileSystemManager(

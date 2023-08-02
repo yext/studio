@@ -6,9 +6,9 @@ import { FeaturesJson } from "../types/PagesJS";
 import LocalDataMappingManager from "../LocalDataMappingManager";
 
 /**
- * Registers a listener for regenerating test data.
+ * Registers a listener for generating test data.
  */
-export default function registerRegenerateTestData(
+export default function registerGenerateTestData(
   server: ViteDevServer,
   mappingManager: LocalDataMappingManager
 ) {
@@ -53,7 +53,7 @@ function generateTestData(featuresJson: FeaturesJson) {
   );
 
   if (output.status !== 0) {
-    return "Could not generate test data, but page was still created.";
+    throw new Error("Could not generate test data.");
   }
-  return "Successfully regenerated test data.";
+  return "Successfully generated test data.";
 }
