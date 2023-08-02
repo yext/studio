@@ -14,7 +14,7 @@ export default function createConfigureStudioServer(
   fileSystemManager: FileSystemManager,
   gitWrapper: GitWrapper,
   orchestrator: ParsingOrchestrator,
-  mappingManager: LocalDataMappingManager
+  localDataMappingManager: LocalDataMappingManager
 ) {
   /**
    * Sets up websocket listeners.
@@ -27,6 +27,6 @@ export default function createConfigureStudioServer(
       orchestrator
     );
     registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
-    registerGenerateTestData(server, mappingManager);
+    registerGenerateTestData(server, localDataMappingManager);
   };
 }

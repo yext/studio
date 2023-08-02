@@ -10,15 +10,19 @@ import LocalDataMappingManager from "../LocalDataMappingManager";
  */
 export default function registerGenerateTestData(
   server: ViteDevServer,
-  mappingManager: LocalDataMappingManager
+  localDataMappingManager: LocalDataMappingManager
 ) {
   registerListener(
     server,
     MessageID.GenerateTestData,
     ({ featuresJson }: GenerateTestDataPayload) => {
       const msg = generateTestData(featuresJson);
-      mappingManager.refreshMapping();
-      return { type: "success", msg, mappingJson: mappingManager.getMapping() };
+      localDataMappingManager.refreshMapping();
+      return {
+        type: "success",
+        msg,
+        mappingJson: localDataMappingManager.getMapping(),
+      };
     }
   );
 }
