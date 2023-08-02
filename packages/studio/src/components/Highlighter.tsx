@@ -23,11 +23,12 @@ export default function Highlighter() {
     if (!rect) {
       return {};
     }
+    const IFrame = document.querySelector("iframe");
     return {
       position: "absolute",
       zIndex: "10",
-      left: `${rect.left}px`,
-      top: `${rect.top}px`,
+      left: `${IFrame ? IFrame.contentWindow!.scrollX : 0 + rect.left}px`,
+      top: `${IFrame ? IFrame.contentWindow!.scrollY : 0 + rect.top}px`,
       width: `${rect.width}px`,
       height: `${rect.height}px`,
       boxSizing: "border-box",
