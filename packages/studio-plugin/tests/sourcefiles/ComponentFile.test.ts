@@ -47,7 +47,7 @@ describe("getComponentMetadata", () => {
     });
   });
 
-  it("can parse a more complex Banner with docs, imported prop types, and initialprops", () => {
+  it("can parse a more complex Banner with tooltip, display name, imported prop types, and initialprops", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     const expectedComponentMetadata: ComponentMetadata = {
@@ -59,7 +59,8 @@ describe("getComponentMetadata", () => {
       propShape: {
         title: {
           type: PropValueType.string,
-          tooltip: "jsdoc tooltip",
+          tooltip: "jsdoc",
+          displayName: "Display Title",
           required: false,
         },
         num: { type: PropValueType.number, required: false },
@@ -89,7 +90,7 @@ describe("getComponentMetadata", () => {
         colorArr: {
           type: PropValueType.Array,
           required: false,
-          tooltip: "array tooltip",
+          tooltip: "array",
           itemType: { type: PropValueType.HexColor },
         },
       },
