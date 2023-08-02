@@ -57,7 +57,11 @@ describe("getComponentMetadata", () => {
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Component,
       propShape: {
-        title: { type: PropValueType.string, tooltip: "jsdoc tooltip", required: false },
+        title: {
+          type: PropValueType.string,
+          tooltip: "jsdoc tooltip",
+          required: false,
+        },
         num: { type: PropValueType.number, required: false },
         bool: { type: PropValueType.boolean, required: false },
         bgColor: { type: PropValueType.HexColor, required: false },

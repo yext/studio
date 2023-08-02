@@ -215,12 +215,12 @@ export default class TypeNodeParsingHelper {
         if (tag.getTagName() === "Tooltip" && taggedCommentText) {
           taggedTooltips.push(taggedCommentText);
         }
-      })
+      });
     });
 
-    const taggedTooltipsStr = taggedTooltips.join("\n")
-    const untaggedTooltipsStr = untaggedTooltips.join("\n")
-    return taggedTooltipsStr ? taggedTooltipsStr :untaggedTooltipsStr
+    const taggedTooltipsStr = taggedTooltips.join("\n");
+    const untaggedTooltipsStr = untaggedTooltips.join("\n");
+    return taggedTooltipsStr ? taggedTooltipsStr : untaggedTooltipsStr;
   }
 
   private static getDisplayName(propertySignature: PropertySignature): string {

@@ -201,7 +201,10 @@ export default class ReactComponentFileWriter {
     const interfaceName = `${this.componentName}Props`;
     const getProperties = (propShape: PropShape) =>
       Object.entries(propShape).map(([key, propMetadata]) => {
-        const docs = this.reconstructDocs(propMetadata.tooltip, propMetadata.displayName)
+        const docs = this.reconstructDocs(
+          propMetadata.tooltip,
+          propMetadata.displayName
+        );
         return {
           name: key,
           type: getTypeString(propMetadata),
@@ -290,19 +293,26 @@ export default class ReactComponentFileWriter {
     );
     this.studioSourceFileWriter.writeToFile();
   }
-  
-  reconstructDocs(tooltip?: string, displayName?: string): JSDocableNodeStructure | undefined{
+
+  reconstructDocs(
+    tooltip?: string,
+    displayName?: string
+  ): JSDocableNodeStructure | undefined {
     if (!tooltip && !displayName) {
-      return
+      return;
     }
-    return{
-      docs:[{
-        tags: [
-          ...( tooltip ? [{ tagName: "Tooltip", text: tooltip }] : []),
-          ...( displayName ? [{ tagName: "DisplayName", text: displayName }] : [])
-        ], 
-        kind: StructureKind.JSDoc
-      }]
-    }
+    return {
+      docs: [
+        {
+          tags: [
+            ...(tooltip ? [{ tagName: "Tooltip", text: tooltip }] : []),
+            ...(displayName
+              ? [{ tagName: "DisplayName", text: displayName }]
+              : []),
+          ],
+          kind: StructureKind.JSDoc,
+        },
+      ],
+    };
   }
 }

@@ -222,7 +222,8 @@ describe("parseShape", () => {
                 kind: ParsedTypeKind.Simple,
                 required: false,
                 type: "string",
-                tooltip: "The label for the button, defaults to 'Apply Filters'",
+                tooltip:
+                  "The label for the button, defaults to 'Apply Filters'",
               },
               customCssClasses: {
                 tooltip: "CSS classes for customizing the component styling.",
