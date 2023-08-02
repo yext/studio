@@ -2,8 +2,7 @@ import upath from "upath";
 import LocalDataMappingManager from "../src/LocalDataMappingManager";
 
 it("throws when localData's mapping.json file doesn't exist", () => {
-  const manager = new LocalDataMappingManager("thisFolderDoesNotExist");
-  expect(() => manager.getMapping()).toThrow(
+  expect(() => new LocalDataMappingManager("thisFolderDoesNotExist")).toThrow(
     /^The localData's mapping.json does not exist/
   );
 });
@@ -11,7 +10,7 @@ it("throws when localData's mapping.json file doesn't exist", () => {
 it("can fetch the local data mapping file", () => {
   const localDataPath = upath.resolve(
     __dirname,
-    "../__fixtures__/ParsingOrchestrator/localData"
+    "./__fixtures__/ParsingOrchestrator/localData"
   );
   const manager = new LocalDataMappingManager(localDataPath);
   const mapping = manager.getMapping();
