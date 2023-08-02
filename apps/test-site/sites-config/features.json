@@ -52,7 +52,7 @@
       "filter": {
         "entityTypes": ["location"]
       },
-      "fields": ["services", "address", "hours", "slug"]
+      "fields": ["services", "slug"]
     }
   ]
 }
