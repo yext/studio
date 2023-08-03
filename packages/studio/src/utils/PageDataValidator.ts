@@ -1,5 +1,3 @@
-import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
-
 /**
  * PageDataValidator contains various static utility methods
  * for validation of user-inputted page data.
@@ -47,7 +45,6 @@ export default class PageDataValidator {
    * Throws an error if the URL Slug is invalid.
    */
   private validateURLSlug(input: string, isEntityPage?: boolean) {
-    if (isEntityPage) input = TemplateExpressionFormatter.getRawValue(input);
     const cleanInput = isEntityPage
       ? input.replace(/\${document\..*?}/g, "")
       : input;
