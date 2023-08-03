@@ -15,6 +15,14 @@
       }
     },
     {
+      "name": "LocationPage",
+      "streamId": "studio-stream-id",
+      "templateType": "JS",
+      "entityPageSet": {
+        "plugin": {}
+      }
+    },
+    {
       "name": "UniversalPage",
       "streamId": "studio-stream-id",
       "templateType": "JS",
@@ -24,6 +32,17 @@
     }
   ],
   "streams": [
+    {
+      "$id": "studio-stream-id",
+      "localization": {
+        "locales": ["en"],
+        "primary": false
+      },
+      "filter": {
+        "entityTypes": ["location"]
+      },
+      "fields": ["address", "hours", "slug"]
+    },
     {
       "$id": "studio-stream-id",
       "localization": {
