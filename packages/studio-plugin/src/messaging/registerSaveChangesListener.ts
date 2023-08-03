@@ -19,7 +19,7 @@ export default function registerSaveChangesListener(
     async (saveData: SaveChangesPayload) => {
       executeSaveChanges(saveData, fileManager, orchestrator);
       await reloadGitData(gitWrapper, server);
-      return "Changes saved successfully.";
+      return { type: "success", msg: "Changes saved successfully." };
     }
   );
 }

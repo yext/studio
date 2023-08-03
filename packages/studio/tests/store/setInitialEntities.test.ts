@@ -1,6 +1,6 @@
 import { StudioData } from "@yext/studio-plugin";
 import useStudioStore from "../../src/store/useStudioStore";
-import setInitialEntityFile from "../../src/store/setInitialEntityFile";
+import setInitialEntities from "../../src/store/setInitialEntities";
 
 jest.mock("virtual_yext-studio", () => {
   const path = jest.requireActual("path");
@@ -36,16 +36,17 @@ jest.mock("virtual_yext-studio", () => {
   return mockStudioData;
 });
 
-it("sets the initial entity file", async () => {
-  expect(useStudioStore.getState().pages.activeEntityFile).toBeUndefined();
-  expect(useStudioStore.getState().pages.activeEntityData).toBeUndefined();
-  await setInitialEntityFile(useStudioStore);
+it("sets the initial entities", async () => {
   expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
     "entityFile.json"
   );
-  expect(useStudioStore.getState().pages.activeEntityData).toEqual({
-    employeeCount: 123,
-    favs: ["cat", "dog", "sleep"],
-    name: "bob",
+  expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
+  await setInitialEntities(useStudioStore);
+  expect(useStudioStore.getState().pages.activePageEntities).toEqual({
+    "entityFile.json": {
+      employeeCount: 123,
+      favs: ["cat", "dog", "sleep"],
+      name: "bob",
+    },
   });
 });

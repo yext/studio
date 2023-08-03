@@ -68,9 +68,9 @@ export default function ArrayPropEditor({
 
   return (
     <div className={containerClasses}>
-      {renderBranchUI(isNested, "pt-2")}
+      {renderBranchUI(isNested)}
       <div className="flex flex-col">
-        <label className="flex h-10 items-center">
+        <label className="flex-col items-center">
           <p className="pr-2 font-semibold" id={docTooltipId}>
             {propName}
           </p>
@@ -147,7 +147,7 @@ function LiteralEditor({
 
   const buttonClasses = classNames("ml-3", {
     "self-start mt-2": itemType.type === PropValueType.Object,
-    "mb-2": itemType.type !== PropValueType.Object,
+    "mt-2": itemType.type !== PropValueType.Object,
   });
 
   return (

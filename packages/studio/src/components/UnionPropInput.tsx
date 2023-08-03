@@ -7,8 +7,8 @@ interface UnionPropInputProps {
   disabled?: boolean;
 }
 
-const selectCssClasses =
-  "bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2.5";
+export const selectCssClasses =
+  "disabled:bg-gray-100 border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2";
 
 /**
  * Renders the dropdown for a string union prop, that will update the

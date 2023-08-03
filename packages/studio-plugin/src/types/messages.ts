@@ -1,11 +1,11 @@
 import { SiteSettingsValues } from "./SiteSettings";
 import { StudioData } from "./StudioData";
-import { StreamScope } from "./PageState";
+import { FeaturesJson } from "./PagesJS";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
   Deploy = "studio:deploy",
-  RegenerateTestData = "studio:regenerateTestData",
+  GenerateTestData = "studio:generateTestData",
 }
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
@@ -20,9 +20,8 @@ export interface SaveChangesPayload
   };
 }
 
-export interface RegenerateTestDataPayload {
-  streamScope: StreamScope;
-  pageName: string;
+export interface GenerateTestDataPayload {
+  featuresJson: FeaturesJson;
 }
 
 export interface StudioHMRPayload {
@@ -33,12 +32,23 @@ export interface StudioHMRPayload {
 export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
   [MessageID.Deploy]: SaveChangesPayload;
-  [MessageID.RegenerateTestData]: RegenerateTestDataPayload;
+  [MessageID.GenerateTestData]: GenerateTestDataPayload;
+};
+
+type BaseResponse = {
+  type: "success";
+  msg: string;
+};
+
+export type ErrorResponse = {
+  type: "error";
+  msg: string;
 };
 
 export type ResponseEventMap = {
-  [key in MessageID]: {
-    type: "success" | "error";
-    msg: string;
+  [MessageID.Deploy]: BaseResponse;
+  [MessageID.SaveChanges]: BaseResponse;
+  [MessageID.GenerateTestData]: BaseResponse & {
+    mappingJson: Record<string, string[]>;
   };
 };

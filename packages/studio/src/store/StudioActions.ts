@@ -2,14 +2,10 @@ import {
   ComponentState,
   ComponentStateKind,
   ComponentTreeHelpers,
-  GetPathVal,
   MessageID,
   ModuleMetadata,
   ModuleState,
-  PageState,
-  PagesJsState,
   PropValues,
-  StreamScope,
   TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
@@ -19,26 +15,28 @@ import sendMessage from "../messaging/sendMessage";
 import { cloneDeep } from "lodash";
 import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
-import path from "path-browserify";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
 import AddComponentAction from "./StudioActions/AddComponentAction";
 import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
 import ImportComponentAction from "./StudioActions/ImportComponentAction";
-import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
+import GenerateTestDataAction from "./StudioActions/GenerateTestDataAction";
+import CreatePageAction from "./StudioActions/CreatePageAction";
 
 export default class StudioActions {
   public addComponent: AddComponentAction["addComponent"];
   public createComponentState: CreateComponentStateAction["createComponentState"];
   public updateActivePage: UpdateActivePageAction["updateActivePage"];
   public importComponent: ImportComponentAction["importComponent"];
+  public generateTestData: GenerateTestDataAction["generateTestData"];
+  public createPage: CreatePageAction["createPage"];
 
   constructor(
     private getPages: () => PageSlice,
     private getFileMetadatas: () => FileMetadataSlice,
     private getSiteSettings: () => SiteSettingsSlice,
     private getPreviousSave: () => PreviousSaveSlice,
-    private getStudioConfig: () => StudioConfigSlice
+    getStudioConfig: () => StudioConfigSlice
   ) {
     this.addComponent = new AddComponentAction(this).addComponent;
     this.createComponentState =
@@ -50,6 +48,14 @@ export default class StudioActions {
     this.importComponent = new ImportComponentAction(
       getFileMetadatas
     ).importComponent;
+    this.generateTestData = new GenerateTestDataAction(
+      getPages
+    ).generateTestData;
+    this.createPage = new CreatePageAction(
+      this,
+      getPages,
+      getStudioConfig
+    ).createPage;
   }
 
   getComponentTree = () => {
@@ -221,13 +227,6 @@ export default class StudioActions {
     this.getPages().clearPendingChanges();
   };
 
-  regenerateTestData = async (streamScope: StreamScope, pageName: string) => {
-    await sendMessage(MessageID.RegenerateTestData, {
-      pageName,
-      streamScope,
-    });
-  };
-
   private updatePreviousSave = () => {
     const { UUIDToFileMetadata } = this.getFileMetadatas();
     const { values } = this.getSiteSettings();
@@ -256,53 +255,5 @@ export default class StudioActions {
       },
       siteSettings: { values },
     };
-  };
-
-  createPage = async (
-    pageName: string,
-    getPathValue?: GetPathVal,
-    streamScope?: StreamScope
-  ) => {
-    const isPagesJSRepo = this.getStudioConfig().isPagesJSRepo;
-    if (isPagesJSRepo && !getPathValue) {
-      throw new Error("Error adding page: a getPath value is required.");
-    }
-    const pagesPath = this.getStudioConfig().paths.pages;
-    const filepath = path.join(pagesPath, pageName + ".tsx");
-    if (!filepath.startsWith(pagesPath)) {
-      throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
-    }
-    const pageState: PageState = {
-      componentTree: [],
-      cssImports: [],
-      filepath,
-    };
-    if (isPagesJSRepo && getPathValue) {
-      const pagesJsState: PagesJsState = { getPathValue, streamScope };
-      if (streamScope) {
-        await this.regenerateTestData(streamScope, pageName);
-        const mappingJsonPath = path.join(
-          this.getStudioConfig().paths.localData,
-          "mapping.json"
-        );
-        const mappingJson = await dynamicImportFromBrowser(mappingJsonPath);
-        const entityFilesForPage: string[] = mappingJson?.[pageName];
-        if (!Array.isArray(entityFilesForPage)) {
-          console.error(
-            `Error getting entity files for ${pageName} from ${JSON.stringify(
-              mappingJson,
-              null,
-              2
-            )}`
-          );
-        } else {
-          pagesJsState.entityFiles = entityFilesForPage;
-        }
-      }
-      pageState.pagesJS = pagesJsState;
-    }
-    this.getPages().addPage(pageName, pageState);
-
-    await this.updateActivePage(pageName);
   };
 }

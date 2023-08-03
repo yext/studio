@@ -1,8 +1,30 @@
 {
   "features": [
     {
+      "name": "ErrorPage",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
+    },
+    {
+      "name": "index",
+      "templateType": "JS",
+      "staticPage": {
+        "plugin": {}
+      }
+    },
+    {
+      "name": "LocationPage",
+      "streamId": "studio-stream-id",
+      "templateType": "JS",
+      "entityPageSet": {
+        "plugin": {}
+      }
+    },
+    {
       "name": "UniversalPage",
-      "streamId": "my-stream-id",
+      "streamId": "studio-stream-id",
       "templateType": "JS",
       "entityPageSet": {
         "plugin": {}
@@ -11,27 +33,26 @@
   ],
   "streams": [
     {
-      "$id": "my-stream-id",
-      "fields": [
-        "id",
-        "uid",
-        "meta",
-        "name",
-        "address",
-        "mainPhone",
-        "description",
-        "hours",
-        "slug",
-        "geocodedCoordinate",
-        "services"
-      ],
-      "filter": {
-        "entityTypes": ["location"]
-      },
+      "$id": "studio-stream-id",
       "localization": {
         "locales": ["en"],
         "primary": false
-      }
+      },
+      "filter": {
+        "entityTypes": ["location"]
+      },
+      "fields": ["address", "hours", "slug"]
+    },
+    {
+      "$id": "studio-stream-id",
+      "localization": {
+        "locales": ["en"],
+        "primary": false
+      },
+      "filter": {
+        "entityTypes": ["location"]
+      },
+      "fields": ["services", "address", "hours", "slug"]
     }
   ]
 }

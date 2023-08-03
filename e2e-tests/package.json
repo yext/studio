@@ -12,11 +12,10 @@
     "@playwright/test": "^1.32.0",
     "@types/fs-extra": "^11.0.1",
     "@types/kill-port": "^2.0.0",
-    "@yext/pages": "^1.0.0-beta.15",
+    "@yext/pages": "^1.0.0-beta.26",
     "@yext/studio": "*",
     "fs-extra": "^11.1.1",
-    "glob": "^10.3.1",
-    "vite": "^4.3.9"
+    "glob": "^10.3.1"
   },
   "dependencies": {
     "kill-port": "^2.0.1"
