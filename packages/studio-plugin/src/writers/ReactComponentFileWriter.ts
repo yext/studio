@@ -1,7 +1,9 @@
 import {
   ArrowFunction,
   FunctionDeclaration,
+  JSDocTagStructure,
   JSDocableNodeStructure,
+  OptionalKind,
   StructureKind,
   SyntaxKind,
   VariableDeclaration,
@@ -24,6 +26,7 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { TypeGuards } from "../utils";
 import camelCase from "camelcase";
+import { CustomTags } from "../parsers/helpers/TypeNodeParsingHelper";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -301,17 +304,18 @@ export default class ReactComponentFileWriter {
     if (!tooltip && !displayName) {
       return;
     }
+
+    const tags: OptionalKind<JSDocTagStructure>[] = []
+    if (tooltip) {
+      tags.push({ tagName: CustomTags.Tooltip, text: tooltip })
+    }
+    
+    if (displayName) {
+      tags.push({ tagName: CustomTags.DisplayName, text: displayName })
+    }
     return {
       docs: [
-        {
-          tags: [
-            ...(tooltip ? [{ tagName: "Tooltip", text: tooltip }] : []),
-            ...(displayName
-              ? [{ tagName: "DisplayName", text: displayName }]
-              : []),
-          ],
-          kind: StructureKind.JSDoc,
-        },
+        { tags, kind: StructureKind.JSDoc }
       ],
     };
   }

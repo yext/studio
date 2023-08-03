@@ -47,7 +47,7 @@ describe("getComponentMetadata", () => {
     });
   });
 
-  it("can parse a more complex Banner with tooltip, display name, imported prop types, and initialprops", () => {
+  it("can parse a more complex Banner with tooltip, display name, imported prop types, and initialprops (but not external JSDocs)", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     const expectedComponentMetadata: ComponentMetadata = {
@@ -73,17 +73,14 @@ describe("getComponentMetadata", () => {
             link: {
               type: PropValueType.string,
               required: true,
-              tooltip: "The CTA link source.",
             },
             label: {
               type: PropValueType.string,
               required: true,
-              tooltip: "The display label for the CTA element.",
             },
             linkType: {
               type: PropValueType.string,
               required: true,
-              tooltip: "The CTA link type (e.g. URL, Phone, Email, Other).",
             },
           },
         },

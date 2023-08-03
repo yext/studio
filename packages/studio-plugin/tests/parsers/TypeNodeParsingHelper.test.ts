@@ -184,57 +184,7 @@ it("throws an error if Array TypeReference is missing a type param", () => {
   ).toThrowError("One type param expected for Array type. Found 0.");
 });
 
-it("can parse a tooltip without the @tooltip tag", () => {
-  const { sourceFile } = createTestSourceFile(
-    `export type MyProps = {
-      /** Pen pineapple, apple pen. */
-      fruit: string
-  }`
-  );
-  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
-    SyntaxKind.TypeAliasDeclaration
-  );
-  const parsedShape = TypeNodeParsingHelper.parseShape(
-    typeAlias,
-    externalShapeParser
-  );
-  expect(parsedShape.type).toEqual({
-    fruit: {
-      kind: ParsedTypeKind.Simple,
-      type: "string",
-      required: true,
-      tooltip: "Pen pineapple, apple pen.",
-    },
-  });
-});
-
-it("will prioritize the @tooltip tag over a tagless JSDoc", () => {
-  const { sourceFile } = createTestSourceFile(
-    `export type MyProps = {
-      /** Ignore this
-       * @tooltip Pen pineapple, apple pen. 
-       * */
-      fruit: string
-  }`
-  );
-  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
-    SyntaxKind.TypeAliasDeclaration
-  );
-  const parsedShape = TypeNodeParsingHelper.parseShape(
-    typeAlias,
-    externalShapeParser
-  );
-  expect(parsedShape.type).toEqual({
-    fruit: {
-      kind: ParsedTypeKind.Simple,
-      type: "string",
-      required: true,
-      tooltip: "Pen pineapple, apple pen.",
-    },
-  });
-});
-
-it("can parse the @displayName tag", () => {
+it("can parse the @displayName and @tooltip tag", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
       /** 
