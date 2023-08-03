@@ -36,7 +36,8 @@ export default function EntityPageModal({
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {
-      PageDataValidator.validateURLSlug(currGetPathValue.value, true);
+      const pageDataValidator = new PageDataValidator()
+      pageDataValidator.validate({url: currGetPathValue.value}, true);
     } catch (error) {
       return false;
     }
@@ -73,7 +74,8 @@ export default function EntityPageModal({
         value: TemplateExpressionFormatter.getRawValue(form.url),
       };
       try {
-        PageDataValidator.validateURLSlug(getPathValue.value, true);
+        const pageDataValidator = new PageDataValidator()
+        pageDataValidator.validate({url: getPathValue.value}, true);
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);

@@ -39,12 +39,11 @@ export default function BasicPageDataCollector({
   const onConfirm = useCallback(
     async (data: BasicPageData) => {
       try {
-        PageDataValidator.validatePageName(data.pageName);
         const getPathValue = data.url
           ? createGetPathVal(data.url, isEntityPage)
           : undefined;
-        if (getPathValue)
-          PageDataValidator.validateURLSlug(getPathValue.value, isEntityPage);
+        const pageDataValidator = new PageDataValidator()
+        pageDataValidator.validate({...data, url: getPathValue?.value}, isEntityPage);
         await handleConfirm(data.pageName, getPathValue);
         return true;
       } catch (err: unknown) {
