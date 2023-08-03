@@ -1,5 +1,6 @@
 import { ConfigEnv, Plugin } from "vite";
 import { simpleGit } from "simple-git";
+import { spawn } from "node:child_process";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator, {
   createTsMorphProject,
@@ -64,6 +65,28 @@ export default async function createStudioPlugin(
     studioConfig.paths,
     new FileSystemWriter(orchestrator, tsMorphProject)
   );
+
+  if (studioConfig.isPagesJSRepo) {
+    const pagesServer = spawn("npx", ["pages", "dev", "--open-browser=false"], {
+      stdio: ["ignore", "pipe", "pipe"],
+      env: {
+        ...process.env,
+      },
+      shell: true,
+    });
+
+    // stream pages server errors to parent process with a prefix
+    pagesServer.stderr.setEncoding("utf-8");
+    pagesServer.stderr.on("data", (data: string) => {
+      data.split("\n").forEach((line: string) => {
+        console.error("Pages Development Server |", line.trim());
+      });
+    });
+
+    pagesServer.addListener("exit", () => {
+      process.exit(-1);
+    });
+  }
 
   return {
     name: "yext-studio-vite-plugin",
