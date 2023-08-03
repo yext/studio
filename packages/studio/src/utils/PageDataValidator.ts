@@ -8,7 +8,10 @@ export default class PageDataValidator {
   /**
    * Throws an error if the user-inputted page data is invalid.
    */
-  validate(pageData: { pageName?: string; url?: string }, isEntityPage?: boolean) {
+  validate(
+    pageData: { pageName?: string; url?: string },
+    isEntityPage?: boolean
+  ) {
     if (pageData.pageName) this.validatePageName(pageData.pageName);
     if (pageData.url) this.validateURLSlug(pageData.url, isEntityPage);
   }

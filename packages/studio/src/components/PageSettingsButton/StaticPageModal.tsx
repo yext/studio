@@ -27,8 +27,8 @@ export default function StaticPageModal({
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {
-      const pageDataValidator = new PageDataValidator()
-      pageDataValidator.validate({url: currGetPathValue.value});
+      const pageDataValidator = new PageDataValidator();
+      pageDataValidator.validate({ url: currGetPathValue.value });
     } catch (error) {
       return false;
     }
@@ -61,8 +61,8 @@ export default function StaticPageModal({
         value: form.url,
       };
       try {
-        const pageDataValidator = new PageDataValidator()
-        pageDataValidator.validate({url: getPathValue.value});
+        const pageDataValidator = new PageDataValidator();
+        pageDataValidator.validate({ url: getPathValue.value });
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
