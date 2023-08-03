@@ -10,7 +10,7 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     localization: { locales: ["en"], primary: false },
     filter: { entityTypes: ["location"] },
-    fields: ["hours", "slug"],
+    fields: ["address", "hours", "slug"],
   },
 };
 export const getPath: GetPath<TemplateProps> = ({
@@ -30,10 +30,10 @@ export default function LocationPage({ document }: TemplateProps) {
       <ProminentImage src="https://images.ctfassets.net/n2ifzifcqscw/10wJSHT2Zvj5G1Z3GYHUqv/882e93cefece92d25d25933d56598903/telluride_shutterstock_2074692298.jpg" />
       <BusinessInfo>
         <Address
-          line1="110 Founders Ave"
-          city="Falls Church"
-          region="VA"
-          postalCode="22046"
+          line1={`${document.address.line1}`}
+          city={`${document.address.city}`}
+          region={`${document.address.region}`}
+          postalCode={`${document.address.postalCode}`}
           countryCode=""
         />
         <HoursDisplay
