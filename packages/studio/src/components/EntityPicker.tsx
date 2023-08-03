@@ -1,7 +1,7 @@
 import { ChangeEvent, useCallback } from "react";
 import useStudioStore from "../store/useStudioStore";
 import Divider from "./common/Divider";
-import classNames from "classnames";
+import { twMerge } from "tailwind-merge";
 import { selectCssClasses } from "./UnionPropInput";
 
 export default function EntityPicker(): JSX.Element | null {
@@ -28,7 +28,7 @@ export default function EntityPicker(): JSX.Element | null {
     return null;
   }
 
-  const selectClasses = classNames(selectCssClasses, "w-full mb-6");
+  const selectClasses = twMerge(selectCssClasses, "w-full mb-6");
 
   return (
     <>
