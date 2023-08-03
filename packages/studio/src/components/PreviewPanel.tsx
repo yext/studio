@@ -56,8 +56,8 @@ export default function PreviewPanel() {
 }
 
 function usePageExpressionSources() {
-  const activeEntityData = useStudioStore(
-    (store) => store.pages.activeEntityData
+  const activeEntityData = useStudioStore((store) =>
+    store.pages.getActiveEntityData()
   );
   const rawSiteSettings = useRawSiteSettings();
   const pageExpressionSources = useMemo(

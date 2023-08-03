@@ -5,6 +5,7 @@ import Divider from "./common/Divider";
 import { ReactComponent as Globe } from "../icons/globe.svg";
 import { ReactComponent as Content } from "../icons/content.svg";
 import SiteSettingsPanel from "./SiteSettingsPanel";
+import EntityPicker from "./EntityPicker";
 
 enum Tab {
   Props = "Props",
@@ -40,7 +41,12 @@ export default function EditorSidebar(): JSX.Element {
 function renderTab(tab: Tab) {
   switch (tab) {
     case Tab.Props:
-      return <PropsPanel />;
+      return (
+        <>
+          <EntityPicker />
+          <PropsPanel />
+        </>
+      );
     case Tab.SiteSettings:
       return <SiteSettingsPanel />;
   }

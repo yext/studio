@@ -4,68 +4,106 @@ import { searchBarComponent } from "../../__fixtures__/componentStates";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import path from "path";
 
-describe("active entity file actions", () => {
-  const initialState: Partial<PageSliceStates> = {
-    pages: {
-      Universal: {
-        componentTree: [searchBarComponent],
-        cssImports: [],
-        filepath: "some/file/path",
-        pagesJS: {
-          entityFiles: ["file1.json", "entityFile.json"],
-          getPathValue: undefined,
-        },
+const initialState: Partial<PageSliceStates> = {
+  pages: {
+    Universal: {
+      componentTree: [searchBarComponent],
+      cssImports: [],
+      filepath: "some/file/path",
+      pagesJS: {
+        entityFiles: ["mockLocalData.json", "entityFile.json"],
+        getPathValue: undefined,
       },
     },
-    activePageName: "Universal",
-    activeEntityFile: undefined,
-  };
+    empty: {
+      componentTree: [],
+      cssImports: [],
+      filepath: "some/file/path",
+      pagesJS: {
+        entityFiles: [],
+        getPathValue: undefined,
+      },
+    },
+  },
+  activePageName: "Universal",
+  activeEntityFile: undefined,
+};
 
-  beforeEach(() => {
-    mockPageSliceStates(initialState);
-  });
+beforeEach(() => {
+  mockPageSliceStates(initialState);
+});
 
-  const localDataFolder = path.resolve(__dirname, "../../__mocks__");
+const localDataFolder = path.resolve(__dirname, "../../__mocks__");
 
-  it("updates activeEntityFile using setActiveEntityFile", async () => {
-    await useStudioStore
-      .getState()
-      .pages.setActiveEntityFile(localDataFolder, "entityFile.json");
+describe("setActiveEntityFile", () => {
+  it("updates activeEntityFile using setActiveEntityFile", () => {
+    useStudioStore.getState().pages.setActiveEntityFile("entityFile.json");
     let activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
     expect(activeEntityFile).toEqual("entityFile.json");
 
-    await useStudioStore
-      .getState()
-      .pages.setActiveEntityFile(localDataFolder, undefined);
+    useStudioStore.getState().pages.setActiveEntityFile(undefined);
     activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
     expect(activeEntityFile).toEqual(undefined);
   });
 
-  it("throws when using setActiveEntityFile without an active page", async () => {
+  it("throws when using setActiveEntityFile without an active page", () => {
     mockPageSliceStates({
       ...initialState,
       activePageName: undefined,
     });
     const setEntityFile = () =>
-      useStudioStore
-        .getState()
-        .pages.setActiveEntityFile(localDataFolder, "entityFile.json");
-    await expect(setEntityFile).rejects.toThrow(
+      useStudioStore.getState().pages.setActiveEntityFile("entityFile.json");
+    expect(setEntityFile).toThrow(
       "Error setting active entity file: no active page."
     );
     const activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
     expect(activeEntityFile).toEqual(undefined);
   });
 
-  it("throws when the entity file is not accepted by the page", async () => {
+  it("throws when the entity file is not accepted by the page", () => {
     const setEntityFile = () =>
       useStudioStore
         .getState()
-        .pages.setActiveEntityFile(localDataFolder, "file-does-not-exist.json");
-    await expect(setEntityFile).rejects.toThrow(
+        .pages.setActiveEntityFile("file-does-not-exist.json");
+    expect(setEntityFile).toThrow(
       '"file-does-not-exist.json" is not an accepted entity file for this page.'
     );
     const activeEntityFile = useStudioStore.getState().pages.activeEntityFile;
     expect(activeEntityFile).toEqual(undefined);
+  });
+});
+
+describe("updateActivePageEntities", () => {
+  it("updates activePageEntities using updateActivePageEntities", async () => {
+    expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
+    await useStudioStore
+      .getState()
+      .pages.updateActivePageEntities(localDataFolder);
+    expect(useStudioStore.getState().pages.activePageEntities).toEqual({
+      "mockLocalData.json": {
+        __: expect.anything(),
+      },
+      "entityFile.json": {
+        employeeCount: 123,
+        favs: ["cat", "dog", "sleep"],
+        name: "bob",
+      },
+    });
+  });
+
+  it("sets activePageEntities to undefined if there are no entityFiles", async () => {
+    await useStudioStore.getState().actions.updateActivePage("empty");
+    await useStudioStore
+      .getState()
+      .pages.updateActivePageEntities(localDataFolder);
+    expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
+  });
+
+  it("sets activePageEntities to undefined if there is no active page", async () => {
+    await useStudioStore.getState().actions.updateActivePage();
+    await useStudioStore
+      .getState()
+      .pages.updateActivePageEntities(localDataFolder);
+    expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
   });
 });

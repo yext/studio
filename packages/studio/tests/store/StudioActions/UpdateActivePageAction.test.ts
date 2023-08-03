@@ -23,14 +23,16 @@ it("updates the active page and sets the entity file", async () => {
     },
   });
   expect(useStudioStore.getState().pages.activeEntityFile).toBeUndefined();
-  expect(useStudioStore.getState().pages.activeEntityData).toBeUndefined();
+  expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
   await useStudioStore.getState().actions.updateActivePage("OtherPage");
   expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
     "entityFile.json"
   );
-  expect(useStudioStore.getState().pages.activeEntityData).toEqual({
-    employeeCount: 123,
-    favs: ["cat", "dog", "sleep"],
-    name: "bob",
+  expect(useStudioStore.getState().pages.activePageEntities).toEqual({
+    "entityFile.json": {
+      employeeCount: 123,
+      favs: ["cat", "dog", "sleep"],
+      name: "bob",
+    },
   });
 });

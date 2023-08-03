@@ -39,7 +39,12 @@ describe("expression value", () => {
   });
 
   it("updates value with field picker", async () => {
-    mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
+    mockStore({
+      pages: {
+        activeEntityFile: "entityFile.json",
+        activePageEntities: { "entityFile.json": { strings: [], words: [] } },
+      },
+    });
     const onPropChange = jest.fn();
     renderArrayPropEditor("document.strings", onPropChange);
     await userEvent.click(

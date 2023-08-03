@@ -23,7 +23,9 @@ export default function FieldPickerInput({
   fieldFilter,
   disabled,
 }: FieldPickerInputProps) {
-  const entityData = useStudioStore((store) => store.pages.activeEntityData);
+  const entityData = useStudioStore((store) =>
+    store.pages.getActiveEntityData()
+  );
   const filteredData = filterEntityData(fieldFilter, entityData);
   const hasFilteredData = Object.keys(filteredData).length > 0;
   const inputBoxCssClasses = classNames(

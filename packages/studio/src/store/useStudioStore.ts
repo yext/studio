@@ -11,7 +11,7 @@ import getCreateModuleAction from "./createModuleAction";
 import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
-import setInitialAsyncState from "./setInitialEntityFile";
+import setInitialAsyncState from "./setInitialEntities";
 import { addZundoMiddleware } from "./zundoMiddleware";
 
 enableMapSet();
