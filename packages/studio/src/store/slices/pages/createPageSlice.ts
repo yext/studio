@@ -103,6 +103,21 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
+    updateEntityFiles: (pageName: string, entityFiles: string[]) => {
+      set((store) => {
+        const pageState = store.pages[pageName];
+        if (!pageState.pagesJS) {
+          throw new Error(
+            `Tried to updateEntityFiles for non PagesJS page ${pageName}.`
+          );
+        }
+        pageState.pagesJS = {
+          ...pageState.pagesJS,
+          entityFiles,
+        };
+        store.pendingChanges.pagesToUpdate.add(pageName);
+      });
+    },
     clearPendingChanges: () => {
       set((store) => {
         store.pendingChanges.pagesToRemove = new Set();

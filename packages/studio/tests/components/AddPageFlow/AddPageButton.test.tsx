@@ -4,10 +4,7 @@ import AddPageButton from "../../../src/components/AddPageButton/AddPageButton";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
-
-jest.mock("../../__mocks__/mapping.json", () => ({
-  test: ["mockLocalData.json"],
-}));
+import * as sendMessageModule from "../../../src/messaging/sendMessage";
 
 const basicPageState: PageState = {
   componentTree: [],
@@ -102,7 +99,6 @@ describe("PagesJS repo", () => {
     }
 
     it("closes modal once page type, stream scope, name, and url are specified", async () => {
-      const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
       render(<AddPageButton />);
 
       const addPageButton = screen.getByRole("button");
@@ -122,9 +118,21 @@ describe("PagesJS repo", () => {
       await specifyName();
       expect(saveButton).toBeEnabled();
       await specifyUrl("-[[[[id]]");
+
+      jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
+        return new Promise((resolve) =>
+          resolve({
+            msg: "msg",
+            type: "success",
+            mappingJson: {
+              test: ["mockLocalData.json"],
+            },
+          })
+        );
+      });
       await userEvent.click(saveButton);
 
-      expect(addPageSpy).toBeCalledWith("test", {
+      expect(useStudioStore.getState().pages.pages["test"]).toEqual({
         ...basicPageState,
         pagesJS: {
           getPathValue: {
@@ -146,7 +154,6 @@ describe("PagesJS repo", () => {
     });
 
     it("does not require changes to stream scope or url slug", async () => {
-      const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
       render(<AddPageButton />);
 
       const addPageButton = screen.getByRole("button");
@@ -160,9 +167,21 @@ describe("PagesJS repo", () => {
       const saveButton = screen.getByRole("button", { name: "Save" });
       expect(saveButton).toBeDisabled();
       await specifyName();
+
+      jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
+        return new Promise((resolve) =>
+          resolve({
+            msg: "msg",
+            type: "success",
+            mappingJson: {
+              test: ["mockLocalData.json"],
+            },
+          })
+        );
+      });
       await userEvent.click(saveButton);
 
-      expect(addPageSpy).toBeCalledWith("test", {
+      expect(useStudioStore.getState().pages.pages["test"]).toEqual({
         ...basicPageState,
         pagesJS: {
           getPathValue: {
@@ -173,6 +192,7 @@ describe("PagesJS repo", () => {
           entityFiles: ["mockLocalData.json"],
         },
       });
+      await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
 
       expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
         "mockLocalData.json"
