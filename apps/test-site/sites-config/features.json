@@ -41,7 +41,7 @@
       "filter": {
         "entityTypes": ["location"]
       },
-      "fields": ["slug"]
+      "fields": ["hours", "slug"]
     },
     {
       "$id": "studio-stream-id",
