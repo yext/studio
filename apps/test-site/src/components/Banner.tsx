@@ -11,9 +11,9 @@ export interface BannerData {
   bool?: boolean;
   bgColor?: HexColor;
   obj?: NestedProp;
-  /** 
+  /**
    * @tooltip Start and End are required for each interval.
-   * @displayName Intervals 
+   * @displayName Intervals
    */
   intervals?: {
     end: string;

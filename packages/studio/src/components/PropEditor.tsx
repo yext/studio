@@ -44,10 +44,7 @@ export default function PropEditor({
     <div className="flex items-center mb-2 text-sm">
       {renderBranchUI(isNested, "pb-10")}
       <label className="flex-col items-center justify-self-start">
-        <p 
-          className="pb-1"
-          id={labelTooltipId}
-        >
+        <p className="pb-1" id={labelTooltipId}>
           {propName}
         </p>
         <PropInput

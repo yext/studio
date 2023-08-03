@@ -305,18 +305,16 @@ export default class ReactComponentFileWriter {
       return;
     }
 
-    const tags: OptionalKind<JSDocTagStructure>[] = []
+    const tags: OptionalKind<JSDocTagStructure>[] = [];
     if (tooltip) {
-      tags.push({ tagName: CustomTags.Tooltip, text: tooltip })
+      tags.push({ tagName: CustomTags.Tooltip, text: tooltip });
     }
-    
+
     if (displayName) {
-      tags.push({ tagName: CustomTags.DisplayName, text: displayName })
+      tags.push({ tagName: CustomTags.DisplayName, text: displayName });
     }
     return {
-      docs: [
-        { tags, kind: StructureKind.JSDoc }
-      ],
+      docs: [{ tags, kind: StructureKind.JSDoc }],
     };
   }
 }

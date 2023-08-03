@@ -60,8 +60,8 @@ export enum ParsedTypeKind {
 }
 
 export enum CustomTags {
-  Tooltip = "tooltip", 
-  DisplayName = "displayName"
+  Tooltip = "tooltip",
+  DisplayName = "displayName",
 }
 
 export default class TypeNodeParsingHelper {
@@ -204,10 +204,13 @@ export default class TypeNodeParsingHelper {
     };
   }
 
-  private static getTagValue(propertySignature: PropertySignature, customTag: CustomTags): string | undefined {
+  private static getTagValue(
+    propertySignature: PropertySignature,
+    customTag: CustomTags
+  ): string | undefined {
     const firstDoc = propertySignature.getJsDocs()[0];
     if (!firstDoc) {
-      return
+      return;
     }
 
     for (const tag of firstDoc.getTags()) {
