@@ -13,3 +13,4 @@ export * from "./messages";
 export * from "./SiteSettings";
 export * from "./GitData";
 export * from "./CliArgs";
+export * from "./PagesJS";

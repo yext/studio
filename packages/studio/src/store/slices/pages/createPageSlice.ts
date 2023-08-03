@@ -24,7 +24,7 @@ const initialStates: PageSliceStates = {
   pages: removeTopLevelFragments(initialStudioData.pageNameToPageState),
   errorPages: initialStudioData.pageNameToErrorPageState,
   activePageName: firstPageEntry?.[0],
-  activeEntityFile: undefined,
+  activeEntityFile: firstPageEntry?.[1]?.pagesJS?.entityFiles?.[0],
   activeComponentUUID: undefined,
   activeComponentRect: undefined,
   selectedComponentUUIDs: [],
@@ -56,7 +56,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         if (pageName === store.activePageName) {
           get().setActivePage(undefined);
           store.activeEntityFile = undefined;
-          store.activeEntityData = undefined;
+          store.activePageEntities = undefined;
         }
         const { pagesToRemove, pagesToUpdate } = store.pendingChanges;
         pagesToUpdate.delete(pageName);
@@ -104,6 +104,21 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           pagesJS.streamScope = newStreamScope;
           store.pendingChanges.pagesToUpdate.add(pageName);
         }
+      });
+    },
+    updateEntityFiles: (pageName: string, entityFiles: string[]) => {
+      set((store) => {
+        const pageState = store.pages[pageName];
+        if (!pageState.pagesJS) {
+          throw new Error(
+            `Tried to updateEntityFiles for non PagesJS page ${pageName}.`
+          );
+        }
+        pageState.pagesJS = {
+          ...pageState.pagesJS,
+          entityFiles,
+        };
+        store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },
     clearPendingChanges: () => {
@@ -237,16 +252,13 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const activeEntityFileActions: Pick<PageSlice, "setActiveEntityFile"> = {
-    setActiveEntityFile: async (
-      parentFolder: string,
-      activeEntityFile?: string
-    ): Promise<void> => {
+  const activeEntityFileActions: Pick<
+    PageSlice,
+    "setActiveEntityFile" | "updateActivePageEntities" | "getActiveEntityData"
+  > = {
+    setActiveEntityFile: (activeEntityFile?: string) => {
       if (activeEntityFile === undefined) {
-        set({
-          activeEntityFile: undefined,
-          activeEntityData: undefined,
-        });
+        set({ activeEntityFile: undefined });
         return;
       }
 
@@ -261,12 +273,31 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `"${activeEntityFile}" is not an accepted entity file for this page.`
         );
       }
-      const activeEntityData = (
-        await dynamicImportFromBrowser(
-          path.join(parentFolder, activeEntityFile)
-        )
-      ).default;
-      set({ activeEntityFile, activeEntityData });
+      set({ activeEntityFile });
+    },
+    updateActivePageEntities: async (parentFolder: string) => {
+      const entityFiles = get().getActivePageState()?.pagesJS?.entityFiles;
+      if (!entityFiles?.length) {
+        set({ activePageEntities: undefined });
+        return;
+      }
+
+      const entityEntries = await Promise.all(
+        entityFiles.map(async (entityFile) => {
+          const entityData = (
+            await dynamicImportFromBrowser(path.join(parentFolder, entityFile))
+          ).default;
+          return [entityFile, entityData];
+        })
+      );
+      const entitiesRecord = Object.fromEntries(entityEntries);
+      set({ activePageEntities: entitiesRecord });
+    },
+    getActiveEntityData() {
+      const activeEntityFile = get().activeEntityFile;
+      if (activeEntityFile) {
+        return get().activePageEntities?.[activeEntityFile];
+      }
     },
   };
 

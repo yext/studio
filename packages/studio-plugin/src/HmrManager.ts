@@ -8,28 +8,19 @@ import upath from "upath";
  * HmrManager is responsible for handling studio specific HMR updates.
  */
 export default class HmrManager {
-  private localDataFolder: string;
-  private mappingJsonPath: string;
-
   constructor(
     private orchestrator: ParsingOrchestrator,
     private pathToUserProjectRoot: string,
     private userPaths: UserPaths
-  ) {
-    this.localDataFolder = upath.join(pathToUserProjectRoot, "localData");
-    this.mappingJsonPath = upath.join(this.localDataFolder, "mapping.json");
-  }
+  ) {}
 
   /**
    * A custom handler for vite hot updates.
    *
    * See import('vite').Plugin.handleHotUpdate
    */
-  async handleHotUpdate(ctx: HmrContext) {
+  handleHotUpdate = async (ctx: HmrContext): Promise<void> => {
     const { server, file } = ctx;
-    if (file.startsWith(this.localDataFolder)) {
-      return this.handleLocalDataUpdate(ctx);
-    }
 
     await HmrManager.reloadAssociatedModules(ctx);
     if (!file.startsWith(this.pathToUserProjectRoot)) {
@@ -44,27 +35,17 @@ export default class HmrManager {
       event: StudioHMRUpdateID,
       data,
     });
-  }
+  };
 
   /**
-   * When any file under localData is updated, invalidate the associated
-   * modules for the file and also the mapping.json file.
+   * Whether or not a given file should be excluded from being watched.
    *
-   * Return an empty array to prevent vite's default HMR behavior, which
-   * would cause the page to reload.
+   * Currently we ignore all files under localData, to avoid a full page refresh when
+   * the generate-test-data yext CLI command is called
    */
-  private handleLocalDataUpdate(ctx: HmrContext) {
-    ctx.modules?.forEach((m) => {
-      ctx.server.moduleGraph.invalidateModule(m);
-    });
-    const mappingJsonModules = ctx.server.moduleGraph.getModulesByFile(
-      this.mappingJsonPath
-    );
-    mappingJsonModules?.forEach((m) => {
-      ctx.server.moduleGraph.invalidateModule(m);
-    });
-    return [];
-  }
+  shouldExcludeFromWatch = (filepath: string): boolean => {
+    return upath.normalize(filepath).startsWith(this.userPaths.localData);
+  };
 
   private static async reloadAssociatedModules(ctx: HmrContext) {
     const reloadModulePromises = ctx.modules.map((m) => {

@@ -23,8 +23,11 @@ export interface PageSliceStates {
   activeComponentUUID?: string;
   /** The entity file whose data is seeding the active preview page. */
   activeEntityFile?: string;
-  /** The data for the entity file seeding the active preview page. */
-  activeEntityData?: Record<string, unknown>;
+  /**
+   * A map of the file name to entity data for the entities that can be used
+   * to seed the active preview page.
+   */
+  activePageEntities?: Record<string, Record<string, unknown>>;
   /** The DOMRect of the active component, for highlighting purposes. */
   activeComponentRect?: DOMRectProperties;
   /** The uuids of the currently selected components in Studio (including the active component). */
@@ -62,14 +65,15 @@ interface PageSliceActions {
   ) => void;
   updateGetPathValue: (pageName: string, getPathValue: GetPathVal) => void;
   updateStreamScope: (pageName: string, newStreamScope: StreamScope) => void;
+  updateEntityFiles: (pageName: string, entityFiles: string[]) => void;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
-  setActiveEntityFile: (
-    parentFolder: string,
-    activeEntityFile?: string
-  ) => Promise<void>;
+
+  setActiveEntityFile: (activeEntityFile?: string) => void;
+  updateActivePageEntities: (parentFolder: string) => Promise<void>;
+  getActiveEntityData: () => Record<string, unknown> | undefined;
 
   addSelectedComponentUUID: (selectedUUID: string) => void;
   clearSelectedComponents: () => void;
