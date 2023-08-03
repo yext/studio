@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/tsdoc/v0/tsdoc.schema.json",
   "tagDefinitions": [
     {
-      "tagName": "@DisplayName",
+      "tagName": "@displayName",
       "syntaxKind": "modifier"
     },
     {
-      "tagName": "@Tooltip",
+      "tagName": "@tooltip",
       "syntaxKind": "modifier"
     }
   ]

@@ -4,15 +4,15 @@ import "./index.css";
 
 export interface ComplexBannerProps {
   /**
-   * @Tooltip jsdoc
-   * @DisplayName Display Title
+   * @tooltip jsdoc
+   * @displayName Display Title
    */
   title?: string;
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
   cta?: CtaData;
-  /** @Tooltip array */
+  /** @tooltip array */
   colorArr?: HexColor[];
 }
 

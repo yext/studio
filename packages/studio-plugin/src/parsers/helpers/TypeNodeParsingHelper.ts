@@ -8,7 +8,6 @@ import {
   TypeReferenceNode,
   Node,
   TypeNode,
-  JSDoc,
 } from "ts-morph";
 import { PropValueType } from "../../types";
 import StaticParsingHelpers from "./StaticParsingHelpers";
@@ -58,6 +57,11 @@ export enum ParsedTypeKind {
   Object = "object",
   StringLiteral = "stringLiteral",
   Array = "array",
+}
+
+export enum CustomTags {
+  Tooltip = "tooltip", 
+  DisplayName = "displayName"
 }
 
 export default class TypeNodeParsingHelper {
@@ -143,8 +147,8 @@ export default class TypeNodeParsingHelper {
     properties.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
       const parsedType = this.parseShapeNode(p, parseTypeReference);
-      const tooltip = this.getTooltip(p);
-      const displayName = this.getDisplayName(p);
+      const tooltip = this.getTagValue(p, CustomTags.Tooltip);
+      const displayName = this.getTagValue(p, CustomTags.DisplayName);
       parsedShape[propertyName] = {
         ...parsedType,
         required: !p.hasQuestionToken(),
@@ -200,39 +204,17 @@ export default class TypeNodeParsingHelper {
     };
   }
 
-  private static getTooltip(propertySignature: PropertySignature): string {
-    const docs = propertySignature.getJsDocs();
-    const untaggedTooltips: string[] = [];
-    const taggedTooltips: string[] = [];
+  private static getTagValue(propertySignature: PropertySignature, customTag: CustomTags): string | undefined {
+    const firstDoc = propertySignature.getJsDocs()[0];
+    if (!firstDoc) {
+      return
+    }
 
-    docs?.forEach((doc: JSDoc) => {
-      const untaggedCommentText = doc.getCommentText();
-      if (untaggedCommentText) {
-        untaggedTooltips.push(untaggedCommentText);
-      }
-      doc.getTags().forEach((tag) => {
-        const taggedCommentText = tag.getCommentText();
-        if (tag.getTagName() === "Tooltip" && taggedCommentText) {
-          taggedTooltips.push(taggedCommentText);
-        }
-      });
-    });
-
-    const taggedTooltipsStr = taggedTooltips.join("\n");
-    const untaggedTooltipsStr = untaggedTooltips.join("\n");
-    return taggedTooltipsStr ? taggedTooltipsStr : untaggedTooltipsStr;
-  }
-
-  private static getDisplayName(propertySignature: PropertySignature): string {
-    const docs = propertySignature.getJsDocs();
-    for (const doc of docs) {
-      for (const tag of doc.getTags()) {
-        const commentText = tag.getCommentText();
-        if (tag.getTagName() === "DisplayName" && commentText) {
-          return commentText;
-        }
+    for (const tag of firstDoc.getTags()) {
+      const commentText = tag.getCommentText();
+      if (tag.getTagName() === customTag && commentText) {
+        return commentText;
       }
     }
-    return "";
   }
 }

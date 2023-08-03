@@ -71,9 +71,9 @@ it("can parse a type literal", () => {
 it("can parse an object property", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** @Tooltip the hello prop */
+      /** @tooltip the hello prop */
       hello: {
-        /** @Tooltip the world sub-property */
+        /** @tooltip the world sub-property */
         world: string
       }
   }`
@@ -105,9 +105,9 @@ it("can parse an object property", () => {
 it("can parse an ArrayType", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** @Tooltip array prop */
+      /** @tooltip array prop */
       arr: {
-        /** @Tooltip an item field */
+        /** @tooltip an item field */
         someKey: string[]
       }[];
   }`
@@ -145,7 +145,7 @@ it("can parse an ArrayType", () => {
 it("can parse an Array TypeReference", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** @Tooltip array prop */
+      /** @tooltip array prop */
       arr: Array<string>;
     }`
   );
@@ -172,7 +172,7 @@ it("can parse an Array TypeReference", () => {
 it("throws an error if Array TypeReference is missing a type param", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** @Tooltip array prop */
+      /** @tooltip array prop */
       arr: Array;
     }`
   );
@@ -184,7 +184,7 @@ it("throws an error if Array TypeReference is missing a type param", () => {
   ).toThrowError("One type param expected for Array type. Found 0.");
 });
 
-it("can parse a tooltip without the @Tooltip tag", () => {
+it("can parse a tooltip without the @tooltip tag", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
       /** Pen pineapple, apple pen. */
@@ -208,11 +208,11 @@ it("can parse a tooltip without the @Tooltip tag", () => {
   });
 });
 
-it("will prioritize the @Tooltip tag over a tagless JSDoc", () => {
+it("will prioritize the @tooltip tag over a tagless JSDoc", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
       /** Ignore this
-       * @Tooltip Pen pineapple, apple pen. 
+       * @tooltip Pen pineapple, apple pen. 
        * */
       fruit: string
   }`
@@ -234,12 +234,12 @@ it("will prioritize the @Tooltip tag over a tagless JSDoc", () => {
   });
 });
 
-it("can parse the @DisplayName tag", () => {
+it("can parse the @displayName tag", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
       /** 
-       * @Tooltip Tip
-       * @DisplayName My Fav Fruit 
+       * @tooltip Tip
+       * @displayName My Fav Fruit 
        */
       fruit: string
   }`
