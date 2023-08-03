@@ -14,13 +14,22 @@ interface RemoveElementButtonProps {
 export default function RemoveElementButton({
   elementUUID,
 }: RemoveElementButtonProps): JSX.Element | null {
-  const removeComponent = useStudioStore(
-    (store) => store.actions.removeComponent
+  const [removeComponent, clearSelectedComponents, activeComponentUUID, selectedComponentUUIDs] = useStudioStore(
+    (store) => {return [
+      store.actions.removeComponent,
+      store.pages.clearSelectedComponents,
+      store.pages.activeComponentUUID,
+      store.pages.selectedComponentUUIDs,
+    ]}
   );
 
   const handleClick = useCallback(() => {
-    removeComponent(elementUUID);
-  }, [elementUUID, removeComponent]);
+    if (elementUUID !== activeComponentUUID) removeComponent(elementUUID);
+    else {
+      selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
+      clearSelectedComponents();
+    }
+  }, [elementUUID, activeComponentUUID, removeComponent, clearSelectedComponents, selectedComponentUUIDs]);
 
   return (
     <button onClick={handleClick} aria-label="Remove Element">

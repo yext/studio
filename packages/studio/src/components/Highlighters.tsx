@@ -1,20 +1,33 @@
 import { CSSProperties, useEffect, useMemo } from "react";
-import useActiveComponentName from "../hooks/useActiveComponentName";
+import { useComponentNames } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import { ComponentStateKind } from "@yext/studio-plugin";
+import DOMRectProperties from "../store/models/DOMRectProperties";
 
 /**
- * Highlights the current activeComponentRect on the page.
+ * Generates Highlighters for all selected components.
  */
-export default function Highlighter() {
-  const rect = useStudioStore((store) => store.pages.activeComponentRect);
-  const activeUUID = useStudioStore((store) => store.pages.activeComponentUUID);
-  const setRect = useStudioStore((store) => store.pages.setActiveComponentRect);
-  const componentName = useActiveComponentName();
+export default function Highlighters() {
+  const [selectedComponentUUIDs, selectedComponentRects] = useStudioStore((store) => 
+  {
+    return [
+      store.pages.selectedComponentUUIDs, 
+      store.pages.selectedComponentRects,
+    ]
+  });
+  return selectedComponentUUIDs.map((uuid, index) => <Highlighter key={`${uuid}-key`} uuid={uuid} rect={selectedComponentRects[index]} />);
+};
+
+/**
+ * Highlights the component in the page preview.
+ */
+function Highlighter({ uuid, rect }: { uuid: string; rect: DOMRectProperties }) {
+  const componentTree = useStudioStore((store) => store.actions.getComponentTree());
   const isErrorState = useStudioStore(
-    (store) =>
-      store.actions.getActiveComponentState()?.kind === ComponentStateKind.Error
+    (store) => store.actions.getComponentState(componentTree, uuid)?.kind === ComponentStateKind.Error 
   );
+  const [componentName] = useComponentNames([uuid]);
+
   const red300 = "rgb(252 165 165)";
   const skyBlueFromMocks = "rgb(88,146,255)";
   const color = isErrorState ? red300 : skyBlueFromMocks;
@@ -49,11 +62,13 @@ export default function Highlighter() {
     };
   }, [rect, color]);
 
-  useEffect(() => {
-    if (!activeUUID) {
-      setRect(undefined);
+  //console.log: what does this do????
+  useEffect(() => {   
+    if (!uuid) {
+      //setRect(undefined);
+      console.log("the useEffect is trying to do something");
     }
-  }, [activeUUID, setRect]);
+  }, [uuid,]); //setRect]);
 
   if (!rect) {
     return null;

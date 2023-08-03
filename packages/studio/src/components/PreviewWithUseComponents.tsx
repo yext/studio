@@ -1,7 +1,7 @@
 import useImportedComponents from "../hooks/useImportedComponents";
 import useStudioStore from "../store/useStudioStore";
 import PreviewPanel from "./PreviewPanel";
-import Highlighter from "./Highlighter";
+import Highlighters from "./Highlighters";
 import IFramePortal from "./IFramePortal";
 import { CSSProperties } from "react";
 
@@ -28,7 +28,7 @@ export default function PreviewWithUseComponents() {
       <div style={innerIframeStyles}>
         <PreviewPanel />
         <div className="absolute top-[-50px]">
-          <Highlighter />
+          {Highlighters()}
         </div>
       </div>
     </IFramePortal>

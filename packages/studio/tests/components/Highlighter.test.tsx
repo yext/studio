@@ -1,7 +1,7 @@
 import { ComponentStateKind } from "@yext/studio-plugin";
 import mockActiveComponentState from "../__utils__/mockActiveComponentState";
 import { render, screen } from "@testing-library/react";
-import Highlighter from "../../src/components/Highlighter";
+import Highlighter from "../../src/components/Highlighters";
 import mockStore from "../__utils__/mockStore";
 
 it("displays the active component name", () => {

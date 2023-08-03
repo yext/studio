@@ -35,16 +35,16 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     selectedComponentUUIDs,
     setActiveComponentUUID,
     addSelectedComponentUUID,
-    removeSelectedComponentUUID,
-    clearSelectedComponentUUIDs,
+    clearSelectedComponents,
+    addShiftSelectedComponentUUIDs,
   ] = useStudioStore((store) => {
     return [
       store.pages.activeComponentUUID,
       store.pages.selectedComponentUUIDs,
       store.pages.setActiveComponentUUID,
       store.pages.addSelectedComponentUUID,
-      store.pages.removeSelectedComponentUUID,
-      store.pages.clearSelectedComponentUUIDs,
+      store.pages.clearSelectedComponents,
+      store.pages.addShiftSelectedComponentUUIDs,
     ];
   });
 
@@ -60,25 +60,22 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleClick = useCallback(
     (event) => {
-      if (isActiveComponent) return;
-      else if (event.shiftKey) {
-        if (isSelectedComponent) {
-          removeSelectedComponentUUID(componentState.uuid);
-        } else addSelectedComponentUUID(componentState.uuid);
+      if (event.shiftKey && activeComponentUUID) {
+        clearSelectedComponents();
+        addShiftSelectedComponentUUIDs(componentState);
       } else {
-        clearSelectedComponentUUIDs();
-        addSelectedComponentUUID(componentState.uuid);
+        clearSelectedComponents();
         setActiveComponentUUID(componentState.uuid);
+        addSelectedComponentUUID(componentState.uuid);
       }
     },
     [
-      componentState.uuid,
-      isSelectedComponent,
-      isActiveComponent,
+      activeComponentUUID,
+      componentState,
       setActiveComponentUUID,
       addSelectedComponentUUID,
-      removeSelectedComponentUUID,
-      clearSelectedComponentUUIDs,
+      clearSelectedComponents,
+      addShiftSelectedComponentUUIDs,
     ]
   );
 
@@ -104,9 +101,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   }, [componentState.uuid, isOpen, onToggle]);
 
   const handleKeyDown = useDeleteKeyListener(
-    isActiveComponent,
-    componentState.uuid
-  );
+    isSelectedComponent  );
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
@@ -142,18 +137,22 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 }
 
 function useDeleteKeyListener(
-  isActiveComponent: boolean,
-  componentStateUUID: string
+  isSelectedComponent: boolean
 ) {
-  const removeComponent = useStudioStore((store) => {
-    return store.actions.removeComponent;
+  const [removeComponent, selectedComponentUUIDs, clearSelectedComponents] = useStudioStore((store) => {
+    return [
+      store.actions.removeComponent,
+      store.pages.selectedComponentUUIDs,
+      store.pages.clearSelectedComponents,
+    ]
   });
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
-      if (isActiveComponent && event.key === "Backspace") {
-        removeComponent(componentStateUUID);
+      if (isSelectedComponent && event.key === "Backspace") {
+        selectedComponentUUIDs.map((uuid) => removeComponent(uuid));
+        clearSelectedComponents();
       }
     },
-    [isActiveComponent, componentStateUUID, removeComponent]
+    [isSelectedComponent, removeComponent, selectedComponentUUIDs, clearSelectedComponents]
   );
 }

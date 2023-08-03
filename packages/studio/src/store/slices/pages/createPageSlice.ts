@@ -3,6 +3,7 @@ import {
   GetPathVal,
   PageState,
   StreamScope,
+  ComponentTreeHelpers
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import path from "path-browserify";
@@ -27,6 +28,7 @@ const initialStates: PageSliceStates = {
   activeComponentUUID: undefined,
   activeComponentRect: undefined,
   selectedComponentUUIDs: [],
+  selectedComponentRects: [],
   pendingChanges: {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
@@ -149,32 +151,77 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         (component) => component.uuid === activeComponentUUID
       );
     },
-    addSelectedComponentUUID: (selectedComponentUUID: string) => {
+    addSelectedComponentUUID: (selectedUUID: string) => {
       set((store) => {
         const selectedComponentUUIDs = store.selectedComponentUUIDs;
-        if (selectedComponentUUIDs.includes(selectedComponentUUID)) {
+        if (selectedComponentUUIDs.includes(selectedUUID)) {
           throw new Error(
             `Error selecting component: component is already selected.`
           );
         }
-        selectedComponentUUIDs.push(selectedComponentUUID);
+        selectedComponentUUIDs.push(selectedUUID);
       });
     },
-    removeSelectedComponentUUID: (selectedComponentUUID: string) => {
+    clearSelectedComponents: () => {
+      set({ selectedComponentUUIDs: [], selectedComponentRects: [] });
+    },
+    /**
+     * Adds to selectedComponentUUIDs all of the components ordered between the selected component and
+     * the active component (inclusive). If any component has children, the children are added as well.
+     */
+    addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => {
+      const selectedUUID = selectedComponent.uuid;
+      const { activeComponentUUID, getActivePageState, addSelectedComponentUUID } = get();
+      const activePageState = getActivePageState();
+      const componentTree = activePageState?.componentTree;
+      if (selectedUUID === activeComponentUUID) return;
+      if (!componentTree) {
+        throw new Error(
+          `Error adding components: component tree is undefined.`
+        );
+      }
+      if (!activeComponentUUID) {
+        throw new Error(
+          `Error adding components: active component is undefined.`
+        );
+      }
+      // The user must select the parent in order to include any of its children.
+      const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as [string, string];
+      const highestParentUUID = ComponentTreeHelpers.getHighestParentUUID(...targetComponentUUIDs, componentTree);
+
+      let selected = false;
+      ComponentTreeHelpers.mapComponentTreeParentsFirst(
+        componentTree,
+        (c) => { // clean this up as much as possible
+          if (c.parentUUID !== highestParentUUID) return;
+          const descendants = ComponentTreeHelpers.getDescendants(c, componentTree);
+          const targetInParent = targetComponentUUIDs.includes(c.uuid);
+          const targetInDescendants = descendants.some(d => targetComponentUUIDs.includes(d.uuid))
+          if (targetInParent || targetInDescendants) {
+            if (selected || (targetInParent && targetInDescendants)) {
+              descendants.forEach(d => addSelectedComponentUUID(d.uuid));
+              addSelectedComponentUUID(c.uuid);
+              selected = false;
+            }
+            else selected = true;
+          }
+          if (selected) {
+            descendants.forEach(c => addSelectedComponentUUID(c.uuid));
+            addSelectedComponentUUID(c.uuid);
+          }
+        }
+      );
+    },
+    addSelectedComponentRect: (rect: DOMRectProperties) => {
       set((store) => {
-        const selectedComponentUUIDs = store.selectedComponentUUIDs;
-        if (!selectedComponentUUIDs.includes(selectedComponentUUID)) {
+        const selectedComponentRects = store.selectedComponentRects;
+        if (selectedComponentRects.includes(rect)) {
           throw new Error(
-            `Error removing component: component is not selected.`
+            `Error adding selected component's Rectangle: Rectangle is already added.`
           );
         }
-        store.selectedComponentUUIDs = selectedComponentUUIDs.filter(
-          (uuid) => uuid !== selectedComponentUUID
-        );
+        selectedComponentRects.push(rect);
       });
-    },
-    clearSelectedComponentUUIDs: () => {
-      set({ selectedComponentUUIDs: [] });
     },
   };
 

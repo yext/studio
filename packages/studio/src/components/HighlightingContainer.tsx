@@ -15,12 +15,17 @@ import { findDOMNode } from "react-dom";
 export default function HighlightingContainer(
   props: PropsWithChildren<{ uuid: string }>
 ) {
-  const [setActiveUUID, setRect, rect, activeComponentUUID] = useStudioStore(
+  const [setActiveUUID, setRect, activeRect, activeComponentUUID, selectedComponentUUIDs, selectedComponentRects, addSelectedComponentUUID, addSelectedComponentRect, clearSelectedComponents] = useStudioStore(
     (store) => [
       store.pages.setActiveComponentUUID,
       store.pages.setActiveComponentRect,
       store.pages.activeComponentRect,
       store.pages.activeComponentUUID,
+      store.pages.selectedComponentUUIDs,
+      store.pages.selectedComponentRects,
+      store.pages.addSelectedComponentUUID,
+      store.pages.addSelectedComponentRect,
+      store.pages.clearSelectedComponents,
     ]
   );
 
@@ -30,7 +35,13 @@ export default function HighlightingContainer(
       setRect={setRect}
       setActiveUUID={setActiveUUID}
       activeComponentUUID={activeComponentUUID}
-      rect={rect}
+      activeRect={activeRect}
+      selectedComponentUUIDs={selectedComponentUUIDs}
+      selectedComponentRects={selectedComponentRects}
+      addSelectedComponentUUID={addSelectedComponentUUID}
+      addSelectedComponentRect={addSelectedComponentRect}
+      clearSelectedComponents={clearSelectedComponents}
+      
     >
       {props.children}
     </HighlightingClass>
@@ -42,7 +53,12 @@ type HighlightingProps = PropsWithChildren<{
   activeComponentUUID?: string;
   setActiveUUID: (uuid: string) => void;
   setRect: (rect: DOMRectProperties) => void;
-  rect?: DOMRectProperties;
+  activeRect?: DOMRectProperties;
+  selectedComponentUUIDs: string[];
+  selectedComponentRects: DOMRectProperties[];
+  addSelectedComponentUUID: (componentUUID: string) => void;
+  addSelectedComponentRect: (rect: DOMRectProperties) => void;
+  clearSelectedComponents: () => void;
 }>;
 
 class HighlightingClass extends Component<HighlightingProps> {
@@ -65,11 +81,14 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
-    if (!isEqual(this.props.rect, rect)) {
+    if (!isEqual(this.props.activeRect, rect)) {
       this.props.setRect(rect);
     }
     if (this.props.activeComponentUUID !== this.props.uuid) {
       this.props.setActiveUUID(this.props.uuid);
+      this.props.clearSelectedComponents();
+      this.props.addSelectedComponentUUID(this.props.uuid);
+      this.props.addSelectedComponentRect(rect);
     }
   };
 
@@ -87,6 +106,15 @@ class HighlightingClass extends Component<HighlightingProps> {
   }
 
   componentDidUpdate(): void {
+    const childNode = getDOMNode(this);
+    if (!childNode) {
+      return;
+    }
+    const rect = rectToJson(childNode.getBoundingClientRect());
+    const isRectAdded = this.props.selectedComponentRects.some(r => JSON.stringify(r) === JSON.stringify(rect));
+    if (this.props.selectedComponentUUIDs.includes(this.props.uuid) && !isRectAdded) {
+      this.props.addSelectedComponentRect(rect);
+    }
     this.attachListenerToChild();
     if (this.props.uuid === this.props.activeComponentUUID) {
       this.highlightSelf();
