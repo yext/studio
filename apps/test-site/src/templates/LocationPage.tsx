@@ -10,14 +10,16 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id",
     localization: { locales: ["en"], primary: false },
     filter: { entityTypes: ["location"] },
-    fields: ["slug"],
+    fields: ["hours", "slug"],
   },
 };
-export const getPath: GetPath<TemplateProps> = ({ document }) => {
+export const getPath: GetPath<TemplateProps> = ({
+  document,
+}: TemplateProps) => {
   return `${document.slug}`;
 };
 
-export default function LocationPage() {
+export default function LocationPage({ document }: TemplateProps) {
   return (
     <>
       <Header
@@ -37,22 +39,15 @@ export default function LocationPage() {
         <HoursDisplay
           monday={{
             isClosed: false,
-            openIntervals: [
-              { start: `9:00 AM`, end: `11:00 AM` },
-              { start: `12:00 PM`, end: `5:00 PM` },
-            ],
+            openIntervals: document.hours.monday.openIntervals,
           }}
           tuesday={{
             isClosed: false,
-            openIntervals: [{ start: `9:00 AM`, end: `5:00 PM` }],
+            openIntervals: document.hours.tuesday.openIntervals,
           }}
-          thursday={{
+          wednesday={{
             isClosed: false,
-            openIntervals: [
-              { start: `9:00 AM`, end: `11:00 AM` },
-              { start: `12:00 PM`, end: `2:00 PM` },
-              { start: `4:00 PM`, end: `5:00 PM` },
-            ],
+            openIntervals: document.hours.wednesday.openIntervals,
           }}
         />
       </BusinessInfo>
