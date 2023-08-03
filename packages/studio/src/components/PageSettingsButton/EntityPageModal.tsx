@@ -23,13 +23,25 @@ export default function EntityPageModal({
   isOpen,
   handleClose,
 }: PageSettingsModalProps): JSX.Element {
-  const [currGetPathValue, updateGetPathValue, streamScope, updateStreamScope] =
-    useStudioStore((store) => [
-      store.pages.pages[pageName].pagesJS?.getPathValue,
-      store.pages.updateGetPathValue,
-      store.pages.pages[pageName].pagesJS?.streamScope,
-      store.pages.updateStreamScope,
-    ]);
+  const [
+    currGetPathValue,
+    updateGetPathValue,
+    streamScope,
+    updateStreamScope,
+    generateTestData,
+    updateEntityFiles,
+    setActiveEntityFile,
+    localDataFolder,
+  ] = useStudioStore((store) => [
+    store.pages.pages[pageName].pagesJS?.getPathValue,
+    store.pages.updateGetPathValue,
+    store.pages.pages[pageName].pagesJS?.streamScope,
+    store.pages.updateStreamScope,
+    store.actions.generateTestData,
+    store.pages.updateEntityFiles,
+    store.pages.setActiveEntityFile,
+    store.studioConfig.paths.localData,
+  ]);
   const isPathUndefined = !currGetPathValue;
 
   const initialFormValue: EntityPageSettings = useMemo(
@@ -55,7 +67,7 @@ export default function EntityPageModal({
   );
 
   const handleModalSave = useCallback(
-    (form: EntityPageSettings) => {
+    async (form: EntityPageSettings) => {
       const getPathValue: GetPathVal = {
         kind: PropValueKind.Expression,
         value: TemplateExpressionFormatter.getRawValue(form.url),
@@ -64,9 +76,25 @@ export default function EntityPageModal({
         updateGetPathValue(pageName, getPathValue);
       }
       updateStreamScope(pageName, StreamScopeParser.parseStreamScope(form));
+      try {
+        const mapping = await generateTestData();
+        updateEntityFiles(pageName, mapping[pageName]);
+        await setActiveEntityFile(localDataFolder, mapping[pageName][0]);
+      } catch (e) {
+        console.error(e);
+      }
       return true;
     },
-    [updateGetPathValue, updateStreamScope, currGetPathValue, pageName]
+    [
+      updateGetPathValue,
+      updateStreamScope,
+      currGetPathValue,
+      pageName,
+      generateTestData,
+      updateEntityFiles,
+      setActiveEntityFile,
+      localDataFolder,
+    ]
   );
 
   return (
