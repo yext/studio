@@ -188,14 +188,24 @@ export default class ComponentTreeHelpers {
   }
 
   static getHighestParentUUID(targetOneUUID, targetTwoUUID, componentTree) {
-    const LCAComponent = ComponentTreeHelpers.getLeastCommonAncestorComponent(targetOneUUID, targetTwoUUID, componentTree);
-    const TargetIsLCA = targetOneUUID === LCAComponent?.uuid || targetTwoUUID === LCAComponent?.uuid;
+    const LCAComponent = ComponentTreeHelpers.getLeastCommonAncestorComponent(
+      targetOneUUID,
+      targetTwoUUID,
+      componentTree
+    );
+    const TargetIsLCA =
+      targetOneUUID === LCAComponent?.uuid ||
+      targetTwoUUID === LCAComponent?.uuid;
     return TargetIsLCA ? LCAComponent?.parentUUID : LCAComponent?.uuid;
   }
 
   // test this, what happens when target one = two from start, or one is undefined?
   // add docs
-  private static getLeastCommonAncestorComponent(targetOneUUID: string | undefined, targetTwoUUID: string | undefined, componentTree: ComponentState[]): ComponentState | undefined {
+  private static getLeastCommonAncestorComponent(
+    targetOneUUID: string | undefined,
+    targetTwoUUID: string | undefined,
+    componentTree: ComponentState[]
+  ): ComponentState | undefined {
     let LCA_UUID;
     ComponentTreeHelpers.mapComponentTree(componentTree, (c) => {
       if (!LCA_UUID && targetOneUUID === targetTwoUUID) {
@@ -208,6 +218,6 @@ export default class ComponentTreeHelpers {
         targetTwoUUID = c.parentUUID;
       }
     });
-    return componentTree.find(c => c.uuid === LCA_UUID);;
+    return componentTree.find((c) => c.uuid === LCA_UUID);
   }
 }

@@ -15,19 +15,27 @@ import { findDOMNode } from "react-dom";
 export default function HighlightingContainer(
   props: PropsWithChildren<{ uuid: string }>
 ) {
-  const [setActiveUUID, setRect, activeRect, activeComponentUUID, selectedComponentUUIDs, selectedComponentRects, addSelectedComponentUUID, addSelectedComponentRect, clearSelectedComponents] = useStudioStore(
-    (store) => [
-      store.pages.setActiveComponentUUID,
-      store.pages.setActiveComponentRect,
-      store.pages.activeComponentRect,
-      store.pages.activeComponentUUID,
-      store.pages.selectedComponentUUIDs,
-      store.pages.selectedComponentRects,
-      store.pages.addSelectedComponentUUID,
-      store.pages.addSelectedComponentRect,
-      store.pages.clearSelectedComponents,
-    ]
-  );
+  const [
+    setActiveUUID,
+    setRect,
+    activeRect,
+    activeComponentUUID,
+    selectedComponentUUIDs,
+    selectedComponentRects,
+    addSelectedComponentUUID,
+    addSelectedComponentRect,
+    clearSelectedComponents,
+  ] = useStudioStore((store) => [
+    store.pages.setActiveComponentUUID,
+    store.pages.setActiveComponentRect,
+    store.pages.activeComponentRect,
+    store.pages.activeComponentUUID,
+    store.pages.selectedComponentUUIDs,
+    store.pages.selectedComponentRects,
+    store.pages.addSelectedComponentUUID,
+    store.pages.addSelectedComponentRect,
+    store.pages.clearSelectedComponents,
+  ]);
 
   return (
     <HighlightingClass
@@ -41,7 +49,6 @@ export default function HighlightingContainer(
       addSelectedComponentUUID={addSelectedComponentUUID}
       addSelectedComponentRect={addSelectedComponentRect}
       clearSelectedComponents={clearSelectedComponents}
-      
     >
       {props.children}
     </HighlightingClass>
@@ -111,8 +118,13 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
-    const isRectAdded = this.props.selectedComponentRects.some(r => JSON.stringify(r) === JSON.stringify(rect));
-    if (this.props.selectedComponentUUIDs.includes(this.props.uuid) && !isRectAdded) {
+    const isRectAdded = this.props.selectedComponentRects.some(
+      (r) => JSON.stringify(r) === JSON.stringify(rect)
+    );
+    if (
+      this.props.selectedComponentUUIDs.includes(this.props.uuid) &&
+      !isRectAdded
+    ) {
       this.props.addSelectedComponentRect(rect);
     }
     this.attachListenerToChild();

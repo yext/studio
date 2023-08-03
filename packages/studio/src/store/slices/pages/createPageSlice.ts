@@ -3,7 +3,7 @@ import {
   GetPathVal,
   PageState,
   StreamScope,
-  ComponentTreeHelpers
+  ComponentTreeHelpers,
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import path from "path-browserify";
@@ -171,7 +171,11 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
      */
     addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => {
       const selectedUUID = selectedComponent.uuid;
-      const { activeComponentUUID, getActivePageState, addSelectedComponentUUID } = get();
+      const {
+        activeComponentUUID,
+        getActivePageState,
+        addSelectedComponentUUID,
+      } = get();
       const activePageState = getActivePageState();
       const componentTree = activePageState?.componentTree;
       if (selectedUUID === activeComponentUUID) return;
@@ -186,31 +190,39 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         );
       }
       // The user must select the parent in order to include any of its children.
-      const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as [string, string];
-      const highestParentUUID = ComponentTreeHelpers.getHighestParentUUID(...targetComponentUUIDs, componentTree);
+      const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as [
+        string,
+        string
+      ];
+      const highestParentUUID = ComponentTreeHelpers.getHighestParentUUID(
+        ...targetComponentUUIDs,
+        componentTree
+      );
 
       let selected = false;
-      ComponentTreeHelpers.mapComponentTreeParentsFirst(
-        componentTree,
-        (c) => { // clean this up as much as possible
-          if (c.parentUUID !== highestParentUUID) return;
-          const descendants = ComponentTreeHelpers.getDescendants(c, componentTree);
-          const targetInParent = targetComponentUUIDs.includes(c.uuid);
-          const targetInDescendants = descendants.some(d => targetComponentUUIDs.includes(d.uuid))
-          if (targetInParent || targetInDescendants) {
-            if (selected || (targetInParent && targetInDescendants)) {
-              descendants.forEach(d => addSelectedComponentUUID(d.uuid));
-              addSelectedComponentUUID(c.uuid);
-              selected = false;
-            }
-            else selected = true;
-          }
-          if (selected) {
-            descendants.forEach(c => addSelectedComponentUUID(c.uuid));
+      ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
+        // clean this up as much as possible
+        if (c.parentUUID !== highestParentUUID) return;
+        const descendants = ComponentTreeHelpers.getDescendants(
+          c,
+          componentTree
+        );
+        const targetInParent = targetComponentUUIDs.includes(c.uuid);
+        const targetInDescendants = descendants.some((d) =>
+          targetComponentUUIDs.includes(d.uuid)
+        );
+        if (targetInParent || targetInDescendants) {
+          if (selected || (targetInParent && targetInDescendants)) {
+            descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
             addSelectedComponentUUID(c.uuid);
-          }
+            selected = false;
+          } else selected = true;
         }
-      );
+        if (selected) {
+          descendants.forEach((c) => addSelectedComponentUUID(c.uuid));
+          addSelectedComponentUUID(c.uuid);
+        }
+      });
     },
     addSelectedComponentRect: (rect: DOMRectProperties) => {
       set((store) => {

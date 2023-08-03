@@ -17,14 +17,15 @@ export default function useActiveComponentName(): string | undefined {
 }
 
 export function useComponentNames(uuids: string[]): (string | undefined)[] {
-  const [getComponentTree, getComponentState] = useStudioStore(
-    (store) => {return [
-      store.actions.getComponentTree,
-      store.actions.getComponentState,
-    ]}
+  const [getComponentTree, getComponentState] = useStudioStore((store) => {
+    return [store.actions.getComponentTree, store.actions.getComponentState];
+  });
+  const componentStates = uuids.map((uuid) =>
+    getComponentState(getComponentTree(), uuid)
   );
-  const componentStates = uuids.map(uuid => getComponentState(getComponentTree(), uuid));
-  return componentStates.map(state => state ? getComponentDisplayName(state) : undefined);
+  return componentStates.map((state) =>
+    state ? getComponentDisplayName(state) : undefined
+  );
 }
 
 export function getComponentDisplayName(componentState: ComponentState) {

@@ -8,23 +8,40 @@ import DOMRectProperties from "../store/models/DOMRectProperties";
  * Generates Highlighters for all selected components.
  */
 export default function Highlighters() {
-  const [selectedComponentUUIDs, selectedComponentRects] = useStudioStore((store) => 
-  {
-    return [
-      store.pages.selectedComponentUUIDs, 
-      store.pages.selectedComponentRects,
-    ]
-  });
-  return selectedComponentUUIDs.map((uuid, index) => <Highlighter key={`${uuid}-key`} uuid={uuid} rect={selectedComponentRects[index]} />);
-};
+  const [selectedComponentUUIDs, selectedComponentRects] = useStudioStore(
+    (store) => {
+      return [
+        store.pages.selectedComponentUUIDs,
+        store.pages.selectedComponentRects,
+      ];
+    }
+  );
+  return selectedComponentUUIDs.map((uuid, index) => (
+    <Highlighter
+      key={`${uuid}-key`}
+      uuid={uuid}
+      rect={selectedComponentRects[index]}
+    />
+  ));
+}
 
 /**
  * Highlights the component in the page preview.
  */
-function Highlighter({ uuid, rect }: { uuid: string; rect: DOMRectProperties }) {
-  const componentTree = useStudioStore((store) => store.actions.getComponentTree());
+function Highlighter({
+  uuid,
+  rect,
+}: {
+  uuid: string;
+  rect: DOMRectProperties;
+}) {
+  const componentTree = useStudioStore((store) =>
+    store.actions.getComponentTree()
+  );
   const isErrorState = useStudioStore(
-    (store) => store.actions.getComponentState(componentTree, uuid)?.kind === ComponentStateKind.Error 
+    (store) =>
+      store.actions.getComponentState(componentTree, uuid)?.kind ===
+      ComponentStateKind.Error
   );
   const [componentName] = useComponentNames([uuid]);
 
@@ -63,12 +80,12 @@ function Highlighter({ uuid, rect }: { uuid: string; rect: DOMRectProperties }) 
   }, [rect, color]);
 
   //console.log: what does this do????
-  useEffect(() => {   
+  useEffect(() => {
     if (!uuid) {
       //setRect(undefined);
       console.log("the useEffect is trying to do something");
     }
-  }, [uuid,]); //setRect]);
+  }, [uuid]); //setRect]);
 
   if (!rect) {
     return null;

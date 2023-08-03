@@ -100,8 +100,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     onToggle(componentState.uuid, !isOpen);
   }, [componentState.uuid, isOpen, onToggle]);
 
-  const handleKeyDown = useDeleteKeyListener(
-    isSelectedComponent  );
+  const handleKeyDown = useDeleteKeyListener(isSelectedComponent);
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
@@ -136,16 +135,15 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
 }
 
-function useDeleteKeyListener(
-  isSelectedComponent: boolean
-) {
-  const [removeComponent, selectedComponentUUIDs, clearSelectedComponents] = useStudioStore((store) => {
-    return [
-      store.actions.removeComponent,
-      store.pages.selectedComponentUUIDs,
-      store.pages.clearSelectedComponents,
-    ]
-  });
+function useDeleteKeyListener(isSelectedComponent: boolean) {
+  const [removeComponent, selectedComponentUUIDs, clearSelectedComponents] =
+    useStudioStore((store) => {
+      return [
+        store.actions.removeComponent,
+        store.pages.selectedComponentUUIDs,
+        store.pages.clearSelectedComponents,
+      ];
+    });
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (isSelectedComponent && event.key === "Backspace") {
@@ -153,6 +151,11 @@ function useDeleteKeyListener(
         clearSelectedComponents();
       }
     },
-    [isSelectedComponent, removeComponent, selectedComponentUUIDs, clearSelectedComponents]
+    [
+      isSelectedComponent,
+      removeComponent,
+      selectedComponentUUIDs,
+      clearSelectedComponents,
+    ]
   );
 }
