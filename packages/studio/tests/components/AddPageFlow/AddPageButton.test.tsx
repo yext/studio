@@ -143,6 +143,8 @@ describe("PagesJS repo", () => {
           entityFiles: ["mockLocalData.json"],
         },
       });
+      await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
+
       expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
         "mockLocalData.json"
       );
@@ -190,6 +192,8 @@ describe("PagesJS repo", () => {
           entityFiles: ["mockLocalData.json"],
         },
       });
+      await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
+
       expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
         "mockLocalData.json"
       );
