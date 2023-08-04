@@ -10,8 +10,8 @@ export default class PageDataValidator {
     pageData: { pageName?: string; url?: string },
     isEntityPage?: boolean
   ) {
-    if (pageData.pageName) this.validatePageName(pageData.pageName);
-    if (pageData.url) this.validateURLSlug(pageData.url, isEntityPage);
+    if (pageData.pageName !== undefined) this.validatePageName(pageData.pageName);
+    if (pageData.url !== undefined) this.validateURLSlug(pageData.url, isEntityPage);
   }
 
   /**
