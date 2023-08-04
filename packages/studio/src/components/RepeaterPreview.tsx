@@ -7,6 +7,7 @@ import ComponentPreview from "./ComponentPreview";
 interface RepeaterPreviewProps {
   repeaterState: RepeaterState;
   expressionSources: ExpressionSources;
+  setTooltipProps?;
 }
 
 /**
@@ -15,6 +16,7 @@ interface RepeaterPreviewProps {
 export default function RepeaterPreview({
   repeaterState,
   expressionSources,
+  setTooltipProps,
 }: RepeaterPreviewProps): JSX.Element | null {
   const { repeatedComponent, listExpression } = repeaterState;
   const repeatedElementState = useMemo(
@@ -33,9 +35,10 @@ export default function RepeaterPreview({
         expressionSources={expressionSources}
         parentItem={item}
         key={key}
+        setTooltipProps={setTooltipProps}
       />
     ),
-    [repeatedElementState, expressionSources]
+    [repeatedElementState, expressionSources, setTooltipProps]
   );
 
   const list = get(expressionSources, listExpression) as unknown;

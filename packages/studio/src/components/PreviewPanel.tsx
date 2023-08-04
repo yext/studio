@@ -6,7 +6,8 @@ import useRawSiteSettings from "../hooks/useRawSiteSettings";
 import { ComponentStateHelpers, TypeGuards } from "@yext/studio-plugin";
 import { get } from "lodash";
 
-export default function PreviewPanel() {
+export default function PreviewPanel(props) {
+  const { setTooltipProps } = props;
   const [componentTree, moduleUUIDBeingEdited, getComponentState] =
     useStudioStore((store) => [
       store.actions.getComponentTree(),
@@ -51,6 +52,7 @@ export default function PreviewPanel() {
     <ComponentTreePreview
       componentTree={componentTree}
       expressionSources={expressionSources}
+      setTooltipProps={setTooltipProps}
     />
   );
 }

@@ -17,6 +17,7 @@ interface ComponentPreviewProps {
   expressionSources: ExpressionSources;
   childElements?: (JSX.Element | null)[];
   parentItem?: unknown;
+  setTooltipProps;
 }
 
 /**
@@ -26,6 +27,7 @@ export default function ComponentPreview({
   componentState,
   expressionSources,
   childElements = [],
+  setTooltipProps,
   parentItem,
 }: ComponentPreviewProps): JSX.Element | null {
   const previewProps = usePreviewProps(
@@ -43,6 +45,7 @@ export default function ComponentPreview({
         previewProps={previewProps}
         expressionSources={expressionSources}
         moduleState={componentState}
+        setTooltipProps={setTooltipProps}
       />
     );
   } else if (TypeGuards.isRepeaterState(componentState)) {
@@ -50,13 +53,15 @@ export default function ComponentPreview({
       <RepeaterPreview
         repeaterState={componentState}
         expressionSources={expressionSources}
+        setTooltipProps={setTooltipProps}
       />
     );
   } else if (componentState.kind === ComponentStateKind.Error) {
     return (
       <ErrorComponentPreview
         element={element}
-        errorComponentState={componentState}
+        errorComponentState={componentState.message}
+        setTooltipProps={setTooltipProps}
       />
     );
   }

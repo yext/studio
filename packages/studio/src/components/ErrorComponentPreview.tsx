@@ -1,14 +1,13 @@
-import { ErrorComponentState } from "@yext/studio-plugin";
 import { useCallback, useMemo, useRef, useState } from "react";
 import { v4 } from "uuid";
 import ErrorBoundary from "./common/ErrorBoundary";
-import { Tooltip } from "react-tooltip";
 
 export default function ErrorComponentPreview(props: {
-  errorComponentState: ErrorComponentState;
+  errorComponentState: string;
   element: JSX.Element | null;
+  setTooltipProps;
 }) {
-  const { errorComponentState, element } = props;
+  const { errorComponentState, element, setTooltipProps } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const uniqueId = useMemo(() => v4(), []);
   // We cannot use the uuid on ErrorComponentState due to
@@ -24,9 +23,16 @@ export default function ErrorComponentPreview(props: {
 
   const rect = containerRef.current?.getBoundingClientRect();
   const tooltipPosition = rect && {
-    x: (rect.right + rect.left) / 2,
-    y: rect.top - 40,
+    x: (rect.right + rect.left) / 2 + window.innerWidth / 4,
+    y: rect.top + 25,
   };
+
+  setTooltipProps({
+    open: tooltipOpen,
+    error: errorComponentState,
+    anchorId: anchorId,
+    position: tooltipPosition,
+  });
 
   return (
     <div
@@ -36,17 +42,7 @@ export default function ErrorComponentPreview(props: {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <ErrorBoundary customError={errorComponentState.message}>
-        {element}
-      </ErrorBoundary>
-      <Tooltip
-        offset={-30}
-        content={errorComponentState.message}
-        anchorSelect={`#${anchorId}`}
-        className="text-sm"
-        isOpen={tooltipOpen}
-        position={tooltipPosition}
-      />
+      <ErrorBoundary customError={errorComponentState}>{element}</ErrorBoundary>
     </div>
   );
 }

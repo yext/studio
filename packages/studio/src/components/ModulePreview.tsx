@@ -8,8 +8,10 @@ export default function ModulePreview(props: {
   expressionSources: ExpressionSources;
   previewProps: Record<string, unknown>;
   moduleState: ModuleState;
+  setTooltipProps;
 }) {
-  const { expressionSources, previewProps, moduleState } = props;
+  const { expressionSources, previewProps, moduleState, setTooltipProps } =
+    props;
 
   const getModuleMetadata = useStudioStore(
     (store) => store.fileMetadatas.getModuleMetadata
@@ -30,6 +32,7 @@ export default function ModulePreview(props: {
     <ComponentTreePreview
       componentTree={componentTree}
       expressionSources={moduleExpressionSources}
+      setTooltipProps={setTooltipProps}
       renderHighlightingContainer={false}
     />
   );
