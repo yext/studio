@@ -2,7 +2,6 @@ import useStudioStore from "../../../src/store/useStudioStore";
 import { PageSliceStates } from "../../../src/store/models/slices/PageSlice";
 import { searchBarComponent } from "../../__fixtures__/componentStates";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
-import path from "path";
 
 const initialState: Partial<PageSliceStates> = {
   pages: {
@@ -32,8 +31,6 @@ const initialState: Partial<PageSliceStates> = {
 beforeEach(() => {
   mockPageSliceStates(initialState);
 });
-
-const localDataFolder = path.resolve(__dirname, "../../__mocks__");
 
 describe("setActiveEntityFile", () => {
   it("updates activeEntityFile using setActiveEntityFile", () => {
@@ -74,36 +71,20 @@ describe("setActiveEntityFile", () => {
 });
 
 describe("updateActivePageEntities", () => {
-  it("updates activePageEntities using updateActivePageEntities", async () => {
+  it("updates activePageEntities using updateActivePageEntities", () => {
     expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
-    await useStudioStore
+    const expectedData = {
+      employeeCount: 123,
+      favs: ["cat", "dog", "sleep"],
+      name: "bob",
+    }
+    useStudioStore
       .getState()
-      .pages.updateActivePageEntities(localDataFolder);
+      .pages.updateActivePageEntities({
+        "entityFile.json": expectedData
+      });
     expect(useStudioStore.getState().pages.activePageEntities).toEqual({
-      "mockLocalData.json": {
-        __: expect.anything(),
-      },
-      "entityFile.json": {
-        employeeCount: 123,
-        favs: ["cat", "dog", "sleep"],
-        name: "bob",
-      },
+      "entityFile.json": expectedData,
     });
-  });
-
-  it("sets activePageEntities to undefined if there are no entityFiles", async () => {
-    await useStudioStore.getState().actions.updateActivePage("empty");
-    await useStudioStore
-      .getState()
-      .pages.updateActivePageEntities(localDataFolder);
-    expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
-  });
-
-  it("sets activePageEntities to undefined if there is no active page", async () => {
-    await useStudioStore.getState().actions.updateActivePage();
-    await useStudioStore
-      .getState()
-      .pages.updateActivePageEntities(localDataFolder);
-    expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
   });
 });

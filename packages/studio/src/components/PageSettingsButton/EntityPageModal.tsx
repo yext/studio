@@ -32,6 +32,7 @@ export default function EntityPageModal({
     generateTestData,
     updateEntityFiles,
     setActiveEntityFile,
+    refreshActivePageEntities,
   ] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
@@ -40,6 +41,7 @@ export default function EntityPageModal({
     store.actions.generateTestData,
     store.pages.updateEntityFiles,
     store.pages.setActiveEntityFile,
+    store.actions.refreshActivePageEntities,
   ]);
   const isPathUndefined = !currGetPathValue;
 
@@ -79,9 +81,10 @@ export default function EntityPageModal({
         const mapping = await generateTestData();
         updateEntityFiles(pageName, mapping[pageName]);
         setActiveEntityFile(mapping[pageName]?.[0]);
+        await refreshActivePageEntities();
       } catch {
         toast.warn(
-          "Error generating test data, but entity page settinsg were still updated."
+          "Error generating test data, but entity page settings were still updated."
         );
       }
       return true;
@@ -94,6 +97,7 @@ export default function EntityPageModal({
       generateTestData,
       updateEntityFiles,
       setActiveEntityFile,
+      refreshActivePageEntities,
     ]
   );
 

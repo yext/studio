@@ -5,7 +5,6 @@ import {
   StreamScope,
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
-import path from "path-browserify";
 import initialStudioData from "virtual_yext-studio";
 import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
@@ -13,7 +12,6 @@ import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
 import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
 import PropValueHelpers from "../../../utils/PropValueHelpers";
-import dynamicImportFromBrowser from "../../../utils/dynamicImportFromBrowser";
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
@@ -188,23 +186,10 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       set({ activeEntityFile });
     },
-    updateActivePageEntities: async (parentFolder: string) => {
-      const entityFiles = get().getActivePageState()?.pagesJS?.entityFiles;
-      if (!entityFiles?.length) {
-        set({ activePageEntities: undefined });
-        return;
-      }
-
-      const entityEntries = await Promise.all(
-        entityFiles.map(async (entityFile) => {
-          const entityData = (
-            await dynamicImportFromBrowser(path.join(parentFolder, entityFile))
-          ).default;
-          return [entityFile, entityData];
-        })
-      );
-      const entitiesRecord = Object.fromEntries(entityEntries);
-      set({ activePageEntities: entitiesRecord });
+    updateActivePageEntities: (
+      entities?: Record<string, Record<string, unknown>>
+    ) => {
+      set({ activePageEntities: entities });
     },
     getActiveEntityData() {
       const activeEntityFile = get().activeEntityFile;

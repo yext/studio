@@ -11,7 +11,6 @@ import getCreateModuleAction from "./createModuleAction";
 import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
-import setInitialAsyncState from "./setInitialEntities";
 import { addZundoMiddleware } from "./zundoMiddleware";
 
 enableMapSet();
@@ -50,7 +49,7 @@ const useStudioStore = create<StudioStore>()(
   )
 );
 
-void setInitialAsyncState(useStudioStore);
+void useStudioStore.getState().actions.refreshActivePageEntities();
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;

@@ -22,6 +22,8 @@ import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
 import ImportComponentAction from "./StudioActions/ImportComponentAction";
 import GenerateTestDataAction from "./StudioActions/GenerateTestDataAction";
 import CreatePageAction from "./StudioActions/CreatePageAction";
+import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
+import path from "path-browserify";
 
 export default class StudioActions {
   public addComponent: AddComponentAction["addComponent"];
@@ -36,14 +38,14 @@ export default class StudioActions {
     private getFileMetadatas: () => FileMetadataSlice,
     private getSiteSettings: () => SiteSettingsSlice,
     private getPreviousSave: () => PreviousSaveSlice,
-    getStudioConfig: () => StudioConfigSlice
+    private getStudioConfig: () => StudioConfigSlice
   ) {
     this.addComponent = new AddComponentAction(this).addComponent;
     this.createComponentState =
       new CreateComponentStateAction().createComponentState;
     this.updateActivePage = new UpdateActivePageAction(
       getPages,
-      getStudioConfig
+      this
     ).updateActivePage;
     this.importComponent = new ImportComponentAction(
       getFileMetadatas
@@ -225,6 +227,25 @@ export default class StudioActions {
     await sendMessage(MessageID.SaveChanges, this.getSaveData());
     this.updatePreviousSave();
     this.getPages().clearPendingChanges();
+  };
+
+  refreshActivePageEntities = async () => {
+    const entityFiles = this.getPages().getActivePageState()?.pagesJS?.entityFiles;
+    if (!entityFiles?.length) {
+      return;
+    }
+
+    const localDataFolder = this.getStudioConfig().paths.localData;
+    const entityEntries = await Promise.all(
+      entityFiles.map(async (entityFile) => {
+        const entityData = (
+          await dynamicImportFromBrowser(path.join(localDataFolder, entityFile))
+        ).default;
+        return [entityFile, entityData];
+      })
+    );
+    const entitiesRecord = Object.fromEntries(entityEntries);
+    this.getPages().updateActivePageEntities(entitiesRecord);
   };
 
   private updatePreviousSave = () => {
