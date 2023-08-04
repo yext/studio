@@ -1,4 +1,4 @@
-import { spawn, exec } from "node:child_process";
+import { spawn, execSync } from "node:child_process";
 
 export const startPagesDevelopmentServer = async () => {
   const pagesServer = spawn("npx", ["pages", "dev", "--open-browser=false"], {
@@ -21,29 +21,33 @@ export const startPagesDevelopmentServer = async () => {
     process.exit(-1);
   });
 
-  // kill pages server parent process when studio exits
-  process.on("exit", () => {
-    pagesServer.kill();
-  });
-
   // kill pages server child process when studio exits
   // by getting the dev server port on startup and then
   // killing the proceess running at that port
-  const getPagesDevelopmentServerPort: Promise<string> = new Promise(
+  const port : number | void = await new Promise(
     (resolve) => {
       pagesServer.stdout.setEncoding("utf-8");
       pagesServer.stdout.on("data", (data: string) => {
         const matches = data.match(/listening on :(\d+)/);
         if (matches && matches.length >= 2) {
-          resolve(matches[1]);
+          const port = Number.parseInt(matches[1])
+          if (isNaN(port)) {
+            resolve()
+          }
+          resolve(port);
         }
-        // default to 5173 if not found within 5 seconds
-        setTimeout(() => resolve("5173"), 5000);
+        setTimeout(resolve, 10000)
       });
     }
   );
-  const port = await getPagesDevelopmentServerPort;
+
+  // kill pages server when studio exits
   process.on("exit", () => {
-    exec(`kill $(lsof -t -i:${port})`);
+    if (port) {
+      console.log("Studio is shutting down")
+      execSync(`npx kill-port ${port}`)
+    } else {
+      pagesServer.kill();
+    }
   });
 };
