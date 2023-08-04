@@ -17,19 +17,17 @@ export default function PreviewWithUseComponents(props) {
   void useImportedComponents(componentTree);
 
   return (
-    <>
-      <IFramePortal
-        className="h-full w-full"
-        title="PreviewPanel"
-        inlineStyles={inlineStyles}
-      >
-        <div>
-          <PreviewPanel setTooltipProps={setTooltipProps} />
-          <div className="absolute top-0">
-            <Highlighter />
-          </div>
+    <IFramePortal
+      className="h-full w-full"
+      title="PreviewPanel"
+      inlineStyles={inlineStyles}
+    >
+      <div>
+        <PreviewPanel setTooltipProps={setTooltipProps} />
+        <div className="absolute top-0">
+          <Highlighter />
         </div>
-      </IFramePortal>
-    </>
+      </div>
+    </IFramePortal>
   );
 }
