@@ -169,21 +169,26 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     addSelectedComponentUUID: (selectedUUID: string) => {
       set((store) => {
         const selectedComponentUUIDs = store.selectedComponentUUIDs;
-        if (selectedComponentUUIDs.includes(selectedUUID)) {
-          throw new Error(
-            `Error selecting component: component is already selected.`
-          );
+        if (!selectedComponentUUIDs.includes(selectedUUID)) {
+          selectedComponentUUIDs.push(selectedUUID);
         }
-        selectedComponentUUIDs.push(selectedUUID);
+      });
+    },
+    addSelectedComponentRect: (rect: DOMRectProperties) => {
+      set((store) => {
+        const selectedComponentRects = store.selectedComponentRects;
+        if (!selectedComponentRects.includes(rect)) {
+          selectedComponentRects.push(rect);
+        }
       });
     },
     clearSelectedComponents: () => {
       set({ selectedComponentUUIDs: [], selectedComponentRects: [] });
     },
     /**
-     * Adds to selectedComponentUUIDs all of the components ordered between the selected component and
-     * the active component (inclusive). If any component has children, the children are added as well.
-     */
+      * Adds all of the components and their children ordered between the selected component and
+      * the active component (inclusive) to selectedComponentUUIDs.
+      */
     addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => {
       const selectedUUID = selectedComponent.uuid;
       const {
@@ -204,50 +209,37 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `Error adding components: active component is undefined.`
         );
       }
-      // The user must select the parent in order to include any of its children.
       const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as [
         string,
         string
       ];
-      const highestParentUUID = ComponentTreeHelpers.getHighestParentUUID(
+      const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         ...targetComponentUUIDs,
         componentTree
       );
 
       let selected = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
-        // clean this up as much as possible
-        if (c.parentUUID !== highestParentUUID) return;
+        if (c.parentUUID !== lowestParentUUID) return;
         const descendants = ComponentTreeHelpers.getDescendants(
           c,
           componentTree
         );
-        const targetInParent = targetComponentUUIDs.includes(c.uuid);
+        const targetIsParent = targetComponentUUIDs.includes(c.uuid);
         const targetInDescendants = descendants.some((d) =>
           targetComponentUUIDs.includes(d.uuid)
         );
-        if (targetInParent || targetInDescendants) {
-          if (selected || (targetInParent && targetInDescendants)) {
+        if (targetIsParent || targetInDescendants) {
+          if (selected || (targetIsParent && targetInDescendants)) {
             descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
             addSelectedComponentUUID(c.uuid);
             selected = false;
           } else selected = true;
         }
         if (selected) {
-          descendants.forEach((c) => addSelectedComponentUUID(c.uuid));
+          descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
           addSelectedComponentUUID(c.uuid);
         }
-      });
-    },
-    addSelectedComponentRect: (rect: DOMRectProperties) => {
-      set((store) => {
-        const selectedComponentRects = store.selectedComponentRects;
-        if (selectedComponentRects.includes(rect)) {
-          throw new Error(
-            `Error adding selected component's Rectangle: Rectangle is already added.`
-          );
-        }
-        selectedComponentRects.push(rect);
       });
     },
   };

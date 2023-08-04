@@ -51,3 +51,57 @@ export const buttonComponent: ComponentState = {
   uuid: "button-uuid",
   metadataUUID: "button-metadata-uuid",
 };
+
+export const containerComponent: ComponentState = {
+  kind: ComponentStateKind.Standard,
+  componentName: "Container",
+  props: {
+  },
+  uuid: "container-uuid",
+  metadataUUID: "container-metadata-uuid",
+};
+
+export const child1Component: ComponentState = {
+  kind: ComponentStateKind.Standard,
+  componentName: "Child1",
+  props: {
+    toy: {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.string,
+      value: "balloon1",
+    },
+  },
+  uuid: "child1-uuid",
+  metadataUUID: "child1-metadata-uuid",
+  parentUUID: "container-uuid",
+};
+
+export const child2Component: ComponentState = {
+  kind: ComponentStateKind.Standard,
+  componentName: "Child2",
+  props: {
+    toy: {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.string,
+      value: "balloon2",
+    },
+  },
+  uuid: "child2-uuid",
+  metadataUUID: "child2-metadata-uuid",
+  parentUUID: "container-uuid",
+};
+
+export const resultsChildComponent: ComponentState = {
+  kind: ComponentStateKind.Standard,
+  componentName: "Results Child",
+  props: {
+    toy: {
+      kind: PropValueKind.Literal,
+      valueType: PropValueType.string,
+      value: "results balloon",
+    },
+  },
+  uuid: "resultschild-uuid",
+  metadataUUID: "resultschild-metadata-uuid",
+  parentUUID: "results-uuid",
+};

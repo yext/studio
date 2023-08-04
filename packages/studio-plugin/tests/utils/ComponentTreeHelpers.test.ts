@@ -7,6 +7,7 @@ import {
   PropValues,
   PropValueType,
 } from "../../src/types/PropValues";
+import { nestedBannerComponentTree } from "../__fixtures__/componentStates";
 import ComponentTreeHelpers from "../../src/utils/ComponentTreeHelpers";
 
 describe("usesExpressionSource", () => {
@@ -91,6 +92,32 @@ describe("usesExpressionSource", () => {
     expect(
       ComponentTreeHelpers.usesExpressionSource(componentTree, "document")
     ).toBeTruthy();
+  });
+});
+
+describe("getLowestParentUUID", () => {
+  it("finds the highest parent of the same component", () => {
+    expect(
+      ComponentTreeHelpers.getLowestParentUUID("mock-uuid-1", "mock-uuid-1", nestedBannerComponentTree)
+    ).toBe("mock-uuid-0");
+  });
+
+  it("finds the highest parent of a child and a parent component", () => {
+    expect(
+      ComponentTreeHelpers.getLowestParentUUID("mock-uuid-3", "mock-uuid-4", nestedBannerComponentTree)
+    ).toBe("mock-uuid-0");
+  });
+
+  it("finds the highest parent of a child and an aunt component", () => {
+    expect(
+      ComponentTreeHelpers.getLowestParentUUID("mock-uuid-4", "mock-uuid-1", nestedBannerComponentTree)
+    ).toBe("mock-uuid-0");
+  });
+
+  it("finds the highest parent of two children without the same parent", () => {
+    expect(
+      ComponentTreeHelpers.getLowestParentUUID("mock-uuid-6", "mock-uuid-3", nestedBannerComponentTree)
+    ).toBe(undefined);
   });
 });
 
