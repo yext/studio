@@ -34,9 +34,7 @@ beforeEach(() => {
 describe("refreshActivePageEntities", () => {
   it("performs dynamic imports for the active page's entities", async () => {
     expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
-    await useStudioStore
-      .getState()
-      .actions.refreshActivePageEntities();
+    await useStudioStore.getState().actions.refreshActivePageEntities();
 
     expect(useStudioStore.getState().pages.activePageEntities).toEqual({
       "mockLocalData.json": {
@@ -52,17 +50,13 @@ describe("refreshActivePageEntities", () => {
 
   it("sets activePageEntities to undefined if there are no entityFiles", async () => {
     await useStudioStore.getState().actions.updateActivePage("empty");
-    await useStudioStore
-      .getState()
-      .actions.refreshActivePageEntities();
+    await useStudioStore.getState().actions.refreshActivePageEntities();
     expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
   });
 
   it("sets activePageEntities to undefined if there is no active page", async () => {
     await useStudioStore.getState().actions.updateActivePage();
-    await useStudioStore
-      .getState()
-      .actions.refreshActivePageEntities();
+    await useStudioStore.getState().actions.refreshActivePageEntities();
     expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
   });
 });

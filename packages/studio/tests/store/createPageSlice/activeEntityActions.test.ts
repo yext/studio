@@ -77,12 +77,10 @@ describe("updateActivePageEntities", () => {
       employeeCount: 123,
       favs: ["cat", "dog", "sleep"],
       name: "bob",
-    }
-    useStudioStore
-      .getState()
-      .pages.updateActivePageEntities({
-        "entityFile.json": expectedData
-      });
+    };
+    useStudioStore.getState().pages.updateActivePageEntities({
+      "entityFile.json": expectedData,
+    });
     expect(useStudioStore.getState().pages.activePageEntities).toEqual({
       "entityFile.json": expectedData,
     });

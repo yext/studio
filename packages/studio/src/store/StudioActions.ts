@@ -230,7 +230,8 @@ export default class StudioActions {
   };
 
   refreshActivePageEntities = async () => {
-    const entityFiles = this.getPages().getActivePageState()?.pagesJS?.entityFiles;
+    const entityFiles =
+      this.getPages().getActivePageState()?.pagesJS?.entityFiles;
     if (!entityFiles?.length) {
       return;
     }
