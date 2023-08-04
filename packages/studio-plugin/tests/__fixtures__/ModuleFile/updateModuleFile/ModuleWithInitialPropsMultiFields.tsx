@@ -1,9 +1,12 @@
 import ComplexBanner from "../../ComponentFile/ComplexBanner";
 
 export interface PanelProps {
-  /** some banner title! */
+  /**
+   * @tooltip some banner title!
+   * @displayName Title!
+   */
   complexBannerText?: string;
-  /** some boolean to toggle */
+  /** @tooltip some boolean to toggle */
   complexBannerBool?: boolean;
 }
 

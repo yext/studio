@@ -15,7 +15,7 @@ const componentMetadata: ComponentMetadata = {
   propShape: {
     myText: {
       type: PropValueType.string,
-      doc: "a random string",
+      tooltip: "a random string",
       required: false,
     },
   },

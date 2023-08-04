@@ -1,6 +1,10 @@
 import {
   ArrowFunction,
   FunctionDeclaration,
+  JSDocTagStructure,
+  JSDocableNodeStructure,
+  OptionalKind,
+  StructureKind,
   SyntaxKind,
   VariableDeclaration,
   WriterFunction,
@@ -22,6 +26,7 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import { TypeGuards } from "../utils";
 import camelCase from "camelcase";
+import { CustomTags } from "../parsers/helpers/TypeNodeParsingHelper";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -199,11 +204,15 @@ export default class ReactComponentFileWriter {
     const interfaceName = `${this.componentName}Props`;
     const getProperties = (propShape: PropShape) =>
       Object.entries(propShape).map(([key, propMetadata]) => {
+        const docs = this.reconstructDocs(
+          propMetadata.tooltip,
+          propMetadata.displayName
+        );
         return {
           name: key,
           type: getTypeString(propMetadata),
           hasQuestionToken: !propMetadata.required,
-          ...(propMetadata.doc && { docs: [propMetadata.doc] }),
+          ...docs,
         };
       });
     const properties = getProperties(propShape);
@@ -286,5 +295,26 @@ export default class ReactComponentFileWriter {
       defaultImports
     );
     this.studioSourceFileWriter.writeToFile();
+  }
+
+  reconstructDocs(
+    tooltip?: string,
+    displayName?: string
+  ): JSDocableNodeStructure | undefined {
+    if (!tooltip && !displayName) {
+      return;
+    }
+
+    const tags: OptionalKind<JSDocTagStructure>[] = [];
+    if (tooltip) {
+      tags.push({ tagName: CustomTags.Tooltip, text: tooltip });
+    }
+
+    if (displayName) {
+      tags.push({ tagName: CustomTags.DisplayName, text: displayName });
+    }
+    return {
+      docs: [{ tags, kind: StructureKind.JSDoc }],
+    };
   }
 }

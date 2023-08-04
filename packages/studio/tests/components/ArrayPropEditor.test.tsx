@@ -123,7 +123,7 @@ describe("literal value", () => {
 function renderArrayPropEditor(
   propValue?: string | PropVal[],
   onPropChange = jest.fn(),
-  doc?: string
+  tooltip?: string
 ) {
   render(
     <ArrayPropEditor
@@ -132,7 +132,7 @@ function renderArrayPropEditor(
         type: PropValueType.Array,
         itemType: { type: PropValueType.string },
         required: false,
-        doc,
+        tooltip,
       }}
       propValue={propValue}
       onPropChange={onPropChange}
