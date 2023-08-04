@@ -29,24 +29,21 @@ export default function UniversalPage({ document }: TemplateProps) {
       ))}
       <Container>
         <Button />
-        <Banner
-          obj={{
-            nestedString: `hello ${document.address.city}  ${document.id}`,
-            nestedObj: { nestedNum: 333, nestedColor: "#FFFFFF" },
-            nestedBool: false,
-          }}
-          title=""
-          bgColor="#FFFFFF"
-          bool={false}
-          num={0}
-          intervals={[
-            {
-              start: "01:00",
-              end: document.hours.monday.openIntervals[0].end,
-            },
-          ]}
-        />
       </Container>
+      <Banner
+        obj={{
+          nestedString: `hello ${document.address.city}  ${document.id}`,
+          nestedObj: { nestedNum: 333, nestedColor: "#FFFFFF" },
+          nestedBool: false,
+        }}
+        title=""
+        bgColor="#FFFFFF"
+        bool={false}
+        num={0}
+        intervals={[
+          { start: "01:00", end: document.hours.monday.openIntervals[0].end },
+        ]}
+      />
     </>
   );
 }
