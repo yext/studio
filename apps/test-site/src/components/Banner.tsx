@@ -21,7 +21,7 @@ export const initialProps: BannerData = {
   title: "initial title",
 };
 
-export function Banner(props: BannerData) {
+export default function Banner(props: BannerData) {
   return (
     <div>
       <p style={{ backgroundColor: props.bgColor }}>{props.title}</p>
