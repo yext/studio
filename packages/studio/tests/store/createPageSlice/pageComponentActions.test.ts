@@ -64,9 +64,22 @@ describe("PageSlice: page component actions", () => {
   describe("selected components actions", () => {
     const store = useStudioStore.getState;
     function domRect(x, y, width, height) {
-      return {x, y, width, height, top: y, bottom: y + height, left: x, right: x + width} as DOMRectProperties
+      return {
+        x,
+        y,
+        width,
+        height,
+        top: y,
+        bottom: y + height,
+        left: x,
+        right: x + width,
+      } as DOMRectProperties;
     }
-    function shiftSelect(activeUUID: string, selectedComponent: ComponentState, expectedUUIDSelection: string[]) {
+    function shiftSelect(
+      activeUUID: string,
+      selectedComponent: ComponentState,
+      expectedUUIDSelection: string[]
+    ) {
       store().pages.clearSelectedComponents();
       store().pages.setActiveComponentUUID(activeUUID);
       store().pages.addShiftSelectedComponentUUIDs(selectedComponent);
@@ -78,7 +91,14 @@ describe("PageSlice: page component actions", () => {
       mockPageSliceStates({
         pages: {
           universal: {
-            componentTree: [searchBarComponent, resultsComponent, containerComponent, child1Component, child2Component, buttonComponent],
+            componentTree: [
+              searchBarComponent,
+              resultsComponent,
+              containerComponent,
+              child1Component,
+              child2Component,
+              buttonComponent,
+            ],
             cssImports: [],
             filepath: "mock-filepath",
           },
@@ -86,36 +106,47 @@ describe("PageSlice: page component actions", () => {
         activePageName: "universal",
         activeComponentUUID: "results-uuid",
         selectedComponentUUIDs: ["results-uuid"],
-        selectedComponentRects: [domRect(1,2,3,4)],
+        selectedComponentRects: [domRect(1, 2, 3, 4)],
       });
     });
 
     it("adds a selected component UUID using addSelectedComponentUUID", () => {
       store().pages.addSelectedComponentUUID("searchbar-uuid");
-      const selectedComponentUUIDs =
-      store().pages.selectedComponentUUIDs;
-      expect(selectedComponentUUIDs).toEqual(["results-uuid","searchbar-uuid"]);
+      const selectedComponentUUIDs = store().pages.selectedComponentUUIDs;
+      expect(selectedComponentUUIDs).toEqual([
+        "results-uuid",
+        "searchbar-uuid",
+      ]);
     });
 
     it("adds a selected component Rect using addSelectedComponentRect", () => {
-      store().pages.addSelectedComponentRect(domRect(5,6,7,8));
-      const selectedComponentRects =
-      store().pages.selectedComponentRects;
-      expect(selectedComponentRects).toEqual([domRect(1,2,3,4), domRect(5,6,7,8)]);
+      store().pages.addSelectedComponentRect(domRect(5, 6, 7, 8));
+      const selectedComponentRects = store().pages.selectedComponentRects;
+      expect(selectedComponentRects).toEqual([
+        domRect(1, 2, 3, 4),
+        domRect(5, 6, 7, 8),
+      ]);
     });
 
     it("clears all selected component UUIDs and Rects using clearSelectedComponents", () => {
       store().pages.clearSelectedComponents();
-      const [selectedComponentUUIDs, selectedComponentRects] =
-        [store().pages.selectedComponentUUIDs,
-          store().pages.selectedComponentRects];
+      const [selectedComponentUUIDs, selectedComponentRects] = [
+        store().pages.selectedComponentUUIDs,
+        store().pages.selectedComponentRects,
+      ];
       expect(selectedComponentUUIDs).toEqual([]);
       expect(selectedComponentRects).toEqual([]);
     });
 
     it("shift selects components after the active component", () => {
-      const expectedUUIDSelection = ["results-uuid", "child1-uuid", "child2-uuid", "container-uuid", "button-uuid"];
-      shiftSelect("results-uuid", buttonComponent, expectedUUIDSelection)
+      const expectedUUIDSelection = [
+        "results-uuid",
+        "child1-uuid",
+        "child2-uuid",
+        "container-uuid",
+        "button-uuid",
+      ];
+      shiftSelect("results-uuid", buttonComponent, expectedUUIDSelection);
     });
 
     it("shift selects components before the active component", () => {
@@ -141,10 +172,7 @@ describe("PageSlice: page component actions", () => {
     });
 
     it("shift selects all the children within a container", () => {
-      const expectedUUIDSelection = [
-        "child1-uuid",
-        "child2-uuid",
-      ];
+      const expectedUUIDSelection = ["child1-uuid", "child2-uuid"];
       shiftSelect("child1-uuid", child2Component, expectedUUIDSelection);
     });
 
@@ -152,7 +180,14 @@ describe("PageSlice: page component actions", () => {
       mockPageSliceStates({
         pages: {
           universal: {
-            componentTree: [resultsComponent, resultsChildComponent, buttonComponent, containerComponent, child1Component, child2Component],
+            componentTree: [
+              resultsComponent,
+              resultsChildComponent,
+              buttonComponent,
+              containerComponent,
+              child1Component,
+              child2Component,
+            ],
             cssImports: [],
             filepath: "mock-filepath",
           },

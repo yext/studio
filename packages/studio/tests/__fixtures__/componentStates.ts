@@ -55,8 +55,7 @@ export const buttonComponent: ComponentState = {
 export const containerComponent: ComponentState = {
   kind: ComponentStateKind.Standard,
   componentName: "Container",
-  props: {
-  },
+  props: {},
   uuid: "container-uuid",
   metadataUUID: "container-metadata-uuid",
 };

@@ -63,18 +63,21 @@ export default function ComponentTree(): JSX.Element | null {
   );
 
   //move this back out of ComponentTree if we don't change it later, this could be where self insert bug gets fix
-  const canDrop = useCallback((_: NodeModel<ComponentState>[], opts: DropOptions) => {
-    const { dragSource, dropTarget, dropTargetId } = opts;
-    if (dropTarget !== undefined && !dropTarget.droppable) {
-      return false;
-    }
-    if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
-      return true;
-    }
-    // For this drag and drop library, returning undefined has different behavior than returning false.
-    // It means to use the default behavior.
-    return undefined;
-  }, []);
+  const canDrop = useCallback(
+    (_: NodeModel<ComponentState>[], opts: DropOptions) => {
+      const { dragSource, dropTarget, dropTargetId } = opts;
+      if (dropTarget !== undefined && !dropTarget.droppable) {
+        return false;
+      }
+      if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
+        return true;
+      }
+      // For this drag and drop library, returning undefined has different behavior than returning false.
+      // It means to use the default behavior.
+      return undefined;
+    },
+    []
+  );
 
   // we would be unable to drag components that aren't highlighted
   // this is to prevent unselected components from being dropped in the middle of some selected components
@@ -157,7 +160,9 @@ function useDragPreview() {
   return () => (
     <div className="p-2 rounded bg-emerald-200 w-fit">
       {componentNames.map((name, index) => (
-        <div key={selectedComponentUUIDs[index]} className="flex">{name}</div>
+        <div key={selectedComponentUUIDs[index]} className="flex">
+          {name}
+        </div>
       ))}
     </div>
   );
@@ -226,7 +231,7 @@ function useDropHandler() {
       }
       const { dragSourceId, destinationIndex } = options;
       const destinationParentId = tree[destinationIndex].parent.toString();
-      // this works because the last selected component must be the highest in depth 
+      // this works because the last selected component must be the highest in depth
       // and the first selected component is the furthest away
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         selectedComponentUUIDs.at(0),
