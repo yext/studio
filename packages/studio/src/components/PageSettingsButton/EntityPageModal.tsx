@@ -10,6 +10,7 @@ import StreamScopeParser, {
 import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
 import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
+import { toast } from "react-toastify";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -31,7 +32,6 @@ export default function EntityPageModal({
     generateTestData,
     updateEntityFiles,
     setActiveEntityFile,
-    localDataFolder,
   ] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
@@ -40,7 +40,6 @@ export default function EntityPageModal({
     store.actions.generateTestData,
     store.pages.updateEntityFiles,
     store.pages.setActiveEntityFile,
-    store.studioConfig.paths.localData,
   ]);
   const isPathUndefined = !currGetPathValue;
 
@@ -79,9 +78,11 @@ export default function EntityPageModal({
       try {
         const mapping = await generateTestData();
         updateEntityFiles(pageName, mapping[pageName]);
-        await setActiveEntityFile(localDataFolder, mapping[pageName][0]);
-      } catch (e) {
-        console.error(e);
+        setActiveEntityFile(mapping[pageName]?.[0]);
+      } catch {
+        toast.warn(
+          "Error generating test data, but entity page settinsg were still updated."
+        );
       }
       return true;
     },
@@ -93,7 +94,6 @@ export default function EntityPageModal({
       generateTestData,
       updateEntityFiles,
       setActiveEntityFile,
-      localDataFolder,
     ]
   );
 
