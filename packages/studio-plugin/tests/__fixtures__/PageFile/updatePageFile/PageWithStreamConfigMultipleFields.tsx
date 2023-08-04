@@ -3,7 +3,7 @@ import ComplexBanner from "../../ComponentFile/ComplexBanner";
 
 export const config: TemplateConfig = {
   stream: {
-    $id: "studio-stream-id",
+    $id: "studio-stream-id-test",
     localization: { locales: ["en"], primary: false },
     filter: {},
     fields: [

@@ -7,7 +7,7 @@ import FixedText from "../components/FixedText";
 
 export const config: TemplateConfig = {
   stream: {
-    $id: "studio-stream-id",
+    $id: "studio-stream-id-UniversalPage",
     localization: { locales: ["en"], primary: false },
     filter: {
       entityTypes: ["location"],

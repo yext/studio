@@ -10,6 +10,7 @@ import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
 import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { PageState } from "../../src/types/PageState";
+import upath from "upath";
 
 jest.mock("uuid");
 
@@ -58,6 +59,7 @@ describe("updatePageFile", () => {
   describe("template config", () => {
     beforeEach(() => {
       jest.spyOn(uuidUtils, "v4").mockReturnValue("mock-uuid-value");
+      jest.spyOn(upath, "basename").mockReturnValue("test");
     });
 
     it("adds template config variable when it is not already defined", () => {
