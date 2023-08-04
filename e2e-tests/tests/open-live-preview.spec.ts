@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect } from "@playwright/test";
 import { studioTest } from "./infra/studioTest.js";
 
 studioTest(

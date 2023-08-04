@@ -67,7 +67,7 @@ export default async function createStudioPlugin(
   );
 
   if (studioConfig.isPagesJSRepo) {
-    startPagesDevelopmentServer()
+    await startPagesDevelopmentServer();
   }
 
   return {
