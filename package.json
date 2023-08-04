@@ -30,7 +30,8 @@
     "rimraf": "^5.0.0",
     "run-script-os": "^1.1.6",
     "turbo": "^1.9.3",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "prettier": "2.8.1"
   },
   "engines": {
     "node": ">=14.0.0"
