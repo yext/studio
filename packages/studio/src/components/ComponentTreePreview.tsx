@@ -8,6 +8,7 @@ import ComponentPreview from "./ComponentPreview";
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   expressionSources: ExpressionSources;
+  setTooltipProps?;
   renderHighlightingContainer?: boolean;
 }
 
@@ -17,11 +18,13 @@ interface ComponentTreePreviewProps {
 export default function ComponentTreePreview({
   componentTree,
   expressionSources,
+  setTooltipProps,
   renderHighlightingContainer = true,
 }: ComponentTreePreviewProps): JSX.Element {
   const elements = useComponentTreeElements(
     componentTree,
     expressionSources,
+    setTooltipProps,
     renderHighlightingContainer
   );
   return <>{elements}</>;
@@ -34,6 +37,7 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   expressionSources: ExpressionSources,
+  setTooltipProps?,
   renderHighlightingContainer?: boolean
 ): (JSX.Element | null)[] | null {
   return useMemo(() => {
@@ -45,6 +49,7 @@ function useComponentTreeElements(
             componentState={c}
             expressionSources={expressionSources}
             childElements={children}
+            setTooltipProps={setTooltipProps}
           />
         );
         if (!renderHighlightingContainer) {
@@ -59,5 +64,10 @@ function useComponentTreeElements(
         );
       }
     );
-  }, [componentTree, expressionSources, renderHighlightingContainer]);
+  }, [
+    componentTree,
+    expressionSources,
+    renderHighlightingContainer,
+    setTooltipProps,
+  ]);
 }

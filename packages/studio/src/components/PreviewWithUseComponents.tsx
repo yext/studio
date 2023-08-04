@@ -9,24 +9,27 @@ const inlineStyles: CSSProperties = {
   overflow: "scroll",
 };
 
-export default function PreviewWithUseComponents() {
+export default function PreviewWithUseComponents(props) {
+  const { setTooltipProps } = props;
   const componentTree = useStudioStore((store) =>
     store.actions.getComponentTree()
   );
   void useImportedComponents(componentTree);
 
   return (
-    <IFramePortal
-      className="h-full w-full"
-      title="PreviewPanel"
-      inlineStyles={inlineStyles}
-    >
-      <div>
-        <PreviewPanel />
-        <div className="absolute top-0">
-          <Highlighter />
+    <>
+      <IFramePortal
+        className="h-full w-full"
+        title="PreviewPanel"
+        inlineStyles={inlineStyles}
+      >
+        <div>
+          <PreviewPanel setTooltipProps={setTooltipProps} />
+          <div className="absolute top-0">
+            <Highlighter />
+          </div>
         </div>
-      </div>
-    </IFramePortal>
+      </IFramePortal>
+    </>
   );
 }
