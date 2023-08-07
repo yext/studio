@@ -161,7 +161,7 @@ function useDragPreview() {
   );
 }
 
-function canDrop (_: NodeModel<ComponentState>[], opts: DropOptions) {
+function canDrop(_: NodeModel<ComponentState>[], opts: DropOptions) {
   const { dragSource, dropTarget, dropTargetId } = opts;
   if (dropTarget !== undefined && !dropTarget.droppable) {
     return false;
