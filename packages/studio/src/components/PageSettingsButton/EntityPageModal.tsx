@@ -77,15 +77,20 @@ export default function EntityPageModal({
         updateGetPathValue(pageName, getPathValue);
       }
       updateStreamScope(pageName, StreamScopeParser.parseStreamScope(form));
-      try {
-        const mapping = await generateTestData();
-        updateEntityFiles(pageName, mapping[pageName]);
-        setActiveEntityFile(mapping[pageName]?.[0]);
-        await refreshActivePageEntities();
-      } catch {
-        toast.warn(
-          "Error generating test data, but entity page settings were still updated."
-        );
+      const regenerateTestData = async () => {
+        try {
+          const mapping = await generateTestData();
+          updateEntityFiles(pageName, mapping[pageName]);
+          setActiveEntityFile(mapping[pageName]?.[0]);
+          await refreshActivePageEntities();
+        } catch {
+          toast.warn(
+            "Error generating test data, but entity page settings were still updated."
+          );
+        }
+      };
+      if (form.entityTypes || form.entityIds || form.savedFilterIds) {
+        await regenerateTestData();
       }
       return true;
     },

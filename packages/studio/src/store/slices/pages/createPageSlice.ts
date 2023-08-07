@@ -165,7 +165,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
   const activeEntityFileActions: Pick<
     PageSlice,
-    "setActiveEntityFile" | "updateActivePageEntities" | "getActiveEntityData"
+    "setActiveEntityFile" | "setActivePageEntities" | "getActiveEntityData"
   > = {
     setActiveEntityFile: (activeEntityFile?: string) => {
       if (activeEntityFile === undefined) {
@@ -186,7 +186,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
       set({ activeEntityFile });
     },
-    updateActivePageEntities: (
+    setActivePageEntities: (
       entities?: Record<string, Record<string, unknown>>
     ) => {
       set({ activePageEntities: entities });

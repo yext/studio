@@ -70,15 +70,15 @@ describe("setActiveEntityFile", () => {
   });
 });
 
-describe("updateActivePageEntities", () => {
-  it("updates activePageEntities using updateActivePageEntities", () => {
+describe("setActivePageEntities", () => {
+  it("updates activePageEntities using setActivePageEntities", () => {
     expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
     const expectedData = {
       employeeCount: 123,
       favs: ["cat", "dog", "sleep"],
       name: "bob",
     };
-    useStudioStore.getState().pages.updateActivePageEntities({
+    useStudioStore.getState().pages.setActivePageEntities({
       "entityFile.json": expectedData,
     });
     expect(useStudioStore.getState().pages.activePageEntities).toEqual({

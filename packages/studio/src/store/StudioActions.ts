@@ -246,7 +246,7 @@ export default class StudioActions {
       })
     );
     const entitiesRecord = Object.fromEntries(entityEntries);
-    this.getPages().updateActivePageEntities(entitiesRecord);
+    this.getPages().setActivePageEntities(entitiesRecord);
   };
 
   private updatePreviousSave = () => {
