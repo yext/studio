@@ -60,7 +60,7 @@ export default function ComponentPreview({
     return (
       <ErrorComponentPreview
         element={element}
-        errorComponentState={componentState.message}
+        errorComponentState={componentState}
         setTooltipProps={setTooltipProps}
       />
     );
