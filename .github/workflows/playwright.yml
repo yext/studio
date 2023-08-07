@@ -1,5 +1,8 @@
 name: Playwright Tests
 
+on:
+  workflow_call:
+
 jobs:
   acceptance:
     name: ${{ matrix.os }} (${{ matrix.shard }}/3)
