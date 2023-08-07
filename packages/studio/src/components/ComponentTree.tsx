@@ -209,8 +209,6 @@ function useDropHandler() {
     selectedComponentUUIDs,
     componentTree,
     updateComponentTree,
-    clearSelectedComponents,
-    addSelectedComponentUUID,
   ] = useStudioStore((store) => {
     return [
       store.pages.selectedComponentUUIDs,
@@ -266,16 +264,12 @@ function useDropHandler() {
         ...selectedComponents
       );
 
-      clearSelectedComponents();
-      selectedComponents.forEach((c) => addSelectedComponentUUID(c.uuid));
       updateComponentTree(updatedComponentTree);
     },
     [
       selectedComponentUUIDs,
       componentTree,
       updateComponentTree,
-      clearSelectedComponents,
-      addSelectedComponentUUID,
     ]
   );
 

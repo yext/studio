@@ -138,6 +138,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
 
       get().setActiveComponentUUID(undefined);
+      get().clearSelectedComponents();
       set({ activePageName });
     },
     getActivePageState: () => {
