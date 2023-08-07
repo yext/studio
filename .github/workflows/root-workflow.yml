@@ -1,4 +1,5 @@
-name: Root Workflow
+name: run
+run-name: runner
 
 on: pull_request
 
