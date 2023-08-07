@@ -23,9 +23,10 @@ export default function Highlighters(): JSX.Element {
           key={`${uuid}-key`}
           uuid={uuid}
           rect={selectedComponentRects[index]}
-        />))}
+        />
+      ))}
     </div>
-  )
+  );
 }
 
 /**
