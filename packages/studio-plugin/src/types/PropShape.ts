@@ -16,7 +16,8 @@ export enum SpecialReactProps {
 
 export type PropMetadata<T extends PropValueType = PropValueType> =
   PropType<T> & {
-    doc?: string;
+    tooltip?: string;
+    displayName?: string;
     required: boolean;
   };
 

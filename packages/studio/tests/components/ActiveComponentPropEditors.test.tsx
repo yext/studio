@@ -63,7 +63,7 @@ const propShape: PropShape = {
   title: {
     type: PropValueType.string,
     required: false,
-    doc: "this is a title",
+    tooltip: "this is a title",
   },
   num: { type: PropValueType.number, required: false },
   bool: { type: PropValueType.boolean, required: false },
@@ -386,7 +386,7 @@ describe("Array prop", () => {
         type: PropValueType.string,
       },
       required: false,
-      doc: "this is an array item",
+      tooltip: "this is an array item",
     },
   };
 
@@ -395,7 +395,12 @@ describe("Array prop", () => {
   }
 
   it("correctly updates expression value using field picker", async () => {
-    mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
+    mockStore({
+      pages: {
+        activeEntityFile: "entityFile.json",
+        activePageEntities: { "entityFile.json": { strings: [], words: [] } },
+      },
+    });
     mockStoreActiveComponent({
       activeComponent: {
         ...activeComponentState,
@@ -551,7 +556,7 @@ describe("Array prop", () => {
           type: PropValueType.string,
         },
         required: false,
-        doc: "this is an array item",
+        tooltip: "this is an array item",
       },
       secondArr: {
         type: PropValueType.Array,
@@ -559,7 +564,7 @@ describe("Array prop", () => {
           type: PropValueType.string,
         },
         required: false,
-        doc: "this is another array item",
+        tooltip: "this is another array item",
       },
     };
     render(<ActiveComponentPropEditorsWrapper propShape={twoArrayPropShape} />);
@@ -782,7 +787,7 @@ function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape }) {
   );
 }
 
-function createObjPropShape(objName: string, doc: string): PropShape {
+function createObjPropShape(objName: string, tooltip: string): PropShape {
   return {
     [objName]: {
       type: PropValueType.Object,
@@ -791,7 +796,7 @@ function createObjPropShape(objName: string, doc: string): PropShape {
         title: {
           type: PropValueType.string,
           required: false,
-          doc,
+          tooltip,
         },
       },
     },

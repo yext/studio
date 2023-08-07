@@ -39,7 +39,12 @@ describe("expression value", () => {
   });
 
   it("updates value with field picker", async () => {
-    mockStore({ pages: { activeEntityData: { strings: [], words: [] } } });
+    mockStore({
+      pages: {
+        activeEntityFile: "entityFile.json",
+        activePageEntities: { "entityFile.json": { strings: [], words: [] } },
+      },
+    });
     const onPropChange = jest.fn();
     renderArrayPropEditor("document.strings", onPropChange);
     await userEvent.click(
@@ -118,7 +123,7 @@ describe("literal value", () => {
 function renderArrayPropEditor(
   propValue?: string | PropVal[],
   onPropChange = jest.fn(),
-  doc?: string
+  tooltip?: string
 ) {
   render(
     <ArrayPropEditor
@@ -127,7 +132,7 @@ function renderArrayPropEditor(
         type: PropValueType.Array,
         itemType: { type: PropValueType.string },
         required: false,
-        doc,
+        tooltip,
       }}
       propValue={propValue}
       onPropChange={onPropChange}

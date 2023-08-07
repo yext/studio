@@ -71,9 +71,9 @@ it("can parse a type literal", () => {
 it("can parse an object property", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** the hello prop */
+      /** @tooltip the hello prop */
       hello: {
-        /** the world sub-property */
+        /** @tooltip the world sub-property */
         world: string
       }
   }`
@@ -89,10 +89,10 @@ it("can parse an object property", () => {
     hello: {
       kind: ParsedTypeKind.Object,
       required: true,
-      doc: "the hello prop",
+      tooltip: "the hello prop",
       type: {
         world: {
-          doc: "the world sub-property",
+          tooltip: "the world sub-property",
           kind: ParsedTypeKind.Simple,
           required: true,
           type: "string",
@@ -105,9 +105,9 @@ it("can parse an object property", () => {
 it("can parse an ArrayType", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** array prop */
+      /** @tooltip array prop */
       arr: {
-        /** an item field */
+        /** @tooltip an item field */
         someKey: string[]
       }[];
   }`
@@ -123,12 +123,12 @@ it("can parse an ArrayType", () => {
     arr: {
       kind: ParsedTypeKind.Array,
       required: true,
-      doc: "array prop",
+      tooltip: "array prop",
       type: {
         kind: ParsedTypeKind.Object,
         type: {
           someKey: {
-            doc: "an item field",
+            tooltip: "an item field",
             kind: ParsedTypeKind.Array,
             required: true,
             type: {
@@ -145,7 +145,7 @@ it("can parse an ArrayType", () => {
 it("can parse an Array TypeReference", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** array prop */
+      /** @tooltip array prop */
       arr: Array<string>;
     }`
   );
@@ -160,7 +160,7 @@ it("can parse an Array TypeReference", () => {
     arr: {
       kind: ParsedTypeKind.Array,
       required: true,
-      doc: "array prop",
+      tooltip: "array prop",
       type: {
         kind: ParsedTypeKind.Simple,
         type: "string",
@@ -172,7 +172,7 @@ it("can parse an Array TypeReference", () => {
 it("throws an error if Array TypeReference is missing a type param", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
-      /** array prop */
+      /** @tooltip array prop */
       arr: Array;
     }`
   );
@@ -182,4 +182,32 @@ it("throws an error if Array TypeReference is missing a type param", () => {
   expect(() =>
     TypeNodeParsingHelper.parseShape(typeAlias, externalShapeParser)
   ).toThrowError("One type param expected for Array type. Found 0.");
+});
+
+it("can parse the @displayName and @tooltip tag", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      /** 
+       * @tooltip Tip
+       * @displayName My Fav Fruit 
+       */
+      fruit: string
+  }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    fruit: {
+      kind: ParsedTypeKind.Simple,
+      type: "string",
+      required: true,
+      displayName: "My Fav Fruit",
+      tooltip: "Tip",
+    },
+  });
 });

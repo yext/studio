@@ -55,7 +55,7 @@ describe("parseObjectLiteral", () => {
 
 describe("parseJsxAttributes", () => {
   const propShape: PropShape = {
-    title: { type: PropValueType.string, doc: "jsdoc", required: false },
+    title: { type: PropValueType.string, tooltip: "jsdoc", required: false },
     nested: {
       type: PropValueType.Object,
       required: false,

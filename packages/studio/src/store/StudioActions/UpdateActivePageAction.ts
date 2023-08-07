@@ -14,13 +14,11 @@ export default class UpdateActivePageAction {
   updateActivePage = async (activePageName?: string): Promise<void> => {
     this.getPageSlice().setActivePage(activePageName);
     this.getPageSlice().setModuleUUIDBeingEdited(undefined);
+    const localDataFolder = this.getStudioConfigSlice().paths.localData;
+    await this.getPageSlice().updateActivePageEntities(localDataFolder);
     const activePageState = this.getPageSlice().getActivePageState();
     // Any file is fine so pick the first one.
     const anyAcceptedEntityFile = activePageState?.pagesJS?.entityFiles?.[0];
-    const localDataFolder = this.getStudioConfigSlice().paths.localData;
-    await this.getPageSlice().setActiveEntityFile(
-      localDataFolder,
-      anyAcceptedEntityFile
-    );
+    this.getPageSlice().setActiveEntityFile(anyAcceptedEntityFile);
   };
 }
