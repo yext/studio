@@ -5,4 +5,5 @@ on: pull_request
 jobs:
   automated-fixes: 
     uses: ./.github/workflows/autofixes.yml
-    secrets: inherit
+    secrets:
+      BOT_REPO_SCOPED_TOKEN: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
