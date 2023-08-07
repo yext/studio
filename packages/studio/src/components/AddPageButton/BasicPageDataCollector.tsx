@@ -24,7 +24,7 @@ export default function BasicPageDataCollector({
   const { state } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
   const pageDataValidator = useMemo(() => {
-    return new PageDataValidator(isEntityPage)
+    return new PageDataValidator(isEntityPage);
   }, [isEntityPage]);
 
   const formData: FormData<BasicPageData> = useMemo(
@@ -45,9 +45,7 @@ export default function BasicPageDataCollector({
         const getPathValue = data.url
           ? createGetPathVal(data.url, isEntityPage)
           : undefined;
-        pageDataValidator.validate(
-          { ...data, url: getPathValue?.value },
-        );
+        pageDataValidator.validate({ ...data, url: getPathValue?.value });
         await handleConfirm(data.pageName, getPathValue);
         return true;
       } catch (err: unknown) {

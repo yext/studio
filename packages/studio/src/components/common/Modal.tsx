@@ -71,7 +71,9 @@ export default function Modal({
       {body}
       <div className={footerClasses}>
         {errorMessage && (
-          <div className="flex justify-start whitespace-pre-wrap text-red-600">{errorMessage}</div>
+          <div className="flex justify-start whitespace-pre-wrap text-red-600">
+            {errorMessage}
+          </div>
         )}
         <div className="flex justify-end">
           <button className="ml-2" onClick={handleClose}>
