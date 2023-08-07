@@ -8,17 +8,21 @@ concurrency:
 
 jobs:
   automated-fixes: 
+    name: linting
     uses: ./.github/workflows/autofixes.yml
     secrets: inherit
 
   update-tailwind-bundle: 
+    name: rebundle-tailwind
     uses: ./.github/workflows/update-tailwind-bundle.yml
     secrets: inherit
 
   run-tests:
+    name: unit-tests
     needs: automated-fixes
     uses: ./.github/workflows/run-tests.yml
 
   playwright:
+    name: playwright
     needs: automated-fixes
     uses: ./.github/workflows/playwright.yml
