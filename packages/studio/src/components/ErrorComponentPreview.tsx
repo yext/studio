@@ -24,8 +24,8 @@ export default function ErrorComponentPreview(props: {
 
   const rect = containerRef.current?.getBoundingClientRect();
   const tooltipPosition = rect && {
-    x: (rect.right + rect.left) / 2 + window.innerWidth / 4,
-    y: rect.top + 25,
+    x: (rect.right + rect.left) / 2 + window.innerWidth / 4 - window.scrollX,
+    y: rect.top + 25 - window.scrollY,
   };
 
   document
