@@ -3,13 +3,16 @@ import { CtaData } from "@yext/search-ui-react";
 import "./index.css";
 
 export interface ComplexBannerProps {
-  /** jsdoc */
+  /**
+   * @tooltip jsdoc
+   * @displayName Display Title
+   */
   title?: string;
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
   cta?: CtaData;
-  /** array doc */
+  /** @tooltip array */
   colorArr?: HexColor[];
 }
 

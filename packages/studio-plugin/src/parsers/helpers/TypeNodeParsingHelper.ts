@@ -47,7 +47,8 @@ type ArrayParsedType = {
 export type ParsedShape = { [key: string]: ParsedProperty };
 
 export type ParsedProperty = ParsedType & {
-  doc?: string;
+  tooltip?: string;
+  displayName?: string;
   required: boolean;
 };
 
@@ -56,6 +57,11 @@ export enum ParsedTypeKind {
   Object = "object",
   StringLiteral = "stringLiteral",
   Array = "array",
+}
+
+export enum CustomTags {
+  Tooltip = "tooltip",
+  DisplayName = "displayName",
 }
 
 export default class TypeNodeParsingHelper {
@@ -141,11 +147,13 @@ export default class TypeNodeParsingHelper {
     properties.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
       const parsedType = this.parseShapeNode(p, parseTypeReference);
-      const doc = this.getJsDocs(p);
+      const tooltip = this.getTagValue(p, CustomTags.Tooltip);
+      const displayName = this.getTagValue(p, CustomTags.DisplayName);
       parsedShape[propertyName] = {
         ...parsedType,
         required: !p.hasQuestionToken(),
-        ...(doc && { doc }),
+        ...(tooltip && { tooltip }),
+        ...(displayName && { displayName }),
       };
     });
     return {
@@ -196,10 +204,20 @@ export default class TypeNodeParsingHelper {
     };
   }
 
-  private static getJsDocs(propertySignature: PropertySignature) {
-    const docs = propertySignature.getStructure().docs;
-    return docs
-      ?.map((doc) => (typeof doc === "string" ? doc : doc.description))
-      .join("\n");
+  private static getTagValue(
+    propertySignature: PropertySignature,
+    customTag: CustomTags
+  ): string | undefined {
+    const firstDoc = propertySignature.getJsDocs()[0];
+    if (!firstDoc) {
+      return;
+    }
+
+    for (const tag of firstDoc.getTags()) {
+      const commentText = tag.getCommentText();
+      if (tag.getTagName() === customTag && commentText) {
+        return commentText;
+      }
+    }
   }
 }

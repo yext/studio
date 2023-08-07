@@ -1,5 +1,5 @@
+import StudioActions from "../StudioActions";
 import PageSlice from "../models/slices/PageSlice";
-import StudioConfigSlice from "../models/slices/StudioConfigSlice";
 
 /**
  * UpdateActivePageAction is responsible for updating the current active page,
@@ -8,17 +8,16 @@ import StudioConfigSlice from "../models/slices/StudioConfigSlice";
 export default class UpdateActivePageAction {
   constructor(
     private getPageSlice: () => PageSlice,
-    private getStudioConfigSlice: () => StudioConfigSlice
+    private studioActions: StudioActions
   ) {}
 
   updateActivePage = async (activePageName?: string): Promise<void> => {
     this.getPageSlice().setActivePage(activePageName);
     this.getPageSlice().setModuleUUIDBeingEdited(undefined);
-    const localDataFolder = this.getStudioConfigSlice().paths.localData;
-    await this.getPageSlice().updateActivePageEntities(localDataFolder);
     const activePageState = this.getPageSlice().getActivePageState();
     // Any file is fine so pick the first one.
     const anyAcceptedEntityFile = activePageState?.pagesJS?.entityFiles?.[0];
     this.getPageSlice().setActiveEntityFile(anyAcceptedEntityFile);
+    await this.studioActions.refreshActivePageEntities();
   };
 }

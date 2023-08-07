@@ -47,7 +47,7 @@ describe("getComponentMetadata", () => {
     });
   });
 
-  it("can parse a more complex Banner with docs, imported prop types, and initialprops", () => {
+  it("can parse a more complex Banner with tooltip, display name, imported prop types, and initialprops (but not external JSDocs)", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     const expectedComponentMetadata: ComponentMetadata = {
@@ -57,7 +57,12 @@ describe("getComponentMetadata", () => {
       metadataUUID: expect.any(String),
       kind: FileMetadataKind.Component,
       propShape: {
-        title: { type: PropValueType.string, doc: "jsdoc", required: false },
+        title: {
+          type: PropValueType.string,
+          tooltip: "jsdoc",
+          displayName: "Display Title",
+          required: false,
+        },
         num: { type: PropValueType.number, required: false },
         bool: { type: PropValueType.boolean, required: false },
         bgColor: { type: PropValueType.HexColor, required: false },
@@ -68,24 +73,21 @@ describe("getComponentMetadata", () => {
             link: {
               type: PropValueType.string,
               required: true,
-              doc: "The CTA link source.",
             },
             label: {
               type: PropValueType.string,
               required: true,
-              doc: "The display label for the CTA element.",
             },
             linkType: {
               type: PropValueType.string,
               required: true,
-              doc: "The CTA link type (e.g. URL, Phone, Email, Other).",
             },
           },
         },
         colorArr: {
           type: PropValueType.Array,
           required: false,
-          doc: "array doc",
+          tooltip: "array",
           itemType: { type: PropValueType.HexColor },
         },
       },

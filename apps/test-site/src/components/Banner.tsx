@@ -2,12 +2,19 @@ import { HexColor } from "@yext/studio";
 import { NestedProp } from "../types/exportedTypes";
 
 export interface BannerData {
-  /** banner's title */
+  /**
+   * @tooltip Banner's title
+   * @displayName Title
+   */
   title?: string;
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
   obj?: NestedProp;
+  /**
+   * @tooltip Start and End are required for each interval.
+   * @displayName Intervals
+   */
   intervals?: {
     end: string;
     start: string;

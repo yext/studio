@@ -34,7 +34,7 @@ jobs:
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       - uses: ./.github/setup-ci
       - name: Regenerate Full Tailwind Bundle
-        run: npx tailwindcss -o src/tailwind-full.css -c ../../.github/tailwind-safelist-all.config.js --minify
+        run: npx tailwindcss -o src/tailwind-full.css -c ../../.github/tailwind-safelist-all.config.ts --minify
         working-directory: ./packages/studio
       - name: Compress Full Tailwind Bundle
         run: node .github/compress-tailwind-full.js
