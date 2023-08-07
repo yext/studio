@@ -6,8 +6,8 @@ describe("URL slug validation", () => {
     errorMessage: string,
     isEntityPage?: boolean
   ) {
-    const validator = new PageDataValidator();
-    expect(() => validator.validate({ url: input }, isEntityPage)).toThrow(
+    const validator = new PageDataValidator(isEntityPage);
+    expect(() => validator.validate({ url: input })).toThrow(
       errorMessage
     );
   }
@@ -18,13 +18,12 @@ describe("URL slug validation", () => {
   });
 
   it("does not give an error for valid document expression in an entity page", () => {
-    const validator = new PageDataValidator();
+    const validator = new PageDataValidator(true);
     expect(() =>
       validator.validate(
         {
           url: "${document.field}-${document.slug}",
         },
-        true
       )
     ).not.toThrowError();
   });
