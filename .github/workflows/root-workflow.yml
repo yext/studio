@@ -1,0 +1,7 @@
+name: Root Workflow
+
+on: pull_request
+
+jobs:
+  automated-fixes: 
+    uses: ./.github/workflows/subworkflows/autofixes.yml
