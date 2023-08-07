@@ -25,21 +25,9 @@ import ComponentNode from "./ComponentNode";
 const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
   root: "overflow-x-auto py-2",
-  placeholder: "relative", // if node above it has fancy class then do display:none
+  placeholder: "relative",
   listItem: "relative",
 };
-
-// const CustomLi = (props: PropsWithChildren) => {
-//   const selectedComponentUUIDs = useStudioStore((store) => {
-//     return store.pages.selectedComponentUUIDs;
-//   });
-//   let isSelected;
-//   if (props.children) {
-//     isSelected = selectedComponentUUIDs.includes(props.children[0]?.props.componentState.uuid);
-//   }
-//   const selectedClass = isSelected ? "selected" : "unselected";
-//   return <div className={selectedClass}>{props.children}</div>
-// }
 
 /**
  * ComponentTree renders the active {@link PageState.componentTree}
@@ -115,7 +103,6 @@ export default function ComponentTree(): JSX.Element | null {
         classes={TREE_CSS_CLASSES}
         dropTargetOffset={4}
         initialOpen={initialOpen}
-        //listItemComponent={CustomLi}
         sort={false}
         insertDroppableFirst={false}
         onDrop={handleDrop}

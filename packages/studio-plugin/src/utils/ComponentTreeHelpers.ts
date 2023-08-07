@@ -188,7 +188,7 @@ export default class ComponentTreeHelpers {
   }
 
   /**
-   * Returns the component UUID that is closest common parent of the two target components.
+   * Returns the component UUID that is closest common parent of the two target components. 
    * This is similar to the lowest common ancestor except it cannot be one of the targets.
    */
   static getLowestParentUUID(

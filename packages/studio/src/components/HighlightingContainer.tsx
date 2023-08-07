@@ -1,4 +1,3 @@
-import { isEqual } from "lodash";
 import { Component, PropsWithChildren, ReactInstance } from "react";
 import DOMRectProperties from "../store/models/DOMRectProperties";
 import useStudioStore from "../store/useStudioStore";
@@ -17,8 +16,6 @@ export default function HighlightingContainer(
 ) {
   const [
     setActiveUUID,
-    setRect,
-    activeRect,
     activeComponentUUID,
     selectedComponentUUIDs,
     selectedComponentRects,
@@ -27,8 +24,6 @@ export default function HighlightingContainer(
     clearSelectedComponents,
   ] = useStudioStore((store) => [
     store.pages.setActiveComponentUUID,
-    store.pages.setActiveComponentRect,
-    store.pages.activeComponentRect,
     store.pages.activeComponentUUID,
     store.pages.selectedComponentUUIDs,
     store.pages.selectedComponentRects,
@@ -40,10 +35,8 @@ export default function HighlightingContainer(
   return (
     <HighlightingClass
       uuid={props.uuid}
-      setRect={setRect}
       setActiveUUID={setActiveUUID}
       activeComponentUUID={activeComponentUUID}
-      activeRect={activeRect}
       selectedComponentUUIDs={selectedComponentUUIDs}
       selectedComponentRects={selectedComponentRects}
       addSelectedComponentUUID={addSelectedComponentUUID}
@@ -59,8 +52,6 @@ type HighlightingProps = PropsWithChildren<{
   uuid: string;
   activeComponentUUID?: string;
   setActiveUUID: (uuid: string) => void;
-  setRect: (rect: DOMRectProperties) => void;
-  activeRect?: DOMRectProperties;
   selectedComponentUUIDs: string[];
   selectedComponentRects: DOMRectProperties[];
   addSelectedComponentUUID: (componentUUID: string) => void;
@@ -88,9 +79,6 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
-    if (!isEqual(this.props.activeRect, rect)) {
-      this.props.setRect(rect);
-    }
     if (this.props.activeComponentUUID !== this.props.uuid) {
       this.props.setActiveUUID(this.props.uuid);
       this.props.clearSelectedComponents();

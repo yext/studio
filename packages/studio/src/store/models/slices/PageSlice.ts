@@ -28,8 +28,6 @@ export interface PageSliceStates {
    * to seed the active preview page.
    */
   activePageEntities?: Record<string, Record<string, unknown>>;
-  /** The DOMRect of the active component, for highlighting purposes. */
-  activeComponentRect?: DOMRectProperties;
   /** The uuids of the currently selected components in Studio (including the active component). */
   selectedComponentUUIDs: string[];
   /** The DOMRects of the currently selected components in Studio (including the active component). */
@@ -68,7 +66,6 @@ interface PageSliceActions {
   updateEntityFiles: (pageName: string, entityFiles: string[]) => void;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
-  setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 
   setActiveEntityFile: (activeEntityFile?: string) => void;

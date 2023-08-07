@@ -26,7 +26,6 @@ const initialStates: PageSliceStates = {
   activePageName: firstPageEntry?.[0],
   activeEntityFile: firstPageEntry?.[1]?.pagesJS?.entityFiles?.[0],
   activeComponentUUID: undefined,
-  activeComponentRect: undefined,
   selectedComponentUUIDs: [],
   selectedComponentRects: [],
   pendingChanges: {
@@ -153,9 +152,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pageComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
       set({ activeComponentUUID });
-    },
-    setActiveComponentRect: (rect: DOMRectProperties | undefined) => {
-      set({ activeComponentRect: rect });
     },
     getActiveComponentState: () => {
       const { activeComponentUUID, getActivePageState } = get();
