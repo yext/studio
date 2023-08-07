@@ -1,5 +1,5 @@
 name: run
-run-name: runner
+run-name: Root Workflow
 
 on: pull_request
 
