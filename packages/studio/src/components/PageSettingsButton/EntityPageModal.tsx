@@ -11,6 +11,7 @@ import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
 import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
 import { toast } from "react-toastify";
+import { isEqual } from "lodash";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
@@ -76,7 +77,8 @@ export default function EntityPageModal({
       if (form.url || currGetPathValue) {
         updateGetPathValue(pageName, getPathValue);
       }
-      updateStreamScope(pageName, StreamScopeParser.parseStreamScope(form));
+      const parsedForm = StreamScopeParser.parseStreamScope(form);
+      updateStreamScope(pageName, parsedForm);
       const regenerateTestData = async () => {
         try {
           const mapping = await generateTestData();
@@ -89,7 +91,7 @@ export default function EntityPageModal({
           );
         }
       };
-      if (form.entityTypes || form.entityIds || form.savedFilterIds) {
+      if (!isEqual(parsedForm, streamScope)) {
         await regenerateTestData();
       }
       return true;
@@ -103,6 +105,7 @@ export default function EntityPageModal({
       updateEntityFiles,
       setActiveEntityFile,
       refreshActivePageEntities,
+      streamScope,
     ]
   );
 
