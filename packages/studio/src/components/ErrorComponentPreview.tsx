@@ -1,9 +1,10 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { v4 } from "uuid";
 import ErrorBoundary from "./common/ErrorBoundary";
+import { ErrorComponentState } from "@yext/studio-plugin";
 
 export default function ErrorComponentPreview(props: {
-  errorComponentState: string;
+  errorComponentState: ErrorComponentState;
   element: JSX.Element | null;
   setTooltipProps;
 }) {
@@ -20,16 +21,17 @@ export default function ErrorComponentPreview(props: {
   const onMouseLeave = useCallback(() => {
     setTooltipOpen(false);
   }, []);
-
   const rect = containerRef.current?.getBoundingClientRect();
-  const tooltipPosition = rect && {
-    x: (rect.right + rect.left) / 2 + window.innerWidth / 4,
-    y: rect.top + 25,
-  };
+  const [tooltipPosition, settooltipPosition] = useState({x: 0, y: 0});
+
+  rect && settooltipPosition({
+    x: (rect.right + rect.left) / 2 + window.innerWidth / 4 + window.scrollX,
+    y: rect.top + 25 + window.scrollY,
+  });
 
   setTooltipProps({
     open: tooltipOpen,
-    error: errorComponentState,
+    error: errorComponentState.message,
     anchorId: anchorId,
     position: tooltipPosition,
   });
@@ -42,7 +44,7 @@ export default function ErrorComponentPreview(props: {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <ErrorBoundary customError={errorComponentState}>{element}</ErrorBoundary>
+      <ErrorBoundary customError={errorComponentState.message}>{element}</ErrorBoundary>
     </div>
   );
 }
