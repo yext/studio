@@ -205,19 +205,16 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 }
 
 function useDropHandler() {
-  const [
-    selectedComponentUUIDs,
-    componentTree,
-    updateComponentTree,
-  ] = useStudioStore((store) => {
-    return [
-      store.pages.selectedComponentUUIDs,
-      store.actions.getComponentTree(),
-      store.actions.updateComponentTree,
-      store.pages.clearSelectedComponents,
-      store.pages.addSelectedComponentUUID,
-    ];
-  });
+  const [selectedComponentUUIDs, componentTree, updateComponentTree] =
+    useStudioStore((store) => {
+      return [
+        store.pages.selectedComponentUUIDs,
+        store.actions.getComponentTree(),
+        store.actions.updateComponentTree,
+        store.pages.clearSelectedComponents,
+        store.pages.addSelectedComponentUUID,
+      ];
+    });
 
   const handleDrop = useCallback(
     (tree: NodeModel<ComponentState>[], options) => {
@@ -266,11 +263,7 @@ function useDropHandler() {
 
       updateComponentTree(updatedComponentTree);
     },
-    [
-      selectedComponentUUIDs,
-      componentTree,
-      updateComponentTree,
-    ]
+    [selectedComponentUUIDs, componentTree, updateComponentTree]
   );
 
   return handleDrop;
