@@ -21,6 +21,7 @@ jobs:
         working-directory: e2e-tests
       - run: npm run autofix
       - name: Automated Linting
+        id: automated-linting
         uses: EndBug/add-and-commit@v9
         with:
           message: "Automated linting update and features.json sync"
@@ -28,4 +29,6 @@ jobs:
           push: true
           pull: --rebase --autostash
           default_author: github_actions
+    if: ${{ steps.automated-linting.outputs.pushed == 'true'}}
+      run: exit 1
 
