@@ -1,0 +1,31 @@
+name: Update Tailwind Bundle
+
+on:
+  workflow_call:
+    secrets:
+      BOT_REPO_SCOPED_TOKEN:
+        required: true
+
+  update-tailwind-full:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
+      - uses: ./.github/setup-ci
+      - name: Regenerate Full Tailwind Bundle
+        run: npx tailwindcss -o src/tailwind-full.css -c ../../.github/tailwind-safelist-all.config.ts --minify
+        working-directory: ./packages/studio
+      - name: Compress Full Tailwind Bundle
+        run: node .github/compress-tailwind-full.js
+      - run: rm packages/studio/src/tailwind-full.css
+      - name: Automated Tailwind Bundle Sync
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Automated tailwind bundle sync"
+          add: "packages/studio/src/*"
+          push: true
+          default_author: github_actions
+  
+
