@@ -5,3 +5,5 @@ on: pull_request
 jobs:
   automated-fixes: 
     uses: ./.github/workflows/autofixes.yml
+    with:
+      secrets: inherit
