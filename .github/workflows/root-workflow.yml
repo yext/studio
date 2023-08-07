@@ -6,3 +6,7 @@ jobs:
   automated-fixes: 
     uses: ./.github/workflows/autofixes.yml
     secrets: inherit
+
+  run-tests:
+    needs: automated-fixes
+    uses: ./.github/workflows/run-tests.yml
