@@ -18,6 +18,7 @@ import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import { startPagesDevelopmentServer } from "./startPagesDevelopmentServer";
 import LocalDataMappingManager from "./LocalDataMappingManager";
+import { execSync } from "node:child_process";
 
 /**
  * Handles server-client communication.
@@ -34,6 +35,24 @@ export default async function createStudioPlugin(
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
 
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
+
+  let pagesDevelopmentPort: Promise<number | undefined>;
+  if (studioConfig.isPagesJSRepo) {
+    pagesDevelopmentPort = startPagesDevelopmentServer();
+    pagesDevelopmentPort
+      .then((port) => {
+        if (port) {
+          process.on("exit", () => {
+            console.log("Studio is shutting down");
+            execSync(`npx kill-port ${port}`);
+          });
+        }
+      })
+      .catch((e) => {
+        throw e;
+      });
+  }
+
   const gitWrapper = new GitWrapper(
     simpleGit({
       baseDir: pathToUserProjectRoot,
@@ -65,10 +84,6 @@ export default async function createStudioPlugin(
     studioConfig.paths,
     new FileSystemWriter(orchestrator, tsMorphProject)
   );
-
-  if (studioConfig.isPagesJSRepo) {
-    await startPagesDevelopmentServer();
-  }
 
   return {
     name: "yext-studio-vite-plugin",

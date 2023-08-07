@@ -1,4 +1,4 @@
-import { spawn, execSync } from "node:child_process";
+import { spawn } from "node:child_process";
 
 export const startPagesDevelopmentServer = async () => {
   const pagesServer = spawn("npx", ["pages", "dev", "--open-browser=false"], {
@@ -25,7 +25,7 @@ export const startPagesDevelopmentServer = async () => {
   // kill pages server child process when studio exits
   // by getting the dev server port on startup and then
   // killing the proceess running at that port
-  const port: number | undefined = await new Promise((resolve) => {
+  const port: Promise<number | undefined> = new Promise((resolve) => {
     pagesServer.stdout.setEncoding("utf-8");
     pagesServer.stdout.on("data", (data: string) => {
       const matches = data.match(/listening on :(\d+)/);
@@ -36,17 +36,15 @@ export const startPagesDevelopmentServer = async () => {
         }
         resolve(port);
       }
-      setTimeout(resolve, 10000);
+      resolve(port);
     });
+    setTimeout(resolve, 10000);
   });
 
   // kill pages server when studio exits
   process.on("exit", () => {
-    if (port) {
-      console.log("Studio is shutting down");
-      execSync(`npx kill-port ${port}`);
-    } else {
-      pagesServer.kill();
-    }
+    pagesServer.kill();
   });
+
+  return port;
 };
