@@ -1,22 +1,23 @@
 import { createPortal } from "react-dom";
-import { CSSProperties, PropsWithChildren, useEffect, useState } from "react";
+import { CSSProperties, PropsWithChildren, useEffect } from "react";
 
 export default function IFramePortal(
   props: PropsWithChildren<{
     className?: string;
     title: string;
     inlineStyles: CSSProperties;
+    iframeEl;
+    setIframeEl;
   }>
 ) {
-  const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null);
-  const iframeDocument = iframeEl?.contentWindow?.document;
+  const iframeDocument = props.iframeEl?.contentWindow?.document;
   useParentDocumentStyles(iframeDocument);
 
   return (
     <>
       <iframe
         title={props.title}
-        ref={setIframeEl}
+        ref={props.setIframeEl}
         className={props.className}
         style={props.inlineStyles}
       ></iframe>

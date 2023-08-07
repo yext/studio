@@ -6,7 +6,8 @@ import { ComponentStateKind } from "@yext/studio-plugin";
 /**
  * Highlights the current activeComponentRect on the page.
  */
-export default function Highlighter() {
+export default function Highlighter(props) {
+  const { iframeEl } = props;
   const rect = useStudioStore((store) => store.pages.activeComponentRect);
   const activeUUID = useStudioStore((store) => store.pages.activeComponentUUID);
   const setRect = useStudioStore((store) => store.pages.setActiveComponentRect);
@@ -23,15 +24,16 @@ export default function Highlighter() {
     if (!rect) {
       return {};
     }
-    const IFrame = document.querySelector("iframe");
     return {
       position: "absolute",
       zIndex: "10",
       left: `${
-        (IFrame?.contentWindow ? IFrame.contentWindow.scrollX : 0) + rect.left
+        (iframeEl?.contentWindow ? iframeEl.contentWindow.scrollX : 0) +
+        rect.left
       }px`,
       top: `${
-        (IFrame?.contentWindow ? IFrame.contentWindow.scrollY : 0) + rect.top
+        (iframeEl?.contentWindow ? iframeEl.contentWindow.scrollY : 0) +
+        rect.top
       }px`,
       width: `${rect.width}px`,
       height: `${rect.height}px`,
@@ -39,7 +41,7 @@ export default function Highlighter() {
       border: `1px solid ${color}`,
       pointerEvents: "none",
     };
-  }, [rect, color]);
+  }, [rect, color, iframeEl]);
 
   const tagStyle: CSSProperties = useMemo(() => {
     if (!rect) {
