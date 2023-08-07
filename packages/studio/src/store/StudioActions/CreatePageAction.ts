@@ -91,9 +91,9 @@ function validate(
   getPathValue?: GetPathVal
 ) {
   if (isPagesJSRepo && !getPathValue) {
-    throw new Error("Error adding page: a getPath value is required.");
+    throw new Error("A getPath value is required.");
   }
   if (!filepath.startsWith(pagesPath)) {
-    throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
+    throw new Error(`Page name is invalid: ${pageName}`);
   }
 }
