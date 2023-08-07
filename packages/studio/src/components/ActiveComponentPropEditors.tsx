@@ -16,7 +16,7 @@ export default function ActiveComponentPropEditors(props: {
 }) {
   const updateActiveComponentProps = useStudioStore(
     (store) => store.actions.updateActiveComponentProps
-  );
+  // );
   const { activeComponentState, propShape, shouldRenderProp } = props;
 
   const filteredPropShape: PropShape = useMemo(() => {
