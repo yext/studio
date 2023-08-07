@@ -153,7 +153,9 @@ function useDragPreview() {
   return () => (
     <div className="p-2 rounded bg-emerald-200 w-fit">
       {componentNames.map((name, index) => (
-        <div key={selectedComponentUUIDs[index]} className="flex">{name}</div>
+        <div key={selectedComponentUUIDs[index]} className="flex">
+          {name}
+        </div>
       ))}
     </div>
   );
@@ -228,7 +230,7 @@ function useDropHandler() {
       }
       const { dragSourceId, destinationIndex } = options;
       const destinationParentId = tree[destinationIndex].parent.toString();
-      // this works because the last selected component must be the highest in depth 
+      // this works because the last selected component must be the highest in depth
       // and the first selected component is the furthest away
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         selectedComponentUUIDs.at(0),
