@@ -25,9 +25,21 @@ import ComponentNode from "./ComponentNode";
 const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
   root: "overflow-x-auto py-2",
-  placeholder: "relative",
+  placeholder: "relative", // if node above it has fancy class then do display:none
   listItem: "relative",
 };
+
+// const CustomLi = (props: PropsWithChildren) => {
+//   const selectedComponentUUIDs = useStudioStore((store) => {
+//     return store.pages.selectedComponentUUIDs;
+//   });
+//   let isSelected;
+//   if (props.children) {
+//     isSelected = selectedComponentUUIDs.includes(props.children[0]?.props.componentState.uuid);
+//   }
+//   const selectedClass = isSelected ? "selected" : "unselected";
+//   return <div className={selectedClass}>{props.children}</div>
+// }
 
 /**
  * ComponentTree renders the active {@link PageState.componentTree}
@@ -62,22 +74,6 @@ export default function ComponentTree(): JSX.Element | null {
     [openIds, setOpenIds]
   );
 
-  //move this back out of ComponentTree if we don't change it later, this could be where self insert bug gets fix
-  const canDrop = useCallback((_: NodeModel<ComponentState>[], opts: DropOptions) => {
-    const { dragSource, dropTarget, dropTargetId } = opts;
-    if (dropTarget !== undefined && !dropTarget.droppable) {
-      return false;
-    }
-    if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
-      return true;
-    }
-    // For this drag and drop library, returning undefined has different behavior than returning false.
-    // It means to use the default behavior.
-    return undefined;
-  }, []);
-
-  // we would be unable to drag components that aren't highlighted
-  // this is to prevent unselected components from being dropped in the middle of some selected components
   const canDrag = useCallback(
     (node: NodeModel<ComponentState> | undefined) => {
       if (node && selectedComponentUUIDs.includes(node.id.toString())) {
@@ -91,7 +87,6 @@ export default function ComponentTree(): JSX.Element | null {
   const renderNodeCallback = useCallback(
     (node: NodeModel<ComponentState>, renderParams: RenderParams) => {
       const { depth, isOpen, hasChild } = renderParams;
-      // const currRectHeight = containerRef.current?.getBoundingClientRect().height;
       if (!node.data) {
         throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
       }
@@ -120,6 +115,7 @@ export default function ComponentTree(): JSX.Element | null {
         classes={TREE_CSS_CLASSES}
         dropTargetOffset={4}
         initialOpen={initialOpen}
+        //listItemComponent={CustomLi}
         sort={false}
         insertDroppableFirst={false}
         onDrop={handleDrop}
@@ -163,6 +159,19 @@ function useDragPreview() {
   );
 }
 
+function canDrop (_: NodeModel<ComponentState>[], opts: DropOptions) {
+  const { dragSource, dropTarget, dropTargetId } = opts;
+  if (dropTarget !== undefined && !dropTarget.droppable) {
+    return false;
+  }
+  if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
+    return true;
+  }
+  // For this drag and drop library, returning undefined has different behavior than returning false.
+  // It means to use the default behavior.
+  return undefined;
+}
+
 function useTree(): NodeModel<ComponentState>[] | undefined {
   const [componentTree, getFileMetadata] = useStudioStore((store) => {
     return [
@@ -192,13 +201,6 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 
   return tree;
 }
-
-// 1. DONE (hack out a solution, need to actually deal with the children problem)
-// 3. DONE (drag previews)
-// 4. DONE (whatever drag and drop does to the preview panel, figure out button and parent highlighting bug)
-// 4. don't let it drop into itself WHY IS THIS IMPOSSIBLE
-// 5. clean
-// 4. test all
 
 function useDropHandler() {
   const [
@@ -233,9 +235,6 @@ function useDropHandler() {
         selectedComponentUUIDs.at(-1),
         componentTree
       );
-      // this is assuming that selected components can't drop into themselves (canDrop) and
-      // you can only highlight on one level (highlighters), and highlighting a container gets all the children too (highlighters)
-      // don't let things get dropped in the middle of the selection
       let updatedComponentTree: ComponentState[] =
         convertNodeModelsToComponentTree(tree);
 
@@ -278,7 +277,8 @@ function useDropHandler() {
     ]
   );
 
-  // do we need callback for this?? since its called in a callback?? also where should i put this - into helpers?
+  return handleDrop;
+
   function convertNodeModelsToComponentTree(tree: NodeModel<ComponentState>[]) {
     const updatedComponentTree: ComponentState[] = tree.map((n) => {
       if (!n.data) {
@@ -299,6 +299,4 @@ function useDropHandler() {
     });
     return updatedComponentTree;
   }
-
-  return handleDrop;
 }

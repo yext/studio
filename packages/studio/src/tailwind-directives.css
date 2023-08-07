@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* .selected + .selected{
+   background-color: red;
+} */

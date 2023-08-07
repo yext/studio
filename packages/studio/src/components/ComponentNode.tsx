@@ -12,6 +12,7 @@ import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import { Tooltip } from "react-tooltip";
 
+
 interface ComponentNodeProps {
   /** The ComponentState this node represents in a ComponentTree. */
   componentState: ComponentState;

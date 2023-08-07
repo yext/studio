@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useMemo } from "react";
+import { CSSProperties, useMemo } from "react";
 import { useComponentNames } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import { ComponentStateKind } from "@yext/studio-plugin";
@@ -78,14 +78,6 @@ function Highlighter({
       padding: "0px 10px",
     };
   }, [rect, color]);
-
-  //console.log: what does this do????
-  useEffect(() => {
-    if (!uuid) {
-      //setRect(undefined);
-      console.log("the useEffect is trying to do something");
-    }
-  }, [uuid]); //setRect]);
 
   if (!rect) {
     return null;

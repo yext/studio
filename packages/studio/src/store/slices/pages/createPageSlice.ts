@@ -186,9 +186,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       set({ selectedComponentUUIDs: [], selectedComponentRects: [] });
     },
     /**
-      * Adds all of the components and their children ordered between the selected component and
-      * the active component (inclusive) to selectedComponentUUIDs.
-      */
+     * Adds all of the components and their children ordered between the selected component and
+     * the active component (inclusive) to selectedComponentUUIDs.
+     */
     addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => {
       const selectedUUID = selectedComponent.uuid;
       const {
