@@ -7,9 +7,7 @@ describe("URL slug validation", () => {
     isEntityPage?: boolean
   ) {
     const validator = new PageDataValidator(isEntityPage);
-    expect(() => validator.validate({ url: input })).toThrow(
-      errorMessage
-    );
+    expect(() => validator.validate({ url: input })).toThrow(errorMessage);
   }
 
   it("gives an error for document expression in a static field", () => {
@@ -20,11 +18,9 @@ describe("URL slug validation", () => {
   it("does not give an error for valid document expression in an entity page", () => {
     const validator = new PageDataValidator(true);
     expect(() =>
-      validator.validate(
-        {
-          url: "${document.field}-${document.slug}",
-        },
-      )
+      validator.validate({
+        url: "${document.field}-${document.slug}",
+      })
     ).not.toThrowError();
   });
 
