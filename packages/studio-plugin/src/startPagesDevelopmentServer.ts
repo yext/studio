@@ -6,6 +6,7 @@ export const startPagesDevelopmentServer = async () => {
     env: {
       ...process.env,
     },
+    shell: true,
   });
 
   // stream pages server errors to parent process with a prefix
