@@ -3,10 +3,6 @@ name: Playwright Tests
 on:
   workflow_call:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}-playwright-tests
-  cancel-in-progress: true
-
 jobs:
   acceptance:
     name: ${{ matrix.os }} (${{ matrix.shard }}/3)
