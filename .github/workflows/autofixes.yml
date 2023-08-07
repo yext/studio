@@ -3,8 +3,7 @@ name: Automated Fixes
 on:
   workflow_call:
     secrets:
-      token:
-        required: true
+      required: true
 
 jobs:
   linting:
