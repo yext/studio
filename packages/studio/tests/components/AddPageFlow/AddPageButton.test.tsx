@@ -234,7 +234,7 @@ describe("errors", () => {
     await userEvent.click(saveButton);
     expect(
       screen.getByText(
-        'Error adding page: page name "universal" is already used.'
+        'Page name "universal" is already used.'
       )
     ).toBeDefined();
   });
@@ -249,7 +249,7 @@ describe("errors", () => {
     await userEvent.click(saveButton);
     expect(
       screen.getByText(
-        "Error adding page: pageName *** cannot contain the characters: *"
+        "Page name cannot contain the characters: *"
       )
     ).toBeDefined();
   });

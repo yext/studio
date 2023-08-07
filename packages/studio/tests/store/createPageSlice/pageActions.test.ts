@@ -52,7 +52,7 @@ describe("addPage", () => {
         filepath: "/blah/universal.tsx",
       });
     expect(action).toThrowError(
-      'Error adding page: page name "universal" is already used.'
+      'Page name "universal" is already used.'
     );
   });
 });

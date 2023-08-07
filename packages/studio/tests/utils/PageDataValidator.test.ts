@@ -45,26 +45,26 @@ describe("page name validation", () => {
   }
 
   it("gives an error for an empty string pagename", () => {
-    const errorMessage = "Error adding page: a pageName is required.";
+    const errorMessage = "A page name is required.";
     expectPageNameError("", errorMessage);
   });
 
   it("gives an error for a pagename with multiple special characters", () => {
     const errorMessage =
-      'Error adding page: pageName test\\|"<>? cannot contain the characters: \\|"<>?';
+      "Page name cannot contain the characters: \\|\"<>?";
     expectPageNameError('test\\|"<>?', errorMessage);
   });
 
   it("gives an error for a pagename ending in a period", () => {
     const errorMessage =
-      "Error adding page: pageName test. cannot end with a period.";
+      "Page name cannot end with a period.";
     expectPageNameError("test.", errorMessage);
   });
 
   it("gives an error for a pagename 256 characters long", () => {
     const longName = "a".repeat(256);
     const errorMessage =
-      "Error adding page: pageName must be 255 characters or less.";
+      "Page name must be 255 characters or less.";
     expectPageNameError(longName, errorMessage);
   });
 });

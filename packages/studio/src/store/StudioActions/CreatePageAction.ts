@@ -93,28 +93,7 @@ function validate(
   if (isPagesJSRepo && !getPathValue) {
     throw new Error("Error adding page: a getPath value is required.");
   }
-  if (!pageName) {
-    throw new Error("Error adding page: a pageName is required.");
-  }
   if (!filepath.startsWith(pagesPath)) {
     throw new Error(`Error adding page: pageName is invalid: ${pageName}`);
-  }
-  const errorChars = pageName.match(/[\\/?%*:|"<>]/g);
-  if (errorChars) {
-    throw new Error(
-      `Error adding page: pageName ${pageName} cannot contain the characters: ${[
-        ...new Set(errorChars),
-      ]}`
-    );
-  }
-  if (pageName.endsWith(".")) {
-    throw new Error(
-      `Error adding page: pageName ${pageName} cannot end with a period.`
-    );
-  }
-  if (pageName.length > 255) {
-    throw new Error(
-      "Error adding page: pageName must be 255 characters or less."
-    );
   }
 }
