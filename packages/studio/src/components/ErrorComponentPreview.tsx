@@ -21,13 +21,16 @@ export default function ErrorComponentPreview(props: {
   const onMouseLeave = useCallback(() => {
     setTooltipOpen(false);
   }, []);
-  const rect = containerRef.current?.getBoundingClientRect();
-  const [tooltipPosition, settooltipPosition] = useState({x: 0, y: 0});
 
-  rect && settooltipPosition({
-    x: (rect.right + rect.left) / 2 + window.innerWidth / 4 + window.scrollX,
-    y: rect.top + 25 + window.scrollY,
-  });
+  const rect = containerRef.current?.getBoundingClientRect();
+  const tooltipPosition = rect && {
+    x: (rect.right + rect.left) / 2 + window.innerWidth / 4,
+    y: rect.top + 25,
+  };
+
+  document
+    .querySelector("iframe")
+    ?.contentDocument?.addEventListener("scroll", () => setTooltipOpen(false));
 
   setTooltipProps({
     open: tooltipOpen,
@@ -44,7 +47,9 @@ export default function ErrorComponentPreview(props: {
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
-      <ErrorBoundary customError={errorComponentState.message}>{element}</ErrorBoundary>
+      <ErrorBoundary customError={errorComponentState.message}>
+        {element}
+      </ErrorBoundary>
     </div>
   );
 }
