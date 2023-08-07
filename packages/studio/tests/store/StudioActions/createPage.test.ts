@@ -6,14 +6,14 @@ describe("non-PagesJS repo", () => {
   it("gives an error for a relative filepath", async () => {
     const createPage = useStudioStore.getState().actions.createPage("../test");
     await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName is invalid: ../test"
+      "Page name is invalid: ../test"
     );
   });
 
   it("gives an error for an invalid pagename", async () => {
     const createPage = useStudioStore.getState().actions.createPage("../test");
     await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName is invalid: ../test"
+      "Page name is invalid: ../test"
     );
   });
 
@@ -67,7 +67,7 @@ describe("PagesJS repo", () => {
   it("gives an error if no getPath value is passed in", async () => {
     const createPage = useStudioStore.getState().actions.createPage("test");
     await expect(createPage).rejects.toThrow(
-      "Error adding page: a getPath value is required."
+      "A getPath value is required."
     );
   });
 
