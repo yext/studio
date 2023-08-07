@@ -3,7 +3,8 @@ name: Automated Fixes
 on:
   workflow_call:
     secrets:
-      required: true
+      BOT_REPO_SCOPED_TOKEN:
+        required: true
 
 jobs:
   linting:
