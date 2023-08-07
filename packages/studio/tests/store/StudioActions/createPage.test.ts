@@ -5,16 +5,12 @@ import mockStore from "../../__utils__/mockStore";
 describe("non-PagesJS repo", () => {
   it("gives an error for a relative filepath", async () => {
     const createPage = useStudioStore.getState().actions.createPage("../test");
-    await expect(createPage).rejects.toThrow(
-      "Page name is invalid: ../test"
-    );
+    await expect(createPage).rejects.toThrow("Page name is invalid: ../test");
   });
 
   it("gives an error for an invalid pagename", async () => {
     const createPage = useStudioStore.getState().actions.createPage("../test");
-    await expect(createPage).rejects.toThrow(
-      "Page name is invalid: ../test"
-    );
+    await expect(createPage).rejects.toThrow("Page name is invalid: ../test");
   });
 
   it("adds the new page name to pagesToUpdate", async () => {
@@ -66,9 +62,7 @@ describe("PagesJS repo", () => {
 
   it("gives an error if no getPath value is passed in", async () => {
     const createPage = useStudioStore.getState().actions.createPage("test");
-    await expect(createPage).rejects.toThrow(
-      "A getPath value is required."
-    );
+    await expect(createPage).rejects.toThrow("A getPath value is required.");
   });
 
   it("adds a page with getPathValue to pages record", async () => {
