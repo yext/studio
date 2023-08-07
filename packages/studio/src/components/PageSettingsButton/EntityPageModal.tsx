@@ -31,18 +31,20 @@ export default function EntityPageModal({
       store.pages.pages[pageName].pagesJS?.streamScope,
       store.pages.updateStreamScope,
     ]);
+  const pageDataValidator = useMemo(() => {
+    return new PageDataValidator(true)
+  }, []);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {
-      const pageDataValidator = new PageDataValidator();
-      pageDataValidator.validate({ url: currGetPathValue.value }, true);
+      pageDataValidator.validate({ url: currGetPathValue.value });
     } catch (error) {
       return false;
     }
     return true;
-  }, [currGetPathValue]);
+  }, [currGetPathValue, pageDataValidator]);
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
@@ -74,8 +76,7 @@ export default function EntityPageModal({
         value: TemplateExpressionFormatter.getRawValue(form.url),
       };
       try {
-        const pageDataValidator = new PageDataValidator();
-        pageDataValidator.validate({ url: getPathValue.value }, true);
+        pageDataValidator.validate({ url: getPathValue.value });
       } catch (error) {
         if (error instanceof Error) {
           setErrorMessage(error.message);
@@ -90,7 +91,7 @@ export default function EntityPageModal({
       updateStreamScope(pageName, StreamScopeParser.parseStreamScope(form));
       return true;
     },
-    [updateGetPathValue, updateStreamScope, currGetPathValue, pageName]
+    [updateGetPathValue, updateStreamScope, currGetPathValue, pageName, pageDataValidator]
   );
 
   return (

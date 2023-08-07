@@ -3,44 +3,52 @@
  * for validation of user-inputted page data.
  */
 export default class PageDataValidator {
+  private isEntityPage = false;
+
+  constructor(isEntityPage?: boolean) {
+    if(isEntityPage) this.isEntityPage = isEntityPage;
+  }
   /**
    * Throws an error if the user-inputted page data is invalid.
    */
   validate(
     pageData: { pageName?: string; url?: string },
-    isEntityPage?: boolean
   ) {
+    const errorMessages: string[] = [];
     if (pageData.pageName !== undefined)
-      this.validatePageName(pageData.pageName);
+      errorMessages.push(...this.validatePageName(pageData.pageName));
     if (pageData.url !== undefined)
-      this.validateURLSlug(pageData.url, isEntityPage);
+      errorMessages.push(...this.validateURLSlug(pageData.url, this.isEntityPage));
+    if(errorMessages.length > 0) throw new Error(errorMessages.join('\r\n'));
   }
 
   /**
    * Throws an error if the page name is invalid.
    */
   private validatePageName(pageName: string) {
+    const errorMessages: string[] = [];
     if (!pageName) {
-      throw new Error("Error adding page: a pageName is required.");
+      errorMessages.push("A page name is required.");
     }
     const errorChars = pageName.match(/[\\/?%*:|"<>]/g);
     if (errorChars) {
-      throw new Error(
-        `Error adding page: pageName ${pageName} cannot contain the characters: ${[
+      errorMessages.push(
+        `Page name cannot contain the characters: ${[
           ...new Set(errorChars),
         ].join("")}`
       );
     }
     if (pageName.endsWith(".")) {
-      throw new Error(
-        `Error adding page: pageName ${pageName} cannot end with a period.`
+      errorMessages.push(
+        `Page name cannot end with a period.`
       );
     }
     if (pageName.length > 255) {
-      throw new Error(
-        "Error adding page: pageName must be 255 characters or less."
+      errorMessages.push(
+        "Page name must be 255 characters or less."
       );
     }
+    return errorMessages;
   }
 
   /**
@@ -52,12 +60,14 @@ export default class PageDataValidator {
       : input;
     const blackListURLChars = new RegExp(/[ <>""''|\\{}[\]]/g);
     const errorChars = cleanInput.match(blackListURLChars);
+    const errorMessages: string[] = [];
     if (errorChars) {
-      throw new Error(
+      errorMessages.push(
         `URL slug contains invalid characters: ${[...new Set(errorChars)].join(
           ""
         )}`
       );
     }
+    return errorMessages;
   }
 }

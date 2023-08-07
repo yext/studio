@@ -22,18 +22,20 @@ export default function StaticPageModal({
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
   ]);
+  const pageDataValidator = useMemo(() => {
+    return new PageDataValidator()
+  }, []);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const isPathEditable = useMemo(() => {
     if (!currGetPathValue) return false;
     try {
-      const pageDataValidator = new PageDataValidator();
       pageDataValidator.validate({ url: currGetPathValue.value });
     } catch (error) {
       return false;
     }
     return true;
-  }, [currGetPathValue]);
+  }, [currGetPathValue, pageDataValidator]);
 
   const initialFormValue: StaticPageSettings = useMemo(
     () => ({ url: currGetPathValue?.value ?? "" }),
@@ -61,7 +63,6 @@ export default function StaticPageModal({
         value: form.url,
       };
       try {
-        const pageDataValidator = new PageDataValidator();
         pageDataValidator.validate({ url: getPathValue.value });
       } catch (error) {
         if (error instanceof Error) {
@@ -74,7 +75,7 @@ export default function StaticPageModal({
       updateGetPathValue(pageName, getPathValue);
       return true;
     },
-    [updateGetPathValue, pageName]
+    [updateGetPathValue, pageName, pageDataValidator]
   );
 
   return (
