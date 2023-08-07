@@ -23,7 +23,7 @@ export default function StaticPageModal({
     store.pages.updateGetPathValue,
   ]);
   const pageDataValidator = useMemo(() => {
-    return new PageDataValidator()
+    return new PageDataValidator();
   }, []);
   const [errorMessage, setErrorMessage] = useState<string>("");
 

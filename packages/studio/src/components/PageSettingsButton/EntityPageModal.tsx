@@ -46,7 +46,7 @@ export default function EntityPageModal({
     store.actions.refreshActivePageEntities,
   ]);
   const pageDataValidator = useMemo(() => {
-    return new PageDataValidator(true)
+    return new PageDataValidator(true);
   }, []);
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -125,7 +125,7 @@ export default function EntityPageModal({
       updateGetPathValue,
       updateStreamScope,
       currGetPathValue,
-      pageName, 
+      pageName,
       pageDataValidator,
       generateTestData,
       updateEntityFiles,

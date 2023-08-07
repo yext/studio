@@ -6,20 +6,20 @@ export default class PageDataValidator {
   private isEntityPage = false;
 
   constructor(isEntityPage?: boolean) {
-    if(isEntityPage) this.isEntityPage = isEntityPage;
+    if (isEntityPage) this.isEntityPage = isEntityPage;
   }
   /**
    * Throws an error if the user-inputted page data is invalid.
    */
-  validate(
-    pageData: { pageName?: string; url?: string },
-  ) {
+  validate(pageData: { pageName?: string; url?: string }) {
     const errorMessages: string[] = [];
     if (pageData.pageName !== undefined)
       errorMessages.push(...this.validatePageName(pageData.pageName));
     if (pageData.url !== undefined)
-      errorMessages.push(...this.validateURLSlug(pageData.url, this.isEntityPage));
-    if(errorMessages.length > 0) throw new Error(errorMessages.join('\r\n'));
+      errorMessages.push(
+        ...this.validateURLSlug(pageData.url, this.isEntityPage)
+      );
+    if (errorMessages.length > 0) throw new Error(errorMessages.join("\r\n"));
   }
 
   /**
@@ -39,14 +39,10 @@ export default class PageDataValidator {
       );
     }
     if (pageName.endsWith(".")) {
-      errorMessages.push(
-        `Page name cannot end with a period.`
-      );
+      errorMessages.push(`Page name cannot end with a period.`);
     }
     if (pageName.length > 255) {
-      errorMessages.push(
-        "Page name must be 255 characters or less."
-      );
+      errorMessages.push("Page name must be 255 characters or less.");
     }
     return errorMessages;
   }
