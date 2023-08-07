@@ -25,7 +25,7 @@ export const startPagesDevelopmentServer = async () => {
   // kill pages server child process when studio exits
   // by getting the dev server port on startup and then
   // killing the proceess running at that port
-  const port : number | void = await new Promise(
+  const port : number | undefined = await new Promise(
     (resolve) => {
       pagesServer.stdout.setEncoding("utf-8");
       pagesServer.stdout.on("data", (data: string) => {
@@ -33,7 +33,7 @@ export const startPagesDevelopmentServer = async () => {
         if (matches && matches.length >= 2) {
           const port = Number.parseInt(matches[1])
           if (isNaN(port)) {
-            resolve()
+            resolve(undefined)
           }
           resolve(port);
         }
