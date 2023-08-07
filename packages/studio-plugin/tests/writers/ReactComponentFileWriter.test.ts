@@ -30,12 +30,13 @@ import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 const propShapeMultiFields: PropShape = {
   complexBannerText: {
     type: PropValueType.string,
-    doc: "some banner title!",
+    tooltip: "some banner title!",
+    displayName: "Title!",
     required: false,
   },
   complexBannerBool: {
     type: PropValueType.boolean,
-    doc: "some boolean to toggle",
+    tooltip: "some boolean to toggle",
     required: false,
   },
 };
@@ -382,7 +383,7 @@ describe("updateFile", () => {
           propShape: {
             complexBannerText: {
               type: PropValueType.string,
-              doc: "title for complex banner",
+              tooltip: "title for complex banner",
               required: false,
             },
           },
@@ -480,7 +481,7 @@ describe("updateFile", () => {
           propShape: {
             complexBannerText: {
               type: PropValueType.string,
-              doc: "title for complex banner",
+              tooltip: "title for complex banner",
               required: false,
             },
           },

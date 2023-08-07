@@ -64,7 +64,8 @@ export default class PageFile {
     this.templateConfigWriter = new TemplateConfigWriter(
       studioSourceFileWriter,
       templateConfigParser,
-      pagesJsWriter
+      pagesJsWriter,
+      pageComponentName
     );
     this.reactComponentFileWriter = new ReactComponentFileWriter(
       pageComponentName,

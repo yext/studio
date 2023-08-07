@@ -5,7 +5,7 @@ import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 const siteSettingsShape: SiteSettingSliceStates["shape"] = {
   apiKey: {
     type: PropValueType.string,
-    doc: "api key to power the site",
+    tooltip: "api key to power the site",
     required: false,
   },
 };

@@ -18,7 +18,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   let propShape: PropShape = {};
   if (filepath?.includes("ComplexBanner")) {
     propShape = {
-      title: { type: PropValueType.string, doc: "jsdoc", required: false },
+      title: { type: PropValueType.string, tooltip: "jsdoc", required: false },
       num: { type: PropValueType.number, required: false },
       bool: { type: PropValueType.boolean, required: false },
       bgColor: { type: PropValueType.HexColor, required: false },
@@ -27,7 +27,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
     propShape = {};
   } else if (filepath?.includes("Required")) {
     propShape = {
-      title: { type: PropValueType.string, doc: "jsdoc", required: true },
+      title: { type: PropValueType.string, tooltip: "jsdoc", required: true },
     };
   }
 

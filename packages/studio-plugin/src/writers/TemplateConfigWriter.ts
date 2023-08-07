@@ -26,7 +26,8 @@ export default class TemplateConfigWriter {
   constructor(
     private studioSourceFileWriter: StudioSourceFileWriter,
     private templateConfigParser: TemplateConfigParser,
-    private pagesJsWriter: PagesJsWriter
+    private pagesJsWriter: PagesJsWriter,
+    private pageName: string
   ) {}
 
   /**
@@ -82,7 +83,7 @@ export default class TemplateConfigWriter {
     return {
       ...currentTemplateConfig,
       stream: {
-        $id: "studio-stream-id",
+        $id: `studio-stream-id-${this.pageName}`,
         localization: STREAM_LOCALIZATION,
         ...currentTemplateConfig?.stream,
         filter: entityPageState.streamScope,
