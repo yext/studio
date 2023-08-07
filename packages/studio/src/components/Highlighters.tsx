@@ -7,7 +7,7 @@ import DOMRectProperties from "../store/models/DOMRectProperties";
 /**
  * Generates Highlighters for all selected components.
  */
-export default function Highlighters() {
+export default function Highlighters(): JSX.Element {
   const [selectedComponentUUIDs, selectedComponentRects] = useStudioStore(
     (store) => {
       return [
@@ -16,13 +16,16 @@ export default function Highlighters() {
       ];
     }
   );
-  return selectedComponentUUIDs.map((uuid, index) => (
-    <Highlighter
-      key={`${uuid}-key`}
-      uuid={uuid}
-      rect={selectedComponentRects[index]}
-    />
-  ));
+  return (
+    <div>
+      {selectedComponentUUIDs.map((uuid, index) => (
+        <Highlighter
+          key={`${uuid}-key`}
+          uuid={uuid}
+          rect={selectedComponentRects[index]}
+        />))}
+    </div>
+  )
 }
 
 /**

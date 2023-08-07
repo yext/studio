@@ -1,7 +1,7 @@
 import { ComponentStateKind } from "@yext/studio-plugin";
 import mockActiveComponentState from "../__utils__/mockActiveComponentState";
 import { render, screen } from "@testing-library/react";
-import Highlighter from "../../src/components/Highlighters";
+import Highlighters from "../../src/components/Highlighters";
 import mockStore from "../__utils__/mockStore";
 
 it("displays the active component name", () => {
@@ -16,7 +16,7 @@ it("displays the active component name", () => {
   });
   mockStore({
     pages: {
-      activeComponentRect: {
+      selectedComponentRects: [{
         x: 0,
         y: 0,
         width: 0,
@@ -25,10 +25,10 @@ it("displays the active component name", () => {
         right: 0,
         bottom: 0,
         left: 0,
-      },
+      }],
     },
   });
-  render(<Highlighter />);
+  render(<Highlighters />);
 
   expect(screen.getByText("Banner")).toBeTruthy();
 });
