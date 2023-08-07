@@ -10,3 +10,7 @@ jobs:
   run-tests:
     needs: automated-fixes
     uses: ./.github/workflows/run-tests.yml
+
+  playwright:
+    needs: automated-fixes
+    uses: ./.github/workflows/playwright.yml
