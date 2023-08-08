@@ -24,9 +24,10 @@ export default function StaticPageModal({
   ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const pageDataValidator = useMemo(() => new PageDataValidator(), []);
-  const isURLEditable = useMemo(() => 
-    pageDataValidator.checkIsURLEditable(currGetPathValue?.value), 
-  [currGetPathValue?.value, pageDataValidator]);
+  const isURLEditable = useMemo(
+    () => pageDataValidator.checkIsURLEditable(currGetPathValue?.value),
+    [currGetPathValue?.value, pageDataValidator]
+  );
 
   const initialFormValue: StaticPageSettings = useMemo(
     () => ({ url: currGetPathValue?.value ?? "" }),

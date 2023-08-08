@@ -47,9 +47,10 @@ export default function EntityPageModal({
   ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const pageDataValidator = useMemo(() => new PageDataValidator(true), []);
-  const isURLEditable = useMemo(() => 
-    pageDataValidator.checkIsURLEditable(currGetPathValue?.value), 
-  [currGetPathValue?.value, pageDataValidator]);
+  const isURLEditable = useMemo(
+    () => pageDataValidator.checkIsURLEditable(currGetPathValue?.value),
+    [currGetPathValue?.value, pageDataValidator]
+  );
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
