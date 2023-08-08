@@ -3,7 +3,7 @@ import { Launcher } from 'react-chat-window'
 
 const AGENT_PROFILE = {
   teamName: 'studio buddy',
-  imageUrl: 'https://i.imgur.com/6aHM1CZ.png'
+  imageUrl: 'https://i.imgur.com/7HDt2AH.png'
 }
 
 type Message = {
@@ -29,25 +29,28 @@ export default class ChatBot extends Component<object, ChatState>{
   }
 
   componentDidMount(): void {
-    this.sendMessage("welcome to studio", "us");
+    this.sendMessage("welcome to studio");
   }
 
   onMessageWasSent = (message: Message) => {
     this.setState({
       messageList: [...this.state.messageList, message]
-    })
-    this.sendMessage("recieved, thanks. sit tight.", "us")
+    }, () => this.answerMessage(message));
   }
 
-  sendMessage(text: string, author: string) {
+  answerMessage = (message: Message) => {
+    this.sendMessage("thought about " + message.data.text);
+  }
+
+  sendMessage(text: string) {
     if (text.length > 0) {
       this.setState({
         messageList: [...this.state.messageList, {
-          author: author,
+          author: 'them',
           type: 'text',
           data: { text }
         }]
-      })
+      });
     }
   }
 
@@ -58,6 +61,7 @@ export default class ChatBot extends Component<object, ChatState>{
   }
 
   render() {
+    console.log(this.state.messageList);
     return (<div>
       <Launcher
         agentProfile={AGENT_PROFILE}

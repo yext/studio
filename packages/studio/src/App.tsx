@@ -6,8 +6,6 @@ import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
 import useStudioStore from "./store/useStudioStore";
 
-import 'react-chat-widget/lib/styles.css';
-
 export default function App() {
   const writeFile = useStudioStore((store) => store.actions.writeFile);
   const getAllComponentFilepaths = useStudioStore((store) => store.actions.getAllComponentFilepaths);
