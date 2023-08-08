@@ -29,14 +29,8 @@ export default function Highlighter(props: {
     return {
       position: "absolute",
       zIndex: "10",
-      left: `${
-        (iframeEl?.contentWindow ? iframeEl.contentWindow.scrollX : 0) +
-        rect.left
-      }px`,
-      top: `${
-        (iframeEl?.contentWindow ? iframeEl.contentWindow.scrollY : 0) +
-        rect.top
-      }px`,
+      left: `${(iframeEl?.contentWindow?.scrollX ?? 0) + rect.left}px`,
+      top: `${(iframeEl?.contentWindow?.scrollY ?? 0) + rect.top}px`,
       width: `${rect.width}px`,
       height: `${rect.height}px`,
       boxSizing: "border-box",
