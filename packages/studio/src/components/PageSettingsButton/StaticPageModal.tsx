@@ -22,20 +22,11 @@ export default function StaticPageModal({
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
   ]);
-  const pageDataValidator = useMemo(() => {
-    return new PageDataValidator();
-  }, []);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const isPathEditable = useMemo(() => {
-    if (!currGetPathValue) return false;
-    try {
-      pageDataValidator.validate({ url: currGetPathValue.value });
-    } catch (error) {
-      return false;
-    }
-    return true;
-  }, [currGetPathValue, pageDataValidator]);
+  const pageDataValidator = useMemo(() => new PageDataValidator(), []);
+  const isURLEditable = useMemo(() => 
+    pageDataValidator.checkIsURLEditable(currGetPathValue?.value), 
+  [currGetPathValue?.value, pageDataValidator]);
 
   const initialFormValue: StaticPageSettings = useMemo(
     () => ({ url: currGetPathValue?.value ?? "" }),
@@ -46,14 +37,14 @@ export default function StaticPageModal({
     () => ({
       url: {
         description: "URL Slug",
-        optional: !isPathEditable,
-        placeholder: isPathEditable
+        optional: !isURLEditable,
+        placeholder: isURLEditable
           ? ""
           : "<URL slug is not editable in Studio. Consult a developer>",
-        disabled: !isPathEditable,
+        disabled: !isURLEditable,
       },
     }),
-    [isPathEditable]
+    [isURLEditable]
   );
 
   const handleModalSave = useCallback(

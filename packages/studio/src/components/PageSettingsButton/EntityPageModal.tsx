@@ -45,42 +45,33 @@ export default function EntityPageModal({
     store.pages.setActiveEntityFile,
     store.actions.refreshActivePageEntities,
   ]);
-  const pageDataValidator = useMemo(() => {
-    return new PageDataValidator(true);
-  }, []);
   const [errorMessage, setErrorMessage] = useState<string>("");
-
-  const isPathEditable = useMemo(() => {
-    if (!currGetPathValue) return false;
-    try {
-      pageDataValidator.validate({ url: currGetPathValue.value });
-    } catch (error) {
-      return false;
-    }
-    return true;
-  }, [currGetPathValue, pageDataValidator]);
+  const pageDataValidator = useMemo(() => new PageDataValidator(true), []);
+  const isURLEditable = useMemo(() => 
+    pageDataValidator.checkIsURLEditable(currGetPathValue?.value), 
+  [currGetPathValue?.value, pageDataValidator]);
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
-      url: isPathEditable ? getUrlDisplayValue(currGetPathValue) : "",
+      url: isURLEditable ? getUrlDisplayValue(currGetPathValue) : "",
       ...StreamScopeParser.convertStreamScopeToForm(streamScope),
     }),
-    [currGetPathValue, streamScope, isPathEditable]
+    [currGetPathValue, streamScope, isURLEditable]
   );
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
       url: {
         description: "URL Slug",
-        optional: !isPathEditable,
-        placeholder: isPathEditable
+        optional: !isURLEditable,
+        placeholder: isURLEditable
           ? ""
           : "<URL slug is not editable in Studio. Consult a developer>",
-        disabled: !isPathEditable,
+        disabled: !isURLEditable,
       },
       ...streamScopeFormData,
     }),
-    [isPathEditable]
+    [isURLEditable]
   );
 
   const handleModalSave = useCallback(

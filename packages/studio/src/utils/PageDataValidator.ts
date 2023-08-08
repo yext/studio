@@ -6,7 +6,21 @@ export default class PageDataValidator {
   private isEntityPage = false;
 
   constructor(isEntityPage?: boolean) {
-    if (isEntityPage) this.isEntityPage = isEntityPage;
+    if (isEntityPage) {
+      this.isEntityPage = isEntityPage;
+    }
+  }
+
+  checkIsURLEditable(url?: string) {
+    if (!url) {
+      return false;
+    }
+    try {
+      this.validate({ url });
+    } catch (error) {
+      return false;
+    }
+    return true;
   }
   /**
    * Throws an error if the user-inputted page data is invalid.

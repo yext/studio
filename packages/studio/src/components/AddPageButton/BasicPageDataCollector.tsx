@@ -23,9 +23,7 @@ export default function BasicPageDataCollector({
   );
   const { state } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
-  const pageDataValidator = useMemo(() => {
-    return new PageDataValidator(isEntityPage);
-  }, [isEntityPage]);
+  const pageDataValidator = useMemo(() => new PageDataValidator(isEntityPage), [isEntityPage])
 
   const formData: FormData<BasicPageData> = useMemo(
     () => ({
