@@ -21,7 +21,9 @@ export const getPath: GetPath<TemplateProps> = ({
   return document.slug;
 };
 
-export default function UniversalPage({ document }: TemplateProps) { return (  <>
+export default function UniversalPage({ document }: TemplateProps) {
+  return (
+    <>
       <FixedText />
       <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
       {document.services.map((item, index) => (
