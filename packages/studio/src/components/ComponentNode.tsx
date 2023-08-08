@@ -6,7 +6,7 @@ import {
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";
-import { useCallback, useMemo, KeyboardEvent } from "react";
+import { useCallback, useMemo, KeyboardEvent, MouseEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
@@ -32,16 +32,16 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
   const [
     activeComponentUUID,
-    selectedComponentUUIDs,
     setActiveComponentUUID,
+    selectedComponentUUIDs,
     addSelectedComponentUUID,
     clearSelectedComponents,
     addShiftSelectedComponentUUIDs,
   ] = useStudioStore((store) => {
     return [
       store.pages.activeComponentUUID,
-      store.pages.selectedComponentUUIDs,
       store.pages.setActiveComponentUUID,
+      store.pages.selectedComponentUUIDs,
       store.pages.addSelectedComponentUUID,
       store.pages.clearSelectedComponents,
       store.pages.addShiftSelectedComponentUUIDs,
@@ -59,7 +59,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   });
 
   const handleClick = useCallback(
-    (event) => {
+    (event: MouseEvent<HTMLDivElement>) => {
       if (event.shiftKey && activeComponentUUID) {
         clearSelectedComponents();
         addShiftSelectedComponentUUIDs(componentState);
@@ -70,8 +70,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       }
     },
     [
-      activeComponentUUID,
       componentState,
+      activeComponentUUID,
       setActiveComponentUUID,
       addSelectedComponentUUID,
       clearSelectedComponents,
