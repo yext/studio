@@ -27,5 +27,3 @@ jobs:
           add: "packages/studio/src/*"
           push: true
           default_author: github_actions
-  
-
