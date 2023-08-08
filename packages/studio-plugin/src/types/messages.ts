@@ -74,13 +74,19 @@ type FileResponse = {
   msg: string;
 }
 
+type WriteResponse = {
+  type: "success";
+  msg: string;
+  originalFile: string;
+};
+
 export type ResponseEventMap = {
   [MessageID.Deploy]: BaseResponse;
   [MessageID.SaveChanges]: BaseResponse;
   [MessageID.GenerateTestData]: BaseResponse & {
     mappingJson: Record<string, string[]>;
   };
-  [MessageID.WriteFile]: BaseResponse;
+  [MessageID.WriteFile]: WriteResponse;
   [MessageID.GetAllComponentFilepaths]: FilepathsResponse;
   [MessageID.GetComponentFile]: FileResponse;
 };
