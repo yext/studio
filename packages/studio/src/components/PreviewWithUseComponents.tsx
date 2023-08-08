@@ -11,6 +11,10 @@ const inlineStyles: CSSProperties = {
   overflow: "scroll",
 };
 
+const tooltipStyle: CSSProperties = {
+  zIndex: "20",
+};
+
 export default function PreviewWithUseComponents() {
   const componentTree = useStudioStore((store) =>
     store.actions.getComponentTree()
@@ -26,6 +30,7 @@ export default function PreviewWithUseComponents() {
   return (
     <>
       <Tooltip
+        style={tooltipStyle}
         offset={-30}
         content={tooltipProps.error}
         anchorSelect={tooltipProps.anchorId}
