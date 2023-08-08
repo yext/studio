@@ -3,7 +3,13 @@ import {
   ComponentStateKind,
   TypeGuards,
 } from "@yext/studio-plugin";
-import { createElement, Fragment, useMemo } from "react";
+import {
+  createElement,
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useMemo,
+} from "react";
 import usePreviewProps from "../hooks/usePreviewProps";
 import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
@@ -17,7 +23,17 @@ interface ComponentPreviewProps {
   expressionSources: ExpressionSources;
   childElements?: (JSX.Element | null)[];
   parentItem?: unknown;
-  setTooltipProps;
+  setTooltipProps: Dispatch<
+    SetStateAction<{
+      open: boolean;
+      position: {
+        x: number;
+        y: number;
+      };
+      error: string;
+      anchorId: string;
+    }>
+  >;
 }
 
 /**

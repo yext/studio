@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { ComponentTreeHelpers, ComponentState } from "@yext/studio-plugin";
 import { ExpressionSources } from "../utils/getPropsForPreview";
 import ErrorBoundary from "./common/ErrorBoundary";
@@ -8,7 +8,17 @@ import ComponentPreview from "./ComponentPreview";
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   expressionSources: ExpressionSources;
-  setTooltipProps?;
+  setTooltipProps: Dispatch<
+    SetStateAction<{
+      open: boolean;
+      position: {
+        x: number;
+        y: number;
+      };
+      error: string;
+      anchorId: string;
+    }>
+  >;
   renderHighlightingContainer?: boolean;
 }
 
@@ -37,7 +47,17 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   expressionSources: ExpressionSources,
-  setTooltipProps?,
+  setTooltipProps: Dispatch<
+    SetStateAction<{
+      open: boolean;
+      position: {
+        x: number;
+        y: number;
+      };
+      error: string;
+      anchorId: string;
+    }>
+  >,
   renderHighlightingContainer?: boolean
 ): (JSX.Element | null)[] | null {
   return useMemo(() => {

@@ -32,7 +32,6 @@ export default function PreviewWithUseComponents() {
         className="text-sm z-20"
         isOpen={tooltipProps.open}
         position={tooltipProps.position}
-        closeOnScroll={true}
       />
       <IFramePortal
         className="h-full w-full"

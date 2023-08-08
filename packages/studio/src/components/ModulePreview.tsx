@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import ComponentTreePreview from "./ComponentTreePreview";
 import { ModuleState } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
@@ -8,7 +8,17 @@ export default function ModulePreview(props: {
   expressionSources: ExpressionSources;
   previewProps: Record<string, unknown>;
   moduleState: ModuleState;
-  setTooltipProps;
+  setTooltipProps: Dispatch<
+    SetStateAction<{
+      open: boolean;
+      position: {
+        x: number;
+        y: number;
+      };
+      error: string;
+      anchorId: string;
+    }>
+  >;
 }) {
   const { expressionSources, previewProps, moduleState, setTooltipProps } =
     props;

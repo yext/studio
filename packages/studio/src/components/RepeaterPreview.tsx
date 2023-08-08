@@ -1,13 +1,23 @@
 import { RepeaterState } from "@yext/studio-plugin";
 import { get } from "lodash";
-import { useCallback, useMemo } from "react";
+import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { ExpressionSources } from "../utils/getPropsForPreview";
 import ComponentPreview from "./ComponentPreview";
 
 interface RepeaterPreviewProps {
   repeaterState: RepeaterState;
   expressionSources: ExpressionSources;
-  setTooltipProps?;
+  setTooltipProps: Dispatch<
+    SetStateAction<{
+      open: boolean;
+      position: {
+        x: number;
+        y: number;
+      };
+      error: string;
+      anchorId: string;
+    }>
+  >;
 }
 
 /**
