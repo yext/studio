@@ -27,11 +27,11 @@
     "eslint-plugin-react-perf": "^3.3.1",
     "eslint-plugin-tsdoc": "^0.2.17",
     "eslint-plugin-unused-imports": "^2.0.0",
+    "prettier": "2.8.1",
     "rimraf": "^5.0.0",
     "run-script-os": "^1.1.6",
     "turbo": "^1.9.3",
-    "typescript": "^5.0.4",
-    "prettier": "2.8.1"
+    "typescript": "^5.0.4"
   },
   "engines": {
     "node": ">=14.0.0"
@@ -40,5 +40,8 @@
     "react": "^18",
     "react-dom": "^18"
   },
-  "packageManager": "npm@8.5.5"
+  "packageManager": "npm@8.5.5",
+  "dependencies": {
+    "react-chat-widget": "^3.1.4"
+  }
 }
