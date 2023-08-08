@@ -399,7 +399,6 @@ export default class StaticParsingHelpers {
   }
 
   static parseSpreadOperator(p:SpreadAssignment): Record<string, TypelessPropVal> | undefined {
-    console.log("CALLED MY FUNCTION")
     const children = p.getChildrenOfKind(SyntaxKind.Identifier)
     if (!children.length) {
       throw new Error(
