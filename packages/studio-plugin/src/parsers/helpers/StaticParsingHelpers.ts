@@ -142,6 +142,15 @@ export default class StaticParsingHelpers {
           .filter((el): el is TypelessPropVal => el !== undefined),
         kind: PropValueKind.Literal,
       };
+    } else if (
+      expression.isKind(SyntaxKind.PrefixUnaryExpression) &&
+      expression.getOperatorToken() === SyntaxKind.MinusToken &&
+      expression.getOperand().isKind(SyntaxKind.NumericLiteral)
+    ) {
+      return {
+        value: parseInt(expression.getOperand().toString()) * -1,
+        kind: PropValueKind.Literal,
+      };
     } else {
       throw new Error(
         `Unrecognized prop value ${initializer.getFullText()} ` +
