@@ -1,6 +1,4 @@
 name: main  
-run-name: Main Workflow
-
 on: pull_request
 
 concurrency:

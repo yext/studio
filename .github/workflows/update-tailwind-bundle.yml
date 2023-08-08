@@ -1,5 +1,4 @@
 name: Update Tailwind Bundle
-
 on:
   workflow_call:
     secrets:
