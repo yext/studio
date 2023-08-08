@@ -230,7 +230,7 @@ export default class StudioActions {
   };
 
   writeFile = async (filepath : string, dataToWrite : string) => {
-    await sendMessage(MessageID.WriteFile, {dataToWrite, filepath});
+    return await sendMessage(MessageID.WriteFile, {dataToWrite, filepath});
   };
 
   getAllComponentFilepaths = async () => {
