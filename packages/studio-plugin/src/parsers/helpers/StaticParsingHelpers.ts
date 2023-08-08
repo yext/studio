@@ -18,6 +18,7 @@ import {
   JsxExpression,
   TypeAliasDeclaration,
   JsxAttribute,
+  SpreadAssignment,
 } from "ts-morph";
 import {
   ArrayProp,
@@ -153,19 +154,26 @@ export default class StaticParsingHelpers {
   static parseObjectLiteral(
     objectLiteral: ObjectLiteralExpression
   ): Record<string, TypelessPropVal> {
-    const parsedValues: Record<string, TypelessPropVal> = {};
+    var parsedValues: Record<string, TypelessPropVal> = {};
     objectLiteral.getProperties().forEach((p) => {
-      if (!p.isKind(SyntaxKind.PropertyAssignment)) {
+      if(p.isKind(SyntaxKind.SpreadAssignment)) {
+        const parsedSpreadOperator = this.parseSpreadOperator(p)
+        parsedValues = {
+          ...(parsedValues),
+          ...parsedSpreadOperator
+        }
+      } else if (p.isKind(SyntaxKind.PropertyAssignment)) {
+        const key = this.getEscapedName(p);
+        const value = StaticParsingHelpers.parseInitializer(
+          p.getInitializerOrThrow()
+        );
+        if (value !== undefined) {
+          parsedValues[key] = value;
+        }
+      } else {
         throw new Error(
           `Unrecognized node type: ${p.getKindName()} in object literal ${p.getFullText()}`
         );
-      }
-      const key = this.getEscapedName(p);
-      const value = StaticParsingHelpers.parseInitializer(
-        p.getInitializerOrThrow()
-      );
-      if (value !== undefined) {
-        parsedValues[key] = value;
       }
     });
     return parsedValues;
@@ -388,5 +396,34 @@ export default class StaticParsingHelpers {
       SyntaxKind.ArrayLiteralExpression,
       SyntaxKind.Identifier
     );
+  }
+
+  static parseSpreadOperator(p:SpreadAssignment): Record<string, TypelessPropVal> | undefined {
+    console.log("CALLED MY FUNCTION")
+    const children = p.getChildrenOfKind(SyntaxKind.Identifier)
+    if (!children.length) {
+      throw new Error(
+        "Spread operator only functional on object variables and arrays."
+      );
+    }
+
+    const valueDeclaration = children[0].getSymbol()?.getValueDeclaration()
+    if (!valueDeclaration || !valueDeclaration.isKind(SyntaxKind.VariableDeclaration)) {
+      throw new Error(
+        "Invalid spread operator. Value Declaraton not found."
+      );
+    }
+
+    const parsedInitializer = this.parseInitializer(valueDeclaration.getInitializerOrThrow())
+    if (!parsedInitializer) {
+      return
+    }
+    
+    const parsedValues: Record<string, TypelessPropVal> = {};
+    for (const [key, value] of Object.entries(parsedInitializer.value)) {
+      parsedValues[key] = value
+    }
+
+    return parsedValues
   }
 }
