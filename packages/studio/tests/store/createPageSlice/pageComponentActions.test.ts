@@ -9,8 +9,8 @@ import {
   resultsChildComponent,
   buttonComponent,
 } from "../../__fixtures__/componentStates";
-import DOMRectProperties from "../../../src/store/models/DOMRectProperties";
 import { ComponentState } from "@yext/studio-plugin";
+import { domRect } from "../../__utils__/helpers";
 
 describe("PageSlice: page component actions", () => {
   describe("active component actions", () => {
@@ -63,18 +63,6 @@ describe("PageSlice: page component actions", () => {
 
   describe("selected components actions", () => {
     const store = useStudioStore.getState;
-    function domRect(x, y, width, height) {
-      return {
-        x,
-        y,
-        width,
-        height,
-        top: y,
-        bottom: y + height,
-        left: x,
-        right: x + width,
-      } as DOMRectProperties;
-    }
     function shiftSelect(
       activeUUID: string,
       selectedComponent: ComponentState,

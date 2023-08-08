@@ -20,6 +20,7 @@ studioTest("can add an entity page", async ({ page, studioPage }) => {
   await expect(pageInTree).toHaveCount(1);
   await expect(page).toHaveScreenshot();
   await studioPage.saveButton.click();
+  await page.waitForTimeout(500);
   const expectedPagePath = studioPage.getPagePath("EntityPage");
   await expect(expectedPagePath).toHaveContents(expectedPage);
   await expect(page).toHaveScreenshot();

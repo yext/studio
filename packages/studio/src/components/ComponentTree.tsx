@@ -21,6 +21,7 @@ import {
 } from "../hooks/useActiveComponentName";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
+import { isEqual } from "lodash";
 
 const ROOT_ID = "tree-root-uuid";
 const TREE_CSS_CLASSES: Readonly<Classes> = {
@@ -35,9 +36,6 @@ const TREE_CSS_CLASSES: Readonly<Classes> = {
 export default function ComponentTree(): JSX.Element | null {
   const tree: NodeModel<ComponentState>[] | undefined = useTree();
   const [openIds, setOpenIds] = useState<Record<string, boolean>>({});
-  const selectedComponentUUIDs = useStudioStore((store) => {
-    return store.pages.selectedComponentUUIDs;
-  });
   const initialOpen = useMemo(() => {
     return (
       tree?.reduce((prev, curr) => {
@@ -60,16 +58,6 @@ export default function ComponentTree(): JSX.Element | null {
       });
     },
     [openIds, setOpenIds]
-  );
-
-  const canDrag = useCallback(
-    (node: NodeModel<ComponentState> | undefined) => {
-      if (node && selectedComponentUUIDs.includes(node.id.toString())) {
-        return true;
-      }
-      return false;
-    },
-    [selectedComponentUUIDs]
   );
 
   const renderNodeCallback = useCallback(
@@ -107,7 +95,6 @@ export default function ComponentTree(): JSX.Element | null {
         insertDroppableFirst={false}
         onDrop={handleDrop}
         canDrop={canDrop}
-        canDrag={canDrag}
         render={renderNodeCallback}
         dragPreviewRender={renderDragPreview}
         placeholderRender={renderPlaceholder}
@@ -133,8 +120,8 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
 }
 
 function useDragPreview() {
-  const [selectedComponentUUIDs] = useStudioStore((store) => {
-    return [store.pages.selectedComponentUUIDs];
+  const selectedComponentUUIDs = useStudioStore((store) => {
+    return store.pages.selectedComponentUUIDs;
   });
   const componentNames = useComponentNames(selectedComponentUUIDs);
   return () => (
@@ -203,76 +190,90 @@ function useDropHandler() {
       ];
     });
 
+  const handleSelectedDrop = useCallback((updatedComponentTree: ComponentState[], dragSourceId: string, destinationParentId: string) => {
+    if (!componentTree) {
+      throw new Error(
+        "Unable to handle drag and drop event: component tree is undefined."
+      );
+    }
+    if(isEqual(
+      ComponentTreeHelpers.mapComponentTree(updatedComponentTree, c => c.uuid), 
+      ComponentTreeHelpers.mapComponentTree(componentTree, c => c.uuid))) {
+      return;
+    }
+    // this works because the last selected component must be the highest in depth
+    // and the first selected component is the furthest away
+    const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
+      selectedComponentUUIDs.at(0),
+      selectedComponentUUIDs.at(-1),
+      componentTree
+    );
+    const selectedComponents = componentTree
+      .filter((c) => selectedComponentUUIDs.includes(c.uuid))
+      .map((c) => {
+        if (c.parentUUID !== lowestParentUUID) return c;
+        return updateComponentParentUUID(c, destinationParentId);
+      });
+
+    updatedComponentTree = updatedComponentTree.filter(
+      (c) =>
+        c.uuid === dragSourceId || !selectedComponentUUIDs.includes(c.uuid)
+    );
+    let newDestinationIndex;
+    updatedComponentTree.forEach((c, index) => {
+      if (c.uuid === dragSourceId) {
+        newDestinationIndex = index;
+      }
+    });
+    updatedComponentTree.splice(
+      newDestinationIndex,
+      1,
+      ...selectedComponents
+    );
+
+    updateComponentTree(updatedComponentTree);
+  }, [selectedComponentUUIDs, componentTree, updateComponentTree]);
+
   const handleDrop = useCallback(
     (tree: NodeModel<ComponentState>[], options) => {
-      if (!componentTree) {
-        throw new Error(
-          "Unable to handle drag and drop event in ComponentTree: component tree is undefined."
-        );
-      }
       const { dragSourceId, destinationIndex } = options;
-      const destinationParentId = tree[destinationIndex].parent.toString();
-      // this works because the last selected component must be the highest in depth
-      // and the first selected component is the furthest away
-      const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
-        selectedComponentUUIDs.at(0),
-        selectedComponentUUIDs.at(-1),
-        componentTree
-      );
-      let updatedComponentTree: ComponentState[] =
+      const updatedComponentTree: ComponentState[] =
         convertNodeModelsToComponentTree(tree);
-
-      const selectedComponents = componentTree
-        .filter((c) => selectedComponentUUIDs.includes(c.uuid))
-        .map((c) => {
-          if (c.parentUUID !== lowestParentUUID) return c;
-          return {
-            ...c,
-            parentUUID:
-              destinationParentId === ROOT_ID ? undefined : destinationParentId,
-          };
-        });
-      updatedComponentTree = updatedComponentTree.filter(
-        (c) =>
-          c.uuid === dragSourceId || !selectedComponentUUIDs.includes(c.uuid)
-      );
-      let newDestinationIndex;
-      updatedComponentTree.forEach((c, index) => {
-        if (c.uuid === dragSourceId) {
-          newDestinationIndex = index;
-        }
-      });
-      updatedComponentTree.splice(
-        newDestinationIndex,
-        1,
-        ...selectedComponents
-      );
-
-      updateComponentTree(updatedComponentTree);
+      if (selectedComponentUUIDs.includes(dragSourceId)) {
+        const destinationParentId = tree[destinationIndex].parent.toString();
+        handleSelectedDrop(updatedComponentTree, dragSourceId, destinationParentId)
+      }
+      else {
+        updateComponentTree(updatedComponentTree);
+      }
     },
-    [selectedComponentUUIDs, componentTree, updateComponentTree]
+    [handleSelectedDrop, selectedComponentUUIDs, updateComponentTree]
   );
 
   return handleDrop;
+}
 
-  function convertNodeModelsToComponentTree(tree: NodeModel<ComponentState>[]) {
-    const updatedComponentTree: ComponentState[] = tree.map((n) => {
-      if (!n.data) {
-        throw new Error(
-          "Unable to handle drag and drop event in ComponentTree: " +
-            "No data passed into NodeModel<ComponentState> for node " +
-            JSON.stringify(n, null, 2)
-        );
-      }
-      const componentState: ComponentState = {
-        ...n.data,
-        parentUUID: n.parent.toString(),
-      };
-      if (componentState.parentUUID === ROOT_ID) {
-        delete componentState.parentUUID;
-      }
-      return componentState;
-    });
-    return updatedComponentTree;
+function convertNodeModelsToComponentTree(tree: NodeModel<ComponentState>[]) {
+  const updatedComponentTree: ComponentState[] = tree.map((n) => {
+    if (!n.data) {
+      throw new Error(
+        "Unable to handle drag and drop event in ComponentTree: " +
+        "No data passed into NodeModel<ComponentState> for node " +
+        JSON.stringify(n, null, 2)
+      );
+    }
+    return updateComponentParentUUID(n.data, n.parent.toString());
+  });
+  return updatedComponentTree;
+}
+
+function updateComponentParentUUID(componentState: ComponentState, newParentUUID: string) {
+  const updatedComponentState: ComponentState = {
+    ...componentState,
+    parentUUID: newParentUUID,
+  };
+  if (updatedComponentState.parentUUID === ROOT_ID) {
+    delete updatedComponentState.parentUUID;
   }
+  return updatedComponentState;
 }

@@ -96,21 +96,6 @@ export const nestedBannerComponentTree: ComponentState[] = [
     parentUUID: "mock-uuid-3",
     uuid: "mock-uuid-4",
   },
-  {
-    kind: ComponentStateKind.Standard,
-    componentName: "ComplexBanner",
-    props: {},
-    uuid: "mock-uuid-5",
-    metadataUUID: getComponentPath("ComplexBanner"),
-  },
-  {
-    kind: ComponentStateKind.Standard,
-    componentName: "ComplexBanner",
-    props: {},
-    uuid: "mock-uuid-6",
-    parentUUID: "mock-uuid-5",
-    metadataUUID: getComponentPath("ComplexBanner"),
-  },
 ];
 
 export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
