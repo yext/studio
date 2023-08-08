@@ -29,7 +29,7 @@ export default function PreviewWithUseComponents() {
         offset={-30}
         content={tooltipProps.error}
         anchorSelect={tooltipProps.anchorId}
-        className="text-sm z-30"
+        className="text-sm z-20"
         isOpen={tooltipProps.open}
         position={tooltipProps.position}
       />
@@ -38,11 +38,9 @@ export default function PreviewWithUseComponents() {
         title="PreviewPanel"
         inlineStyles={inlineStyles}
       >
-        <div>
-          <PreviewPanel setTooltipProps={setTooltipProps} />
-          <div className="absolute top-0">
-            <Highlighter />
-          </div>
+        <PreviewPanel setTooltipProps={setTooltipProps} />
+        <div className="absolute top-0">
+          <Highlighter />
         </div>
       </IFramePortal>
     </>
