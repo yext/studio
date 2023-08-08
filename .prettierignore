@@ -3,4 +3,5 @@
 packages/studio-plugin/tests/__fixtures__/PageFile/noReturnParenthesesPage.tsx
 packages/studio-plugin/tests/__fixtures__/PageFile/repeaterPage.tsx
 packages/studio-plugin/tests/__fixtures__/StudioConfigs/malformed/studio.config.js
-packages/studio/src/tailwind-full.csspret
+packages/studio/src/tailwind-full.css
+.github
