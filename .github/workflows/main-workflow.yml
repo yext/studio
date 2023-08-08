@@ -1,4 +1,4 @@
-name: main  
+name: main
 on: pull_request
 
 concurrency:
@@ -6,11 +6,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  automated-fixes: 
+  automated-fixes:
     uses: ./.github/workflows/autofixes.yml
     secrets: inherit
 
-  update-tailwind-bundle: 
+  update-tailwind-bundle:
     uses: ./.github/workflows/update-tailwind-bundle.yml
     secrets: inherit
 
