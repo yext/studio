@@ -29,7 +29,7 @@ export default function PreviewWithUseComponents() {
         offset={-30}
         content={tooltipProps.error}
         anchorSelect={tooltipProps.anchorId}
-        className="text-sm z-20"
+        className="text-sm z-30"
         isOpen={tooltipProps.open}
         position={tooltipProps.position}
       />
