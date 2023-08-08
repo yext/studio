@@ -42,6 +42,6 @@
   },
   "packageManager": "npm@8.5.5",
   "dependencies": {
-    "react-chat-widget": "^3.1.4"
+    "react-chat-window": "^1.2.1"
   }
 }
