@@ -229,6 +229,18 @@ export default class StudioActions {
     this.getPages().clearPendingChanges();
   };
 
+  writeFile = async (filepath : string, dataToWrite : string) => {
+    await sendMessage(MessageID.WriteFile, {dataToWrite, filepath});
+  };
+
+  getAllComponentFilepaths = async () => {
+    return await sendMessage(MessageID.GetAllComponentFilepaths, {});
+  };
+
+  getComponentFile = async (filepath : string) => {
+    return await sendMessage(MessageID.GetComponentFile, {filepath});
+  };
+
   refreshActivePageEntities = async () => {
     const entityFiles =
       this.getPages().getActivePageState()?.pagesJS?.entityFiles;

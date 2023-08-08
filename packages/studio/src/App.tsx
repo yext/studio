@@ -5,6 +5,7 @@ import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
 import { Widget, addResponseMessage } from 'react-chat-widget';
 import { useCallback, useEffect } from "react";
+import useStudioStore from "./store/useStudioStore";
 
 import 'react-chat-widget/lib/styles.css';
 
@@ -12,6 +13,14 @@ export default function App() {
   useEffect(() => {
     addResponseMessage('Welcome to this **awesome** chat!');
   }, []);
+
+  const writeFile = useStudioStore((store) => store.actions.writeFile);
+  const getAllComponentFilepaths = useStudioStore((store) => store.actions.getAllComponentFilepaths);
+  const getComponentFile = useStudioStore((store) => store.actions.getComponentFile);
+
+  writeFile("new.tsx", "abcdefhijklmnop")
+  getAllComponentFilepaths().then((info) => {console.log("filepaths:", info)})
+  getComponentFile("Cta.tsx").then((info) => {console.log("file:", info)})
 
   const handleNewUserMessage = useCallback((newMessage) => {
     console.log(`New message incoming! ${newMessage}`);
