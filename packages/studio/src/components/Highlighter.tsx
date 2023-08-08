@@ -6,7 +6,9 @@ import { ComponentStateKind } from "@yext/studio-plugin";
 /**
  * Highlights the current activeComponentRect on the page.
  */
-export default function Highlighter(props) {
+export default function Highlighter(props: {
+  iframeEl: HTMLIFrameElement | null;
+}) {
   const { iframeEl } = props;
   const rect = useStudioStore((store) => store.pages.activeComponentRect);
   const activeUUID = useStudioStore((store) => store.pages.activeComponentUUID);
