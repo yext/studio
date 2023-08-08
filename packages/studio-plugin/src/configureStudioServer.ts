@@ -6,6 +6,10 @@ import registerSaveChangesListener from "./messaging/registerSaveChangesListener
 import ParsingOrchestrator from "./ParsingOrchestrator";
 import registerGenerateTestData from "./messaging/registerGenerateTestData";
 import LocalDataMappingManager from "./LocalDataMappingManager";
+import registerWriteFileListener from "./messaging/registerWriteFileListener";
+import registerGetComponentFile from "./messaging/registerGetComponentFile"
+import registerGetAllComponentFilepaths from "./messaging/registerGetAllComponentFilepaths"
+
 
 /**
  * A factory method for our vite plugin's configureServer handler.
@@ -28,5 +32,8 @@ export default function createConfigureStudioServer(
     );
     registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
     registerGenerateTestData(server, localDataMappingManager);
+    registerWriteFileListener(server,fileSystemManager);
+    registerGetComponentFile(server,fileSystemManager);
+    registerGetAllComponentFilepaths(server,fileSystemManager);
   };
 }
