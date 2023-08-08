@@ -29,11 +29,17 @@ export default function mockComponentTree({
       activePageName: "pagename",
       moduleUUIDBeingEdited,
       ...(activeComponentUUID && { activeComponentUUID: activeComponentUUID }),
-      ...(selectedComponentUUIDs && { selectedComponentUUIDs: selectedComponentUUIDs }),
-      ...(selectedComponentRects && { selectedComponentRects: selectedComponentRects }),
+      ...(selectedComponentUUIDs && {
+        selectedComponentUUIDs: selectedComponentUUIDs,
+      }),
+      ...(selectedComponentRects && {
+        selectedComponentRects: selectedComponentRects,
+      }),
     },
-    ...(UUIDToFileMetadata && {fileMetadatas: {
-      UUIDToFileMetadata: UUIDToFileMetadata,
-    }})
+    ...(UUIDToFileMetadata && {
+      fileMetadatas: {
+        UUIDToFileMetadata: UUIDToFileMetadata,
+      },
+    }),
   });
 }

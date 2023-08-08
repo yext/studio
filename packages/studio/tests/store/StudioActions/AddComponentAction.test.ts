@@ -91,8 +91,8 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
           props: {},
         },
       ],
-      moduleUUIDBeingEdited: "ModuleState.uuid"
-  });
+      moduleUUIDBeingEdited: "ModuleState.uuid",
+    });
   });
 
   insertionOrderTestSuite(() => {
@@ -104,7 +104,7 @@ describe("adds components to ModuleMetadata when a module is being edited", () =
 
 describe("adds components to the active PageState when no module is being edited", () => {
   beforeEach(() => {
-    mockComponentTree({componentTree: initialTree});
+    mockComponentTree({ componentTree: initialTree });
   });
 
   insertionOrderTestSuite(() => {

@@ -1,4 +1,7 @@
-import { ComponentStateKind, StandardComponentState } from "@yext/studio-plugin";
+import {
+  ComponentStateKind,
+  StandardComponentState,
+} from "@yext/studio-plugin";
 import mockActiveComponentState from "../__utils__/mockActiveComponentState";
 import mockComponentTree from "../__utils__/mockComponentTree";
 import { render, screen } from "@testing-library/react";
@@ -44,12 +47,17 @@ it("displays the active component name label", () => {
 });
 
 it("displays component name labels for multiple selected components", () => {
-  const selectedRects = [domRect(1,1,1,1), domRect(1,2,1,1), domRect(2,1,1,1), domRect(2,2,1,1)];
+  const selectedRects = [
+    domRect(1, 1, 1, 1),
+    domRect(1, 2, 1, 1),
+    domRect(2, 1, 1, 1),
+    domRect(2, 2, 1, 1),
+  ];
   mockComponentTree({
     componentTree: nestedComponentTree,
     UUIDToFileMetadata: mockUUIDToFileMetadata,
     activeComponentUUID: nestedComponentTree[0].uuid,
-    selectedComponentUUIDs: nestedComponentTree.map(c => c.uuid),
+    selectedComponentUUIDs: nestedComponentTree.map((c) => c.uuid),
     selectedComponentRects: selectedRects,
   });
   render(<Highlighters />);
