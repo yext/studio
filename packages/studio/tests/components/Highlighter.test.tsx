@@ -28,7 +28,7 @@ it("displays the active component name", () => {
       },
     },
   });
-  render(<Highlighter />);
+  render(<Highlighter iframeEl={null} />);
 
   expect(screen.getByText("Banner")).toBeTruthy();
 });
