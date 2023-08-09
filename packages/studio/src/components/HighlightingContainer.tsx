@@ -8,7 +8,7 @@ import { findDOMNode } from "react-dom";
  * HighlightingContainer is intended to be used as a wrapper around a
  * single rendered Studio component.
  *
- * When this container is clicked, it sets it's child component as the
+ * When this container is clicked, it sets its child component as the
  * current active component, and adds highlighting styling around it.
  */
 export default function HighlightingContainer(

@@ -41,7 +41,7 @@ it("displays the active component name label", () => {
       ],
     },
   });
-  render(<Highlighters />);
+  render(<Highlighter iframeEl={null} />);
 
   expect(screen.getByText("Banner")).toBeTruthy();
 });
