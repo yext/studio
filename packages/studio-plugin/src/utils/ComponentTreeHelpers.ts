@@ -196,18 +196,18 @@ export default class ComponentTreeHelpers {
     targetTwoUUID: string | undefined,
     componentTree: ComponentState[]
   ) {
-    const LCAComponent = ComponentTreeHelpers.getLowestCommonAncestorComponent(
-      targetOneUUID,
-      targetTwoUUID,
+    if (!targetOneUUID || !targetTwoUUID) return undefined;
+    const componentOne = componentTree.find((c) => c.uuid === targetOneUUID);
+    const componentTwo = componentTree.find((c) => c.uuid === targetTwoUUID);
+    const LCAComponentUUID = ComponentTreeHelpers.getLowestCommonAncestorComponentUUID(
+      componentOne?.parentUUID,
+      componentTwo?.parentUUID,
       componentTree
     );
-    const TargetIsLCA =
-      targetOneUUID === LCAComponent?.uuid ||
-      targetTwoUUID === LCAComponent?.uuid;
-    return TargetIsLCA ? LCAComponent?.parentUUID : LCAComponent?.uuid;
+    return LCAComponentUUID;
   }
 
-  private static getLowestCommonAncestorComponent(
+  private static getLowestCommonAncestorComponentUUID(
     targetOneUUID: string | undefined,
     targetTwoUUID: string | undefined,
     componentTree: ComponentState[]
@@ -224,6 +224,6 @@ export default class ComponentTreeHelpers {
         targetTwoUUID = c.parentUUID;
       }
     });
-    return componentTree.find((c) => c.uuid === LCA_UUID);
+    return LCA_UUID;
   }
 }
