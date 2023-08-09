@@ -12,7 +12,7 @@ import killPort from "kill-port";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-console.log(process.env)
+console.log(process.env);
 
 /**
  * Spawns a studio instance for the test that will not be shared
