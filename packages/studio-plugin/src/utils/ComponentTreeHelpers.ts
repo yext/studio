@@ -215,9 +215,9 @@ export default class ComponentTreeHelpers {
   ): ComponentState | undefined {
     let LCA_UUID;
     ComponentTreeHelpers.mapComponentTree(componentTree, (c) => {
+      if (LCA_UUID) return;
       if (!LCA_UUID && targetOneUUID === targetTwoUUID) {
         LCA_UUID = targetOneUUID;
-        return;
       }
       if (c.uuid === targetOneUUID) {
         targetOneUUID = c.parentUUID;
