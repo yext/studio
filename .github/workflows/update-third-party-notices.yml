@@ -9,12 +9,11 @@ jobs:
         with:
           node-version: 16.x
           registry-url: 'https://registry.npmjs.org'
-          token: ''
       - run: npm install -g generate-license-file@1
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
-          token: ${{ secrets.REPO_SCOPED_TOKEN }}
+          token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       # Skip post-install scripts here, as a malicious
       # script could steal the NPM_TOKEN.
       - run: npm ci --ignore-scripts
