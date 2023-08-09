@@ -21,14 +21,7 @@ export default function PreviewWithUseComponents() {
 
   return (
     <>
-      <Tooltip
-        offset={-30}
-        content={tooltipProps.content}
-        anchorSelect={tooltipProps.anchorSelect}
-        className="text-sm z-20"
-        isOpen={tooltipProps.isOpen}
-        position={tooltipProps.position}
-      />
+      <Tooltip offset={-30} className="text-sm z-20" {...tooltipProps} />
       <IFramePortal
         className="h-full w-full"
         title="PreviewPanel"
