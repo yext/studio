@@ -107,6 +107,7 @@ export default class StaticParsingHelpers {
         kind: PropValueKind.Literal,
       };
     }
+    console.log("hi");
     const expression = initializer.isKind(SyntaxKind.JsxExpression)
       ? initializer.getExpressionOrThrow()
       : initializer;
@@ -148,7 +149,7 @@ export default class StaticParsingHelpers {
       expression.getOperand().isKind(SyntaxKind.NumericLiteral)
     ) {
       return {
-        value: parseInt(expression.getOperand().toString()) * -1,
+        value: parseInt(expression.getOperand().getFullText()) * -1,
         kind: PropValueKind.Literal,
       };
     } else {

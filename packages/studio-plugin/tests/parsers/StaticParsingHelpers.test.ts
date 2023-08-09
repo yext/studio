@@ -304,6 +304,22 @@ describe("parseExportAssignment", () => {
   });
 });
 
+it("parsing an negative numeric literal", () => {
+  const { sourceFile } = createTestSourceFile(`const a = { aKey: -1 }`);
+  const objectLiteralExpression = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.ObjectLiteralExpression
+  );
+  const parsedValue = StaticParsingHelpers.parseObjectLiteral(
+    objectLiteralExpression
+  );
+  expect(parsedValue).toEqual({
+    aKey: {
+      value: -1,
+      kind: PropValueKind.Literal,
+    },
+  });
+});
+
 function getJsxAttributesFromSource(code: string): JsxAttributeLike[] {
   const { sourceFile } = createTestSourceFile(code);
   const jsxAttributes = sourceFile
