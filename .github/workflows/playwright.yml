@@ -36,7 +36,7 @@ jobs:
       - run: |
           git config --global user.name "Playwright Job ${{ matrix.os }} ${{ matrix.shard }}"
           git config --global user.email "slapshot@yext.com"
-      - run: npm run playwright
+      - run: npm run playwright -- --shard=${{ matrix.shard }}/3
         working-directory: e2e-tests
       - uses: actions/upload-artifact@v3
         if: success() || failure()
