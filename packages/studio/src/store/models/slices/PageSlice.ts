@@ -68,7 +68,9 @@ interface PageSliceActions {
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 
   setActiveEntityFile: (activeEntityFile?: string) => void;
-  updateActivePageEntities: (parentFolder: string) => Promise<void>;
+  setActivePageEntities: (
+    entities?: Record<string, Record<string, unknown>>
+  ) => void;
   getActiveEntityData: () => Record<string, unknown> | undefined;
 
   clearPendingChanges: () => void;
