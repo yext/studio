@@ -22,7 +22,7 @@ type Fixtures = {
  */
 export const studioTest = base.extend<Fixtures>({
   createRemote: false,
-  debug: false,
+  debug: !!process.env.CI,
   studioPage: async ({ page, createRemote, debug }, use, testInfo) => {
     const opts = { createRemote, debug, testInfo };
     await setupAcceptance(opts, async (port: number, tmpDir: string) => {
