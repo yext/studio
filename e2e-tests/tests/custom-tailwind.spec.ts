@@ -3,10 +3,9 @@ import { studioTest } from "./infra/studioTest.js";
 
 studioTest.use({
   tailwindConfigPath: "tests/__fixtures__/tailwind.config.ts",
-  debug: true
-})
+});
 
-studioTest.only(
+studioTest(
   "can display styles from a custom tailwind theme",
   async ({ studioPage }) => {
     await studioPage.removeElement("div");

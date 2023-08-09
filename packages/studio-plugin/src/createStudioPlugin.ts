@@ -14,9 +14,9 @@ import HmrManager from "./HmrManager";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import upath from "upath";
 import lodash from "lodash";
-import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import LocalDataMappingManager from "./LocalDataMappingManager";
+import getStudioViteOptions from "./viteconfig/getStudioViteOptions";
 
 /**
  * Handles server-client communication.
@@ -89,19 +89,13 @@ export default async function createStudioPlugin(
       watchUserFiles(studioConfig.paths);
     },
     config(config) {
-      const serverConfig: UserConfig = {
-        server: {
-          port: studioConfig.port,
-          open:
-            args.mode === "development" &&
-            args.command === "serve" &&
-            studioConfig.openBrowser,
-          watch: {
-            ignored: hmrManager.shouldExcludeFromWatch,
-          },
-        },
-      };
-      return lodash.merge({}, config, serverConfig);
+      const studioViteOptions = getStudioViteOptions(
+        args,
+        studioConfig,
+        pathToUserProjectRoot,
+        hmrManager.shouldExcludeFromWatch
+      );
+      return lodash.merge({}, config, studioViteOptions);
     },
     resolveId(id) {
       if (id === VirtualModuleID.StudioData || id === VirtualModuleID.GitData) {
