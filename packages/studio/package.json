@@ -26,7 +26,6 @@
     "cross-env": "^7.0.3",
     "lodash": "^4.17.21",
     "path-browserify": "^1.0.1",
-    "postcss": "^8.4.27",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-modal": "3.16.1",
