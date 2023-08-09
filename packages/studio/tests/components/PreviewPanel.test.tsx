@@ -41,7 +41,6 @@ const repeaterState: RepeaterState = {
 
 const mockSetState = jest.fn();
 
-
 beforeEach(() => {
   jest.spyOn(console, "warn").mockImplementation();
 });

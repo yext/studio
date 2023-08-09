@@ -10,12 +10,12 @@ import {
 import { v4 } from "uuid";
 import ErrorBoundary from "./common/ErrorBoundary";
 import { ErrorComponentState } from "@yext/studio-plugin";
-import { tooltipProps } from "./PreviewWithUseComponents";
+import { ITooltip } from "react-tooltip";
 
 export default function ErrorComponentPreview(props: {
   errorComponentState: ErrorComponentState;
   element: JSX.Element | null;
-  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }) {
   const { errorComponentState, element, setTooltipProps } = props;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,15 +39,16 @@ export default function ErrorComponentPreview(props: {
 
   useEffect(() => {
     const rect = containerRef.current?.getBoundingClientRect();
+    const y = (rect && rect.top + 25 - window.scrollY) || 0;
     const tooltipPosition = rect && {
       x: (rect.right + rect.left) / 2 + window.innerWidth / 4 - window.scrollX,
-      y: rect.top + 25 - window.scrollY,
+      y: y < 25 ? 25 : y,
     };
 
     setTooltipProps({
-      open: tooltipOpen,
-      error: errorComponentState.message,
-      anchorId: anchorId,
+      isOpen: tooltipOpen,
+      content: errorComponentState.message,
+      anchorSelect: anchorId,
       position: tooltipPosition || { x: 0, y: 0 },
     });
   }, [tooltipOpen, anchorId, errorComponentState, setTooltipProps]);

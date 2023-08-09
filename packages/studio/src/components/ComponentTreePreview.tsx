@@ -4,12 +4,12 @@ import { ExpressionSources } from "../utils/getPropsForPreview";
 import ErrorBoundary from "./common/ErrorBoundary";
 import HighlightingContainer from "./HighlightingContainer";
 import ComponentPreview from "./ComponentPreview";
-import { tooltipProps } from "./PreviewWithUseComponents";
+import { ITooltip } from "react-tooltip";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   expressionSources: ExpressionSources;
-  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
   renderHighlightingContainer?: boolean;
 }
 
@@ -38,7 +38,7 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   expressionSources: ExpressionSources,
-  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>,
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>,
   renderHighlightingContainer?: boolean
 ): (JSX.Element | null)[] | null {
   return useMemo(() => {

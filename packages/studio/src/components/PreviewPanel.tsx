@@ -5,10 +5,10 @@ import ComponentTreePreview from "./ComponentTreePreview";
 import useRawSiteSettings from "../hooks/useRawSiteSettings";
 import { ComponentStateHelpers, TypeGuards } from "@yext/studio-plugin";
 import { get } from "lodash";
-import { tooltipProps } from "./PreviewWithUseComponents";
+import { ITooltip } from "react-tooltip";
 
 export default function PreviewPanel(props: {
-  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }) {
   const { setTooltipProps } = props;
   const [componentTree, moduleUUIDBeingEdited, getComponentState] =

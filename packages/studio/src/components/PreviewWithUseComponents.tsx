@@ -3,25 +3,18 @@ import useStudioStore from "../store/useStudioStore";
 import PreviewPanel from "./PreviewPanel";
 import Highlighter from "./Highlighter";
 import IFramePortal from "./IFramePortal";
-import { Tooltip, IPosition } from "react-tooltip";
+import { Tooltip, ITooltip } from "react-tooltip";
 import { useState } from "react";
-
-export interface tooltipProps {
-  open: boolean;
-  position: IPosition;
-  error: string;
-  anchorId: string;
-}
 
 export default function PreviewWithUseComponents() {
   const componentTree = useStudioStore((store) =>
     store.actions.getComponentTree()
   );
-  const [tooltipProps, setTooltipProps] = useState<tooltipProps>({
-    open: false,
+  const [tooltipProps, setTooltipProps] = useState<ITooltip>({
+    isOpen: false,
     position: { x: 0, y: 0 },
-    error: "",
-    anchorId: "",
+    content: "",
+    anchorSelect: "",
   });
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null);
   void useImportedComponents(componentTree);
@@ -30,10 +23,10 @@ export default function PreviewWithUseComponents() {
     <>
       <Tooltip
         offset={-30}
-        content={tooltipProps.error}
-        anchorSelect={tooltipProps.anchorId}
+        content={tooltipProps.content}
+        anchorSelect={tooltipProps.anchorSelect}
         className="text-sm z-20"
-        isOpen={tooltipProps.open}
+        isOpen={tooltipProps.isOpen}
         position={tooltipProps.position}
       />
       <IFramePortal

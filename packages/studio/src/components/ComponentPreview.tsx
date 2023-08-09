@@ -17,14 +17,14 @@ import { ExpressionSources } from "../utils/getPropsForPreview";
 import RepeaterPreview from "./RepeaterPreview";
 import ErrorComponentPreview from "./ErrorComponentPreview";
 import ModulePreview from "./ModulePreview";
-import { tooltipProps } from "./PreviewWithUseComponents";
+import { ITooltip } from "react-tooltip";
 
 interface ComponentPreviewProps {
   componentState: ComponentState;
   expressionSources: ExpressionSources;
   childElements?: (JSX.Element | null)[];
   parentItem?: unknown;
-  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }
 
 /**

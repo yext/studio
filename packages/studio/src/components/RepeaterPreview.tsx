@@ -3,12 +3,12 @@ import { get } from "lodash";
 import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { ExpressionSources } from "../utils/getPropsForPreview";
 import ComponentPreview from "./ComponentPreview";
-import { tooltipProps } from "./PreviewWithUseComponents";
+import { ITooltip } from "react-tooltip";
 
 interface RepeaterPreviewProps {
   repeaterState: RepeaterState;
   expressionSources: ExpressionSources;
-  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }
 
 /**
