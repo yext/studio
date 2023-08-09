@@ -37,10 +37,10 @@ export default async function createStudioPlugin(
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
 
   const pagesDevPortPromise = studioConfig.isPagesJSRepo
-    ? startPagesDevelopmentServer()
+    ? startPagesDevelopmentServer(cliArgs["--"] ?? [])
     : null;
 
-  const gitWrapper = new GitWrapper(
+    const gitWrapper = new GitWrapper(
     simpleGit({
       baseDir: pathToUserProjectRoot,
       config: [

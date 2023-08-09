@@ -1,7 +1,8 @@
 import { spawn } from "node:child_process";
 
-export const startPagesDevelopmentServer = async () => {
-  const pagesServer = spawn("npx", ["pages", "dev", "--open-browser=false"], {
+export const startPagesDevelopmentServer = async (cliArgs : string[]) => {
+
+  const pagesServer = spawn("npx", ["pages", "dev", "--open-browser=false",  cliArgs.includes("--noGenerateTestData") ? "--local" : ""], {
     stdio: ["pipe", "pipe", "pipe"],
     env: {
       ...process.env,
@@ -28,7 +29,11 @@ export const startPagesDevelopmentServer = async () => {
   const port: Promise<number> = new Promise((resolve) => {
     pagesServer.stdout.setEncoding("utf-8");
     pagesServer.stdout.on("data", (data: string) => {
+      data.split("\n").forEach((line: string) => {
+        console.info("Pages Development Server |", line.trim());
+      });
       const matches = data.match(/listening on :(\d+)/);
+      console.log(matches)
       if (matches && matches.length >= 2) {
         const port = Number.parseInt(matches[1]);
         if (isNaN(port)) {
@@ -36,7 +41,6 @@ export const startPagesDevelopmentServer = async () => {
         }
         resolve(port);
       }
-      throw new Error("Could not parse PagesJS dev server port.");
     });
     setTimeout(resolve, 10000);
   });
