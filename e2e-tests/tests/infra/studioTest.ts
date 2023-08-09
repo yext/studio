@@ -2,7 +2,7 @@ import { test as base } from "@playwright/test";
 import StudioPlaywrightPage from "./StudioPlaywrightPage.js";
 import setupAcceptance from "./setupAcceptance.js";
 
-type Fixtures = {
+export type StudioTestFixtures = {
   /**
    * The StudioPlaywrightPage model for interacting with the page.
    */
@@ -20,9 +20,10 @@ type Fixtures = {
  * studioTest extends the base playwright test by providing a StudioPage Page Object Model,
  * and also performing setup and cleanup.
  */
-export const studioTest = base.extend<Fixtures>({
+export const studioTest = base.extend<StudioTestFixtures>({
   createRemote: false,
-  debug: !!process.env.CI,
+  debug: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   studioPage: async ({ page, createRemote, debug }, use, testInfo) => {
     const opts = { createRemote, debug, testInfo };
     await setupAcceptance(opts, async (port: number, tmpDir: string) => {

@@ -8,6 +8,7 @@ import fsExtra from "fs-extra";
 import spawnStudio from "./spawnStudio.js";
 import { globSync } from "glob";
 import killPort from "kill-port";
+import { StudioTestFixtures } from './studioTest.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,12 +17,10 @@ const __dirname = dirname(__filename);
  * Spawns a studio instance for the test that will not be shared
  * with any other tests. This instance runs in a temporary folder.
  */
-export default async function setup(
+export default async function setupAcceptance(
   opts: {
     testInfo: TestInfo;
-    createRemote: boolean;
-    debug: boolean;
-  },
+  } & Omit<StudioTestFixtures, 'studioPage'>,
   run: (port: number, tmpDir: string) => Promise<void>
 ) {
   const { createRemote, testInfo, debug } = opts;
@@ -91,6 +90,7 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
 function createTempWorkingDir(testInfo: TestInfo) {
   const prefix = getTestFilename(testInfo).split(".").at(0) + "_";
   const tmpDir = fs.mkdtempSync("__playground-" + prefix);
+  fs.writeFileSync('test', tmpDir)
   const copy = (pathToCopy: string) => {
     const srcPath = path.resolve(__dirname, "../..", pathToCopy);
     const destPath = path.join(tmpDir, pathToCopy);
