@@ -49,8 +49,17 @@ describe("refreshActivePageEntities", () => {
   });
 
   it("sets activePageEntities to undefined if there are no entityFiles", async () => {
-    await useStudioStore.getState().actions.updateActivePage("empty");
     await useStudioStore.getState().actions.refreshActivePageEntities();
+    expect(
+      useStudioStore.getState().pages.activePageEntities
+    ).not.toBeUndefined();
+    const refreshEntitiesSpy = jest.spyOn(
+      useStudioStore.getState().actions,
+      "refreshActivePageEntities"
+    );
+    expect(refreshEntitiesSpy).toBeCalledTimes(0);
+    await useStudioStore.getState().actions.updateActivePage("empty");
+    expect(refreshEntitiesSpy).toBeCalledTimes(1);
     expect(useStudioStore.getState().pages.activePageEntities).toBeUndefined();
   });
 

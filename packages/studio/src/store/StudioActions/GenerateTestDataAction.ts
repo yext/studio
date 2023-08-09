@@ -4,15 +4,23 @@ import {
   EntityFeature,
   FeaturesJson,
   MessageID,
+  ResponseEventMap,
 } from "@yext/studio-plugin";
 import { Stream } from "@yext/pages";
 import PageSlice from "../models/slices/PageSlice";
 import sendMessage from "../../messaging/sendMessage";
+import { isEqual } from "lodash";
+import StudioActions from "../StudioActions";
 
 export default class GenerateTestDataAction {
-  constructor(private getPageSlice: () => PageSlice) {}
+  constructor(
+    private getPageSlice: () => PageSlice,
+    private studioActions: StudioActions
+  ) {}
 
-  generateTestData = async (): Promise<Record<string, string[]>> => {
+  generateTestData = async (): Promise<
+    ResponseEventMap["studio:generateTestData"]
+  > => {
     const featuresJson = Object.entries(
       this.getPageSlice().pages
     ).reduce<FeaturesJson>(
@@ -36,16 +44,30 @@ export default class GenerateTestDataAction {
         features: [],
       }
     );
-    const response = await sendMessage(
-      MessageID.GenerateTestData,
-      {
-        featuresJson,
-      },
-      {
-        displayErrorToast: false,
-      }
+    const response = await sendMessage(MessageID.GenerateTestData, {
+      featuresJson,
+    });
+    await this.updateEntityFiles(response.mappingJson);
+    return response;
+  };
+
+  private updateEntityFiles = async (mappingJson: Record<string, string[]>) => {
+    await Promise.all(
+      Object.entries(this.getPageSlice().pages).map(
+        async ([pageName, pageState]) => {
+          const entityFiles: string[] = mappingJson[pageName];
+          const newEntityFilesSet = new Set(entityFiles);
+          const currEntityFilesSet = new Set(pageState.pagesJS?.entityFiles);
+          if (!isEqual(currEntityFilesSet, newEntityFilesSet)) {
+            this.getPageSlice().setEntityFiles(pageName, entityFiles);
+            if (pageName === this.getPageSlice().activePageName) {
+              await this.studioActions.refreshActivePageEntities();
+              this.getPageSlice().setActiveEntityFile(entityFiles?.[0]);
+            }
+          }
+        }
+      )
     );
-    return response.mappingJson;
   };
 
   private static getStreamId(pageName: string) {
