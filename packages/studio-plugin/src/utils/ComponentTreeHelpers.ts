@@ -199,11 +199,12 @@ export default class ComponentTreeHelpers {
     if (!targetOneUUID || !targetTwoUUID) return undefined;
     const componentOne = componentTree.find((c) => c.uuid === targetOneUUID);
     const componentTwo = componentTree.find((c) => c.uuid === targetTwoUUID);
-    const LCAComponentUUID = ComponentTreeHelpers.getLowestCommonAncestorComponentUUID(
-      componentOne?.parentUUID,
-      componentTwo?.parentUUID,
-      componentTree
-    );
+    const LCAComponentUUID =
+      ComponentTreeHelpers.getLowestCommonAncestorComponentUUID(
+        componentOne?.parentUUID,
+        componentTwo?.parentUUID,
+        componentTree
+      );
     return LCAComponentUUID;
   }
 
