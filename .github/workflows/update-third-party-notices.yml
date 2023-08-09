@@ -3,7 +3,7 @@ on: workflow_call
 
 jobs:
   license-check:
-    runs-on: ${{ inputs.environment }}
+    runs-on: macos-latest
     steps:
       - uses: actions/setup-node@v3
         with:
