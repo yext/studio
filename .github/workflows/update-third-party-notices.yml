@@ -22,8 +22,10 @@ jobs:
       # `npm rebuild` will run all those post-install scripts for us.
       - run: npm rebuild
       - run: generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
-
+      
       - run: cd ../studio-plugin; npm ci --ignore-scripts
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: npm rebuild
       - run: generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
 
