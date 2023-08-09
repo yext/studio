@@ -33,7 +33,6 @@ export const startPagesDevelopmentServer = async () => {
     pagesServer.stdout.setEncoding("utf-8");
     pagesServer.stdout.on("data", (data: string) => {
       const matches = data.match(/listening on :(\d+)/);
-      console.log(matches);
       if (matches && matches.length >= 2) {
         const port = Number.parseInt(matches[1]);
         if (isNaN(port)) {
@@ -42,7 +41,7 @@ export const startPagesDevelopmentServer = async () => {
         resolve(port);
       }
     });
-    setTimeout(resolve, 10000);
+    setTimeout(() => {throw new Error("Could not determine PagesJS development server port.");}, 10000);
   });
 
   // kill pages server when studio exits
