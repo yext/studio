@@ -4,17 +4,8 @@ import Toast from "./components/Toast";
 import ChatBot from "./components/ChatBot";
 import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
-import useStudioStore from "./store/useStudioStore";
 
 export default function App() {
-  const writeFile = useStudioStore((store) => store.actions.writeFile);
-  const getAllComponentFilepaths = useStudioStore((store) => store.actions.getAllComponentFilepaths);
-  const getComponentFile = useStudioStore((store) => store.actions.getComponentFile);
-
-  writeFile("new.tsx", "abcdefhijklmnop")
-  getAllComponentFilepaths().then((info) => {console.log("filepaths:", info)})
-  getComponentFile("Cta.tsx").then((info) => {console.log("file:", info)})
-
   return (
     <div className="App">
       <Toast />

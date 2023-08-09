@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import { Launcher } from 'react-chat-window'
+//import useStudioStore from "./store/useStudioStore";
 
 const AGENT_PROFILE = {
   teamName: 'studio buddy',
@@ -39,6 +40,14 @@ export default class ChatBot extends Component<object, ChatState>{
   }
 
   answerMessage = (message: Message) => {
+    //const writeFile = useStudioStore((store) => store.actions.writeFile);
+    //const getAllComponentFilepaths = useStudioStore((store) => store.actions.getAllComponentFilepaths);
+    //const getComponentFile = useStudioStore((store) => store.actions.getComponentFile);
+
+    //writeFile("new.tsx", "abcdefhijklmnop")
+    //getAllComponentFilepaths().then((info) => {console.log("filepaths:", info)})
+    //getComponentFile("Cta.tsx").then((info) => {console.log("file:", info)})
+
     this.sendMessage("thought about " + message.data.text);
   }
 
