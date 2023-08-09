@@ -107,7 +107,6 @@ export default class StaticParsingHelpers {
         kind: PropValueKind.Literal,
       };
     }
-    console.log("hi");
     const expression = initializer.isKind(SyntaxKind.JsxExpression)
       ? initializer.getExpressionOrThrow()
       : initializer;
