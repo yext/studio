@@ -7,7 +7,10 @@ import DOMRectProperties from "../store/models/DOMRectProperties";
 /**
  * Generates Highlighters for all selected components.
  */
-export default function Highlighters(): JSX.Element {
+export default function Highlighters(props: {
+  iframeEl: HTMLIFrameElement | null;
+}): JSX.Element {
+  const { iframeEl } = props;
   const [selectedComponentUUIDs, selectedComponentRects] = useStudioStore(
     (store) => {
       return [
@@ -23,6 +26,7 @@ export default function Highlighters(): JSX.Element {
           key={`${uuid}-key`}
           uuid={uuid}
           rect={selectedComponentRects[index]}
+          iframeEl={iframeEl}
         />
       ))}
     </div>
@@ -35,9 +39,11 @@ export default function Highlighters(): JSX.Element {
 function Highlighter({
   uuid,
   rect,
+  iframeEl,
 }: {
   uuid: string;
   rect: DOMRectProperties;
+  iframeEl: HTMLIFrameElement | null;
 }) {
   const componentTree = useStudioStore((store) =>
     store.actions.getComponentTree()
@@ -60,15 +66,15 @@ function Highlighter({
     return {
       position: "absolute",
       zIndex: "10",
-      left: `${window.scrollX + rect.left}px`,
-      top: `${window.scrollY + rect.top}px`,
+      left: `${(iframeEl?.contentWindow?.scrollX ?? 0) + rect.left}px`,
+      top: `${(iframeEl?.contentWindow?.scrollY ?? 0) + rect.top}px`,
       width: `${rect.width}px`,
       height: `${rect.height}px`,
       boxSizing: "border-box",
       border: `1px solid ${color}`,
       pointerEvents: "none",
     };
-  }, [rect, color]);
+  }, [rect, color, iframeEl]);
 
   const tagStyle: CSSProperties = useMemo(() => {
     if (!rect) {

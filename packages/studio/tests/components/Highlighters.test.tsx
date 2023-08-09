@@ -41,7 +41,7 @@ it("displays the active component name label", () => {
       ],
     },
   });
-  render(<Highlighter iframeEl={null} />);
+  render(<Highlighters iframeEl={null} />);
 
   expect(screen.getByText("Banner")).toBeTruthy();
 });
@@ -60,7 +60,7 @@ it("displays component name labels for multiple selected components", () => {
     selectedComponentUUIDs: nestedComponentTree.map((c) => c.uuid),
     selectedComponentRects: selectedRects,
   });
-  render(<Highlighters />);
+  render(<Highlighters iframeEl={null} />);
 
   expect(screen.getAllByText("Banner")).toHaveLength(2);
   expect(screen.getAllByText("Container")).toHaveLength(2);

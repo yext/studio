@@ -31,7 +31,7 @@ export default function PreviewWithUseComponents() {
       <div style={innerIframeStyles}>
         <PreviewPanel />
         <div className="absolute top-[-50px]">
-          <Highlighter iframeEl={iframeEl} />
+          <Highlighters iframeEl={iframeEl} />
         </div>
       </div>
     </IFramePortal>
