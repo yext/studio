@@ -207,7 +207,10 @@ function useDropHandler() {
             updatedComponentTree,
             (c) => c.uuid
           ),
-          ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => c.uuid)
+          ComponentTreeHelpers.mapComponentTreeParentsFirst(
+            componentTree,
+            (c) => c.uuid
+          )
         )
       ) {
         return;
@@ -226,7 +229,7 @@ function useDropHandler() {
           return updateComponentParentUUID(c, destinationParentId);
         });
 
-        updatedComponentTree = updatedComponentTree.filter(
+      updatedComponentTree = updatedComponentTree.filter(
         (c) =>
           c.uuid === dragSourceId || !selectedComponentUUIDs.includes(c.uuid)
       );
