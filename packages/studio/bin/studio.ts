@@ -4,6 +4,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import cac from "cac";
 import { CliArgs } from "@yext/studio-plugin";
+import libexec from "libnpmexec"
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,18 +17,11 @@ cli
   .option("--port <port>", "[number] port to run studio")
   .option("--root <directory>", `[string] path to the root directory`)
   .action((options: CliArgs) => {
-    spawnSync(
-      "npx",
-      ["cross-env", NODE_OPTIONS, "npx", "vite", "--config", pathToViteConfig],
-      {
-        stdio: "inherit",
-        env: {
-          ...process.env,
-          YEXT_STUDIO_ARGS: JSON.stringify(options),
-        },
-        shell: true,
-      }
-    );
+    libexec({
+      args: ["cross-env", NODE_OPTIONS, "vite", "--config", pathToViteConfig],
+      npxCache: '~/.npm/_npx',
+      cache: '~/.npm/_cacache'
+    })
   });
 
 cli.help();
