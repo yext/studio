@@ -14,6 +14,10 @@ jobs:
     uses: ./.github/workflows/update-tailwind-bundle.yml
     secrets: inherit
 
+  update-thrid-party-notices:
+    uses: ./.github/workflows/update-third-party-notices.yml
+    secrets: inherit
+
   run-tests:
     needs: automated-fixes
     uses: ./.github/workflows/run-tests.yml
