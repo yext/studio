@@ -10,6 +10,7 @@ export enum MessageID {
   GetAllComponentFilepaths = "studio:getAllComponentFilepaths",
   GetComponentFile = "studio:getComponentFile",
   GetCodeCompletion = "studio:getCodeCompletion",
+  GetTextGeneration = "studio:getTextGeneration",
 }
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
@@ -33,7 +34,7 @@ export interface WriteFilePayload {
   filepath: string;
 }
 
-export interface GetCodeCompletionPayload {
+export interface GetCompletionPayload {
   prompt: string;
 }
 
@@ -55,7 +56,8 @@ export type StudioEventMap = {
   [MessageID.WriteFile]: WriteFilePayload;
   [MessageID.GetAllComponentFilepaths]: GetAllComponentFilepathsPayload;
   [MessageID.GetComponentFile]: GetComponentFilePayload;
-  [MessageID.GetCodeCompletion]: GetCodeCompletionPayload;
+  [MessageID.GetCodeCompletion]: GetCompletionPayload;
+  [MessageID.GetTextGeneration]: GetCompletionPayload;
 };
 
 type BaseResponse = {
@@ -96,5 +98,6 @@ export type ResponseEventMap = {
   [MessageID.WriteFile]: WriteResponse;
   [MessageID.GetAllComponentFilepaths]: FilepathsResponse;
   [MessageID.GetComponentFile]: FileResponse;
-  [MessageID.GetCodeCompletion]: FileResponse
+  [MessageID.GetCodeCompletion]: FileResponse;
+  [MessageID.GetTextGeneration]: FileResponse
 };

@@ -1,16 +1,16 @@
 import { ViteDevServer } from "vite";
 import { GetCompletionPayload, MessageID } from "../types";
 import { registerListener } from "./registerListener";
-import { callCodeBison } from "../vertex/generateCode";
+import { callTextBison } from "../vertex/generateText"
 
-export default function getComponentFile(
+export default function registerGetTextGenerationListern(
   server: ViteDevServer,
 ) {
   registerListener(
     server,
-    MessageID.GetCodeCompletion,
+    MessageID.GetTextGeneration,
     async ({prompt}: GetCompletionPayload) => {
-        const res = await callCodeBison(prompt)
+        const res = await callTextBison(prompt)
         return { file: res.structValue.fields.content.stringValue, metadata: res, type: "data", msg: "Changes written successfully." };
     }
   );

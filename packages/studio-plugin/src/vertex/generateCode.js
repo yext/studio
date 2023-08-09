@@ -14,7 +14,7 @@ const model = 'code-bison@001';
 // Instantiates a client
 const predictionServiceClient = new PredictionServiceClient(clientOptions);
 
-export async function callPredict(prompt) {
+export async function callCodeBison(prompt) {
   // Configure the parent resource
   const endpoint = `projects/${project}/locations/us-central1/publishers/${publisher}/models/${model}`;
 
@@ -25,7 +25,7 @@ export async function callPredict(prompt) {
   const instances = [instanceValue];
 
   const parameter = {
-    temperature: 0.5,
+    temperature: 0,
     maxOutputTokens: 256,
   };
   const parameters = helpers.toValue(parameter);

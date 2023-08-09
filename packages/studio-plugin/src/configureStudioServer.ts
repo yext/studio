@@ -10,6 +10,7 @@ import registerWriteFileListener from "./messaging/registerWriteFileListener";
 import registerGetComponentFile from "./messaging/registerGetComponentFile"
 import registerGetAllComponentFilepaths from "./messaging/registerGetAllComponentFilepaths"
 import registerGetCodeCompletionListener from "./messaging/registerGetCodeCompletionListener"
+import registerGetTextGenerationListerner from "./messaging/registerGetTextGenerationListener"
 
 /**
  * A factory method for our vite plugin's configureServer handler.
@@ -36,5 +37,6 @@ export default function createConfigureStudioServer(
     registerGetComponentFile(server,fileSystemManager);
     registerGetAllComponentFilepaths(server,fileSystemManager);
     registerGetCodeCompletionListener(server)
+    registerGetTextGenerationListerner(server)
   };
 }
