@@ -17,6 +17,7 @@ import lodash from "lodash";
 import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import LocalDataMappingManager from "./LocalDataMappingManager";
+import {listEndpoints} from "./vertex/initializeVertex"
 
 /**
  * Handles server-client communication.
@@ -64,6 +65,9 @@ export default async function createStudioPlugin(
     studioConfig.paths,
     new FileSystemWriter(orchestrator, tsMorphProject)
   );
+
+  // initialize vertex
+  listEndpoints()
 
   return {
     name: "yext-studio-vite-plugin",

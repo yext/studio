@@ -241,6 +241,10 @@ export default class StudioActions {
     return await sendMessage(MessageID.GetComponentFile, {filepath});
   };
 
+  getCodeCompletion = async (prompt : string) => {
+    return await sendMessage(MessageID.GetCodeCompletion, {prompt});
+  };
+
   refreshActivePageEntities = async () => {
     const entityFiles =
       this.getPages().getActivePageState()?.pagesJS?.entityFiles;

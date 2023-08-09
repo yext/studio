@@ -9,7 +9,7 @@ import LocalDataMappingManager from "./LocalDataMappingManager";
 import registerWriteFileListener from "./messaging/registerWriteFileListener";
 import registerGetComponentFile from "./messaging/registerGetComponentFile"
 import registerGetAllComponentFilepaths from "./messaging/registerGetAllComponentFilepaths"
-
+import registerGetCodeCompletionListener from "./messaging/registerGetCodeCompletionListener"
 
 /**
  * A factory method for our vite plugin's configureServer handler.
@@ -35,5 +35,6 @@ export default function createConfigureStudioServer(
     registerWriteFileListener(server,fileSystemManager);
     registerGetComponentFile(server,fileSystemManager);
     registerGetAllComponentFilepaths(server,fileSystemManager);
+    registerGetCodeCompletionListener(server)
   };
 }
