@@ -16,23 +16,18 @@ jobs:
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       # Skip post-install scripts here, as a malicious
       # script could steal the NPM_TOKEN.
-      - run: cd packages/studio; npm ci --ignore-scripts
+      - run: npm ci --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # `npm rebuild` will run all those post-install scripts for us.
-      - run: cd packages/studio; npm rebuild
-      - run: cd packages/studio; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
-
-      - run: cd packages/studio-plugin; npm ci --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: cd packages/studio-plugin; npm rebuild
-      - run: cd packages/studio-plugin; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
+      - run: npm rebuild
+      - run: generate-license-file --input packages/studio/package.json --output packages/studio/THIRD-PARTY-NOTICES --overwrite
+      - run: generate-license-file --input packages/studio-plugin/package.json --output packages/studio-plugin/THIRD-PARTY-NOTICES --overwrite
 
       - name: Update THIRD-PARTY-NOTICES
         uses: EndBug/add-and-commit@v9
         with:
           message: "Automated update to THIRD-PARTY-NOTICES from github action's 3rd party notices check"
-          add: 'THIRD-PARTY-NOTICES'
+          add: '["packages/studio/THIRD-PARTY-NOTICES", "packages/studio/THIRD-PARTY-NOTICES"]'
           push: true
           default_author: github_actions
