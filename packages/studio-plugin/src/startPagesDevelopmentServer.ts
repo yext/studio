@@ -25,18 +25,18 @@ export const startPagesDevelopmentServer = async () => {
   // kill pages server child process when studio exits
   // by getting the dev server port on startup and then
   // killing the proceess running at that port
-  const port: Promise<number | undefined> = new Promise((resolve) => {
+  const port: Promise<number> = new Promise((resolve) => {
     pagesServer.stdout.setEncoding("utf-8");
     pagesServer.stdout.on("data", (data: string) => {
       const matches = data.match(/listening on :(\d+)/);
       if (matches && matches.length >= 2) {
         const port = Number.parseInt(matches[1]);
         if (isNaN(port)) {
-          resolve(undefined);
+          throw new Error("PagesJS dev server port was parsed as NaN.");
         }
         resolve(port);
       }
-      resolve(port);
+      throw new Error("Could not parse PagesJS dev server port.");
     });
     setTimeout(resolve, 10000);
   });

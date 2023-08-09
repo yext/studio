@@ -7,12 +7,12 @@ on:
 
 jobs:
   acceptance:
-    name: ${{ matrix.os }} (${{ matrix.shard }}/1)
+    name: ${{ matrix.os }} (${{ matrix.shard }}/3)
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        shard: [1]
+        shard: [1, 2, 3]
         os: [windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -50,7 +50,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: ${{ failure() && github.event_name == 'pull_request' }}
         with:
-          message: New snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 1
+          message: New snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 3
           add: e2e-tests/__screenshots__/*.png
           push: true
           pull: --rebase --autostash

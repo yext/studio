@@ -36,22 +36,9 @@ export default async function createStudioPlugin(
 
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
 
-  let pagesDevelopmentPort: Promise<number | undefined>;
-  if (studioConfig.isPagesJSRepo) {
-    pagesDevelopmentPort = startPagesDevelopmentServer();
-    pagesDevelopmentPort
-      .then((port) => {
-        if (port) {
-          process.on("exit", () => {
-            console.log("Studio is shutting down");
-            execSync(`npx kill-port ${port}`);
-          });
-        }
-      })
-      .catch((e) => {
-        throw e;
-      });
-  }
+  const pagesDevPortPromise = studioConfig.isPagesJSRepo
+    ? startPagesDevelopmentServer()
+    : null;
 
   const gitWrapper = new GitWrapper(
     simpleGit({
@@ -84,6 +71,15 @@ export default async function createStudioPlugin(
     studioConfig.paths,
     new FileSystemWriter(orchestrator, tsMorphProject)
   );
+
+  await pagesDevPortPromise?.then((port) => {
+    if (port) {
+      process.on("exit", () => {
+        console.log("Studio is shutting down");
+        execSync(`npx kill-port ${port}`);
+      });
+    }
+  });
 
   return {
     name: "yext-studio-vite-plugin",
