@@ -23,7 +23,15 @@ export default async function spawnStudio(
   const port = await getPort(testInfo);
   const child = spawn(
     "npx",
-    ["studio", "--port", port.toString(), "--root", rootDir, "--", "--noGenerateTestData"],
+    [
+      "studio",
+      "--port",
+      port.toString(),
+      "--root",
+      rootDir,
+      "--",
+      "--noGenerateTestData",
+    ],
     { stdio: "pipe", shell: true }
   );
 

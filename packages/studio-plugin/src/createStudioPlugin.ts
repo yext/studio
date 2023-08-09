@@ -40,7 +40,7 @@ export default async function createStudioPlugin(
     ? startPagesDevelopmentServer(cliArgs["--"] ?? [])
     : null;
 
-    const gitWrapper = new GitWrapper(
+  const gitWrapper = new GitWrapper(
     simpleGit({
       baseDir: pathToUserProjectRoot,
       config: [

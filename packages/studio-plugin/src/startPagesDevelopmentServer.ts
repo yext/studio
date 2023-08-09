@@ -1,14 +1,22 @@
 import { spawn } from "node:child_process";
 
-export const startPagesDevelopmentServer = async (cliArgs : string[]) => {
-
-  const pagesServer = spawn("npx", ["pages", "dev", "--open-browser=false",  cliArgs.includes("--noGenerateTestData") ? "--local" : ""], {
-    stdio: ["pipe", "pipe", "pipe"],
-    env: {
-      ...process.env,
-    },
-    shell: true,
-  });
+export const startPagesDevelopmentServer = async (cliArgs: string[]) => {
+  const pagesServer = spawn(
+    "npx",
+    [
+      "pages",
+      "dev",
+      "--open-browser=false",
+      cliArgs.includes("--noGenerateTestData") ? "--local" : "",
+    ],
+    {
+      stdio: ["pipe", "pipe", "pipe"],
+      env: {
+        ...process.env,
+      },
+      shell: true,
+    }
+  );
 
   // stream pages server errors to parent process with a prefix
   pagesServer.stderr.setEncoding("utf-8");
@@ -33,7 +41,7 @@ export const startPagesDevelopmentServer = async (cliArgs : string[]) => {
         console.info("Pages Development Server |", line.trim());
       });
       const matches = data.match(/listening on :(\d+)/);
-      console.log(matches)
+      console.log(matches);
       if (matches && matches.length >= 2) {
         const port = Number.parseInt(matches[1]);
         if (isNaN(port)) {
