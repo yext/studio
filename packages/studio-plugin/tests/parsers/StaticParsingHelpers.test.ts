@@ -56,6 +56,7 @@ describe("parseObjectLiteral", () => {
 describe("parseJsxAttributes", () => {
   const propShape: PropShape = {
     title: { type: PropValueType.string, tooltip: "jsdoc", required: false },
+    number: { type: PropValueType.number, required: false },
     nested: {
       type: PropValueType.Object,
       required: false,
@@ -201,6 +202,23 @@ describe("parseJsxAttributes", () => {
     };
     expect(receivedPropValues).toEqual(expectedPropValues);
   });
+
+  it("parsing an negative numeric literal", () => {
+    const sourceCode = `<Banner number={-1} />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues = {
+      number: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.number,
+        value: -1,
+      },
+    };
+    expect(receivedPropValues).toEqual(expectedPropValues);
+  });
 });
 
 describe("unwrapParensExpression", () => {
@@ -301,22 +319,6 @@ describe("parseExportAssignment", () => {
     expect(() =>
       StaticParsingHelpers.parseExportAssignment(exportAssignment)
     ).toThrowError(/^Could not find a child of kind/);
-  });
-});
-
-it("parsing an negative numeric literal", () => {
-  const { sourceFile } = createTestSourceFile(`const a = { aKey: -1 }`);
-  const objectLiteralExpression = sourceFile.getFirstDescendantByKindOrThrow(
-    SyntaxKind.ObjectLiteralExpression
-  );
-  const parsedValue = StaticParsingHelpers.parseObjectLiteral(
-    objectLiteralExpression
-  );
-  expect(parsedValue).toEqual({
-    aKey: {
-      value: -1,
-      kind: PropValueKind.Literal,
-    },
   });
 });
 
