@@ -201,6 +201,8 @@ function useDropHandler() {
           "Unable to handle drag and drop event: component tree is undefined."
         );
       }
+      console.log(ComponentTreeHelpers.mapComponentTree(componentTree, (c) => c.uuid))
+      console.log(ComponentTreeHelpers.mapComponentTree(componentTree, (c) => {return c.uuid}))
       if (
         isEqual(
           ComponentTreeHelpers.mapComponentTreeParentsFirst(
