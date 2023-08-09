@@ -1,36 +1,42 @@
 import type { Config } from "tailwindcss";
+import type {
+  StudioTailwindConfig,
+  StudioTailwindTheme,
+} from "@yext/studio-plugin";
 import path from "path";
 import fs from "fs";
 
 /**
- * The subset of a tailwind ThemeConfig that we support.
- */
-interface StudioTailwindTheme {
-  colors?: Record<string, string>;
-  fontSize?: Record<string, string>;
-}
-
-/**
+ * The user's StudioTailwindTheme.
+ *
  * We have to use require() instead of a dynamic import because
  * tailwind does not support async config.
  */
-let userTailwindTheme: StudioTailwindTheme = {};
-try {
-  const tailwindConfigPath = path.resolve(process.cwd(), "tailwind.config.ts");
-  if (fs.existsSync(tailwindConfigPath)) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    userTailwindTheme = require(tailwindConfigPath)?.theme?.extend ?? {};
-  }
-} catch (e) {
-  console.error(e);
-}
+const userTailwindTheme: StudioTailwindTheme =
+  (() => {
+    try {
+      const tailwindConfigPath = path.resolve(
+        process.cwd(),
+        "tailwind.config.ts"
+      );
+      console.log(tailwindConfigPath)
+      if (fs.existsSync(tailwindConfigPath)) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const tailwindConfig: StudioTailwindConfig = require(tailwindConfigPath);
+        console.log("user's tailwind config", tailwindConfig)
+        return tailwindConfig?.theme?.extend;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  })() ?? {};
 
 /**
  * Generates a safelist for custom test colors, background colors, and font sizes.
  */
-const generateSafelist = (customTheme: StudioTailwindTheme): string[] => {
-  const customColors = Object.keys(customTheme?.colors ?? {});
-  const customFontSizes = Object.keys(customTheme?.fontSize ?? {});
+const generateSafelist = (theme: StudioTailwindTheme): string[] => {
+  const customColors = Object.keys(theme?.colors ?? {});
+  const customFontSizes = Object.keys(theme?.fontSize ?? {});
   return [
     ...customFontSizes.map((size) => `text-${size}`),
     ...customColors.flatMap((color) => [`bg-${color}`, `text-${color}`]),

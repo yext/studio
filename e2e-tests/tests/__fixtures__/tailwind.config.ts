@@ -8,7 +8,7 @@ export default {
         primary: "#aa00ff",
       },
       fontSize: {
-        primary: "14px",
+        extremelyLarge: "60px",
       },
     },
   },

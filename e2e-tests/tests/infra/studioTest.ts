@@ -14,6 +14,8 @@ export type StudioTestFixtures = {
   createRemote: boolean;
   /** Flag to turn on logging and prevent cleanup of temp folders. */
   debug: boolean;
+  /** Path to a tailwind.config.ts to use. */
+  tailwindConfigPath: string | undefined;
 };
 
 /**
@@ -23,9 +25,13 @@ export type StudioTestFixtures = {
 export const studioTest = base.extend<StudioTestFixtures>({
   createRemote: false,
   debug: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  studioPage: async ({ page, createRemote, debug }, use, testInfo) => {
-    const opts = { createRemote, debug, testInfo };
+  tailwindConfigPath: undefined,
+  studioPage: async (
+    { page, createRemote, debug, tailwindConfigPath },
+    use,
+    testInfo
+  ) => {
+    const opts = { createRemote, debug, testInfo, tailwindConfigPath };
     await setupAcceptance(opts, async (port: number, tmpDir: string) => {
       await page.goto("localhost:" + port);
       await page.waitForLoadState("networkidle");
