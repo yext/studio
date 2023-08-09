@@ -7,7 +7,7 @@ export const startPagesDevelopmentServer = async (cliArgs: string[]) => {
       "pages",
       "dev",
       "--open-browser=false",
-      cliArgs.includes("--noGenerateTestData") ? "--local" : "",
+      "--local",
     ],
     {
       stdio: ["pipe", "pipe", "pipe"],
@@ -37,9 +37,6 @@ export const startPagesDevelopmentServer = async (cliArgs: string[]) => {
   const port: Promise<number> = new Promise((resolve) => {
     pagesServer.stdout.setEncoding("utf-8");
     pagesServer.stdout.on("data", (data: string) => {
-      data.split("\n").forEach((line: string) => {
-        console.info("Pages Development Server |", line.trim());
-      });
       const matches = data.match(/listening on :(\d+)/);
       console.log(matches);
       if (matches && matches.length >= 2) {
