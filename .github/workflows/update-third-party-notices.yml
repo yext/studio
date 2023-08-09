@@ -20,14 +20,14 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       # `npm rebuild` will run all those post-install scripts for us.
-      - run: npm rebuild
-      - run: generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
+      - run: cd packages/studio; npm rebuild
+      - run: cd packages/studio; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
 
-      - run: ls; cd ../studio-plugin; npm ci --ignore-scripts
+      - run: cd packages/studio-plugin; npm ci --ignore-scripts
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm rebuild
-      - run: generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
+      - run: cd packages/studio-plugin; npm rebuild
+      - run: cd packages/studio-plugin; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
 
       - name: Update THIRD-PARTY-NOTICES
         uses: EndBug/add-and-commit@v9
