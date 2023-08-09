@@ -31,13 +31,14 @@ export default function ErrorComponentPreview(props: {
     setTooltipOpen(false);
   }, []);
 
-  document
-    .querySelector("iframe")
-    ?.contentDocument?.addEventListener("scroll", () => setTooltipOpen(false));
-
-  document.addEventListener("scroll", () => setTooltipOpen(false));
-
   useEffect(() => {
+    document
+      .querySelector("iframe")
+      ?.contentDocument?.addEventListener("scroll", () =>
+        setTooltipOpen(false)
+      );
+    document.addEventListener("scroll", () => setTooltipOpen(false));
+
     const rect = containerRef.current?.getBoundingClientRect();
     const y = (rect && rect.top + 25 - window.scrollY) || 0;
     const tooltipPosition = rect && {
