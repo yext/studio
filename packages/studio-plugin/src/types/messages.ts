@@ -35,20 +35,31 @@ export type StudioEventMap = {
   [MessageID.GenerateTestData]: GenerateTestDataPayload;
 };
 
-type BaseResponse = {
-  type: "success";
+export enum ResponseType {
+  Success = "success",
+  Error = "error",
+  Fatal = "fatal",
+}
+
+export type BaseResponse = {
+  type: ResponseType.Success;
   msg: string;
 };
 
 export type ErrorResponse = {
-  type: "error";
+  type: ResponseType.Error;
+  msg: string;
+};
+
+export type FatalErrorResponse = {
+  type: ResponseType.Fatal;
   msg: string;
 };
 
 export type ResponseEventMap = {
   [MessageID.Deploy]: BaseResponse;
   [MessageID.SaveChanges]: BaseResponse;
-  [MessageID.GenerateTestData]: BaseResponse & {
+  [MessageID.GenerateTestData]: (BaseResponse | ErrorResponse) & {
     mappingJson: Record<string, string[]>;
   };
 };
