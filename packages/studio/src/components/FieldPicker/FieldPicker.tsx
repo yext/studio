@@ -80,7 +80,7 @@ export default function FieldPicker({
         aria-label="Toggle field picker"
       />
       {!fieldPickerIsClosed && (
-        <div className="fixed z-10">
+        <div className="absolute z-10 ml-12">
           <FieldDropdown
             fieldIdToValue={filteredEntityData}
             handleFieldSelection={handleFieldDropdownSelection}

@@ -70,9 +70,9 @@ export default function UndefinedMenuButton({
           aria-label="Toggle undefined value menu"
         />
         {isOpen && (
-          <div className="absolute mt-3">
+          <div className="relative mt-3 left-56">
             <ul
-              className="relative bg-white rounded border z-10 shadow-2xl text-sm"
+              className="absolute bg-white rounded border z-10 shadow-2xl text-sm"
               style={listStyles}
             >
               <li
