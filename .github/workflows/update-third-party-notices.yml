@@ -6,7 +6,7 @@ on:
         required: true
 
 jobs:
-  call_notices_check:
+  call-notices-check:
     uses: yext/slapshot-reusable-workflows/.github/workflows/third_party_notices_check.yml@v1
     with:
       environment: macos-latest
