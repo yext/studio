@@ -3,18 +3,21 @@ import useStudioStore from "../store/useStudioStore";
 import PreviewPanel from "./PreviewPanel";
 import Highlighter from "./Highlighter";
 import IFramePortal from "./IFramePortal";
-import { Tooltip } from "react-tooltip";
-import { CSSProperties, useState } from "react";
+import { Tooltip, IPosition } from "react-tooltip";
+import { useState } from "react";
 
-const inlineStyles: CSSProperties = {
-  overflow: "scroll",
-};
+export interface tooltipProps {
+  open: boolean;
+  position: IPosition;
+  error: string;
+  anchorId: string;
+}
 
 export default function PreviewWithUseComponents() {
   const componentTree = useStudioStore((store) =>
     store.actions.getComponentTree()
   );
-  const [tooltipProps, setTooltipProps] = useState({
+  const [tooltipProps, setTooltipProps] = useState<tooltipProps>({
     open: false,
     position: { x: 0, y: 0 },
     error: "",
@@ -36,7 +39,6 @@ export default function PreviewWithUseComponents() {
       <IFramePortal
         className="h-full w-full"
         title="PreviewPanel"
-        inlineStyles={inlineStyles}
         iframeEl={iframeEl}
         setIframeEl={setIframeEl}
       >

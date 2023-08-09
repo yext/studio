@@ -11,7 +11,7 @@ export default function IFramePortal(
   props: PropsWithChildren<{
     className?: string;
     title: string;
-    inlineStyles: CSSProperties;
+    inlineStyles?: CSSProperties;
     iframeEl: HTMLIFrameElement | null;
     setIframeEl: Dispatch<SetStateAction<HTMLIFrameElement | null>>;
   }>

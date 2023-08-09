@@ -17,23 +17,14 @@ import { ExpressionSources } from "../utils/getPropsForPreview";
 import RepeaterPreview from "./RepeaterPreview";
 import ErrorComponentPreview from "./ErrorComponentPreview";
 import ModulePreview from "./ModulePreview";
+import { tooltipProps } from "./PreviewWithUseComponents";
 
 interface ComponentPreviewProps {
   componentState: ComponentState;
   expressionSources: ExpressionSources;
   childElements?: (JSX.Element | null)[];
   parentItem?: unknown;
-  setTooltipProps: Dispatch<
-    SetStateAction<{
-      open: boolean;
-      position: {
-        x: number;
-        y: number;
-      };
-      error: string;
-      anchorId: string;
-    }>
-  >;
+  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
 }
 
 /**

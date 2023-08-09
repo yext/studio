@@ -3,22 +3,13 @@ import ComponentTreePreview from "./ComponentTreePreview";
 import { ModuleState } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources } from "../utils/getPropsForPreview";
+import { tooltipProps } from "./PreviewWithUseComponents";
 
 export default function ModulePreview(props: {
   expressionSources: ExpressionSources;
   previewProps: Record<string, unknown>;
   moduleState: ModuleState;
-  setTooltipProps: Dispatch<
-    SetStateAction<{
-      open: boolean;
-      position: {
-        x: number;
-        y: number;
-      };
-      error: string;
-      anchorId: string;
-    }>
-  >;
+  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
 }) {
   const { expressionSources, previewProps, moduleState, setTooltipProps } =
     props;

@@ -10,21 +10,12 @@ import {
 import { v4 } from "uuid";
 import ErrorBoundary from "./common/ErrorBoundary";
 import { ErrorComponentState } from "@yext/studio-plugin";
+import { tooltipProps } from "./PreviewWithUseComponents";
 
 export default function ErrorComponentPreview(props: {
   errorComponentState: ErrorComponentState;
   element: JSX.Element | null;
-  setTooltipProps: Dispatch<
-    SetStateAction<{
-      open: boolean;
-      position: {
-        x: number;
-        y: number;
-      };
-      error: string;
-      anchorId: string;
-    }>
-  >;
+  setTooltipProps: Dispatch<SetStateAction<tooltipProps>>;
 }) {
   const { errorComponentState, element, setTooltipProps } = props;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -40,41 +31,26 @@ export default function ErrorComponentPreview(props: {
     setTooltipOpen(false);
   }, []);
 
-  const rect = containerRef.current?.getBoundingClientRect();
-  const tooltipPosition = useMemo(() => {
-    return (
-      rect && {
-        x:
-          (rect.right + rect.left) / 2 + window.innerWidth / 4 - window.scrollX,
-        y: rect.top + 25 - window.scrollY,
-      }
-    );
-  }, [rect]);
-
   document
     .querySelector("iframe")
-    ?.contentDocument?.addEventListener("scroll", () => {
-      setTooltipOpen(false);
-    });
+    ?.contentDocument?.addEventListener("scroll", () => setTooltipOpen(false));
 
-  document.addEventListener("scroll", () => {
-    setTooltipOpen(false);
-  });
+  document.addEventListener("scroll", () => setTooltipOpen(false));
 
   useEffect(() => {
+    const rect = containerRef.current?.getBoundingClientRect();
+    const tooltipPosition = rect && {
+      x: (rect.right + rect.left) / 2 + window.innerWidth / 4 - window.scrollX,
+      y: rect.top + 25 - window.scrollY,
+    };
+
     setTooltipProps({
       open: tooltipOpen,
       error: errorComponentState.message,
       anchorId: anchorId,
       position: tooltipPosition || { x: 0, y: 0 },
     });
-  }, [
-    tooltipOpen,
-    anchorId,
-    errorComponentState,
-    setTooltipProps,
-    tooltipPosition,
-  ]);
+  }, [tooltipOpen, anchorId, errorComponentState, setTooltipProps]);
 
   return (
     <div
