@@ -1,14 +1,9 @@
 import { spawn } from "node:child_process";
 
-export const startPagesDevelopmentServer = async (cliArgs: string[]) => {
+export const startPagesDevelopmentServer = async () => {
   const pagesServer = spawn(
     "npx",
-    [
-      "pages",
-      "dev",
-      "--open-browser=false",
-      "--local",
-    ],
+    ["pages", "dev", "--open-browser=false", "--local"],
     {
       stdio: ["pipe", "pipe", "pipe"],
       env: {
