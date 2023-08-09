@@ -41,7 +41,9 @@ export const startPagesDevelopmentServer = async () => {
         resolve(port);
       }
     });
-    setTimeout(() => {throw new Error("Could not determine PagesJS development server port.");}, 10000);
+    setTimeout(() => {
+      throw new Error("Could not determine PagesJS development server port.");
+    }, 10000);
   });
 
   // kill pages server when studio exits
