@@ -31,3 +31,4 @@ jobs:
           add: '["packages/studio/THIRD-PARTY-NOTICES", "packages/studio-plugin/THIRD-PARTY-NOTICES"]'
           push: true
           default_author: github_actions
+          
