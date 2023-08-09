@@ -56,7 +56,9 @@ export default class GenerateTestDataAction {
       Object.entries(this.getPageSlice().pages).map(
         async ([pageName, pageState]) => {
           const entityFiles: string[] = mappingJson[pageName];
-          if (!isEqual(pageState.pagesJS?.entityFiles, entityFiles)) {
+          const newEntityFilesSet = new Set(entityFiles);
+          const currEntityFilesSet = new Set(pageState.pagesJS?.entityFiles);
+          if (!isEqual(currEntityFilesSet, newEntityFilesSet)) {
             this.getPageSlice().setEntityFiles(pageName, entityFiles);
             if (pageName === this.getPageSlice().activePageName) {
               await this.studioActions.refreshActivePageEntities();

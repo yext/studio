@@ -36,14 +36,17 @@ describe("updateEntityFiles", () => {
     expect(pageSlice.activePageEntities).toBeUndefined();
   });
 
-  it("does not update entityFiles if there was no change", async () => {
+  it("does not update entityFiles if there was no change except order", async () => {
     mockPageSliceStates({
-      pages: getPagesRecord(["mockLocalData.json"]),
+      pages: getPagesRecord(["mockLocalData.json", "entityFile.json"]),
       activePageName: "test",
       activeEntityFile: "mockLocalData.json",
-      activePageEntities: { "mockLocalData.json": { name: "test" } },
+      activePageEntities: {
+        "mockLocalData.json": { name: "test1" },
+        "entityFile.json": { name: "test2" },
+      },
     });
-    mockMessage({ test: ["mockLocalData.json"] });
+    mockMessage({ test: ["entityFile.json", "mockLocalData.json"] });
     const setEntityFilesSpy = jest.spyOn(
       useStudioStore.getState().pages,
       "setEntityFiles"
@@ -67,10 +70,12 @@ describe("updateEntityFiles", () => {
     const pageSlice = useStudioStore.getState().pages;
     expect(pageSlice.pages["test"].pagesJS?.entityFiles).toEqual([
       "mockLocalData.json",
+      "entityFile.json",
     ]);
     expect(pageSlice.activeEntityFile).toEqual("mockLocalData.json");
     expect(pageSlice.activePageEntities).toEqual({
-      "mockLocalData.json": { name: "test" },
+      "mockLocalData.json": { name: "test1" },
+      "entityFile.json": { name: "test2" },
     });
   });
 
