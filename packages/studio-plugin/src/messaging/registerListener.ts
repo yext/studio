@@ -1,8 +1,9 @@
 import { ViteDevServer } from "vite";
 import {
-  ErrorResponse,
+  FatalErrorResponse,
   MessageID,
   ResponseEventMap,
+  ResponseType,
   StudioEventMap,
 } from "../types";
 import { IncomingMessage } from "http";
@@ -35,7 +36,7 @@ export function registerListener<T extends MessageID>(
 async function getResponsePayload<T extends MessageID>(
   messageId: T,
   handler: () => Promise<ResponseEventMap[T]> | ResponseEventMap[T]
-): Promise<ResponseEventMap[T] | ErrorResponse> {
+): Promise<ResponseEventMap[T] | FatalErrorResponse> {
   try {
     return handler();
   } catch (error: unknown) {
@@ -47,7 +48,7 @@ async function getResponsePayload<T extends MessageID>(
     }
     console.error(error);
     return {
-      type: "error",
+      type: ResponseType.Fatal,
       msg,
     };
   }

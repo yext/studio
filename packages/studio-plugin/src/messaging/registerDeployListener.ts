@@ -1,5 +1,5 @@
 import { ViteDevServer } from "vite";
-import { MessageID, SaveChangesPayload } from "../types";
+import { MessageID, ResponseType, SaveChangesPayload } from "../types";
 import { registerListener } from "./registerListener";
 import executeSaveChanges from "./executeSaveChanges";
 import FileSystemManager from "../FileSystemManager";
@@ -20,7 +20,7 @@ export default function registerDeployListener(
       executeSaveChanges(saveData, fileManager, orchestrator);
       await gitWrapper.deploy();
       await reloadGitData(gitWrapper, server);
-      return { type: "success", msg: "Deployed successfully." };
+      return { type: ResponseType.Success, msg: "Deployed successfully." };
     }
   );
 }

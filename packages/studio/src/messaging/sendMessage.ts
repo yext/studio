@@ -1,7 +1,8 @@
 import {
-  ErrorResponse,
+  FatalErrorResponse,
   MessageID,
   ResponseEventMap,
+  ResponseType,
   StudioEventMap,
 } from "@yext/studio-plugin";
 import { toast } from "react-toastify";
@@ -13,21 +14,20 @@ import { toast } from "react-toastify";
  */
 export default async function sendMessage<T extends MessageID>(
   messageId: T,
-  payload: StudioEventMap[T],
-  options?: {
-    displayErrorToast?: boolean;
-  }
+  payload: StudioEventMap[T]
 ): Promise<ResponseEventMap[T]> {
   const response = await fetch(window.location.href + messageId, {
     method: "POST",
     body: JSON.stringify(payload),
   });
-  const responseData: ResponseEventMap[T] | ErrorResponse =
+  const responseData: ResponseEventMap[T] | FatalErrorResponse =
     await response.json();
-  if (responseData.type === "error") {
-    options?.displayErrorToast && toast.error(responseData.msg);
+  if (responseData.type === ResponseType.Fatal) {
+    toast.error(responseData.msg);
     throw new Error(responseData.msg);
   }
-  toast.success(responseData.msg);
+  if (responseData.type === ResponseType.Success) {
+    toast.success(responseData.msg);
+  }
   return responseData;
 }
