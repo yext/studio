@@ -31,20 +31,18 @@ export default function ErrorComponentPreview(props: {
     setTooltipOpen(false);
   }, []);
 
+  const scrollListener = () => setTooltipOpen(false);
+
   useEffect(() => {
     document
       .querySelector("iframe")
-      ?.contentDocument?.addEventListener("scroll", () =>
-        setTooltipOpen(false)
-      );
-    document.addEventListener("scroll", () => setTooltipOpen(false));
+      ?.contentDocument?.addEventListener("scroll", scrollListener);
+    document.addEventListener("scroll", scrollListener);
     return () => {
       document
         .querySelector("iframe")
-        ?.contentDocument?.removeEventListener("scroll", () =>
-          setTooltipOpen(false)
-        );
-      document.removeEventListener("scroll", () => setTooltipOpen(false));
+        ?.contentDocument?.removeEventListener("scroll", scrollListener);
+      document.removeEventListener("scroll", scrollListener);
     };
   }, []);
 
