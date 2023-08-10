@@ -24,25 +24,22 @@ export default function ErrorComponentPreview(props: {
   // repeaters re-using the same uuid
   const anchorId = `ErrorComponentState-${uniqueId}`;
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const closeTooltip = () => setTooltipOpen(false);
   const onMouseEnter = useCallback(() => {
     setTooltipOpen(true);
   }, []);
-  const onMouseLeave = useCallback(() => {
-    setTooltipOpen(false);
-  }, []);
-
-  const scrollListener = () => setTooltipOpen(false);
+  const onMouseLeave = useCallback(closeTooltip, []);
 
   useEffect(() => {
     document
       .querySelector("iframe")
-      ?.contentDocument?.addEventListener("scroll", scrollListener);
-    document.addEventListener("scroll", scrollListener);
+      ?.contentDocument?.addEventListener("scroll", closeTooltip);
+    document.addEventListener("scroll", closeTooltip);
     return () => {
       document
         .querySelector("iframe")
-        ?.contentDocument?.removeEventListener("scroll", scrollListener);
-      document.removeEventListener("scroll", scrollListener);
+        ?.contentDocument?.removeEventListener("scroll", closeTooltip);
+      document.removeEventListener("scroll", closeTooltip);
     };
   }, []);
 
