@@ -205,12 +205,12 @@ it("clicking a component in the preview updates the activeComponentUUID", async 
   const container1 = await screen.findByText(/Container 1/);
   await userEvent.click(container1);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    "container-uuid"
+    "container-uuid-1"
   );
   const banner1 = await within(container1).findByText(/Banner 1/);
   await userEvent.click(banner1);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
-    "banner-uuid"
+    "banner-uuid-1"
   );
 });
 
