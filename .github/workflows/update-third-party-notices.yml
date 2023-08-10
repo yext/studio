@@ -9,16 +9,14 @@ jobs:
         with:
           node-version: 18.x
           registry-url: "https://registry.npmjs.org"
+      - run: npm install -g json@v11
+      - run: npm install -g generate-license-file@2
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
-      - name: Generate third party notices for studio
-        working-directory: packages/studio
-        run: ../../generate-third-party-notices.sh
-      - name: Generate third party notices for studio-plugin
-        working-directory: packages/studio-plugin
-        run: ../../generate-third-party-notices.sh
+      - name: Generate third party notices
+        run: generate-third-party-notices.sh
       - name: Update THIRD-PARTY-NOTICES
         uses: EndBug/add-and-commit@v9
         with:
