@@ -200,10 +200,10 @@ export default class ComponentTreeHelpers {
     const componentOne = componentTree.find((c) => c.uuid === targetOneUUID);
     const componentTwo = componentTree.find((c) => c.uuid === targetTwoUUID);
     return ComponentTreeHelpers.getLowestCommonAncestorComponentUUID(
-        componentOne?.parentUUID,
-        componentTwo?.parentUUID,
-        componentTree
-      );
+      componentOne?.parentUUID,
+      componentTwo?.parentUUID,
+      componentTree
+    );
   }
 
   private static getLowestCommonAncestorComponentUUID(

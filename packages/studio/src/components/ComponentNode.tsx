@@ -49,9 +49,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   });
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
-  const isSelectedComponent = selectedComponentUUIDs.has(
-    componentState.uuid
-  );
+  const isSelectedComponent = selectedComponentUUIDs.has(componentState.uuid);
 
   const vectorClassName = classNames("cursor-pointer", {
     "rotate-90": isOpen,

@@ -180,15 +180,19 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 }
 
 function useDropHandler() {
-  const [selectedComponentUUIDs, lowestParentUUID, componentTree, updateComponentTree] =
-    useStudioStore((store) => {
-      return [
-        store.pages.selectedComponentUUIDs,
-        store.pages.lowestParentUUID,
-        store.actions.getComponentTree(),
-        store.actions.updateComponentTree,
-      ];
-    });
+  const [
+    selectedComponentUUIDs,
+    lowestParentUUID,
+    componentTree,
+    updateComponentTree,
+  ] = useStudioStore((store) => {
+    return [
+      store.pages.selectedComponentUUIDs,
+      store.pages.lowestParentUUID,
+      store.actions.getComponentTree(),
+      store.actions.updateComponentTree,
+    ];
+  });
 
   const handleSelectedDrop = useCallback(
     (
@@ -223,8 +227,7 @@ function useDropHandler() {
         });
 
       updatedComponentTree = updatedComponentTree.filter(
-        (c) =>
-          c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
+        (c) => c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
       );
       let newDestinationIndex;
       updatedComponentTree.forEach((c, index) => {
@@ -240,7 +243,12 @@ function useDropHandler() {
 
       updateComponentTree(updatedComponentTree);
     },
-    [selectedComponentUUIDs, lowestParentUUID, componentTree, updateComponentTree]
+    [
+      selectedComponentUUIDs,
+      lowestParentUUID,
+      componentTree,
+      updateComponentTree,
+    ]
   );
 
   const handleDrop = useCallback(
