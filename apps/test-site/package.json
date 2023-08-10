@@ -31,7 +31,7 @@
   },
   "scripts": {
     "dev": "studio",
-    "localData": "yext pages generate-test-data",
+    "localData": "yext pages generate-test-data -a",
     "start": "craco start",
     "build": "craco build"
   },

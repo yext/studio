@@ -63,7 +63,7 @@ interface PageSliceActions {
   ) => void;
   updateGetPathValue: (pageName: string, getPathValue: GetPathVal) => void;
   updateStreamScope: (pageName: string, newStreamScope: StreamScope) => void;
-  updateEntityFiles: (pageName: string, entityFiles: string[]) => void;
+  setEntityFiles: (pageName: string, entityFiles: string[] | undefined) => void;
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
