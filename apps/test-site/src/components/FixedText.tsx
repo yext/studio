@@ -1,4 +1,3 @@
-typescript
 import { CSSProperties } from "react";
 
 const styles: CSSProperties = {

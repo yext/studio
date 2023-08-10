@@ -9,7 +9,7 @@ export const initialProps: ProminentImageProps = {
 
 export default function ProminentImage({ src, altText }: ProminentImageProps) {
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center items-center">
       <img
         className="max-w-screen-sm max-h-screen-sm"
         src={src}
