@@ -3,7 +3,13 @@ import {
   ComponentStateKind,
   TypeGuards,
 } from "@yext/studio-plugin";
-import { createElement, Fragment, useMemo } from "react";
+import {
+  createElement,
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useMemo,
+} from "react";
 import usePreviewProps from "../hooks/usePreviewProps";
 import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
@@ -11,12 +17,14 @@ import { ExpressionSources } from "../utils/getPropsForPreview";
 import RepeaterPreview from "./RepeaterPreview";
 import ErrorComponentPreview from "./ErrorComponentPreview";
 import ModulePreview from "./ModulePreview";
+import { ITooltip } from "react-tooltip";
 
 interface ComponentPreviewProps {
   componentState: ComponentState;
   expressionSources: ExpressionSources;
   childElements?: (JSX.Element | null)[];
   parentItem?: unknown;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }
 
 /**
@@ -26,6 +34,7 @@ export default function ComponentPreview({
   componentState,
   expressionSources,
   childElements = [],
+  setTooltipProps,
   parentItem,
 }: ComponentPreviewProps): JSX.Element | null {
   const previewProps = usePreviewProps(
@@ -43,6 +52,7 @@ export default function ComponentPreview({
         previewProps={previewProps}
         expressionSources={expressionSources}
         moduleState={componentState}
+        setTooltipProps={setTooltipProps}
       />
     );
   } else if (TypeGuards.isRepeaterState(componentState)) {
@@ -50,6 +60,7 @@ export default function ComponentPreview({
       <RepeaterPreview
         repeaterState={componentState}
         expressionSources={expressionSources}
+        setTooltipProps={setTooltipProps}
       />
     );
   } else if (componentState.kind === ComponentStateKind.Error) {
@@ -57,6 +68,7 @@ export default function ComponentPreview({
       <ErrorComponentPreview
         element={element}
         errorComponentState={componentState}
+        setTooltipProps={setTooltipProps}
       />
     );
   }

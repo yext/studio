@@ -9,9 +9,7 @@ export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id-UniversalPage",
     localization: { locales: ["en"], primary: false },
-    filter: {
-      entityTypes: ["location"],
-    },
+    filter: { entityTypes: ["location"] },
     fields: ["services", "address", "hours", "slug"],
   },
 };
@@ -43,10 +41,7 @@ export default function UniversalPage({ document }: TemplateProps) {
         bool={false}
         num={0}
         intervals={[
-          {
-            start: "01:00",
-            end: document.hours.monday.openIntervals[0].end,
-          },
+          { start: "01:00", end: document.hours.monday.openIntervals[0].end },
         ]}
       />
     </>
