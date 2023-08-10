@@ -69,7 +69,7 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
 
     console.log("code bison output", newFileRes.file.slice(3).slice(0, -3))
 
-    const writeRes = await this.props.writeFile(fileSelector.file, newFileRes.file.slice(13).slice(0, -3))
+    const writeRes = await this.props.writeFile(fileSelector.file, newFileRes.file.slice(3).replace("typescript", "").slice(0, -3))
 
     console.log("write file output", writeRes)
 
