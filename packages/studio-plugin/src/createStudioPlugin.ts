@@ -31,6 +31,9 @@ export default async function createStudioPlugin(
     process.env[STUDIO_PROCESS_ARGS_OBJ] as string
   );
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
+  console.log('cwd', process.cwd())
+  process.chdir(pathToUserProjectRoot);
+  console.log('cwd', process.cwd())
 
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
   const gitWrapper = new GitWrapper(
