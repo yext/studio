@@ -56,6 +56,7 @@ describe("parseObjectLiteral", () => {
 describe("parseJsxAttributes", () => {
   const propShape: PropShape = {
     title: { type: PropValueType.string, tooltip: "jsdoc", required: false },
+    number: { type: PropValueType.number, required: false },
     nested: {
       type: PropValueType.Object,
       required: false,
@@ -197,6 +198,23 @@ describe("parseJsxAttributes", () => {
             valueType: PropValueType.string,
           },
         },
+      },
+    };
+    expect(receivedPropValues).toEqual(expectedPropValues);
+  });
+
+  it("can parse a negative numeric literal", () => {
+    const sourceCode = `<Banner number={-1} />`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
+    const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
+      jsxAttributes,
+      propShape
+    );
+    const expectedPropValues = {
+      number: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.number,
+        value: -1,
       },
     };
     expect(receivedPropValues).toEqual(expectedPropValues);
