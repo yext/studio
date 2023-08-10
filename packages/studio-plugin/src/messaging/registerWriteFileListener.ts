@@ -12,7 +12,7 @@ export default function registerWriteFileListener(
     server,
     MessageID.WriteFile,
     async ({filepath, dataToWrite}: WriteFilePayload) => {
-        console.log("registerWriteFileListener running")
+        console.log("registerWriteFileListener filepath", filepath)
         let file = ""
         if (fs.existsSync(fileManager.getUserPaths().components + "/" + filepath)) {
             file = fs.readFileSync(fileManager.getUserPaths().components + "/" + filepath).toString()

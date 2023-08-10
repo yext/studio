@@ -20,7 +20,7 @@ interface ChatState {
 };
 
 export default class ChatBot extends Component<{getTextGeneration: Function, getCodeCompletion: Function, writeFile: Function, getAllComponentFilepaths: Function, getComponentFile: Function}, ChatState>{
-  constructor(props ) {
+  constructor(props) {
     super(props);
     this.state = {
       messageList: [],
@@ -40,12 +40,36 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
   }
 
   answerMessage = async (message: Message) => {
-    const res = await this.props.getTextGeneration("select the text of what the user wants to change in this sentence \"" + message.data.text + "\" and add it to the end of this sentence: \"Edit the code below to  \"")
-    console.log(res)
+
+    const filepaths = await this.props.getAllComponentFilepaths()
+  
+    console.log("filepaths", filepaths)
+  
+    const fileSelector = await this.props.getTextGeneration("Which filepath does this message want to edit:" + message.data.text + ". The only possible filepaths are: " + filepaths.filepaths.join("\n") + ". ONLY respond with the filename.")
+
+    console.log("chosen file", fileSelector, message.data.text)
+
+    const modifiedPromptRes = await this.props.getTextGeneration("select the text of what the user wants to change in this sentence \"" + message.data.text + "\" and add it to the end of this sentence: \"Edit the code below to  \"")
+    console.log(modifiedPromptRes)
     const re = new RegExp("^(Edit the code below to)(.)*");
-    const arr = res.file.match(re)
-    console.log(arr)
-    this.sendMessage("thought about " + res.file.match(re)[0]);
+    console.log("here", modifiedPromptRes.file.match(re))
+    const editTheCode = modifiedPromptRes.file.match(re)[0]
+    console.log("TextBison output", modifiedPromptRes, editTheCode)
+
+    const originalFile = await this.props.getComponentFile(fileSelector.file)
+
+    console.log("original file", originalFile)
+
+    console.log("code bison input", editTheCode + originalFile.file)
+
+    const newFileRes = await this.props.getCodeCompletion(editTheCode + originalFile.file)
+
+    console.log("code bison output", newFileRes)
+
+    const writeRes = await this.props.writeFile(fileSelector.file, newFileRes.file.replaceAll("`", ""))
+
+    console.log("write file output", writeRes)
+
     this.sendMessage(`Great! I've made the change.`);
   }
 

@@ -28,6 +28,8 @@ export default async function sendMessage<T extends MessageID>(
     options?.displayErrorToast && toast.error(responseData.msg);
     throw new Error(responseData.msg);
   }
-  toast.success(responseData.msg);
+  if (responseData.type !== "data") {
+    toast.success(responseData.msg);
+  }
   return responseData;
 }

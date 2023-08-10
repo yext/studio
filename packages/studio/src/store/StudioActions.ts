@@ -230,6 +230,7 @@ export default class StudioActions {
   };
 
   writeFile = async (filepath : string, dataToWrite : string) => {
+    console.log("Filepath in actions", filepath)
     return await sendMessage(MessageID.WriteFile, {dataToWrite, filepath});
   };
 
