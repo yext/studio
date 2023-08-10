@@ -60,8 +60,8 @@ it("does not render if the page is not an entity page", async () => {
 it("correctly renders dropdown for entity page", () => {
   render(<EntityPicker />);
   expect(screen.getByLabelText("Entity")).toHaveValue("entityFile-1.json");
-  expect(screen.getByText("Name: Entity 1, ID: entity-1")).toBeDefined();
-  expect(screen.getByText("Name: Entity 2, ID: entity-2")).toBeDefined();
+  expect(screen.getByText("Entity 1 (id: entity-1)")).toBeDefined();
+  expect(screen.getByText("Entity 2 (id: entity-2)")).toBeDefined();
 });
 
 it("can update active entity using dropdown", async () => {
