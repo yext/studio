@@ -8,9 +8,6 @@ import fs from "fs";
 
 /**
  * The user's StudioTailwindTheme.
- *
- * We have to use require() instead of a dynamic import because
- * tailwind does not support async config.
  */
 const userTailwindTheme: StudioTailwindTheme =
   (() => {
@@ -19,11 +16,11 @@ const userTailwindTheme: StudioTailwindTheme =
         process.cwd(),
         "tailwind.config.ts"
       );
-      console.log(tailwindConfigPath);
       if (fs.existsSync(tailwindConfigPath)) {
+        // We have to use require() instead of a dynamic import because
+        // tailwind does not support async config.
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const tailwindConfig: StudioTailwindConfig = require(tailwindConfigPath);
-        console.log("user's tailwind config", tailwindConfig);
         return tailwindConfig?.theme?.extend;
       }
     } catch (e) {
