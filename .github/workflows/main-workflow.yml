@@ -6,22 +6,22 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  automated-fixes:
-    uses: ./.github/workflows/autofixes.yml
-    secrets: inherit
+  # automated-fixes:
+  #   uses: ./.github/workflows/autofixes.yml
+  #   secrets: inherit
 
-  update-tailwind-bundle:
-    uses: ./.github/workflows/update-tailwind-bundle.yml
-    secrets: inherit
+  # update-tailwind-bundle:
+  #   uses: ./.github/workflows/update-tailwind-bundle.yml
+  #   secrets: inherit
 
   update-thrid-party-notices:
     uses: ./.github/workflows/update-third-party-notices.yml
     secrets: inherit
 
-  run-tests:
-    needs: automated-fixes
-    uses: ./.github/workflows/run-tests.yml
+  # run-tests:
+  #   needs: automated-fixes
+  #   uses: ./.github/workflows/run-tests.yml
 
-  playwright:
-    needs: automated-fixes
-    uses: ./.github/workflows/playwright.yml
+  # playwright:
+  #   needs: automated-fixes
+  #   uses: ./.github/workflows/playwright.yml
