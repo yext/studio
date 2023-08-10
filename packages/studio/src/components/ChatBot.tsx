@@ -40,8 +40,12 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
   }
 
   answerMessage = async (message: Message) => {
-    const res = await this.props.getTextGeneration(message.data.text);
+    const res = await this.props.getTextGeneration("select the text of what the user wants to change in this sentence \"" + message.data.text + "\" and add it to the end of this sentence: \"Edit the code below to  \"")
     console.log(res)
+    const re = new RegExp("^(Edit the code below to)(.)*");
+    const arr = res.file.match(re)
+    console.log(arr)
+    this.sendMessage("thought about " + res.file.match(re)[0]);
     this.sendMessage(`Great! I've made the change.`);
   }
 
