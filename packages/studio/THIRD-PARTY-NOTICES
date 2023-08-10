@@ -1,4 +1,7 @@
-The following NPM packages may be included in this product:
+This file was generated with the generate-license-file npm package!
+https://www.npmjs.com/package/generate-license-file
+
+The following npm packages may be included in this product:
 
  - @alloc/quick-lru@5.2.0
  - ansi-regex@5.0.1
@@ -38,7 +41,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @ampproject/remapping@2.2.1
 
@@ -248,7 +251,7 @@ Apache License
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @babel/code-frame@7.22.10
  - @babel/compat-data@7.22.9
@@ -391,7 +394,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @babel/helper-define-polyfill-provider@0.4.2
  - babel-plugin-polyfill-corejs2@0.4.5
@@ -425,7 +428,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @babel/parser@7.22.10
 
@@ -453,7 +456,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @babel/preset-modules@0.1.6-no-external-plugins
 
@@ -483,7 +486,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @babel/regjsgen@0.8.0
 
@@ -514,7 +517,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @dhmk/utils@2.4.2
 
@@ -526,7 +529,7 @@ For more info see [src/index.ts](src/index.ts) or [lib/index.d.ts](lib/index.d.t
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @dhmk/zustand-lens@2.0.5
 
@@ -817,7 +820,7 @@ Merges object `b` with `a` recursively (doesn't merge arrays).
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @emotion/is-prop-valid@0.8.8
  - @emotion/memoize@0.7.4
@@ -848,7 +851,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @esbuild/darwin-x64@0.18.20
  - esbuild-darwin-64@0.15.18
@@ -861,7 +864,7 @@ This is the macOS 64-bit binary for esbuild, a JavaScript bundler and minifier. 
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @floating-ui/core@1.4.1
  - @floating-ui/dom@1.5.1
@@ -892,7 +895,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @isaacs/cliui@8.0.2
 
@@ -915,7 +918,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @jridgewell/gen-mapping@0.3.3
  - @jridgewell/set-array@1.1.2
@@ -944,7 +947,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @jridgewell/resolve-uri@3.1.1
 
@@ -972,7 +975,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @jridgewell/sourcemap-codec@1.4.15
 
@@ -1002,7 +1005,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @jridgewell/trace-mapping@0.3.19
 
@@ -1030,7 +1033,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @juggle/resize-observer@3.4.0
 
@@ -1240,7 +1243,7 @@ Apache License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @kwsites/file-exists@1.1.1
 
@@ -1269,7 +1272,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @kwsites/promise-deferred@1.1.1
 
@@ -1299,7 +1302,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @minoru/react-dnd-treeview@3.4.4
 
@@ -1329,7 +1332,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @motionone/animation@10.15.1
  - @motionone/dom@10.12.0
@@ -1364,7 +1367,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @nodelib/fs.scandir@2.1.5
  - @nodelib/fs.stat@2.0.5
@@ -1397,7 +1400,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @pkgjs/parseargs@0.11.0
 
@@ -1607,7 +1610,7 @@ Apache License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @popperjs/core@2.11.8
 
@@ -1636,7 +1639,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @react-aria/ssr@3.7.1
 
@@ -1846,7 +1849,7 @@ Apache License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @react-dnd/asap@5.0.2
 
@@ -1874,7 +1877,7 @@ IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @react-dnd/invariant@4.0.2
  - @react-dnd/shallowequal@4.0.2
@@ -1886,7 +1889,7 @@ These packages each contain the following license and notice below:
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @restart/hooks@0.4.11
 
@@ -1916,7 +1919,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @restart/ui@1.6.6
 
@@ -1946,7 +1949,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @rollup/plugin-inject@5.0.3
 
@@ -2051,7 +2054,7 @@ A [picomatch pattern](https://github.com/micromatch/picomatch), or array of patt
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @rollup/pluginutils@5.0.2
 
@@ -2315,7 +2318,7 @@ normalizePath('foo/bar'); // 'foo/bar'
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @svgr/babel-plugin-add-jsx-attribute@6.5.1
  - @svgr/babel-plugin-remove-jsx-attribute@8.0.0
@@ -2342,7 +2345,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @swc/helpers@0.5.1
 
@@ -2552,7 +2555,7 @@ limitations under the License.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @ts-morph/common@0.19.0
  - ts-morph@18.0.0
@@ -2583,7 +2586,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - @types/estree@1.0.1
  - @types/node@18.17.4
@@ -2617,7 +2620,7 @@ MIT License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @types/parse-json@4.0.0
 
@@ -2647,7 +2650,7 @@ MIT License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @types/warning@3.0.0
 
@@ -2674,7 +2677,7 @@ These definitions were written by Chi Vinh Le <https://github.com/cvle>.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @vitejs/plugin-react@4.0.4
 
@@ -2704,7 +2707,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @yext/pages@1.0.0-rc.0
 
@@ -2745,7 +2748,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - @yext/studio-plugin@0.17.0
 
@@ -2755,7 +2758,7 @@ This package contains the following license and notice below:
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - accepts@1.3.8
  - mime-types@2.1.35
@@ -2788,7 +2791,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - ansi-regex@6.0.1
  - ansi-styles@6.2.1
@@ -2855,7 +2858,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - ansi-to-html@0.7.2
 
@@ -2886,7 +2889,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - any-promise@1.3.0
 
@@ -2914,7 +2917,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - anymatch@3.1.3
 
@@ -2938,7 +2941,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - arg@5.0.2
 
@@ -2968,7 +2971,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - array-flatten@1.1.1
  - path-to-regexp@0.1.7
@@ -2999,7 +3002,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - asn1.js@5.4.1
 
@@ -3029,7 +3032,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - assert@2.0.0
  - util@0.12.5
@@ -3057,7 +3060,7 @@ IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - available-typed-arrays@1.0.5
 
@@ -3087,7 +3090,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - balanced-match@1.0.2
 
@@ -3117,7 +3120,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - base64-js@1.5.1
 
@@ -3147,7 +3150,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - big-integer@1.6.51
 
@@ -3180,7 +3183,7 @@ For more information, please refer to <http://unlicense.org>
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - binary-extensions@2.2.0
  - is-binary-path@2.1.0
@@ -3199,7 +3202,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - bl@5.1.0
 
@@ -3221,7 +3224,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - bn.js@4.12.0
  - bn.js@5.2.1
@@ -3250,7 +3253,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - body-parser@1.20.1
  - type-is@1.6.18
@@ -3283,7 +3286,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - bplist-parser@0.2.0
 
@@ -3340,7 +3343,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - brace-expansion@1.1.11
  - brace-expansion@2.0.1
@@ -3371,7 +3374,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - braces@3.0.2
  - normalize-path@3.0.0
@@ -3402,7 +3405,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - brorand@1.1.0
 
@@ -3437,7 +3440,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browser-or-node@2.1.1
 
@@ -3467,7 +3470,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browser-resolve@2.0.0
 
@@ -3497,7 +3500,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browserify-aes@1.2.0
 
@@ -3527,7 +3530,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browserify-cipher@1.0.1
 
@@ -3557,7 +3560,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browserify-des@1.0.2
 
@@ -3587,7 +3590,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browserify-rsa@4.1.0
 
@@ -3617,7 +3620,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browserify-sign@4.2.1
 
@@ -3639,7 +3642,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browserify-zlib@0.2.0
 
@@ -3718,7 +3721,7 @@ IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - browserslist@4.21.10
 
@@ -3747,7 +3750,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - buffer-xor@1.0.3
 
@@ -3777,7 +3780,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - buffer@5.7.1
  - buffer@6.0.3
@@ -3808,7 +3811,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - builtin-status-codes@3.0.0
 
@@ -3838,7 +3841,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - bytes@3.1.2
 
@@ -3870,7 +3873,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - cac@6.7.14
 
@@ -3900,7 +3903,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - call-bind@1.0.2
  - get-intrinsic@1.2.1
@@ -3931,7 +3934,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - camelcase-css@2.0.1
 
@@ -3961,7 +3964,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - caniuse-lite@1.0.30001519
 
@@ -4365,7 +4368,7 @@ Creative Commons may be contacted at creativecommons.org.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - chokidar@3.5.3
 
@@ -4395,7 +4398,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - cipher-base@1.0.4
  - create-hash@1.2.0
@@ -4428,7 +4431,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - classnames@2.3.2
 
@@ -4458,7 +4461,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - clone@1.0.4
 
@@ -4485,7 +4488,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - clsx@1.2.1
  - escalade@3.1.1
@@ -4504,7 +4507,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - code-block-writer@12.0.0
 
@@ -4534,7 +4537,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - color-convert@1.9.3
  - color-convert@2.0.1
@@ -4564,7 +4567,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - color-name@1.1.3
  - color-name@1.1.4
@@ -4582,7 +4585,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - colors@1.4.0
 
@@ -4616,7 +4619,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - commander@11.0.0
  - commander@4.1.1
@@ -4648,7 +4651,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - concat-map@0.0.1
  - minimist@1.2.8
@@ -4678,7 +4681,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - console-browserify@1.2.0
 
@@ -4706,7 +4709,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - constants-browserify@1.0.0
 
@@ -4768,7 +4771,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - content-disposition@0.5.4
  - forwarded@0.2.0
@@ -4801,7 +4804,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - content-type@1.0.5
 
@@ -4832,7 +4835,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - convert-source-map@1.9.0
 
@@ -4864,7 +4867,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - cookie-signature@1.0.6
 
@@ -4914,7 +4917,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - cookie@0.5.0
 
@@ -4946,7 +4949,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - core-js-compat@3.32.0
 
@@ -4974,7 +4977,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - cosmiconfig@7.1.0
 
@@ -5004,7 +5007,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - create-ecdh@4.0.4
 
@@ -5034,7 +5037,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - create-require@1.1.1
 
@@ -5068,7 +5071,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - cross-env@7.0.3
 
@@ -5097,7 +5100,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - cross-fetch@4.0.0
 
@@ -5127,7 +5130,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - cross-spawn@7.0.3
 
@@ -5157,7 +5160,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - crypto-browserify@3.12.0
 
@@ -5190,7 +5193,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - cssesc@3.0.0
  - emoji-regex@8.0.0
@@ -5230,7 +5233,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - csstype@3.1.2
 
@@ -5258,7 +5261,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - debounce@1.2.1
 
@@ -5288,7 +5291,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - debug@2.6.9
 
@@ -5315,7 +5318,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - debug@4.3.4
 
@@ -5343,7 +5346,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - defaults@1.0.4
 
@@ -5374,7 +5377,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - define-properties@1.2.0
 
@@ -5404,7 +5407,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - depd@2.0.0
 
@@ -5435,7 +5438,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - dequal@2.0.3
  - kleur@3.0.3
@@ -5466,7 +5469,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - des.js@1.1.0
 
@@ -5501,7 +5504,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - destroy@1.2.0
 
@@ -5532,7 +5535,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - didyoumean@1.2.2
 
@@ -5555,7 +5558,7 @@ limitations under the License.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - diffie-hellman@5.0.3
  - public-encrypt@4.0.3
@@ -5584,7 +5587,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - dlv@1.1.3
 
@@ -5669,7 +5672,7 @@ delve(obj, undefined, 'foo') === 'foo';
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - dnd-core@16.0.1
  - react-dnd-html5-backend@16.0.1
@@ -5700,7 +5703,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - dnd-multi-backend@7.1.3
 
@@ -5730,7 +5733,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - dom-helpers@5.2.1
 
@@ -5760,7 +5763,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - domain-browser@4.22.0
 
@@ -5792,7 +5795,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - eastasianwidth@0.2.0
 
@@ -5833,7 +5836,7 @@ Original Code is [東アジアの文字幅 (East Asian Width) の判定 - 中途
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - ee-first@1.1.1
  - thenify-all@1.6.0
@@ -5864,7 +5867,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - electron-to-chromium@1.4.490
 
@@ -5878,7 +5881,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH RE
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - elliptic@6.5.4
 
@@ -6125,7 +6128,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - encodeurl@1.0.2
 
@@ -6156,7 +6159,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - entities@2.2.0
  - entities@4.5.0
@@ -6177,7 +6180,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - error-ex@1.3.2
  - is-arrayish@0.2.1
@@ -6208,7 +6211,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - es6-object-assign@1.1.0
 
@@ -6239,7 +6242,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - esbuild@0.15.18
  - esbuild@0.18.20
@@ -6270,7 +6273,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - escape-html@1.0.3
 
@@ -6303,7 +6306,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - escape-string-regexp@1.0.5
  - object-assign@4.1.1
@@ -6336,7 +6339,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - esm-module-paths@1.1.1
 
@@ -6394,7 +6397,7 @@ yarn add esm-module-paths
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - estree-walker@2.0.2
 
@@ -6410,7 +6413,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - esutils@2.0.3
 
@@ -6438,7 +6441,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - etag@1.8.1
  - proxy-addr@2.0.7
@@ -6470,7 +6473,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - events@3.3.0
 
@@ -6501,7 +6504,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - exenv@1.2.2
 
@@ -6541,7 +6544,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - express@4.18.2
 
@@ -6574,7 +6577,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - fast-deep-equal@3.1.3
 
@@ -6604,7 +6607,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - fastq@1.15.0
 
@@ -6626,7 +6629,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - fill-range@7.0.1
  - is-number@7.0.0
@@ -6658,7 +6661,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - finalhandler@1.2.0
 
@@ -6689,7 +6692,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - for-each@0.3.3
 
@@ -6719,7 +6722,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - foreground-child@3.1.1
 
@@ -6743,7 +6746,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - framer-motion@6.5.1
 
@@ -6773,7 +6776,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - framesync@6.0.1
 
@@ -6803,7 +6806,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - fresh@0.5.2
 
@@ -6835,7 +6838,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - fs-extra@11.1.1
 
@@ -6859,7 +6862,7 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHE
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - fs.realpath@1.0.0
 
@@ -6911,7 +6914,7 @@ the licensed code:
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - fsevents@2.3.2
 
@@ -6942,7 +6945,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - function-bind@1.1.1
 
@@ -6970,7 +6973,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - gensync@1.0.0-beta.2
 
@@ -6986,7 +6989,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - glob-parent@5.1.2
 
@@ -7010,7 +7013,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - glob-parent@6.0.2
 
@@ -7034,7 +7037,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - glob@10.3.3
 
@@ -7058,7 +7061,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - glob@7.1.6
 
@@ -7088,7 +7091,7 @@ https://creativecommons.org/licenses/by-sa/4.0/
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - gopd@1.0.1
 
@@ -7118,7 +7121,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - graceful-fs@4.2.11
 
@@ -7142,7 +7145,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - handlebars@4.7.8
 
@@ -7170,7 +7173,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - has-property-descriptors@1.0.0
  - has-proto@1.0.1
@@ -7202,7 +7205,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - has-symbols@1.0.3
 
@@ -7232,7 +7235,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - has-tostringtag@1.0.0
 
@@ -7262,7 +7265,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - has@1.0.3
 
@@ -7293,7 +7296,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - hash-base@3.1.0
  - md5.js@1.3.5
@@ -7324,7 +7327,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - hash.js@1.1.7
 
@@ -7381,7 +7384,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - hey-listen@1.0.8
 
@@ -7411,7 +7414,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - hmac-drbg@1.0.1
 
@@ -7468,7 +7471,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - hoist-non-react-statics@3.3.2
 
@@ -7506,7 +7509,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - http-errors@2.0.0
 
@@ -7537,7 +7540,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - https-browserify@1.0.0
 
@@ -7566,7 +7569,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - human-signals@2.1.0
 
@@ -7776,7 +7779,7 @@ Apache License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - human-signals@4.3.1
 
@@ -7986,7 +7989,7 @@ Apache License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - iconv-lite@0.4.24
 
@@ -8015,7 +8018,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - ieee754@1.2.1
 
@@ -8035,7 +8038,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - inflight@1.0.6
 
@@ -8059,7 +8062,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - inherits@2.0.4
 
@@ -8083,7 +8086,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - ipaddr.js@1.9.1
 
@@ -8111,7 +8114,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - is-arguments@1.1.1
  - is-generator-function@1.0.10
@@ -8143,7 +8146,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - is-callable@1.2.7
  - is-typed-array@1.1.12
@@ -8175,7 +8178,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - is-core-module@2.13.0
 
@@ -8204,7 +8207,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - is-extglob@2.1.1
 
@@ -8234,7 +8237,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - is-glob@4.0.3
 
@@ -8264,7 +8267,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - isexe@2.0.0
  - lru-cache@5.1.1
@@ -8295,7 +8298,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - isomorphic-timers-promises@1.0.1
 
@@ -8322,7 +8325,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - jackspeak@2.2.3
  - path-scurry@1.10.1
@@ -8387,7 +8390,7 @@ software or this license, under any kind of legal claim.***
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - jiti@1.19.1
 
@@ -8417,7 +8420,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - js-tokens@4.0.0
 
@@ -8447,7 +8450,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - jsesc@0.5.0
 
@@ -8476,7 +8479,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - json-parse-even-better-errors@2.3.1
 
@@ -8510,7 +8513,7 @@ distributed under the terms of the MIT license above.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - json5@2.2.3
 
@@ -8542,7 +8545,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - jsonfile@6.1.0
 
@@ -8566,7 +8569,7 @@ OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHE
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - lilconfig@2.1.0
 
@@ -8596,7 +8599,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - lines-and-columns@1.2.4
 
@@ -8626,7 +8629,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - lodash.debounce@4.0.8
 
@@ -8682,7 +8685,7 @@ terms above.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - lodash@4.17.21
 
@@ -8738,7 +8741,7 @@ terms above.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - loose-envify@1.4.0
 
@@ -8768,7 +8771,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - lru-cache@10.0.0
 
@@ -8792,7 +8795,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - magic-string@0.27.0
 
@@ -8808,7 +8811,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - media-typer@0.3.0
 
@@ -8839,7 +8842,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - merge-descriptors@1.0.1
 
@@ -8871,7 +8874,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - merge-stream@2.0.0
 
@@ -8901,7 +8904,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - merge2@1.4.1
 
@@ -8931,7 +8934,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - methods@1.1.2
 
@@ -8963,7 +8966,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - miller-rabin@4.0.1
 
@@ -8998,7 +9001,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - mime-db@1.52.0
 
@@ -9030,7 +9033,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - mime@1.6.0
 
@@ -9060,7 +9063,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - minimalistic-assert@1.0.1
 
@@ -9082,7 +9085,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - minimalistic-crypto-utils@1.0.1
 
@@ -9138,7 +9141,7 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - minimatch@7.4.6
  - minimatch@9.0.3
@@ -9163,7 +9166,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - minipass@7.0.2
 
@@ -9187,7 +9190,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - mkdirp@2.1.6
 
@@ -9217,7 +9220,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - module-from-string@3.3.0
 
@@ -9247,7 +9250,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - ms@2.0.0
  - ms@2.1.2
@@ -9278,7 +9281,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - ms@2.1.3
 
@@ -9308,7 +9311,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - mz@2.7.0
 
@@ -9338,7 +9341,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - nanoid@3.3.6
 
@@ -9367,7 +9370,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - negotiator@0.6.3
 
@@ -9400,7 +9403,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - neo-async@2.6.2
 
@@ -9431,7 +9434,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - node-fetch@2.6.12
 
@@ -9461,7 +9464,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - node-releases@2.0.13
 
@@ -9491,7 +9494,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - node-stdlib-browser@1.2.0
 
@@ -9518,7 +9521,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - object-hash@3.0.0
 
@@ -9548,7 +9551,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - object-inspect@1.12.3
 
@@ -9578,7 +9581,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - object-keys@1.1.1
 
@@ -9608,7 +9611,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - on-finished@2.4.1
 
@@ -9640,7 +9643,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - os-browserify@0.3.0
 
@@ -9670,7 +9673,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - pako@1.0.11
 
@@ -9700,7 +9703,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - parse-asn1@5.1.6
 
@@ -9722,7 +9725,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - parseurl@1.3.3
 
@@ -9754,7 +9757,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - path-browserify@1.0.1
 
@@ -9783,7 +9786,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - path-parse@1.0.7
 
@@ -9813,7 +9816,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - pbkdf2@3.1.2
 
@@ -9843,7 +9846,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - picocolors@1.0.0
 
@@ -9867,7 +9870,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - picomatch@2.3.1
 
@@ -9897,7 +9900,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - pirates@4.0.6
 
@@ -9927,7 +9930,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - popmotion@11.0.3
 
@@ -9945,7 +9948,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - postcss-import@15.1.0
 
@@ -9974,7 +9977,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - postcss-js@4.0.1
 
@@ -10003,7 +10006,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - postcss-load-config@4.0.1
 
@@ -10032,7 +10035,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - postcss-nested@6.0.1
 
@@ -10061,7 +10064,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - postcss-selector-parser@6.0.13
 
@@ -10092,7 +10095,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - postcss-value-parser@4.2.0
 
@@ -10123,7 +10126,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - postcss@8.4.27
 
@@ -10152,7 +10155,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - prettier@2.8.8
 
@@ -16131,7 +16134,7 @@ By: Ika
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - process@0.11.10
 
@@ -16162,7 +16165,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - prompts@2.4.2
  - sisteransi@1.0.5
@@ -16193,7 +16196,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - prop-types@15.8.1
  - warning@4.0.3
@@ -16224,7 +16227,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - qs@6.11.0
 
@@ -16262,7 +16265,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - querystring-es3@0.2.1
 
@@ -16289,7 +16292,7 @@ IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - queue-microtask@1.2.3
  - run-parallel@1.2.0
@@ -16319,7 +16322,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - randombytes@2.1.0
  - randomfill@1.0.4
@@ -16350,7 +16353,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - range-parser@1.2.1
 
@@ -16382,7 +16385,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - raw-body@2.5.1
 
@@ -16413,7 +16416,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - react-dnd-touch-backend@16.0.1
 
@@ -16443,7 +16446,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - react-dnd@16.0.1
 
@@ -16473,7 +16476,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - react-dom@18.2.0
  - react-is@16.13.1
@@ -16508,7 +16511,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - react-lifecycles-compat@3.0.4
 
@@ -16538,7 +16541,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - react-modal@3.16.1
 
@@ -16566,7 +16569,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - react-toastify@9.1.3
 
@@ -16596,7 +16599,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - react-tooltip@5.20.0
 
@@ -16626,7 +16629,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - react-use-measure@2.1.1
  - zustand@4.4.1
@@ -16657,7 +16660,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - read-cache@1.0.0
 
@@ -16686,7 +16689,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - readable-stream@3.6.2
 
@@ -16742,7 +16745,7 @@ IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - readdirp@3.6.0
 
@@ -16772,7 +16775,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - redux@4.2.1
 
@@ -16802,7 +16805,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - regenerator-runtime@0.14.0
  - regenerator-transform@0.15.2
@@ -16833,7 +16836,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - regjsparser@0.9.1
 
@@ -16863,7 +16866,7 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - resolve@1.22.4
 
@@ -16893,7 +16896,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - reusify@1.0.4
 
@@ -16923,7 +16926,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - ripemd160@2.0.2
 
@@ -16953,7 +16956,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - rollup@3.28.0
 
@@ -17657,7 +17660,7 @@ Repository: https://github.com/yargs/yargs-parser.git
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - safe-buffer@5.2.1
 
@@ -17687,7 +17690,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - safer-buffer@2.1.2
 
@@ -17717,7 +17720,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - send@0.18.0
 
@@ -17749,7 +17752,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - serve-static@1.15.0
 
@@ -17783,7 +17786,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - setimmediate@1.0.5
 
@@ -17812,7 +17815,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - setprototypeof@1.2.0
 
@@ -17834,7 +17837,7 @@ CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - sha.js@2.4.11
 
@@ -17891,7 +17894,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - shebang-command@2.0.0
 
@@ -17909,7 +17912,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - side-channel@1.0.4
 
@@ -17939,7 +17942,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - signal-exit@3.0.7
 
@@ -17964,7 +17967,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - signal-exit@4.1.0
 
@@ -17989,7 +17992,7 @@ ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - simple-git@3.19.1
 
@@ -18829,7 +18832,7 @@ simpleGit().listRemote(['--get-url'], (err, data) => {
 
 -----------
 
-The following NPM packages may be included in this product:
+The following npm packages may be included in this product:
 
  - source-map-js@1.0.2
  - source-map@0.6.1
@@ -18866,7 +18869,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - statuses@2.0.1
 
@@ -18897,7 +18900,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - stream-browserify@3.0.0
 
@@ -18926,7 +18929,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - stream-http@3.2.0
 
@@ -18959,7 +18962,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - string_decoder@1.3.0
 
@@ -19015,7 +19018,7 @@ IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - style-value-types@5.0.0
 
@@ -19032,7 +19035,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - sucrase@3.34.0
 
@@ -19062,7 +19065,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - svg-parser@2.0.4
 
@@ -19112,7 +19115,7 @@ MIT
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - tailwind-merge@1.14.0
 
@@ -19142,7 +19145,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - tailwindcss@3.3.3
 
@@ -19172,7 +19175,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - thenify@3.3.1
 
@@ -19202,7 +19205,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - timers-browserify@2.0.12
 
@@ -19257,7 +19260,7 @@ The `lib/node` directory borrows files from joyent/node which uses the following
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - to-fast-properties@2.0.0
 
@@ -19276,7 +19279,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - to-regex-range@5.0.1
 
@@ -19306,7 +19309,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - toidentifier@1.0.1
 
@@ -19336,7 +19339,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - true-myth@6.2.0
 
@@ -19366,7 +19369,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - ts-interface-checker@0.1.13
 
@@ -19576,7 +19579,7 @@ Apache License
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - tslib@2.6.1
 
@@ -19597,7 +19600,7 @@ PERFORMANCE OF THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - typescript@5.1.6
 
@@ -19661,7 +19664,7 @@ END OF TERMS AND CONDITIONS
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - uglify-js@3.17.4
 
@@ -19699,7 +19702,7 @@ SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - uncontrollable@8.0.4
 
@@ -19729,7 +19732,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - universalify@2.0.0
 
@@ -19758,7 +19761,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - unpipe@1.0.0
 
@@ -19789,7 +19792,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - upath@2.0.1
 
@@ -19820,7 +19823,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - update-browserslist-db@1.0.11
 
@@ -19849,7 +19852,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - url@0.11.1
 
@@ -19879,7 +19882,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - util-deprecate@1.0.2
 
@@ -19912,7 +19915,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - utils-merge@1.0.1
 
@@ -19941,7 +19944,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - uuid@9.0.0
 
@@ -19959,7 +19962,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - vite-plugin-node-polyfills@0.9.0
 
@@ -19989,7 +19992,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - vite-plugin-svgr@2.4.0
 
@@ -20019,7 +20022,7 @@ SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - vite@4.4.9
 
@@ -23424,7 +23427,7 @@ Repository: github:eemeli/yaml
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - vm-browserify@1.1.2
 
@@ -23451,7 +23454,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - wcwidth@1.0.1
 
@@ -23489,7 +23492,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - webidl-conversions@3.0.1
 
@@ -23510,7 +23513,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - whatwg-url@5.0.0
 
@@ -23540,7 +23543,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - xtend@4.0.2
 
@@ -23569,7 +23572,7 @@ THE SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - yaml@1.10.2
 
@@ -23591,7 +23594,7 @@ THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - yaml@2.3.1
 
@@ -23613,7 +23616,7 @@ THIS SOFTWARE.
 
 -----------
 
-The following NPM package may be included in this product:
+The following npm package may be included in this product:
 
  - zundo@2.0.0-beta.12
 
@@ -23643,4 +23646,5 @@ SOFTWARE.
 
 -----------
 
-This file was generated with generate-license-file! https://www.npmjs.com/package/generate-license-file
+This file was generated with the generate-license-file npm package!
+https://www.npmjs.com/package/generate-license-file
