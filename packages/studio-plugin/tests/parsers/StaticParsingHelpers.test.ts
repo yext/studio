@@ -203,7 +203,7 @@ describe("parseJsxAttributes", () => {
     expect(receivedPropValues).toEqual(expectedPropValues);
   });
 
-  it("parsing an negative numeric literal", () => {
+  it("can parse a negative numeric literal", () => {
     const sourceCode = `<Banner number={-1} />`;
     const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
