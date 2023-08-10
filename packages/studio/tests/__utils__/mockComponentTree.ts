@@ -14,7 +14,7 @@ export default function mockComponentTree({
   UUIDToFileMetadata?: Record<string, FileMetadata>;
   moduleUUIDBeingEdited?: string;
   activeComponentUUID?: string;
-  selectedComponentUUIDs?: string[];
+  selectedComponentUUIDs?: Set<string>;
   selectedComponentRectsMap?: Map<string, DOMRectProperties>;
 }): void {
   mockStore({

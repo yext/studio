@@ -66,7 +66,7 @@ describe("PageSlice: page component actions", () => {
     function shiftSelect(
       activeUUID: string,
       selectedComponent: ComponentState,
-      expectedUUIDSelection: string[]
+      expectedUUIDSelection: Set<string>,
     ) {
       store().pages.clearSelectedComponents();
       store().pages.setActiveComponentUUID(activeUUID);
@@ -93,7 +93,7 @@ describe("PageSlice: page component actions", () => {
         },
         activePageName: "universal",
         activeComponentUUID: "results-uuid",
-        selectedComponentUUIDs: ["results-uuid"],
+        selectedComponentUUIDs: new Set(["results-uuid"]),
         selectedComponentRectsMap: new Map([
           ["results-uuid", domRect(1, 2, 3, 4)],
         ]),
@@ -103,10 +103,10 @@ describe("PageSlice: page component actions", () => {
     it("adds a selected component UUID using addSelectedComponentUUID", () => {
       store().pages.addSelectedComponentUUID("searchbar-uuid");
       const selectedComponentUUIDs = store().pages.selectedComponentUUIDs;
-      expect(selectedComponentUUIDs).toEqual([
+      expect(selectedComponentUUIDs).toEqual(new Set([
         "results-uuid",
         "searchbar-uuid",
-      ]);
+      ]));
     });
 
     it("adds a selected component Rect using addSelectedComponentRect", () => {
@@ -129,45 +129,45 @@ describe("PageSlice: page component actions", () => {
         store().pages.selectedComponentUUIDs,
         store().pages.selectedComponentRectsMap,
       ];
-      expect(selectedComponentUUIDs).toEqual([]);
+      expect(selectedComponentUUIDs).toEqual(new Set());
       expect(selectedComponentRectsMap).toEqual(new Map());
     });
 
     it("shift selects components after the active component", () => {
-      const expectedUUIDSelection = [
+      const expectedUUIDSelection = new Set([
         "results-uuid",
         "child1-uuid",
         "child2-uuid",
         "container-uuid",
         "button-uuid",
-      ];
+      ]);
       shiftSelect("results-uuid", buttonComponent, expectedUUIDSelection);
     });
 
     it("shift selects components before the active component", () => {
-      const expectedUUIDSelection = [
+      const expectedUUIDSelection = new Set([
         "results-uuid",
         "child1-uuid",
         "child2-uuid",
         "container-uuid",
         "button-uuid",
-      ];
+      ]);
       shiftSelect("button-uuid", resultsComponent, expectedUUIDSelection);
     });
 
     it("shift selects between levels", () => {
-      const expectedUUIDSelection = [
+      const expectedUUIDSelection = new Set([
         "searchbar-uuid",
         "results-uuid",
         "child1-uuid",
         "child2-uuid",
         "container-uuid",
-      ];
+      ]);
       shiftSelect("searchbar-uuid", child1Component, expectedUUIDSelection);
     });
 
     it("shift selects all the children within a container", () => {
-      const expectedUUIDSelection = ["child1-uuid", "child2-uuid"];
+      const expectedUUIDSelection = new Set(["child1-uuid", "child2-uuid"]);
       shiftSelect("child1-uuid", child2Component, expectedUUIDSelection);
     });
 
@@ -189,17 +189,17 @@ describe("PageSlice: page component actions", () => {
         },
         activePageName: "universal",
         activeComponentUUID: undefined,
-        selectedComponentUUIDs: [],
+        selectedComponentUUIDs: new Set(),
         selectedComponentRectsMap: new Map(),
       });
-      const expectedUUIDSelection = [
+      const expectedUUIDSelection = new Set([
         "resultschild-uuid",
         "results-uuid",
         "button-uuid",
         "child1-uuid",
         "child2-uuid",
         "container-uuid",
-      ];
+      ]);
       shiftSelect("child1-uuid", resultsChildComponent, expectedUUIDSelection);
     });
   });

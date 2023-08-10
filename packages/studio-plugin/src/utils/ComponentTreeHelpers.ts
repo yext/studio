@@ -188,7 +188,7 @@ export default class ComponentTreeHelpers {
   }
 
   /**
-   * Returns the component UUID that is closest common parent of the two target components.
+   * Returns the component UUID that is lowest common parent of the two target components.
    * This is similar to the lowest common ancestor except it cannot be one of the targets.
    */
   static getLowestParentUUID(
@@ -199,20 +199,18 @@ export default class ComponentTreeHelpers {
     if (!targetOneUUID || !targetTwoUUID) return undefined;
     const componentOne = componentTree.find((c) => c.uuid === targetOneUUID);
     const componentTwo = componentTree.find((c) => c.uuid === targetTwoUUID);
-    const LCAComponentUUID =
-      ComponentTreeHelpers.getLowestCommonAncestorComponentUUID(
+    return ComponentTreeHelpers.getLowestCommonAncestorComponentUUID(
         componentOne?.parentUUID,
         componentTwo?.parentUUID,
         componentTree
       );
-    return LCAComponentUUID;
   }
 
   private static getLowestCommonAncestorComponentUUID(
     targetOneUUID: string | undefined,
     targetTwoUUID: string | undefined,
     componentTree: ComponentState[]
-  ): ComponentState | undefined {
+  ): string | undefined {
     let LCA_UUID;
     ComponentTreeHelpers.mapComponentTree(componentTree, (c) => {
       if (LCA_UUID) return;

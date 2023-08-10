@@ -60,7 +60,7 @@ it("displays component name labels for multiple selected components", () => {
     componentTree: nestedComponentTree,
     UUIDToFileMetadata: mockUUIDToFileMetadata,
     activeComponentUUID: nestedComponentTree[0].uuid,
-    selectedComponentUUIDs: nestedComponentTree.map((c) => c.uuid),
+    selectedComponentUUIDs: new Set(nestedComponentTree.map((c) => c.uuid)),
     selectedComponentRectsMap: selectedRectsMap,
   });
   render(<Highlighters iframeEl={null} />);

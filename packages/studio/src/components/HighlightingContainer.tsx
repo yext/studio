@@ -52,7 +52,7 @@ type HighlightingProps = PropsWithChildren<{
   uuid: string;
   activeComponentUUID?: string;
   setActiveUUID: (uuid: string) => void;
-  selectedComponentUUIDs: string[];
+  selectedComponentUUIDs: Set<string>;
   selectedComponentRectsMap: Map<string, DOMRectProperties>;
   addSelectedComponentUUID: (componentUUID: string) => void;
   addSelectedComponentRect: (
@@ -68,7 +68,7 @@ class HighlightingClass extends Component<HighlightingProps> {
   constructor(props: HighlightingProps) {
     super(props);
     this.resizeObserver = new ResizeObserver(() => {
-      if (this.props.selectedComponentUUIDs.includes(this.props.uuid)) {
+      if (this.props.selectedComponentUUIDs.has(this.props.uuid)) {
         this.componentDidUpdate();
       }
     });
@@ -115,7 +115,7 @@ class HighlightingClass extends Component<HighlightingProps> {
       ) === JSON.stringify(rect);
     if (
       !isRectUpdated &&
-      this.props.selectedComponentUUIDs.includes(this.props.uuid)
+      this.props.selectedComponentUUIDs.has(this.props.uuid)
     ) {
       this.props.addSelectedComponentRect(this.props.uuid, rect);
     }

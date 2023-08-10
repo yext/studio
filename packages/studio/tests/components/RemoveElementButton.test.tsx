@@ -37,7 +37,7 @@ beforeEach(() => {
     },
     activePageName: "universal",
     activeComponentUUID: "mock-uuid-1",
-    selectedComponentUUIDs: ["mock-uuid-1"],
+    selectedComponentUUIDs: new Set(["mock-uuid-1"]),
   });
 });
 

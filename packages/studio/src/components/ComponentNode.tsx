@@ -49,7 +49,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   });
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
-  const isSelectedComponent = selectedComponentUUIDs.includes(
+  const isSelectedComponent = selectedComponentUUIDs.has(
     componentState.uuid
   );
 
@@ -147,7 +147,7 @@ function useDeleteKeyListener(isSelectedComponent: boolean) {
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (isSelectedComponent && event.key === "Backspace") {
-        selectedComponentUUIDs.map((uuid) => removeComponent(uuid));
+        selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
         clearSelectedComponents();
       }
     },

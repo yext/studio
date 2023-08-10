@@ -29,9 +29,11 @@ export interface PageSliceStates {
    */
   activePageEntities?: Record<string, Record<string, unknown>>;
   /** The uuids of the currently selected components in Studio (including the active component). */
-  selectedComponentUUIDs: string[];
+  selectedComponentUUIDs: Set<string>;
   /** The DOMRects of the currently selected components in Studio (including the active component). */
   selectedComponentRectsMap: Map<string, DOMRectProperties>;
+  /** The component UUID for the lowest common parent of the selected components. */
+  lowestParentUUID: string | undefined;
   /**
    * The part of state that tracks which pages have been interacted with from
    * the UI and have changes pending on commit.

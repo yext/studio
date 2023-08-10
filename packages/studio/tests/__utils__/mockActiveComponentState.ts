@@ -19,7 +19,7 @@ export default function mockStoreActiveComponent({
       },
       ...(activeComponent && { activeComponentUUID: activeComponent.uuid }),
       ...(activeComponent && {
-        selectedComponentUUIDs: [activeComponent.uuid],
+        selectedComponentUUIDs: new Set([activeComponent.uuid]),
       }),
       activePageName: "index",
     },

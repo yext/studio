@@ -123,11 +123,12 @@ function useDragPreview() {
   const selectedComponentUUIDs = useStudioStore((store) => {
     return store.pages.selectedComponentUUIDs;
   });
-  const componentNames = useComponentNames(selectedComponentUUIDs);
+  const selectComponentUUIDsArray = Array.from(selectedComponentUUIDs);
+  const componentNames = useComponentNames(selectComponentUUIDsArray);
   return () => (
     <div className="p-2 rounded bg-emerald-200 w-fit">
       {componentNames.map((name, index) => (
-        <div key={selectedComponentUUIDs[index]} className="flex">
+        <div key={selectComponentUUIDsArray[index]} className="flex">
           {name}
         </div>
       ))}
@@ -179,14 +180,13 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 }
 
 function useDropHandler() {
-  const [selectedComponentUUIDs, componentTree, updateComponentTree] =
+  const [selectedComponentUUIDs, lowestParentUUID, componentTree, updateComponentTree] =
     useStudioStore((store) => {
       return [
         store.pages.selectedComponentUUIDs,
+        store.pages.lowestParentUUID,
         store.actions.getComponentTree(),
         store.actions.updateComponentTree,
-        store.pages.clearSelectedComponents,
-        store.pages.addSelectedComponentUUID,
       ];
     });
 
@@ -215,15 +215,8 @@ function useDropHandler() {
       ) {
         return;
       }
-      // this works because the last selected component must be the highest in depth
-      // and the first selected component is the furthest away
-      const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
-        selectedComponentUUIDs.at(0),
-        selectedComponentUUIDs.at(-1),
-        componentTree
-      );
       const selectedComponents = componentTree
-        .filter((c) => selectedComponentUUIDs.includes(c.uuid))
+        .filter((c) => selectedComponentUUIDs.has(c.uuid))
         .map((c) => {
           if (c.parentUUID !== lowestParentUUID) return c;
           return updateComponentParentUUID(c, destinationParentId);
@@ -231,7 +224,7 @@ function useDropHandler() {
 
       updatedComponentTree = updatedComponentTree.filter(
         (c) =>
-          c.uuid === dragSourceId || !selectedComponentUUIDs.includes(c.uuid)
+          c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
       );
       let newDestinationIndex;
       updatedComponentTree.forEach((c, index) => {
@@ -247,7 +240,7 @@ function useDropHandler() {
 
       updateComponentTree(updatedComponentTree);
     },
-    [selectedComponentUUIDs, componentTree, updateComponentTree]
+    [selectedComponentUUIDs, lowestParentUUID, componentTree, updateComponentTree]
   );
 
   const handleDrop = useCallback(
@@ -255,9 +248,9 @@ function useDropHandler() {
       const { dragSourceId, destinationIndex } = options;
       const updatedComponentTree: ComponentState[] =
         convertNodeModelsToComponentTree(tree);
-      if (selectedComponentUUIDs.includes(dragSourceId)) {
+      if (selectedComponentUUIDs.has(dragSourceId)) {
         const destinationParentId = tree[destinationIndex].parent.toString();
-        if (selectedComponentUUIDs.includes(destinationParentId)) return;
+        if (selectedComponentUUIDs.has(destinationParentId)) return;
         handleSelectedDrop(
           updatedComponentTree,
           dragSourceId,

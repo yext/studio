@@ -24,8 +24,9 @@ const initialStates: PageSliceStates = {
   activePageName: firstPageEntry?.[0],
   activeEntityFile: firstPageEntry?.[1]?.pagesJS?.entityFiles?.[0],
   activeComponentUUID: undefined,
-  selectedComponentUUIDs: [],
-  selectedComponentRectsMap: new Map(),
+  selectedComponentUUIDs: new Set<string>(),
+  selectedComponentRectsMap: new Map<string, DOMRectProperties>(),
+  lowestParentUUID: undefined,
   pendingChanges: {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
@@ -162,9 +163,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     addSelectedComponentUUID: (selectedUUID: string) => {
       set((store) => {
-        const selectedComponentUUIDs = store.selectedComponentUUIDs;
-        if (!selectedComponentUUIDs.includes(selectedUUID)) {
-          selectedComponentUUIDs.push(selectedUUID);
+        if (!store.selectedComponentUUIDs.has(selectedUUID)) {
+          store.selectedComponentUUIDs.add(selectedUUID);
         }
       });
     },
@@ -179,8 +179,9 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     clearSelectedComponents: () => {
       set((store) => {
-        store.selectedComponentUUIDs = [];
-        store.selectedComponentRectsMap.clear();
+        store.selectedComponentUUIDs = new Set();
+        store.selectedComponentRectsMap = new Map();
+        store.lowestParentUUID = undefined;
       });
     },
     /**
@@ -215,6 +216,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         ...targetComponentUUIDs,
         componentTree
       );
+      //set({ lowestParentUUID });
 
       let selected = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {

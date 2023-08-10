@@ -93,7 +93,7 @@ describe("Keyboard macros", () => {
   describe("shift key shortcut", () => {
     it("shift click calls function to add selected components", () => {
       const addShiftSpy = jest.spyOn(
-        useStudioStore.getState().pages,
+        useStudioStore.getState().pages, 
         "addShiftSelectedComponentUUIDs"
       );
       render(<ComponentTree />);
