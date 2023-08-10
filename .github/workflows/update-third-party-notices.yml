@@ -7,23 +7,16 @@ jobs:
     steps:
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18.x
           registry-url: "https://registry.npmjs.org"
       - run: npm install -g generate-license-file@1
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
-      # Skip post-install scripts here, as a malicious
-      # script could steal the NPM_TOKEN.
-      - run: npm ci --ignore-scripts
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      # `npm rebuild` will run all those post-install scripts for us.
-      - run: npm rebuild
+      - run: npm install
       - run: generate-license-file --input packages/studio/package.json --output packages/studio/THIRD-PARTY-NOTICES --overwrite
       - run: generate-license-file --input packages/studio-plugin/package.json --output packages/studio-plugin/THIRD-PARTY-NOTICES --overwrite
-
       - name: Update THIRD-PARTY-NOTICES
         uses: EndBug/add-and-commit@v9
         with:
