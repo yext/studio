@@ -16,7 +16,7 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
       - name: Generate third party notices
-        run: pwd
+        run: ls
       - name: Update THIRD-PARTY-NOTICES
         uses: EndBug/add-and-commit@v9
         with:
