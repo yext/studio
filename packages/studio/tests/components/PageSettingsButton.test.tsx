@@ -3,9 +3,11 @@ import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
-import { PageState, PropValueKind } from "@yext/studio-plugin";
+import { PageState, PropValueKind, ResponseType } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
+import * as sendMessageModule from "../../src/messaging/sendMessage";
+import { StudioStore } from "../../src/store/models/StudioStore";
 
 const basePageState: PageState = {
   componentTree: [],
@@ -137,7 +139,7 @@ it("displays the correct stream scope when modal opens", async () => {
   expect(savedFilterIDsTextbox).toHaveValue("banana");
 });
 
-it("updates the stream scope with user input when entity page's getPath value is undefined", async () => {
+it("updates stream scope with user input and regenerates test data for entity page with undefined getPath", async () => {
   const updateStreamScopeSpy = jest.spyOn(
     useStudioStore.getState().pages,
     "updateStreamScope"
@@ -153,6 +155,22 @@ it("updates the stream scope with user input when entity page's getPath value is
   });
   await userEvent.type(entityTypesTextbox, "kiwi");
   await userEvent.type(savedFilterIDsTextbox, ",pineapple");
+
+  function getEntityFiles(store: StudioStore) {
+    return store.pages.pages["fruits"].pagesJS?.entityFiles;
+  }
+  expect(getEntityFiles(useStudioStore.getState())).toBeUndefined();
+  jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
+    return new Promise((resolve) =>
+      resolve({
+        msg: "msg",
+        type: ResponseType.Success,
+        mappingJson: {
+          fruits: ["mockLocalData.json"],
+        },
+      })
+    );
+  });
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
   expect(updateStreamScopeSpy).toBeCalledWith("fruits", {
@@ -160,6 +178,11 @@ it("updates the stream scope with user input when entity page's getPath value is
     entityTypes: ["kiwi"],
     savedFilterIds: ["banana", "pineapple"],
   });
+  expect(useStudioStore.getState().pages.activeEntityFile).toBeUndefined();
+  expect(getEntityFiles(useStudioStore.getState())).toEqual([
+    "mockLocalData.json",
+  ]);
+
   await userEvent.click(pageSettingsButton);
   expect(entityTypesTextbox).toHaveValue("kiwi");
   expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
