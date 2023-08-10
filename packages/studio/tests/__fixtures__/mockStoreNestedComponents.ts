@@ -146,7 +146,7 @@ export const nestedComponentTree: ComponentState[] = [
       },
     },
     uuid: "banner-uuid-1",
-    parentUUID: "container-uuid",
+    parentUUID: "container-uuid-1",
   },
   {
     kind: ComponentStateKind.Standard,
@@ -160,7 +160,7 @@ export const nestedComponentTree: ComponentState[] = [
     },
     uuid: "container-uuid-2",
     metadataUUID: "container-metadata-uuid",
-    parentUUID: "container-uuid",
+    parentUUID: "container-uuid-1",
   },
   {
     ...componentState,
