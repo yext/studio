@@ -19,5 +19,5 @@ runs:
         path: "**/node_modules"
         key: node_modules-${{ runner.os }}-node-${{ inputs.node-version }}-${{ hashFiles('package-lock.json') }}
     - if: ${{ steps.cache-node_modules.outputs.cache-hit != 'true' }}
-      run: npm i
+      run: npm ci
       shell: bash
