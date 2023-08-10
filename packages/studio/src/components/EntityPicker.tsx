@@ -41,7 +41,7 @@ export default function EntityPicker(): JSX.Element | null {
         >
           {Object.entries(activePageEntities).map(([fileName, data]) => (
             <option key={fileName} value={fileName}>
-              {`Name: ${data.name}, ID: ${data.id}`}
+              {`${data.name} (id: ${data.id})`}
             </option>
           ))}
         </select>
