@@ -1,30 +1,30 @@
-name: Run Tests
-on: workflow_call
+  name: Run Tests
+  on: workflow_call
 
-jobs:
-  unit_tests:
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest]
-        node-version: [18.x]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/setup-ci
-        with:
-          node-version: ${{ matrix.node-version }}
-      - run: npm run build -w=packages/studio-plugin
-      - run: npm test -w=packages/studio-plugin
-      - run: npm test -w=packages/studio
-        if: success() || failure()
+  jobs:
+    unit_tests:
+      strategy:
+        matrix:
+          os: [windows-latest, ubuntu-latest]
+          node-version: [18.x]
+      runs-on: ${{ matrix.os }}
+      steps:
+        - uses: actions/checkout@v3
+        - uses: ./.github/setup-ci
+          with:
+            node-version: ${{ matrix.node-version }}
+        - run: npm run build -w=packages/studio-plugin
+        - run: npm test -w=packages/studio-plugin
+        - run: npm test -w=packages/studio
+          if: success() || failure()
 
-  test_build:
-    strategy:
-      matrix:
-        os: [windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: ./.github/setup-ci
-      - run: npm run build
-      - run: npm run typecheck-jest
+    test_build:
+      strategy:
+        matrix:
+          os: [windows-latest, ubuntu-latest]
+      runs-on: ${{ matrix.os }}
+      steps:
+        - uses: actions/checkout@v3
+        - uses: ./.github/setup-ci
+        - run: npm run build
+        - run: npm run typecheck-jest
