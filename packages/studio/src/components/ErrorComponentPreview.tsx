@@ -55,7 +55,7 @@ export default function ErrorComponentPreview(props: {
       isOpen: tooltipOpen,
       content: errorComponentState.message,
       anchorSelect: anchorId,
-      position: tooltipPosition || { x: 0, y: 0 },
+      position: tooltipPosition ?? { x: 0, y: 0 },
     });
   }, [tooltipOpen, anchorId, errorComponentState, setTooltipProps]);
 
