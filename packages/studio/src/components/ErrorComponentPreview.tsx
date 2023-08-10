@@ -38,7 +38,9 @@ export default function ErrorComponentPreview(props: {
         setTooltipOpen(false)
       );
     document.addEventListener("scroll", () => setTooltipOpen(false));
+  }, []);
 
+  useEffect(() => {
     const rect = containerRef.current?.getBoundingClientRect();
     const y = (rect && rect.top + 25 - window.scrollY) || 0;
     const tooltipPosition = rect && {
