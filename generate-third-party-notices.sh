@@ -9,4 +9,4 @@ npm install
 generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
 rm package-lock.json
 cd ../..
-json -I -f package.json -e "this.workspaces=${WORK}"
+json -I -f package.json -e "this.workspaces=${WORKSPACES}"
