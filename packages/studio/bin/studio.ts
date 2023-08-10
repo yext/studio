@@ -19,8 +19,8 @@ cli
   .action((options: CliArgs) => {
     libexec({
       args: ["cross-env", NODE_OPTIONS, "vite", "--config", pathToViteConfig],
-      npxCache: '~/.npm/_npx',
-      cache: '~/.npm/_cacache'
+      npxCache: '/Users/oshi/.npm/_npx',
+      cache: '/Users/oshi/.npm/_cacache'
     })
   });
 
