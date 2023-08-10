@@ -19,6 +19,7 @@ export interface BannerData {
     end: string;
     start: string;
   }[];
+  fixedText?: string;
 }
 
 export const initialProps: BannerData = {
@@ -26,6 +27,7 @@ export const initialProps: BannerData = {
   num: 5,
   bool: true,
   title: "initial title",
+  fixedText: "This is fixed text",
 };
 
 export default function Banner(props: BannerData) {
@@ -40,6 +42,7 @@ export default function Banner(props: BannerData) {
           (interval) => `Start: ${interval.start} End: ${interval.end}, `
         )}
       </p>
+      <p>{props.fixedText}</p>
     </div>
   );
 }

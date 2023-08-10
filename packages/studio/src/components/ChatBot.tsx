@@ -53,7 +53,8 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
     console.log(modifiedPromptRes)
     const re = new RegExp("^(Edit the typescript code below to)(.)*");
     console.log("here", modifiedPromptRes.file.match(re))
-    const editTheCode = modifiedPromptRes.file.match(re)[0]
+    let editTheCode = modifiedPromptRes.file.match(re)[0]
+    //
     console.log("TextBison output", modifiedPromptRes, editTheCode)
 
     const originalFile = await this.props.getComponentFile(fileSelector.file)
@@ -61,6 +62,8 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
     console.log("original file", originalFile)
 
     console.log("code bison input", editTheCode + originalFile.file)
+    const optionalPropRegex = new RegExp(/(option)|(prop)/, "gm");
+    editTheCode = editTheCode.replaceAll(optionalPropRegex, "optional prop");
 
     const newFileRes = await this.props.getCodeCompletion(editTheCode + originalFile.file)
 
