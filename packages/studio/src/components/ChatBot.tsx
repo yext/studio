@@ -40,18 +40,9 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
   }
 
   answerMessage = async (message: Message) => {
-    //const writeFile = useStudioStore((store) => store.actions.writeFile);
-    //const getAllComponentFilepaths = useStudioStore((store) => store.actions.getAllComponentFilepaths);
-    //const getComponentFile = useStudioStore((store) => store.actions.getComponentFile);
-
-    //writeFile("new.tsx", "abcdefhijklmnop")
-    //getAllComponentFilepaths().then((info) => {console.log("filepaths:", info)})
-    //getComponentFile("Cta.tsx").then((info) => {console.log("file:", info)})
-    
-
-    const res = await this.props.getTextGeneration(message.data.text)
+    const res = await this.props.getTextGeneration(message.data.text);
     console.log(res)
-    this.sendMessage("thought about " + res.file);
+    this.sendMessage(`Great! I've made the change.`);
   }
 
   sendMessage(text: string) {

@@ -24,7 +24,7 @@ cli
         env: {
           ...process.env,
           YEXT_STUDIO_ARGS: JSON.stringify(options),
-          GOOGLE_APPLICATION_CREDENTIALS:"/Users/blife/studio-prototype/packages/studio-plugin/studio-buddy-395317-56e812250dd9.json",
+          GOOGLE_APPLICATION_CREDENTIALS:"/Users/annli/Downloads/studio-buddy-395317-56e812250dd9.json",
         },
         shell: true,
       }
