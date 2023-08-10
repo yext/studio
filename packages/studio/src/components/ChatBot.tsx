@@ -49,9 +49,9 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
 
     console.log("chosen file", fileSelector, message.data.text)
 
-    const modifiedPromptRes = await this.props.getTextGeneration("select the text of what the user wants to change in this sentence \"" + message.data.text + "\" and add it to the end of this sentence: \"Edit the code below to  \"")
+    const modifiedPromptRes = await this.props.getTextGeneration("select the text of what the user wants to change in this sentence \"" + message.data.text + "\" and add it to the end of this sentence: \"Edit the typescript code below to  \"")
     console.log(modifiedPromptRes)
-    const re = new RegExp("^(Edit the code below to)(.)*");
+    const re = new RegExp("^(Edit the typescript code below to)(.)*");
     console.log("here", modifiedPromptRes.file.match(re))
     const editTheCode = modifiedPromptRes.file.match(re)[0]
     console.log("TextBison output", modifiedPromptRes, editTheCode)
@@ -64,9 +64,9 @@ export default class ChatBot extends Component<{getTextGeneration: Function, get
 
     const newFileRes = await this.props.getCodeCompletion(editTheCode + originalFile.file)
 
-    console.log("code bison output", newFileRes)
+    console.log("code bison output", newFileRes.file.slice(3).slice(0, -3))
 
-    const writeRes = await this.props.writeFile(fileSelector.file, newFileRes.file.replaceAll("`", ""))
+    const writeRes = await this.props.writeFile(fileSelector.file, newFileRes.file.slice(3).slice(0, -3))
 
     console.log("write file output", writeRes)
 
