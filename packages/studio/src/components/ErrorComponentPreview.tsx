@@ -38,6 +38,14 @@ export default function ErrorComponentPreview(props: {
         setTooltipOpen(false)
       );
     document.addEventListener("scroll", () => setTooltipOpen(false));
+    return () => {
+      document
+        .querySelector("iframe")
+        ?.contentDocument?.removeEventListener("scroll", () =>
+          setTooltipOpen(false)
+        );
+      document.removeEventListener("scroll", () => setTooltipOpen(false));
+    };
   }, []);
 
   useEffect(() => {
