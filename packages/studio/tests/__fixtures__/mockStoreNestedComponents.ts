@@ -133,7 +133,7 @@ export const nestedComponentTree: ComponentState[] = [
         valueType: PropValueType.string,
       },
     },
-    uuid: "container-uuid",
+    uuid: "container-uuid-1",
     metadataUUID: "container-metadata-uuid",
   },
   {
@@ -145,6 +145,7 @@ export const nestedComponentTree: ComponentState[] = [
         valueType: PropValueType.string,
       },
     },
+    uuid: "banner-uuid-1",
     parentUUID: "container-uuid",
   },
   {

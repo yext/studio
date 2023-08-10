@@ -27,18 +27,18 @@ it("displays the active component name label", () => {
   });
   mockStore({
     pages: {
-      selectedComponentRects: [
-        {
+      selectedComponentRectsMap: new Map([
+        ["uuid", {
           x: 0,
           y: 0,
-          width: 0,
-          height: 0,
+          width: 10,
+          height: 10,
           top: 0,
           right: 0,
           bottom: 0,
           left: 0,
-        },
-      ],
+        }],
+      ]),
     },
   });
   render(<Highlighters iframeEl={null} />);
@@ -47,18 +47,18 @@ it("displays the active component name label", () => {
 });
 
 it("displays component name labels for multiple selected components", () => {
-  const selectedRects = [
-    domRect(1, 1, 1, 1),
-    domRect(1, 2, 1, 1),
-    domRect(2, 1, 1, 1),
-    domRect(2, 2, 1, 1),
-  ];
+  const selectedRectsMap = new Map([
+    ["banner-uuid-1", domRect(1, 1, 1, 1)],
+    ["banner-uuid-2", domRect(1, 2, 1, 1)],
+    ["container-uuid-1", domRect(2, 1, 1, 1)],
+    ["container-uuid-2", domRect(2, 2, 1, 1)],
+  ]);
   mockComponentTree({
     componentTree: nestedComponentTree,
     UUIDToFileMetadata: mockUUIDToFileMetadata,
     activeComponentUUID: nestedComponentTree[0].uuid,
     selectedComponentUUIDs: nestedComponentTree.map((c) => c.uuid),
-    selectedComponentRects: selectedRects,
+    selectedComponentRectsMap: selectedRectsMap,
   });
   render(<Highlighters iframeEl={null} />);
 

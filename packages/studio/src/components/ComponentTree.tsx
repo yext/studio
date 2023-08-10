@@ -257,6 +257,7 @@ function useDropHandler() {
         convertNodeModelsToComponentTree(tree);
       if (selectedComponentUUIDs.includes(dragSourceId)) {
         const destinationParentId = tree[destinationIndex].parent.toString();
+        if (selectedComponentUUIDs.includes(destinationParentId)) return;
         handleSelectedDrop(
           updatedComponentTree,
           dragSourceId,

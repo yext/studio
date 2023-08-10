@@ -8,14 +8,14 @@ export default function mockComponentTree({
   moduleUUIDBeingEdited,
   activeComponentUUID,
   selectedComponentUUIDs,
-  selectedComponentRects,
+  selectedComponentRectsMap,
 }: {
   componentTree: ComponentState[];
   UUIDToFileMetadata?: Record<string, FileMetadata>;
   moduleUUIDBeingEdited?: string;
   activeComponentUUID?: string;
   selectedComponentUUIDs?: string[];
-  selectedComponentRects?: DOMRectProperties[];
+  selectedComponentRectsMap?: Map<string, DOMRectProperties>;
 }): void {
   mockStore({
     pages: {
@@ -32,8 +32,8 @@ export default function mockComponentTree({
       ...(selectedComponentUUIDs && {
         selectedComponentUUIDs: selectedComponentUUIDs,
       }),
-      ...(selectedComponentRects && {
-        selectedComponentRects: selectedComponentRects,
+      ...(selectedComponentRectsMap && {
+        selectedComponentRectsMap: selectedComponentRectsMap,
       }),
     },
     ...(UUIDToFileMetadata && {

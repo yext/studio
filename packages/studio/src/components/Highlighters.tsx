@@ -11,24 +11,24 @@ export default function Highlighters(props: {
   iframeEl: HTMLIFrameElement | null;
 }): JSX.Element {
   const { iframeEl } = props;
-  const [selectedComponentUUIDs, selectedComponentRects] = useStudioStore(
+  const [selectedComponentUUIDs, selectedComponentRectsMap] = useStudioStore(
     (store) => {
       return [
         store.pages.selectedComponentUUIDs,
-        store.pages.selectedComponentRects,
+        store.pages.selectedComponentRectsMap,
       ];
     }
   );
   return (
     <div>
-      {selectedComponentUUIDs.map((uuid, index) => (
-        <Highlighter
+      {selectedComponentUUIDs.map((uuid) => {
+        return <Highlighter
           key={`${uuid}-key`}
           uuid={uuid}
-          rect={selectedComponentRects[index]}
+          rect={selectedComponentRectsMap.get(uuid)}
           iframeEl={iframeEl}
         />
-      ))}
+      })}
     </div>
   );
 }
@@ -42,7 +42,7 @@ function Highlighter({
   iframeEl,
 }: {
   uuid: string;
-  rect: DOMRectProperties;
+  rect: DOMRectProperties | undefined;
   iframeEl: HTMLIFrameElement | null;
 }) {
   const componentTree = useStudioStore((store) =>

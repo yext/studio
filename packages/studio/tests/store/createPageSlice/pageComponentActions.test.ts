@@ -94,7 +94,7 @@ describe("PageSlice: page component actions", () => {
         activePageName: "universal",
         activeComponentUUID: "results-uuid",
         selectedComponentUUIDs: ["results-uuid"],
-        selectedComponentRects: [domRect(1, 2, 3, 4)],
+        selectedComponentRectsMap: new Map([["results-uuid", domRect(1, 2, 3, 4)]]),
       });
     });
 
@@ -108,22 +108,22 @@ describe("PageSlice: page component actions", () => {
     });
 
     it("adds a selected component Rect using addSelectedComponentRect", () => {
-      store().pages.addSelectedComponentRect(domRect(5, 6, 7, 8));
-      const selectedComponentRects = store().pages.selectedComponentRects;
-      expect(selectedComponentRects).toEqual([
-        domRect(1, 2, 3, 4),
-        domRect(5, 6, 7, 8),
-      ]);
+      store().pages.addSelectedComponentRect("searchbar-uuid", domRect(5, 6, 7, 8));
+      const selectedComponentRectsMap = store().pages.selectedComponentRectsMap;
+      expect(selectedComponentRectsMap).toEqual(new Map([
+        ["results-uuid", domRect(1, 2, 3, 4)],
+        ["searchbar-uuid", domRect(5, 6, 7, 8)],
+      ]));
     });
 
     it("clears all selected component UUIDs and Rects using clearSelectedComponents", () => {
       store().pages.clearSelectedComponents();
-      const [selectedComponentUUIDs, selectedComponentRects] = [
+      const [selectedComponentUUIDs, selectedComponentRectsMap] = [
         store().pages.selectedComponentUUIDs,
-        store().pages.selectedComponentRects,
+        store().pages.selectedComponentRectsMap,
       ];
       expect(selectedComponentUUIDs).toEqual([]);
-      expect(selectedComponentRects).toEqual([]);
+      expect(selectedComponentRectsMap).toEqual(new Map());
     });
 
     it("shift selects components after the active component", () => {
@@ -183,7 +183,7 @@ describe("PageSlice: page component actions", () => {
         activePageName: "universal",
         activeComponentUUID: undefined,
         selectedComponentUUIDs: [],
-        selectedComponentRects: [],
+        selectedComponentRectsMap: new Map(),
       });
       const expectedUUIDSelection = [
         "resultschild-uuid",

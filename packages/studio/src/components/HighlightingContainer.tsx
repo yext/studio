@@ -18,7 +18,7 @@ export default function HighlightingContainer(
     setActiveUUID,
     activeComponentUUID,
     selectedComponentUUIDs,
-    selectedComponentRects,
+    selectedComponentRectsMap,
     addSelectedComponentUUID,
     addSelectedComponentRect,
     clearSelectedComponents,
@@ -26,7 +26,7 @@ export default function HighlightingContainer(
     store.pages.setActiveComponentUUID,
     store.pages.activeComponentUUID,
     store.pages.selectedComponentUUIDs,
-    store.pages.selectedComponentRects,
+    store.pages.selectedComponentRectsMap,
     store.pages.addSelectedComponentUUID,
     store.pages.addSelectedComponentRect,
     store.pages.clearSelectedComponents,
@@ -38,7 +38,7 @@ export default function HighlightingContainer(
       setActiveUUID={setActiveUUID}
       activeComponentUUID={activeComponentUUID}
       selectedComponentUUIDs={selectedComponentUUIDs}
-      selectedComponentRects={selectedComponentRects}
+      selectedComponentRectsMap={selectedComponentRectsMap}
       addSelectedComponentUUID={addSelectedComponentUUID}
       addSelectedComponentRect={addSelectedComponentRect}
       clearSelectedComponents={clearSelectedComponents}
@@ -53,9 +53,9 @@ type HighlightingProps = PropsWithChildren<{
   activeComponentUUID?: string;
   setActiveUUID: (uuid: string) => void;
   selectedComponentUUIDs: string[];
-  selectedComponentRects: DOMRectProperties[];
+  selectedComponentRectsMap: Map<string, DOMRectProperties>;
   addSelectedComponentUUID: (componentUUID: string) => void;
-  addSelectedComponentRect: (rect: DOMRectProperties) => void;
+  addSelectedComponentRect: (selectedUUID: string, rect: DOMRectProperties) => void;
   clearSelectedComponents: () => void;
 }>;
 
@@ -65,8 +65,8 @@ class HighlightingClass extends Component<HighlightingProps> {
   constructor(props: HighlightingProps) {
     super(props);
     this.resizeObserver = new ResizeObserver(() => {
-      if (this.props.uuid === this.props.activeComponentUUID) {
-        this.highlightSelf();
+      if (this.props.selectedComponentUUIDs.includes(this.props.uuid)) {
+        this.componentDidUpdate();
       }
     });
   }
@@ -78,12 +78,12 @@ class HighlightingClass extends Component<HighlightingProps> {
     if (!childNode) {
       return;
     }
-    const rect = rectToJson(childNode.getBoundingClientRect());
     if (this.props.activeComponentUUID !== this.props.uuid) {
+      const rect = rectToJson(childNode.getBoundingClientRect());
       this.props.setActiveUUID(this.props.uuid);
       this.props.clearSelectedComponents();
       this.props.addSelectedComponentUUID(this.props.uuid);
-      this.props.addSelectedComponentRect(rect);
+      this.props.addSelectedComponentRect(this.props.uuid, rect);
     }
   };
 
@@ -106,14 +106,11 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
-    const isRectAdded = this.props.selectedComponentRects.some(
-      (r) => JSON.stringify(r) === JSON.stringify(rect)
-    );
+    const isRectUpdated = JSON.stringify(this.props.selectedComponentRectsMap.get(this.props.uuid)) === JSON.stringify(rect);
     if (
-      this.props.selectedComponentUUIDs.includes(this.props.uuid) &&
-      !isRectAdded
+      !isRectUpdated && this.props.selectedComponentUUIDs.includes(this.props.uuid)
     ) {
-      this.props.addSelectedComponentRect(rect);
+      this.props.addSelectedComponentRect(this.props.uuid, rect);
     }
     this.attachListenerToChild();
     if (this.props.uuid === this.props.activeComponentUUID) {

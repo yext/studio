@@ -31,7 +31,7 @@ export interface PageSliceStates {
   /** The uuids of the currently selected components in Studio (including the active component). */
   selectedComponentUUIDs: string[];
   /** The DOMRects of the currently selected components in Studio (including the active component). */
-  selectedComponentRects: DOMRectProperties[];
+  selectedComponentRectsMap: Map<string, DOMRectProperties>;
   /**
    * The part of state that tracks which pages have been interacted with from
    * the UI and have changes pending on commit.
@@ -75,7 +75,7 @@ interface PageSliceActions {
   getActiveEntityData: () => Record<string, unknown> | undefined;
 
   addSelectedComponentUUID: (selectedUUID: string) => void;
-  addSelectedComponentRect: (rect: DOMRectProperties) => void;
+  addSelectedComponentRect: (selectedUUID: string, rect: DOMRectProperties) => void;
   clearSelectedComponents: () => void;
   addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => void;
 
