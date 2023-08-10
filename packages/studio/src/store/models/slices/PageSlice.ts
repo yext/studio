@@ -75,7 +75,10 @@ interface PageSliceActions {
   getActiveEntityData: () => Record<string, unknown> | undefined;
 
   addSelectedComponentUUID: (selectedUUID: string) => void;
-  addSelectedComponentRect: (selectedUUID: string, rect: DOMRectProperties) => void;
+  addSelectedComponentRect: (
+    selectedUUID: string,
+    rect: DOMRectProperties
+  ) => void;
   clearSelectedComponents: () => void;
   addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => void;
 

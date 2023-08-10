@@ -94,7 +94,9 @@ describe("PageSlice: page component actions", () => {
         activePageName: "universal",
         activeComponentUUID: "results-uuid",
         selectedComponentUUIDs: ["results-uuid"],
-        selectedComponentRectsMap: new Map([["results-uuid", domRect(1, 2, 3, 4)]]),
+        selectedComponentRectsMap: new Map([
+          ["results-uuid", domRect(1, 2, 3, 4)],
+        ]),
       });
     });
 
@@ -108,12 +110,17 @@ describe("PageSlice: page component actions", () => {
     });
 
     it("adds a selected component Rect using addSelectedComponentRect", () => {
-      store().pages.addSelectedComponentRect("searchbar-uuid", domRect(5, 6, 7, 8));
+      store().pages.addSelectedComponentRect(
+        "searchbar-uuid",
+        domRect(5, 6, 7, 8)
+      );
       const selectedComponentRectsMap = store().pages.selectedComponentRectsMap;
-      expect(selectedComponentRectsMap).toEqual(new Map([
-        ["results-uuid", domRect(1, 2, 3, 4)],
-        ["searchbar-uuid", domRect(5, 6, 7, 8)],
-      ]));
+      expect(selectedComponentRectsMap).toEqual(
+        new Map([
+          ["results-uuid", domRect(1, 2, 3, 4)],
+          ["searchbar-uuid", domRect(5, 6, 7, 8)],
+        ])
+      );
     });
 
     it("clears all selected component UUIDs and Rects using clearSelectedComponents", () => {

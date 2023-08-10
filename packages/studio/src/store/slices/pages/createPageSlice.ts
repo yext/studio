@@ -25,7 +25,7 @@ const initialStates: PageSliceStates = {
   activeEntityFile: firstPageEntry?.[1]?.pagesJS?.entityFiles?.[0],
   activeComponentUUID: undefined,
   selectedComponentUUIDs: [],
-  selectedComponentRectsMap: new Map,
+  selectedComponentRectsMap: new Map(),
   pendingChanges: {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
@@ -169,7 +169,10 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
-    addSelectedComponentRect: (selectedUUID: string, rect: DOMRectProperties) => {
+    addSelectedComponentRect: (
+      selectedUUID: string,
+      rect: DOMRectProperties
+    ) => {
       set((store) => {
         const selectedComponentRectsMap = store.selectedComponentRectsMap;
         selectedComponentRectsMap.set(selectedUUID, rect);

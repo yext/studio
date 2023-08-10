@@ -55,7 +55,10 @@ type HighlightingProps = PropsWithChildren<{
   selectedComponentUUIDs: string[];
   selectedComponentRectsMap: Map<string, DOMRectProperties>;
   addSelectedComponentUUID: (componentUUID: string) => void;
-  addSelectedComponentRect: (selectedUUID: string, rect: DOMRectProperties) => void;
+  addSelectedComponentRect: (
+    selectedUUID: string,
+    rect: DOMRectProperties
+  ) => void;
   clearSelectedComponents: () => void;
 }>;
 
@@ -106,9 +109,13 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
-    const isRectUpdated = JSON.stringify(this.props.selectedComponentRectsMap.get(this.props.uuid)) === JSON.stringify(rect);
+    const isRectUpdated =
+      JSON.stringify(
+        this.props.selectedComponentRectsMap.get(this.props.uuid)
+      ) === JSON.stringify(rect);
     if (
-      !isRectUpdated && this.props.selectedComponentUUIDs.includes(this.props.uuid)
+      !isRectUpdated &&
+      this.props.selectedComponentUUIDs.includes(this.props.uuid)
     ) {
       this.props.addSelectedComponentRect(this.props.uuid, rect);
     }

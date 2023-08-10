@@ -22,12 +22,14 @@ export default function Highlighters(props: {
   return (
     <div>
       {selectedComponentUUIDs.map((uuid) => {
-        return <Highlighter
-          key={`${uuid}-key`}
-          uuid={uuid}
-          rect={selectedComponentRectsMap.get(uuid)}
-          iframeEl={iframeEl}
-        />
+        return (
+          <Highlighter
+            key={`${uuid}-key`}
+            uuid={uuid}
+            rect={selectedComponentRectsMap.get(uuid)}
+            iframeEl={iframeEl}
+          />
+        );
       })}
     </div>
   );

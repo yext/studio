@@ -28,16 +28,19 @@ it("displays the active component name label", () => {
   mockStore({
     pages: {
       selectedComponentRectsMap: new Map([
-        ["uuid", {
-          x: 0,
-          y: 0,
-          width: 10,
-          height: 10,
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        }],
+        [
+          "uuid",
+          {
+            x: 0,
+            y: 0,
+            width: 10,
+            height: 10,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+        ],
       ]),
     },
   });
