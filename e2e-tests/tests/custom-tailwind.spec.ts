@@ -5,7 +5,7 @@ studioTest.use({
   tailwindConfigPath: "tests/__fixtures__/tailwind.config.ts",
 });
 
-studioTest.only(
+studioTest(
   "can display styles from a custom tailwind theme",
   async ({ studioPage }) => {
     await studioPage.removeElement("div");
