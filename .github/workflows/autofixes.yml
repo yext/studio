@@ -31,3 +31,26 @@ jobs:
       - name: Fail on linting push
         run: |
           if [[ ${{ steps.automated-linting.outputs.pushed }} == true ]]; then exit 1; else exit 0; fi
+
+  license-check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install -g json@v11
+      - run: npm install -g generate-license-file@2
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
+      - name: Generate third party notices
+        run: ./generate-third-party-notices.sh
+      - name: Update THIRD-PARTY-NOTICES
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Automated update to THIRD-PARTY-NOTICES from github action's 3rd party notices check"
+          add: '["packages/studio/THIRD-PARTY-NOTICES", "packages/studio-plugin/THIRD-PARTY-NOTICES"]'
+          push: true
+          default_author: github_actions
