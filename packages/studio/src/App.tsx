@@ -4,8 +4,15 @@ import Toast from "./components/Toast";
 import ChatBot from "./components/ChatBot";
 import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
+import useStudioStore from "./store/useStudioStore";
 
 export default function App() {
+  const getTextGeneration = useStudioStore((store) => store.actions.getTextGeneration);
+  const getCodeCompletion = useStudioStore((store) => store.actions.getCodeCompletion);
+  const getComponentFile = useStudioStore((store) => store.actions.getComponentFile);
+  const getAllComponentFilepaths = useStudioStore((store) => store.actions.getAllComponentFilepaths);
+  const writeFile = useStudioStore((store) => store.actions.writeFile);
+
   return (
     <div className="App">
       <Toast />
@@ -19,7 +26,7 @@ export default function App() {
           <EditorSidebar />
         </div>
       </div>
-      <ChatBot />
+      <ChatBot getTextGeneration={getTextGeneration} getCodeCompletion={getCodeCompletion} getComponentFile={getComponentFile} getAllComponentFilepaths={getAllComponentFilepaths} writeFile={writeFile}/>
     </div>
   );
 }

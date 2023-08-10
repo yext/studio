@@ -1,6 +1,5 @@
 import { Component } from 'react'
 import { Launcher } from 'react-chat-window'
-//import useStudioStore from "./store/useStudioStore";
 
 const AGENT_PROFILE = {
   teamName: 'studio buddy',
@@ -20,8 +19,8 @@ interface ChatState {
   isOpen: boolean;
 };
 
-export default class ChatBot extends Component<object, ChatState>{
-  constructor(props) {
+export default class ChatBot extends Component<{getTextGeneration: Function, getCodeCompletion: Function, writeFile: Function, getAllComponentFilepaths: Function, getComponentFile: Function}, ChatState>{
+  constructor(props ) {
     super(props);
     this.state = {
       messageList: [],
@@ -29,8 +28,9 @@ export default class ChatBot extends Component<object, ChatState>{
     };
   }
 
+
   componentDidMount(): void {
-    this.sendMessage("welcome to studio");
+    this.sendMessage("Welcome to Studio! What changes can I help you with?");
   }
 
   onMessageWasSent = (message: Message) => {
@@ -39,7 +39,7 @@ export default class ChatBot extends Component<object, ChatState>{
     }, () => this.answerMessage(message));
   }
 
-  answerMessage = (message: Message) => {
+  answerMessage = async (message: Message) => {
     //const writeFile = useStudioStore((store) => store.actions.writeFile);
     //const getAllComponentFilepaths = useStudioStore((store) => store.actions.getAllComponentFilepaths);
     //const getComponentFile = useStudioStore((store) => store.actions.getComponentFile);
@@ -47,8 +47,11 @@ export default class ChatBot extends Component<object, ChatState>{
     //writeFile("new.tsx", "abcdefhijklmnop")
     //getAllComponentFilepaths().then((info) => {console.log("filepaths:", info)})
     //getComponentFile("Cta.tsx").then((info) => {console.log("file:", info)})
+    
 
-    this.sendMessage("thought about " + message.data.text);
+    const res = await this.props.getTextGeneration(message.data.text)
+    console.log(res)
+    this.sendMessage("thought about " + res.file);
   }
 
   sendMessage(text: string) {

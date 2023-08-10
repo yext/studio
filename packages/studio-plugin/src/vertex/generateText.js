@@ -30,7 +30,7 @@ export async function callTextBison(prompt) {
 
   const parameter = {
     temperature: 0,
-    maxOutputTokens: 5,
+    maxOutputTokens: 1024,
     topP: 0.95,
     topK: 40,
   };

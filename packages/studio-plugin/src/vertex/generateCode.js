@@ -26,7 +26,7 @@ export async function callCodeBison(prompt) {
 
   const parameter = {
     temperature: 0,
-    maxOutputTokens: 256,
+    maxOutputTokens: 1024,
   };
   const parameters = helpers.toValue(parameter);
 
