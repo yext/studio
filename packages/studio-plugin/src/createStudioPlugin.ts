@@ -16,7 +16,7 @@ import lodash from "lodash";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import { startPagesDevelopmentServer } from "./startPagesDevelopmentServer";
 import LocalDataMappingManager from "./LocalDataMappingManager";
-import { execSync } from "node:child_process";
+import { spawn } from "child_process";
 import getStudioViteOptions from "./viteconfig/getStudioViteOptions";
 
 /**
@@ -67,12 +67,15 @@ export default async function createStudioPlugin(
   );
 
   await pagesDevPortPromise?.then((port) => {
-    if (port) {
-      process.on("exit", () => {
-        console.log("Studio is shutting down");
-        execSync(`npx kill-port ${port}`);
-      });
+    if (!port) {
+      throw new Error("No port found for PagesJS.");
     }
+    console.log("PagesJS running on port:", port);
+    process.on("exit", () => {
+      spawn("npx", ["kill-port", port.toString()], {
+        shell: true,
+      });
+    });
   });
 
   return {

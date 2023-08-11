@@ -75,7 +75,7 @@ export default class ImportComponentAction {
   };
 }
 
-function getFunctionComponent(
+export function getFunctionComponent(
   importedValue: Record<string, unknown>,
   name: string
 ): ImportType | undefined {

@@ -100,7 +100,7 @@ export default class ParsingOrchestrator {
    *
    * Will remove data for a file if it no longer exists in the filesystem.
    */
-  reloadFile(filepath: string) {
+  reloadFile(filepath: string): FileMetadata | undefined {
     const sourceFile = this.project.getSourceFile(filepath);
 
     if (sourceFile) {
@@ -132,6 +132,7 @@ export default class ParsingOrchestrator {
       }
     }
     this.studioData = this.calculateStudioData();
+    return this.filepathToFileMetadata[filepath]
   }
 
   getStudioData(): StudioData {

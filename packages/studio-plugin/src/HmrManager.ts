@@ -30,7 +30,7 @@ export default class HmrManager {
     this.orchestrator.reloadFile(file);
     this.invalidateStudioData();
     const updateType = getHMRUpdateType(file, this.userPaths);
-    const data = this.getPayload(updateType);
+    const data = this.getPayload(updateType, file);
     this.server.ws.send({
       type: "custom",
       event: StudioHMRUpdateID,
@@ -51,12 +51,14 @@ export default class HmrManager {
   }
 
   private getPayload(
-    updateType: StudioHMRPayload["updateType"]
+    updateType: StudioHMRPayload["updateType"],
+    file: string
   ): StudioHMRPayload {
     const studioData = this.orchestrator.getStudioData();
     return {
       updateType,
       studioData,
+      file
     };
   }
 }

@@ -1,17 +1,20 @@
 import { StudioData, StudioHMRPayload } from "@yext/studio-plugin";
 import useStudioStore from "./useStudioStore";
 import removeTopLevelFragments from "../utils/removeTopLevelFragments";
+import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
+import path from "path-browserify"
+import { getFunctionComponent } from "./StudioActions/ImportComponentAction";
 
 /**
  * A handler for custom Studio HMR events.
  * When a custom studio HMR event is received, updates the store.
  */
-export default function hotReloadStore(payload: StudioHMRPayload) {
+export default async function hotReloadStore(payload: StudioHMRPayload) {
   const { updateType, studioData } = payload;
   switch (updateType) {
     case "components":
     case "modules":
-      syncFileMetadata(studioData);
+      await syncFileMetadata(studioData, payload.file);
       break;
     case "pages":
       syncPages(studioData);
@@ -20,21 +23,21 @@ export default function hotReloadStore(payload: StudioHMRPayload) {
       syncSiteSettings(studioData);
       break;
     default:
-      fullSync(studioData);
+      await fullSync(studioData, payload.file);
       break;
   }
 }
 
-function fullSync(studioData: StudioData) {
+async function fullSync(studioData: StudioData, file: string) {
   syncPages(studioData);
-  syncFileMetadata(studioData);
+  await syncFileMetadata(studioData, file);
   syncSiteSettings(studioData);
   useStudioStore.setState((store) => {
     store.studioConfig = studioData.studioConfig;
   });
 }
 
-function syncFileMetadata(studioData: StudioData) {
+async function syncFileMetadata(studioData: StudioData, file: string) {
   const UUIDToFileMetadata = removeTopLevelFragments(
     studioData.UUIDToFileMetadata
   );
@@ -42,6 +45,16 @@ function syncFileMetadata(studioData: StudioData) {
     store.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
     store.previousSave.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
   });
+  const fileMetadata = Object.values(UUIDToFileMetadata).find(metadata => metadata.filepath === file)
+  if (!fileMetadata) {
+    return;
+  }
+
+  const importedFile = await dynamicImportFromBrowser(file + `?timestamp=${Date.now()}`);
+  const componentFunction = getFunctionComponent(importedFile, path.basename(file, '.tsx'));
+  if (componentFunction) {
+    useStudioStore.getState().fileMetadatas.setImportedComponent(fileMetadata.metadataUUID, componentFunction);
+  }
 }
 
 function syncPages(studioData: StudioData) {
