@@ -175,14 +175,11 @@ export default class ComponentTreeHelpers {
     ancestorState: ComponentState,
     componentTree: ComponentState[]
   ) {
-    const descendants = ComponentTreeHelpers.mapComponentTree<ComponentState[]>(
+    const descendants = ComponentTreeHelpers.mapComponentTreeParentsFirst<ComponentState>(
       componentTree,
-      (componentState, mappedChildren) => [
-        componentState,
-        ...mappedChildren.flat(),
-      ],
+      componentState => componentState,
       ancestorState
-    ).flat();
+    );
 
     return descendants;
   }

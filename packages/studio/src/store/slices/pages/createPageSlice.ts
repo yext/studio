@@ -162,9 +162,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
     addSelectedComponentUUID: (selectedUUID: string) => {
       set((store) => {
-        if (!store.selectedComponentUUIDs.has(selectedUUID)) {
-          store.selectedComponentUUIDs.add(selectedUUID);
-        }
+        store.selectedComponentUUIDs.add(selectedUUID);
       });
     },
     addSelectedComponentRect: (
@@ -172,8 +170,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       rect: DOMRectProperties
     ) => {
       set((store) => {
-        const selectedComponentRectsMap = store.selectedComponentRectsMap;
-        selectedComponentRectsMap.set(selectedUUID, rect);
+        store.selectedComponentRectsMap.set(selectedUUID, rect);
       });
     },
     clearSelectedComponents: () => {
