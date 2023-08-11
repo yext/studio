@@ -20,7 +20,7 @@ cli
       "npx",
       ["cross-env", NODE_OPTIONS, "npx", "vite", "--config", pathToViteConfig],
       {
-        stdio: "inherit",
+        stdio: ["ignore", "inherit", "inherit"],
         env: {
           ...process.env,
           YEXT_STUDIO_ARGS: JSON.stringify(options),
