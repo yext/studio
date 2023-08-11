@@ -1,7 +1,7 @@
 import useStudioStore from "../../store/useStudioStore";
 import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
-import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
+import { GetPathVal, PropValueKind, ResponseType } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
 import PropValueHelpers from "../../utils/PropValueHelpers";
 import StreamScopeParser, {
@@ -32,18 +32,12 @@ export default function EntityPageModal({
     streamScope,
     updateStreamScope,
     generateTestData,
-    updateEntityFiles,
-    setActiveEntityFile,
-    refreshActivePageEntities,
   ] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
     store.pages.pages[pageName].pagesJS?.streamScope,
     store.pages.updateStreamScope,
     store.actions.generateTestData,
-    store.pages.updateEntityFiles,
-    store.pages.setActiveEntityFile,
-    store.actions.refreshActivePageEntities,
   ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const pageDataValidator = useMemo(() => new PageDataValidator(true), []);
@@ -97,13 +91,9 @@ export default function EntityPageModal({
       const parsedForm = StreamScopeParser.parseStreamScope(form);
       updateStreamScope(pageName, parsedForm);
       const regenerateTestData = async () => {
-        try {
-          const mapping = await generateTestData();
-          updateEntityFiles(pageName, mapping[pageName]);
-          setActiveEntityFile(mapping[pageName]?.[0]);
-          await refreshActivePageEntities();
-        } catch {
-          toast.warn(
+        const response = await generateTestData();
+        if (response.type === ResponseType.Error) {
+          toast.error(
             "Error generating test data, but entity page settings were still updated."
           );
         }
@@ -120,9 +110,6 @@ export default function EntityPageModal({
       pageName,
       pageDataValidator,
       generateTestData,
-      updateEntityFiles,
-      setActiveEntityFile,
-      refreshActivePageEntities,
       streamScope,
     ]
   );

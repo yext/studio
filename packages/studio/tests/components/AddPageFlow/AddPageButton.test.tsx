@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import AddPageButton from "../../../src/components/AddPageButton/AddPageButton";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
-import { PageState, PropValueKind } from "@yext/studio-plugin";
+import { PageState, PropValueKind, ResponseType } from "@yext/studio-plugin";
 import * as sendMessageModule from "../../../src/messaging/sendMessage";
 
 const basicPageState: PageState = {
@@ -123,7 +123,7 @@ describe("PagesJS repo", () => {
         return new Promise((resolve) =>
           resolve({
             msg: "msg",
-            type: "success",
+            type: ResponseType.Success,
             mappingJson: {
               test: ["mockLocalData.json"],
             },
@@ -172,7 +172,7 @@ describe("PagesJS repo", () => {
         return new Promise((resolve) =>
           resolve({
             msg: "msg",
-            type: "success",
+            type: ResponseType.Success,
             mappingJson: {
               test: ["mockLocalData.json"],
             },

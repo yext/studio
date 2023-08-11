@@ -99,19 +99,18 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         }
       });
     },
-    updateEntityFiles: (pageName: string, entityFiles: string[]) => {
+    setEntityFiles: (pageName: string, entityFiles: string[] | undefined) => {
       set((store) => {
         const pageState = store.pages[pageName];
         if (!pageState.pagesJS) {
           throw new Error(
-            `Tried to updateEntityFiles for non PagesJS page ${pageName}.`
+            `Tried to update entity files for non-PagesJS page ${pageName}.`
           );
         }
         pageState.pagesJS = {
           ...pageState.pagesJS,
           entityFiles,
         };
-        store.pendingChanges.pagesToUpdate.add(pageName);
       });
     },
     clearPendingChanges: () => {

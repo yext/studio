@@ -3,6 +3,7 @@ import {
   StreamScope,
   PageState,
   PagesJsState,
+  ResponseType,
 } from "@yext/studio-plugin";
 import path from "path-browserify";
 import StudioConfigSlice from "../models/slices/StudioConfigSlice";
@@ -35,11 +36,11 @@ export default class CreatePageAction {
     this.getPageSlice().addPage(pageName, pageState);
 
     if (streamScope) {
-      try {
-        const mappingJson = await this.studioActions.generateTestData();
-        this.updateEntityFiles(pageName, mappingJson);
-      } catch {
-        toast.warn("Could not generate test data, but page was still created.");
+      const response = await this.studioActions.generateTestData();
+      if (response.type === ResponseType.Error) {
+        toast.error(
+          "Could not generate test data, but page was still created."
+        );
       }
     }
 
@@ -62,24 +63,6 @@ export default class CreatePageAction {
       pageState.pagesJS = pagesJsState;
     }
     return pageState;
-  }
-
-  private updateEntityFiles(
-    pageName: string,
-    mappingJson: Record<string, string[]>
-  ) {
-    const entityFilesForPage: string[] = mappingJson?.[pageName];
-    if (!Array.isArray(entityFilesForPage)) {
-      console.error(
-        `Error getting entity files for ${pageName} from ${JSON.stringify(
-          mappingJson,
-          null,
-          2
-        )}`
-      );
-    } else {
-      this.getPageSlice().updateEntityFiles(pageName, entityFilesForPage);
-    }
   }
 }
 
