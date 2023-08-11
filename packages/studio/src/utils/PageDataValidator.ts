@@ -20,12 +20,8 @@ export default class PageDataValidator {
     if (!url) {
       return false;
     }
-    try {
-      this.validate({ url });
-    } catch (error) {
-      return false;
-    }
-    return true;
+    const result: ValidationResult = this.validate({ url });
+    return result.valid;
   }
   /**
    * Throws an error if the user-inputted page data is invalid.
