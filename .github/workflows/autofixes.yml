@@ -46,7 +46,7 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
 
-        # since only changes to THIRD-PARTY-NOTICES files are added, this change will not be pushed
+      # since only changes to THIRD-PARTY-NOTICES files are added, this change will not be pushed
       - name: Clear workspace from package.json
         run: json -I -f package.json -e 'this.workspaces=[]'
 
