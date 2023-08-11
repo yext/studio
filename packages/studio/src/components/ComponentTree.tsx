@@ -221,7 +221,7 @@ function useDropHandler() {
         selectedComponentUUIDsArray.at(0),
         selectedComponentUUIDsArray.at(-1),
         componentTree
-      )
+      );
       const selectedComponents = componentTree
         .filter((c) => selectedComponentUUIDs.has(c.uuid))
         .map((c) => {
