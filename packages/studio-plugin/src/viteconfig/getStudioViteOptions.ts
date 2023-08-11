@@ -4,7 +4,7 @@ import { StudioConfigWithDefaulting } from "../types";
 export default function getStudioViteOptions(
   args: ConfigEnv,
   studioConfig: StudioConfigWithDefaulting,
-  excludeFromWatch: (filepath: string) => boolean
+  pathToUserProjectRoot: string
 ): UserConfig {
   const serverOptions: ServerOptions = {
     port: studioConfig.port,
@@ -13,7 +13,7 @@ export default function getStudioViteOptions(
       args.command === "serve" &&
       studioConfig.openBrowser,
     watch: {
-      ignored: excludeFromWatch,
+      ignored: pathToUserProjectRoot,
     },
   };
 

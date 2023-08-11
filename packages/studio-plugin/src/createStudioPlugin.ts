@@ -10,7 +10,6 @@ import { CliArgs, UserPaths } from "./types";
 import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
-import HmrManager from "./HmrManager";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import upath from "upath";
 import lodash from "lodash";
@@ -54,11 +53,6 @@ export default async function createStudioPlugin(
     studioConfig,
     studioConfig.isPagesJSRepo ? localDataMappingManager.getMapping : undefined
   );
-  const hmrManager = new HmrManager(
-    orchestrator,
-    pathToUserProjectRoot,
-    studioConfig.paths
-  );
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -92,7 +86,7 @@ export default async function createStudioPlugin(
       const studioViteOptions = getStudioViteOptions(
         args,
         studioConfig,
-        hmrManager.shouldExcludeFromWatch
+        pathToUserProjectRoot
       );
       return lodash.merge({}, config, studioViteOptions);
     },
@@ -115,9 +109,10 @@ export default async function createStudioPlugin(
       fileSystemManager,
       gitWrapper,
       orchestrator,
-      localDataMappingManager
+      localDataMappingManager,
+      pathToUserProjectRoot,
+      studioConfig.paths
     ),
-    handleHotUpdate: hmrManager.handleHotUpdate,
   };
 }
 
