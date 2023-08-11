@@ -41,7 +41,11 @@ export const startPagesDevelopmentServer = async () => {
         resolve(port);
       }
     });
-    setTimeout(() => {throw new Error("Error starting Pages Development Server. Port not found within 30 seconds.")}, 30_000)
+    setTimeout(() => {
+      throw new Error(
+        "Error starting Pages Development Server. Port not found within 30 seconds."
+      );
+    }, 30_000);
   });
 
   // kill pages server when studio exits
