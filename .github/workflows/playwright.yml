@@ -3,12 +3,12 @@ on: workflow_call
 
 jobs:
   acceptance:
-    name: ${{ matrix.os }} (${{ matrix.shard }}/3)
+    name: ${{ matrix.os }} (${{ matrix.shard }}/4)
     timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        shard: [1, 2, 3, 4, 5, 6]
+        shard: [1, 2, 3, 4]
         os: [windows-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -32,7 +32,7 @@ jobs:
       - run: |
           git config --global user.name "Playwright Job ${{ matrix.os }} ${{ matrix.shard }}"
           git config --global user.email "slapshot@yext.com"
-      - run: npm run playwright -- --shard=${{ matrix.shard }}/3
+      - run: npm run playwright -- --shard=${{ matrix.shard }}/4
         working-directory: e2e-tests
       - uses: actions/upload-artifact@v3
         if: success() || failure()
@@ -46,7 +46,7 @@ jobs:
         uses: EndBug/add-and-commit@v9
         if: ${{ failure() && github.event_name == 'pull_request' }}
         with:
-          message: New snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 3
+          message: New snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 4
           add: e2e-tests/__screenshots__/*.png
           push: true
           pull: --rebase --autostash

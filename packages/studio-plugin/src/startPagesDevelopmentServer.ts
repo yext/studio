@@ -21,12 +21,6 @@ export const startPagesDevelopmentServer = async () => {
     });
   });
 
-  pagesServer.stdout.on("data", (data: string) => {
-    data.split("\n").forEach((line: string) => {
-      console.log("Pages Development Server stdout |", line.trim());
-    });
-  });
-
   // kill studio if the pages server exits
   pagesServer.addListener("exit", () => {
     process.exit(-1);

@@ -50,7 +50,7 @@ export default async function spawnStudio(
  * The port is guaranteed to only be used by this test.
  */
 async function getPort(testInfo: TestInfo) {
-  let port = 5174 + getTestNumber(testInfo);
+  let port = 6001 + getTestNumber(testInfo);
   const totalNumTests = getTestGlob().length;
 
   let portIsOccupied = await serverExistsForPort(port);
