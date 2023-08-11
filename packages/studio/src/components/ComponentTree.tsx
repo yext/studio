@@ -123,7 +123,7 @@ function useDragPreview() {
   const componentNames = useComponentNames(selectedComponentUUIDs);
   return () => (
     <div className="p-2 rounded bg-emerald-200 w-fit">
-      {componentNames.map(c => (
+      {componentNames.map((c) => (
         <div key={c.uuid} className="flex">
           {c.name}
         </div>

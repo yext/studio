@@ -17,19 +17,24 @@ export default function useActiveComponentName(): string | undefined {
   return getComponentDisplayName(activeState);
 }
 
-export function useComponentNames(uuids: Set<string>): { name: string, uuid: string }[] {
+export function useComponentNames(
+  uuids: Set<string>
+): { name: string; uuid: string }[] {
   const componentTree = useStudioStore((store) => {
     return store.actions.getComponentTree();
   });
   if (!componentTree) {
     return [];
   }
-  const componentStates = ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
+  const componentStates = ComponentTreeHelpers.mapComponentTreeParentsFirst(
+    componentTree,
+    (c) => {
       if (uuids.has(c.uuid)) return c;
       else return undefined;
-  });
+    }
+  );
   return componentStates.flatMap((state) =>
-    state ? {name: getComponentDisplayName(state), uuid: state.uuid} : []
+    state ? { name: getComponentDisplayName(state), uuid: state.uuid } : []
   );
 }
 
