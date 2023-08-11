@@ -19,11 +19,11 @@ export default class HmrManager {
    *
    * See import('vite').Plugin.handleHotUpdate
    */
-  handleHotUpdate = async (ctx: HmrContext): Promise<void> => {
+  handleHotUpdate = async (ctx: HmrContext) => {
     const { server, file } = ctx;
 
-    await HmrManager.reloadAssociatedModules(ctx);
     if (!file.startsWith(this.pathToUserProjectRoot)) {
+      await HmrManager.reloadAssociatedModules(ctx);
       return;
     }
     this.orchestrator.reloadFile(file);
@@ -49,6 +49,7 @@ export default class HmrManager {
 
   private static async reloadAssociatedModules(ctx: HmrContext) {
     const reloadModulePromises = ctx.modules.map((m) => {
+      console.log('reloading module', m.file, m.importers)
       return ctx.server.reloadModule(m);
     });
     await Promise.all(reloadModulePromises);
