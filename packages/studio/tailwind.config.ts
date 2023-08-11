@@ -1,10 +1,20 @@
 import type { Config } from "tailwindcss";
-import type {
+import {
   StudioTailwindConfig,
   StudioTailwindTheme,
+  STUDIO_PROCESS_ARGS_OBJ,
+  CliArgs,
 } from "@yext/studio-plugin";
 import path from "path";
 import fs from "fs";
+
+const getRootDir = (): string => {
+  const cliArgs: CliArgs = JSON.parse(
+    process.env[STUDIO_PROCESS_ARGS_OBJ] as string
+  );
+  return cliArgs.root ?? process.cwd();
+};
+const rootDir = getRootDir();
 
 /**
  * The user's StudioTailwindTheme.
@@ -12,10 +22,7 @@ import fs from "fs";
 const userTailwindTheme: StudioTailwindTheme =
   (() => {
     try {
-      const tailwindConfigPath = path.resolve(
-        process.cwd(),
-        "tailwind.config.ts"
-      );
+      const tailwindConfigPath = path.resolve(rootDir, "tailwind.config.ts");
       if (fs.existsSync(tailwindConfigPath)) {
         // We have to use require() instead of a dynamic import because
         // tailwind does not support async config.
@@ -44,7 +51,7 @@ export default {
   content: [
     path.resolve(__dirname, "src/**/*.{ts,tsx}"),
     path.resolve(__dirname, "index.html"),
-    path.resolve(process.cwd(), "src/**/*.{ts,tsx}"),
+    path.resolve(rootDir, "src/**/*.{ts,tsx}"),
   ],
   safelist: generateSafelist(userTailwindTheme),
   theme: {
