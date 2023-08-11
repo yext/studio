@@ -71,7 +71,7 @@ function Item(props: FieldDropdownProps & { subfieldId: string }) {
       {isObject && (
         <div className="flex items-center">
           <VectorIcon />
-          <div className="absolute mt-4 ml-16">
+          <div className="absolute mt-4 left-60">
             <FieldDropdown
               fieldIdToValue={value as Record<string, unknown>}
               parentFieldId={fieldId}
