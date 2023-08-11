@@ -180,11 +180,10 @@ function useTree(): NodeModel<ComponentState>[] | undefined {
 }
 
 function useDropHandler() {
-  const [selectedComponentUUIDs, lowestParentUUID, componentTree, updateComponentTree] =
+  const [selectedComponentUUIDs, componentTree, updateComponentTree] =
     useStudioStore((store) => {
       return [
         store.pages.selectedComponentUUIDs,
-        store.pages.lowestParentUUID,
         store.actions.getComponentTree(),
         store.actions.updateComponentTree,
       ];
@@ -201,6 +200,8 @@ function useDropHandler() {
           "Unable to handle drag and drop event: component tree is undefined."
         );
       }
+      console.log(componentTree);
+      console.log(updatedComponentTree);
       if (
         isEqual(
           ComponentTreeHelpers.mapComponentTreeParentsFirst(
@@ -215,16 +216,20 @@ function useDropHandler() {
       ) {
         return;
       }
+      const selectedComponentUUIDsArray = Array.from(selectedComponentUUIDs);
+      const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
+        selectedComponentUUIDsArray.at(0),
+        selectedComponentUUIDsArray.at(-1),
+        componentTree
+      )
       const selectedComponents = componentTree
         .filter((c) => selectedComponentUUIDs.has(c.uuid))
         .map((c) => {
           if (c.parentUUID !== lowestParentUUID) return c;
           return updateComponentParentUUID(c, destinationParentId);
         });
-
       updatedComponentTree = updatedComponentTree.filter(
-        (c) =>
-          c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
+        (c) => c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
       );
       let newDestinationIndex;
       updatedComponentTree.forEach((c, index) => {
@@ -237,10 +242,11 @@ function useDropHandler() {
         1,
         ...selectedComponents
       );
+      console.log(updatedComponentTree);
 
       updateComponentTree(updatedComponentTree);
     },
-    [selectedComponentUUIDs, lowestParentUUID, componentTree, updateComponentTree]
+    [selectedComponentUUIDs, componentTree, updateComponentTree]
   );
 
   const handleDrop = useCallback(
