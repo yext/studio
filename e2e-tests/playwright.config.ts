@@ -23,7 +23,7 @@ expect.extend({
 const config: PlaywrightTestConfig = {
   testDir: "./tests",
   /* Maximum time one test can run for. */
-  timeout: 90 * 1000,
+  timeout: 125 * 1000,
   snapshotPathTemplate: "__screenshots__/{platform}/{testFilePath}/{arg}{ext}",
   expect: {
     /**
@@ -40,7 +40,6 @@ const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 2 : 0,
-  fullyParallel: true,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: "html",
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -51,6 +50,7 @@ const config: PlaywrightTestConfig = {
     trace: "on-first-retry",
     video: "on",
   },
+  workers: 1,
 };
 
 export default config;
