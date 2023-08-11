@@ -13,6 +13,7 @@ export interface ViewportMap {
     [key: string]: Viewport;
 }
 
+//todo add more "new" phones + dimensions
 export const INITIAL_VIEWPORTS: ViewportMap = {
   iphonex: {
     name: 'iPhone X',
@@ -119,7 +120,7 @@ export const INITIAL_VIEWPORTS: ViewportMap = {
     type: 'mobile',
   },
 };
-export const DEFAULT_VIEWPORT = 'responsive';
+export const DEFAULT_VIEWPORT = 'responsive'; // todo tbd if we need this
 
 export const MINIMAL_VIEWPORTS: ViewportMap = {
   mobile1: {

@@ -4,7 +4,7 @@ import SaveButton from "./SaveButton";
 import DeployButton from "./DeployButton";
 import gitData from "virtual_yext-studio-git-data";
 import OpenLivePreviewButton from "./OpenLivePreviewButton";
-
+import Viewport from "./Viewport/Viewport";
 /**
  * Renders the top bar of Studio, which includes buttons for performing undo
  * and redo actions, and adding elements.
@@ -17,6 +17,7 @@ export default function ActionsBar(): JSX.Element {
         <OpenLivePreviewButton />
       </div>
       <div className="ml-8 flex">
+        <Viewport />
         <UndoRedo />
       </div>
       {!gitData.isWithinCBD && <SaveButton />}
