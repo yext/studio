@@ -4,5 +4,5 @@ export default {
     pages: "src/templates",
   },
   isPagesJSRepo: true,
-  port: 5173,
+  port: 5174,
 };
