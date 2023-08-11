@@ -202,11 +202,11 @@ function useDropHandler() {
       const hasNoChanges = isEqual(
         ComponentTreeHelpers.mapComponentTreeParentsFirst(
           updatedComponentTree,
-          c => c
+          (c) => c
         ),
         ComponentTreeHelpers.mapComponentTreeParentsFirst(
           componentTree,
-          c => c
+          (c) => c
         )
       );
       if (hasNoChanges) {

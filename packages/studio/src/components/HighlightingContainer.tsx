@@ -110,9 +110,8 @@ class HighlightingClass extends Component<HighlightingProps> {
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
     const isRectUpdated =
-      JSON.stringify(
-        this.props.selectedComponentRectsMap[this.props.uuid]
-      ) === JSON.stringify(rect);
+      JSON.stringify(this.props.selectedComponentRectsMap[this.props.uuid]) ===
+      JSON.stringify(rect);
     if (
       !isRectUpdated &&
       this.props.selectedComponentUUIDs.has(this.props.uuid)
