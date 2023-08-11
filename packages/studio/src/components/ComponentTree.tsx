@@ -215,7 +215,7 @@ function useDropHandler() {
       const selectedUUIDsArray = Array.from(selectedComponentUUIDs);
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         selectedUUIDsArray[0],
-        selectedUUIDsArray[selectedUUIDsArray.length-1],
+        selectedUUIDsArray[selectedUUIDsArray.length - 1],
         componentTree
       );
       const selectedComponents = componentTree
