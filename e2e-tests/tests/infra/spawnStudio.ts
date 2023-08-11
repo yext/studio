@@ -28,9 +28,7 @@ export default async function spawnStudio(
       "--port",
       port.toString(),
       "--root",
-      rootDir,
-      "--",
-      "--noGenerateTestData",
+      rootDir
     ],
     { stdio: "pipe", shell: true }
   );
