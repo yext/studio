@@ -66,7 +66,7 @@ describe("PageSlice: page component actions", () => {
     function shiftSelect(
       activeUUID: string,
       selectedComponent: ComponentState,
-      expectedUUIDSelection: Set<string>,
+      expectedUUIDSelection: Set<string>
     ) {
       store().pages.clearSelectedComponents();
       store().pages.setActiveComponentUUID(activeUUID);
@@ -103,10 +103,9 @@ describe("PageSlice: page component actions", () => {
     it("adds a selected component UUID using addSelectedComponentUUID", () => {
       store().pages.addSelectedComponentUUID("searchbar-uuid");
       const selectedComponentUUIDs = store().pages.selectedComponentUUIDs;
-      expect(selectedComponentUUIDs).toEqual(new Set([
-        "results-uuid",
-        "searchbar-uuid",
-      ]));
+      expect(selectedComponentUUIDs).toEqual(
+        new Set(["results-uuid", "searchbar-uuid"])
+      );
     });
 
     it("adds a selected component Rect using addSelectedComponentRect", () => {
