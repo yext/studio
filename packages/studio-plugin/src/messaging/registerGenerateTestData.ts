@@ -1,7 +1,13 @@
 import { spawnSync } from "child_process";
 import { registerListener } from "./registerListener";
 import { ViteDevServer } from "vite";
-import { MessageID, GenerateTestDataPayload } from "../types";
+import {
+  MessageID,
+  GenerateTestDataPayload,
+  BaseResponse,
+  ErrorResponse,
+  ResponseType,
+} from "../types";
 import { FeaturesJson } from "../types/PagesJS";
 import LocalDataMappingManager from "../LocalDataMappingManager";
 
@@ -16,11 +22,10 @@ export default function registerGenerateTestData(
     server,
     MessageID.GenerateTestData,
     ({ featuresJson }: GenerateTestDataPayload) => {
-      const msg = generateTestData(featuresJson);
+      const response = generateTestData(featuresJson);
       localDataMappingManager.refreshMapping();
       return {
-        type: "success",
-        msg,
+        ...response,
         mappingJson: localDataMappingManager.getMapping(),
       };
     }
@@ -30,7 +35,9 @@ export default function registerGenerateTestData(
 /**
  * Spawns a `yext pages generate-test-data -a` call with the given FeaturesJson.
  */
-function generateTestData(featuresJson: FeaturesJson) {
+function generateTestData(
+  featuresJson: FeaturesJson
+): BaseResponse | ErrorResponse {
   const prepareJsonForCmd = (json: FeaturesJson) => {
     if (process.platform === "win32") {
       return `${JSON.stringify(json).replace(/([\\]*)"/g, `$1$1\\"`)}`;
@@ -57,7 +64,13 @@ function generateTestData(featuresJson: FeaturesJson) {
   );
 
   if (output.status !== 0) {
-    throw new Error("Could not generate test data.");
+    return {
+      type: ResponseType.Error,
+      msg: "Could not generate test data.",
+    };
   }
-  return "Successfully generated test data.";
+  return {
+    type: ResponseType.Success,
+    msg: "Successfully generated test data.",
+  };
 }

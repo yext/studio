@@ -51,7 +51,8 @@ export default class StudioActions {
       getFileMetadatas
     ).importComponent;
     this.generateTestData = new GenerateTestDataAction(
-      getPages
+      getPages,
+      this
     ).generateTestData;
     this.createPage = new CreatePageAction(
       this,
@@ -233,6 +234,7 @@ export default class StudioActions {
     const entityFiles =
       this.getPages().getActivePageState()?.pagesJS?.entityFiles;
     if (!entityFiles?.length) {
+      this.getPages().setActivePageEntities(undefined);
       return;
     }
 

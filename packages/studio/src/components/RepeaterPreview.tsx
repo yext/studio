@@ -1,12 +1,14 @@
 import { RepeaterState } from "@yext/studio-plugin";
 import { get } from "lodash";
-import { useCallback, useMemo } from "react";
+import { Dispatch, SetStateAction, useCallback, useMemo } from "react";
 import { ExpressionSources } from "../utils/getPropsForPreview";
 import ComponentPreview from "./ComponentPreview";
+import { ITooltip } from "react-tooltip";
 
 interface RepeaterPreviewProps {
   repeaterState: RepeaterState;
   expressionSources: ExpressionSources;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }
 
 /**
@@ -15,6 +17,7 @@ interface RepeaterPreviewProps {
 export default function RepeaterPreview({
   repeaterState,
   expressionSources,
+  setTooltipProps,
 }: RepeaterPreviewProps): JSX.Element | null {
   const { repeatedComponent, listExpression } = repeaterState;
   const repeatedElementState = useMemo(
@@ -33,9 +36,10 @@ export default function RepeaterPreview({
         expressionSources={expressionSources}
         parentItem={item}
         key={key}
+        setTooltipProps={setTooltipProps}
       />
     ),
-    [repeatedElementState, expressionSources]
+    [repeatedElementState, expressionSources, setTooltipProps]
   );
 
   const list = get(expressionSources, listExpression) as unknown;

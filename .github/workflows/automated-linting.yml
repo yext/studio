@@ -1,4 +1,4 @@
-name: Automated Fixes
+name: Automated Linting
 on:
   workflow_call:
     secrets:
