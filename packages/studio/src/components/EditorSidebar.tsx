@@ -25,7 +25,10 @@ export default function EditorSidebar(): JSX.Element {
   const [selectedTab, setTab] = useState<Tab>(Tab.Props);
 
   return (
-    <div className="w-1/4 px-4 flex flex-col h-fill" data-testid="EditorSidebar">
+    <div
+      className="w-1/4 px-4 flex flex-col h-fill"
+      data-testid="EditorSidebar"
+    >
       <OptionPicker
         options={Tab}
         icons={tabIcons}
