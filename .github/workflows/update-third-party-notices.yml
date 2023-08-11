@@ -13,8 +13,8 @@ jobs:
         with:
           node-version: 18.x
           registry-url: "https://registry.npmjs.org"
-      - run: npm install -g json@v11
-      - run: npm install -g generate-license-file@2
+      - run: npm install -g json@v11.0.0
+      - run: npm install -g generate-license-file@2.0.0
       - uses: actions/checkout@v3
         with:
           ref: ${{ github.head_ref }}
