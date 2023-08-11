@@ -21,6 +21,12 @@ export const startPagesDevelopmentServer = async () => {
     });
   });
 
+  pagesServer.stdout.on("data", (data: string) => {
+    data.split("\n").forEach((line: string) => {
+      console.log("Pages Development Server stdout |", line.trim());
+    });
+  });
+
   // kill studio if the pages server exits
   pagesServer.addListener("exit", () => {
     process.exit(-1);
@@ -45,7 +51,7 @@ export const startPagesDevelopmentServer = async () => {
       throw new Error(
         "Error starting Pages Development Server. Port not found within 30 seconds."
       );
-    }, 30_000);
+    }, 100_000);
   });
 
   // kill pages server when studio exits
