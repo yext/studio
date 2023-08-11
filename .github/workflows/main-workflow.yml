@@ -7,11 +7,15 @@ concurrency:
 
 jobs:
   automated-fixes:
-    uses: ./.github/workflows/autofixes.yml
+    uses: ./.github/workflows/automated-linting.yml
     secrets: inherit
 
   update-tailwind-bundle:
     uses: ./.github/workflows/update-tailwind-bundle.yml
+    secrets: inherit
+
+  update-third-party-notices:
+    uses: ./.github/workflows/update-third-party-notices.yml
     secrets: inherit
 
   run-tests:
