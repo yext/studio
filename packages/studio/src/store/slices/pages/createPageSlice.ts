@@ -203,7 +203,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `Error adding components: active component is undefined.`
         );
       }
-      const targetComponentUUIDs: [string, string] = [selectedUUID, activeComponentUUID];
+      const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as const;
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         ...targetComponentUUIDs,
         componentTree
