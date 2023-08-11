@@ -36,11 +36,12 @@ export const startPagesDevelopmentServer = async () => {
       if (matches && matches.length >= 2) {
         const port = Number.parseInt(matches[1]);
         if (isNaN(port)) {
-          throw new Error("PagesJS dev server port was parsed as NaN.");
+          throw new Error("Pagess Development Server port was parsed as NaN.");
         }
         resolve(port);
       }
     });
+    setTimeout(() => {throw new Error("Error starting Pages Development Server. Port not found within 30 seconds.")}, 30_000)
   });
 
   // kill pages server when studio exits
