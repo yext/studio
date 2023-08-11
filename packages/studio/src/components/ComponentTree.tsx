@@ -103,6 +103,35 @@ export default function ComponentTree(): JSX.Element | null {
   );
 }
 
+function canDrop(_: NodeModel<ComponentState>[], opts: DropOptions) {
+  const { dragSource, dropTarget, dropTargetId } = opts;
+  if (dropTarget !== undefined && !dropTarget.droppable) {
+    return false;
+  }
+  if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
+    return true;
+  }
+  // For this drag and drop library, returning undefined has different behavior than returning false.
+  // It means to use the default behavior.
+  return undefined;
+}
+
+function useDragPreview() {
+  const selectedComponentUUIDs = useStudioStore((store) => {
+    return store.pages.selectedComponentUUIDs;
+  });
+  const componentNames = useComponentNames(selectedComponentUUIDs);
+  return () => (
+    <div className="p-2 rounded bg-emerald-200 w-fit">
+      {componentNames.map(c => (
+        <div key={c.uuid} className="flex">
+          {c.name}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
   const Placeholder = () => {
     const placeHolderStyle = useMemo(
@@ -117,36 +146,6 @@ function renderPlaceholder(_: NodeModel, { depth }: PlaceholderRenderParams) {
     );
   };
   return <Placeholder />;
-}
-
-function useDragPreview() {
-  const selectedComponentUUIDs = useStudioStore((store) => {
-    return store.pages.selectedComponentUUIDs;
-  });
-  const selectComponentUUIDsArray = Array.from(selectedComponentUUIDs);
-  const componentNames = useComponentNames(selectComponentUUIDsArray);
-  return () => (
-    <div className="p-2 rounded bg-emerald-200 w-fit">
-      {componentNames.map((name, index) => (
-        <div key={selectComponentUUIDsArray[index]} className="flex">
-          {name}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function canDrop(_: NodeModel<ComponentState>[], opts: DropOptions) {
-  const { dragSource, dropTarget, dropTargetId } = opts;
-  if (dropTarget !== undefined && !dropTarget.droppable) {
-    return false;
-  }
-  if (dragSource?.parent === dropTargetId || dropTargetId === ROOT_ID) {
-    return true;
-  }
-  // For this drag and drop library, returning undefined has different behavior than returning false.
-  // It means to use the default behavior.
-  return undefined;
 }
 
 function useTree(): NodeModel<ComponentState>[] | undefined {
@@ -200,8 +199,6 @@ function useDropHandler() {
           "Unable to handle drag and drop event: component tree is undefined."
         );
       }
-      console.log(componentTree);
-      console.log(updatedComponentTree);
       if (
         isEqual(
           ComponentTreeHelpers.mapComponentTreeParentsFirst(
@@ -242,7 +239,6 @@ function useDropHandler() {
         1,
         ...selectedComponents
       );
-      console.log(updatedComponentTree);
 
       updateComponentTree(updatedComponentTree);
     },

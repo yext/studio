@@ -56,7 +56,7 @@ function Highlighter({
       store.actions.getComponentState(componentTree, uuid)?.kind ===
       ComponentStateKind.Error
   );
-  const [componentName] = useComponentNames([uuid]);
+  const [componentName] = useComponentNames(new Set([uuid]));
 
   const red300 = "rgb(252 165 165)";
   const skyBlueFromMocks = "rgb(88,146,255)";
@@ -98,7 +98,7 @@ function Highlighter({
 
   return (
     <div style={style}>
-      <div style={tagStyle}>{componentName}</div>
+      <div style={tagStyle}>{componentName.name}</div>
     </div>
   );
 }
