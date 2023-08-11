@@ -46,19 +46,14 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
 
-      # copy package.json files from studio and studio-plugin to a temp directory
-      - run: mkdir -p temp/studio; mkdir -p temp/studio-plugin
-      - run: cp packages/studio/package.json temp/studio/package.json
-      - run: cp packages/studio-plugin/package.json temp/studio-plugin/package.json
+        # since only changes to THIRD-PARTY-NOTICES files are added, this change will not be pushed
+      - name: Clear workspace from package.json
+        run: json -I -f package.json -e 'this.workspaces=[]'
 
-      # npm install in both directories
-      # generate-license-file works using package.json and node_modules
-      - working-directory: temp/studio
-        run: npm i && generate-license-file --input package.json --output ../packages/studio/THIRD-PARTY-NOTICES --overwrite
-      - working-directory: temp/studio-plugin
-        run: npm i && generate-license-file --input package.json --output ../packages/studio-plugin/THIRD-PARTY-NOTICES --overwrite
-      - if: always()
-        run: rm -rf ./temp
+      - working-directory: packages/studio
+        run: npm install; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
+      - working-directory: packages/studio-plugin
+        run: npm install; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
 
       - name: Update THIRD-PARTY-NOTICES
         id: update-notices
