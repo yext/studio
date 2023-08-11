@@ -1332,7 +1332,7 @@ SOFTWARE.
 The following npm packages may be included in this product:
 
  - @types/estree@1.0.1
- - @types/node@20.4.9
+ - @types/node@20.4.10
 
 These packages each contain the following license and notice below:
 
