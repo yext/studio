@@ -1,12 +1,16 @@
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import useStudioStore from "../store/useStudioStore";
 import usePreviewProps from "../hooks/usePreviewProps";
 import ComponentTreePreview from "./ComponentTreePreview";
 import useRawSiteSettings from "../hooks/useRawSiteSettings";
 import { ComponentStateHelpers, TypeGuards } from "@yext/studio-plugin";
 import { get } from "lodash";
+import { ITooltip } from "react-tooltip";
 
-export default function PreviewPanel() {
+export default function PreviewPanel(props: {
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
+}) {
+  const { setTooltipProps } = props;
   const [componentTree, moduleUUIDBeingEdited, getComponentState] =
     useStudioStore((store) => [
       store.actions.getComponentTree(),
@@ -51,6 +55,7 @@ export default function PreviewPanel() {
     <ComponentTreePreview
       componentTree={componentTree}
       expressionSources={expressionSources}
+      setTooltipProps={setTooltipProps}
     />
   );
 }

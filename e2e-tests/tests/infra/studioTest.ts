@@ -27,7 +27,7 @@ export const studioTest = base.extend<Fixtures>({
     const opts = { createRemote, debug, testInfo };
     await setupAcceptance(opts, async (port: number, tmpDir: string) => {
       await page.goto("localhost:" + port);
-      await page.waitForLoadState("networkidle");
+      await page.waitForLoadState();
       const studioPage = new StudioPlaywrightPage(page, tmpDir);
       await use(studioPage);
     });
