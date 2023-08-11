@@ -128,11 +128,11 @@ export default async function createStudioPlugin(
   };
 }
 
-  function getProjectRoot(cliArgs: CliArgs) {
-    if (!cliArgs.root) {
-      return upath.normalize(process.cwd());
-    } else if (upath.isAbsolute(cliArgs.root)) {
-      return upath.normalize(cliArgs.root);
-    }
-    return upath.join(process.cwd(), cliArgs.root);
+function getProjectRoot(cliArgs: CliArgs) {
+  if (!cliArgs.root) {
+    return upath.normalize(process.cwd());
+  } else if (upath.isAbsolute(cliArgs.root)) {
+    return upath.normalize(cliArgs.root);
   }
+  return upath.join(process.cwd(), cliArgs.root);
+}
