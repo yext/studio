@@ -6,7 +6,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  automated-fixes:
+  automated-linting:
     uses: ./.github/workflows/automated-linting.yml
     secrets: inherit
 
@@ -19,9 +19,9 @@ jobs:
     secrets: inherit
 
   run-tests:
-    needs: automated-fixes
+    needs: automated-linting
     uses: ./.github/workflows/run-tests.yml
 
   playwright:
-    needs: automated-fixes
+    needs: automated-linting
     uses: ./.github/workflows/playwright.yml
