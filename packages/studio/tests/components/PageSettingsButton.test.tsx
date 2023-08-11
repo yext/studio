@@ -4,7 +4,6 @@ import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
 import { PageState, PropValueKind, ResponseType } from "@yext/studio-plugin";
-import TemplateExpressionFormatter from "../../src/utils/TemplateExpressionFormatter";
 import { checkTooltipFunctionality } from "../__utils__/helpers";
 import * as sendMessageModule from "../../src/messaging/sendMessage";
 import { StudioStore } from "../../src/store/models/StudioStore";
