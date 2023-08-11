@@ -1,3 +1,8 @@
+interface ValidationResult {
+  valid: boolean;
+  errorMessages: string;
+}
+
 /**
  * PageDataValidator contains various static utility methods
  * for validation of user-inputted page data.
@@ -25,7 +30,7 @@ export default class PageDataValidator {
   /**
    * Throws an error if the user-inputted page data is invalid.
    */
-  validate(pageData: { pageName?: string; url?: string }) {
+  validate(pageData: { pageName?: string; url?: string }): ValidationResult {
     const errorMessages: string[] = [];
     if (pageData.pageName !== undefined)
       errorMessages.push(...this.validatePageName(pageData.pageName));
@@ -33,7 +38,10 @@ export default class PageDataValidator {
       errorMessages.push(
         ...this.validateURLSlug(pageData.url, this.isEntityPage)
       );
-    if (errorMessages.length > 0) throw new Error(errorMessages.join("\r\n"));
+    return {
+      valid: errorMessages.length === 0,
+      errorMessages: errorMessages.join("\r\n")
+    } as ValidationResult;
   }
 
   /**

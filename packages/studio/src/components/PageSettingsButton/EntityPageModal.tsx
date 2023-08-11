@@ -75,18 +75,13 @@ export default function EntityPageModal({
         kind: PropValueKind.Expression,
         value: TemplateExpressionFormatter.getRawValue(form.url),
       };
-      try {
-        pageDataValidator.validate({ url: getPathValue.value });
-      } catch (error) {
-        if (error instanceof Error) {
-          setErrorMessage(error.message);
-          return false;
-        } else {
-          throw error;
-        }
+      const validationResult = pageDataValidator.validate({ url: getPathValue.value });
+      if (!validationResult.valid) {
+        setErrorMessage(validationResult.errorMessages);
+        return false;
       }
       if (form.url || currGetPathValue) {
-        updateGetPathValue(pageName, getPathValue);
+        updateGetPathValue(pageName, getPathValue); 
       }
       const parsedForm = StreamScopeParser.parseStreamScope(form);
       updateStreamScope(pageName, parsedForm);

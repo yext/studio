@@ -54,15 +54,10 @@ export default function StaticPageModal({
         kind: PropValueKind.Literal,
         value: form.url,
       };
-      try {
-        pageDataValidator.validate({ url: getPathValue.value });
-      } catch (error) {
-        if (error instanceof Error) {
-          setErrorMessage(error.message);
-          return false;
-        } else {
-          throw error;
-        }
+      const validationResult = pageDataValidator.validate({ url: getPathValue.value });
+      if (!validationResult.valid) {
+        setErrorMessage(validationResult.errorMessages);
+        return false;
       }
       updateGetPathValue(pageName, getPathValue);
       return true;

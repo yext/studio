@@ -42,11 +42,15 @@ export default function BasicPageDataCollector({
 
   const onConfirm = useCallback(
     async (data: BasicPageData) => {
+      const getPathValue = data.url
+        ? createGetPathVal(data.url, isEntityPage)
+        : undefined;
+      const validationResult = pageDataValidator.validate({ ...data, url: getPathValue?.value });
+      if (!validationResult.valid) {
+        setErrorMessage(validationResult.errorMessages);
+        return false;
+      }
       try {
-        const getPathValue = data.url
-          ? createGetPathVal(data.url, isEntityPage)
-          : undefined;
-        pageDataValidator.validate({ ...data, url: getPathValue?.value });
         await handleConfirm(data.pageName, getPathValue);
         return true;
       } catch (err: unknown) {
