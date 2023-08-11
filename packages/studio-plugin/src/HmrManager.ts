@@ -49,7 +49,7 @@ export default class HmrManager {
 
   private static async reloadAssociatedModules(ctx: HmrContext) {
     const reloadModulePromises = ctx.modules.map((m) => {
-      console.log('reloading module', m.file, m.importers)
+      console.log("reloading module", m.file, m.importers);
       return ctx.server.reloadModule(m);
     });
     await Promise.all(reloadModulePromises);
