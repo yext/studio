@@ -6,7 +6,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  automated-fixes:
+  # automated-fixes:
     # uses: ./.github/workflows/autofixes.yml
     # secrets: inherit
 
