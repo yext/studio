@@ -1,13 +1,15 @@
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { ComponentTreeHelpers, ComponentState } from "@yext/studio-plugin";
 import { ExpressionSources } from "../utils/getPropsForPreview";
 import ErrorBoundary from "./common/ErrorBoundary";
 import HighlightingContainer from "./HighlightingContainer";
 import ComponentPreview from "./ComponentPreview";
+import { ITooltip } from "react-tooltip";
 
 interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   expressionSources: ExpressionSources;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
   renderHighlightingContainer?: boolean;
 }
 
@@ -17,11 +19,13 @@ interface ComponentTreePreviewProps {
 export default function ComponentTreePreview({
   componentTree,
   expressionSources,
+  setTooltipProps,
   renderHighlightingContainer = true,
 }: ComponentTreePreviewProps): JSX.Element {
   const elements = useComponentTreeElements(
     componentTree,
     expressionSources,
+    setTooltipProps,
     renderHighlightingContainer
   );
   return <>{elements}</>;
@@ -34,6 +38,7 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   expressionSources: ExpressionSources,
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>,
   renderHighlightingContainer?: boolean
 ): (JSX.Element | null)[] | null {
   return useMemo(() => {
@@ -45,6 +50,7 @@ function useComponentTreeElements(
             componentState={c}
             expressionSources={expressionSources}
             childElements={children}
+            setTooltipProps={setTooltipProps}
           />
         );
         if (!renderHighlightingContainer) {
@@ -59,5 +65,10 @@ function useComponentTreeElements(
         );
       }
     );
-  }, [componentTree, expressionSources, renderHighlightingContainer]);
+  }, [
+    componentTree,
+    expressionSources,
+    renderHighlightingContainer,
+    setTooltipProps,
+  ]);
 }

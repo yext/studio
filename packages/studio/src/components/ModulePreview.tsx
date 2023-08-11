@@ -1,15 +1,18 @@
-import { useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import ComponentTreePreview from "./ComponentTreePreview";
 import { ModuleState } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources } from "../utils/getPropsForPreview";
+import { ITooltip } from "react-tooltip";
 
 export default function ModulePreview(props: {
   expressionSources: ExpressionSources;
   previewProps: Record<string, unknown>;
   moduleState: ModuleState;
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }) {
-  const { expressionSources, previewProps, moduleState } = props;
+  const { expressionSources, previewProps, moduleState, setTooltipProps } =
+    props;
 
   const getModuleMetadata = useStudioStore(
     (store) => store.fileMetadatas.getModuleMetadata
@@ -30,6 +33,7 @@ export default function ModulePreview(props: {
     <ComponentTreePreview
       componentTree={componentTree}
       expressionSources={moduleExpressionSources}
+      setTooltipProps={setTooltipProps}
       renderHighlightingContainer={false}
     />
   );
