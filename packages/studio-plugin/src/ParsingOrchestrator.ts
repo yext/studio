@@ -132,7 +132,7 @@ export default class ParsingOrchestrator {
       }
     }
     this.studioData = this.calculateStudioData();
-    return this.filepathToFileMetadata[filepath]
+    return this.filepathToFileMetadata[filepath];
   }
 
   getStudioData(): StudioData {

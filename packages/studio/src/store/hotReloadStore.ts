@@ -2,7 +2,7 @@ import { StudioData, StudioHMRPayload } from "@yext/studio-plugin";
 import useStudioStore from "./useStudioStore";
 import removeTopLevelFragments from "../utils/removeTopLevelFragments";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
-import path from "path-browserify"
+import path from "path-browserify";
 import { getFunctionComponent } from "./StudioActions/ImportComponentAction";
 
 /**
@@ -45,15 +45,27 @@ async function syncFileMetadata(studioData: StudioData, file: string) {
     store.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
     store.previousSave.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
   });
-  const fileMetadata = Object.values(UUIDToFileMetadata).find(metadata => metadata.filepath === file)
+  const fileMetadata = Object.values(UUIDToFileMetadata).find(
+    (metadata) => metadata.filepath === file
+  );
   if (!fileMetadata) {
     return;
   }
 
-  const importedFile = await dynamicImportFromBrowser(file + `?timestamp=${Date.now()}`);
-  const componentFunction = getFunctionComponent(importedFile, path.basename(file, '.tsx'));
+  const importedFile = await dynamicImportFromBrowser(
+    file + `?timestamp=${Date.now()}`
+  );
+  const componentFunction = getFunctionComponent(
+    importedFile,
+    path.basename(file, ".tsx")
+  );
   if (componentFunction) {
-    useStudioStore.getState().fileMetadatas.setImportedComponent(fileMetadata.metadataUUID, componentFunction);
+    useStudioStore
+      .getState()
+      .fileMetadatas.setImportedComponent(
+        fileMetadata.metadataUUID,
+        componentFunction
+      );
   }
 }
 

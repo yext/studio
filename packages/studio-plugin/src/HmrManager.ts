@@ -58,7 +58,7 @@ export default class HmrManager {
     return {
       updateType,
       studioData,
-      file
+      file,
     };
   }
 }
