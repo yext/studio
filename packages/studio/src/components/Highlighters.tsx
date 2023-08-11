@@ -27,7 +27,7 @@ export default function Highlighters(props: {
           <Highlighter
             key={`${uuid}-key`}
             uuid={uuid}
-            rect={selectedComponentRectsMap.get(uuid)}
+            rect={selectedComponentRectsMap[uuid]}
             iframeEl={iframeEl}
           />
         );

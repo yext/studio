@@ -94,9 +94,9 @@ describe("PageSlice: page component actions", () => {
         activePageName: "universal",
         activeComponentUUID: "results-uuid",
         selectedComponentUUIDs: new Set(["results-uuid"]),
-        selectedComponentRectsMap: new Map([
-          ["results-uuid", domRect(1, 2, 3, 4)],
-        ]),
+        selectedComponentRectsMap: {
+          "results-uuid": domRect(1, 2, 3, 4),
+        },
       });
     });
 
@@ -115,10 +115,10 @@ describe("PageSlice: page component actions", () => {
       );
       const selectedComponentRectsMap = store().pages.selectedComponentRectsMap;
       expect(selectedComponentRectsMap).toEqual(
-        new Map([
-          ["results-uuid", domRect(1, 2, 3, 4)],
-          ["searchbar-uuid", domRect(5, 6, 7, 8)],
-        ])
+        {
+          "results-uuid": domRect(1, 2, 3, 4),
+          "searchbar-uuid": domRect(5, 6, 7, 8),
+        }
       );
     });
 
@@ -129,7 +129,7 @@ describe("PageSlice: page component actions", () => {
         store().pages.selectedComponentRectsMap,
       ];
       expect(selectedComponentUUIDs).toEqual(new Set());
-      expect(selectedComponentRectsMap).toEqual(new Map());
+      expect(selectedComponentRectsMap).toEqual({});
     });
 
     it("shift selects components after the active component", () => {
@@ -189,7 +189,7 @@ describe("PageSlice: page component actions", () => {
         activePageName: "universal",
         activeComponentUUID: undefined,
         selectedComponentUUIDs: new Set(),
-        selectedComponentRectsMap: new Map(),
+        selectedComponentRectsMap: {},
       });
       const expectedUUIDSelection = new Set([
         "resultschild-uuid",

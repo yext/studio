@@ -15,7 +15,7 @@ export default function mockComponentTree({
   moduleUUIDBeingEdited?: string;
   activeComponentUUID?: string;
   selectedComponentUUIDs?: Set<string>;
-  selectedComponentRectsMap?: Map<string, DOMRectProperties>;
+  selectedComponentRectsMap?: Record<string, DOMRectProperties>;
 }): void {
   mockStore({
     pages: {

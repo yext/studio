@@ -31,7 +31,7 @@ export interface PageSliceStates {
   /** The uuids of the currently selected components in Studio (including the active component). */
   selectedComponentUUIDs: Set<string>;
   /** The DOMRects of the currently selected components in Studio (including the active component). */
-  selectedComponentRectsMap: Map<string, DOMRectProperties>;
+  selectedComponentRectsMap: Record<string, DOMRectProperties>;
   /**
    * The part of state that tracks which pages have been interacted with from
    * the UI and have changes pending on commit.
