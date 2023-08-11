@@ -45,7 +45,10 @@ export default function BasicPageDataCollector({
       const getPathValue = data.url
         ? createGetPathVal(data.url, isEntityPage)
         : undefined;
-      const validationResult = pageDataValidator.validate({ ...data, url: getPathValue?.value });
+      const validationResult = pageDataValidator.validate({
+        ...data,
+        url: getPathValue?.value,
+      });
       if (!validationResult.valid) {
         setErrorMessage(validationResult.errorMessages);
         return false;

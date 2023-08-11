@@ -40,7 +40,7 @@ export default class PageDataValidator {
       );
     return {
       valid: errorMessages.length === 0,
-      errorMessages: errorMessages.join("\r\n")
+      errorMessages: errorMessages.join("\r\n"),
     } as ValidationResult;
   }
 

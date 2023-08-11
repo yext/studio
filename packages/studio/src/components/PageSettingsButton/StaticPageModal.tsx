@@ -54,7 +54,9 @@ export default function StaticPageModal({
         kind: PropValueKind.Literal,
         value: form.url,
       };
-      const validationResult = pageDataValidator.validate({ url: getPathValue.value });
+      const validationResult = pageDataValidator.validate({
+        url: getPathValue.value,
+      });
       if (!validationResult.valid) {
         setErrorMessage(validationResult.errorMessages);
         return false;
