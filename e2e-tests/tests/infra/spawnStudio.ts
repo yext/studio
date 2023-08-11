@@ -42,7 +42,7 @@ export default async function spawnStudio(
  * The port is guaranteed to only be used by this test.
  */
 async function getPort(testInfo: TestInfo) {
-  let port = 5173 + getTestNumber(testInfo);
+  let port = 6001 + getTestNumber(testInfo);
   const totalNumTests = getTestGlob().length;
 
   let portIsOccupied = await serverExistsForPort(port);
@@ -66,7 +66,7 @@ async function serverExistsForPort(port: number) {
 }
 
 async function waitForPort(port: number): Promise<void> {
-  const timeout = 30_000;
+  const timeout = 45_000;
   const cancellationToken = { canceled: false };
   setTimeout(() => (cancellationToken.canceled = true), timeout);
   while (!cancellationToken.canceled) {

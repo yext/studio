@@ -15,6 +15,7 @@ export default class StudioPlaywrightPage {
   readonly componentTree: Locator;
   readonly addElementButton: Locator;
   readonly removeElementButton: Locator;
+  readonly livePreviewButton: Locator;
   readonly preview: FrameLocator;
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
@@ -34,6 +35,10 @@ export default class StudioPlaywrightPage {
 
     this.removeElementButton = page.getByRole("button", {
       name: "Remove Element",
+    });
+
+    this.livePreviewButton = page.getByRole("link", {
+      name: "Live Preview",
     });
 
     this.preview = page.frameLocator('[title="PreviewPanel"]');
