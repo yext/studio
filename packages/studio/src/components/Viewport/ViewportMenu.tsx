@@ -50,7 +50,14 @@ function Option(props: optionProps) {
         aria-label={`Add ${viewportOption} Element`}
         disabled={isSameAsActiveViewport}
       >
-        {viewportOption}
+        <div className="flex flex-row gap-x-2 items-center">
+            {viewportOption}
+            <div className="opacity-75"> 
+                {props.styles?.width.replace('px', 'x')} 
+                {props.styles?.height.replace('px', '')} 
+            </div>
+        </div>
+
       </button>
     );
   }
