@@ -199,24 +199,23 @@ function useDropHandler() {
           "Unable to handle drag and drop event: component tree is undefined."
         );
       }
-      if (
-        isEqual(
-          ComponentTreeHelpers.mapComponentTreeParentsFirst(
-            updatedComponentTree,
-            (c) => c.uuid
-          ),
-          ComponentTreeHelpers.mapComponentTreeParentsFirst(
-            componentTree,
-            (c) => c.uuid
-          )
+      const hasNoChanges = isEqual(
+        ComponentTreeHelpers.mapComponentTreeParentsFirst(
+          updatedComponentTree,
+          (c) => c.uuid
+        ),
+        ComponentTreeHelpers.mapComponentTreeParentsFirst(
+          componentTree,
+          (c) => c.uuid
         )
-      ) {
+      );
+      if (hasNoChanges) {
         return;
       }
-      const selectedComponentUUIDsArray = Array.from(selectedComponentUUIDs);
+      const selectedUUIDsArray = Array.from(selectedComponentUUIDs);
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
-        selectedComponentUUIDsArray.at(0),
-        selectedComponentUUIDsArray.at(-1),
+        selectedUUIDsArray[0],
+        selectedUUIDsArray[selectedUUIDsArray.length-1],
         componentTree
       );
       const selectedComponents = componentTree

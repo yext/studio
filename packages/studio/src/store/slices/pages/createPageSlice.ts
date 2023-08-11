@@ -203,16 +203,13 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `Error adding components: active component is undefined.`
         );
       }
-      const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as [
-        string,
-        string
-      ];
+      const targetComponentUUIDs: [string, string] = [selectedUUID, activeComponentUUID];
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         ...targetComponentUUIDs,
         componentTree
       );
 
-      let selected = false;
+      let selecting = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
         if (c.parentUUID !== lowestParentUUID) return;
         const descendants = ComponentTreeHelpers.getDescendants(
@@ -224,13 +221,13 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           targetComponentUUIDs.includes(d.uuid)
         );
         if (targetIsParent || targetInDescendants) {
-          if (selected || (targetIsParent && targetInDescendants)) {
+          if (selecting || (targetIsParent && targetInDescendants)) {
             descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
             addSelectedComponentUUID(c.uuid);
-            selected = false;
-          } else selected = true;
+            selecting = false;
+          } else selecting = true;
         }
-        if (selected) {
+        if (selecting) {
           descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
           addSelectedComponentUUID(c.uuid);
         }

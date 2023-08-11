@@ -58,11 +58,10 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleClick = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
+      clearSelectedComponents();
       if (event.shiftKey && activeComponentUUID) {
-        clearSelectedComponents();
         addShiftSelectedComponentUUIDs(componentState);
       } else {
-        clearSelectedComponents();
         setActiveComponentUUID(componentState.uuid);
         addSelectedComponentUUID(componentState.uuid);
       }
