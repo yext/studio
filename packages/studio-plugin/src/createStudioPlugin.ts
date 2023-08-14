@@ -10,15 +10,14 @@ import { CliArgs, UserPaths } from "./types";
 import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
-import HmrManager from "./HmrManager";
 import { readdirSync, existsSync, lstatSync } from "fs";
 import upath from "upath";
 import lodash from "lodash";
-import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import { startPagesDevelopmentServer } from "./startPagesDevelopmentServer";
 import LocalDataMappingManager from "./LocalDataMappingManager";
 import { execSync } from "node:child_process";
+import getStudioViteOptions from "./viteconfig/getStudioViteOptions";
 
 /**
  * Handles server-client communication.
@@ -61,11 +60,6 @@ export default async function createStudioPlugin(
     studioConfig,
     studioConfig.isPagesJSRepo ? localDataMappingManager.getMapping : undefined
   );
-  const hmrManager = new HmrManager(
-    orchestrator,
-    pathToUserProjectRoot,
-    studioConfig.paths
-  );
 
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
@@ -105,19 +99,12 @@ export default async function createStudioPlugin(
       watchUserFiles(studioConfig.paths);
     },
     config(config) {
-      const serverConfig: UserConfig = {
-        server: {
-          port: studioConfig.port,
-          open:
-            args.mode === "development" &&
-            args.command === "serve" &&
-            studioConfig.openBrowser,
-          watch: {
-            ignored: hmrManager.shouldExcludeFromWatch,
-          },
-        },
-      };
-      return lodash.merge({}, config, serverConfig);
+      const studioViteOptions = getStudioViteOptions(
+        args,
+        studioConfig,
+        pathToUserProjectRoot
+      );
+      return lodash.merge({}, config, studioViteOptions);
     },
     resolveId(id) {
       if (id === VirtualModuleID.StudioData || id === VirtualModuleID.GitData) {
@@ -138,9 +125,10 @@ export default async function createStudioPlugin(
       fileSystemManager,
       gitWrapper,
       orchestrator,
-      localDataMappingManager
+      localDataMappingManager,
+      pathToUserProjectRoot,
+      studioConfig.paths
     ),
-    handleHotUpdate: hmrManager.handleHotUpdate,
   };
 }
 
