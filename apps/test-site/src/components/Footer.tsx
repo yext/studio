@@ -7,12 +7,15 @@ export interface FooterProps {
 
 export const initialProps: FooterProps = {
   copywrightText: "© 2023 Yext",
-  backgroundColor: "#BAD8FD"
+  backgroundColor: "#BAD8FD",
 };
 
-export default function Footer({ copywrightText, backgroundColor }: FooterProps) {
+export default function Footer({
+  copywrightText,
+  backgroundColor,
+}: FooterProps) {
   return (
-    <footer style={{backgroundColor}}>
+    <footer style={{ backgroundColor }}>
       {copywrightText && <p>{copywrightText}</p>}
     </footer>
   );

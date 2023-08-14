@@ -20,7 +20,27 @@
       "staticPage": {
         "plugin": {}
       }
+    },
+    {
+      "name": "LocationPage",
+      "streamId": "studio-stream-id-LocationPage",
+      "templateType": "JS",
+      "entityPageSet": {
+        "plugin": {}
+      }
     }
   ],
-  "streams": []
+  "streams": [
+    {
+      "$id": "studio-stream-id-LocationPage",
+      "localization": {
+        "locales": ["en"],
+        "primary": false
+      },
+      "filter": {
+        "entityTypes": ["location"]
+      },
+      "fields": ["address", "hours", "slug"]
+    }
+  ]
 }

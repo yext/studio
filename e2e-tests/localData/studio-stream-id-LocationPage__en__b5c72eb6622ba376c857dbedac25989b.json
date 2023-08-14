@@ -1,125 +1,116 @@
 {
-	"__": {
-		"entityPageSet": {},
-		"name": "LocationPage",
-		"streamId": "studio-stream-id-LocationPage",
-		"templateType": "JS"
-	},
-	"address": {
-		"city": "New York",
-		"countryCode": "US",
-		"line1": "1 Madison Ave",
-		"line2": "5th Floor",
-		"localizedCountryName": "United States",
-		"localizedRegionName": "New York",
-		"postalCode": "10010",
-		"region": "NY"
-	},
-	"addressHidden": false,
-	"businessId": 3350634,
-	"c_features": [
-		"OPEN_NOW",
-		"DOG_FRIENDLY"
-	],
-	"cityCoordinate": {
-		"latitude": 40.708601,
-		"longitude": -73.876717
-	},
-	"description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
-	"displayCoordinate": {
-		"latitude": 40.7410895,
-		"longitude": -73.9875092
-	},
-	"geocodedCoordinate": {
-		"latitude": 40.7410895,
-		"longitude": -73.98750919999999
-	},
-	"hours": {
-		"friday": {
-			"isClosed": true
-		},
-		"monday": {
-			"openIntervals": [
-				{
-					"end": "14:00",
-					"start": "01:00"
-				}
-			]
-		},
-		"saturday": {
-			"isClosed": true
-		},
-		"sunday": {
-			"isClosed": true
-		},
-		"thursday": {
-			"isClosed": true
-		},
-		"tuesday": {
-			"openIntervals": [
-				{
-					"end": "16:00",
-					"start": "03:00"
-				}
-			]
-		},
-		"wednesday": {
-			"openIntervals": [
-				{
-					"end": "17:00",
-					"start": "04:00"
-				},
-				{
-					"end": "19:00",
-					"start": "18:00"
-				}
-			]
-		}
-	},
-	"id": "637478382857487577",
-	"isoRegionCode": "NY",
-	"key": "0:LocationPage:knowledgeGraph:18714997:en",
-	"localPhone": "+12128136543",
-	"locale": "en",
-	"mainPhone": "+18884442988",
-	"meta": {
-		"entityType": {
-			"id": "location",
-			"uid": 0
-		},
-		"locale": "en"
-	},
-	"name": "Office Space",
-	"priceRange": "TWO",
-	"ref_categories": [
-		{}
-	],
-	"ref_listings": [],
-	"ref_reviewsAgg": [],
-	"routableCoordinate": {
-		"latitude": 40.7411641,
-		"longitude": -73.9878306
-	},
-	"services": [
-		"Dogs",
-		"Cats",
-		"Sleep"
-	],
-	"siteDomain": "",
-	"siteId": 0,
-	"siteInternalHostName": "",
-	"timezone": "America/New_York",
-	"uid": 18714997,
-	"websiteUrl": {
-		"preferDisplayUrl": false,
-		"url": "https://locations.yext.com/us/ny/new-york/1-madison-ave.html"
-	},
-	"yextDisplayCoordinate": {
-		"latitude": 40.7410895,
-		"longitude": -73.9875092
-	},
-	"yextRoutableCoordinate": {
-		"latitude": 40.7411641,
-		"longitude": -73.9878306
-	}
+  "__": {
+    "entityPageSet": {},
+    "name": "LocationPage",
+    "streamId": "studio-stream-id-LocationPage",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "New York",
+    "countryCode": "US",
+    "line1": "1 Madison Ave",
+    "line2": "5th Floor",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "New York",
+    "postalCode": "10010",
+    "region": "NY"
+  },
+  "addressHidden": false,
+  "businessId": 3350634,
+  "c_features": ["OPEN_NOW", "DOG_FRIENDLY"],
+  "cityCoordinate": {
+    "latitude": 40.708601,
+    "longitude": -73.876717
+  },
+  "description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
+  "displayCoordinate": {
+    "latitude": 40.7410895,
+    "longitude": -73.9875092
+  },
+  "geocodedCoordinate": {
+    "latitude": 40.7410895,
+    "longitude": -73.98750919999999
+  },
+  "hours": {
+    "friday": {
+      "isClosed": true
+    },
+    "monday": {
+      "openIntervals": [
+        {
+          "end": "14:00",
+          "start": "01:00"
+        }
+      ]
+    },
+    "saturday": {
+      "isClosed": true
+    },
+    "sunday": {
+      "isClosed": true
+    },
+    "thursday": {
+      "isClosed": true
+    },
+    "tuesday": {
+      "openIntervals": [
+        {
+          "end": "16:00",
+          "start": "03:00"
+        }
+      ]
+    },
+    "wednesday": {
+      "openIntervals": [
+        {
+          "end": "17:00",
+          "start": "04:00"
+        },
+        {
+          "end": "19:00",
+          "start": "18:00"
+        }
+      ]
+    }
+  },
+  "id": "637478382857487577",
+  "isoRegionCode": "NY",
+  "key": "0:LocationPage:knowledgeGraph:18714997:en",
+  "localPhone": "+12128136543",
+  "locale": "en",
+  "mainPhone": "+18884442988",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "name": "Office Space",
+  "priceRange": "TWO",
+  "ref_categories": [{}],
+  "ref_listings": [],
+  "ref_reviewsAgg": [],
+  "routableCoordinate": {
+    "latitude": 40.7411641,
+    "longitude": -73.9878306
+  },
+  "services": ["Dogs", "Cats", "Sleep"],
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "timezone": "America/New_York",
+  "uid": 18714997,
+  "websiteUrl": {
+    "preferDisplayUrl": false,
+    "url": "https://locations.yext.com/us/ny/new-york/1-madison-ave.html"
+  },
+  "yextDisplayCoordinate": {
+    "latitude": 40.7410895,
+    "longitude": -73.9875092
+  },
+  "yextRoutableCoordinate": {
+    "latitude": 40.7411641,
+    "longitude": -73.9878306
+  }
 }
