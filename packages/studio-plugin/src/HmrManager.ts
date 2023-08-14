@@ -26,7 +26,8 @@ export default class HmrManager {
    *
    * See import('vite').Plugin.handleHotUpdate
    */
-  handleHotUpdate = (file: string) => {
+  handleHotUpdate = (unnormalizedFilepath: string) => {
+    const file = upath.normalize(unnormalizedFilepath);
     this.orchestrator.reloadFile(file);
     this.invalidateStudioData();
     const updateType = getHMRUpdateType(file, this.userPaths);

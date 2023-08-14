@@ -52,13 +52,13 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
-  const localDataMappingManager = new LocalDataMappingManager(
-    studioConfig.paths.localData
-  );
+  const localDataMappingManager = studioConfig.isPagesJSRepo
+    ? new LocalDataMappingManager(studioConfig.paths.localData)
+    : undefined;
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig,
-    studioConfig.isPagesJSRepo ? localDataMappingManager.getMapping : undefined
+    localDataMappingManager?.getMapping
   );
 
   const fileSystemManager = new FileSystemManager(
@@ -113,7 +113,7 @@ export default async function createStudioPlugin(
       }
     },
     load(id) {
-      if (id === localDataMappingManager.mappingPath) {
+      if (id === localDataMappingManager?.mappingPath) {
         return `${JSON.stringify(localDataMappingManager.getMapping())}`;
       }
       if (id === "\0" + VirtualModuleID.StudioData) {
