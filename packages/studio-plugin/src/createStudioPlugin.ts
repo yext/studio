@@ -79,7 +79,7 @@ export default async function createStudioPlugin(
     console.log("PagesJS running on port:", port);
     process.on("exit", () => {
       execSync(`npx kill-port ${port}`);
-    });    
+    });
   });
 
   return {
