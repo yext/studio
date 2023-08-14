@@ -67,12 +67,13 @@ export default async function createStudioPlugin(
   );
 
   await pagesDevPortPromise?.then((port) => {
-    if (port) {
-      process.on("exit", () => {
-        console.log("Studio is shutting down");
-        execSync(`npx kill-port ${port}`);
-      });
+    if (!port) {
+      throw new Error("No port found for PagesJS.");
     }
+    console.log("PagesJS running on port:", port);
+    process.on("exit", () => {
+      execSync(`npx kill-port ${port}`);
+    });
   });
 
   return {
