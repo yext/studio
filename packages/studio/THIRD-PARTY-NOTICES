@@ -2589,7 +2589,7 @@ SOFTWARE.
 The following npm packages may be included in this product:
 
  - @types/estree@1.0.1
- - @types/node@18.17.4
+ - @types/node@18.17.5
  - @types/prop-types@15.7.5
  - @types/react@18.2.20
  - @types/scheduler@0.16.3
