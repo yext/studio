@@ -32,13 +32,10 @@ export default async function createStudioPlugin(
     process.env[STUDIO_PROCESS_ARGS_OBJ] as string
   );
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
-
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
-
   const pagesDevPortPromise = studioConfig.isPagesJSRepo
     ? startPagesDevelopmentServer()
     : null;
-
   const gitWrapper = new GitWrapper(
     simpleGit({
       baseDir: pathToUserProjectRoot,
@@ -60,7 +57,6 @@ export default async function createStudioPlugin(
     studioConfig,
     localDataMappingManager?.getMapping
   );
-
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
     new FileSystemWriter(orchestrator, tsMorphProject)
@@ -113,9 +109,6 @@ export default async function createStudioPlugin(
       }
     },
     load(id) {
-      if (id === localDataMappingManager?.mappingPath) {
-        return `${JSON.stringify(localDataMappingManager.getMapping())}`;
-      }
       if (id === "\0" + VirtualModuleID.StudioData) {
         return `export default ${JSON.stringify(orchestrator.getStudioData())}`;
       } else if (id === "\0" + VirtualModuleID.GitData) {
