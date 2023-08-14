@@ -23,7 +23,7 @@ export const getPath: GetPath<TemplateProps> = ({
 export default function LocationPage({ document }: TemplateProps) {
   return (
     <>
-      <Footer copywrightText="© 2023 Yext" backgroundColor="#BAD8FD" />
+      <Footer copyrightText="© 2023 Yext" backgroundColor="#BAD8FD" />
       <Header
         title="Yext"
         logo="https://a.mktgcdn.com/p/R9FjcYjRNA5dAespqgHFLMvu2m18-E5Apnb3KON0oJY/300x300.png"
