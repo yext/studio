@@ -1,22 +1,22 @@
 import { HexColor } from "@yext/studio";
 
 export interface FooterProps {
-  copywrightText?: string;
+  copyrightText?: string;
   backgroundColor?: HexColor;
 }
 
 export const initialProps: FooterProps = {
-  copywrightText: "© 2023 Yext",
+  copyrightText: "© 2023 Yext",
   backgroundColor: "#BAD8FD",
 };
 
 export default function Footer({
-  copywrightText,
+  copyrightText,
   backgroundColor,
 }: FooterProps) {
   return (
     <footer style={{ backgroundColor }}>
-      {copywrightText && <p>{copywrightText}</p>}
+      {copyrightText && <p>{copyrightText}</p>}
     </footer>
   );
 }
