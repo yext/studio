@@ -18,7 +18,7 @@ import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import { startPagesDevelopmentServer } from "./startPagesDevelopmentServer";
 import LocalDataMappingManager from "./LocalDataMappingManager";
-import { execSync } from "node:child_process";
+import { execSync } from "child_process";
 
 /**
  * Handles server-client communication.
@@ -78,7 +78,6 @@ export default async function createStudioPlugin(
     }
     console.log("PagesJS running on port:", port);
     process.on("exit", () => {
-      console.log("Studio is shutting down");
       execSync(`npx kill-port ${port}`);
     });    
   });
