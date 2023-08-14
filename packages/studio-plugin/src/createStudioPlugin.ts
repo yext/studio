@@ -18,7 +18,7 @@ import { UserConfig } from "vite";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import { startPagesDevelopmentServer } from "./startPagesDevelopmentServer";
 import LocalDataMappingManager from "./LocalDataMappingManager";
-import { execSync } from "child_process";
+import { execSync } from "node:child_process";
 
 /**
  * Handles server-client communication.
