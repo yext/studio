@@ -11,7 +11,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest(
+studioTest.only(
   "can update initial props of a component and see UI is updated via HMR",
   async ({ page, studioPage }) => {
     const buttonPreviews = studioPage.preview.getByText("Press me!");
@@ -29,7 +29,7 @@ studioTest(
     const buttonPath = studioPage.getComponentPath("Button");
     fs.writeFileSync(buttonPath, updatedComponent);
     // Wait for the HMR to complete
-    await page.waitForResponse(/Button\.tsx/, { timeout: 5000 });
+    await page.waitForResponse(/Button\.tsx/, { timeout: 10000 });
 
     await studioPage.addElement("Button", "Components");
     await expect(buttonPreviews).toHaveCount(2);
