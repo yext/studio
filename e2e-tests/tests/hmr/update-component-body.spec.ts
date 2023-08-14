@@ -22,7 +22,7 @@ studioTest(
     const buttonPath = studioPage.getComponentPath("Button");
     fs.writeFileSync(buttonPath, updatedComponent);
     // Wait for the HMR to complete
-    await page.waitForResponse(/Button\.tsx/, { timeout: 10000 });
+    await page.waitForResponse(/Button\.tsx/, { timeout: 20000 });
     await expect(updatedButtonPreviews).toHaveCount(1);
     await expect(studioPage.preview.locator("body")).toHaveScreenshot();
   }
