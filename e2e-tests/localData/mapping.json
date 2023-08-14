@@ -7,5 +7,17 @@
   ],
   "ErrorPage": [
     "cog-internal-feature-static-file-generation-ErrorPage__en__cfcd208495d565ef66e7dff9f98764da.json"
-  ]
+  ],
+  "LocationPage": [
+		"studio-stream-id-LocationPage__en__b5c72eb6622ba376c857dbedac25989b.json",
+		"studio-stream-id-LocationPage__en__c436bc541570239fdbb3c86a549f7a71.json",
+		"studio-stream-id-LocationPage__en__138daa2e17fc5803f9d87d45899b6bd1.json",
+		"studio-stream-id-LocationPage__en__74f6cc7a9108951c20122cd3dabb7eb5.json",
+		"studio-stream-id-LocationPage__en__3a148c2b8fc08ea238566ecbca52ed91.json",
+		"studio-stream-id-LocationPage__en__7d5f646cf2f84c4ce9ef3a0f92afe207.json",
+		"studio-stream-id-LocationPage__en__ab9a660c88afbd8dafb14c8c8b281274.json",
+		"studio-stream-id-LocationPage__en__a09d94986018c82320dfe5e138ea88ef.json",
+		"studio-stream-id-LocationPage__en__63332cafcabf752f4ecfa57bb7f83e42.json",
+		"studio-stream-id-LocationPage__en__8f3df878733e5e0969823b81e3bf497f.json"
+	]
 }

@@ -1,0 +1,121 @@
+{
+	"__": {
+		"entityPageSet": {},
+		"name": "LocationPage",
+		"streamId": "studio-stream-id-LocationPage",
+		"templateType": "JS"
+	},
+	"address": {
+		"city": "Magalia",
+		"countryCode": "US",
+		"line1": "14115 Lakeridge Circle",
+		"localizedCountryName": "United States",
+		"localizedRegionName": "California",
+		"postalCode": "95954",
+		"region": "CA"
+	},
+	"businessId": 3350634,
+	"cityCoordinate": {
+		"latitude": 39.867959,
+		"longitude": -121.599628
+	},
+	"displayCoordinate": {
+		"latitude": 39.817925,
+		"longitude": -121.591739
+	},
+	"geocodedCoordinate": {
+		"latitude": 39.817948,
+		"longitude": -121.591689
+	},
+	"hours": {
+		"friday": {
+			"openIntervals": [
+				{
+					"end": "19:00",
+					"start": "08:00"
+				}
+			]
+		},
+		"monday": {
+			"openIntervals": [
+				{
+					"end": "19:00",
+					"start": "08:00"
+				}
+			]
+		},
+		"saturday": {
+			"openIntervals": [
+				{
+					"end": "19:00",
+					"start": "08:00"
+				}
+			]
+		},
+		"sunday": {
+			"openIntervals": [
+				{
+					"end": "19:00",
+					"start": "08:00"
+				}
+			]
+		},
+		"thursday": {
+			"openIntervals": [
+				{
+					"end": "19:00",
+					"start": "08:00"
+				}
+			]
+		},
+		"tuesday": {
+			"openIntervals": [
+				{
+					"end": "19:00",
+					"start": "08:00"
+				}
+			]
+		},
+		"wednesday": {
+			"openIntervals": [
+				{
+					"end": "19:00",
+					"start": "08:00"
+				}
+			]
+		}
+	},
+	"id": "06548",
+	"isoRegionCode": "CA",
+	"key": "0:LocationPage:knowledgeGraph:18715002:en",
+	"locale": "en",
+	"mainPhone": "+15308730800",
+	"meta": {
+		"entityType": {
+			"id": "location",
+			"uid": 0
+		},
+		"locale": "en"
+	},
+	"name": "Magalia",
+	"ref_categories": null,
+	"ref_listings": [],
+	"ref_reviewsAgg": [],
+	"routableCoordinate": {
+		"latitude": 39.8183908,
+		"longitude": -121.5917993
+	},
+	"siteDomain": "",
+	"siteId": 0,
+	"siteInternalHostName": "",
+	"timezone": "America/Los_Angeles",
+	"uid": 18715002,
+	"yextDisplayCoordinate": {
+		"latitude": 39.817925,
+		"longitude": -121.591739
+	},
+	"yextRoutableCoordinate": {
+		"latitude": 39.8183908,
+		"longitude": -121.5917993
+	}
+}

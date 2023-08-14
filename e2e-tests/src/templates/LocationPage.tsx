@@ -1,7 +1,6 @@
 import { GetPath, TemplateConfig, TemplateProps } from "@yext/pages";
 import AddressDisplay from "../components/AddressDisplay";
 import BusinessInfo from "../components/BusinessInfo";
-import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HoursDisplay from "../components/HoursDisplay";
 import ProminentImage from "../components/ProminentImage";
@@ -23,7 +22,6 @@ export const getPath: GetPath<TemplateProps> = ({
 export default function LocationPage({ document }: TemplateProps) {
   return (
     <>
-      <Footer copywrightText="© 2023 Yext" backgroundColor="#BAD8FD" />
       <Header
         title="Yext"
         logo="https://a.mktgcdn.com/p/R9FjcYjRNA5dAespqgHFLMvu2m18-E5Apnb3KON0oJY/300x300.png"

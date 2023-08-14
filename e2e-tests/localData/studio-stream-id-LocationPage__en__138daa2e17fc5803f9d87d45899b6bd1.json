@@ -1,0 +1,109 @@
+{
+	"__": {
+		"entityPageSet": {},
+		"name": "LocationPage",
+		"streamId": "studio-stream-id-LocationPage",
+		"templateType": "JS"
+	},
+	"address": {
+		"city": "London",
+		"countryCode": "GB",
+		"line1": "48 Warwick St.",
+		"line2": "Office 410",
+		"localizedCountryName": "United Kingdom",
+		"localizedRegionName": "City of London",
+		"postalCode": "W1B 5AW",
+		"region": "Gt Lon"
+	},
+	"addressHidden": false,
+	"businessId": 3350634,
+	"c_features": [
+		"OPEN_NOW"
+	],
+	"cityCoordinate": {
+		"latitude": 51.50642013549805,
+		"longitude": -0.12721000611782074
+	},
+	"description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
+	"displayCoordinate": {
+		"latitude": 51.5107139,
+		"longitude": -0.1377914
+	},
+	"geocodedCoordinate": {
+		"latitude": 51.5106898,
+		"longitude": -0.1378107
+	},
+	"hours": {
+		"friday": {
+			"isClosed": true
+		},
+		"monday": {
+			"isClosed": true
+		},
+		"saturday": {
+			"isClosed": true
+		},
+		"sunday": {
+			"isClosed": true
+		},
+		"thursday": {
+			"isClosed": true
+		},
+		"tuesday": {
+			"openIntervals": [
+				{
+					"end": "16:00",
+					"start": "15:00"
+				}
+			]
+		},
+		"wednesday": {
+			"isClosed": true
+		}
+	},
+	"id": "7941089580646240971",
+	"isoRegionCode": "LND",
+	"key": "0:LocationPage:knowledgeGraph:18714999:en",
+	"locale": "en",
+	"mainPhone": "+442037052290",
+	"meta": {
+		"entityType": {
+			"id": "location",
+			"uid": 0
+		},
+		"locale": "en"
+	},
+	"name": "Office Space",
+	"priceRange": "FOUR",
+	"ref_categories": [
+		{}
+	],
+	"ref_listings": [],
+	"ref_reviewsAgg": [],
+	"routableCoordinate": {
+		"latitude": 51.51076,
+		"longitude": -0.13767
+	},
+	"services": [
+		"Dogs",
+		"Cats",
+		"Sleep"
+	],
+	"siteDomain": "",
+	"siteId": 0,
+	"siteInternalHostName": "",
+	"timezone": "Europe/London",
+	"uid": 18714999,
+	"websiteUrl": {
+		"preferDisplayUrl": false,
+		"url": "https://locations.yext.com/gb/gt-lon/london/48-warwick-st-.html"
+	},
+	"yextDisplayCoordinate": {
+		"latitude": 51.5107139,
+		"longitude": -0.1377914
+	},
+	"yextRoutableCoordinate": {
+		"latitude": 51.51076,
+		"longitude": -0.13767
+	}
+}
