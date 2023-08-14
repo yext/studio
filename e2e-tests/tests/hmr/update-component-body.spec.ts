@@ -7,7 +7,7 @@ const updatedComponent = fs.readFileSync(
   "utf-8"
 );
 
-studioTest(
+studioTest.only(
   "can update the body of a component and see it updated via HMR",
   async ({ page, studioPage }) => {
     const updatedButtonPreviews = studioPage.preview.getByText(
@@ -22,7 +22,7 @@ studioTest(
     const buttonPath = studioPage.getComponentPath("Button");
     fs.writeFileSync(buttonPath, updatedComponent);
     // Wait for the HMR to complete
-    await page.waitForResponse(/Button\.tsx/, { timeout: 20000 });
+    await page.waitForResponse(/Button\.tsx/, { timeout: 5000 });
     await expect(updatedButtonPreviews).toHaveCount(1);
     await expect(studioPage.preview.locator("body")).toHaveScreenshot();
   }
