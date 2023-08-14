@@ -7,7 +7,7 @@ const updatedComponent = fs.readFileSync(
   "utf-8"
 );
 
-studioTest.only(
+studioTest(
   "can update the body of a component and see it updated via HMR",
   async ({ page, studioPage }) => {
     const updatedButtonPreviews = studioPage.preview.getByText(
