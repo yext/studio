@@ -27,6 +27,7 @@ export interface GenerateTestDataPayload {
 export interface StudioHMRPayload {
   updateType: "siteSettings" | "components" | "modules" | "pages" | "full";
   studioData: StudioData;
+  file: string;
 }
 
 export type StudioEventMap = {
