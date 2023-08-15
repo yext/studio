@@ -1,0 +1,121 @@
+{
+  "__": {
+    "entityPageSet": {},
+    "name": "LocationPage",
+    "streamId": "studio-stream-id-LocationPage",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Needles",
+    "countryCode": "US",
+    "line1": "1020 East Broadway Street",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "California",
+    "postalCode": "92363",
+    "region": "CA"
+  },
+  "businessId": 3350634,
+  "cityCoordinate": {
+    "latitude": 34.838470458984375,
+    "longitude": -114.60433197021484
+  },
+  "displayCoordinate": {
+    "latitude": 34.8249062,
+    "longitude": -114.5947005
+  },
+  "geocodedCoordinate": {
+    "latitude": 34.8249062,
+    "longitude": -114.5947005
+  },
+  "hours": {
+    "friday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "monday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "saturday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "sunday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "thursday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "tuesday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "wednesday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    }
+  },
+  "id": "05699",
+  "isoRegionCode": "CA",
+  "key": "0:LocationPage:knowledgeGraph:18715006:en",
+  "locale": "en",
+  "mainPhone": "+17603262944",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "name": "Needles",
+  "ref_categories": null,
+  "ref_listings": [],
+  "ref_reviewsAgg": [],
+  "routableCoordinate": {
+    "latitude": 34.8253943,
+    "longitude": -114.5963464
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "timezone": "America/Los_Angeles",
+  "uid": 18715006,
+  "yextDisplayCoordinate": {
+    "latitude": 34.8249062,
+    "longitude": -114.5947005
+  },
+  "yextRoutableCoordinate": {
+    "latitude": 34.8253943,
+    "longitude": -114.5963464
+  }
+}
