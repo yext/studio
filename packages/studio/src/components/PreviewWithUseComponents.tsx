@@ -5,8 +5,9 @@ import Highlighter from "./Highlighter";
 import IFramePortal from "./IFramePortal";
 import { Tooltip, ITooltip } from "react-tooltip";
 import { useState } from "react";
+import { ViewportStyles } from "./Viewport/defaults";
 
-export default function PreviewWithUseComponents() {
+export default function PreviewWithUseComponents(props: ViewportStyles) {
   const componentTree = useStudioStore((store) =>
     store.actions.getComponentTree()
   );
@@ -23,7 +24,9 @@ export default function PreviewWithUseComponents() {
     <>
       <Tooltip offset={-30} className="text-sm z-20" {...tooltipProps} />
       <IFramePortal
-        className="h-full w-full"
+        className={
+          "mr-auto ml-auto border-2 border-black" + props.height + props.width
+        }
         title="PreviewPanel"
         iframeEl={iframeEl}
         setIframeEl={setIframeEl}

@@ -1,150 +1,150 @@
 export interface Viewport {
-    name: string;
-    styles: ViewportStyles | null;
-    type: 'desktop' | 'mobile' | 'tablet' | 'other';
+  name: string;
+  styles: ViewportStyles | null;
+  type: "desktop" | "mobile" | "tablet" | "other";
 }
 
 export interface ViewportStyles {
-    height: string;
-    width: string;
+  height: string;
+  width: string;
 }
 
 export interface ViewportMap {
-    [key: string]: Viewport;
+  [key: string]: Viewport;
 }
 
 //todo add more "new" phones + dimensions
 export const INITIAL_VIEWPORTS: ViewportMap = {
   iphonex: {
-    name: 'iPhone X',
+    name: "iPhone X",
     styles: {
-      height: '812px',
-      width: '375px',
+      height: "812px",
+      width: "375px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   iphonexr: {
-    name: 'iPhone XR',
+    name: "iPhone XR",
     styles: {
-      height: '896px',
-      width: '414px',
+      height: "896px",
+      width: "414px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   iphonexsmax: {
-    name: 'iPhone XS Max',
+    name: "iPhone XS Max",
     styles: {
-      height: '896px',
-      width: '414px',
+      height: "896px",
+      width: "414px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   iphonese2: {
-    name: 'iPhone SE (2nd generation)',
+    name: "iPhone SE (2nd generation)",
     styles: {
-      height: '667px',
-      width: '375px',
+      height: "667px",
+      width: "375px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   iphone12mini: {
-    name: 'iPhone 12 mini',
+    name: "iPhone 12 mini",
     styles: {
-      height: '812px',
-      width: '375px',
+      height: "812px",
+      width: "375px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   iphone12: {
-    name: 'iPhone 12',
+    name: "iPhone 12",
     styles: {
-      height: '844px',
-      width: '390px',
+      height: "844px",
+      width: "390px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   iphone12promax: {
-    name: 'iPhone 12 Pro Max',
+    name: "iPhone 12 Pro Max",
     styles: {
-      height: '926px',
-      width: '428px',
+      height: "926px",
+      width: "428px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   galaxys5: {
-    name: 'Galaxy S5',
+    name: "Galaxy S5",
     styles: {
-      height: '640px',
-      width: '360px',
+      height: "640px",
+      width: "360px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   galaxys9: {
-    name: 'Galaxy S9',
+    name: "Galaxy S9",
     styles: {
-      height: '740px',
-      width: '360px',
+      height: "740px",
+      width: "360px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   nexus5x: {
-    name: 'Nexus 5X',
+    name: "Nexus 5X",
     styles: {
-      height: '660px',
-      width: '412px',
+      height: "660px",
+      width: "412px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   nexus6p: {
-    name: 'Nexus 6P',
+    name: "Nexus 6P",
     styles: {
-      height: '732px',
-      width: '412px',
+      height: "732px",
+      width: "412px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   pixel: {
-    name: 'Pixel',
+    name: "Pixel",
     styles: {
-      height: '960px',
-      width: '540px',
+      height: "960px",
+      width: "540px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   pixelxl: {
-    name: 'Pixel XL',
+    name: "Pixel XL",
     styles: {
-      height: '1280px',
-      width: '720px',
+      height: "1280px",
+      width: "720px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
 };
-export const DEFAULT_VIEWPORT = 'responsive'; // todo tbd if we need this
+export const DEFAULT_VIEWPORT = "responsive"; // todo tbd if we need this
 
 export const MINIMAL_VIEWPORTS: ViewportMap = {
   mobile1: {
-    name: 'Small mobile',
+    name: "Small mobile",
     styles: {
-      height: '568px',
-      width: '320px',
+      height: "568px",
+      width: "320px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   mobile2: {
-    name: 'Large mobile',
+    name: "Large mobile",
     styles: {
-      height: '896px',
-      width: '414px',
+      height: "896px",
+      width: "414px",
     },
-    type: 'mobile',
+    type: "mobile",
   },
   tablet: {
-    name: 'Tablet',
+    name: "Tablet",
     styles: {
-      height: '1112px',
-      width: '834px',
+      height: "1112px",
+      width: "834px",
     },
-    type: 'tablet',
+    type: "tablet",
   },
 };
