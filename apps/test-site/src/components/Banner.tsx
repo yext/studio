@@ -23,7 +23,7 @@ export interface BannerData {
 
 export const initialProps: BannerData = {
   bgColor: "#abcdef",
-  num: 52,
+  num: 5,
   bool: true,
   title: "initial title",
 };
@@ -32,7 +32,7 @@ export default function Banner(props: BannerData) {
   return (
     <div>
       <p style={{ backgroundColor: props.bgColor }}>{props.title}</p>
-      <p>{`${props.bool}`}</p>23423423123123123123123212312
+      <p>{`${props.bool}`}</p>
       <p>{props.num}</p>
       <h1>{props.obj && JSON.stringify(props.obj)}</h1>
       <p>
