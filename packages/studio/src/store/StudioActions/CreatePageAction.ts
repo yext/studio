@@ -35,11 +35,13 @@ export default class CreatePageAction {
     );
     this.getPageSlice().addPage(pageName, pageState);
 
-    const response = await this.studioActions.generateTestData();
-    if (response.type === ResponseType.Error) {
-      toast.error(
-        "Could not generate test data, but page was still created."
-      );
+    if (isPagesJSRepo) {
+      const response = await this.studioActions.generateTestData();
+      if (response.type === ResponseType.Error) {
+        toast.error(
+          "Could not generate test data, but page was still created."
+        );
+      }
     }
 
     await this.studioActions.updateActivePage(pageName);
