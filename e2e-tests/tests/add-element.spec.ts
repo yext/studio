@@ -7,14 +7,14 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest("can add a container component", async ({ page, studioPage }) => {
-  const previews = studioPage.preview.getByText("I'm a container:");
+studioTest("can add a Footer component", async ({ page, studioPage }) => {
+  await studioPage.switchPage("LocationPage");
+  await studioPage.addElement("Footer", "Components");
+  const previews = studioPage.preview.getByText("© 2023 Yext");
   await expect(previews).toHaveCount(1);
-  await studioPage.addElement("Container", "Layouts");
-  await expect(previews).toHaveCount(2);
   await expect(page).toHaveScreenshot();
   await studioPage.saveButton.click();
-  const pagePath = studioPage.getPagePath("BasicPage");
+  const pagePath = studioPage.getPagePath("LocationPage");
   await expect(pagePath).toHaveContents(expectedPage);
   await expect(page).toHaveScreenshot();
 });

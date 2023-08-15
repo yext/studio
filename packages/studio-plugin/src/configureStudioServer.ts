@@ -16,7 +16,7 @@ export default function createConfigureStudioServer(
   fileSystemManager: FileSystemManager,
   gitWrapper: GitWrapper,
   orchestrator: ParsingOrchestrator,
-  localDataMappingManager: LocalDataMappingManager,
+  localDataMappingManager: LocalDataMappingManager | undefined,
   pathToUserProjectRoot: string,
   userPaths: UserPaths
 ) {
@@ -34,6 +34,7 @@ export default function createConfigureStudioServer(
       orchestrator
     );
     registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
-    registerGenerateTestData(server, localDataMappingManager);
+    localDataMappingManager &&
+      registerGenerateTestData(server, localDataMappingManager);
   };
 }

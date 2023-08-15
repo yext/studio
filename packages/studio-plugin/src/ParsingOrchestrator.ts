@@ -100,11 +100,11 @@ export default class ParsingOrchestrator {
    *
    * Will remove data for a file if it no longer exists in the filesystem.
    */
-  reloadFile(filepath: string): FileMetadata | undefined {
-    const sourceFile = this.project.getSourceFile(filepath);
-
-    if (sourceFile) {
-      sourceFile.refreshFromFileSystemSync();
+  reloadFile(filepath: string) {
+    const fileExists = fs.existsSync(filepath);
+    if (fileExists) {
+      const sourceFile = this.project.getSourceFile(filepath);
+      sourceFile?.refreshFromFileSystemSync();
     }
 
     if (
@@ -115,19 +115,19 @@ export default class ParsingOrchestrator {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
         delete this.filepathToFileMetadata[filepath];
-        if (sourceFile) {
+        if (fileExists) {
           this.filepathToFileMetadata[filepath] = {
             ...this.getFileMetadata(filepath),
             metadataUUID: originalMetadataUUID,
           };
         }
-      } else if (sourceFile) {
+      } else if (fileExists) {
         this.filepathToFileMetadata[filepath] = this.getFileMetadata(filepath);
       }
     } else if (filepath.startsWith(this.paths.pages)) {
       const pageName = upath.basename(filepath, ".tsx");
       delete this.pageNameToPageFile[pageName];
-      if (sourceFile) {
+      if (fileExists) {
         this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
       }
     }

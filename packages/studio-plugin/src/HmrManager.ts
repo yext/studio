@@ -16,9 +16,12 @@ export default class HmrManager {
   ) {}
 
   createWatcher(pathToUserProjectRoot: string) {
-    const watcher = chokidar.watch(upath.join(pathToUserProjectRoot, "src"));
+    const watcher = chokidar.watch(upath.join(pathToUserProjectRoot, "src"), {
+      ignoreInitial: true,
+    });
     watcher.on("change", this.handleHotUpdate);
     watcher.on("unlink", this.handleHotUpdate);
+    watcher.on("add", this.handleHotUpdate);
   }
 
   /**
@@ -26,7 +29,8 @@ export default class HmrManager {
    *
    * See import('vite').Plugin.handleHotUpdate
    */
-  handleHotUpdate = (file: string) => {
+  handleHotUpdate = (unnormalizedFilepath: string) => {
+    const file = upath.normalize(unnormalizedFilepath);
     this.orchestrator.reloadFile(file);
     this.invalidateStudioData();
     const updateType = getHMRUpdateType(file, this.userPaths);

@@ -32,13 +32,10 @@ export default async function createStudioPlugin(
     process.env[STUDIO_PROCESS_ARGS_OBJ] as string
   );
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
-
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
-
   const pagesDevPortPromise = studioConfig.isPagesJSRepo
     ? startPagesDevelopmentServer()
     : null;
-
   const gitWrapper = new GitWrapper(
     simpleGit({
       baseDir: pathToUserProjectRoot,
@@ -52,15 +49,14 @@ export default async function createStudioPlugin(
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
-  const localDataMappingManager = new LocalDataMappingManager(
-    studioConfig.paths.localData
-  );
+  const localDataMappingManager = studioConfig.isPagesJSRepo
+    ? new LocalDataMappingManager(studioConfig.paths.localData)
+    : undefined;
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig,
-    studioConfig.isPagesJSRepo ? localDataMappingManager.getMapping : undefined
+    localDataMappingManager?.getMapping
   );
-
   const fileSystemManager = new FileSystemManager(
     studioConfig.paths,
     new FileSystemWriter(orchestrator, tsMorphProject)
@@ -113,9 +109,6 @@ export default async function createStudioPlugin(
       }
     },
     load(id) {
-      if (id === localDataMappingManager.mappingPath) {
-        return `${JSON.stringify(localDataMappingManager.getMapping())}`;
-      }
       if (id === "\0" + VirtualModuleID.StudioData) {
         return `export default ${JSON.stringify(orchestrator.getStudioData())}`;
       } else if (id === "\0" + VirtualModuleID.GitData) {
