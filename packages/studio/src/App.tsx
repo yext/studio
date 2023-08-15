@@ -8,8 +8,9 @@ import { useState } from "react";
 
 export default function App() {
   const [viewportDimensions, setViewportDimensions] = useState<ViewportStyles>({
-    height: " h-full ",
-    width: " w-full ",
+    name: "Reset Viewport",
+    height: window.innerHeight,
+    width: window.innerWidth,
   });
 
   return (
@@ -20,7 +21,7 @@ export default function App() {
         <div className="flex flex-row grow">
           <LeftSidebar />
           <div className="grow w-1/3 bg-white border-8 shadow">
-            <PreviewWithUseComponents {...viewportDimensions} />
+            <PreviewWithUseComponents viewportDimensions={viewportDimensions} />
           </div>
           <EditorSidebar />
         </div>
