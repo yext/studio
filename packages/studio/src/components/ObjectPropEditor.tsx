@@ -45,7 +45,7 @@ export default function ObjectPropEditor(props: {
   return (
     <div className={containerClasses}>
       {renderBranchUI(isNested)}
-      <div className="min-w-[112px]">
+      <div>
         <span
           className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap"
           id={propTooltipId}

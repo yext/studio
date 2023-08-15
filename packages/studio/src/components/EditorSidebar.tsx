@@ -26,7 +26,7 @@ export default function EditorSidebar(): JSX.Element {
 
   return (
     <div
-      className="w-1/4 px-4 flex flex-col h-fill"
+      className="w-1/4 px-4 flex flex-col"
       data-testid="EditorSidebar"
     >
       <OptionPicker

@@ -33,7 +33,7 @@ export default function PropsPanel(): JSX.Element | null {
           <Divider />
         </>
       )}
-      <div className="grow flex flex-col h-fill">
+      <div className="grow flex flex-col">
         <ActiveComponentPropEditors
           activeComponentState={extractedComponentState}
           propShape={propShape}
