@@ -171,20 +171,30 @@ export default class StudioPlaywrightPage {
     elementName: string,
     category: "Components" | "Layouts" | "Modules"
   ) {
+    await this.openAddElementMenu(category, true);
+    await this.getAddElementLocator(elementName).click();
+  }
+
+  async openAddElementMenu(
+    category: "Components" | "Layouts" | "Modules" = "Components",
+    shouldTakeScreenshots = false
+  ) {
+    const takeScreenshot = () =>
+      shouldTakeScreenshots && expect(this.page).toHaveScreenshot();
     await this.addElementButton.click();
-    await expect(this.page).toHaveScreenshot();
+    await takeScreenshot();
 
     const categoryButton = this.page.getByRole("button", { name: category });
     if (await categoryButton.isEnabled()) {
       await categoryButton.click();
-      await expect(this.page).toHaveScreenshot();
+      await takeScreenshot();
     }
+  }
 
-    await this.page
-      .getByRole("button", {
-        name: `Add ${elementName} Element`,
-      })
-      .click();
+  getAddElementLocator(elementName: string) {
+    return this.page.getByRole("button", {
+      name: `Add ${elementName} Element`,
+    });
   }
 
   async removeElement(elementName: string, index?: number) {

@@ -16,9 +16,12 @@ export default class HmrManager {
   ) {}
 
   createWatcher(pathToUserProjectRoot: string) {
-    const watcher = chokidar.watch(upath.join(pathToUserProjectRoot, "src"));
+    const watcher = chokidar.watch(upath.join(pathToUserProjectRoot, "src"), {
+      ignoreInitial: true,
+    });
     watcher.on("change", this.handleHotUpdate);
     watcher.on("unlink", this.handleHotUpdate);
+    watcher.on("add", this.handleHotUpdate);
   }
 
   /**
