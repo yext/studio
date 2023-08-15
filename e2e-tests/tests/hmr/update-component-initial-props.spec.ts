@@ -11,7 +11,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest.only(
+studioTest(
   "can update initial props of a component and see UI is updated via HMR",
   async ({ page, studioPage }) => {
     const buttonPreviews = studioPage.preview.getByText("Press me!");
