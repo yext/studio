@@ -169,9 +169,10 @@ export default class StudioPlaywrightPage {
 
   async addElement(
     elementName: string,
-    category: "Components" | "Layouts" | "Modules"
+    category: "Components" | "Layouts" | "Modules",
+    shouldTakeScreenshots = true
   ) {
-    await this.openAddElementMenu(category, true);
+    await this.openAddElementMenu(category, shouldTakeScreenshots);
     await this.getAddElementLocator(elementName).click();
   }
 

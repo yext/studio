@@ -15,7 +15,7 @@ studioTest(
     );
     await expect(updatedButtonPreviews).toHaveCount(0);
 
-    await studioPage.addElement("Button", "Components");
+    await studioPage.addElement("Button", "Components", false);
     await expect(updatedButtonPreviews).toHaveCount(0);
     await expect(studioPage.preview.locator("body")).toHaveScreenshot();
 
