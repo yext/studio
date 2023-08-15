@@ -4,9 +4,10 @@ import Toast from "./components/Toast";
 import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
 import { ViewportStyles } from "./components/Viewport/defaults";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function App() {
+  const previewRef = useRef<HTMLDivElement>(null);
   const [viewportDimensions, setViewportDimensions] = useState<ViewportStyles>({
     name: "Reset Viewport",
     height: window.innerHeight,
@@ -20,8 +21,11 @@ export default function App() {
         <ActionsBar setViewportDimensions={setViewportDimensions} />
         <div className="flex flex-row grow">
           <LeftSidebar />
-          <div className="grow w-1/3 bg-white border-8 shadow">
-            <PreviewWithUseComponents viewportDimensions={viewportDimensions} />
+          <div ref={previewRef} className="grow w-1/3 bg-white border-8 shadow">
+            <PreviewWithUseComponents
+              viewportDimensions={viewportDimensions}
+              previewRef={previewRef}
+            />
           </div>
           <EditorSidebar />
         </div>

@@ -4,14 +4,15 @@ import PreviewPanel from "./PreviewPanel";
 import Highlighter from "./Highlighter";
 import IFramePortal from "./IFramePortal";
 import { Tooltip, ITooltip } from "react-tooltip";
-import { useState } from "react";
-import { ViewportStyles, MINIMAL_VIEWPORTS_CSS } from "./Viewport/defaults";
+import { RefObject, useState } from "react";
+import { ViewportStyles, EXPANDED_VIEWPORTS } from "./Viewport/defaults";
 import { twMerge } from "tailwind-merge";
 
 export default function PreviewWithUseComponents(props: {
   viewportDimensions: ViewportStyles;
+  previewRef: RefObject<HTMLDivElement>;
 }) {
-  const { viewportDimensions } = props;
+  const { viewportDimensions, previewRef } = props;
   const componentTree = useStudioStore((store) =>
     store.actions.getComponentTree()
   );
@@ -25,13 +26,16 @@ export default function PreviewWithUseComponents(props: {
   void useImportedComponents(componentTree);
 
   const dimensions =
-    MINIMAL_VIEWPORTS_CSS[viewportDimensions.name.replace(/\s+/g, "")] +
-    (viewportDimensions.width / viewportDimensions.height >
-    window.innerWidth / window.innerHeight
+    viewportDimensions.width * (previewRef.current?.clientHeight ?? 0) >
+    viewportDimensions.height * (previewRef.current?.clientWidth ?? 0)
       ? " w-full "
-      : " h-full ");
-
-  const iframeCSS = twMerge("mr-auto ml-auto border-2", dimensions);
+      : " h-full ";
+  const id = viewportDimensions.name.replace(/\s+/g, "").toLowerCase();
+  const iframeCSS = twMerge(
+    "mr-auto ml-auto border-2",
+    EXPANDED_VIEWPORTS[id].css,
+    dimensions
+  );
 
   return (
     <>

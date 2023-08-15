@@ -1,12 +1,5 @@
 import { useCallback, SetStateAction, Dispatch } from "react";
-import { MINIMAL_VIEWPORTS, Viewport, ViewportStyles } from "./defaults";
-// can switch to other viewports in defaults.tsx
-
-const resetViewport: Viewport = {
-  name: "Reset Viewport",
-  styles: null,
-  type: "other",
-};
+import { EXPANDED_VIEWPORTS, Viewport, ViewportStyles } from "./defaults";
 
 interface optionProps extends Viewport {
   setViewportDimensions: Dispatch<SetStateAction<ViewportStyles>>;
@@ -37,13 +30,7 @@ function Selector(props: {
 
   return (
     <div className="flex flex-col items-start py-1">
-      <Option
-        setViewportDimensions={setViewportDimensions}
-        afterSelect={afterSelect}
-        {...resetViewport}
-      />
-
-      {Object.values(MINIMAL_VIEWPORTS).map((val) => {
+      {Object.values(EXPANDED_VIEWPORTS).map((val) => {
         return (
           <Option
             setViewportDimensions={setViewportDimensions}
