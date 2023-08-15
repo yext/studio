@@ -7,8 +7,13 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
+const waitForImageLoad = async () => {
+  await new Promise((r) => setTimeout(r, 500));
+};
+
 studioTest("can add a Footer component", async ({ page, studioPage }) => {
   await studioPage.switchPage("LocationPage");
+  await waitForImageLoad();
   await studioPage.addElement("Footer", "Components");
   const previews = studioPage.preview.getByText("© 2023 Yext");
   await expect(previews).toHaveCount(1);

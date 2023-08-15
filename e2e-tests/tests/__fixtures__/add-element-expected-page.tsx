@@ -29,7 +29,7 @@ export default function LocationPage({ document }: TemplateProps) {
         logo="https://a.mktgcdn.com/p/R9FjcYjRNA5dAespqgHFLMvu2m18-E5Apnb3KON0oJY/300x300.png"
         backgroundColor="#BAD8FD"
       />
-      <ProminentImage src="https://images.ctfassets.net/n2ifzifcqscw/10wJSHT2Zvj5G1Z3GYHUqv/882e93cefece92d25d25933d56598903/telluride_shutterstock_2074692298.jpg" />
+      <ProminentImage src="https://tellurideadventures.com/wp-content/uploads/2021/01/telluride-4100097_640.jpg" />
       <BusinessInfo>
         <AddressDisplay
           line1={`${document.address.line1}`}
