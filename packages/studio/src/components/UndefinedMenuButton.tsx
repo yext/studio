@@ -13,7 +13,7 @@ import PropValueHelpers from "../utils/PropValueHelpers";
 
 const listStyles: CSSProperties = {
   minWidth: "130px",
-  right: "9.5em",
+  left: "-13px",
 };
 
 interface UndefinedMenuButtonProps {
@@ -72,7 +72,7 @@ export default function UndefinedMenuButton({
         {isOpen && (
           <div className="relative mt-3">
             <ul
-              className="absolute bg-white rounded border z-10 shadow-2xl text-sm left-[-13px]"
+              className="absolute bg-white rounded border z-10 shadow-2xl text-sm"
               style={listStyles}
             >
               <li
