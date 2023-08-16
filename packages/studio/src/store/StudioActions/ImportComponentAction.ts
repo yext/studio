@@ -10,9 +10,8 @@ import {
   TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
-import { ImportType } from "../models/ImportType";
-import { FunctionComponent } from "react";
 import dynamicImportFromBrowser from "../../utils/dynamicImportFromBrowser";
+import getFunctionComponent from "../../utils/getFunctionComponent";
 
 /**
  * Imports a component into the global store.
@@ -73,17 +72,4 @@ export default class ImportComponentAction {
       metadata.componentTree.map((c) => this.importComponent(c))
     );
   };
-}
-
-function getFunctionComponent(
-  importedValue: Record<string, unknown>,
-  name: string
-): ImportType | undefined {
-  if (typeof importedValue[name] === "function") {
-    return importedValue[name] as FunctionComponent;
-  } else if (typeof importedValue["default"] === "function") {
-    return importedValue["default"] as FunctionComponent;
-  } else {
-    console.error(`${name} is not a valid functional component.`);
-  }
 }

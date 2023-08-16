@@ -2056,7 +2056,7 @@ A [picomatch pattern](https://github.com/micromatch/picomatch), or array of patt
 
 The following npm package may be included in this product:
 
- - @rollup/pluginutils@5.0.2
+ - @rollup/pluginutils@5.0.3
 
 This package contains the following license and notice below:
 
@@ -2796,7 +2796,7 @@ The following npm packages may be included in this product:
  - ansi-regex@6.0.1
  - ansi-styles@6.2.1
  - bundle-name@3.0.0
- - callsites@4.0.0
+ - callsites@4.1.0
  - camelcase@6.3.0
  - camelcase@7.0.1
  - chalk@5.3.0
@@ -3966,7 +3966,7 @@ THE SOFTWARE.
 
 The following npm package may be included in this product:
 
- - caniuse-lite@1.0.30001519
+ - caniuse-lite@1.0.30001520
 
 This package contains the following license and notice below:
 
@@ -5869,7 +5869,7 @@ THE SOFTWARE.
 
 The following npm package may be included in this product:
 
- - electron-to-chromium@1.4.490
+ - electron-to-chromium@1.4.491
 
 This package contains the following license and notice below:
 
@@ -9168,7 +9168,7 @@ IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 The following npm package may be included in this product:
 
- - minipass@7.0.2
+ - minipass@7.0.3
 
 This package contains the following license and notice below:
 
