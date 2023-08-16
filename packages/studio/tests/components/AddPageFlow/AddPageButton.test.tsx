@@ -62,7 +62,17 @@ describe("PagesJS repo", () => {
   }
 
   it("closes modal when page type, name, and url are specified for static page", async () => {
-    const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
+    jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
+      return new Promise((resolve) =>
+        resolve({
+          msg: "msg",
+          type: ResponseType.Success,
+          mappingJson: {
+            test: ["mockLocalData.json"],
+          },
+        })
+      );
+    });
     render(<AddPageButton />);
 
     const addPageButton = screen.getByRole("button");
@@ -80,13 +90,25 @@ describe("PagesJS repo", () => {
     await specifyUrl("testing");
     await userEvent.click(saveButton);
 
-    expect(addPageSpy).toBeCalledWith("test", {
+    expect(useStudioStore.getState().pages.pages["test"]).toEqual({
       ...basicPageState,
       pagesJS: {
-        getPathValue: { kind: PropValueKind.Literal, value: "testing" },
+        getPathValue: {
+          kind: PropValueKind.Literal,
+          value: "testing",
+        },
+        entityFiles: ["mockLocalData.json"],
       },
     });
+
     await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
+
+    expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
+      "mockLocalData.json"
+    );
+    expect(useStudioStore.getState().pages.getActiveEntityData()).toEqual({
+      __: expect.anything(),
+    });
   });
 
   describe("entity page", () => {
@@ -100,6 +122,17 @@ describe("PagesJS repo", () => {
 
     it("closes modal once page type, stream scope, name, and url are specified", async () => {
       render(<AddPageButton />);
+      jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
+        return new Promise((resolve) =>
+          resolve({
+            msg: "msg",
+            type: ResponseType.Success,
+            mappingJson: {
+              test: ["mockLocalData.json"],
+            },
+          })
+        );
+      });
 
       const addPageButton = screen.getByRole("button");
       await userEvent.click(addPageButton);
@@ -118,18 +151,6 @@ describe("PagesJS repo", () => {
       await specifyName();
       expect(saveButton).toBeEnabled();
       await specifyUrl("-[[[[id]]");
-
-      jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
-        return new Promise((resolve) =>
-          resolve({
-            msg: "msg",
-            type: ResponseType.Success,
-            mappingJson: {
-              test: ["mockLocalData.json"],
-            },
-          })
-        );
-      });
       await userEvent.click(saveButton);
 
       expect(useStudioStore.getState().pages.pages["test"]).toEqual({
