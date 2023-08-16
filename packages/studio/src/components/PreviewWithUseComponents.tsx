@@ -5,17 +5,17 @@ import Highlighter from "./Highlighter";
 import IFramePortal from "./IFramePortal";
 import { Tooltip, ITooltip } from "react-tooltip";
 import { RefObject, useState } from "react";
-import { ViewportStyles, EXPANDED_VIEWPORTS } from "./Viewport/defaults";
+import { EXPANDED_VIEWPORTS } from "./Viewport/defaults";
 import { twMerge } from "tailwind-merge";
 
 export default function PreviewWithUseComponents(props: {
-  viewportDimensions: ViewportStyles;
   previewRef: RefObject<HTMLDivElement>;
 }) {
-  const { viewportDimensions, previewRef } = props;
-  const componentTree = useStudioStore((store) =>
-    store.actions.getComponentTree()
-  );
+  const { previewRef } = props;
+  const [viewportDimensions, componentTree] = useStudioStore((store) => [
+    store.pagePreview.viewportDimensions,
+    store.actions.getComponentTree(),
+  ]);
   const [tooltipProps, setTooltipProps] = useState<ITooltip>({
     isOpen: false,
     position: { x: 0, y: 0 },

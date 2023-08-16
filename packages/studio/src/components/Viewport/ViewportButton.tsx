@@ -1,12 +1,8 @@
-import { Dispatch, SetStateAction, useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import useRootClose from "@restart/ui/useRootClose";
 import ViewportMenu from "./ViewportMenu";
-import { ViewportStyles } from "./defaults";
 
-export default function ViewportButton(props: {
-  setViewportDimensions: Dispatch<SetStateAction<ViewportStyles>>;
-}): JSX.Element {
-  const { setViewportDimensions } = props;
+export default function ViewportButton(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const icon =
@@ -27,12 +23,7 @@ export default function ViewportButton(props: {
           aria-label="Viewport Button"
         />
       </button>
-      {isOpen && (
-        <ViewportMenu
-          setViewportDimensions={setViewportDimensions}
-          closeMenu={handleClose}
-        />
-      )}
+      {isOpen && <ViewportMenu closeMenu={handleClose} />}
     </div>
   );
 }

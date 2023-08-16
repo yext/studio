@@ -1,50 +1,40 @@
-import { useCallback, SetStateAction, Dispatch } from "react";
-import { EXPANDED_VIEWPORTS, Viewport, ViewportStyles } from "./defaults";
+import { useCallback } from "react";
+import { EXPANDED_VIEWPORTS, Viewport } from "./defaults";
+import useStudioStore from "../../store/useStudioStore";
 
 interface optionProps extends Viewport {
-  setViewportDimensions: Dispatch<SetStateAction<ViewportStyles>>;
   afterSelect: () => void;
 }
 
 export default function ViewportMenu(props: {
-  setViewportDimensions: Dispatch<SetStateAction<ViewportStyles>>;
   closeMenu: () => void;
 }): JSX.Element {
-  const { setViewportDimensions, closeMenu } = props;
+  const { closeMenu } = props;
 
   return (
     <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
-      <Selector
-        setViewportDimensions={setViewportDimensions}
-        afterSelect={closeMenu}
-      />
+      <Selector afterSelect={closeMenu} />
     </div>
   );
 }
 
-function Selector(props: {
-  afterSelect: () => void;
-  setViewportDimensions: Dispatch<SetStateAction<ViewportStyles>>;
-}) {
-  const { afterSelect, setViewportDimensions } = props;
+function Selector(props: { afterSelect: () => void }) {
+  const { afterSelect } = props;
 
   return (
     <div className="flex flex-col items-start py-1">
       {Object.values(EXPANDED_VIEWPORTS).map((val) => {
-        return (
-          <Option
-            setViewportDimensions={setViewportDimensions}
-            afterSelect={afterSelect}
-            {...val}
-          />
-        );
+        return <Option afterSelect={afterSelect} {...val} />;
       })}
     </div>
   );
 }
 
 function Option(props: optionProps) {
-  const { afterSelect, setViewportDimensions } = props;
+  const [setViewportDimensions] = useStudioStore((store) => [
+    store.pagePreview.setViewportDimensions,
+  ]);
+  const { afterSelect } = props;
   const viewportOption = props.name;
 
   const handleSelect = useCallback(() => {
