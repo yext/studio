@@ -7,4 +7,8 @@ studioTest("renders field picker dropdown", async ({ page, studioPage }) => {
   await page.getByLabel("Toggle field picker").click();
   await page.getByText("Meta").click();
   await expect(page).toHaveScreenshot();
+  page.setViewportSize({ width: 1000, height: 720 });
+  await page.getByText("Meta").hover();
+  await page.mouse.wheel(200, 0);
+  await expect(page).toHaveScreenshot();
 });
