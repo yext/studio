@@ -19,7 +19,7 @@ jobs:
           ref: ${{ github.head_ref }}
           token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
 
-      # this is done since studio is a monorepo. A fresh reinstall without workspaces allows all
+      # this is done since studio is a monorepo. a fresh reinstall without workspaces allows all
       # node_modules to be installed within the current dir (instead of some at the root, with workspaces)
       # NOTE: since only changes to THIRD-PARTY-NOTICES files are added, this change will not be pushed
       - name: Clear workspace from package.json
