@@ -21,23 +21,6 @@ describe("updateEntityFiles", () => {
     });
   });
 
-  it("generates entityFiles for static pages", async () => {
-    mockPageSliceStates({
-      pages: getStaticPagesRecord(),
-      activePageName: "test",
-    });
-    mockMessage({ test: ["mockLocalData.json"] });
-    await useStudioStore.getState().actions.generateTestData();
-    const pageSlice = useStudioStore.getState().pages;
-    expect(pageSlice.pages["test"].pagesJS?.entityFiles).toEqual([
-      "mockLocalData.json",
-    ]);
-    expect(pageSlice.activeEntityFile).toEqual("mockLocalData.json");
-    expect(pageSlice.activePageEntities).toEqual({
-      "mockLocalData.json": expect.anything(),
-    });
-  });
-
   it("updates entityFiles to undefined when no test data is generated", async () => {
     mockPageSliceStates({
       pages: getPagesRecord(["mockLocalData.json"]),
@@ -131,20 +114,6 @@ function getPagesRecord(entityFiles?: string[]) {
         getPathValue: undefined,
         streamScope: {},
         entityFiles,
-      },
-    },
-  };
-}
-
-function getStaticPagesRecord() {
-  return {
-    test: {
-      componentTree: [],
-      cssImports: [],
-      filepath: "mock-filepath",
-      pagesJS: {
-        getPathValue: undefined,
-        streamScope: undefined,
       },
     },
   };
