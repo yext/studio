@@ -11,7 +11,7 @@ export interface EntityFeature extends FeatureBase {
   entityPageSet: Record<string, never>;
 }
 
-interface StaticFeature extends FeatureBase {
+export interface StaticFeature extends FeatureBase {
   staticPage: {
     urlTemplate?: string;
     htmlTemplate?: string;

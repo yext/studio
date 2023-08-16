@@ -35,7 +35,7 @@ export default class CreatePageAction {
     );
     this.getPageSlice().addPage(pageName, pageState);
 
-    if (streamScope) {
+    if (isPagesJSRepo) {
       const response = await this.studioActions.generateTestData();
       if (response.type === ResponseType.Error) {
         toast.error(
