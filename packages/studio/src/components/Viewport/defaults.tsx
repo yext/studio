@@ -86,39 +86,3 @@ export const EXPANDED_VIEWPORTS: ViewportMap = {
     css: "aspect-[600/720]",
   },
 };
-
-export const MINIMAL_VIEWPORTS: ViewportMap = {
-  resetviewport: {
-    name: "Reset Viewport",
-    styles: null,
-    type: "other",
-    css: "h-full w-full",
-  },
-  mobile1: {
-    name: "Small Mobile",
-    styles: {
-      height: 568,
-      width: 320,
-    },
-    type: "mobile",
-    css: "aspect-[320/568]",
-  },
-  mobile2: {
-    name: "Large Mobile",
-    styles: {
-      height: 896,
-      width: 414,
-    },
-    type: "mobile",
-    css: "aspect-[414/896]",
-  },
-  tablet: {
-    name: "Tablet",
-    styles: {
-      height: 1112,
-      width: 834,
-    },
-    type: "tablet",
-    css: "aspect-[834/1112]",
-  },
-};
