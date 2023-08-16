@@ -18,6 +18,7 @@
   "addressHidden": false,
   "businessId": 3350634,
   "c_features": ["OPEN_NOW", "DOG_FRIENDLY"],
+  "c_servicesOffered": ["Test Service"],
   "cityCoordinate": {
     "latitude": 40.708601,
     "longitude": -73.876717
@@ -88,7 +89,13 @@
   },
   "name": "Office Space",
   "priceRange": "TWO",
-  "ref_categories": [{}],
+  "ref_categories": [
+    {
+      "id": "668",
+      "name": "Software Consultant",
+      "uid": 668
+    }
+  ],
   "ref_listings": [],
   "ref_reviewsAgg": [],
   "routableCoordinate": {
@@ -99,6 +106,7 @@
   "siteDomain": "",
   "siteId": 0,
   "siteInternalHostName": "",
+  "slug": "office/637478382857487577",
   "timezone": "America/New_York",
   "uid": 18714997,
   "websiteUrl": {

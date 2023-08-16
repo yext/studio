@@ -5,9 +5,6 @@
   "ErrorComponentPreviews": [
     "cog-internal-feature-static-file-generation-ErrorComponentPreviews__en__cfcd208495d565ef66e7dff9f98764da.json"
   ],
-  "ErrorPage": [
-    "cog-internal-feature-static-file-generation-ErrorPage__en__cfcd208495d565ef66e7dff9f98764da.json"
-  ],
   "LocationPage": [
     "studio-stream-id-LocationPage__en__b5c72eb6622ba376c857dbedac25989b.json",
     "studio-stream-id-LocationPage__en__c436bc541570239fdbb3c86a549f7a71.json",
@@ -19,5 +16,8 @@
     "studio-stream-id-LocationPage__en__a09d94986018c82320dfe5e138ea88ef.json",
     "studio-stream-id-LocationPage__en__63332cafcabf752f4ecfa57bb7f83e42.json",
     "studio-stream-id-LocationPage__en__8f3df878733e5e0969823b81e3bf497f.json"
+  ],
+  "NewStaticPage": [
+    "cog-internal-feature-static-file-generation-NewStaticPage__en__cfcd208495d565ef66e7dff9f98764da.json"
   ]
 }

@@ -2,49 +2,37 @@ import { useCallback } from "react";
 import { EXPANDED_VIEWPORTS, Viewport } from "./defaults";
 import useStudioStore from "../../store/useStudioStore";
 
-interface optionProps extends Viewport {
-  afterSelect: () => void;
+interface OptionProps extends Viewport {
+  closeMenu: () => void;
 }
 
 export default function ViewportMenu(props: {
   closeMenu: () => void;
 }): JSX.Element {
-  const { closeMenu } = props;
-
   return (
-    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
-      <Selector afterSelect={closeMenu} />
-    </div>
-  );
-}
-
-function Selector(props: { afterSelect: () => void }) {
-  const { afterSelect } = props;
-
-  return (
-    <div className="flex flex-col items-start py-1">
+    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg flex flex-col items-start py-1">
       {Object.values(EXPANDED_VIEWPORTS).map((val) => {
-        return <Option afterSelect={afterSelect} {...val} />;
+        return <Option key={val.name} closeMenu={props.closeMenu} {...val} />;
       })}
     </div>
   );
 }
 
-function Option(props: optionProps) {
+function Option(props: OptionProps) {
   const [setViewportDimensions] = useStudioStore((store) => [
     store.pagePreview.setViewportDimensions,
   ]);
-  const { afterSelect } = props;
+  const { closeMenu } = props;
   const viewportOption = props.name;
 
   const handleSelect = useCallback(() => {
-    afterSelect?.();
+    closeMenu();
     setViewportDimensions({
       name: props.name ?? "Reset Viewport",
       height: props.styles?.height ?? window.innerHeight,
       width: props.styles?.width ?? window.innerWidth,
     });
-  }, [afterSelect, setViewportDimensions, props]);
+  }, [closeMenu, setViewportDimensions, props]);
 
   return (
     <button
@@ -55,11 +43,7 @@ function Option(props: optionProps) {
       <div className="flex flex-row gap-x-2 items-center">
         {viewportOption}
         <div className="opacity-75">
-          {props.styles ? (
-            props.styles.width + "x" + props.styles.height
-          ) : (
-            <></>
-          )}
+          {props.styles && props.styles.width + "x" + props.styles.height}
         </div>
       </div>
     </button>

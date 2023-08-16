@@ -72,7 +72,13 @@
     "locale": "en"
   },
   "name": "Office Space 2",
-  "ref_categories": [{}],
+  "ref_categories": [
+    {
+      "id": "668",
+      "name": "Software Consultant",
+      "uid": 668
+    }
+  ],
   "ref_listings": [],
   "ref_reviewsAgg": [],
   "routableCoordinate": {
@@ -83,6 +89,7 @@
   "siteDomain": "",
   "siteId": 0,
   "siteInternalHostName": "",
+  "slug": "office/1659277149695818196",
   "timezone": "America/Chicago",
   "uid": 18715001,
   "websiteUrl": {
