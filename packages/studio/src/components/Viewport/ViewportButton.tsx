@@ -24,6 +24,7 @@ export default function ViewportButton(props: {
           className="h-14 w-auto rounded-md lg:block pr-1"
           src={icon}
           alt="Viewport icon"
+          aria-label="Viewport Button"
         />
       </button>
       {isOpen && (
