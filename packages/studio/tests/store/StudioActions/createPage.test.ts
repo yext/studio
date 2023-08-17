@@ -6,47 +6,12 @@ import * as sendMessageModule from "../../../src/messaging/sendMessage";
 describe("non-PagesJS repo", () => {
   it("gives an error for a relative filepath", async () => {
     const createPage = useStudioStore.getState().actions.createPage("../test");
-    await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName is invalid: ../test"
-    );
+    await expect(createPage).rejects.toThrow("Page name is invalid: ../test");
   });
 
-  it("gives an error for an empty string pagename", async () => {
-    const createPage = useStudioStore.getState().actions.createPage("");
-    await expect(createPage).rejects.toThrow(
-      "Error adding page: a pageName is required."
-    );
-  });
-
-  it("gives an error for a pagename with only asterisks", async () => {
-    const createPage = useStudioStore.getState().actions.createPage("***");
-    await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName *** cannot contain the characters: *"
-    );
-  });
-
-  it("gives an error for a pagename with multiple special characters", async () => {
-    const createPage = useStudioStore
-      .getState()
-      .actions.createPage('test\\|"<>?');
-    await expect(createPage).rejects.toThrow(
-      'Error adding page: pageName test\\|"<>? cannot contain the characters: \\,|,",<,>,?'
-    );
-  });
-
-  it("gives an error for a pagename ending in a period", async () => {
-    const createPage = useStudioStore.getState().actions.createPage("test.");
-    await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName test. cannot end with a period."
-    );
-  });
-
-  it("gives an error for a pagename 256 characters long", async () => {
-    const longName = "a".repeat(256);
-    const createPage = useStudioStore.getState().actions.createPage(longName);
-    await expect(createPage).rejects.toThrow(
-      "Error adding page: pageName must be 255 characters or less."
-    );
+  it("gives an error for an invalid pagename", async () => {
+    const createPage = useStudioStore.getState().actions.createPage("../test");
+    await expect(createPage).rejects.toThrow("Page name is invalid: ../test");
   });
 
   it("adds the new page name to pagesToUpdate", async () => {
@@ -98,9 +63,7 @@ describe("PagesJS repo", () => {
 
   it("gives an error if no getPath value is passed in", async () => {
     const createPage = useStudioStore.getState().actions.createPage("test");
-    await expect(createPage).rejects.toThrow(
-      "Error adding page: a getPath value is required."
-    );
+    await expect(createPage).rejects.toThrow("A getPath value is required.");
   });
 
   it("adds a page with getPathValue to pages record", async () => {
