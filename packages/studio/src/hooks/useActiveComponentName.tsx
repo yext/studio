@@ -34,7 +34,7 @@ export function useComponentNames(
     }
   );
   return componentStates.flatMap((state) =>
-    state ? { name: getComponentDisplayName(state), uuid: state.uuid } : { name: '', uuid: '' }
+    state ? { name: getComponentDisplayName(state), uuid: state.uuid } : []
   );
 }
 
