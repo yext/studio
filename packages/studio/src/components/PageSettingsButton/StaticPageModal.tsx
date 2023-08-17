@@ -58,7 +58,7 @@ export default function StaticPageModal({
         url: getPathValue.value,
       });
       if (!validationResult.valid) {
-        setErrorMessage(validationResult.errorMessages);
+        setErrorMessage(validationResult.errorMessages.join("\r\n"));
         return false;
       }
       updateGetPathValue(pageName, getPathValue);

@@ -50,7 +50,7 @@ export default function BasicPageDataCollector({
         url: getPathValue?.value,
       });
       if (!validationResult.valid) {
-        setErrorMessage(validationResult.errorMessages);
+        setErrorMessage(validationResult.errorMessages.join("\r\n"));
         return false;
       }
       try {

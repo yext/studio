@@ -5,7 +5,7 @@ import PageDataValidator, {
 describe("URL slug validation", () => {
   function expectURLError(
     input: string,
-    errorMessage: string,
+    errorMessage: string[],
     isEntityPage?: boolean
   ) {
     const validator = new PageDataValidator(isEntityPage);
@@ -15,7 +15,7 @@ describe("URL slug validation", () => {
 
   it("gives an error for document expression in a static field", () => {
     const errorMessage = "URL slug contains invalid characters: {}";
-    expectURLError("${document.field}", errorMessage);
+    expectURLError("${document.field}", [errorMessage]);
   });
 
   it("does not give an error for valid document expression in an entity page", () => {
@@ -23,14 +23,14 @@ describe("URL slug validation", () => {
     const result = validator.validate({
       url: "${document.field}-${document.slug}",
     });
-    expect(result).toEqual({ valid: true, errorMessages: "" });
+    expect(result).toEqual({ valid: true, errorMessages: [] });
   });
 
   it("gives an error for a document expression with invalid characters", () => {
     const errorMessage = "URL slug contains invalid characters: <>[]{}";
     expectURLError(
       "${document.field}<>[[]]{}${document.slug}",
-      errorMessage,
+      [errorMessage],
       true
     );
   });

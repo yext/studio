@@ -1,6 +1,6 @@
 export interface ValidationResult {
   valid: boolean;
-  errorMessages: string;
+  errorMessages: string[];
 }
 
 /**
@@ -36,7 +36,7 @@ export default class PageDataValidator {
       );
     return {
       valid: errorMessages.length === 0,
-      errorMessages: errorMessages.join("\r\n"),
+      errorMessages: errorMessages,
     } as ValidationResult;
   }
 
