@@ -48,14 +48,18 @@ const generateSafelist = (theme: StudioTailwindTheme): string[] => {
   ];
 };
 
-const transformedUserContent = (userTailwindConfig?.content ?? []).map(
-  (filepath) => {
-    if (path.isAbsolute(filepath)) {
-      return filepath;
-    }
-    return path.join(rootDir, filepath);
+/**
+ * The portion of the content array that gets styles from the user's repo.
+ * If the user did not specify a tailwind config, default to all styles under the src dir.
+ */
+const transformedUserContent = (
+  userTailwindConfig?.content ?? [path.resolve(rootDir, "src/**/*.{ts,tsx}")]
+).map((filepath) => {
+  if (path.isAbsolute(filepath)) {
+    return filepath;
   }
-);
+  return path.join(rootDir, filepath);
+});
 
 export default {
   content: [
