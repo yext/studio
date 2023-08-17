@@ -8,7 +8,7 @@ import hotReloadStore from "./store/hotReloadStore";
 
 if (import.meta.hot) {
   import.meta.hot.on(StudioHMRUpdateID, (hmrPayload: StudioHMRPayload) => {
-    hotReloadStore(hmrPayload);
+    void hotReloadStore(hmrPayload);
   });
 }
 

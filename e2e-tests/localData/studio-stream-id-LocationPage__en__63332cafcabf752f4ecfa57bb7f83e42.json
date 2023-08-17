@@ -1,0 +1,122 @@
+{
+  "__": {
+    "entityPageSet": {},
+    "name": "LocationPage",
+    "streamId": "studio-stream-id-LocationPage",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "Battle Creek",
+    "countryCode": "US",
+    "line1": "30 East Columbia Ave",
+    "line2": "Ste A",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Michigan",
+    "postalCode": "49015",
+    "region": "MI"
+  },
+  "businessId": 3350634,
+  "cityCoordinate": {
+    "latitude": 42.29739,
+    "longitude": -85.228636
+  },
+  "displayCoordinate": {
+    "latitude": 42.2977374,
+    "longitude": -85.1969402
+  },
+  "geocodedCoordinate": {
+    "latitude": 42.2977374,
+    "longitude": -85.1969402
+  },
+  "hours": {
+    "friday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "monday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "saturday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "sunday": {
+      "openIntervals": [
+        {
+          "end": "19:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "thursday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "tuesday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    },
+    "wednesday": {
+      "openIntervals": [
+        {
+          "end": "22:00",
+          "start": "08:00"
+        }
+      ]
+    }
+  },
+  "id": "04369",
+  "isoRegionCode": "MI",
+  "key": "0:LocationPage:knowledgeGraph:18715008:en",
+  "locale": "en",
+  "mainPhone": "+12699653237",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "name": "Battle Creek",
+  "ref_categories": null,
+  "ref_listings": [],
+  "ref_reviewsAgg": [],
+  "routableCoordinate": {
+    "latitude": 42.2985595,
+    "longitude": -85.1969572
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "timezone": "America/Detroit",
+  "uid": 18715008,
+  "yextDisplayCoordinate": {
+    "latitude": 42.2977374,
+    "longitude": -85.1969402
+  },
+  "yextRoutableCoordinate": {
+    "latitude": 42.2985595,
+    "longitude": -85.1969572
+  }
+}

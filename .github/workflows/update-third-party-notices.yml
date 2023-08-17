@@ -1,4 +1,4 @@
-name: Automated Linting
+name: Update Third Party Notices
 on:
   workflow_call:
     secrets:
