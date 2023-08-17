@@ -13,7 +13,7 @@ import PropValueHelpers from "../utils/PropValueHelpers";
 
 const listStyles: CSSProperties = {
   minWidth: "130px",
-  right: "9.5em",
+  left: "-13px",
 };
 
 interface UndefinedMenuButtonProps {
@@ -70,9 +70,9 @@ export default function UndefinedMenuButton({
           aria-label="Toggle undefined value menu"
         />
         {isOpen && (
-          <div className="absolute mt-3">
+          <div className="relative mt-3">
             <ul
-              className="relative bg-white rounded border z-10 shadow-2xl text-sm"
+              className="absolute bg-white rounded border z-10 shadow-2xl text-sm"
               style={listStyles}
             >
               <li
