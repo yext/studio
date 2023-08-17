@@ -5,6 +5,7 @@ import {
   SetStateAction,
   useEffect,
   useRef,
+  useState,
 } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { VIEWPORTS } from "./Viewport/defaults";
@@ -22,18 +23,30 @@ export default function IFramePortal(
   const [viewportDimensions] = useStudioStore((store) => [
     store.pagePreview.viewportDimensions,
   ]);
-  const dimensions =
-    viewportDimensions.width * (previewRef.current?.clientHeight ?? 0) >
-    viewportDimensions.height * (previewRef.current?.clientWidth ?? 0)
-      ? " w-full "
-      : " h-full ";
   const id = viewportDimensions.name.replace(/\s+/g, "").toLowerCase();
-  const iframeCSS = twMerge(
-    "mr-auto ml-auto border-2",
-    VIEWPORTS[id].css,
-    dimensions
+  const [css, setCss] = useState(
+    viewportDimensions.width * (previewRef.current?.clientHeight ?? 0) >
+      viewportDimensions.height * (previewRef.current?.clientWidth ?? 0)
+      ? " w-full "
+      : " h-full "
   );
+  const iframeCSS = twMerge("mr-auto ml-auto border-2", VIEWPORTS[id].css, css);
   useParentDocumentStyles(iframeDocument);
+  const handleResize = () => {
+    const tempCss =
+      viewportDimensions.width * (previewRef.current?.clientHeight ?? 0) >
+      viewportDimensions.height * (previewRef.current?.clientWidth ?? 0)
+        ? " w-full "
+        : " h-full ";
+    if (tempCss !== css) {
+      setCss(tempCss);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  });
 
   return (
     <div ref={previewRef} className="grow w-1/3 bg-white border-8 shadow">
