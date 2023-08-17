@@ -1,6 +1,7 @@
-import { PropValueKind } from "@yext/studio-plugin";
+import { PropValueKind, ResponseType } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
+import * as sendMessageModule from "../../../src/messaging/sendMessage";
 
 describe("non-PagesJS repo", () => {
   it("gives an error for a relative filepath", async () => {
@@ -103,6 +104,17 @@ describe("PagesJS repo", () => {
   });
 
   it("adds a page with getPathValue to pages record", async () => {
+    jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
+      return new Promise((resolve) =>
+        resolve({
+          msg: "msg",
+          type: ResponseType.Success,
+          mappingJson: {
+            testing: ["mockLocalData.json"],
+          },
+        })
+      );
+    });
     await useStudioStore.getState().actions.createPage("test", {
       kind: PropValueKind.Literal,
       value: "testing",

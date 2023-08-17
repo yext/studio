@@ -2,6 +2,7 @@ import {
   STREAM_LOCALIZATION,
   StreamScope,
   EntityFeature,
+  StaticFeature,
   FeaturesJson,
   MessageID,
   ResponseEventMap,
@@ -27,16 +28,20 @@ export default class GenerateTestDataAction {
       (json, pageEntry) => {
         const [pageName, pageState] = pageEntry;
         const scope = pageState.pagesJS?.streamScope;
-        if (!scope) {
-          return json;
+        if (scope) {
+          const entityFeature =
+            GenerateTestDataAction.getEntityFeature(pageName);
+          const stream = GenerateTestDataAction.getStreamFromStreamScope(
+            scope,
+            pageName
+          );
+          json.features.push(entityFeature);
+          json.streams.push(stream);
+        } else {
+          const staticFeature =
+            GenerateTestDataAction.getStaticFeature(pageName);
+          json.features.push(staticFeature);
         }
-        const entityFeature = GenerateTestDataAction.getEntityFeature(pageName);
-        const stream = GenerateTestDataAction.getStreamFromStreamScope(
-          scope,
-          pageName
-        );
-        json.features.push(entityFeature);
-        json.streams.push(stream);
         return json;
       },
       {
@@ -93,6 +98,14 @@ export default class GenerateTestDataAction {
       streamId: this.getStreamId(pageName),
       templateType: "JS",
       entityPageSet: {},
+    };
+  }
+
+  private static getStaticFeature(pageName: string): StaticFeature {
+    return {
+      name: pageName,
+      templateType: "JS",
+      staticPage: {},
     };
   }
 }
