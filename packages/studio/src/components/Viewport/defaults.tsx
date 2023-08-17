@@ -15,7 +15,7 @@ export interface ViewportMap {
   [key: string]: Viewport;
 }
 
-export const EXPANDED_VIEWPORTS: ViewportMap = {
+export const VIEWPORTS: ViewportMap = {
   resetviewport: {
     name: "Reset Viewport",
     styles: null,

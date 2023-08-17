@@ -7,7 +7,7 @@ import {
   useRef,
 } from "react";
 import useStudioStore from "../store/useStudioStore";
-import { EXPANDED_VIEWPORTS } from "./Viewport/defaults";
+import { VIEWPORTS } from "./Viewport/defaults";
 import { twMerge } from "tailwind-merge";
 
 export default function IFramePortal(
@@ -30,7 +30,7 @@ export default function IFramePortal(
   const id = viewportDimensions.name.replace(/\s+/g, "").toLowerCase();
   const iframeCSS = twMerge(
     "mr-auto ml-auto border-2",
-    EXPANDED_VIEWPORTS[id].css,
+    VIEWPORTS[id].css,
     dimensions
   );
   useParentDocumentStyles(iframeDocument);
