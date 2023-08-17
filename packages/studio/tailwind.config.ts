@@ -48,16 +48,20 @@ const generateSafelist = (theme: StudioTailwindTheme): string[] => {
   ];
 };
 
+const transformedUserContent = (userTailwindConfig?.content ?? []).map(
+  (filepath) => {
+    if (path.isAbsolute(filepath)) {
+      return filepath;
+    }
+    return path.join(rootDir, filepath);
+  }
+);
+
 export default {
   content: [
     path.resolve(__dirname, "src/**/*.{ts,tsx}"),
-    ...(userTailwindConfig?.content ?? []).map((filepath) => {
-      if (path.isAbsolute(filepath)) {
-        return filepath;
-      }
-      return path.join(rootDir, filepath);
-    }),
     path.resolve(__dirname, "index.html"),
+    ...transformedUserContent,
   ],
   safelist: generateSafelist(userTailwindTheme),
   theme: {
