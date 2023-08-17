@@ -12,6 +12,7 @@ export type FormData<T extends Form> = {
     optional?: boolean;
     placeholder?: string;
     tooltip?: string;
+    disabled?: boolean;
   };
 };
 
@@ -149,6 +150,7 @@ function FormField({
   description,
   placeholder,
   tooltip,
+  disabled,
 }: {
   field: string;
   value: string;
@@ -157,6 +159,7 @@ function FormField({
   description: string;
   placeholder?: string;
   tooltip?: string;
+  disabled?: boolean;
 }): JSX.Element {
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -182,6 +185,7 @@ function FormField({
         placeholder={placeholder}
         value={value}
         onChange={handleChange}
+        disabled={disabled}
       />
     </>
   );
