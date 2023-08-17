@@ -3,7 +3,8 @@ import type { Config } from "tailwindcss";
 /**
  * The subset of a tailwind Config supported by Studio.
  */
-export type StudioTailwindConfig = Omit<Config, "theme"> & {
+export type StudioTailwindConfig = Omit<Config, "theme" | "content"> & {
+  content: string[];
   theme: {
     extend: StudioTailwindTheme;
   };
