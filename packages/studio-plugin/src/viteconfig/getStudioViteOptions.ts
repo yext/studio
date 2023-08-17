@@ -11,6 +11,7 @@ export default function getStudioViteOptions(
     open:
       args.mode === "development" &&
       args.command === "serve" &&
+      !process.env.YEXT_CBD_BRANCH &&
       studioConfig.openBrowser,
     watch: {
       ignored: pathToUserProjectRoot,
