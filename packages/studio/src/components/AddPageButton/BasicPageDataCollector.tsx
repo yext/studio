@@ -5,6 +5,7 @@ import useStudioStore from "../../store/useStudioStore";
 import AddPageContext from "./AddPageContext";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
+import PageDataValidator from "../../utils/PageDataValidator";
 
 type BasicPageData = {
   pageName: string;
@@ -22,6 +23,10 @@ export default function BasicPageDataCollector({
   );
   const { state } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
+  const pageDataValidator = useMemo(
+    () => new PageDataValidator(isEntityPage),
+    [isEntityPage]
+  );
 
   const formData: FormData<BasicPageData> = useMemo(
     () => ({
@@ -37,10 +42,18 @@ export default function BasicPageDataCollector({
 
   const onConfirm = useCallback(
     async (data: BasicPageData) => {
+      const getPathValue = data.url
+        ? createGetPathVal(data.url, isEntityPage)
+        : undefined;
+      const validationResult = pageDataValidator.validate({
+        ...data,
+        url: getPathValue?.value,
+      });
+      if (!validationResult.valid) {
+        setErrorMessage(validationResult.errorMessages.join("\r\n"));
+        return false;
+      }
       try {
-        const getPathValue = data.url
-          ? createGetPathVal(data.url, isEntityPage)
-          : undefined;
         await handleConfirm(data.pageName, getPathValue);
         return true;
       } catch (err: unknown) {
@@ -52,7 +65,7 @@ export default function BasicPageDataCollector({
         }
       }
     },
-    [handleConfirm, isEntityPage]
+    [handleConfirm, isEntityPage, pageDataValidator]
   );
 
   const transformOnChangeValue = useCallback(

@@ -222,6 +222,25 @@ describe("PagesJS repo", () => {
         __: expect.anything(),
       });
     });
+
+    it("gives an error if the URL slug contains document expression and is invalid", async () => {
+      render(<AddPageButton />);
+      const addPageButton = screen.getByRole("button");
+      await userEvent.click(addPageButton);
+      await selectEntityPageType();
+      const nextButton = screen.getByRole("button", { name: "Next" });
+      await userEvent.click(nextButton);
+      await userEvent.click(nextButton);
+      await specifyName();
+      await specifyUrl("=<>[[[[field]]");
+      const saveButton = screen.getByRole("button", { name: "Save" });
+      await userEvent.click(saveButton);
+
+      expect(
+        screen.getByText("URL slug contains invalid characters: <>")
+      ).toBeDefined();
+      expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+    });
   });
 });
 
@@ -235,9 +254,7 @@ describe("errors", () => {
     const saveButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(saveButton);
     expect(
-      screen.getByText(
-        'Error adding page: page name "universal" is already used.'
-      )
+      screen.getByText('Page name "universal" is already used.')
     ).toBeDefined();
   });
 
@@ -246,11 +263,11 @@ describe("errors", () => {
     const addPageButton = screen.getByRole("button");
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
-    await userEvent.type(textbox, "../test");
+    await userEvent.type(textbox, "***");
     const saveButton = screen.getByRole("button", { name: "Save" });
     await userEvent.click(saveButton);
     expect(
-      screen.getByText("Error adding page: pageName is invalid: ../test")
+      screen.getByText("Page name cannot contain the characters: *")
     ).toBeDefined();
   });
 });

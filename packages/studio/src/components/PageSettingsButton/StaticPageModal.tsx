@@ -1,8 +1,9 @@
 import useStudioStore from "../../store/useStudioStore";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind } from "@yext/studio-plugin";
 import { PageSettingsModalProps } from "./PageSettingsButton";
+import PageDataValidator from "../../utils/PageDataValidator";
 
 export type StaticPageSettings = {
   url: string;
@@ -21,7 +22,12 @@ export default function StaticPageModal({
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
   ]);
-  const isPathUndefined = !currGetPathValue;
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const pageDataValidator = useMemo(() => new PageDataValidator(), []);
+  const isURLEditable = useMemo(
+    () => pageDataValidator.checkIsURLEditable(currGetPathValue?.value),
+    [currGetPathValue?.value, pageDataValidator]
+  );
 
   const initialFormValue: StaticPageSettings = useMemo(
     () => ({ url: currGetPathValue?.value ?? "" }),
@@ -32,13 +38,14 @@ export default function StaticPageModal({
     () => ({
       url: {
         description: "URL Slug",
-        optional: isPathUndefined,
-        placeholder: isPathUndefined
-          ? "<URL slug is defined by developer>"
-          : "",
+        optional: !isURLEditable,
+        placeholder: isURLEditable
+          ? ""
+          : "<URL slug is not editable in Studio. Consult a developer>",
+        disabled: !isURLEditable,
       },
     }),
-    [isPathUndefined]
+    [isURLEditable]
   );
 
   const handleModalSave = useCallback(
@@ -47,10 +54,17 @@ export default function StaticPageModal({
         kind: PropValueKind.Literal,
         value: form.url,
       };
+      const validationResult = pageDataValidator.validate({
+        url: getPathValue.value,
+      });
+      if (!validationResult.valid) {
+        setErrorMessage(validationResult.errorMessages.join("\r\n"));
+        return false;
+      }
       updateGetPathValue(pageName, getPathValue);
       return true;
     },
-    [updateGetPathValue, pageName]
+    [updateGetPathValue, pageName, pageDataValidator]
   );
 
   return (
@@ -59,6 +73,7 @@ export default function StaticPageModal({
       title="Page Settings"
       formData={staticFormData}
       initialFormValue={initialFormValue}
+      errorMessage={errorMessage}
       requireChangesToSubmit={true}
       handleClose={handleClose}
       handleConfirm={handleModalSave}
