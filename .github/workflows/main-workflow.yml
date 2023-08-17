@@ -14,10 +14,6 @@ jobs:
     uses: ./.github/workflows/update-tailwind-bundle.yml
     secrets: inherit
 
-  update-third-party-notices:
-    uses: ./.github/workflows/update-third-party-notices.yml
-    secrets: inherit
-
   run-tests:
     needs: automated-linting
     uses: ./.github/workflows/run-tests.yml
