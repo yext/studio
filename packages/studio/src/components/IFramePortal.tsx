@@ -2,6 +2,7 @@ import { createPortal } from "react-dom";
 import {
   Dispatch,
   PropsWithChildren,
+  RefObject,
   SetStateAction,
   useEffect,
   useRef,
@@ -9,6 +10,7 @@ import {
 } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { twMerge } from "tailwind-merge";
+import { Viewport } from "./Viewport/defaults";
 
 export default function IFramePortal(
   props: PropsWithChildren<{
@@ -20,29 +22,12 @@ export default function IFramePortal(
   const previewRef = useRef<HTMLDivElement>(null);
   const iframeDocument = props.iframeEl?.contentWindow?.document;
   const [viewport] = useStudioStore((store) => [store.pagePreview.viewport]);
-  const [css, setCss] = useState(
-    (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
-      (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
-      ? " w-full "
-      : " h-full "
-  );
-  const iframeCSS = twMerge("mr-auto ml-auto border-2", viewport.css, css);
   useParentDocumentStyles(iframeDocument);
-  const handleResize = () => {
-    const tempCss =
-      (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
-      (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
-        ? " w-full "
-        : " h-full ";
-    if (tempCss !== css) {
-      setCss(tempCss);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  });
+  const iframeCSS = twMerge(
+    "mr-auto ml-auto border-2",
+    viewport.css,
+    GetCSS(viewport, previewRef)
+  );
 
   return (
     <div ref={previewRef} className="grow w-1/3 bg-white border-8 shadow">
@@ -70,3 +55,29 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
     }
   }, [iframeDocument]);
 }
+
+const GetCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
+  const [css, setCss] = useState(
+    (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
+      (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
+      ? " w-full "
+      : " h-full "
+  );
+  const handleResize = () => {
+    const tempCss =
+      (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
+      (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
+        ? " w-full "
+        : " h-full ";
+    if (tempCss !== css) {
+      setCss(tempCss);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  });
+
+  return css;
+};

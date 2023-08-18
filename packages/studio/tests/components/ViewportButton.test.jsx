@@ -16,14 +16,13 @@ it("can change viewport", async () => {
   await userEvent.click(screen.getByRole("button"));
   expect(screen.getByText("iPhone SE")).toBeDefined();
   await userEvent.click(screen.getByText("iPhone SE"));
-  expect(useStudioStore.getState().pagePreview.viewport.name).toEqual(
-    "iPhone SE"
-  );
-  expect(useStudioStore.getState().pagePreview.viewport.styles.height).toEqual(
-    667
-  );
-  expect(useStudioStore.getState().pagePreview.viewport.styles.width).toEqual(
-    375
-  );
-  expect(useStudioStore.getState().pagePreview.viewport.type).toEqual("mobile");
+  expect(useStudioStore.getState().pagePreview.viewport).toMatchObject({
+    name: "iPhone SE",
+    styles: {
+      height: 667,
+      width: 375,
+    },
+    type: "mobile",
+    css: "aspect-[375/667]",
+  });
 });

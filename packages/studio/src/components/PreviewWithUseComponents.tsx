@@ -14,9 +14,9 @@ export default function PreviewWithUseComponents() {
     anchorSelect: "",
   });
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null);
-  const [componentTree] = useStudioStore((store) => [
-    store.actions.getComponentTree(),
-  ]);
+  const componentTree = useStudioStore((store) =>
+    store.actions.getComponentTree()
+  );
   void useImportedComponents(componentTree);
 
   return (

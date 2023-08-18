@@ -18,19 +18,18 @@ export default function ViewportMenu(props: {
   );
 }
 
-function Option({ name, closeMenu, styles }: OptionProps) {
+function Option({ name: viewportOption, closeMenu, styles }: OptionProps) {
   const [setViewport] = useStudioStore((store) => [
     store.pagePreview.setViewport,
   ]);
-  const viewportOption = name;
 
   const handleSelect = useCallback(() => {
     closeMenu();
     const viewport =
-      VIEWPORTS[name.replace(/\s+/g, "").toLowerCase()] ??
+      VIEWPORTS[viewportOption.replace(/\s+/g, "").toLowerCase()] ??
       VIEWPORTS["resetviewport"];
     setViewport(viewport);
-  }, [closeMenu, name, setViewport]);
+  }, [closeMenu, viewportOption, setViewport]);
 
   return (
     <button
