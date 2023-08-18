@@ -6,7 +6,8 @@
   "scripts": {
     "playwright": "playwright test",
     "update-snapshots": "playwright test --update-snapshots",
-    "report": "playwright show-report"
+    "report": "playwright show-report",
+    "clean": "rimraf __playground-*"
   },
   "devDependencies": {
     "@playwright/test": "^1.32.0",

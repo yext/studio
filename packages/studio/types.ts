@@ -1,1 +1,5 @@
-export { HexColor, StudioConfig } from "@yext/studio-plugin";
+export {
+  HexColor,
+  StudioConfig,
+  StudioTailwindConfig,
+} from "@yext/studio-plugin";
