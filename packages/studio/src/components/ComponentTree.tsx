@@ -48,36 +48,54 @@ export default function ComponentTree(): JSX.Element | null {
   }, [openIds, tree]);
 
   const handleDrop = useDropHandler();
+  const renderNodeCallback = renderNodeHandler();
   const renderDragPreview = useDragPreview();
 
-  const onToggle = useCallback(
-    (nodeId: string, newOpenValue: boolean) => {
-      setOpenIds({
-        ...openIds,
-        [nodeId]: newOpenValue,
-      });
-    },
-    [openIds, setOpenIds]
-  );
+  function renderNodeHandler() {
+    const [selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID] =
+    useStudioStore((store) => {
+      return [
+        store.pages.selectedComponentUUIDs,
+        store.pages.clearSelectedComponents,
+        store.pages.setActiveComponentUUID,
+      ];
+    });
 
-  const renderNodeCallback = useCallback(
-    (node: NodeModel<ComponentState>, renderParams: RenderParams) => {
-      const { depth, isOpen, hasChild } = renderParams;
-      if (!node.data) {
-        throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
-      }
-      return (
-        <ComponentNode
-          componentState={node.data}
-          depth={depth}
-          isOpen={isOpen}
-          onToggle={onToggle}
-          hasChild={hasChild}
-        />
-      );
-    },
-    [onToggle]
-  );
+    const onToggle = useCallback(
+      (nodeId: string, newOpenValue: boolean) => {
+        setOpenIds({
+          ...openIds,
+          [nodeId]: newOpenValue,
+        });
+      },
+      [openIds, setOpenIds]
+    );
+
+    const renderNodeCallback = useCallback(
+      (node: NodeModel<ComponentState>, renderParams: RenderParams) => {
+        const { depth, isOpen, hasChild, isDragging } = renderParams;
+        if (!node.data) {
+          throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
+        }
+        if (isDragging && selectedComponentUUIDs.size !== 0 && !selectedComponentUUIDs.has(node.data.uuid)) {
+          setActiveComponentUUID(undefined);
+          clearSelectedComponents();
+        }
+        return (
+          <ComponentNode
+            componentState={node.data}
+            depth={depth}
+            isOpen={isOpen}
+            onToggle={onToggle}
+            hasChild={hasChild}
+          />
+        );
+      },
+      [onToggle, selectedComponentUUIDs]
+    );
+
+    return renderNodeCallback;
+    }
 
   if (!tree) {
     return null;

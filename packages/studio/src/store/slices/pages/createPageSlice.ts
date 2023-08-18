@@ -195,12 +195,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       if (selectedUUID === activeComponentUUID) return;
       if (!componentTree) {
         throw new Error(
-          `Error adding components: component tree is undefined.`
+          `Error selecting components: component tree is undefined.`
         );
       }
       if (!activeComponentUUID) {
         throw new Error(
-          `Error adding components: active component is undefined.`
+          `Error selecting components: active component is undefined.`
         );
       }
       const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as const;
