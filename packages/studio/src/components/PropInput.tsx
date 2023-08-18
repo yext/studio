@@ -93,6 +93,8 @@ export default function PropInput({
           value={propValue as string | undefined}
         />
       );
+    case PropValueType.TailwindClass:
+      return <div>bob</div>
     default:
       return <div>Unknown PropValueType {type}.</div>;
   }

@@ -23,6 +23,7 @@ export type LiteralProp<T = PropValues> = {
   | HexColorProp
   | ObjectProp<T>
   | ArrayProp
+  | TailwindClassProp
 );
 
 export type ExpressionProp =
@@ -42,6 +43,7 @@ export enum PropValueType {
   HexColor = "HexColor",
   Record = "Record",
   Array = "Array",
+  TailwindClass = "TailwindClass"
 }
 
 export enum PropValueKind {
@@ -83,3 +85,9 @@ type HexColorProp = {
   valueType: PropValueType.HexColor;
   value: HexColor;
 };
+// For tailwind classes from the user's custom theme.
+export type TailwindClass = string;
+type TailwindClassProp = {
+  valueType: PropValueType.TailwindClass;
+  value: TailwindClass;
+}

@@ -66,6 +66,7 @@ export default class TypeGuards {
       case PropValueType.boolean:
       case PropValueType.number:
       case PropValueType.HexColor:
+      case PropValueType.TailwindClass:
         return this.valueMatchesPropType({ type: valueType }, value);
       case PropValueType.Array:
         return Array.isArray(value) && value.every(this.isValidPropVal);
@@ -122,6 +123,8 @@ export default class TypeGuards {
               : !metadata.required
           )
         );
+      case PropValueType.TailwindClass:
+        return typeof value === "string";
     }
     return false;
   };

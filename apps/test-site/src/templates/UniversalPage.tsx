@@ -1,9 +1,5 @@
 import { GetPath, TemplateConfig, TemplateProps } from "@yext/pages";
-import Banner from "../components/Banner";
-import Button from "../components/Button";
-import Container from "../components/Container";
-import Cta from "../components/Cta";
-import FixedText from "../components/FixedText";
+import TailwindBoi from "../components/TailwindBoi";
 
 export const config: TemplateConfig = {
   stream: {
@@ -22,28 +18,7 @@ export const getPath: GetPath<TemplateProps> = ({
 export default function UniversalPage({ document }: TemplateProps) {
   return (
     <>
-      <FixedText />
-      <Cta label="[LABEL]" link="[URL]" linkType="[LINK TYPE]" />
-      {document.services.map((item, index) => (
-        <Banner title={`${item}!`} key={index} />
-      ))}
-      <Container>
-        <Button />
-      </Container>
-      <Banner
-        obj={{
-          nestedString: `hello ${document.address.city}  ${document.id}`,
-          nestedObj: { nestedNum: 333, nestedColor: "#FFFFFF" },
-          nestedBool: false,
-        }}
-        title=""
-        bgColor="#FFFFFF"
-        bool={false}
-        num={0}
-        intervals={[
-          { start: "01:00", end: document.hours.monday.openIntervals[0].end },
-        ]}
-      />
+      <TailwindBoi boi="bg-primary"/>
     </>
   );
 }
