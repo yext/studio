@@ -35,9 +35,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pageActions = {
     addPage: (pageName: string, page: PageState) => {
       if (get().pages[pageName]) {
-        throw new Error(
-          `Error adding page: page name "${pageName}" is already used.`
-        );
+        throw new Error(`Page name "${pageName}" is already used.`);
       }
 
       set((store) => {

@@ -1,5 +1,5 @@
 import useStudioStore from "../../store/useStudioStore";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import FormModal, { FormData } from "../common/FormModal";
 import { GetPathVal, PropValueKind, ResponseType } from "@yext/studio-plugin";
 import TemplateExpressionFormatter from "../../utils/TemplateExpressionFormatter";
@@ -10,6 +10,7 @@ import StreamScopeParser, {
 import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
 import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
+import PageDataValidator from "../../utils/PageDataValidator";
 import { toast } from "react-toastify";
 import { isEqual } from "lodash";
 
@@ -38,28 +39,34 @@ export default function EntityPageModal({
     store.pages.updateStreamScope,
     store.actions.generateTestData,
   ]);
-  const isPathUndefined = !currGetPathValue;
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const pageDataValidator = useMemo(() => new PageDataValidator(true), []);
+  const isURLEditable = useMemo(
+    () => pageDataValidator.checkIsURLEditable(currGetPathValue?.value),
+    [currGetPathValue?.value, pageDataValidator]
+  );
 
   const initialFormValue: EntityPageSettings = useMemo(
     () => ({
-      url: getUrlDisplayValue(currGetPathValue),
+      url: isURLEditable ? getUrlDisplayValue(currGetPathValue) : "",
       ...StreamScopeParser.convertStreamScopeToForm(streamScope),
     }),
-    [currGetPathValue, streamScope]
+    [currGetPathValue, streamScope, isURLEditable]
   );
 
   const entityFormData: FormData<EntityPageSettings> = useMemo(
     () => ({
       url: {
         description: "URL Slug",
-        optional: isPathUndefined,
-        placeholder: isPathUndefined
-          ? "<URL slug is defined by developer>"
-          : "",
+        optional: !isURLEditable,
+        placeholder: isURLEditable
+          ? ""
+          : "<URL slug is not editable in Studio. Consult a developer>",
+        disabled: !isURLEditable,
       },
       ...streamScopeFormData,
     }),
-    [isPathUndefined]
+    [isURLEditable]
   );
 
   const handleModalSave = useCallback(
@@ -68,6 +75,13 @@ export default function EntityPageModal({
         kind: PropValueKind.Expression,
         value: TemplateExpressionFormatter.getRawValue(form.url),
       };
+      const validationResult = pageDataValidator.validate({
+        url: getPathValue.value,
+      });
+      if (!validationResult.valid) {
+        setErrorMessage(validationResult.errorMessages.join("\r\n"));
+        return false;
+      }
       if (form.url || currGetPathValue) {
         updateGetPathValue(pageName, getPathValue);
       }
@@ -91,6 +105,7 @@ export default function EntityPageModal({
       updateStreamScope,
       currGetPathValue,
       pageName,
+      pageDataValidator,
       generateTestData,
       streamScope,
     ]
@@ -103,6 +118,7 @@ export default function EntityPageModal({
       instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas. Changing the scope of the stream (entity IDs, entity type IDs, and saved filter IDs) may result in entity data references being invalid or out of date."
       formData={entityFormData}
       initialFormValue={initialFormValue}
+      errorMessage={errorMessage}
       requireChangesToSubmit={true}
       handleClose={handleClose}
       handleConfirm={handleModalSave}
