@@ -91,7 +91,7 @@ export default function ComponentTree(): JSX.Element | null {
           />
         );
       },
-      [onToggle, selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID]
+      [selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID]
     );
 
     return renderNodeCallback;
