@@ -1,7 +1,7 @@
 import type { StudioTailwindConfig } from "@yext/studio";
 
 export default {
-  content: ["./src/**/*.{ts,tsx}"],
+  content: ["./src/**/*.{ts,tsx}", "../tests/custom-tailwind.spec.ts"],
   theme: {
     extend: {
       colors: {

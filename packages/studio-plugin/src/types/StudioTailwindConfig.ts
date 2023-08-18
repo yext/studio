@@ -5,8 +5,8 @@ import type { Config } from "tailwindcss";
  */
 export type StudioTailwindConfig = Omit<Config, "theme" | "content"> & {
   content: string[];
-  theme: {
-    extend: StudioTailwindTheme;
+  theme?: {
+    extend?: StudioTailwindTheme;
   };
 };
 

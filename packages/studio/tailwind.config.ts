@@ -20,17 +20,13 @@ const rootDir = getRootDir();
  * The user's StudioTailwindTheme.
  */
 const userTailwindConfig: StudioTailwindConfig | undefined = (() => {
-  try {
-    const tailwindConfigPath = path.resolve(rootDir, "tailwind.config.ts");
-    if (fs.existsSync(tailwindConfigPath)) {
-      // We have to use require() instead of a dynamic import because
-      // tailwind does not support async config.
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const tailwindConfig: StudioTailwindConfig = require(tailwindConfigPath);
-      return tailwindConfig;
-    }
-  } catch (e) {
-    console.error(e);
+  const tailwindConfigPath = path.resolve(rootDir, "tailwind.config.ts");
+  if (fs.existsSync(tailwindConfigPath)) {
+    // We have to use require() instead of a dynamic import because
+    // tailwind does not support async config.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const tailwindConfig: StudioTailwindConfig = require(tailwindConfigPath);
+    return tailwindConfig;
   }
 })();
 const userTailwindTheme: StudioTailwindTheme =
