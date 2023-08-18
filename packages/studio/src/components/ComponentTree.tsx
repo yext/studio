@@ -47,11 +47,21 @@ export default function ComponentTree(): JSX.Element | null {
     );
   }, [openIds, tree]);
 
+  const onToggle = useCallback(
+    (nodeId: string, newOpenValue: boolean) => {
+      setOpenIds({
+        ...openIds,
+        [nodeId]: newOpenValue,
+      });
+    },
+    [openIds, setOpenIds]
+  );
+
   const handleDrop = useDropHandler();
-  const renderNodeCallback = renderNodeHandler();
+  const renderNodeCallback = useNodeRenderer();
   const renderDragPreview = useDragPreview();
 
-  function renderNodeHandler() {
+  function useNodeRenderer() {
     const [selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID] =
     useStudioStore((store) => {
       return [
@@ -60,16 +70,6 @@ export default function ComponentTree(): JSX.Element | null {
         store.pages.setActiveComponentUUID,
       ];
     });
-
-    const onToggle = useCallback(
-      (nodeId: string, newOpenValue: boolean) => {
-        setOpenIds({
-          ...openIds,
-          [nodeId]: newOpenValue,
-        });
-      },
-      [openIds, setOpenIds]
-    );
 
     const renderNodeCallback = useCallback(
       (node: NodeModel<ComponentState>, renderParams: RenderParams) => {
@@ -91,11 +91,11 @@ export default function ComponentTree(): JSX.Element | null {
           />
         );
       },
-      [onToggle, selectedComponentUUIDs]
+      [onToggle, selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID]
     );
 
     return renderNodeCallback;
-    }
+  }
 
   if (!tree) {
     return null;
