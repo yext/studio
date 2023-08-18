@@ -5,6 +5,7 @@ import PropValueHelpers from "../utils/PropValueHelpers";
 import ColorPicker from "./common/ColorPicker";
 import StringPropInput from "./StringPropInput";
 import UnionPropInput from "./UnionPropInput";
+import NumberPropInput from "./NumberPropInput";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropType;
@@ -61,13 +62,12 @@ export default function PropInput({
   switch (type) {
     case PropValueType.number:
       return (
-        <input
-          type="number"
-          onChange={handleChangeEvent}
-          className={inputBoxCssClasses}
-          value={(propValue ?? "") as number | string}
+        <NumberPropInput
+          onChange={onChange}
+          value={(propValue ?? "") as number}
+          propKind={propKind}
           disabled={isUndefinedValue}
-        />
+          />
       );
     case PropValueType.string:
       return (
