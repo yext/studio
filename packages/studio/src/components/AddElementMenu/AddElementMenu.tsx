@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import ElementSelector from "./ElementSelector";
-import { useCallback } from "react";
 import renderIconForType from "../common/renderIconForType";
 import useStudioStore from "../../store/useStudioStore";
 import { FileMetadataKind } from "@yext/studio-plugin";

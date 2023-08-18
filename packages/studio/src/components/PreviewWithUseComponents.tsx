@@ -7,9 +7,6 @@ import { Tooltip, ITooltip } from "react-tooltip";
 import { useState } from "react";
 
 export default function PreviewWithUseComponents() {
-  const componentTree = useStudioStore((store) =>
-    store.actions.getComponentTree()
-  );
   const [tooltipProps, setTooltipProps] = useState<ITooltip>({
     isOpen: false,
     position: { x: 0, y: 0 },
@@ -17,13 +14,15 @@ export default function PreviewWithUseComponents() {
     anchorSelect: "",
   });
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null);
+  const componentTree = useStudioStore((store) =>
+    store.actions.getComponentTree()
+  );
   void useImportedComponents(componentTree);
 
   return (
     <>
       <Tooltip offset={-30} className="text-sm z-20" {...tooltipProps} />
       <IFramePortal
-        className="h-full w-full"
         title="PreviewPanel"
         iframeEl={iframeEl}
         setIframeEl={setIframeEl}

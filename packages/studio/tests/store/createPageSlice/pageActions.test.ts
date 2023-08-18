@@ -51,9 +51,7 @@ describe("addPage", () => {
         cssImports: [],
         filepath: "/blah/universal.tsx",
       });
-    expect(action).toThrowError(
-      'Error adding page: page name "universal" is already used.'
-    );
+    expect(action).toThrowError('Page name "universal" is already used.');
   });
 });
 
