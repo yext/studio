@@ -62,8 +62,11 @@ export default function ComponentTree(): JSX.Element | null {
   const renderDragPreview = useDragPreview();
 
   function useNodeRenderer() {
-    const [selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID] =
-    useStudioStore((store) => {
+    const [
+      selectedComponentUUIDs,
+      clearSelectedComponents,
+      setActiveComponentUUID,
+    ] = useStudioStore((store) => {
       return [
         store.pages.selectedComponentUUIDs,
         store.pages.clearSelectedComponents,
@@ -77,7 +80,11 @@ export default function ComponentTree(): JSX.Element | null {
         if (!node.data) {
           throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
         }
-        if (isDragging && selectedComponentUUIDs.size !== 0 && !selectedComponentUUIDs.has(node.data.uuid)) {
+        if (
+          isDragging &&
+          selectedComponentUUIDs.size !== 0 &&
+          !selectedComponentUUIDs.has(node.data.uuid)
+        ) {
           setActiveComponentUUID(undefined);
           clearSelectedComponents();
         }
