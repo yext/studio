@@ -8,7 +8,7 @@ import ProminentImage from "../components/ProminentImage";
 export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id-LocationPage",
-    localization: { locales: ["en"], primary: false },
+    localization: { locales: ["en"] },
     filter: { entityTypes: ["location"] },
     fields: ["address", "hours", "slug"],
   },
