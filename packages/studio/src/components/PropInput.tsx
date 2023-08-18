@@ -13,9 +13,6 @@ interface PropInputProps<T = string | number | boolean> {
   propKind: PropValueKind;
 }
 
-const inputBoxCssClasses =
-  "border border-gray-300 focus:border-indigo-500 rounded-lg p-2";
-
 /**
  * Renders the input element of a PropEditor component, that
  * will update the corresponding prop's value for the active
@@ -66,7 +63,7 @@ export default function PropInput({
           value={(propValue ?? "") as number}
           propKind={propKind}
           disabled={isUndefinedValue}
-          />
+        />
       );
     case PropValueType.string:
       return (

@@ -24,22 +24,24 @@ export default function PopulatePropInput({
     (e: ChangeEvent<HTMLInputElement>) => {
       if (typeof value === "string") {
         const val =
-        propKind === PropValueKind.Expression
-          ? TemplateExpressionFormatter.getRawValue(e.target.value)
-          : e.target.value;
+          propKind === PropValueKind.Expression
+            ? TemplateExpressionFormatter.getRawValue(e.target.value)
+            : e.target.value;
         onChange(val);
       } else {
         const val = e.target.valueAsNumber;
         onChange(val);
       }
     },
-    [onChange, propKind]
+    [onChange, propKind, value]
   );
 
-  const displayValue = (typeof value === "string") ? (
-    propKind === PropValueKind.Expression
-      ? TemplateExpressionFormatter.getTemplateStringDisplayValue(value)
-      : value) : value;
+  const displayValue =
+    typeof value === "string"
+      ? propKind === PropValueKind.Expression
+        ? TemplateExpressionFormatter.getTemplateStringDisplayValue(value)
+        : value
+      : value;
 
   const appendField = useCallback(
     (fieldId: string) => {
@@ -47,15 +49,22 @@ export default function PopulatePropInput({
       const appendedValue = displayValue
         ? `${displayValue} ${documentUsage}`
         : documentUsage;
-      (typeof value === "string") ?
-        onChange(TemplateExpressionFormatter.getRawValue(appendedValue)) : onChange(0) //todo;
+      typeof value === "string"
+        ? onChange(TemplateExpressionFormatter.getRawValue(appendedValue))
+        : onChange(displayValue);
     },
-    [displayValue, onChange]
+    [displayValue, onChange, value]
   );
 
-  const fieldPickerFilter = useCallback(
+  const fieldPickerStringFilter = useCallback(
     (value: unknown) =>
       TypeGuards.valueMatchesPropType({ type: PropValueType.string }, value),
+    []
+  );
+
+  const fieldPickerNumberFilter = useCallback(
+    (value: unknown) =>
+      TypeGuards.valueMatchesPropType({ type: PropValueType.number }, value),
     []
   );
 
@@ -64,7 +73,11 @@ export default function PopulatePropInput({
       onInputChange={handleChangeEvent}
       handleFieldSelection={appendField}
       displayValue={displayValue}
-      fieldFilter={fieldPickerFilter}
+      fieldFilter={
+        typeof value === "string"
+          ? fieldPickerStringFilter
+          : fieldPickerNumberFilter
+      }
       disabled={disabled}
     />
   );
