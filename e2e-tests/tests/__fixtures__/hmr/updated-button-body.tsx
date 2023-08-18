@@ -9,9 +9,7 @@ export const initialProps: ButtonProps = {
 export default function Button(props: ButtonProps) {
   return (
     <button className={props.className}>
-      <div className="bg-purple-400 text-white">
-        this is the updated component body
-      </div>
+      <div>this is the updated component body</div>
     </button>
   );
 }

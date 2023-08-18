@@ -1,13 +1,11 @@
 {
   "__": {
-    "name": "ErrorPage",
-    "staticPage": {
-      "plugin": {}
-    },
+    "name": "NewStaticPage",
+    "staticPage": {},
     "templateType": "JS"
   },
   "businessId": 3350634,
-  "key": "0:ErrorPage:knowledgeGraph:0:en",
+  "key": "0:NewStaticPage:knowledgeGraph:0:en",
   "locale": "en",
   "meta": {
     "locale": "en"

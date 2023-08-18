@@ -1,5 +1,6 @@
 import StudioActions from "../StudioActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
+import PagePreviewSlice from "./slices/PagePreviewSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousSaveSlice from "./slices/PreviousSaveSlice";
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
@@ -14,6 +15,7 @@ export type StudioStore = {
   fileMetadatas: FileMetadataSlice;
   pages: PageSlice;
   siteSettings: SiteSettingSlice;
+  pagePreview: PagePreviewSlice;
   previousSave: PreviousSaveSlice;
   createModule: (modulePath: string) => void;
   actions: StudioActions;

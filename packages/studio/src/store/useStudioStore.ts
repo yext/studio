@@ -7,6 +7,7 @@ import { StudioStore } from "./models/StudioStore";
 import createFileMetadataSlice from "./slices/createFileMetadataSlice";
 import createPageSlice from "./slices/pages/createPageSlice";
 import createSiteSettingSlice from "./slices/createSiteSettingsSlice";
+import createPagePreviewSlice from "./slices/createPagePreviewSlice";
 import getCreateModuleAction from "./createModuleAction";
 import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
@@ -34,6 +35,7 @@ const useStudioStore = create<StudioStore>()(
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
         siteSettings: lens(createSiteSettingSlice),
+        pagePreview: lens(createPagePreviewSlice),
         createModule: getCreateModuleAction(get),
         previousSave: lens(createPreviousSaveSlice),
         actions: new StudioActions(

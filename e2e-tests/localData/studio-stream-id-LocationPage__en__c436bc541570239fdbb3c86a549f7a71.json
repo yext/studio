@@ -98,7 +98,13 @@
     "locale": "en"
   },
   "name": "Office Space",
-  "ref_categories": [{}],
+  "ref_categories": [
+    {
+      "id": "668",
+      "name": "Software Consultant",
+      "uid": 668
+    }
+  ],
   "ref_listings": [],
   "ref_reviewsAgg": [],
   "routableCoordinate": {
@@ -109,6 +115,7 @@
   "siteDomain": "",
   "siteId": 0,
   "siteInternalHostName": "",
+  "slug": "office/2917513710699998040",
   "timezone": "America/New_York",
   "uid": 18714998,
   "websiteUrl": {

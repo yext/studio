@@ -1,9 +1,7 @@
 {
   "__": {
     "name": "ErrorComponentPreviews",
-    "staticPage": {
-      "plugin": {}
-    },
+    "staticPage": {},
     "templateType": "JS"
   },
   "businessId": 3350634,
