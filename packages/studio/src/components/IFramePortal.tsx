@@ -8,7 +8,6 @@ import {
   useState,
 } from "react";
 import useStudioStore from "../store/useStudioStore";
-import { VIEWPORTS } from "./Viewport/defaults";
 import { twMerge } from "tailwind-merge";
 
 export default function IFramePortal(
@@ -20,22 +19,19 @@ export default function IFramePortal(
 ) {
   const previewRef = useRef<HTMLDivElement>(null);
   const iframeDocument = props.iframeEl?.contentWindow?.document;
-  const [viewportDimensions] = useStudioStore((store) => [
-    store.pagePreview.viewportDimensions,
-  ]);
-  const id = viewportDimensions.name.replace(/\s+/g, "").toLowerCase();
+  const [viewport] = useStudioStore((store) => [store.pagePreview.viewport]);
   const [css, setCss] = useState(
-    viewportDimensions.width * (previewRef.current?.clientHeight ?? 0) >
-      viewportDimensions.height * (previewRef.current?.clientWidth ?? 0)
+    (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
+      (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
       ? " w-full "
       : " h-full "
   );
-  const iframeCSS = twMerge("mr-auto ml-auto border-2", VIEWPORTS[id].css, css);
+  const iframeCSS = twMerge("mr-auto ml-auto border-2", viewport.css, css);
   useParentDocumentStyles(iframeDocument);
   const handleResize = () => {
     const tempCss =
-      viewportDimensions.width * (previewRef.current?.clientHeight ?? 0) >
-      viewportDimensions.height * (previewRef.current?.clientWidth ?? 0)
+      (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
+      (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
         ? " w-full "
         : " h-full ";
     if (tempCss !== css) {

@@ -19,19 +19,16 @@ export default function ViewportMenu(props: {
 }
 
 function Option({ name, closeMenu, styles }: OptionProps) {
-  const [setViewportDimensions] = useStudioStore((store) => [
-    store.pagePreview.setViewportDimensions,
+  const [setViewport] = useStudioStore((store) => [
+    store.pagePreview.setViewport,
   ]);
   const viewportOption = name;
 
   const handleSelect = useCallback(() => {
     closeMenu();
-    setViewportDimensions({
-      name: name,
-      height: styles?.height ?? window.innerHeight,
-      width: styles?.width ?? window.innerWidth,
-    });
-  }, [closeMenu, name, setViewportDimensions, styles]);
+    const viewport = VIEWPORTS[name.replace(/\s+/g, "").toLowerCase()] ?? VIEWPORTS["resetviewport"];
+    setViewport(viewport);
+  }, [closeMenu, name, setViewport]);
 
   return (
     <button

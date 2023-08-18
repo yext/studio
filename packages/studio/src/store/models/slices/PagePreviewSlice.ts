@@ -1,6 +1,6 @@
-import { ViewportStyles } from "../../../components/Viewport/defaults";
+import { Viewport } from "../../../components/Viewport/defaults";
 
 export default interface PagePreviewSlice {
-  viewportDimensions: ViewportStyles;
-  setViewportDimensions: (viewportDimensions: ViewportStyles) => void;
+  viewport: Viewport;
+  setViewport: (viewport: Viewport) => void;
 }
