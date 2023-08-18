@@ -26,7 +26,7 @@ export default function IFramePortal(
   const iframeCSS = twMerge(
     "mr-auto ml-auto border-2",
     viewport.css,
-    GetCSS(viewport, previewRef)
+    useCSS(viewport, previewRef)
   );
 
   return (
@@ -56,7 +56,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
   }, [iframeDocument]);
 }
 
-const GetCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
+const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
   const [css, setCss] = useState(
     (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
       (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
@@ -75,8 +75,11 @@ const GetCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
   };
 
   useEffect(() => {
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (previewRef.current) {
+      resizeObserver.observe(previewRef.current);
+    }
+    return () => resizeObserver.disconnect();
   });
 
   return css;
