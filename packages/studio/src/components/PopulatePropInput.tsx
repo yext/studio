@@ -3,9 +3,9 @@ import { ChangeEvent, useCallback } from "react";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 
-interface StringPropInputProps {
-  value: string;
-  onChange: (value: string) => void;
+interface PropInputProps {
+  value: string | number;
+  onChange: (value: string | number) => void;
   propKind: PropValueKind;
   disabled?: boolean;
 }
@@ -14,27 +14,32 @@ interface StringPropInputProps {
  * Renders the input element of a non-union string prop, that will update the
  * corresponding prop's value for the active component based on a user's input.
  */
-export default function StringPropInput({
+export default function PopulatePropInput({
   value,
   onChange,
   propKind,
   disabled,
-}: StringPropInputProps): JSX.Element {
+}: PropInputProps): JSX.Element {
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const val =
+      if (typeof value === "string") {
+        const val =
         propKind === PropValueKind.Expression
           ? TemplateExpressionFormatter.getRawValue(e.target.value)
           : e.target.value;
-      onChange(val);
+        onChange(val);
+      } else {
+        const val = e.target.valueAsNumber;
+        onChange(val);
+      }
     },
     [onChange, propKind]
   );
 
-  const displayValue =
+  const displayValue = (typeof value === "string") ? (
     propKind === PropValueKind.Expression
       ? TemplateExpressionFormatter.getTemplateStringDisplayValue(value)
-      : value;
+      : value) : value;
 
   const appendField = useCallback(
     (fieldId: string) => {
@@ -42,7 +47,8 @@ export default function StringPropInput({
       const appendedValue = displayValue
         ? `${displayValue} ${documentUsage}`
         : documentUsage;
-      onChange(TemplateExpressionFormatter.getRawValue(appendedValue));
+      (typeof value === "string") ?
+        onChange(TemplateExpressionFormatter.getRawValue(appendedValue)) : onChange(0) //todo;
     },
     [displayValue, onChange]
   );
