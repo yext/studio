@@ -26,7 +26,9 @@ function Option({ name, closeMenu, styles }: OptionProps) {
 
   const handleSelect = useCallback(() => {
     closeMenu();
-    const viewport = VIEWPORTS[name.replace(/\s+/g, "").toLowerCase()] ?? VIEWPORTS["resetviewport"];
+    const viewport =
+      VIEWPORTS[name.replace(/\s+/g, "").toLowerCase()] ??
+      VIEWPORTS["resetviewport"];
     setViewport(viewport);
   }, [closeMenu, name, setViewport]);
 
