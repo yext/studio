@@ -2,7 +2,6 @@ import {
   ComponentState,
   ComponentStateHelpers,
   ComponentStateKind,
-  ComponentTreeHelpers,
 } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
@@ -129,31 +128,24 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
           />
         )}
       </div>
-      {(isActiveComponent && componentState.uuid === firstSelectedComponentUUID) && (
-        <RemoveElementButton elementUUID={componentState.uuid} />
-      )}
+      {isActiveComponent &&
+        componentState.uuid === firstSelectedComponentUUID && (
+          <RemoveElementButton elementUUID={componentState.uuid} />
+        )}
     </div>
   );
 }
 
 function useDeleteKeyListener(isSelectedComponent: boolean) {
-  const [removeComponent, selectedComponentUUIDs] =
-    useStudioStore((store) => {
-      return [
-        store.actions.removeComponent,
-        store.pages.selectedComponentUUIDs,
-      ];
-    });
+  const [removeComponent, selectedComponentUUIDs] = useStudioStore((store) => {
+    return [store.actions.removeComponent, store.pages.selectedComponentUUIDs];
+  });
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (isSelectedComponent && event.key === "Backspace") {
         selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
       }
     },
-    [
-      isSelectedComponent,
-      removeComponent,
-      selectedComponentUUIDs,
-    ]
+    [isSelectedComponent, removeComponent, selectedComponentUUIDs]
   );
 }
