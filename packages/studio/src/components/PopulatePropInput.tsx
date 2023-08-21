@@ -1,7 +1,10 @@
 import { PropValueKind, PropValueType, TypeGuards } from "@yext/studio-plugin";
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useMemo } from "react";
 import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
+import { get } from "lodash";
+import useStudioStore from "../store/useStudioStore";
+import useRawSiteSettings from "../hooks/useRawSiteSettings";
 
 interface PropInputProps {
   value: string | number;
@@ -20,6 +23,7 @@ export default function PopulatePropInput({
   propKind,
   disabled,
 }: PropInputProps): JSX.Element {
+  const expressionSources = useExpressionSources();
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       if (typeof value === "string") {
@@ -29,7 +33,7 @@ export default function PopulatePropInput({
             : e.target.value;
         onChange(val);
       } else {
-        const val = e.target.valueAsNumber;
+        const val = Number(e.target.value);
         onChange(val);
       }
     },
@@ -37,23 +41,28 @@ export default function PopulatePropInput({
   );
 
   const displayValue =
-    typeof value === "string"
-      ? propKind === PropValueKind.Expression
-        ? TemplateExpressionFormatter.getTemplateStringDisplayValue(value)
-        : value
+    propKind === PropValueKind.Expression && value === "string"
+      ? TemplateExpressionFormatter.getTemplateStringDisplayValue(value)
       : value;
 
+  // Appends if string. Replaces if number.
   const appendField = useCallback(
     (fieldId: string) => {
-      const documentUsage = "${" + fieldId + "}";
-      const appendedValue = displayValue
-        ? `${displayValue} ${documentUsage}`
-        : documentUsage;
-      typeof value === "string"
-        ? onChange(TemplateExpressionFormatter.getRawValue(appendedValue))
-        : onChange(displayValue);
+      if (typeof value === "string") {
+        const documentUsage = "${" + fieldId + "}";
+        const appendedValue = displayValue
+          ? `${displayValue} ${documentUsage}`
+          : documentUsage;
+        onChange(TemplateExpressionFormatter.getRawValue(appendedValue));
+      } else {
+        const newPropValue = get(
+          { document: expressionSources["document"] },
+          fieldId
+        );
+        onChange(newPropValue);
+      }
     },
-    [displayValue, onChange, value]
+    [displayValue, onChange, value, expressionSources]
   );
 
   const fieldPickerStringFilter = useCallback(
@@ -81,4 +90,20 @@ export default function PopulatePropInput({
       disabled={disabled}
     />
   );
+}
+
+function useExpressionSources() {
+  const activeEntityData = useStudioStore((store) =>
+    store.pages.getActiveEntityData()
+  );
+  const rawSiteSettings = useRawSiteSettings();
+  const pageExpressionSources = useMemo(
+    () => ({
+      document: activeEntityData,
+      siteSettings: rawSiteSettings,
+    }),
+    [activeEntityData, rawSiteSettings]
+  );
+
+  return pageExpressionSources;
 }
