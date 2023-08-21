@@ -3,8 +3,9 @@ import { ChangeEvent, useCallback } from "react";
 import Toggle from "./common/Toggle";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import ColorPicker from "./common/ColorPicker";
-import PopulatePropInput from "./PopulatePropInput";
+import NumberPropInput from "./NumberPropInput";
 import UnionPropInput from "./UnionPropInput";
+import StringPropInput from "./StringPropInput";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropType;
@@ -58,16 +59,15 @@ export default function PropInput({
   switch (type) {
     case PropValueType.number:
       return (
-        <PopulatePropInput
+        <NumberPropInput
           onChange={onChange}
           value={(propValue ?? "") as number}
-          propKind={propKind}
           disabled={isUndefinedValue}
         />
       );
     case PropValueType.string:
       return (
-        <PopulatePropInput
+        <StringPropInput
           onChange={onChange}
           value={displayValue as string}
           propKind={propKind}
