@@ -193,12 +193,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         store.selectedComponentRectsMap[selectedUUID] = rect;
       });
     },
-    removeSelectedComponent: (selectedUUID: string) => {
-      set((store) => {
-        store.selectedComponentUUIDs.delete(selectedUUID);
-        delete store.selectedComponentRectsMap[selectedUUID];
-      });
-    },
     clearSelectedComponents: () => {
       set((store) => {
         store.selectedComponentUUIDs = new Set();
@@ -263,17 +257,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
           addSelectedComponentUUID(c.uuid);
         }
-        // if (targetIsParent || targetInDescendants) {
-        //   if (selecting || (targetIsParent && targetInDescendants)) {
-        //     descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
-        //     addSelectedComponentUUID(c.uuid);
-        //     selecting = false;
-        //   } else selecting = true;
-        // }
-        // if (selecting) {
-        //   descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
-        //   addSelectedComponentUUID(c.uuid);
-        // }
       });
     },
   };

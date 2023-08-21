@@ -80,7 +80,6 @@ interface PageSliceActions {
     selectedUUID: string,
     rect: DOMRectProperties
   ) => void;
-  removeSelectedComponent: (selectedUUID: string) => void;
   clearSelectedComponents: () => void;
   addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => void;
 

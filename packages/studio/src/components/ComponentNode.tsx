@@ -137,12 +137,11 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 }
 
 function useDeleteKeyListener(isSelectedComponent: boolean) {
-  const [removeComponent, selectedComponentUUIDs, clearSelectedComponents] =
+  const [removeComponent, selectedComponentUUIDs] =
     useStudioStore((store) => {
       return [
         store.actions.removeComponent,
         store.pages.selectedComponentUUIDs,
-        store.pages.clearSelectedComponents,
       ];
     });
   return useCallback(
@@ -155,19 +154,6 @@ function useDeleteKeyListener(isSelectedComponent: boolean) {
       isSelectedComponent,
       removeComponent,
       selectedComponentUUIDs,
-      clearSelectedComponents,
     ]
-  );
-}
-
-function useFirstSelectedComponentChecker() {
-  const getActiveComponentState = useStudioStore((store) => {
-      return store.actions.getActiveComponentState;
-    });
-  return useCallback((componentUUID: string) => {
-      const firstActiveComponent = getActiveComponentState();
-      return !!firstActiveComponent && firstActiveComponent.uuid === componentUUID;
-    },
-    [getActiveComponentState]
   );
 }
