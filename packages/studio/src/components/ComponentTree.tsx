@@ -62,8 +62,10 @@ export default function ComponentTree(): JSX.Element | null {
   const renderDragPreview = useDragPreview();
 
   function useNodeRenderer() {
-    const [selectedComponentUUIDs, setActiveComponentUUID] =
-    useStudioStore((store) => {
+    const [
+      selectedComponentUUIDs,
+      setActiveComponentUUID,
+    ] = useStudioStore((store) => {
       return [
         store.pages.selectedComponentUUIDs,
         store.pages.setActiveComponentUUID,
@@ -76,7 +78,11 @@ export default function ComponentTree(): JSX.Element | null {
         if (!node.data) {
           throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
         }
-        if (isDragging && selectedComponentUUIDs.size !== 0 && !selectedComponentUUIDs.has(node.data.uuid)) {
+        if (
+          isDragging &&
+          selectedComponentUUIDs.size !== 0 &&
+          !selectedComponentUUIDs.has(node.data.uuid)
+        ) {
           setActiveComponentUUID(undefined);
         }
         return (
@@ -243,7 +249,12 @@ function useDropHandler() {
       updatedComponentTree = updatedComponentTree.filter(
         (c) => c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
       );
-      let newDestinationIndex = updatedComponentTree.findIndex((c) => c.uuid === dragSourceId)
+      let newDestinationIndex;
+      updatedComponentTree.forEach((c, index) => {
+        if (c.uuid === dragSourceId) {
+          newDestinationIndex = index;
+        }
+      });
       updatedComponentTree.splice(
         newDestinationIndex,
         1,
