@@ -1,6 +1,6 @@
 {
   "name": "@yext/studio-plugin",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
   "type": "module",
@@ -38,7 +38,7 @@
     "chokidar": "^3.5.3",
     "colors": "^1.4.0",
     "kill-port": "^2.0.1",
-    "prettier": "^2.8.1",
+    "prettier": "2.8.3",
     "simple-git": "^3.16.0",
     "true-myth": "^6.2.0",
     "ts-morph": "^18.0.0",

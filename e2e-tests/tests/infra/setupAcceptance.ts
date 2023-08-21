@@ -8,6 +8,7 @@ import fsExtra from "fs-extra";
 import spawnStudio from "./spawnStudio.js";
 import { globSync } from "glob";
 import killPort from "kill-port";
+import { StudioTestFixtures } from "./studioTest.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -16,12 +17,10 @@ const __dirname = dirname(__filename);
  * Spawns a studio instance for the test that will not be shared
  * with any other tests. This instance runs in a temporary folder.
  */
-export default async function setup(
+export default async function setupAcceptance(
   opts: {
     testInfo: TestInfo;
-    createRemote: boolean;
-    debug: boolean;
-  },
+  } & Omit<StudioTestFixtures, "studioPage">,
   run: (port: number, tmpDir: string) => Promise<void>
 ) {
   const { createRemote, testInfo, debug } = opts;
@@ -30,7 +29,7 @@ export default async function setup(
   let tmpDir: string | null = null;
 
   try {
-    tmpDir = createTempWorkingDir(testInfo);
+    tmpDir = createTempWorkingDir(testInfo, opts.tailwindConfigPath);
     if (createRemote) {
       gitCleanup = await createRemoteBranch(testInfo, tmpDir);
     }
@@ -88,7 +87,7 @@ async function createRemoteBranch(testInfo: TestInfo, tmpDir: string) {
 /**
  * Creates a temporary working directory for the test.
  */
-function createTempWorkingDir(testInfo: TestInfo) {
+function createTempWorkingDir(testInfo: TestInfo, tailwindConfigPath?: string) {
   const prefix = getTestFilename(testInfo).split(".").at(0) + "_";
   const tmpDir = fs.mkdtempSync("__playground-" + prefix);
   const copy = (pathToCopy: string) => {
@@ -100,6 +99,14 @@ function createTempWorkingDir(testInfo: TestInfo) {
   copy("localData");
   copy("sites-config");
   copy("studio.config.js");
+
+  if (tailwindConfigPath) {
+    fsExtra.copySync(
+      tailwindConfigPath,
+      path.join(tmpDir, "tailwind.config.ts")
+    );
+  }
+
   return tmpDir;
 }
 

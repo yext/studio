@@ -10,10 +10,6 @@ jobs:
     uses: ./.github/workflows/automated-linting.yml
     secrets: inherit
 
-  update-tailwind-bundle:
-    uses: ./.github/workflows/update-tailwind-bundle.yml
-    secrets: inherit
-
   run-tests:
     needs: automated-linting
     uses: ./.github/workflows/run-tests.yml

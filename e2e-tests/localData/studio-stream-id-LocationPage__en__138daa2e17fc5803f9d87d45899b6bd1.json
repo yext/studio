@@ -73,7 +73,13 @@
   },
   "name": "Office Space",
   "priceRange": "FOUR",
-  "ref_categories": [{}],
+  "ref_categories": [
+    {
+      "id": "668",
+      "name": "Software Consultant",
+      "uid": 668
+    }
+  ],
   "ref_listings": [],
   "ref_reviewsAgg": [],
   "routableCoordinate": {
@@ -84,6 +90,7 @@
   "siteDomain": "",
   "siteId": 0,
   "siteInternalHostName": "",
+  "slug": "office/7941089580646240971",
   "timezone": "Europe/London",
   "uid": 18714999,
   "websiteUrl": {

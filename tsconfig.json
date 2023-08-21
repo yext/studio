@@ -14,5 +14,10 @@
     "jsx": "react-jsx",
     "target": "ESNext"
   },
-  "include": ["**/*.ts", "**/*.tsx", "**/*.js"]
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js",
+    "packages/studio/postcss.config.cjs"
+  ]
 }

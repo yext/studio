@@ -14,3 +14,4 @@ export * from "./SiteSettings";
 export * from "./GitData";
 export * from "./CliArgs";
 export * from "./PagesJS";
+export * from "./StudioTailwindConfig";
