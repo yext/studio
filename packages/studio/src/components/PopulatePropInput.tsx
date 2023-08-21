@@ -32,7 +32,7 @@ export default function PopulatePropInput({
             ? TemplateExpressionFormatter.getRawValue(e.target.value)
             : e.target.value;
         onChange(val);
-      } else {
+      } else if (typeof value == "number") {
         const val = Number(e.target.value);
         onChange(val);
       }
@@ -41,7 +41,7 @@ export default function PopulatePropInput({
   );
 
   const displayValue =
-    propKind === PropValueKind.Expression && value === "string"
+    propKind === PropValueKind.Expression && typeof value === "string"
       ? TemplateExpressionFormatter.getTemplateStringDisplayValue(value)
       : value;
 
@@ -54,7 +54,7 @@ export default function PopulatePropInput({
           ? `${displayValue} ${documentUsage}`
           : documentUsage;
         onChange(TemplateExpressionFormatter.getRawValue(appendedValue));
-      } else {
+      } else if (typeof value == "number") {
         const newPropValue = get(
           { document: expressionSources["document"] },
           fieldId
