@@ -172,13 +172,19 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `Error rendering components: component tree is undefined.`
         );
       }
-      const orderedSelectedComponentUUIDs = ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
-        if (selectedComponentUUIDs.has(c.uuid)) {
-          return c.uuid;
-        }
-        return undefined;
-      }).filter((uuid) => !!uuid);
-      return orderedSelectedComponentUUIDs.length !== 0 ? orderedSelectedComponentUUIDs[0] : undefined;
+      const orderedSelectedComponentUUIDs =
+        ComponentTreeHelpers.mapComponentTreeParentsFirst(
+          componentTree,
+          (c) => {
+            if (selectedComponentUUIDs.has(c.uuid)) {
+              return c.uuid;
+            }
+            return undefined;
+          }
+        ).filter((uuid) => !!uuid);
+      return orderedSelectedComponentUUIDs.length !== 0
+        ? orderedSelectedComponentUUIDs[0]
+        : undefined;
     },
     addSelectedComponentUUID: (selectedUUID: string) => {
       set((store) => {
@@ -209,7 +215,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         activeComponentUUID,
         getActivePageState,
         addSelectedComponentUUID,
-        clearSelectedComponents
+        clearSelectedComponents,
       } = get();
       const activePageState = getActivePageState();
       const componentTree = activePageState?.componentTree;
@@ -217,7 +223,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         clearSelectedComponents();
         addSelectedComponentUUID(selectedUUID);
         return;
-      };
+      }
       if (!componentTree) {
         throw new Error(
           `Error selecting components: component tree is undefined.`

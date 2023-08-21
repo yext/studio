@@ -62,15 +62,14 @@ export default function ComponentTree(): JSX.Element | null {
   const renderDragPreview = useDragPreview();
 
   function useNodeRenderer() {
-    const [
-      selectedComponentUUIDs,
-      setActiveComponentUUID,
-    ] = useStudioStore((store) => {
-      return [
-        store.pages.selectedComponentUUIDs,
-        store.pages.setActiveComponentUUID,
-      ];
-    });
+    const [selectedComponentUUIDs, setActiveComponentUUID] = useStudioStore(
+      (store) => {
+        return [
+          store.pages.selectedComponentUUIDs,
+          store.pages.setActiveComponentUUID,
+        ];
+      }
+    );
 
     const renderNodeCallback = useCallback(
       (node: NodeModel<ComponentState>, renderParams: RenderParams) => {
