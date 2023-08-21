@@ -8,22 +8,31 @@ const expectedPage = fs.readFileSync(
 );
 
 studioTest("can rearrange elements in tree", async ({ page, studioPage }) => {
-  const banner = page.getByText("Banner");
-  const div = page.getByRole("list").filter({ hasText: "div" });
-  const divBox = await div.boundingBox();
+  await studioPage.switchPage("LocationPage");
+  await studioPage.addElement("Footer", "Components", false);
+  await expect(page).toHaveScreenshot();
+  const footer = page.getByText("Footer");
+  const businessInfo = page
+    .getByRole("list")
+    .filter({ hasText: "BusinessInfo" });
+  const businessInfoBox = await businessInfo.boundingBox();
 
-  await banner.hover();
+  await footer.hover();
   await page.mouse.down();
-  divBox &&
-    (await page.mouse.move(divBox.x + divBox.width / 4, divBox.y, {
-      steps: 1000,
-    }));
+  businessInfoBox &&
+    (await page.mouse.move(
+      businessInfoBox.x,
+      businessInfoBox.y + businessInfoBox.height - 5,
+      {
+        steps: 1000,
+      }
+    ));
   await page.waitForTimeout(1000);
   await page.mouse.up();
   await expect(page).toHaveScreenshot();
 
   await studioPage.saveButton.click();
-  const pagePath = studioPage.getPagePath("BasicPage");
+  const pagePath = studioPage.getPagePath("LocationPage");
   await expect(pagePath).toHaveContents(expectedPage);
   await expect(page).toHaveScreenshot();
 });
