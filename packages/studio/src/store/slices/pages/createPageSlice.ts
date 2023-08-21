@@ -146,7 +146,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
   const pageComponentActions = {
     setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
+      const { addSelectedComponentUUID, clearSelectedComponents } = get();
       set({ activeComponentUUID });
+      clearSelectedComponents();
+      if (!!activeComponentUUID) {
+        addSelectedComponentUUID(activeComponentUUID);
+      }
     },
     getActiveComponentState: () => {
       const { activeComponentUUID, getActivePageState } = get();
@@ -157,6 +162,23 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       return activePageState.componentTree.find(
         (component) => component.uuid === activeComponentUUID
       );
+    },
+    getFirstSelectedComponentUUID: () => {
+      const { selectedComponentUUIDs, getActivePageState } = get();
+      const activePageState = getActivePageState();
+      const componentTree = activePageState?.componentTree;
+      if (!componentTree) {
+        throw new Error(
+          `Error rendering components: component tree is undefined.`
+        );
+      }
+      const orderedSelectedComponentUUIDs = ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
+        if (selectedComponentUUIDs.has(c.uuid)) {
+          return c.uuid;
+        }
+        return undefined;
+      }).filter((uuid) => !!uuid);
+      return orderedSelectedComponentUUIDs.length !== 0 ? orderedSelectedComponentUUIDs[0] : undefined;
     },
     addSelectedComponentUUID: (selectedUUID: string) => {
       set((store) => {
@@ -169,6 +191,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     ) => {
       set((store) => {
         store.selectedComponentRectsMap[selectedUUID] = rect;
+      });
+    },
+    removeSelectedComponent: (selectedUUID: string) => {
+      set((store) => {
+        store.selectedComponentUUIDs.delete(selectedUUID);
+        delete store.selectedComponentRectsMap[selectedUUID];
       });
     },
     clearSelectedComponents: () => {
@@ -187,10 +215,15 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         activeComponentUUID,
         getActivePageState,
         addSelectedComponentUUID,
+        clearSelectedComponents
       } = get();
       const activePageState = getActivePageState();
       const componentTree = activePageState?.componentTree;
-      if (selectedUUID === activeComponentUUID) return;
+      if (selectedUUID === activeComponentUUID) {
+        clearSelectedComponents();
+        addSelectedComponentUUID(selectedUUID);
+        return;
+      };
       if (!componentTree) {
         throw new Error(
           `Error selecting components: component tree is undefined.`
@@ -218,17 +251,29 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         const targetInDescendants = descendants.some((d) =>
           targetComponentUUIDs.includes(d.uuid)
         );
-        if (targetIsParent || targetInDescendants) {
-          if (selecting || (targetIsParent && targetInDescendants)) {
-            descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
-            addSelectedComponentUUID(c.uuid);
-            selecting = false;
-          } else selecting = true;
-        }
-        if (selecting) {
+        if (targetIsParent && targetInDescendants) {
+          descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
+          addSelectedComponentUUID(c.uuid);
+          return;
+        } else if (targetIsParent || targetInDescendants) {
+          descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
+          addSelectedComponentUUID(c.uuid);
+          selecting = !selecting;
+        } else if (selecting) {
           descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
           addSelectedComponentUUID(c.uuid);
         }
+        // if (targetIsParent || targetInDescendants) {
+        //   if (selecting || (targetIsParent && targetInDescendants)) {
+        //     descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
+        //     addSelectedComponentUUID(c.uuid);
+        //     selecting = false;
+        //   } else selecting = true;
+        // }
+        // if (selecting) {
+        //   descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
+        //   addSelectedComponentUUID(c.uuid);
+        // }
       });
     },
   };

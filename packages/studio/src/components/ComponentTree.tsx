@@ -62,11 +62,10 @@ export default function ComponentTree(): JSX.Element | null {
   const renderDragPreview = useDragPreview();
 
   function useNodeRenderer() {
-    const [selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID] =
+    const [selectedComponentUUIDs, setActiveComponentUUID] =
     useStudioStore((store) => {
       return [
         store.pages.selectedComponentUUIDs,
-        store.pages.clearSelectedComponents,
         store.pages.setActiveComponentUUID,
       ];
     });
@@ -79,7 +78,6 @@ export default function ComponentTree(): JSX.Element | null {
         }
         if (isDragging && selectedComponentUUIDs.size !== 0 && !selectedComponentUUIDs.has(node.data.uuid)) {
           setActiveComponentUUID(undefined);
-          clearSelectedComponents();
         }
         return (
           <ComponentNode
@@ -91,7 +89,7 @@ export default function ComponentTree(): JSX.Element | null {
           />
         );
       },
-      [selectedComponentUUIDs, clearSelectedComponents, setActiveComponentUUID]
+      [selectedComponentUUIDs, setActiveComponentUUID]
     );
 
     return renderNodeCallback;
@@ -245,12 +243,7 @@ function useDropHandler() {
       updatedComponentTree = updatedComponentTree.filter(
         (c) => c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
       );
-      let newDestinationIndex;
-      updatedComponentTree.forEach((c, index) => {
-        if (c.uuid === dragSourceId) {
-          newDestinationIndex = index;
-        }
-      });
+      let newDestinationIndex = updatedComponentTree.findIndex((c) => c.uuid === dragSourceId)
       updatedComponentTree.splice(
         newDestinationIndex,
         1,

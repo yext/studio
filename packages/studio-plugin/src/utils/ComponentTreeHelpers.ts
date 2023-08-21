@@ -212,7 +212,7 @@ export default class ComponentTreeHelpers {
     let LCA_UUID;
     ComponentTreeHelpers.mapComponentTree(componentTree, (c) => {
       if (LCA_UUID) return;
-      if (!LCA_UUID && targetOneUUID === targetTwoUUID) {
+      if (targetOneUUID === targetTwoUUID) {
         LCA_UUID = targetOneUUID;
       }
       if (c.uuid === targetOneUUID) {

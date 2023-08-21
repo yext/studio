@@ -57,6 +57,7 @@ interface PageSliceActions {
 
   setActivePage: (pageName: string | undefined) => void;
   getActivePageState: () => PageState | undefined;
+  getFirstSelectedComponentUUID: () => string | undefined;
   setComponentTreeInPage: (
     pageName: string,
     componentTree: ComponentState[]
@@ -79,6 +80,7 @@ interface PageSliceActions {
     selectedUUID: string,
     rect: DOMRectProperties
   ) => void;
+  removeSelectedComponent: (selectedUUID: string) => void;
   clearSelectedComponents: () => void;
   addShiftSelectedComponentUUIDs: (selectedComponent: ComponentState) => void;
 

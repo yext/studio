@@ -2,6 +2,7 @@ import {
   ComponentState,
   ComponentStateHelpers,
   ComponentStateKind,
+  ComponentTreeHelpers,
 } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
@@ -33,6 +34,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const [
     activeComponentUUID,
     setActiveComponentUUID,
+    getFirstSelectedComponentUUID,
     selectedComponentUUIDs,
     addSelectedComponentUUID,
     clearSelectedComponents,
@@ -41,6 +43,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     return [
       store.pages.activeComponentUUID,
       store.pages.setActiveComponentUUID,
+      store.pages.getFirstSelectedComponentUUID,
       store.pages.selectedComponentUUIDs,
       store.pages.addSelectedComponentUUID,
       store.pages.clearSelectedComponents,
@@ -98,6 +101,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   }, [componentState.uuid, isOpen, onToggle]);
 
   const handleKeyDown = useDeleteKeyListener(isSelectedComponent);
+  const firstSelectedComponentUUID = getFirstSelectedComponentUUID();
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
@@ -125,7 +129,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
           />
         )}
       </div>
-      {isActiveComponent && (
+      {(isActiveComponent && componentState.uuid === firstSelectedComponentUUID) && (
         <RemoveElementButton elementUUID={componentState.uuid} />
       )}
     </div>
@@ -145,7 +149,6 @@ function useDeleteKeyListener(isSelectedComponent: boolean) {
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (isSelectedComponent && event.key === "Backspace") {
         selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
-        clearSelectedComponents();
       }
     },
     [
@@ -154,5 +157,17 @@ function useDeleteKeyListener(isSelectedComponent: boolean) {
       selectedComponentUUIDs,
       clearSelectedComponents,
     ]
+  );
+}
+
+function useFirstSelectedComponentChecker() {
+  const getActiveComponentState = useStudioStore((store) => {
+      return store.actions.getActiveComponentState;
+    });
+  return useCallback((componentUUID: string) => {
+      const firstActiveComponent = getActiveComponentState();
+      return !!firstActiveComponent && firstActiveComponent.uuid === componentUUID;
+    },
+    [getActiveComponentState]
   );
 }

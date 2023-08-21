@@ -33,7 +33,7 @@ export function useComponentNames(
       else return undefined;
     }
   );
-  return componentStates.flatMap((state) =>
+  return componentStates.filter((state) => !!state).flatMap((state) =>
     state ? { name: getComponentDisplayName(state), uuid: state.uuid } : []
   );
 }

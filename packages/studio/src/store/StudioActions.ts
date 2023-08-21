@@ -184,6 +184,9 @@ export default class StudioActions {
     if (this.getPages().activeComponentUUID === componentUUID) {
       this.getPages().setActiveComponentUUID(undefined);
     }
+    if (this.getPages().selectedComponentUUIDs.has(componentUUID)) {
+      this.getPages().removeSelectedComponent(componentUUID);
+    }
   };
 
   /**
