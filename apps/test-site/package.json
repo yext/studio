@@ -21,7 +21,7 @@
     "@typescript-eslint/parser": "^5.16.0",
     "@yext/eslint-config": "^1.0.0",
     "@yext/eslint-plugin-export-star": "^1.0.2",
-    "@yext/pages": "^1.0.0-rc.0",
+    "@yext/pages": "^1.0.0-rc.1",
     "@yext/studio": "*",
     "@yext/types": "^0.1.12-alpha",
     "eslint": "^8.11.0",
