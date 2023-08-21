@@ -9,30 +9,29 @@ const expectedPage = fs.readFileSync(
 
 studioTest("can rearrange elements in tree", async ({ page, studioPage }) => {
   await studioPage.switchPage("LocationPage");
-  await studioPage.addElement("Footer", "Components", false);
-  await expect(page).toHaveScreenshot();
-  const footer = page.getByText("Footer");
-  const businessInfo = page
-    .getByRole("list")
-    .filter({ hasText: "BusinessInfo" });
-  const businessInfoBox = await businessInfo.boundingBox();
+  const hoursDisplay = page.getByText("HoursDisplay");
+  const addressDisplay = page
+    .getByRole("listitem")
+    .filter({ hasText: /^AddressDisplay$/ });
+  const addressDisplayBox = await addressDisplay.boundingBox();
 
-  await footer.hover();
+  await hoursDisplay.hover();
   await page.mouse.down();
-  businessInfoBox &&
+  addressDisplayBox &&
     (await page.mouse.move(
-      businessInfoBox.x,
-      businessInfoBox.y + businessInfoBox.height - 5,
+      addressDisplayBox.x + addressDisplayBox.width / 4,
+      addressDisplayBox.y,
       {
         steps: 1000,
       }
     ));
   await page.waitForTimeout(1000);
   await page.mouse.up();
+  await expect(studioPage.saveButton.button).toBeEnabled();
   await expect(page).toHaveScreenshot();
 
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("LocationPage");
   await expect(pagePath).toHaveContents(expectedPage);
-  await expect(page).toHaveScreenshot();
+  await expect(studioPage.saveButton.button).toBeDisabled();
 });

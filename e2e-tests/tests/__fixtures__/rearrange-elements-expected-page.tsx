@@ -1,7 +1,6 @@
 import { GetPath, TemplateConfig, TemplateProps } from "@yext/pages";
 import AddressDisplay from "../components/AddressDisplay";
 import BusinessInfo from "../components/BusinessInfo";
-import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HoursDisplay from "../components/HoursDisplay";
 
@@ -10,7 +9,7 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id-LocationPage",
     localization: { locales: ["en"], primary: false },
     filter: { entityTypes: ["location"] },
-    fields: ["address", "hours", "slug"],
+    fields: ["hours", "address", "slug"],
   },
 };
 export const getPath: GetPath<TemplateProps> = ({
@@ -28,13 +27,6 @@ export default function LocationPage({ document }: TemplateProps) {
         backgroundColor="#BAD8FD"
       />
       <BusinessInfo>
-        <AddressDisplay
-          line1={`${document.address.line1}`}
-          city={`${document.address.city}`}
-          region={`${document.address.region}`}
-          postalCode={`${document.address.postalCode}`}
-          countryCode=""
-        />
         <HoursDisplay
           monday={{
             isClosed: false,
@@ -49,8 +41,14 @@ export default function LocationPage({ document }: TemplateProps) {
             openIntervals: document.hours.wednesday.openIntervals,
           }}
         />
+        <AddressDisplay
+          line1={`${document.address.line1}`}
+          city={`${document.address.city}`}
+          region={`${document.address.region}`}
+          postalCode={`${document.address.postalCode}`}
+          countryCode=""
+        />
       </BusinessInfo>
-      <Footer copyrightText="© 2023 Yext" backgroundColor="#BAD8FD" />
     </>
   );
 }
