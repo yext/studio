@@ -28,6 +28,8 @@ export default class PropValueHelpers {
         return "#FFFFFF";
       case PropValueType.Array:
         return "";
+      case PropValueType.TailwindClass:
+        return ""
       default:
         console.error(
           `Unknown PropValueType ${propType.type}. Can't derive a default value based on PropValueType.`

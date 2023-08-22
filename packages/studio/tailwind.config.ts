@@ -7,6 +7,7 @@ import {
 } from "@yext/studio-plugin";
 import path from "path";
 import fs from "fs";
+import generateTailwindSafelist from "./src/utils/generateTailwindSafelist";
 
 const getRootDir = (): string => {
   const cliArgs: CliArgs = JSON.parse(
@@ -33,18 +34,6 @@ const userTailwindTheme: StudioTailwindTheme =
   userTailwindConfig?.theme?.extend ?? {};
 
 /**
- * Generates a safelist for custom test colors, background colors, and font sizes.
- */
-const generateSafelist = (theme: StudioTailwindTheme): string[] => {
-  const customColors = Object.keys(theme?.colors ?? {});
-  const customFontSizes = Object.keys(theme?.fontSize ?? {});
-  return [
-    ...customFontSizes.map((size) => `text-${size}`),
-    ...customColors.flatMap((color) => [`bg-${color}`, `text-${color}`]),
-  ];
-};
-
-/**
  * The portion of the content array that gets styles from the user's repo.
  * If the user did not specify a tailwind config, default to all styles under the src dir.
  */
@@ -63,7 +52,7 @@ export default {
     path.resolve(__dirname, "index.html"),
     ...transformedUserContent,
   ],
-  safelist: generateSafelist(userTailwindTheme),
+  safelist: generateTailwindSafelist(userTailwindTheme),
   theme: {
     extend: userTailwindTheme,
   },

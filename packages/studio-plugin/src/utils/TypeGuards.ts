@@ -124,7 +124,7 @@ export default class TypeGuards {
           )
         );
       case PropValueType.TailwindClass:
-        return typeof value === "string";
+        return typeof value === "string" || value === undefined;
     }
     return false;
   };
