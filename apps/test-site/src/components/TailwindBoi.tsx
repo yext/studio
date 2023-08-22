@@ -6,9 +6,5 @@ export interface Proppers {
 }
 
 export default function TailwindBoi({ boi }: Proppers) {
-  return (
-    <div className={boi}>
-      {boi}
-    </div>
-  );
+  return <div className={boi}>{boi}</div>;
 }

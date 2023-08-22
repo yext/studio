@@ -43,7 +43,7 @@ export enum PropValueType {
   HexColor = "HexColor",
   Record = "Record",
   Array = "Array",
-  TailwindClass = "TailwindClass"
+  TailwindClass = "TailwindClass",
 }
 
 export enum PropValueKind {
@@ -90,4 +90,4 @@ export type TailwindClass = string;
 type TailwindClassProp = {
   valueType: PropValueType.TailwindClass;
   value: TailwindClass;
-}
+};

@@ -18,7 +18,7 @@ export const getPath: GetPath<TemplateProps> = ({
 export default function UniversalPage({ document }: TemplateProps) {
   return (
     <>
-      <TailwindBoi boi="bg-primary text-primary text-medium"/>
+      <TailwindBoi boi="bg-primary text-primary text-medium" />
     </>
   );
 }

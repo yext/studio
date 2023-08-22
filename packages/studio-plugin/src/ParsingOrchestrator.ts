@@ -167,7 +167,7 @@ export default class ParsingOrchestrator {
       ...pageRecords,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
-      studioConfig: this.studioConfig
+      studioConfig: this.studioConfig,
     };
   }
 

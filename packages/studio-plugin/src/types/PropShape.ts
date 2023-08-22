@@ -44,8 +44,8 @@ type NonUnionPropType<T> = {
 type TailwindClassPropType = {
   type: PropValueType.TailwindClass;
   unionValues?: never;
-  customClasses?: string[]
-}
+  customClasses?: string[];
+};
 
 export type RecordPropType = {
   type: PropValueType.Record;

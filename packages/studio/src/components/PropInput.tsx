@@ -5,7 +5,7 @@ import PropValueHelpers from "../utils/PropValueHelpers";
 import ColorPicker from "./common/ColorPicker";
 import StringPropInput from "./StringPropInput";
 import UnionPropInput from "./UnionPropInput";
-import TailwindPropInput from './TailwindPropInput';
+import TailwindPropInput from "./TailwindPropInput";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropType;
@@ -95,7 +95,13 @@ export default function PropInput({
         />
       );
     case PropValueType.TailwindClass:
-      return <TailwindPropInput onChange={onChange} disabled={isUndefinedValue} value={displayValue as string}/>
+      return (
+        <TailwindPropInput
+          onChange={onChange}
+          disabled={isUndefinedValue}
+          value={displayValue as string}
+        />
+      );
     default:
       return <div>Unknown PropValueType {type}.</div>;
   }

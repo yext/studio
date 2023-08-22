@@ -20,7 +20,7 @@
       "vite-plugin-svgr/client"
     ],
     "paths": {
-      "@pathToUserProjectRoot/*": ["../../apps/test-site/*"] 
+      "@pathToUserProjectRoot/*": ["../../apps/test-site/*"]
     }
   },
   "include": ["src", "types.ts"]
