@@ -241,7 +241,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
       let selecting = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
-        const atTarget = c.uuid === selectedUUID || c.uuid === activeComponentUUID
+        const atTarget =
+          c.uuid === selectedUUID || c.uuid === activeComponentUUID;
         if (atTarget) {
           selecting = !selecting;
         }
@@ -251,7 +252,8 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           ...ComponentTreeHelpers.getDescendants(c, componentTree),
         ];
         const targetInSubTree = subTree.some(
-          (d) => d.uuid === selectedUUID || d.uuid === activeComponentUUID)
+          (d) => d.uuid === selectedUUID || d.uuid === activeComponentUUID
+        );
         if (targetInSubTree || selecting) {
           subTree.forEach((d) => addSelectedComponentUUID(d.uuid));
         }

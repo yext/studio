@@ -184,9 +184,7 @@ function insertionOrderTestSuite(
   });
 
   it("puts new component at start if fragment is active component", () => {
-    useStudioStore
-      .getState()
-      .pages.updateActiveComponent("mock-fragment-uuid");
+    useStudioStore.getState().pages.updateActiveComponent("mock-fragment-uuid");
     useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
