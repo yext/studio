@@ -77,10 +77,7 @@ export default function ComponentTree(): JSX.Element | null {
         if (!node.data) {
           throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
         }
-        if (
-          isDragging &&
-          !selectedComponentUUIDs.has(node.data.uuid)
-        ) {
+        if (isDragging && !selectedComponentUUIDs.has(node.data.uuid)) {
           setActiveComponentUUID(node.data.uuid);
         }
         return (

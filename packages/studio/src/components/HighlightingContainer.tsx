@@ -5,7 +5,6 @@ import rectToJson from "../utils/rectToJson";
 import { findDOMNode } from "react-dom";
 import { isEqual } from "lodash";
 
-
 /**
  * HighlightingContainer is intended to be used as a wrapper around a
  * single rendered Studio component.
@@ -111,7 +110,8 @@ class HighlightingClass extends Component<HighlightingProps> {
     const rect = rectToJson(childNode.getBoundingClientRect());
     const isRectUpdated = isEqual(
       this.props.selectedComponentRectsMap[this.props.uuid],
-      rect);
+      rect
+    );
     if (
       !isRectUpdated &&
       this.props.selectedComponentUUIDs.has(this.props.uuid)

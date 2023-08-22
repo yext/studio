@@ -50,10 +50,8 @@ function Highlighter({
 }) {
   const isErrorState = useStudioStore(
     (store) =>
-      store.actions.getComponentState(
-        store.actions.getComponentTree(),
-        uuid
-      )?.kind === ComponentStateKind.Error
+      store.actions.getComponentState(store.actions.getComponentTree(), uuid)
+        ?.kind === ComponentStateKind.Error
   );
   const [componentName] = useComponentNames(new Set([uuid]));
 
@@ -96,10 +94,10 @@ function Highlighter({
   }
 
   return (
-      <div style={style}>
-        {componentName.name && 
-          <div style={tagStyle}>{componentName.name}</div>
-        }
-      </div>
+    <div style={style}>
+      {componentName.name && 
+        <div style={tagStyle}>{componentName.name}</div>
+      }
+    </div>
   );
 }
