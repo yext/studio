@@ -23,36 +23,36 @@ const customReactModalStyles = {
  * Renders the current version number
  */
 export default function VersionNumber() {
-  const infoSVG = <Info className="h-7"/>
+  const infoSVG = <Info className="h-7" />;
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       return (
-      <ReactModal
-      isOpen={isOpen}
-      onRequestClose={handleClose}
-      contentLabel="Studio Info"
-      style={customReactModalStyles}
-      ariaHideApp={false}
-      shouldCloseOnEsc={true}
-      shouldCloseOnOverlayClick={true}
-      role="dialog"
-      >
-        <p className="font-bold mb-4"> Studio Info</p>
-        Studio Verison: {version}
-      </ReactModal>
+        <ReactModal
+          isOpen={isOpen}
+          onRequestClose={handleClose}
+          contentLabel="Studio Info"
+          style={customReactModalStyles}
+          ariaHideApp={false}
+          shouldCloseOnEsc={true}
+          shouldCloseOnOverlayClick={true}
+          role="dialog"
+        >
+          <p className="font-bold mb-4"> Studio Info</p>
+          Studio Verison: {version}
+        </ReactModal>
       );
     },
     []
   );
 
-  return ( 
-  <>
-    <ButtonWithModal
-      buttonContent={ infoSVG }
-      buttonClassName="pt-2"
-      renderModal={renderModal}
-    />
-  </> 
-  )
+  return (
+    <>
+      <ButtonWithModal
+        buttonContent={infoSVG}
+        buttonClassName="pt-2"
+        renderModal={renderModal}
+      />
+    </>
+  );
 }
