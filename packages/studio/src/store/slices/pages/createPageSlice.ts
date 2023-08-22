@@ -235,13 +235,16 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         selectedUUID,
         activeComponentUUID,
-        componentTree,
+        componentTree
       );
 
       let selecting = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
         if (c.parentUUID !== lowestParentUUID) return;
-        const subTree = [c, ...ComponentTreeHelpers.getDescendants(c, componentTree)];
+        const subTree = [
+          c,
+          ...ComponentTreeHelpers.getDescendants(c, componentTree),
+        ];
         const targetInSubtree = subTree.some(
           (d) => d.uuid === selectedUUID || d.uuid === activeComponentUUID
         );

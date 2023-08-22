@@ -35,9 +35,10 @@ export function useComponentNames(
   );
   return componentStates
     .filter((state): state is ComponentState => !!state)
-    .flatMap((state) =>
-      ({ name: getComponentDisplayName(state), uuid: state.uuid })
-    );
+    .flatMap((state) => ({
+      name: getComponentDisplayName(state),
+      uuid: state.uuid,
+    }));
 }
 
 export function getComponentDisplayName(componentState: ComponentState) {
