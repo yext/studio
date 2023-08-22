@@ -85,7 +85,7 @@ export default function TailwindPropInput({
           <EmbedIcon
             className="mb-0.5"
             role="button"
-            aria-label="Toggle field picker"
+            aria-label="Toggle tailwind class picker"
             onClick={toggleOpen}
           />
         )}

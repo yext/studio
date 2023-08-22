@@ -16,3 +16,22 @@ jest.mock("../../src/utils/dynamicImportFromBrowser", () => {
     default: (absPath: string) => import(path.relative(__dirname, absPath)),
   };
 });
+
+jest.mock(
+  "@pathToUserProjectRoot/tailwind.config",
+  () => {
+    return {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#aa00ff",
+          },
+          fontSize: {
+            medium: "14px",
+          },
+        },
+      },
+    };
+  },
+  { virtual: true }
+);
