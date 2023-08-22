@@ -52,16 +52,12 @@ export default function StringPropInput({
       onInputChange={handleChangeEvent}
       handleFieldSelection={appendField}
       displayValue={displayValue}
-      fieldFilter={useFieldPickerFilter()}
+      fieldFilter={fieldPickerFilter}
       disabled={disabled}
     />
   );
 }
 
-function useFieldPickerFilter() {
-  return useCallback(
-    (value: unknown) =>
-      TypeGuards.valueMatchesPropType({ type: PropValueType.string }, value),
-    []
-  );
+function fieldPickerFilter(value: unknown) {
+  return TypeGuards.valueMatchesPropType({ type: PropValueType.string }, value);
 }

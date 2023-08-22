@@ -37,16 +37,12 @@ export default function NumberPropInput({
       onInputChange={handleChangeEvent}
       handleFieldSelection={appendField}
       displayValue={value}
-      fieldFilter={useFieldPickerNumberFilter()}
+      fieldFilter={fieldPickerFilter}
       disabled={disabled}
     />
   );
 }
 
-function useFieldPickerNumberFilter() {
-  return useCallback(
-    (value: unknown) =>
-      TypeGuards.valueMatchesPropType({ type: PropValueType.number }, value),
-    []
-  );
+function fieldPickerFilter(value: unknown) {
+  return TypeGuards.valueMatchesPropType({ type: PropValueType.number }, value);
 }
