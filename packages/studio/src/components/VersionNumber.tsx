@@ -24,7 +24,6 @@ const infoSVG = <Info className="h-7" />;
  * Renders the current version number
  */
 export default function VersionNumber() {
-
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       return (
@@ -47,10 +46,10 @@ export default function VersionNumber() {
   );
 
   return (
-      <ButtonWithModal
-        buttonContent={infoSVG}
-        buttonClassName="pt-2"
-        renderModal={renderModal}
-      />
+    <ButtonWithModal
+      buttonContent={infoSVG}
+      buttonClassName="pt-2"
+      renderModal={renderModal}
+    />
   );
 }
