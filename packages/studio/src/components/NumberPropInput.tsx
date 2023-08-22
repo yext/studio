@@ -2,8 +2,6 @@ import { PropValueType, TypeGuards } from "@yext/studio-plugin";
 import { ChangeEvent, useCallback } from "react";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
 
-import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
-
 interface PropInputProps {
   value: number;
   onChange: (value: number | string) => void;
