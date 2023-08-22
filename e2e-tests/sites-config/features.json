@@ -26,7 +26,8 @@
     {
       "$id": "studio-stream-id-LocationPage",
       "localization": {
-        "locales": ["en"]
+        "locales": ["en"],
+        "primary": false
       },
       "filter": {
         "entityTypes": ["location"]
