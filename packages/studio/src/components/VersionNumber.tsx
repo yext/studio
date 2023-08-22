@@ -50,6 +50,7 @@ export default function VersionNumber() {
   <>
     <ButtonWithModal
       buttonContent={ infoSVG }
+      buttonClassName="pt-2"
       renderModal={renderModal}
     />
   </> 
