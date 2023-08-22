@@ -27,41 +27,24 @@
     {
       "$id": "studio-stream-id-UniversalPage",
       "localization": {
-        "locales": [
-          "en"
-        ],
+        "locales": ["en"],
         "primary": false
       },
       "filter": {
-        "entityTypes": [
-          "location"
-        ]
+        "entityTypes": ["location"]
       },
-      "fields": [
-        "services",
-        "address",
-        "hours",
-        "slug"
-      ]
+      "fields": ["services", "address", "hours", "slug"]
     },
     {
       "$id": "studio-stream-id-LocationPage",
       "localization": {
-        "locales": [
-          "en"
-        ],
+        "locales": ["en"],
         "primary": false
       },
       "filter": {
-        "entityTypes": [
-          "location"
-        ]
+        "entityTypes": ["location"]
       },
-      "fields": [
-        "address",
-        "hours",
-        "slug"
-      ]
+      "fields": ["address", "hours", "slug"]
     }
   ]
 }
