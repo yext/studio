@@ -28,12 +28,21 @@ describe("PageSlice: page component actions", () => {
       });
     });
 
-    it("updates activeComponentUUID using setActiveComponentUUID", () => {
-      useStudioStore.getState().pages.setActiveComponentUUID("searchbar-uuid");
+    it("updates activeComponentUUID and resets selectedComponentUUIDs using updateActiveComponent", () => {
+      useStudioStore.getState().pages.updateActiveComponent("searchbar-uuid");
       const activeComponentUUID =
         useStudioStore.getState().pages.activeComponentUUID;
       expect(activeComponentUUID).toEqual("searchbar-uuid");
     });
+
+    it("resets selectedComponentUUIDs when updateActiveComponent is called", () => {
+      useStudioStore.getState().pages.addSelectedComponentUUID("results-uuid");
+      useStudioStore.getState().pages.addSelectedComponentUUID("child1-uuid");
+      useStudioStore.getState().pages.addSelectedComponentUUID("child2-uuid");
+      useStudioStore.getState().pages.updateActiveComponent("searchbar-uuid");
+      const selectedComponentUUIDs = useStudioStore.getState().pages.selectedComponentUUIDs;
+      expect(selectedComponentUUIDs).toEqual(new Set(["searchbar-uuid"]));
+    })
 
     it("returns active component using getActiveComponentState", () => {
       const activeComponent = useStudioStore
@@ -69,7 +78,7 @@ describe("PageSlice: page component actions", () => {
       expectedUUIDSelection: Set<string>
     ) {
       store().pages.clearSelectedComponents();
-      store().pages.setActiveComponentUUID(activeUUID);
+      store().pages.updateActiveComponent(activeUUID);
       store().pages.addShiftSelectedComponentUUIDs(selectedComponent);
       const selectedComponentUUIDs = store().pages.selectedComponentUUIDs;
       expect(selectedComponentUUIDs).toEqual(expectedUUIDSelection);
@@ -99,6 +108,20 @@ describe("PageSlice: page component actions", () => {
         },
       });
     });
+
+    it("returns the UUID of the first selected component, a top-level component, in the tree", () => {
+      store().pages.addSelectedComponentUUID("container-uuid");
+      const firstSelectedComponentUUID = store().pages.getFirstSelectedComponentUUID();
+      expect(firstSelectedComponentUUID).toEqual("results-uuid");
+    })
+
+    it("returns the UUID of the first selected component, a child component, in the tree", () => {
+      store().pages.clearSelectedComponents();
+      store().pages.addSelectedComponentUUID("child1-uuid");
+      store().pages.addSelectedComponentUUID("child2-uuid");
+      const firstSelectedComponentUUID = store().pages.getFirstSelectedComponentUUID();
+      expect(firstSelectedComponentUUID).toEqual("child1-uuid");
+    })
 
     it("adds a selected component UUID using addSelectedComponentUUID", () => {
       store().pages.addSelectedComponentUUID("searchbar-uuid");

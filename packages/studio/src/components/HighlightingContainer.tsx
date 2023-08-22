@@ -16,7 +16,7 @@ export default function HighlightingContainer(
   props: PropsWithChildren<{ uuid: string }>
 ) {
   const [
-    setActiveComponentUUID,
+    updateActiveComponent,
     activeComponentUUID,
     selectedComponentUUIDs,
     selectedComponentRectsMap,
@@ -24,7 +24,7 @@ export default function HighlightingContainer(
     addSelectedComponentRect,
     clearSelectedComponents,
   ] = useStudioStore((store) => [
-    store.pages.setActiveComponentUUID,
+    store.pages.updateActiveComponent,
     store.pages.activeComponentUUID,
     store.pages.selectedComponentUUIDs,
     store.pages.selectedComponentRectsMap,
@@ -36,7 +36,7 @@ export default function HighlightingContainer(
   return (
     <HighlightingClass
       uuid={props.uuid}
-      setActiveComponentUUID={setActiveComponentUUID}
+      updateActiveComponent={updateActiveComponent}
       activeComponentUUID={activeComponentUUID}
       selectedComponentUUIDs={selectedComponentUUIDs}
       selectedComponentRectsMap={selectedComponentRectsMap}
@@ -52,7 +52,7 @@ export default function HighlightingContainer(
 type HighlightingProps = PropsWithChildren<{
   uuid: string;
   activeComponentUUID?: string;
-  setActiveComponentUUID: (uuid: string) => void;
+  updateActiveComponent: (uuid: string) => void;
   selectedComponentUUIDs: Set<string>;
   selectedComponentRectsMap: Record<string, DOMRectProperties>;
   addSelectedComponentUUID: (componentUUID: string) => void;
@@ -84,7 +84,7 @@ class HighlightingClass extends Component<HighlightingProps> {
     }
     if (this.props.activeComponentUUID !== this.props.uuid) {
       const rect = rectToJson(childNode.getBoundingClientRect());
-      this.props.setActiveComponentUUID(this.props.uuid);
+      this.props.updateActiveComponent(this.props.uuid);
       this.props.addSelectedComponentRect(this.props.uuid, rect);
     }
   };
@@ -108,12 +108,12 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
-    const isRectUpdated = isEqual(
+    const isRectUpdated = !isEqual(
       this.props.selectedComponentRectsMap[this.props.uuid],
       rect
     );
     if (
-      !isRectUpdated &&
+      isRectUpdated &&
       this.props.selectedComponentUUIDs.has(this.props.uuid)
     ) {
       this.props.addSelectedComponentRect(this.props.uuid, rect);

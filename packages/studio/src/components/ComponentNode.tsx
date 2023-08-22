@@ -32,7 +32,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
   const [
     activeComponentUUID,
-    setActiveComponentUUID,
+    updateActiveComponent,
     getFirstSelectedComponentUUID,
     selectedComponentUUIDs,
     addSelectedComponentUUID,
@@ -41,7 +41,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   ] = useStudioStore((store) => {
     return [
       store.pages.activeComponentUUID,
-      store.pages.setActiveComponentUUID,
+      store.pages.updateActiveComponent,
       store.pages.getFirstSelectedComponentUUID,
       store.pages.selectedComponentUUIDs,
       store.pages.addSelectedComponentUUID,
@@ -64,14 +64,14 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       if (event.shiftKey && activeComponentUUID) {
         addShiftSelectedComponentUUIDs(componentState);
       } else {
-        setActiveComponentUUID(componentState.uuid);
+        updateActiveComponent(componentState.uuid);
         addSelectedComponentUUID(componentState.uuid);
       }
     },
     [
       componentState,
       activeComponentUUID,
-      setActiveComponentUUID,
+      updateActiveComponent,
       addSelectedComponentUUID,
       clearSelectedComponents,
       addShiftSelectedComponentUUIDs,

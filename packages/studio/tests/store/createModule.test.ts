@@ -156,7 +156,7 @@ it("sets active component to the new module component", () => {
 
 describe("errors", () => {
   it("throws an error when there is no active component state", () => {
-    useStudioStore.getState().pages.setActiveComponentUUID(undefined);
+    useStudioStore.getState().pages.updateActiveComponent(undefined);
     const action = () => useStudioStore.getState().createModule("Any");
     expect(action).toThrow("Tried to create module without active component.");
   });

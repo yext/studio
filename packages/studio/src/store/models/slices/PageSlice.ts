@@ -66,7 +66,7 @@ interface PageSliceActions {
   updateStreamScope: (pageName: string, newStreamScope: StreamScope) => void;
   setEntityFiles: (pageName: string, entityFiles: string[] | undefined) => void;
 
-  setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
+  updateActiveComponent: (activeComponentUUID: string | undefined) => void;
   setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 
   setActiveEntityFile: (activeEntityFile?: string) => void;

@@ -100,7 +100,7 @@ export default function getCreateModuleAction(
       return c;
     });
     get().actions.updateComponentTree(updatedPageComponentTree);
-    get().pages.setActiveComponentUUID(moduleState.uuid);
+    get().pages.updateActiveComponent(moduleState.uuid);
   }
 
   return (modulePath: string) => {

@@ -13,7 +13,7 @@ import { v4 } from "uuid";
 export default function createDetachAllModuleInstances(get: () => PageSlice) {
   return (metadata: ModuleMetadata) => {
     const pagesSlice = get();
-    pagesSlice.setActiveComponentUUID(undefined);
+    pagesSlice.updateActiveComponent(undefined);
     Object.keys(pagesSlice.pages).forEach((pageName) => {
       const originalPage = pagesSlice.pages[pageName];
       const updatedComponentTree = detachModuleInstances(

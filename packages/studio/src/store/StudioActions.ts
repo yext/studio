@@ -182,7 +182,7 @@ export default class StudioActions {
     }).flat();
     this.updateComponentTree(updatedComponentTree);
     if (this.getPages().activeComponentUUID === componentUUID) {
-      this.getPages().setActiveComponentUUID(undefined);
+      this.getPages().updateActiveComponent(undefined);
     }
     if (this.getPages().selectedComponentUUIDs.has(componentUUID)) {
       this.getPages().selectedComponentUUIDs.delete(componentUUID);

@@ -13,17 +13,17 @@ export default function EditModuleButton({
 }: {
   state: ModuleState | RepeaterState;
 }) {
-  const [setModuleUUIDBeingEdited, setActiveComponentUUID] = useStudioStore(
+  const [setModuleUUIDBeingEdited, updateActiveComponent] = useStudioStore(
     (store) => [
       store.pages.setModuleUUIDBeingEdited,
-      store.pages.setActiveComponentUUID,
+      store.pages.updateActiveComponent,
     ]
   );
 
   const handleClick = useCallback(() => {
-    setActiveComponentUUID(undefined);
+    updateActiveComponent(undefined);
     setModuleUUIDBeingEdited(state.uuid);
-  }, [state.uuid, setModuleUUIDBeingEdited, setActiveComponentUUID]);
+  }, [state.uuid, setModuleUUIDBeingEdited, updateActiveComponent]);
 
   const moduleName =
     ComponentStateHelpers.extractRepeatedState(state).componentName;

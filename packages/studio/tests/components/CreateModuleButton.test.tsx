@@ -62,13 +62,13 @@ it("does not render when there is no active page state", async () => {
 });
 
 it("does not render when there is no active component state", () => {
-  useStudioStore.getState().pages.setActiveComponentUUID(undefined);
+  useStudioStore.getState().pages.updateActiveComponent(undefined);
   render(<CreateModuleButton />);
   expect(screen.queryByRole("button")).toBeNull();
 });
 
 it("does not render when the active component is a module", () => {
-  useStudioStore.getState().pages.setActiveComponentUUID("mock-uuid-2");
+  useStudioStore.getState().pages.updateActiveComponent("mock-uuid-2");
   render(<CreateModuleButton />);
   expect(screen.queryByRole("button")).toBeNull();
 });

@@ -27,8 +27,8 @@ export default function DeleteModuleButton({
   const detachAllModuleInstances = useStudioStore(
     (store) => store.pages.detachAllModuleInstances
   );
-  const setActiveComponentUUID = useStudioStore(
-    (store) => store.pages.setActiveComponentUUID
+  const updateActiveComponent = useStudioStore(
+    (store) => store.pages.updateActiveComponent
   );
   const removeFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.removeFileMetadata
@@ -63,11 +63,11 @@ export default function DeleteModuleButton({
   );
 
   const handleDelete = useCallback(() => {
-    setActiveComponentUUID(undefined);
+    updateActiveComponent(undefined);
     detachAllModuleInstances(metadata);
     removeFileMetadata(metadata.metadataUUID);
   }, [
-    setActiveComponentUUID,
+    updateActiveComponent,
     detachAllModuleInstances,
     metadata,
     removeFileMetadata,

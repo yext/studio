@@ -141,7 +141,7 @@ function insertionOrderTestSuite(
   it("puts new component at start if container is active component", () => {
     useStudioStore
       .getState()
-      .pages.setActiveComponentUUID("mock-container-uuid");
+      .pages.updateActiveComponent("mock-container-uuid");
     useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
@@ -156,7 +156,7 @@ function insertionOrderTestSuite(
   it("puts new component directly after regular component if it is active component", () => {
     useStudioStore
       .getState()
-      .pages.setActiveComponentUUID("mock-component-uuid");
+      .pages.updateActiveComponent("mock-component-uuid");
     useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
@@ -170,7 +170,7 @@ function insertionOrderTestSuite(
   });
 
   it("puts new component directly after module if it is active component", () => {
-    useStudioStore.getState().pages.setActiveComponentUUID("mock-module-uuid");
+    useStudioStore.getState().pages.updateActiveComponent("mock-module-uuid");
     useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
@@ -186,7 +186,7 @@ function insertionOrderTestSuite(
   it("puts new component at start if fragment is active component", () => {
     useStudioStore
       .getState()
-      .pages.setActiveComponentUUID("mock-fragment-uuid");
+      .pages.updateActiveComponent("mock-fragment-uuid");
     useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({
@@ -199,7 +199,7 @@ function insertionOrderTestSuite(
   });
 
   it("puts new component at start if built-in component is active component", () => {
-    useStudioStore.getState().pages.setActiveComponentUUID("mock-builtin-uuid");
+    useStudioStore.getState().pages.updateActiveComponent("mock-builtin-uuid");
     useStudioStore.getState().actions.addComponent(componentMetadata);
     expect(getExpectedObject()).toEqual(
       expect.objectContaining({

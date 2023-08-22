@@ -131,7 +131,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         );
       }
 
-      get().setActiveComponentUUID(undefined);
+      get().updateActiveComponent(undefined);
       get().clearSelectedComponents();
       set({ activePageName });
     },
@@ -145,7 +145,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   };
 
   const pageComponentActions = {
-    setActiveComponentUUID: (activeComponentUUID: string | undefined) => {
+    updateActiveComponent: (activeComponentUUID: string | undefined) => {
       const { addSelectedComponentUUID, clearSelectedComponents } = get();
       set({ activeComponentUUID });
       clearSelectedComponents();
@@ -232,6 +232,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `Error selecting components: active component is undefined.`
         );
       }
+
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         selectedUUID,
         activeComponentUUID,
@@ -240,18 +241,19 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
 
       let selecting = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
+        const atTarget = c.uuid === selectedUUID || c.uuid === activeComponentUUID
+        if (atTarget) {
+          selecting = !selecting;
+        }
         if (c.parentUUID !== lowestParentUUID) return;
         const subTree = [
           c,
           ...ComponentTreeHelpers.getDescendants(c, componentTree),
         ];
-        const targetInSubtree = subTree.some(
-          (d) => d.uuid === selectedUUID || d.uuid === activeComponentUUID
-        );
-        if (!targetInSubtree && !selecting) return;
-        subTree.forEach((d) => addSelectedComponentUUID(d.uuid));
-        if (targetInSubtree) {
-          selecting = !selecting;
+        const targetInSubTree = subTree.some(
+          (d) => d.uuid === selectedUUID || d.uuid === activeComponentUUID)
+        if (targetInSubTree || selecting) {
+          subTree.forEach((d) => addSelectedComponentUUID(d.uuid));
         }
       });
     },

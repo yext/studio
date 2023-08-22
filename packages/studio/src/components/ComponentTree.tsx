@@ -62,11 +62,11 @@ export default function ComponentTree(): JSX.Element | null {
   const renderDragPreview = useDragPreview();
 
   function useNodeRenderer() {
-    const [selectedComponentUUIDs, setActiveComponentUUID] = useStudioStore(
+    const [selectedComponentUUIDs, updateActiveComponent] = useStudioStore(
       (store) => {
         return [
           store.pages.selectedComponentUUIDs,
-          store.pages.setActiveComponentUUID,
+          store.pages.updateActiveComponent,
         ];
       }
     );
@@ -78,7 +78,7 @@ export default function ComponentTree(): JSX.Element | null {
           throw new Error(`Node missing data ${JSON.stringify(node, null, 2)}`);
         }
         if (isDragging && !selectedComponentUUIDs.has(node.data.uuid)) {
-          setActiveComponentUUID(node.data.uuid);
+          updateActiveComponent(node.data.uuid);
         }
         return (
           <ComponentNode
@@ -90,7 +90,7 @@ export default function ComponentTree(): JSX.Element | null {
           />
         );
       },
-      [selectedComponentUUIDs, setActiveComponentUUID]
+      [selectedComponentUUIDs, updateActiveComponent]
     );
 
     return renderNodeCallback;
@@ -268,7 +268,6 @@ function useDropHandler() {
         convertNodeModelsToComponentTree(tree);
       if (selectedComponentUUIDs.has(dragSourceId)) {
         const destinationParentId = tree[destinationIndex].parent.toString();
-        if (selectedComponentUUIDs.has(destinationParentId)) return;
         handleSelectedDrop(
           updatedComponentTree,
           dragSourceId,
