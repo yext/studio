@@ -79,10 +79,9 @@ export default function ComponentTree(): JSX.Element | null {
         }
         if (
           isDragging &&
-          selectedComponentUUIDs.size !== 0 &&
           !selectedComponentUUIDs.has(node.data.uuid)
         ) {
-          setActiveComponentUUID(undefined);
+          setActiveComponentUUID(node.data.uuid);
         }
         return (
           <ComponentNode

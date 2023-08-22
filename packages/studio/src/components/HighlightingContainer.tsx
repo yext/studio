@@ -3,6 +3,8 @@ import DOMRectProperties from "../store/models/DOMRectProperties";
 import useStudioStore from "../store/useStudioStore";
 import rectToJson from "../utils/rectToJson";
 import { findDOMNode } from "react-dom";
+import { isEqual } from "lodash";
+
 
 /**
  * HighlightingContainer is intended to be used as a wrapper around a
@@ -15,7 +17,7 @@ export default function HighlightingContainer(
   props: PropsWithChildren<{ uuid: string }>
 ) {
   const [
-    setActiveUUID,
+    setActiveComponentUUID,
     activeComponentUUID,
     selectedComponentUUIDs,
     selectedComponentRectsMap,
@@ -35,7 +37,7 @@ export default function HighlightingContainer(
   return (
     <HighlightingClass
       uuid={props.uuid}
-      setActiveUUID={setActiveUUID}
+      setActiveComponentUUID={setActiveComponentUUID}
       activeComponentUUID={activeComponentUUID}
       selectedComponentUUIDs={selectedComponentUUIDs}
       selectedComponentRectsMap={selectedComponentRectsMap}
@@ -51,7 +53,7 @@ export default function HighlightingContainer(
 type HighlightingProps = PropsWithChildren<{
   uuid: string;
   activeComponentUUID?: string;
-  setActiveUUID: (uuid: string) => void;
+  setActiveComponentUUID: (uuid: string) => void;
   selectedComponentUUIDs: Set<string>;
   selectedComponentRectsMap: Record<string, DOMRectProperties>;
   addSelectedComponentUUID: (componentUUID: string) => void;
@@ -83,9 +85,7 @@ class HighlightingClass extends Component<HighlightingProps> {
     }
     if (this.props.activeComponentUUID !== this.props.uuid) {
       const rect = rectToJson(childNode.getBoundingClientRect());
-      this.props.setActiveUUID(this.props.uuid);
-      this.props.clearSelectedComponents();
-      this.props.addSelectedComponentUUID(this.props.uuid);
+      this.props.setActiveComponentUUID(this.props.uuid);
       this.props.addSelectedComponentRect(this.props.uuid, rect);
     }
   };
@@ -109,9 +109,9 @@ class HighlightingClass extends Component<HighlightingProps> {
       return;
     }
     const rect = rectToJson(childNode.getBoundingClientRect());
-    const isRectUpdated =
-      JSON.stringify(this.props.selectedComponentRectsMap[this.props.uuid]) ===
-      JSON.stringify(rect);
+    const isRectUpdated = isEqual(
+      this.props.selectedComponentRectsMap[this.props.uuid],
+      rect);
     if (
       !isRectUpdated &&
       this.props.selectedComponentUUIDs.has(this.props.uuid)

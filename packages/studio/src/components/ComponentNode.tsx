@@ -128,8 +128,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
           />
         )}
       </div>
-      {isActiveComponent &&
-        componentState.uuid === firstSelectedComponentUUID && (
+      {componentState.uuid === firstSelectedComponentUUID && (
           <RemoveElementButton elementUUID={componentState.uuid} />
         )}
     </div>

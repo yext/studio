@@ -182,9 +182,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
             return undefined;
           }
         ).filter((uuid) => !!uuid);
-      return orderedSelectedComponentUUIDs.length !== 0
-        ? orderedSelectedComponentUUIDs[0]
-        : undefined;
+      return orderedSelectedComponentUUIDs[0];
     },
     addSelectedComponentUUID: (selectedUUID: string) => {
       set((store) => {
@@ -234,34 +232,23 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `Error selecting components: active component is undefined.`
         );
       }
-      const targetComponentUUIDs = [selectedUUID, activeComponentUUID] as const;
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
-        ...targetComponentUUIDs,
-        componentTree
+        selectedUUID,
+        activeComponentUUID,
+        componentTree,
       );
 
       let selecting = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
         if (c.parentUUID !== lowestParentUUID) return;
-        const descendants = ComponentTreeHelpers.getDescendants(
-          c,
-          componentTree
+        const subTree = [c, ...ComponentTreeHelpers.getDescendants(c, componentTree)];
+        const targetInSubtree = subTree.some(
+          (d) => d.uuid === selectedUUID || d.uuid === activeComponentUUID
         );
-        const targetIsParent = targetComponentUUIDs.includes(c.uuid);
-        const targetInDescendants = descendants.some((d) =>
-          targetComponentUUIDs.includes(d.uuid)
-        );
-        if (targetIsParent && targetInDescendants) {
-          descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
-          addSelectedComponentUUID(c.uuid);
-          return;
-        } else if (targetIsParent || targetInDescendants) {
-          descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
-          addSelectedComponentUUID(c.uuid);
+        if (!targetInSubtree && !selecting) return;
+        subTree.forEach((d) => addSelectedComponentUUID(d.uuid));
+        if (targetInSubtree) {
           selecting = !selecting;
-        } else if (selecting) {
-          descendants.forEach((d) => addSelectedComponentUUID(d.uuid));
-          addSelectedComponentUUID(c.uuid);
         }
       });
     },

@@ -48,13 +48,12 @@ function Highlighter({
   rect: DOMRectProperties | undefined;
   iframeEl: HTMLIFrameElement | null;
 }) {
-  const componentTree = useStudioStore((store) =>
-    store.actions.getComponentTree()
-  );
   const isErrorState = useStudioStore(
     (store) =>
-      store.actions.getComponentState(componentTree, uuid)?.kind ===
-      ComponentStateKind.Error
+      store.actions.getComponentState(
+        store.actions.getComponentTree(),
+        uuid
+      )?.kind === ComponentStateKind.Error
   );
   const [componentName] = useComponentNames(new Set([uuid]));
 
@@ -97,8 +96,9 @@ function Highlighter({
   }
 
   return (
-    <div style={style}>
-      <div style={tagStyle}>{componentName ? componentName.name : ""}</div>
-    </div>
+    componentName.name &&
+      <div style={style}>
+        <div style={tagStyle}>{componentName.name}</div>
+      </div>
   );
 }
