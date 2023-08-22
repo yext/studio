@@ -41,7 +41,18 @@ function createPropVal(
     valueType,
     value,
   };
-  if (!TypeGuards.isValidPropVal(newPropVal)) {
+  if (
+    !TypeGuards.isValidPropVal(newPropVal) &&
+    valueType === PropValueType.number &&
+    typeof value === "string"
+  ) {
+    // this only occurs when the number fieldpicker is used
+    return {
+      kind: PropValueKind.Expression,
+      valueType: PropValueType.string,
+      value,
+    };
+  } else if (!TypeGuards.isValidPropVal(newPropVal)) {
     return null;
   }
   return newPropVal;

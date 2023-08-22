@@ -1,13 +1,12 @@
 import { PropValueType, TypeGuards } from "@yext/studio-plugin";
-import { ChangeEvent, useCallback, useMemo } from "react";
+import { ChangeEvent, useCallback } from "react";
 import FieldPickerInput from "./FieldPicker/FieldPickerInput";
-import { get } from "lodash";
-import useStudioStore from "../store/useStudioStore";
-import useRawSiteSettings from "../hooks/useRawSiteSettings";
+
+import TemplateExpressionFormatter from "../utils/TemplateExpressionFormatter";
 
 interface PropInputProps {
   value: number;
-  onChange: (value: number) => void;
+  onChange: (value: number | string) => void;
   disabled?: boolean;
 }
 
@@ -20,7 +19,6 @@ export default function NumberPropInput({
   onChange,
   disabled,
 }: PropInputProps): JSX.Element {
-  const expressionSources = useExpressionSources();
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const val = Number(e.target.value);
@@ -31,19 +29,10 @@ export default function NumberPropInput({
 
   const appendField = useCallback(
     (fieldId: string) => {
-      const newPropValue = get(
-        { document: expressionSources["document"] },
-        fieldId
-      );
-      onChange(newPropValue);
+      const documentUsage = "${" + fieldId + "}";
+      onChange(TemplateExpressionFormatter.getRawValue(documentUsage));
     },
-    [onChange, expressionSources]
-  );
-
-  const fieldPickerNumberFilter = useCallback(
-    (value: unknown) =>
-      TypeGuards.valueMatchesPropType({ type: PropValueType.number }, value),
-    []
+    [onChange]
   );
 
   return (
@@ -51,24 +40,16 @@ export default function NumberPropInput({
       onInputChange={handleChangeEvent}
       handleFieldSelection={appendField}
       displayValue={value}
-      fieldFilter={fieldPickerNumberFilter}
+      fieldFilter={useFieldPickerNumberFilter()}
       disabled={disabled}
     />
   );
 }
 
-function useExpressionSources() {
-  const activeEntityData = useStudioStore((store) =>
-    store.pages.getActiveEntityData()
+function useFieldPickerNumberFilter() {
+  return useCallback(
+    (value: unknown) =>
+      TypeGuards.valueMatchesPropType({ type: PropValueType.number }, value),
+    []
   );
-  const rawSiteSettings = useRawSiteSettings();
-  const pageExpressionSources = useMemo(
-    () => ({
-      document: activeEntityData,
-      siteSettings: rawSiteSettings,
-    }),
-    [activeEntityData, rawSiteSettings]
-  );
-
-  return pageExpressionSources;
 }
