@@ -18,10 +18,7 @@
       "vite/client",
       "@yext/studio-plugin/virtual-module",
       "vite-plugin-svgr/client"
-    ],
-    "paths": {
-      "@pathToUserProjectRoot/*": ["../../apps/test-site/*"]
-    }
+    ]
   },
   "include": ["src", "types.ts"]
 }

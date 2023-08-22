@@ -26,8 +26,5 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/setup-ci
-      - run: npm run build -w=packages/studio-plugin
-      - run: npm run build -w=packages/studio
-      - run: npm i
-      - run: npm run build -w=apps/test-site
+      - run: npm run build
       - run: npm run typecheck-jest
