@@ -1,4 +1,3 @@
-/* eslint-disable no-template-curly-in-string */
 import { render, screen } from "@testing-library/react";
 import TailwindPropInput from "../../src/components/TailwindPropInput";
 import userEvent from "@testing-library/user-event";
