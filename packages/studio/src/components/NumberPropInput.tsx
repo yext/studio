@@ -29,8 +29,7 @@ export default function NumberPropInput({
 
   const appendField = useCallback(
     (fieldId: string) => {
-      const documentUsage = "${" + fieldId + "}";
-      onChange(TemplateExpressionFormatter.getRawValue(documentUsage));
+      onChange(fieldId);
     },
     [onChange]
   );
