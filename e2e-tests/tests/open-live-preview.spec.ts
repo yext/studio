@@ -9,6 +9,6 @@ studioTest(
     await studioPage.livePreviewButton.click({ position: { x: 75, y: 0 } });
     const popup = await popupPromise;
     await popup.waitForLoadState();
-    await expect(popup).toHaveTitle("Pages Development Page");
+    await expect(popup).toHaveTitle("Pages Development");
   }
 );

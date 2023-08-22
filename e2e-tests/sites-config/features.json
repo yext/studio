@@ -1,33 +1,25 @@
 {
   "features": [
     {
-      "name": "BasicPage",
+      "name": "LocationPage",
+      "streamId": "studio-stream-id-LocationPage",
       "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
-    },
-    {
-      "name": "ErrorComponentPreviews",
-      "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
+      "entityPageSet": {}
     },
     {
       "name": "ErrorPage",
       "templateType": "JS",
-      "staticPage": {
-        "plugin": {}
-      }
+      "staticPage": {}
     },
     {
-      "name": "LocationPage",
-      "streamId": "studio-stream-id-LocationPage",
+      "name": "ErrorComponentPreviews",
       "templateType": "JS",
-      "entityPageSet": {
-        "plugin": {}
-      }
+      "staticPage": {}
+    },
+    {
+      "name": "BasicPage",
+      "templateType": "JS",
+      "staticPage": {}
     }
   ],
   "streams": [

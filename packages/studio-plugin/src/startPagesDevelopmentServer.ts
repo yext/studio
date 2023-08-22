@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 export const startPagesDevelopmentServer = async () => {
   const pagesServer = spawn(
     "npx",
-    ["pages", "dev", "--open-browser=false", "--local"],
+    ["pages", "dev", "--no-open-browser", "--local", "--noInit"],
     {
       stdio: ["pipe", "pipe", "pipe"],
       env: {

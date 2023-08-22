@@ -5,7 +5,7 @@ import NestedModule from "../modules/a/b/NestedModule";
 export const config: TemplateConfig = {
   stream: {
     $id: "studio-stream-id",
-    localization: { locales: ["en"], primary: false },
+    localization: { locales: ["en"] },
     filter: {},
     fields: ["slug"],
   },
