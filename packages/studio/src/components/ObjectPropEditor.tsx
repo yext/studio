@@ -44,7 +44,7 @@ export default function ObjectPropEditor(props: {
 
   return (
     <div className={containerClasses}>
-      {renderBranchUI(isNested)}
+      {isNested && renderBranchUI()}
       <div>
         <span
           className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap"

@@ -41,9 +41,9 @@ export default function PropEditor({
   const labelTooltipId = `${uniqueId}-label`;
 
   return (
-    <div className="flex items-center mb-2 text-sm">
-      {renderBranchUI(isNested, "pb-10")}
-      <label>
+    <div className="flex items-center mb-2 text-sm min-w-0">
+      {isNested && renderBranchUI("pb-10")}
+      <label className='flex flex-col min-w-0'>
         <div className="flex">
           <p className="pb-1" id={labelTooltipId}>
             {propName}
@@ -73,10 +73,10 @@ export default function PropEditor({
   );
 }
 
-export function renderBranchUI(isNested?: boolean, additionalClasses = "") {
+export function renderBranchUI(additionalClasses = "") {
   const classes = classNames(
     "mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap",
     additionalClasses
   );
-  return isNested && <div className={classes}>---</div>;
+  return <div className={classes}>---</div>;
 }

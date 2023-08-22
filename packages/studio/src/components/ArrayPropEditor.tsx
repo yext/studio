@@ -68,7 +68,7 @@ export default function ArrayPropEditor({
 
   return (
     <div className={containerClasses}>
-      {renderBranchUI(isNested)}
+      {isNested && renderBranchUI()}
       <div className="flex flex-col">
         <label className="flex-col items-center">
           <p className="pr-2 pb-1 font-semibold" id={propTooltipId}>
@@ -177,7 +177,7 @@ function LiteralEditor({
       )}
       <div className="flex items-center ml-2 mt-1">
         <div className="before:border-l-2 before:pt-3 pb-4"></div>
-        {renderBranchUI(true)}
+        {renderBranchUI()}
         <button
           className="flex gap-x-2 items-center bg-gray-200 hover:bg-gray-300
             rounded-md py-1 px-2"

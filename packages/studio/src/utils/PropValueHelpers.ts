@@ -46,6 +46,7 @@ export default class PropValueHelpers {
       case PropValueType.string:
       case PropValueType.boolean:
       case PropValueType.HexColor:
+      case PropValueType.TailwindClass:
         return this.getPropInputDefaultValue(propType, PropValueKind.Literal);
       case PropValueType.Array:
         return [];
