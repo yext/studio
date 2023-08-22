@@ -27,8 +27,7 @@
     {
       "$id": "studio-stream-id-UniversalPage",
       "localization": {
-        "locales": ["en"],
-        "primary": false
+        "locales": ["en"]
       },
       "filter": {
         "entityTypes": ["location"]
@@ -38,8 +37,7 @@
     {
       "$id": "studio-stream-id-LocationPage",
       "localization": {
-        "locales": ["en"],
-        "primary": false
+        "locales": ["en"]
       },
       "filter": {
         "entityTypes": ["location"]
