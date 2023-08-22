@@ -9,5 +9,4 @@ export const PAGESJS_TEMPLATE_PROPS_TYPE = "TemplateProps";
 export const STUDIO_PROCESS_ARGS_OBJ = "YEXT_STUDIO_ARGS";
 export const STREAM_LOCALIZATION: Stream["localization"] = {
   locales: ["en"],
-  primary: false,
 };
