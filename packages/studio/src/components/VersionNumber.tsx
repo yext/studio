@@ -18,12 +18,12 @@ const customReactModalStyles = {
     zIndex: 1000,
   },
 };
+const infoSVG = <Info className="h-7" />;
 
 /**
  * Renders the current version number
  */
 export default function VersionNumber() {
-  const infoSVG = <Info className="h-7" />;
 
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
