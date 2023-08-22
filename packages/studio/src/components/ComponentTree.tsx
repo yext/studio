@@ -245,7 +245,8 @@ function useDropHandler() {
         (c) => c.uuid === dragSourceId || !selectedComponentUUIDs.has(c.uuid)
       );
       const newDestinationIndex = updatedComponentTree.findIndex(
-        (c) => c.uuid === dragSourceId);
+        (c) => c.uuid === dragSourceId
+      );
       updatedComponentTree.splice(
         newDestinationIndex,
         1,
