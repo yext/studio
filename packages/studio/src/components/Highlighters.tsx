@@ -96,9 +96,10 @@ function Highlighter({
   }
 
   return (
-    componentName.name &&
       <div style={style}>
-        <div style={tagStyle}>{componentName.name}</div>
+        {componentName.name && 
+          <div style={tagStyle}>{componentName.name}</div>
+        }
       </div>
   );
 }
