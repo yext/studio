@@ -5,6 +5,6 @@ import { version } from '../../package.json'
  */
 export default function VersionNumber() {
   return (
-    <div>v.{version}</div>
+    <p className='text-gray-500'>v.{version}</p>
   );
 }
