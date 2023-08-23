@@ -232,7 +232,7 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
         return;
       }
 
-      const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
+      const lowestParentUUID = ComponentTreeHelpers.getLowestCommonAncestor(
         selectedUUID,
         activeComponentUUID,
         componentTree

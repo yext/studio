@@ -14,23 +14,17 @@ interface RemoveElementButtonProps {
 export default function RemoveElementButton({
   elementUUID,
 }: RemoveElementButtonProps): JSX.Element | null {
-  const [removeComponent, activeComponentUUID, selectedComponentUUIDs] =
+  const [removeComponent, selectedComponentUUIDs] =
     useStudioStore((store) => {
       return [
         store.actions.removeComponent,
-        store.pages.activeComponentUUID,
         store.pages.selectedComponentUUIDs,
       ];
     });
 
   const handleClick = useCallback(() => {
-    if (elementUUID !== activeComponentUUID) removeComponent(elementUUID);
-    else {
-      selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
-    }
+    selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
   }, [
-    elementUUID,
-    activeComponentUUID,
     removeComponent,
     selectedComponentUUIDs,
   ]);

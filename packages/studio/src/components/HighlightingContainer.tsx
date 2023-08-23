@@ -20,14 +20,12 @@ export default function HighlightingContainer(
     activeComponentUUID,
     selectedComponentUUIDs,
     selectedComponentRectsMap,
-    addSelectedComponentUUID,
     addSelectedComponentRect,
   ] = useStudioStore((store) => [
     store.pages.updateActiveComponent,
     store.pages.activeComponentUUID,
     store.pages.selectedComponentUUIDs,
     store.pages.selectedComponentRectsMap,
-    store.pages.addSelectedComponentUUID,
     store.pages.addSelectedComponentRect,
   ]);
 
@@ -38,7 +36,6 @@ export default function HighlightingContainer(
       activeComponentUUID={activeComponentUUID}
       selectedComponentUUIDs={selectedComponentUUIDs}
       selectedComponentRectsMap={selectedComponentRectsMap}
-      addSelectedComponentUUID={addSelectedComponentUUID}
       addSelectedComponentRect={addSelectedComponentRect}
     >
       {props.children}
@@ -52,7 +49,6 @@ type HighlightingProps = PropsWithChildren<{
   updateActiveComponent: (uuid: string) => void;
   selectedComponentUUIDs: Set<string>;
   selectedComponentRectsMap: Record<string, DOMRectProperties>;
-  addSelectedComponentUUID: (componentUUID: string) => void;
   addSelectedComponentRect: (
     selectedUUID: string,
     rect: DOMRectProperties

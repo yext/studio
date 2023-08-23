@@ -1,5 +1,5 @@
 import { CSSProperties, useMemo } from "react";
-import { useComponentNames } from "../hooks/useActiveComponentName";
+import { useComponentNames } from "../hooks/useComponentNames";
 import useStudioStore from "../store/useStudioStore";
 import { ComponentStateKind } from "@yext/studio-plugin";
 import DOMRectProperties from "../store/models/DOMRectProperties";

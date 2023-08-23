@@ -1,7 +1,6 @@
 import {
   ComponentState,
   ComponentStateKind,
-  ComponentTreeHelpers,
   TypeGuards,
 } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
@@ -15,30 +14,6 @@ export default function useActiveComponentName(): string | undefined {
     return undefined;
   }
   return getComponentDisplayName(activeState);
-}
-
-export function useComponentNames(
-  uuids: Set<string>
-): { name: string; uuid: string }[] {
-  const componentTree = useStudioStore((store) => {
-    return store.actions.getComponentTree();
-  });
-  if (!componentTree) {
-    return [];
-  }
-  const componentStates = ComponentTreeHelpers.mapComponentTreeParentsFirst(
-    componentTree,
-    (c) => {
-      if (uuids.has(c.uuid)) return c;
-      else return undefined;
-    }
-  );
-  return componentStates
-    .filter((state): state is ComponentState => !!state)
-    .flatMap((state) => ({
-      name: getComponentDisplayName(state),
-      uuid: state.uuid,
-    }));
 }
 
 export function getComponentDisplayName(componentState: ComponentState) {

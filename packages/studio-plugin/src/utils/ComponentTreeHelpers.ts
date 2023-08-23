@@ -186,42 +186,33 @@ export default class ComponentTreeHelpers {
   }
 
   /**
-   * Returns the component UUID that is lowest common parent of the two target components.
-   * This is similar to the lowest common ancestor except it cannot be one of the targets.
+   * Returns the component UUID that is lowest common ancestor of the two target components.
    */
-  static getLowestParentUUID(
+  static getLowestCommonAncestor(
     targetOneUUID: string,
     targetTwoUUID: string,
     componentTree: ComponentState[]
-  ) {
-    if (!targetOneUUID || !targetTwoUUID) return undefined;
-    const componentOne = componentTree.find((c) => c.uuid === targetOneUUID);
-    const componentTwo = componentTree.find((c) => c.uuid === targetTwoUUID);
-    return ComponentTreeHelpers.getLowestCommonAncestorComponentUUID(
-      componentOne?.parentUUID,
-      componentTwo?.parentUUID,
-      componentTree
-    );
-  }
-
-  private static getLowestCommonAncestorComponentUUID(
-    targetOneUUID: string | undefined,
-    targetTwoUUID: string | undefined,
-    componentTree: ComponentState[]
   ): string | undefined {
-    let LCA_UUID;
+    let parentOneUUID;
+    let parentTwoUUID;
     ComponentTreeHelpers.mapComponentTree(componentTree, (c) => {
-      if (LCA_UUID) return;
-      if (targetOneUUID === targetTwoUUID) {
-        LCA_UUID = targetOneUUID;
-      }
+      if (parentOneUUID && parentTwoUUID) return;
       if (c.uuid === targetOneUUID) {
-        targetOneUUID = c.parentUUID;
+        parentOneUUID = c.parentUUID;
       }
       if (c.uuid === targetTwoUUID) {
-        targetTwoUUID = c.parentUUID;
+        parentTwoUUID = c.parentUUID;
       }
     });
-    return LCA_UUID;
+    ComponentTreeHelpers.mapComponentTree(componentTree, (c) => {
+      if (parentOneUUID === parentTwoUUID) return;
+      if (c.uuid === parentOneUUID) {
+        parentOneUUID = c.parentUUID;
+      }
+      if (c.uuid === parentTwoUUID) {
+        parentTwoUUID = c.parentUUID;
+      }
+    });
+    return parentOneUUID === parentTwoUUID ? parentOneUUID : undefined;
   }
 }

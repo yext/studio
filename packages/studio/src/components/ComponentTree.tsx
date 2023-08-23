@@ -15,10 +15,8 @@ import {
   TypeGuards,
 } from "@yext/studio-plugin";
 import { useCallback, useMemo, useState } from "react";
-import {
-  getComponentDisplayName,
-  useComponentNames,
-} from "../hooks/useActiveComponentName";
+import { getComponentDisplayName } from "../hooks/useActiveComponentName";
+import { useComponentNames } from "../hooks/useComponentNames";
 import useStudioStore from "../store/useStudioStore";
 import ComponentNode from "./ComponentNode";
 import { isEqual } from "lodash";
@@ -230,7 +228,7 @@ function useDropHandler() {
         return;
       }
       const selectedUUIDsArray = Array.from(selectedComponentUUIDs);
-      const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
+      const lowestParentUUID = ComponentTreeHelpers.getLowestCommonAncestor(
         selectedUUIDsArray[0],
         selectedUUIDsArray[selectedUUIDsArray.length - 1],
         componentTree
@@ -298,12 +296,11 @@ function updateComponentParentUUID(
   componentState: ComponentState,
   newParentUUID: string
 ) {
-  const updatedComponentState: ComponentState = {
+  if (newParentUUID === ROOT_ID) {
+    return componentState;
+  }
+  return {
     ...componentState,
     parentUUID: newParentUUID,
   };
-  if (updatedComponentState.parentUUID === ROOT_ID) {
-    delete updatedComponentState.parentUUID;
-  }
-  return updatedComponentState;
 }

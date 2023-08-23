@@ -95,10 +95,10 @@ describe("usesExpressionSource", () => {
   });
 });
 
-describe("getLowestParentUUID", () => {
+describe("getLowestCommonAncestor", () => {
   it("finds the highest parent of the same component", () => {
     expect(
-      ComponentTreeHelpers.getLowestParentUUID(
+      ComponentTreeHelpers.getLowestCommonAncestor(
         "mock-uuid-1",
         "mock-uuid-1",
         nestedBannerComponentTree
@@ -108,7 +108,7 @@ describe("getLowestParentUUID", () => {
 
   it("finds the highest parent of a child and a parent component", () => {
     expect(
-      ComponentTreeHelpers.getLowestParentUUID(
+      ComponentTreeHelpers.getLowestCommonAncestor(
         "mock-uuid-3",
         "mock-uuid-4",
         nestedBannerComponentTree
@@ -118,7 +118,7 @@ describe("getLowestParentUUID", () => {
 
   it("finds the highest parent of a child and an aunt component", () => {
     expect(
-      ComponentTreeHelpers.getLowestParentUUID(
+      ComponentTreeHelpers.getLowestCommonAncestor(
         "mock-uuid-4",
         "mock-uuid-1",
         nestedBannerComponentTree
@@ -128,7 +128,7 @@ describe("getLowestParentUUID", () => {
 
   it("finds the highest parent of two children without the same parent", () => {
     expect(
-      ComponentTreeHelpers.getLowestParentUUID(
+      ComponentTreeHelpers.getLowestCommonAncestor(
         "mock-uuid-6",
         "mock-uuid-3",
         nestedBannerComponentTree
