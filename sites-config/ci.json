@@ -16,7 +16,7 @@
     "buildCmd": "npm run build:local"
   },
   "livePreview": {
-    "serveSetupCmd": "npm run features && npm run localData",
-    "serveCmd": "npm run dev"
+    "serveSetupCmd": "npm run build && cd apps/test-site && npm run localData",
+    "serveCmd": "cd apps/test-site && npm run dev"
   }
 }
