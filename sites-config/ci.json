@@ -1,0 +1,22 @@
+{
+  "artifactStructure": {
+    "assets": [
+      {
+        "root": "apps/test-site/dist",
+        "pattern": "apps/test-site/assets/**/*"
+      }
+    ],
+    "features": "apps/test-site/sites-config/features.json"
+  },
+  "dependencies": {
+    "installDepsCmd": "npm install",
+    "requiredFiles": ["package.json", "package-lock.json", ".npmrc"]
+  },
+  "buildArtifacts": {
+    "buildCmd": "npm run build:local"
+  },
+  "livePreview": {
+    "serveSetupCmd": "npm run features && npm run localData",
+    "serveCmd": "npm run dev"
+  }
+}
