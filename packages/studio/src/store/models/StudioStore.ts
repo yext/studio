@@ -5,6 +5,7 @@ import PageSlice from "./slices/PageSlice";
 import PreviousSaveSlice from "./slices/PreviousSaveSlice";
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
 import StudioConfigSlice from "./slices/StudioConfigSlice";
+import StudioGitDataSlice from "./slices/StudioGitDataSlice";
 
 /**
  * The overall shape of the Zustand store as the state manager for Studio.
@@ -20,4 +21,5 @@ export type StudioStore = {
   createModule: (modulePath: string) => void;
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
+  studioGitData: StudioGitDataSlice;
 };
