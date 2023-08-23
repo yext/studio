@@ -127,8 +127,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 }
 
 function useDeleteKeyListener(isSelectedComponent: boolean) {
-  const [removeSelectedComponents, selectedComponentUUIDs] = useStudioStore((store) => {
-    return [store.actions.removeSelectedComponents, store.pages.selectedComponentUUIDs];
+  const removeSelectedComponents = useStudioStore((store) => {
+    return store.actions.removeSelectedComponents;
   });
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
@@ -136,6 +136,6 @@ function useDeleteKeyListener(isSelectedComponent: boolean) {
         removeSelectedComponents();
       }
     },
-    [isSelectedComponent, removeSelectedComponents, selectedComponentUUIDs]
+    [isSelectedComponent, removeSelectedComponents]
   );
 }

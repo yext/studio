@@ -64,8 +64,12 @@ describe("Keyboard macros", () => {
       );
       fireEvent.keyDown(activeComponent, { key: "Backspace" });
       expect(removeComponentSpy).toBeCalled();
-      expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
-      expect(useStudioStore.getState().pages.selectedComponentUUIDs.size).toEqual(0);
+      expect(
+        useStudioStore.getState().pages.activeComponentUUID
+      ).toBeUndefined();
+      expect(
+        useStudioStore.getState().pages.selectedComponentUUIDs.size
+      ).toEqual(0);
     });
 
     it("does not remove the active component during text input deletion", async () => {

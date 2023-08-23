@@ -205,7 +205,7 @@ export default class StudioActions {
     }).flat();
     this.updateComponentTree(updatedComponentTree);
     this.getPages().updateActiveComponent(undefined);
-  }
+  };
 
   /**
    * @param moduleMetadata - the {@link ModuleMetadata} of the module to detach.

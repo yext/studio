@@ -11,9 +11,8 @@ export function useComponentNames(
     return [];
   }
   const componentStates = componentTree.filter((c) => uuids.has(c.uuid));
-  return componentStates
-    .flatMap((state) => ({
-      name: getComponentDisplayName(state),
-      uuid: state.uuid,
-    }));
+  return componentStates.flatMap((state) => ({
+    name: getComponentDisplayName(state),
+    uuid: state.uuid,
+  }));
 }

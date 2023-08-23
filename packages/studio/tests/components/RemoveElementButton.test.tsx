@@ -52,5 +52,7 @@ it("removes element from component tree and updates the store", async () => {
 
   expect(removeComponentSpy).toBeCalled();
   expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
-  expect(useStudioStore.getState().pages.selectedComponentUUIDs.size).toEqual(0);
+  expect(useStudioStore.getState().pages.selectedComponentUUIDs.size).toEqual(
+    0
+  );
 });
