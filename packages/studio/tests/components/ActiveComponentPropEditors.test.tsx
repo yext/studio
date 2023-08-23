@@ -155,7 +155,7 @@ function testStandardOrModuleComponentState(
       />
     );
     expect(screen.getByLabelText("title")).toHaveAttribute("type", "text");
-    expect(screen.getByLabelText("num")).toHaveAttribute("type", "number");
+    expect(screen.getByLabelText("num")).toHaveAttribute("type", "text");
     expect(screen.getByLabelText("bool")).toHaveAttribute("type", "checkbox");
     expect(screen.getByLabelText("bgColor")).toHaveAttribute("type", "color");
   });
