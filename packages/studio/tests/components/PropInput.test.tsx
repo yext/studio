@@ -58,8 +58,8 @@ describe("correctly renders prop inputs with undefined value", () => {
         onChange={jest.fn()}
       />
     );
-    const input = screen.getByRole("spinbutton");
-    expect(input).toHaveValue(null);
+    const input = screen.getByRole("textbox");
+    expect(input).toHaveValue("");
     expect(input).toBeDisabled();
   });
 
