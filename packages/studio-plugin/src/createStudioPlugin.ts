@@ -43,12 +43,12 @@ export default async function createStudioPlugin(
     })
   );
   await gitWrapper.setup();
-  const studioInCBD = gitWrapper.getStoredData()?.isWithinCBD ?? true
+  const studioInCBD = gitWrapper.getStoredData()?.isWithinCBD ?? true;
 
   if (!studioInCBD) {
     const pagesDevPortPromise = studioConfig.isPagesJSRepo
-    ? startPagesDevelopmentServer()
-    : null;
+      ? startPagesDevelopmentServer()
+      : null;
 
     await pagesDevPortPromise?.then((port) => {
       if (!port) {
