@@ -4,6 +4,6 @@ const mockGitData: GitData = {
   canPush: {
     status: false,
   },
-  isWithinCBD: false
+  isWithinCBD: false,
 };
 export default mockGitData;
