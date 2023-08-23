@@ -3,8 +3,9 @@ import { ChangeEvent, useCallback } from "react";
 import Toggle from "./common/Toggle";
 import PropValueHelpers from "../utils/PropValueHelpers";
 import ColorPicker from "./common/ColorPicker";
-import StringPropInput from "./StringPropInput";
+import NumberPropInput from "./NumberPropInput";
 import UnionPropInput from "./UnionPropInput";
+import StringPropInput from "./StringPropInput";
 import TailwindPropInput from "./TailwindPropInput";
 
 interface PropInputProps<T = string | number | boolean> {
@@ -13,9 +14,6 @@ interface PropInputProps<T = string | number | boolean> {
   onChange: (value: T) => void;
   propKind: PropValueKind;
 }
-
-const inputBoxCssClasses =
-  "border border-gray-300 focus:border-indigo-500 rounded-lg p-2";
 
 /**
  * Renders the input element of a PropEditor component, that
@@ -62,11 +60,9 @@ export default function PropInput({
   switch (type) {
     case PropValueType.number:
       return (
-        <input
-          type="number"
-          onChange={handleChangeEvent}
-          className={inputBoxCssClasses}
-          value={(propValue ?? "") as number | string}
+        <NumberPropInput
+          onChange={onChange}
+          value={(propValue ?? "") as number}
           disabled={isUndefinedValue}
         />
       );
