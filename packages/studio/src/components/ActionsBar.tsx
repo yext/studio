@@ -18,7 +18,7 @@ export default function ActionsBar(): JSX.Element {
   return (
     <div className="flex bg-gray-100 py-3 items-center px-4">
       <AddElementButton />
-      <div className="ml-auto">
+      <div className="ml-auto h-7">
         <InfoButton />
       </div>
       {!studioInCBD && (
