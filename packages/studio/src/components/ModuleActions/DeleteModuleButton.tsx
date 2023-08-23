@@ -9,7 +9,7 @@ import {
   ModuleMetadata,
   TypeGuards,
 } from "@yext/studio-plugin";
-import Modal from "../common/Modal";
+import DialogModal from "../common/DialogModal";
 import path from "path-browserify";
 import useStudioStore from "../../store/useStudioStore";
 import ActionIconWrapper from "./ActionIconWrapper";
@@ -91,7 +91,7 @@ export default function DeleteModuleButton({
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       return (
-        <Modal
+        <DialogModal
           isOpen={isOpen}
           title="Delete Module"
           body={modalBody}

@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useContext, useMemo } from "react";
 import AddPageContext from "./AddPageContext";
-import Modal from "../common/Modal";
+import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 
 enum PageType {
@@ -47,7 +47,7 @@ export default function PageTypeSelector({
   );
 
   return (
-    <Modal
+    <DialogModal
       isOpen={isOpen}
       handleClose={handleClose}
       handleConfirm={handleConfirm}
