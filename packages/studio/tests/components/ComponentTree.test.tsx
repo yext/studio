@@ -97,9 +97,9 @@ describe("Keyboard macros", () => {
         "addShiftSelectedComponentUUIDs",
         {
           value: jest.fn(),
-        },
+        }
       );
-      
+
       const addShiftSpy = jest.spyOn(
         useStudioStore.getState().pages,
         "addShiftSelectedComponentUUIDs"
