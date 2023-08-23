@@ -29,7 +29,6 @@ export default function InfoButton() {
   return (
     <ButtonWithModal
       buttonContent={infoSVG}
-      buttonClassName="pt-2"
       renderModal={renderModal}
     />
   );
