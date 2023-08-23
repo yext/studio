@@ -75,26 +75,43 @@ class HighlightingClass extends Component<HighlightingProps> {
     });
   }
 
-  highlightSelf = (e?: Event) => {
+  handleClick = (e?: Event) => {
     e?.stopImmediatePropagation();
     e?.preventDefault();
     const childNode = getDOMNode(this);
     if (!childNode) {
       return;
     }
-    if (this.props.activeComponentUUID !== this.props.uuid) {
-      const rect = rectToJson(childNode.getBoundingClientRect());
-      this.props.updateActiveComponent(this.props.uuid);
+    this.setSelfAsActive();
+    this.highlightSelf(childNode);
+  }
+
+  highlightSelf = (childNode: Element) => {
+    const rect = rectToJson(childNode.getBoundingClientRect());
+    const isRectUpdated = !isEqual(
+      this.props.selectedComponentRectsMap[this.props.uuid],
+      rect
+    );
+    if (
+      isRectUpdated &&
+      this.props.selectedComponentUUIDs.has(this.props.uuid)
+    ) {
       this.props.addSelectedComponentRect(this.props.uuid, rect);
     }
   };
+
+  setSelfAsActive(): void {
+    if (this.props.activeComponentUUID !== this.props.uuid) {
+      this.props.updateActiveComponent(this.props.uuid);
+    }
+  }
 
   private attachListenerToChild() {
     const childNode = getDOMNode(this);
     if (!childNode) {
       return;
     }
-    childNode.addEventListener("click", this.highlightSelf);
+    childNode.addEventListener("click", this.handleClick);
     this.resizeObserver.observe(document.body);
   }
 
@@ -107,16 +124,8 @@ class HighlightingClass extends Component<HighlightingProps> {
     if (!childNode) {
       return;
     }
-    const rect = rectToJson(childNode.getBoundingClientRect());
-    const isRectUpdated = !isEqual(
-      this.props.selectedComponentRectsMap[this.props.uuid],
-      rect
-    );
-    if (
-      isRectUpdated &&
-      this.props.selectedComponentUUIDs.has(this.props.uuid)
-    ) {
-      this.props.addSelectedComponentRect(this.props.uuid, rect);
+    if (this.props.selectedComponentUUIDs.has(this.props.uuid)) {
+      this.highlightSelf(childNode);
     }
     this.attachListenerToChild();
   }
@@ -126,7 +135,7 @@ class HighlightingClass extends Component<HighlightingProps> {
     if (!childNode) {
       return;
     }
-    childNode.removeEventListener("click", this.highlightSelf);
+    childNode.removeEventListener("click", this.handleClick);
     this.resizeObserver.disconnect();
   }
 
