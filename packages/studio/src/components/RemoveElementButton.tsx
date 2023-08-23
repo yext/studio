@@ -2,35 +2,23 @@ import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as X } from "../icons/x.svg";
 import { useCallback } from "react";
 
-interface RemoveElementButtonProps {
-  /** The uuid of the element to be removed. */
-  elementUUID: string;
-}
+interface RemoveElementButtonProps {}
 
 /**
  * Renders a button for removing an element from the component tree of the
  * active page.
  */
-export default function RemoveElementButton({
-  elementUUID,
-}: RemoveElementButtonProps): JSX.Element | null {
-  const [removeComponent, selectedComponentUUIDs] =
+export default function RemoveElementButton({}: RemoveElementButtonProps): JSX.Element | null {
+  const [removeSelectedComponents, selectedComponentUUIDs] =
     useStudioStore((store) => {
       return [
-        store.actions.removeComponent,
+        store.actions.removeSelectedComponents,
         store.pages.selectedComponentUUIDs,
       ];
     });
 
-  const handleClick = useCallback(() => {
-    selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
-  }, [
-    removeComponent,
-    selectedComponentUUIDs,
-  ]);
-
   return (
-    <button onClick={handleClick} aria-label="Remove Element">
+    <button onClick={removeSelectedComponents} aria-label="Remove Element">
       <X />
     </button>
   );

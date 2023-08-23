@@ -54,7 +54,7 @@ describe("Keyboard macros", () => {
     it("delete key calls function to remove the active component", () => {
       const removeComponentSpy = jest.spyOn(
         useStudioStore.getState().actions,
-        "removeComponent"
+        "removeSelectedComponents"
       );
       render(<ComponentTree />);
       const activeComponent = screen.getByText("component-name");
@@ -63,13 +63,15 @@ describe("Keyboard macros", () => {
         "mock-uuid-1"
       );
       fireEvent.keyDown(activeComponent, { key: "Backspace" });
-      expect(removeComponentSpy).toBeCalledWith("mock-uuid-1");
+      expect(removeComponentSpy).toBeCalled();
+      expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+      expect(useStudioStore.getState().pages.selectedComponentUUIDs.size).toEqual(0);
     });
 
     it("does not remove the active component during text input deletion", async () => {
       const removeComponentSpy = jest.spyOn(
         useStudioStore.getState().actions,
-        "removeComponent"
+        "removeSelectedComponents"
       );
       render(
         <>

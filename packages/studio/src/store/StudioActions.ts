@@ -168,7 +168,7 @@ export default class StudioActions {
     this.updateComponentTree(updatedComponentTree);
   };
 
-  removeComponent = (componentUUID: string) => {
+  private removeComponent = (componentUUID: string) => {
     const componentTree = this.getComponentTree();
     if (!componentTree) {
       return;
@@ -189,6 +189,23 @@ export default class StudioActions {
       delete this.getPages().selectedComponentRectsMap[componentUUID];
     }
   };
+
+  removeSelectedComponents = () => {
+    const componentTree = this.getComponentTree();
+    if (!componentTree) {
+      return;
+    }
+    const selectedComponentUUIDs = this.getPages().selectedComponentUUIDs;
+    const updatedComponentTree = ComponentTreeHelpers.mapComponentTree<
+      ComponentState[]
+    >(componentTree, (componentState, mappedChildren) => {
+      return selectedComponentUUIDs.has(componentState.uuid)
+        ? []
+        : [componentState, ...mappedChildren.flat()];
+    }).flat();
+    this.updateComponentTree(updatedComponentTree);
+    this.getPages().updateActiveComponent(undefined);
+  }
 
   /**
    * @param moduleMetadata - the {@link ModuleMetadata} of the module to detach.

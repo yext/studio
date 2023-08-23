@@ -44,12 +44,13 @@ beforeEach(() => {
 it("removes element from component tree and updates the store", async () => {
   const removeComponentSpy = jest.spyOn(
     useStudioStore.getState().actions,
-    "removeComponent"
+    "removeSelectedComponents"
   );
-  render(<RemoveElementButton elementUUID="mock-uuid-1" />);
+  render(<RemoveElementButton />);
   const removeElementButton = screen.getByRole("button");
   await userEvent.click(removeElementButton);
 
-  expect(removeComponentSpy).toBeCalledWith("mock-uuid-1");
+  expect(removeComponentSpy).toBeCalled();
   expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+  expect(useStudioStore.getState().pages.selectedComponentUUIDs.size).toEqual(0);
 });

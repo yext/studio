@@ -120,22 +120,22 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         )}
       </div>
       {componentState.uuid === firstSelectedComponentUUID && (
-        <RemoveElementButton elementUUID={componentState.uuid} />
+        <RemoveElementButton />
       )}
     </div>
   );
 }
 
 function useDeleteKeyListener(isSelectedComponent: boolean) {
-  const [removeComponent, selectedComponentUUIDs] = useStudioStore((store) => {
-    return [store.actions.removeComponent, store.pages.selectedComponentUUIDs];
+  const [removeSelectedComponents, selectedComponentUUIDs] = useStudioStore((store) => {
+    return [store.actions.removeSelectedComponents, store.pages.selectedComponentUUIDs];
   });
   return useCallback(
     (event: KeyboardEvent<HTMLDivElement>) => {
       if (isSelectedComponent && event.key === "Backspace") {
-        selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
+        removeSelectedComponents();
       }
     },
-    [isSelectedComponent, removeComponent, selectedComponentUUIDs]
+    [isSelectedComponent, removeSelectedComponents, selectedComponentUUIDs]
   );
 }
