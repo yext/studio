@@ -1,4 +1,4 @@
-import { HexColor } from "@yext/studio";
+import { HexColor, TailwindClass } from "@yext/studio";
 import { NestedProp } from "../types/exportedTypes";
 
 export interface BannerData {
@@ -19,6 +19,7 @@ export interface BannerData {
     end: string;
     start: string;
   }[];
+  className?: TailwindClass
 }
 
 export const initialProps: BannerData = {
