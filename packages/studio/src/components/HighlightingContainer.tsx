@@ -80,7 +80,7 @@ class HighlightingClass extends Component<HighlightingProps> {
     }
     this.setSelfAsActive();
     this.highlightSelf(childNode);
-  }
+  };
 
   highlightSelf = (childNode: Element) => {
     const rect = rectToJson(childNode.getBoundingClientRect());

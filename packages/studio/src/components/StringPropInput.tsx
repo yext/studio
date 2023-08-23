@@ -47,12 +47,6 @@ export default function StringPropInput({
     [displayValue, onChange]
   );
 
-  const fieldPickerFilter = useCallback(
-    (value: unknown) =>
-      TypeGuards.valueMatchesPropType({ type: PropValueType.string }, value),
-    []
-  );
-
   return (
     <FieldPickerInput
       onInputChange={handleChangeEvent}
@@ -62,4 +56,8 @@ export default function StringPropInput({
       disabled={disabled}
     />
   );
+}
+
+function fieldPickerFilter(value: unknown) {
+  return TypeGuards.valueMatchesPropType({ type: PropValueType.string }, value);
 }

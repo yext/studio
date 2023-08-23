@@ -87,7 +87,7 @@ describe("Repeaters", () => {
     screen.getByText("text");
     expect(screen.getAllByRole("textbox")[0]).toHaveValue("test");
     screen.getByText("num");
-    expect(screen.getByRole("spinbutton")).toHaveValue(5);
+    expect(screen.getByRole("textbox", { name: "num" })).toHaveValue("5");
   });
 
   it("does not render Create Module button for a repeated component", () => {

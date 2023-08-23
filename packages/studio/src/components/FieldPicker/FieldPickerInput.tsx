@@ -8,7 +8,7 @@ import classNames from "classnames";
 interface FieldPickerInputProps {
   onInputChange: ChangeEventHandler<HTMLInputElement>;
   handleFieldSelection: (fieldId: string) => void;
-  displayValue: string;
+  displayValue: string | number;
   fieldFilter: (value: unknown) => boolean;
   disabled?: boolean;
 }
