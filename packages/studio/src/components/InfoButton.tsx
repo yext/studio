@@ -23,9 +23,9 @@ const renderModal: renderModalFunction = (isOpen, handleClose) => {
 };
 
 /**
- * Renders the current version number
+ * Renders an info modal including the current Studio version
  */
-export default function VersionNumber() {
+export default function InfoButton() {
   return (
     <ButtonWithModal
       buttonContent={infoSVG}
