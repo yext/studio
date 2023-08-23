@@ -19,7 +19,7 @@ export interface BannerData {
     end: string;
     start: string;
   }[];
-  className?: TailwindClass
+  className?: TailwindClass;
 }
 
 export const initialProps: BannerData = {
