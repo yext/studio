@@ -1,5 +1,5 @@
 /**
- * A slice for containing data sourced Git.
+ * A slice for containing data GitData.
  */
 export default interface StudioGitDataSlice {
   isWithinCBD: boolean
