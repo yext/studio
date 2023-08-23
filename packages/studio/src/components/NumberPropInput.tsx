@@ -25,17 +25,10 @@ export default function NumberPropInput({
     [onChange]
   );
 
-  const appendField = useCallback(
-    (fieldId: string) => {
-      onChange(fieldId);
-    },
-    [onChange]
-  );
-
   return (
     <FieldPickerInput
       onInputChange={handleChangeEvent}
-      handleFieldSelection={appendField}
+      handleFieldSelection={onChange}
       displayValue={value}
       fieldFilter={fieldPickerFilter}
       disabled={disabled}
