@@ -3,7 +3,7 @@ import InfoButton from "../../src/components/InfoButton";
 import userEvent from "@testing-library/user-event";
 
 it("correctly renders the info modal when icon is clicked", async () => {
-  render(<InfoButton />)
+  render(<InfoButton />);
   await userEvent.click(screen.getByRole("button"));
   expect(screen.getByText("Studio Info")).toBeDefined();
 });
