@@ -20,7 +20,9 @@ export default function NumberPropInput({
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const val = Number(e.target.value);
-      onChange(val);
+      if (!isNaN(val)) {
+        onChange(val);
+      }
     },
     [onChange]
   );
