@@ -4,7 +4,6 @@ import { ReactComponent as Info } from "../icons/info.svg";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import Modal from "./common/Modal";
 
-
 const infoSVG = <Info className="h-7" />;
 const body = (
   <div>

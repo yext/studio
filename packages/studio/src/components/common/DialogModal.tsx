@@ -40,52 +40,52 @@ export default function DialogModal({
   const moduleBodyContent = useMemo(() => {
     return (
       <>
-      <div className="flex justify-between items-center font-bold mb-4">
-        {title}
-        <button onClick={handleClose} aria-label="Close Modal">
-          <X />
-        </button>
-      </div>
-      {body}
-      <div className={footerClasses}>
-        {errorMessage && (
-          <div className="flex justify-start whitespace-pre-wrap text-red-600">
-            {errorMessage}
-          </div>
-        )}
-        <div className="flex justify-end">
-          <button className="ml-2" onClick={handleClose}>
-            Cancel
-          </button>
-          <button
-            className={confirmButtonClasses}
-            disabled={isConfirmButtonDisabled}
-            onClick={handleConfirm}
-          >
-            {confirmButtonText}
+        <div className="flex justify-between items-center font-bold mb-4">
+          {title}
+          <button onClick={handleClose} aria-label="Close Modal">
+            <X />
           </button>
         </div>
-      </div>
-    </>
+        {body}
+        <div className={footerClasses}>
+          {errorMessage && (
+            <div className="flex justify-start whitespace-pre-wrap text-red-600">
+              {errorMessage}
+            </div>
+          )}
+          <div className="flex justify-end">
+            <button className="ml-2" onClick={handleClose}>
+              Cancel
+            </button>
+            <button
+              className={confirmButtonClasses}
+              disabled={isConfirmButtonDisabled}
+              onClick={handleConfirm}
+            >
+              {confirmButtonText}
+            </button>
+          </div>
+        </div>
+      </>
     );
   }, [
-    body, 
-    confirmButtonClasses, 
-    confirmButtonText, 
-    errorMessage, 
-    footerClasses, 
-    handleClose, 
-    handleConfirm, 
-    isConfirmButtonDisabled, 
-    title
+    body,
+    confirmButtonClasses,
+    confirmButtonText,
+    errorMessage,
+    footerClasses,
+    handleClose,
+    handleConfirm,
+    isConfirmButtonDisabled,
+    title,
   ]);
 
   return (
     <Modal
-    isOpen={isOpen}
-    body={moduleBodyContent}
-    title={title}
-    handleClose={handleClose}
+      isOpen={isOpen}
+      body={moduleBodyContent}
+      title={title}
+      handleClose={handleClose}
     />
   );
 }

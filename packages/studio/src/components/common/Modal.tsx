@@ -30,7 +30,7 @@ export default function Modal({
   isOpen,
   title,
   body,
-  handleClose
+  handleClose,
 }: ModalProps) {
   return (
     <ReactModal
