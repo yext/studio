@@ -1,4 +1,3 @@
-import { useCallback } from "react";
 import { version } from "../../package.json";
 import { ReactComponent as Info } from "../icons/info.svg";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
@@ -12,24 +11,21 @@ const body = (
   </div>
 );
 
+const renderModal: renderModalFunction = (isOpen, handleClose) => {
+  return (
+    <Modal
+      isOpen={isOpen}
+      body={body}
+      title="Studio Info"
+      handleClose={handleClose}
+    />
+  );
+}
+
 /**
  * Renders the current version number
  */
 export default function VersionNumber() {
-  const renderModal: renderModalFunction = useCallback(
-    (isOpen, handleClose) => {
-      return (
-        <Modal
-          isOpen={isOpen}
-          body={body}
-          title="Studio Info"
-          handleClose={handleClose}
-        />
-      );
-    },
-    []
-  );
-
   return (
     <ButtonWithModal
       buttonContent={infoSVG}
