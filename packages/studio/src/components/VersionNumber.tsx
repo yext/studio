@@ -20,7 +20,7 @@ const renderModal: renderModalFunction = (isOpen, handleClose) => {
       handleClose={handleClose}
     />
   );
-}
+};
 
 /**
  * Renders the current version number
