@@ -21,11 +21,11 @@ export default function ActionsBar(): JSX.Element {
       <div className="ml-auto">
         <InfoButton />
       </div>
-        {!studioInCBD &&
-        <div className="ml-4">
-          <OpenLivePreviewButton />
-        </div>
-        }
+      {!studioInCBD &&
+      <div className="ml-4">
+        <OpenLivePreviewButton />
+      </div>
+      }
       <div className="ml-2 flex items-center">
         <div className="mr-2">
           <ViewportButton />
