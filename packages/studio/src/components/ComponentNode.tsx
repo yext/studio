@@ -33,19 +33,15 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const [
     activeComponentUUID,
     updateActiveComponent,
-    getFirstSelectedComponentUUID,
+    firstSelectedComponentUUID,
     selectedComponentUUIDs,
-    addSelectedComponentUUID,
-    clearSelectedComponents,
     addShiftSelectedComponentUUIDs,
   ] = useStudioStore((store) => {
     return [
       store.pages.activeComponentUUID,
       store.pages.updateActiveComponent,
-      store.pages.getFirstSelectedComponentUUID,
+      store.pages.getFirstSelectedComponentUUID(),
       store.pages.selectedComponentUUIDs,
-      store.pages.addSelectedComponentUUID,
-      store.pages.clearSelectedComponents,
       store.pages.addShiftSelectedComponentUUIDs,
     ];
   });
@@ -60,20 +56,16 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
 
   const handleClick = useCallback(
     (event: MouseEvent<HTMLDivElement>) => {
-      clearSelectedComponents();
       if (event.shiftKey && activeComponentUUID) {
         addShiftSelectedComponentUUIDs(componentState);
       } else {
         updateActiveComponent(componentState.uuid);
-        addSelectedComponentUUID(componentState.uuid);
       }
     },
     [
       componentState,
       activeComponentUUID,
       updateActiveComponent,
-      addSelectedComponentUUID,
-      clearSelectedComponents,
       addShiftSelectedComponentUUIDs,
     ]
   );
@@ -100,7 +92,6 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   }, [componentState.uuid, isOpen, onToggle]);
 
   const handleKeyDown = useDeleteKeyListener(isSelectedComponent);
-  const firstSelectedComponentUUID = getFirstSelectedComponentUUID();
 
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>

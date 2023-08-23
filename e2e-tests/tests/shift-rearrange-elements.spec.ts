@@ -10,6 +10,9 @@ const expectedPage = fs.readFileSync(
 studioTest(
   "can rearrange multiple elements in tree using shift",
   async ({ page, studioPage }) => {
+    await page.getByText("Insert").click();
+    await page.getByText("Footer").click();
+
     const container = page.getByText("Container");
     const banner = page.getByText("Banner");
     const div = page.getByRole("list").filter({ hasText: "div" });

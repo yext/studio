@@ -78,7 +78,6 @@ describe("PageSlice: page component actions", () => {
       selectedComponent: ComponentState,
       expectedUUIDSelection: Set<string>
     ) {
-      store().pages.clearSelectedComponents();
       store().pages.updateActiveComponent(activeUUID);
       store().pages.addShiftSelectedComponentUUIDs(selectedComponent);
       const selectedComponentUUIDs = store().pages.selectedComponentUUIDs;

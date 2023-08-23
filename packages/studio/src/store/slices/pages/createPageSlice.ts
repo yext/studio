@@ -132,7 +132,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       }
 
       get().updateActiveComponent(undefined);
-      get().clearSelectedComponents();
       set({ activePageName });
     },
     getActivePageState: () => {
@@ -217,11 +216,6 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
       } = get();
       const activePageState = getActivePageState();
       const componentTree = activePageState?.componentTree;
-      if (selectedUUID === activeComponentUUID) {
-        clearSelectedComponents();
-        addSelectedComponentUUID(selectedUUID);
-        return;
-      }
       if (!componentTree) {
         throw new Error(
           `Error selecting components: component tree is undefined.`
@@ -232,13 +226,17 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
           `Error selecting components: active component is undefined.`
         );
       }
+      clearSelectedComponents();
+      if (selectedUUID === activeComponentUUID) {
+        addSelectedComponentUUID(selectedUUID);
+        return;
+      }
 
       const lowestParentUUID = ComponentTreeHelpers.getLowestParentUUID(
         selectedUUID,
         activeComponentUUID,
         componentTree
       );
-
       let selecting = false;
       ComponentTreeHelpers.mapComponentTreeParentsFirst(componentTree, (c) => {
         const atTarget =

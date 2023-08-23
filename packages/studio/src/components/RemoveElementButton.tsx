@@ -16,13 +16,11 @@ export default function RemoveElementButton({
 }: RemoveElementButtonProps): JSX.Element | null {
   const [
     removeComponent,
-    clearSelectedComponents,
     activeComponentUUID,
     selectedComponentUUIDs,
   ] = useStudioStore((store) => {
     return [
       store.actions.removeComponent,
-      store.pages.clearSelectedComponents,
       store.pages.activeComponentUUID,
       store.pages.selectedComponentUUIDs,
     ];
@@ -32,13 +30,11 @@ export default function RemoveElementButton({
     if (elementUUID !== activeComponentUUID) removeComponent(elementUUID);
     else {
       selectedComponentUUIDs.forEach((uuid) => removeComponent(uuid));
-      clearSelectedComponents();
     }
   }, [
     elementUUID,
     activeComponentUUID,
     removeComponent,
-    clearSelectedComponents,
     selectedComponentUUIDs,
   ]);
 
