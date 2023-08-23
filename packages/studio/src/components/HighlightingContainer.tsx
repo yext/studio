@@ -119,9 +119,6 @@ class HighlightingClass extends Component<HighlightingProps> {
       this.props.addSelectedComponentRect(this.props.uuid, rect);
     }
     this.attachListenerToChild();
-    if (this.props.uuid === this.props.activeComponentUUID) {
-      this.highlightSelf();
-    }
   }
 
   componentWillUnmount(): void {
