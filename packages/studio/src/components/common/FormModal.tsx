@@ -1,6 +1,6 @@
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { Tooltip } from "react-tooltip";
-import Modal from "./Modal";
+import DialogModal from "./DialogModal";
 
 type Form = {
   [field: string]: string;
@@ -115,7 +115,7 @@ export default function FormModal<T extends Form>({
   ]);
 
   return (
-    <Modal
+    <DialogModal
       isOpen={isOpen}
       title={title}
       errorMessage={!isValidForm ? errorMessage : undefined}
