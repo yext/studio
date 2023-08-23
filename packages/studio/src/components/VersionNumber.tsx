@@ -4,6 +4,7 @@ import { ReactComponent as Info } from "../icons/info.svg";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import ReactModal from "react-modal";
 
+const infoSVG = <Info className="h-7" />;
 const customReactModalStyles = {
   content: {
     top: "50%",
@@ -23,8 +24,6 @@ const customReactModalStyles = {
  * Renders the current version number
  */
 export default function VersionNumber() {
-  const infoSVG = <Info className="h-7" />;
-
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
       return (
@@ -47,12 +46,10 @@ export default function VersionNumber() {
   );
 
   return (
-    <>
-      <ButtonWithModal
-        buttonContent={infoSVG}
-        buttonClassName="pt-2"
-        renderModal={renderModal}
-      />
-    </>
+    <ButtonWithModal
+      buttonContent={infoSVG}
+      buttonClassName="pt-2"
+      renderModal={renderModal}
+    />
   );
 }
