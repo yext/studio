@@ -1,4 +1,4 @@
-import Modal from "./common/Modal";
+import DialogModal from "./common/DialogModal";
 import useStudioStore from "../store/useStudioStore";
 import { ReactComponent as X } from "../icons/x.svg";
 import { useCallback } from "react";
@@ -25,7 +25,7 @@ export default function RemovePageButton({
         await handleClose();
       }
       return (
-        <Modal
+        <DialogModal
           isOpen={isOpen}
           title="Delete Page"
           body={<div>Are you sure you want to remove page "{pageName}"?</div>}
