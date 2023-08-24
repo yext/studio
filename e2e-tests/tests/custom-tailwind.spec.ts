@@ -20,3 +20,19 @@ studioTest(
     await expect(studioPage.preview.locator("body")).toHaveScreenshot();
   }
 );
+
+studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
+  await studioPage.removeElement("div");
+  await studioPage.addElement("CustomTailwindButton", "Components", false);
+  await studioPage.setActiveComponent("CustomTailwindButton");
+  const editorSidebar = page.getByTestId("EditorSidebar");
+  await expect(editorSidebar).toHaveScreenshot();
+  const classPicker = editorSidebar.getByRole("button", {
+    name: "Toggle tailwind class picker",
+  });
+  await classPicker.click();
+  await expect(editorSidebar).toHaveScreenshot();
+  await editorSidebar.getByText("bg-primary").click();
+  await expect(editorSidebar).toHaveScreenshot();
+  await expect(studioPage.preview.locator("body")).toHaveScreenshot();
+});

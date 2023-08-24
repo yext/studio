@@ -71,9 +71,15 @@ export default function TailwindPropInput({
   const pillContainerClass = classNames(
     "flex flex-wrap items-center border border-gray-300 focus:border-indigo-500 rounded-lg pt-2 pb-1 pl-2 pr-2 w-full",
     {
-      "opacity-50": !!disabled,
+      "opacity-50": !!disabled || !availableClasses,
     }
   );
+
+  if (availableClasses === undefined) {
+    return (
+      <div className={pillContainerClass}>No custom tailwind config found.</div>
+    );
+  }
 
   return (
     <div className="relative" ref={ref}>
