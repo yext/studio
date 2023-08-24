@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
       - uses: ./.github/setup-acceptance
 
-      - run: npm run playwright -- --shard=${{ matrix.shard }}/4
+      - run: npm run update-snapshots -- --shard=${{ matrix.shard }}/4
         working-directory: e2e-tests
 
       - uses: actions/upload-artifact@v3
@@ -30,12 +30,11 @@ jobs:
           path: ./e2e-tests/playwright-report/
           retention-days: 30
 
-      # This step will commit any new snapshots that weren't taken locally.
-      - name: Commit New Snapshots
+      - name: Commit Updated Snapshots
         uses: EndBug/add-and-commit@v9
-        if: ${{ failure() && github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' }}
         with:
-          message: New snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 4
+          message: Updated snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 4
           add: e2e-tests/__screenshots__/*.png
           push: true
           pull: --rebase --autostash
