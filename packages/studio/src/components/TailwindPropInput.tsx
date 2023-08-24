@@ -6,7 +6,7 @@ import { ReactComponent as X } from "../icons/x.svg";
 import { useRootClose } from "@restart/ui";
 import classNames from "classnames";
 
-const safelistPromise: Promise<string[] | undefined> = import(
+const customClassesPromise: Promise<string[] | undefined> = import(
   "@pathToUserProjectRoot/tailwind.config"
 )
   .then((module) => {
@@ -30,15 +30,16 @@ export default function TailwindPropInput({
   value,
   disabled,
 }: Props) {
-  const safelist = useAwaitedSafelist(value);
+  const availableClasses = useAvailableTailwindClasses(value);
+  const hasAvailableClasses = !!availableClasses?.length;
   const ref = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (isOpen && !safelist?.length) {
+    if (isOpen && !hasAvailableClasses) {
       setIsOpen(false);
     }
-  }, [isOpen, safelist?.length]);
+  }, [isOpen, hasAvailableClasses]);
 
   useRootClose(ref, () => {
     setIsOpen(false);
@@ -67,7 +68,6 @@ export default function TailwindPropInput({
     [onChange, value]
   );
 
-  const hasUnusedClasses = !!safelist?.length;
   const pillContainerClass = classNames(
     "flex flex-wrap items-center border border-gray-300 focus:border-indigo-500 rounded-lg pt-2 pb-1 pl-2 pr-2 w-full",
     {
@@ -87,7 +87,7 @@ export default function TailwindPropInput({
             />
           );
         })}
-        {hasUnusedClasses && (
+        {hasAvailableClasses && (
           <EmbedIcon
             className="mb-0.5"
             role="button"
@@ -97,8 +97,8 @@ export default function TailwindPropInput({
         )}
       </div>
       {isOpen &&
-        hasUnusedClasses &&
-        renderDropdown(safelist, value, addTailwindClass)}
+        hasAvailableClasses &&
+        renderDropdown(availableClasses, addTailwindClass)}
     </div>
   );
 }
@@ -129,15 +129,14 @@ function TailwindClassPill(props: {
 }
 
 function renderDropdown(
-  safelist: string[],
-  value: string,
+  availableClasses: string[],
   addTailwindClass: (val: string) => void
 ) {
   return (
     <ul className="absolute w-max bg-white mt-2 rounded border shadow-2xl z-10 opacity-100">
-      {safelist.map((tailwindClass) => {
+      {availableClasses.map((tailwindClass) => {
         return (
-          <SafelistItem
+          <DropdownItem
             key={tailwindClass}
             addTailwindClass={addTailwindClass}
             tailwindClass={tailwindClass}
@@ -148,7 +147,7 @@ function renderDropdown(
   );
 }
 
-function SafelistItem(props: {
+function DropdownItem(props: {
   tailwindClass: string;
   addTailwindClass: (val: string) => void;
 }) {
@@ -167,21 +166,24 @@ function SafelistItem(props: {
   );
 }
 
-function useAwaitedSafelist(value: string) {
-  const [safelist, setSafelist] = useState<string[] | undefined>();
+function useAvailableTailwindClasses(value: string) {
+  const [availableClasses, setAvailableClasses] = useState<
+    string[] | undefined
+  >();
 
   useEffect(() => {
-    if (safelist) {
+    if (availableClasses) {
       return;
     }
-    const updateSafelist = async () => {
-      setSafelist(await safelistPromise);
+    const updateAvailableClasses = async () => {
+      const customClasses = await customClassesPromise;
+      const availableClasses = customClasses?.filter(
+        (tailwindClass) => !value.includes(tailwindClass)
+      );
+      setAvailableClasses(availableClasses);
     };
-    void updateSafelist();
-  }, [safelist]);
+    void updateAvailableClasses();
+  }, [availableClasses, value]);
 
-  const filteredSafelist = safelist?.filter(
-    (tailwindClass) => !value.includes(tailwindClass)
-  );
-  return filteredSafelist;
+  return availableClasses;
 }
