@@ -95,7 +95,7 @@ export default function TailwindPropInput({
         })}
         {hasAvailableClasses && (
           <EmbedIcon
-            className="mb-0.5 ml-auto hover:opacity-75"
+            className="mb-1 ml-auto hover:opacity-75"
             role="button"
             aria-label="Toggle tailwind class picker"
             onClick={toggleOpen}
