@@ -33,7 +33,7 @@ export default async function createStudioPlugin(
   );
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
-  
+
   if (!process.env.YEXT_CBD_BRANCH) {
     const pagesDevPortPromise = studioConfig.isPagesJSRepo
       ? startPagesDevelopmentServer()
