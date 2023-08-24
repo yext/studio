@@ -60,7 +60,7 @@ describe("verifying canPush calculation", () => {
       canPush: {
         status: false,
         reason: "No remotes found.",
-      }
+      },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -84,7 +84,7 @@ describe("verifying canPush calculation", () => {
       canPush: {
         status: false,
         reason: "Multiple remotes found.",
-      }
+      },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -98,7 +98,7 @@ describe("verifying canPush calculation", () => {
       canPush: {
         status: false,
         reason: "No upstream branch found",
-      }
+      },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -113,7 +113,7 @@ describe("verifying canPush calculation", () => {
       canPush: {
         status: false,
         reason: "No changes to push.",
-      }
+      },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
@@ -127,7 +127,7 @@ describe("verifying canPush calculation", () => {
     const expectedData: GitData = {
       canPush: {
         status: true,
-      }
+      },
     };
     expect(gitWrapper.getStoredData()).toEqual(expectedData);
   });
