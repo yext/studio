@@ -43,23 +43,6 @@ export default async function createStudioPlugin(
     })
   );
   await gitWrapper.setup();
-  const studioInCBD = gitWrapper.getStoredData()?.isWithinCBD ?? true;
-
-  if (!studioInCBD) {
-    const pagesDevPortPromise = studioConfig.isPagesJSRepo
-      ? startPagesDevelopmentServer()
-      : null;
-
-    await pagesDevPortPromise?.then((port) => {
-      if (!port) {
-        throw new Error("No port found for PagesJS.");
-      }
-      console.log("PagesJS running on port:", port);
-      process.on("exit", () => {
-        execSync(`npx kill-port ${port}`);
-      });
-    });
-  }
 
   /** The ts-morph Project instance for the entire app. */
   const tsMorphProject = createTsMorphProject();
@@ -75,6 +58,23 @@ export default async function createStudioPlugin(
     studioConfig.paths,
     new FileSystemWriter(orchestrator, tsMorphProject)
   );
+  const isWithinCBD = orchestrator.getStudioData().isWithinCBD;
+
+  if (!isWithinCBD) {
+    const pagesDevPortPromise = studioConfig.isPagesJSRepo
+      ? startPagesDevelopmentServer()
+      : null;
+
+    await pagesDevPortPromise?.then((port) => {
+      if (!port) {
+        throw new Error("No port found for PagesJS.");
+      }
+      console.log("PagesJS running on port:", port);
+      process.on("exit", () => {
+        execSync(`npx kill-port ${port}`);
+      });
+    });
+  }
 
   return {
     name: "yext-studio-vite-plugin",
@@ -103,7 +103,8 @@ export default async function createStudioPlugin(
       const studioViteOptions = getStudioViteOptions(
         args,
         studioConfig,
-        pathToUserProjectRoot
+        pathToUserProjectRoot,
+        isWithinCBD
       );
       return lodash.merge({}, config, studioViteOptions);
     },

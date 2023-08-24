@@ -13,7 +13,7 @@ import useStudioStore from "../store/useStudioStore";
  */
 export default function ActionsBar(): JSX.Element {
   const studioInCBD = useStudioStore(
-    (store) => store.studioGitData.isWithinCBD
+    (store) => store.studioEnvData.isWithinCBD
   );
   return (
     <div className="flex bg-gray-100 py-3 items-center px-4">

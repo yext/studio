@@ -3,5 +3,4 @@ export interface GitData {
     status: boolean;
     reason?: string;
   };
-  isWithinCBD: boolean;
 }

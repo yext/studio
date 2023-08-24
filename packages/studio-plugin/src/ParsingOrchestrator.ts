@@ -168,6 +168,7 @@ export default class ParsingOrchestrator {
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
       studioConfig: this.studioConfig,
+      isWithinCBD: !process.env.YEXT_CBD_BRANCH
     };
   }
 
