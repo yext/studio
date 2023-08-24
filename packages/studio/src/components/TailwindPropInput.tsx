@@ -179,7 +179,7 @@ function useAvailableTailwindClasses(value: string) {
     if (customClasses) {
       return;
     }
-    void customClassesPromise.then(setCustomClasses)
+    void customClassesPromise.then(setCustomClasses);
   }, [customClasses]);
 
   return customClasses?.filter(
