@@ -1,5 +1,6 @@
 import { expect } from "@playwright/test";
 import { studioTest } from "./infra/studioTest.js";
+import fs from "fs";
 
 studioTest.use({
   tailwindConfigPath: "tests/__fixtures__/tailwind.config.ts",
@@ -21,6 +22,10 @@ studioTest(
   }
 );
 
+const expectedPageContents = `export default function BasicPage() {
+  return <CustomTailwindButton className="bg-primary" />;
+}`;
+
 studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
   await studioPage.removeElement("div");
   await studioPage.addElement("CustomTailwindButton", "Components", false);
@@ -35,4 +40,10 @@ studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
   await editorSidebar.getByText("bg-primary").click();
   await expect(editorSidebar).toHaveScreenshot();
   await expect(studioPage.preview.locator("body")).toHaveScreenshot();
+  await studioPage.saveButton.click();
+  const pagePath = studioPage.getPagePath("BasicPage");
+  const hasExpectedPageContents = fs
+    .readFileSync(pagePath, "utf-8")
+    .includes(expectedPageContents);
+  expect(hasExpectedPageContents).toBeTruthy();
 });
