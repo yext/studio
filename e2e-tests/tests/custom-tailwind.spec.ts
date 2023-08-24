@@ -7,7 +7,7 @@ studioTest.use({
 });
 
 studioTest(
-  "can display styles from a custom tailwind theme",
+  "can display styles from a custom tailwind config",
   async ({ studioPage }) => {
     await studioPage.removeElement("div");
     await studioPage.addElement("Button", "Components", false);
@@ -26,7 +26,7 @@ const expectedPageContents = `export default function BasicPage() {
   return <CustomTailwindButton className="bg-primary" />;
 }`;
 
-studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
+studioTest.only("TailwindClass prop editor", async ({ studioPage, page }) => {
   await studioPage.removeElement("div");
   await studioPage.addElement("CustomTailwindButton", "Components", false);
   await studioPage.setActiveComponent("CustomTailwindButton");

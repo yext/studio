@@ -69,7 +69,7 @@ export default function TailwindPropInput({
   );
 
   const pillContainerClass = classNames(
-    "flex flex-wrap items-center border border-gray-300 focus:border-indigo-500 rounded-lg pt-2 pb-1 pl-2 pr-2 w-full",
+    "flex flex-wrap items-center border border-gray-300 min-w-[150px] focus:border-indigo-500 rounded-lg pt-2 pb-1 pl-2 pr-2 w-full",
     {
       "opacity-50": !!disabled || !availableClasses,
     }
@@ -95,7 +95,7 @@ export default function TailwindPropInput({
         })}
         {hasAvailableClasses && (
           <EmbedIcon
-            className="mb-0.5"
+            className="mb-0.5 ml-auto hover:opacity-75"
             role="button"
             aria-label="Toggle tailwind class picker"
             onClick={toggleOpen}
@@ -139,7 +139,7 @@ function renderDropdown(
   addTailwindClass: (val: string) => void
 ) {
   return (
-    <ul className="absolute w-max bg-white mt-2 rounded border shadow-2xl z-10 opacity-100">
+    <ul className="absolute w-max bg-white right-0 rounded border shadow-2xl z-10 opacity-100">
       {availableClasses.map((tailwindClass) => {
         return (
           <DropdownItem
@@ -173,23 +173,16 @@ function DropdownItem(props: {
 }
 
 function useAvailableTailwindClasses(value: string) {
-  const [availableClasses, setAvailableClasses] = useState<
-    string[] | undefined
-  >();
+  const [customClasses, setCustomClasses] = useState<string[]>();
 
   useEffect(() => {
-    if (availableClasses) {
+    if (customClasses) {
       return;
     }
-    const updateAvailableClasses = async () => {
-      const customClasses = await customClassesPromise;
-      const availableClasses = customClasses?.filter(
-        (tailwindClass) => !value.includes(tailwindClass)
-      );
-      setAvailableClasses(availableClasses);
-    };
-    void updateAvailableClasses();
-  }, [availableClasses, value]);
+    void customClassesPromise.then(setCustomClasses)
+  }, [customClasses]);
 
-  return availableClasses;
+  return customClasses?.filter(
+    (tailwindClass) => !value.includes(tailwindClass)
+  );
 }

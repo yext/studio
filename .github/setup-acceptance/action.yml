@@ -1,0 +1,19 @@
+name: Setup Acceptance
+
+runs:
+  using: composite
+  steps:
+    - uses: ./.github/setup-ci
+    - run: npm run build -w=packages/studio-plugin
+    - run: npm run build -w=packages/studio
+    - uses: actions/cache@v3
+      with:
+        path: |
+          ~/Library/Caches/ms-playwright
+          C:\Users\runneradmin\AppData\Local\ms-playwright\
+        key: playwright-browsers_${{ runner.os }}-${{ hashFiles('node_modules/@playwright/test/package.json') }}
+    - run: npx playwright install
+    - run: npm i
+    - run: |
+        git config --global user.name "Playwright Job ${{ matrix.os }} ${{ matrix.shard }}"
+        git config --global user.email "slapshot@yext.com"
