@@ -41,12 +41,6 @@ type NonUnionPropType<T> = {
   unionValues?: never;
 };
 
-type TailwindClassPropType = {
-  type: PropValueType.TailwindClass;
-  unionValues?: never;
-  customClasses?: string[];
-};
-
 export type RecordPropType = {
   type: PropValueType.Record;
   // Only Record<string, any> is supported.
@@ -69,5 +63,10 @@ export type ObjectPropType<T extends PropValueType = PropValueType> = {
 export type ArrayPropType = {
   type: PropValueType.Array;
   itemType: PropType;
+  unionValues?: never;
+};
+
+type TailwindClassPropType = {
+  type: PropValueType.TailwindClass;
   unionValues?: never;
 };

@@ -8,10 +8,16 @@ import classNames from "classnames";
 
 const safelistPromise: Promise<string[] | undefined> = import(
   "@pathToUserProjectRoot/tailwind.config"
-).then((module) => {
-  const theme: StudioTailwindTheme | undefined = module.default?.theme?.extend;
-  return theme && generateTailwindSafelist(theme);
-});
+)
+  .then((module) => {
+    const theme: StudioTailwindTheme | undefined =
+      module.default?.theme?.extend;
+    return theme && generateTailwindSafelist(theme);
+  })
+  .catch((e) => {
+    console.error(e);
+    return undefined;
+  });
 
 interface Props {
   onChange: (value: string) => void;
@@ -38,7 +44,7 @@ export default function TailwindPropInput({
     setIsOpen(false);
   });
 
-  const toggleOpen = useCallback(() => setIsOpen(!isOpen), [isOpen]);
+  const toggleOpen = useCallback(() => setIsOpen((isOpen) => !isOpen), []);
   const addTailwindClass = useCallback(
     (tailwindClass: string) => {
       setIsOpen(false);

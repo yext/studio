@@ -29,7 +29,10 @@ export type LiteralProp<T = PropValues> = {
 export type ExpressionProp =
   | {
       kind: PropValueKind.Expression;
-      valueType: Exclude<PropValueType, PropValueType.Object>;
+      valueType: Exclude<
+        PropValueType,
+        PropValueType.Object | PropValueType.TailwindClass
+      >;
       value: string;
     }
   | RecordProp;
