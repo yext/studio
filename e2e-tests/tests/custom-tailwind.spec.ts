@@ -26,7 +26,7 @@ const expectedPageContents = `export default function BasicPage() {
   return <CustomTailwindButton className="bg-primary" />;
 }`;
 
-studioTest.only("TailwindClass prop editor", async ({ studioPage, page }) => {
+studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
   await studioPage.removeElement("div");
   await studioPage.addElement("CustomTailwindButton", "Components", false);
   await studioPage.setActiveComponent("CustomTailwindButton");
