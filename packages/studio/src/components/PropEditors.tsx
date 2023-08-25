@@ -8,7 +8,7 @@ import {
 } from "@yext/studio-plugin";
 import PropEditor from "./PropEditor";
 import PropValueHelpers from "../utils/PropValueHelpers";
-import { Fragment, useCallback } from "react";
+import { useCallback } from "react";
 import ObjectPropEditor from "./ObjectPropEditor";
 import classNames from "classnames";
 import ArrayPropEditor from "./ArrayPropEditor";
@@ -61,7 +61,7 @@ export default function PropEditors(props: {
           </div>
         );
       }
-      return <Fragment key={propName}>{editor}</Fragment>;
+      return <div key={propName}>{editor}</div>;
     }
   );
 

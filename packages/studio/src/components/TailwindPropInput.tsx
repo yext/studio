@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import generateTailwindSafelist from "../utils/generateTailwindSafelist";
 import { StudioTailwindTheme } from "@yext/studio-plugin";
 import { ReactComponent as EmbedIcon } from "../icons/embed.svg";
@@ -69,7 +69,7 @@ export default function TailwindPropInput({
   );
 
   const pillContainerClass = classNames(
-    "flex flex-wrap items-center border border-gray-300 min-w-[150px] focus:border-indigo-500 rounded-lg pt-2 pb-1 pl-2 pr-2 w-full",
+    "flex flex-wrap items-center border border-gray-300 focus:border-indigo-500 rounded-lg pt-2 pb-1 pl-2 pr-2 w-full",
     {
       "opacity-50": !!disabled || !availableClasses,
     }
@@ -82,7 +82,7 @@ export default function TailwindPropInput({
   }
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="flex flex-col">
       <div className={pillContainerClass}>
         {splitValue(value).map((tailwindClass) => {
           return (
@@ -104,7 +104,7 @@ export default function TailwindPropInput({
       </div>
       {isOpen &&
         hasAvailableClasses &&
-        renderDropdown(availableClasses, addTailwindClass)}
+        renderDropdown(availableClasses, addTailwindClass, ref)}
     </div>
   );
 }
@@ -136,20 +136,23 @@ function TailwindClassPill(props: {
 
 function renderDropdown(
   availableClasses: string[],
-  addTailwindClass: (val: string) => void
+  addTailwindClass: (val: string) => void,
+  ref: RefObject<HTMLDivElement>
 ) {
   return (
-    <ul className="absolute w-max bg-white right-0 rounded border shadow-2xl z-10 opacity-100">
-      {availableClasses.map((tailwindClass) => {
-        return (
-          <DropdownItem
-            key={tailwindClass}
-            addTailwindClass={addTailwindClass}
-            tailwindClass={tailwindClass}
-          />
-        );
-      })}
-    </ul>
+    <div className="relative" ref={ref}>
+      <ul className="absolute w-max bg-white right-0 rounded border shadow-2xl z-10 opacity-100">
+        {availableClasses.map((tailwindClass) => {
+          return (
+            <DropdownItem
+              key={tailwindClass}
+              addTailwindClass={addTailwindClass}
+              tailwindClass={tailwindClass}
+            />
+          );
+        })}
+      </ul>
+    </div>
   );
 }
 
