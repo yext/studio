@@ -4,14 +4,15 @@ import { StudioConfigWithDefaulting } from "../types";
 export default function getStudioViteOptions(
   args: ConfigEnv,
   studioConfig: StudioConfigWithDefaulting,
-  pathToUserProjectRoot: string
+  pathToUserProjectRoot: string,
+  isWithinCBD: boolean
 ): UserConfig {
   const serverOptions: ServerOptions = {
     port: studioConfig.port,
     open:
       args.mode === "development" &&
       args.command === "serve" &&
-      !process.env.YEXT_CBD_BRANCH &&
+      !isWithinCBD &&
       studioConfig.openBrowser,
     watch: {
       ignored: pathToUserProjectRoot,
