@@ -32,7 +32,7 @@ export default function ActiveComponentPropEditors(props: {
 
   const propValues = activeComponentState.props;
   return (
-    <div className="overflow-x-auto flex flex-col">
+    <div className="overflow-x-auto flex flex-col grow">
       <PropEditors
         propShape={filteredPropShape}
         propValues={propValues}
