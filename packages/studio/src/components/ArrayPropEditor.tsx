@@ -58,7 +58,7 @@ export default function ArrayPropEditor({
     [onChange]
   );
 
-  const containerClasses = classNames("flex text-sm", {
+  const containerClasses = classNames("flex grow text-sm", {
     "mb-2": !isNested,
   });
 
@@ -69,7 +69,7 @@ export default function ArrayPropEditor({
   return (
     <div className={containerClasses}>
       {isNested && renderBranchUI()}
-      <div className="flex flex-col">
+      <div className="flex grow flex-col">
         <label className="flex-col items-center">
           <p className="pr-2 pb-1 font-semibold" id={propTooltipId}>
             {propName}

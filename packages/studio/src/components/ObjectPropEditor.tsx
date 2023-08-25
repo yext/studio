@@ -35,7 +35,7 @@ export default function ObjectPropEditor(props: {
   );
   const isUndefinedValue = propValues === undefined;
 
-  const containerClasses = classNames("flex", {
+  const containerClasses = classNames("flex grow", {
     "mb-2": !isNested,
   });
 
@@ -45,7 +45,7 @@ export default function ObjectPropEditor(props: {
   return (
     <div className={containerClasses}>
       {isNested && renderBranchUI()}
-      <div>
+      <div className="flex-grow">
         <span
           className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap"
           id={propTooltipId}

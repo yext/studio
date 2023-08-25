@@ -33,13 +33,11 @@ export default function PropsPanel(): JSX.Element | null {
           <Divider />
         </>
       )}
-      <div className="grow flex flex-col">
-        <ActiveComponentPropEditors
-          activeComponentState={extractedComponentState}
-          propShape={propShape}
-        />
-        <RepeaterPanel />
-      </div>
+      <ActiveComponentPropEditors
+        activeComponentState={extractedComponentState}
+        propShape={propShape}
+      />
+      <RepeaterPanel />
     </>
   );
 }
