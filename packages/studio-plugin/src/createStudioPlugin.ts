@@ -14,10 +14,9 @@ import { readdirSync, existsSync, lstatSync } from "fs";
 import upath from "upath";
 import lodash from "lodash";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
-import { startPagesDevelopmentServer } from "./startPagesDevelopmentServer";
 import LocalDataMappingManager from "./LocalDataMappingManager";
-import { execSync } from "node:child_process";
 import getStudioViteOptions from "./viteconfig/getStudioViteOptions";
+import { createDevServer } from "@yext/pages";
 
 /**
  * Handles server-client communication.
@@ -33,9 +32,11 @@ export default async function createStudioPlugin(
   );
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
-  const pagesDevPortPromise = studioConfig.isPagesJSRepo
-    ? startPagesDevelopmentServer()
-    : null;
+  const shouldSpawnPagesDevServer =
+    !process.env.YEXT_CBD_BRANCH && studioConfig.isPagesJSRepo;
+  const pagesDevPortPromise =
+    shouldSpawnPagesDevServer && createDevServer(false, false, 5173);
+
   const gitWrapper = new GitWrapper(
     simpleGit({
       baseDir: pathToUserProjectRoot,
@@ -62,16 +63,7 @@ export default async function createStudioPlugin(
     new FileSystemWriter(orchestrator, tsMorphProject)
   );
 
-  await pagesDevPortPromise?.then((port) => {
-    if (!port) {
-      throw new Error("No port found for PagesJS.");
-    }
-    console.log("PagesJS running on port:", port);
-    process.on("exit", () => {
-      execSync(`npx kill-port ${port}`);
-    });
-  });
-
+  await pagesDevPortPromise;
   return {
     name: "yext-studio-vite-plugin",
     buildStart() {
@@ -99,7 +91,8 @@ export default async function createStudioPlugin(
       const studioViteOptions = getStudioViteOptions(
         args,
         studioConfig,
-        pathToUserProjectRoot
+        pathToUserProjectRoot,
+        orchestrator.getStudioData().isWithinCBD
       );
       return lodash.merge({}, config, studioViteOptions);
     },

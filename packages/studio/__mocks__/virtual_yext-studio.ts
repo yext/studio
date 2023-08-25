@@ -18,5 +18,6 @@ const mockStudioData: StudioData = {
     isPagesJSRepo: false,
     port: 8080,
   },
+  isWithinCBD: false,
 };
 export default mockStudioData;

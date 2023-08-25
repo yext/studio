@@ -26,11 +26,5 @@ const renderModal: renderModalFunction = (isOpen, handleClose) => {
  * Renders an info modal including the current Studio version
  */
 export default function InfoButton() {
-  return (
-    <ButtonWithModal
-      buttonContent={infoSVG}
-      buttonClassName="pt-2"
-      renderModal={renderModal}
-    />
-  );
+  return <ButtonWithModal buttonContent={infoSVG} renderModal={renderModal} />;
 }
