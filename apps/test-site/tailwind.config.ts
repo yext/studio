@@ -1,4 +1,4 @@
-import type { StudioTailwindConfig } from "@yext/studio-plugin";
+import type { StudioTailwindConfig } from "@yext/studio";
 
 export default {
   content: ["./src/**/*.{ts,tsx}"],
