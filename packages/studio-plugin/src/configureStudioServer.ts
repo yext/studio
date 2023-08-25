@@ -23,7 +23,7 @@ export default function createConfigureStudioServer(
   localDataMappingManager: LocalDataMappingManager | undefined,
   pathToUserProjectRoot: string,
   userPaths: UserPaths,
-  managementApiService: ManagementApiService | undefined
+  managementApiService?: ManagementApiService | undefined
 ) {
   /**
    * Sets up websocket listeners.

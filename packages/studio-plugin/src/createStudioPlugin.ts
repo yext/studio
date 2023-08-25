@@ -17,7 +17,6 @@ import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import LocalDataMappingManager from "./LocalDataMappingManager";
 import getStudioViteOptions from "./viteconfig/getStudioViteOptions";
 import { createDevServer } from "@yext/pages";
-import ManagementApiService from "./http/ManagementApiService";
 
 /**
  * Handles server-client communication.
@@ -54,11 +53,6 @@ export default async function createStudioPlugin(
   const localDataMappingManager = studioConfig.isPagesJSRepo
     ? new LocalDataMappingManager(studioConfig.paths.localData)
     : undefined;
-  // TODO: Remove false-gate and pass real API key once we get it
-  const managementApiService =
-    false && studioConfig.isPagesJSRepo
-      ? new ManagementApiService("apiKey")
-      : undefined;
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     studioConfig,
@@ -120,8 +114,7 @@ export default async function createStudioPlugin(
       orchestrator,
       localDataMappingManager,
       pathToUserProjectRoot,
-      studioConfig.paths,
-      managementApiService
+      studioConfig.paths
     ),
   };
 }
