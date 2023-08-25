@@ -78,7 +78,6 @@ export default class GitWrapper {
     const canPush = await this.canPush();
     this.gitData = {
       canPush,
-      isWithinCBD: !!process.env.YEXT_CBD_BRANCH,
     };
   }
 }
