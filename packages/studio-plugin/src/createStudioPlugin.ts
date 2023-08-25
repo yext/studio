@@ -32,11 +32,10 @@ export default async function createStudioPlugin(
   );
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
-
-  if (!process.env.YEXT_CBD_BRANCH && studioConfig.isPagesJSRepo) {
-    process.stdout.write("Pages Development Server ");
-    await createDevServer(false, false, 5173);
-  }
+  const shouldSpawnPagesDevServer = !process.env.YEXT_CBD_BRANCH && studioConfig.isPagesJSRepo;
+  const pagesDevPortPromise = shouldSpawnPagesDevServer 
+    ? createDevServer(false, false, 5173)
+    : null;
 
   const gitWrapper = new GitWrapper(
     simpleGit({
@@ -64,6 +63,7 @@ export default async function createStudioPlugin(
     new FileSystemWriter(orchestrator, tsMorphProject)
   );
 
+  await pagesDevPortPromise;
   return {
     name: "yext-studio-vite-plugin",
     buildStart() {
