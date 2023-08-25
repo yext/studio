@@ -1,20 +1,9 @@
-import {
-  CSSProperties,
-  PropsWithChildren,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { PropsWithChildren, useCallback, useRef, useState } from "react";
 import useRootClose from "@restart/ui/useRootClose";
 import { ReactComponent as EllipsesIcon } from "../icons/ellipses.svg";
 import classNames from "classnames";
 import { PropType, PropVal, PropValueType } from "@yext/studio-plugin";
 import PropValueHelpers from "../utils/PropValueHelpers";
-
-const listStyles: CSSProperties = {
-  minWidth: "130px",
-  left: "-13px",
-};
 
 interface UndefinedMenuButtonProps {
   propType: PropType;
@@ -29,7 +18,7 @@ export default function UndefinedMenuButton({
   children,
 }: PropsWithChildren<UndefinedMenuButtonProps>) {
   const [isOpen, setIsOpen] = useState(false);
-  const menuItemRef = useRef<HTMLLIElement>(null);
+  const menuItemRef = useRef<HTMLDivElement>(null);
 
   useRootClose(menuItemRef, () => setIsOpen(false), { disabled: !isOpen });
 
@@ -69,23 +58,18 @@ export default function UndefinedMenuButton({
           onClick={onButtonClick}
           aria-label="Toggle undefined value menu"
         />
-        {isOpen && (
-          <div className="relative mt-3">
-            <ul
-              className="absolute bg-white rounded border z-10 shadow-2xl text-sm"
-              style={listStyles}
-            >
-              <li
-                ref={menuItemRef}
-                className="flex justify-center cursor-pointer hover:bg-gray-100 px-2 py-1"
-                onClick={onMenuClick}
-              >
-                {undefinedMenuText}
-              </li>
-            </ul>
-          </div>
-        )}
       </div>
+      {isOpen && (
+        <div className="relative mt-12">
+          <div
+            className="absolute bg-white rounded border z-10 shadow-2xl text-sm right-0 cursor-pointer hover:bg-gray-100 px-2 py-1 whitespace-nowrap"
+            onClick={onMenuClick}
+            ref={menuItemRef}
+          >
+            {undefinedMenuText}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
