@@ -34,9 +34,7 @@ export default async function createStudioPlugin(
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
   const shouldSpawnPagesDevServer =
     !process.env.YEXT_CBD_BRANCH && studioConfig.isPagesJSRepo;
-  const pagesDevPortPromise = shouldSpawnPagesDevServer
-    ? createDevServer(false, false, 5173)
-    : null;
+  const pagesDevPortPromise = shouldSpawnPagesDevServer && createDevServer(false, false, 5173);
 
   const gitWrapper = new GitWrapper(
     simpleGit({
