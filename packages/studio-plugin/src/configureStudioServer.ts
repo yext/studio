@@ -8,6 +8,10 @@ import registerGenerateTestData from "./messaging/registerGenerateTestData";
 import LocalDataMappingManager from "./LocalDataMappingManager";
 import HmrManager from "./HmrManager";
 import { UserPaths } from "./types";
+import ManagementApiService from "./http/ManagementApiService";
+import registerGetEntities from "./messaging/registerGetEntities";
+import registerGetSavedFilters from "./messaging/registerGetSavedFilters";
+import registerGetEntityTypes from "./messaging/registerGetEntityTypes";
 
 /**
  * A factory method for our vite plugin's configureServer handler.
@@ -18,7 +22,8 @@ export default function createConfigureStudioServer(
   orchestrator: ParsingOrchestrator,
   localDataMappingManager: LocalDataMappingManager | undefined,
   pathToUserProjectRoot: string,
-  userPaths: UserPaths
+  userPaths: UserPaths,
+  managementApiService: ManagementApiService | undefined
 ) {
   /**
    * Sets up websocket listeners.
@@ -36,5 +41,10 @@ export default function createConfigureStudioServer(
     registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
     localDataMappingManager &&
       registerGenerateTestData(server, localDataMappingManager);
+    if (managementApiService) {
+      registerGetEntities(server, managementApiService);
+      registerGetSavedFilters(server, managementApiService);
+      registerGetEntityTypes(server, managementApiService);
+    }
   };
 }

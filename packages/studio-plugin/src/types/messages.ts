@@ -1,11 +1,16 @@
 import { SiteSettingsValues } from "./SiteSettings";
 import { StudioData } from "./StudioData";
 import { FeaturesJson } from "./PagesJS";
+import { EntitiesRequest, EntitiesResponse } from "../http/types/Entities";
+import { SavedFilterData } from "../http/types/SavedFilters";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
   Deploy = "studio:deploy",
   GenerateTestData = "studio:generateTestData",
+  GetEntities = "studio:getEntities",
+  GetSavedFilters = "studio:getSavedFilters",
+  GetEntityTypes = "studio:getEntityTypes",
 }
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
@@ -34,6 +39,9 @@ export type StudioEventMap = {
   [MessageID.SaveChanges]: SaveChangesPayload;
   [MessageID.Deploy]: SaveChangesPayload;
   [MessageID.GenerateTestData]: GenerateTestDataPayload;
+  [MessageID.GetEntities]: EntitiesRequest;
+  [MessageID.GetSavedFilters]: null;
+  [MessageID.GetEntityTypes]: null;
 };
 
 export enum ResponseType {
@@ -63,4 +71,19 @@ export type ResponseEventMap = {
   [MessageID.GenerateTestData]: (BaseResponse | ErrorResponse) & {
     mappingJson: Record<string, string[]>;
   };
+  [MessageID.GetEntities]:
+    | ErrorResponse
+    | (BaseResponse & {
+        entities: EntitiesResponse;
+      });
+  [MessageID.GetSavedFilters]:
+    | ErrorResponse
+    | (BaseResponse & {
+        savedFilters: SavedFilterData[];
+      });
+  [MessageID.GetEntityTypes]:
+    | ErrorResponse
+    | (BaseResponse & {
+        entityTypes: string[];
+      });
 };
