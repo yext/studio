@@ -9,4 +9,5 @@ export interface StudioData {
   UUIDToFileMetadata: Record<string, FileMetadata>;
   siteSettings?: SiteSettings;
   studioConfig: StudioConfigWithDefaulting;
+  isWithinCBD: boolean;
 }
