@@ -32,8 +32,9 @@ export default async function createStudioPlugin(
   );
   const pathToUserProjectRoot = getProjectRoot(cliArgs);
   const studioConfig = await getStudioConfig(pathToUserProjectRoot, cliArgs);
-  const shouldSpawnPagesDevServer = !process.env.YEXT_CBD_BRANCH && studioConfig.isPagesJSRepo;
-  const pagesDevPortPromise = shouldSpawnPagesDevServer 
+  const shouldSpawnPagesDevServer =
+    !process.env.YEXT_CBD_BRANCH && studioConfig.isPagesJSRepo;
+  const pagesDevPortPromise = shouldSpawnPagesDevServer
     ? createDevServer(false, false, 5173)
     : null;
 
