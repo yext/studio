@@ -1,7 +1,7 @@
 import useStudioStore from "../../../src/store/useStudioStore";
 import { mockPageSliceStates } from "../../__utils__/mockPageSliceState";
 import * as sendMessageModule from "../../../src/messaging/sendMessage";
-import { ResponseType } from "@yext/studio-plugin";
+import { MessageID, ResponseEventMap, ResponseType } from "@yext/studio-plugin";
 
 describe("updateEntityFiles", () => {
   it("updates previously undefined entityFiles", async () => {
@@ -94,12 +94,13 @@ describe("updateEntityFiles", () => {
 
 function mockMessage(mappingJson: Record<string, string[]>, isError = false) {
   jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
-    return new Promise((resolve) =>
-      resolve({
-        msg: "msg",
-        type: isError ? ResponseType.Error : ResponseType.Success,
-        mappingJson,
-      })
+    return new Promise<ResponseEventMap[MessageID.GenerateTestData]>(
+      (resolve) =>
+        resolve({
+          msg: "msg",
+          type: isError ? ResponseType.Error : ResponseType.Success,
+          mappingJson,
+        })
     );
   });
 }
