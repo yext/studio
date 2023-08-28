@@ -35,7 +35,6 @@ type NonUnionPropType<T> = {
     | PropValueType.string
     | PropValueType.Record
     | PropValueType.Array
-    | PropValueType.TailwindClass
   >;
   unionValues?: never;
 };
