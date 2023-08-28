@@ -27,7 +27,6 @@ export default class PropValueHelpers {
       case PropValueType.HexColor:
         return "#FFFFFF";
       case PropValueType.Array:
-        return "";
       case PropValueType.TailwindClass:
         return "";
       default:
