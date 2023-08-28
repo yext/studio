@@ -6,6 +6,7 @@ interface PropInputProps {
   value: number;
   onChange: (value: number | string) => void;
   disabled?: boolean;
+  inputId?: string;
 }
 
 /**
@@ -16,6 +17,7 @@ export default function NumberPropInput({
   value,
   onChange,
   disabled,
+  inputId,
 }: PropInputProps): JSX.Element {
   const handleChangeEvent = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,6 +36,7 @@ export default function NumberPropInput({
       displayValue={value}
       fieldFilter={fieldPickerFilter}
       disabled={disabled}
+      inputId={inputId}
     />
   );
 }

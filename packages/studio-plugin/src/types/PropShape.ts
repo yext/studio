@@ -25,7 +25,6 @@ export type PropType<T extends PropValueType = PropValueType> =
   | ObjectPropType<T>
   | NonUnionPropType<T>
   | StringUnionPropType
-  | TailwindClassPropType
   | (PropValueType.Record extends T ? RecordPropType : never)
   | (PropValueType.Array extends T ? ArrayPropType : never);
 
@@ -63,10 +62,5 @@ export type ObjectPropType<T extends PropValueType = PropValueType> = {
 export type ArrayPropType = {
   type: PropValueType.Array;
   itemType: PropType;
-  unionValues?: never;
-};
-
-type TailwindClassPropType = {
-  type: PropValueType.TailwindClass;
   unionValues?: never;
 };

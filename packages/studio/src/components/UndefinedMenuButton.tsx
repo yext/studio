@@ -42,7 +42,7 @@ export default function UndefinedMenuButton({
         role="button"
         onClick={onButtonClick}
         aria-label="Toggle undefined value menu"
-        className="absolute right-0"
+        className="absolute right-0 top-1"
       />
       {isOpen && (
         <div className="relative mt-12">

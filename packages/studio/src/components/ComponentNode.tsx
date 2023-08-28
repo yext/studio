@@ -79,7 +79,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   return (
     <div className={componentNodeClasses} style={componentNodeStyle}>
       <div
-        className="flex items-center cursor-pointer"
+        className="flex grow items-center cursor-pointer"
         onClick={handleClick}
         onKeyDown={handleKeyDown}
         tabIndex={0}

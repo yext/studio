@@ -64,42 +64,44 @@ export default function ArrayPropEditor({
 
   const propTooltipId = `${uniqueId}-prop-tooltip`;
   const inputTooltipId = `${uniqueId}-input-tooltip`;
+  const inputId = `${uniqueId}-id`;
   const isUndefinedValue = propValue === undefined;
 
   return (
     <div className={containerClasses}>
       {isNested && renderBranchUI()}
       <div className="flex grow flex-col">
-        <label className="flex-col items-center">
+        <label className="flex-col items-center" htmlFor={inputId}>
           <p className="pr-2 pb-1 font-semibold" id={propTooltipId}>
             {propName}
           </p>
-          {propMetadata.tooltip && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={propTooltipId}
-              content={propMetadata.tooltip}
-              place="left"
-            />
-          )}
-          <div id={inputTooltipId}>
-            <FieldPickerInput
-              onInputChange={onExpressionChange}
-              handleFieldSelection={onChange}
-              displayValue={isExpression ? value : ""}
-              fieldFilter={fieldPickerFilter}
-              disabled={!isExpression || isUndefinedValue}
-            />
-          </div>
-          {!isExpression && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={inputTooltipId}
-              content="Disabled while items are present below"
-              place="left"
-            />
-          )}
         </label>
+        {propMetadata.tooltip && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={propTooltipId}
+            content={propMetadata.tooltip}
+            place="left"
+          />
+        )}
+        <div id={inputTooltipId}>
+          <FieldPickerInput
+            onInputChange={onExpressionChange}
+            handleFieldSelection={onChange}
+            displayValue={isExpression ? value : ""}
+            fieldFilter={fieldPickerFilter}
+            disabled={!isExpression || isUndefinedValue}
+            inputId={inputId}
+          />
+        </div>
+        {!isExpression && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={inputTooltipId}
+            content="Disabled while items are present below"
+            place="left"
+          />
+        )}
         {!isUndefinedValue && (
           <LiteralEditor
             value={isExpression ? DEFAULT_ARRAY_LITERAL : value}

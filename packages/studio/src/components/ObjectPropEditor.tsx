@@ -45,7 +45,7 @@ export default function ObjectPropEditor(props: {
   return (
     <div className={containerClasses}>
       {isNested && renderBranchUI()}
-      <div className="flex-grow">
+      <div className="flex flex-col grow">
         <span
           className="text-sm font-semibold mt-0.5 mb-1 whitespace-nowrap"
           id={propTooltipId}
@@ -78,7 +78,7 @@ export default function ObjectPropEditor(props: {
 function renderUndefinedObject() {
   const curlyBrackets = "{}";
   return (
-    <span className="text-sm text-gray-400 pl-2.5 mt-0.5 mb-1">
+    <span className="text-sm text-gray-400 pl-1 mt-0.5 mb-1">
       {curlyBrackets}
     </span>
   );
