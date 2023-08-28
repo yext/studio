@@ -22,7 +22,8 @@ export default function registerGetEntities(
           type: ResponseType.Success,
           entities: response,
         };
-      } catch {
+      } catch (e) {
+        console.error(e);
         return {
           msg: "Error fetching entities.",
           type: ResponseType.Error,

@@ -38,7 +38,7 @@ async function getResponsePayload<T extends MessageID>(
   handler: () => Promise<ResponseEventMap[T]> | ResponseEventMap[T]
 ): Promise<ResponseEventMap[T] | FatalErrorResponse> {
   try {
-    return handler();
+    return await handler();
   } catch (error: unknown) {
     let msg = `Error occurred for event ${messageId}`;
     if (typeof error === "string") {

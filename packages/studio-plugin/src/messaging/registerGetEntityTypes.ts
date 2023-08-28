@@ -18,7 +18,8 @@ export default function registerGetEntityTypes(
         type: ResponseType.Success,
         entityTypes: response,
       };
-    } catch {
+    } catch (e) {
+      console.error(e);
       return {
         msg: "Error fetching entity types.",
         type: ResponseType.Error,

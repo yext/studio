@@ -68,11 +68,11 @@ function addParamsToURL(url: string, params: QueryParams): string {
  * Throws an error if the reponse is malformed or contains any errors.
  */
 function validateApiResponse(apiResponse: ApiResponse) {
-  if (
-    !apiResponse.response ||
-    !apiResponse.meta ||
-    apiResponse.meta.errors?.length > 0
-  ) {
-    throw new Error("Error in API Response");
+  const responseString = JSON.stringify(apiResponse, null, 2);
+  if (!apiResponse.response || !apiResponse.meta) {
+    throw new Error(`Malformed API Response: ${responseString}`);
+  }
+  if (apiResponse.meta.errors?.length > 0) {
+    throw new Error(`Error in API Response: ${responseString}`);
   }
 }

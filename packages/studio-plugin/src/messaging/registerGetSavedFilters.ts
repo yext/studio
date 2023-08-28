@@ -18,7 +18,8 @@ export default function registerGetSavedFilters(
         type: ResponseType.Success,
         savedFilters: response,
       };
-    } catch {
+    } catch (e) {
+      console.error(e);
       return {
         msg: "Error fetching saved filters.",
         type: ResponseType.Error,
