@@ -6,11 +6,10 @@ import ParsingOrchestrator, {
 } from "./ParsingOrchestrator";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
-import { CliArgs, UserPaths } from "./types";
+import { CliArgs } from "./types";
 import createConfigureStudioServer from "./configureStudioServer";
 import GitWrapper from "./git/GitWrapper";
 import VirtualModuleID from "./VirtualModuleID";
-import { readdirSync, existsSync, lstatSync } from "fs";
 import upath from "upath";
 import lodash from "lodash";
 import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
@@ -66,27 +65,6 @@ export default async function createStudioPlugin(
   await pagesDevPortPromise;
   return {
     name: "yext-studio-vite-plugin",
-    buildStart() {
-      const watchDir = (dirPath: string) => {
-        if (existsSync(dirPath)) {
-          readdirSync(dirPath).forEach((filename) => {
-            const filepath = upath.join(dirPath, filename);
-            if (lstatSync(filepath).isDirectory()) {
-              watchDir(filepath);
-            } else {
-              this.addWatchFile(filepath);
-            }
-          });
-        }
-      };
-      const watchUserFiles = (userPaths: UserPaths) => {
-        watchDir(userPaths.pages);
-        watchDir(userPaths.components);
-        watchDir(userPaths.modules);
-        this.addWatchFile(userPaths.siteSettings);
-      };
-      watchUserFiles(studioConfig.paths);
-    },
     config(config) {
       const studioViteOptions = getStudioViteOptions(
         args,
