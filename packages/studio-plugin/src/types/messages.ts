@@ -65,25 +65,19 @@ export type FatalErrorResponse = {
   msg: string;
 };
 
+type ManagementApiResponse<T> = ErrorResponse | (BaseResponse & T);
+
 export type ResponseEventMap = {
   [MessageID.Deploy]: BaseResponse;
   [MessageID.SaveChanges]: BaseResponse;
   [MessageID.GenerateTestData]: (BaseResponse | ErrorResponse) & {
     mappingJson: Record<string, string[]>;
   };
-  [MessageID.GetEntities]:
-    | ErrorResponse
-    | (BaseResponse & {
-        entities: EntitiesResponse;
-      });
-  [MessageID.GetSavedFilters]:
-    | ErrorResponse
-    | (BaseResponse & {
-        savedFilters: SavedFilterData[];
-      });
-  [MessageID.GetEntityTypes]:
-    | ErrorResponse
-    | (BaseResponse & {
-        entityTypes: string[];
-      });
+  [MessageID.GetEntities]: ManagementApiResponse<{
+    entities: EntitiesResponse;
+  }>;
+  [MessageID.GetSavedFilters]: ManagementApiResponse<{
+    savedFilters: SavedFilterData[];
+  }>;
+  [MessageID.GetEntityTypes]: ManagementApiResponse<{ entityTypes: string[] }>;
 };
