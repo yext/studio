@@ -4,7 +4,7 @@ import BusinessInfo from "../components/BusinessInfo";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HoursDisplay from "../components/HoursDisplay";
-import ProminentImage from "../../src/components/ProminentImage";
+import ProminentImage from "../components/ProminentImage";
 
 export const config: TemplateConfig = {
   stream: {
