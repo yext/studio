@@ -1,16 +1,16 @@
 {
-	"__": {
-		"name": "ErrorComponentPreviews",
-		"staticPage": {},
-		"templateType": "JS"
-	},
-	"businessId": 3350634,
-	"key": "0:ErrorComponentPreviews:knowledgeGraph:0:en",
-	"locale": "en",
-	"meta": {
-		"locale": "en"
-	},
-	"siteDomain": "",
-	"siteId": 0,
-	"siteInternalHostName": ""
+  "__": {
+    "name": "ErrorComponentPreviews",
+    "staticPage": {},
+    "templateType": "JS"
+  },
+  "businessId": 3350634,
+  "key": "0:ErrorComponentPreviews:knowledgeGraph:0:en",
+  "locale": "en",
+  "meta": {
+    "locale": "en"
+  },
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": ""
 }

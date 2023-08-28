@@ -1,141 +1,134 @@
 {
-	"__": {
-		"entityPageSet": {},
-		"name": "LocationPage",
-		"streamId": "studio-stream-id-LocationPage",
-		"templateType": "JS"
-	},
-	"address": {
-		"city": "McLean",
-		"countryCode": "US",
-		"line1": "7900 Westpark Drive",
-		"line2": "Suite T200",
-		"localizedCountryName": "United States",
-		"localizedRegionName": "Virginia",
-		"postalCode": "22102",
-		"region": "VA"
-	},
-	"addressHidden": false,
-	"businessId": 3350634,
-	"c_names": [
-		"my name is Steve",
-		"your name is Rose"
-	],
-	"cityCoordinate": {
-		"latitude": 38.936519622802734,
-		"longitude": -77.18428039550781
-	},
-	"description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
-	"displayCoordinate": {
-		"latitude": 38.9246498,
-		"longitude": -77.2169181
-	},
-	"facebookPageUrl": "https://www.facebook.com/Yext-Cafe-2073644659328705/",
-	"geocodedCoordinate": {
-		"latitude": 38.9246498,
-		"longitude": -77.2169181
-	},
-	"hours": {
-		"friday": {
-			"openIntervals": [
-				{
-					"end": "14:00",
-					"start": "12:00"
-				}
-			]
-		},
-		"monday": {
-			"openIntervals": [
-				{
-					"end": "14:00",
-					"start": "01:00"
-				}
-			]
-		},
-		"saturday": {
-			"openIntervals": [
-				{
-					"end": "13:00",
-					"start": "12:00"
-				}
-			]
-		},
-		"sunday": {
-			"isClosed": true
-		},
-		"thursday": {
-			"isClosed": true
-		},
-		"tuesday": {
-			"openIntervals": [
-				{
-					"end": "15:00",
-					"start": "02:00"
-				},
-				{
-					"end": "17:00",
-					"start": "16:00"
-				}
-			]
-		},
-		"wednesday": {
-			"openIntervals": [
-				{
-					"end": "23:59",
-					"start": "00:00"
-				}
-			]
-		}
-	},
-	"id": "2917513710699998040",
-	"isoRegionCode": "VA",
-	"key": "0:LocationPage:knowledgeGraph:18714998:en",
-	"localPhone": "+16467624579",
-	"locale": "en",
-	"mainPhone": "+18884442988",
-	"meta": {
-		"entityType": {
-			"id": "location",
-			"uid": 0
-		},
-		"locale": "en"
-	},
-	"name": "Office Space",
-	"ref_categories": [
-		{
-			"id": "668",
-			"name": "Software Consultant",
-			"uid": 668
-		}
-	],
-	"ref_listings": [],
-	"ref_reviewsAgg": [],
-	"routableCoordinate": {
-		"latitude": 38.9243984,
-		"longitude": -77.2178386
-	},
-	"services": [
-		"Dogs",
-		"Cats",
-		"Sleep"
-	],
-	"siteDomain": "",
-	"siteId": 0,
-	"siteInternalHostName": "",
-	"slug": "office/2917513710699998040",
-	"timezone": "America/New_York",
-	"uid": 18714998,
-	"websiteUrl": {
-		"displayUrl": "https://google.com",
-		"preferDisplayUrl": false,
-		"url": "https://locations.yext.com/us/va/mclean/7900-westpark-drive.html"
-	},
-	"yextDisplayCoordinate": {
-		"latitude": 38.9246498,
-		"longitude": -77.2169181
-	},
-	"yextRoutableCoordinate": {
-		"latitude": 38.9243984,
-		"longitude": -77.2178386
-	}
+  "__": {
+    "entityPageSet": {},
+    "name": "LocationPage",
+    "streamId": "studio-stream-id-LocationPage",
+    "templateType": "JS"
+  },
+  "address": {
+    "city": "McLean",
+    "countryCode": "US",
+    "line1": "7900 Westpark Drive",
+    "line2": "Suite T200",
+    "localizedCountryName": "United States",
+    "localizedRegionName": "Virginia",
+    "postalCode": "22102",
+    "region": "VA"
+  },
+  "addressHidden": false,
+  "businessId": 3350634,
+  "c_names": ["my name is Steve", "your name is Rose"],
+  "cityCoordinate": {
+    "latitude": 38.936519622802734,
+    "longitude": -77.18428039550781
+  },
+  "description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
+  "displayCoordinate": {
+    "latitude": 38.9246498,
+    "longitude": -77.2169181
+  },
+  "facebookPageUrl": "https://www.facebook.com/Yext-Cafe-2073644659328705/",
+  "geocodedCoordinate": {
+    "latitude": 38.9246498,
+    "longitude": -77.2169181
+  },
+  "hours": {
+    "friday": {
+      "openIntervals": [
+        {
+          "end": "14:00",
+          "start": "12:00"
+        }
+      ]
+    },
+    "monday": {
+      "openIntervals": [
+        {
+          "end": "14:00",
+          "start": "01:00"
+        }
+      ]
+    },
+    "saturday": {
+      "openIntervals": [
+        {
+          "end": "13:00",
+          "start": "12:00"
+        }
+      ]
+    },
+    "sunday": {
+      "isClosed": true
+    },
+    "thursday": {
+      "isClosed": true
+    },
+    "tuesday": {
+      "openIntervals": [
+        {
+          "end": "15:00",
+          "start": "02:00"
+        },
+        {
+          "end": "17:00",
+          "start": "16:00"
+        }
+      ]
+    },
+    "wednesday": {
+      "openIntervals": [
+        {
+          "end": "23:59",
+          "start": "00:00"
+        }
+      ]
+    }
+  },
+  "id": "2917513710699998040",
+  "isoRegionCode": "VA",
+  "key": "0:LocationPage:knowledgeGraph:18714998:en",
+  "localPhone": "+16467624579",
+  "locale": "en",
+  "mainPhone": "+18884442988",
+  "meta": {
+    "entityType": {
+      "id": "location",
+      "uid": 0
+    },
+    "locale": "en"
+  },
+  "name": "Office Space",
+  "ref_categories": [
+    {
+      "id": "668",
+      "name": "Software Consultant",
+      "uid": 668
+    }
+  ],
+  "ref_listings": [],
+  "ref_reviewsAgg": [],
+  "routableCoordinate": {
+    "latitude": 38.9243984,
+    "longitude": -77.2178386
+  },
+  "services": ["Dogs", "Cats", "Sleep"],
+  "siteDomain": "",
+  "siteId": 0,
+  "siteInternalHostName": "",
+  "slug": "office/2917513710699998040",
+  "timezone": "America/New_York",
+  "uid": 18714998,
+  "websiteUrl": {
+    "displayUrl": "https://google.com",
+    "preferDisplayUrl": false,
+    "url": "https://locations.yext.com/us/va/mclean/7900-westpark-drive.html"
+  },
+  "yextDisplayCoordinate": {
+    "latitude": 38.9246498,
+    "longitude": -77.2169181
+  },
+  "yextRoutableCoordinate": {
+    "latitude": 38.9243984,
+    "longitude": -77.2178386
+  }
 }
