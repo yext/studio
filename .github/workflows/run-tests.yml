@@ -7,6 +7,7 @@ jobs:
       matrix:
         os: [windows-latest, ubuntu-latest]
         node-version: [18.x]
+        package: [studio, studio-plugin]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
@@ -14,9 +15,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm run build -w=packages/studio-plugin
-      - run: npm test -w=packages/studio-plugin
-      - run: npm test -w=packages/studio
-        if: success() || failure()
+      - run: npm test -w=packages/${{ matrix.package }}
 
   test_build:
     strategy:
