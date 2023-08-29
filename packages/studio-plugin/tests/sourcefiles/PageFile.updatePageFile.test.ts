@@ -8,9 +8,9 @@ import { Project } from "ts-morph";
 import { streamConfigMultipleFieldsComponentTree } from "../__fixtures__/componentStates";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { PageState } from "../../src/types/PageState";
 import upath from "upath";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
 jest.mock("uuid");
 
@@ -32,7 +32,7 @@ describe("updatePageFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    tsMorphProject = createTsMorphProject();
+    tsMorphProject = createTestProject();
   });
 
   it("updates page component based on PageState's component tree", () => {
@@ -349,11 +349,11 @@ describe("updatePageFile", () => {
                 value: "document.name",
               },
             },
-            componentName: "Banner",
-            fullText: `<Banner title={document.name} />`,
-            uuid: "error-banner-uuid",
-            metadataUUID: "error-banner-metadataUUID",
-            message: "could not parse banner",
+            componentName: "UnknownComponent",
+            fullText: `<UnknownComponent title={document.name} />`,
+            uuid: "error-uuid",
+            metadataUUID: "error-metadataUUID",
+            message: "could not parse UnknownComponent",
           },
         ],
       });

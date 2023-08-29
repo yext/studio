@@ -21,8 +21,9 @@ import typescript from "typescript";
 import { v4 } from "uuid";
 import { ParsingError } from "./errors/ParsingError";
 
-export function createTsMorphProject() {
+export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({
+    tsConfigFilePath,
     compilerOptions: {
       jsx: typescript.JsxEmit.ReactJSX,
     },

@@ -1,5 +1,4 @@
 import ComponentFile from "../../src/sourcefiles/ComponentFile";
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { getComponentPath } from "../__utils__/getFixturePath";
 import {
   ComponentMetadata,
@@ -9,12 +8,13 @@ import {
 } from "../../src/types";
 import { assertIsOk } from "../__utils__/asserts";
 import upath from "upath";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
 describe("getComponentMetadata", () => {
   beforeEach(() => {
     jest.spyOn(console, "error").mockImplementation();
   });
-  const project = createTsMorphProject();
+  const project = createTestProject();
 
   it("can parse a simple Banner component", () => {
     const pathToComponent = getComponentPath("SimpleBanner");

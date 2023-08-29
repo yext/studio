@@ -1,9 +1,9 @@
 import { SyntaxKind } from "ts-morph";
-import { PropValueType } from "../../lib";
 import TypeNodeParsingHelper, {
   ParsedTypeKind,
 } from "../../src/parsers/helpers/TypeNodeParsingHelper";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
+import { PropValueType } from "../../src/types";
 
 const externalShapeParser = jest.fn();
 

@@ -1,7 +1,5 @@
 import { Project } from "ts-morph";
-import ParsingOrchestrator, {
-  createTsMorphProject,
-} from "../../src/ParsingOrchestrator";
+import ParsingOrchestrator from "../../src/ParsingOrchestrator";
 import getUserPaths from "../../src/parsers/getUserPaths";
 import upath from "upath";
 import fs from "fs";
@@ -12,6 +10,7 @@ import {
   FileMetadataKind,
   ModuleMetadata,
 } from "../../src/types";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
 jest.mock("fs", () => {
   const actualFs = jest.requireActual("fs");
@@ -53,7 +52,7 @@ const moduleMetadata: ModuleMetadata = {
 };
 
 describe("syncFileMetadata", () => {
-  const tsMorphProject: Project = createTsMorphProject();
+  const tsMorphProject: Project = createTestProject();
   const orchestrator = new ParsingOrchestrator(tsMorphProject, {
     paths,
     openBrowser: true,

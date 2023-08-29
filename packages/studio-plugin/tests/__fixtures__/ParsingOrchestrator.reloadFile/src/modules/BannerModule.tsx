@@ -1,10 +1,10 @@
-import Banner from "../components/Banner";
+import BannerComponent from "../components/BannerComponent";
 
 export default function BannerModule() {
   return (
     <>
-      <Banner bannerText="first Banner" />
-      <Banner />
+      <BannerComponent bannerText="first Banner" />
+      <BannerComponent />
     </>
   );
 }

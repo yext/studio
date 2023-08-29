@@ -9,13 +9,13 @@ import {
   PropValues,
   PropValueType,
   PropShape,
+  TypelessPropVal,
 } from "../../src/types";
 import { getComponentPath, getModulePath } from "../__utils__/getFixturePath";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
 import { complexBannerComponent } from "../__fixtures__/componentStates";
 import { throwIfCalled } from "../__utils__/throwIfCalled";
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
-import { TypelessPropVal } from "../../lib";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
 jest.mock("uuid");
 
@@ -24,7 +24,7 @@ describe("updateModuleFile", () => {
   let moduleFile: ModuleFile;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    tsMorphProject = createTsMorphProject();
+    tsMorphProject = createTestProject();
     addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
     moduleFile = new ModuleFile(
       getModulePath("updateModuleFile/EmptyModule"),
