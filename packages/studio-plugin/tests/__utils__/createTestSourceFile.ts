@@ -1,5 +1,4 @@
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
-import upath from "upath";
+import { Project } from "ts-morph";
 
 export default function createTestSourceFile(
   code: string,
@@ -14,5 +13,9 @@ export default function createTestSourceFile(
 }
 
 export function createTestProject() {
-  return createTsMorphProject(upath.join(__dirname, "fixture-tsconfig.json"));
+  return new Project({
+    compilerOptions: {
+      react: "react-jsx",
+    },
+  });
 }

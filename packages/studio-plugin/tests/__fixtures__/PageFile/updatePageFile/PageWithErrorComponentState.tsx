@@ -12,5 +12,5 @@ export const config: TemplateConfig = {
 export default function PageWithErrorComponentState({
   document,
 }: TemplateProps) {
-  return <UnknownComponent title={document.name} />;
+  return <Banner title={document.name} />;
 }

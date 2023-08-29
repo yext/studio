@@ -27,6 +27,9 @@ export default class StudioSourceFileParser {
   private sourceFile: SourceFile;
 
   constructor(private filepath: string, project: Project) {
+    if (!project.getSourceFile(filepath)) {
+      project.addSourceFileAtPath(filepath);
+    }
     this.sourceFile = project.getSourceFileOrThrow(filepath);
   }
 

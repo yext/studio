@@ -23,6 +23,9 @@ export default class StudioSourceFileWriter {
   private sourceFile: SourceFile;
 
   constructor(private filepath: string, project: Project) {
+    if (!project.getSourceFile(filepath)) {
+      project.addSourceFileAtPath(filepath);
+    }
     this.sourceFile = project.getSourceFileOrThrow(filepath);
   }
 

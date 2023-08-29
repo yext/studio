@@ -13,7 +13,6 @@ import { Project } from "ts-morph";
 import fs from "fs";
 import prettyPrintError from "../src/errors/prettyPrintError";
 import { assertIsOk } from "./__utils__/asserts";
-import { createTestProject } from "./__utils__/createTestSourceFile";
 
 jest.mock("../src/errors/prettyPrintError");
 
@@ -189,11 +188,11 @@ describe("reloadFile", () => {
 
   it("reloadFile can reload a module file", () => {
     const updatedModuleFile = `
-    import BannerComponent from "../components/BannerComponent";
+    import Banner from "../components/Banner";
 
     export default function NestedModule() {
       return (
-        <BannerComponent />
+        <Banner />
       );
     }
   `;
@@ -208,10 +207,10 @@ describe("reloadFile", () => {
         kind: ComponentStateKind.Fragment,
       }),
       expect.objectContaining({
-        componentName: "BannerComponent",
+        componentName: "Banner",
       }),
       expect.objectContaining({
-        componentName: "BannerComponent",
+        componentName: "Banner",
       }),
     ]);
 
@@ -220,7 +219,7 @@ describe("reloadFile", () => {
     const updatedTree = getComponentTree();
     expect(updatedTree).toEqual([
       expect.objectContaining({
-        componentName: "BannerComponent",
+        componentName: "Banner",
       }),
     ]);
   });
