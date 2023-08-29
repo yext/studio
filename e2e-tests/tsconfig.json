@@ -1,6 +1,7 @@
 {
-  "include": "src",
+  "include": ["src", "tests", "global.d.ts"],
   "compilerOptions": {
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "esModuleInterop": true,
   }
 }
