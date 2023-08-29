@@ -10,8 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/setup-ci
-        with:
-          node-version: 18.x
       - run: npm run build -w=packages/studio-plugin
       - run: npm test -w=packages/studio -- --coverage=false
 
@@ -23,8 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/setup-ci
-        with:
-          node-version: 18.x
       - run: npm test -w=packages/studio-plugin -- --coverage=false
 
   test_build:
