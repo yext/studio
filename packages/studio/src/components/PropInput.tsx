@@ -6,12 +6,14 @@ import ColorPicker from "./common/ColorPicker";
 import NumberPropInput from "./NumberPropInput";
 import UnionPropInput from "./UnionPropInput";
 import StringPropInput from "./StringPropInput";
+import TailwindPropInput from "./TailwindPropInput";
 
 interface PropInputProps<T = string | number | boolean> {
   propType: PropType;
   propValue?: T;
   onChange: (value: T) => void;
   propKind: PropValueKind;
+  inputId?: string;
 }
 
 /**
@@ -24,6 +26,7 @@ export default function PropInput({
   propValue,
   onChange,
   propKind,
+  inputId,
 }: PropInputProps): JSX.Element {
   const { type, unionValues } = propType;
   const handleChangeEvent = useCallback(
@@ -63,6 +66,7 @@ export default function PropInput({
           onChange={onChange}
           value={(propValue ?? "") as number}
           disabled={isUndefinedValue}
+          inputId={inputId}
         />
       );
     case PropValueType.string:
@@ -72,6 +76,7 @@ export default function PropInput({
           value={displayValue as string}
           propKind={propKind}
           disabled={isUndefinedValue}
+          inputId={inputId}
         />
       );
     case PropValueType.boolean:
@@ -80,6 +85,7 @@ export default function PropInput({
           checked={displayValue as boolean}
           onToggle={handleChangeEvent}
           disabled={isUndefinedValue}
+          inputId={inputId}
         />
       );
     case PropValueType.HexColor:
@@ -87,6 +93,15 @@ export default function PropInput({
         <ColorPicker
           onChange={handleChangeEvent}
           value={propValue as string | undefined}
+          inputId={inputId}
+        />
+      );
+    case PropValueType.TailwindClass:
+      return (
+        <TailwindPropInput
+          onChange={onChange}
+          disabled={isUndefinedValue}
+          value={displayValue as string}
         />
       );
     default:

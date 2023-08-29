@@ -108,7 +108,8 @@ export default class ReactComponentFileWriter {
   private shouldUseStringSyntaxForProp({ kind, valueType }: PropVal) {
     const isRepresentedAsString =
       valueType === PropValueType.string ||
-      valueType === PropValueType.HexColor;
+      valueType === PropValueType.HexColor ||
+      valueType === PropValueType.TailwindClass;
     return kind === PropValueKind.Literal && isRepresentedAsString;
   }
 

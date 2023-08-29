@@ -18,22 +18,11 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
       - if: ${{ github.event_name != 'pull_request' }}
         uses: actions/checkout@v3
-      - uses: ./.github/setup-ci
-      - run: npm run build -w=packages/studio-plugin
-      - run: npm run build -w=packages/studio
-      - uses: actions/cache@v3
-        with:
-          path: |
-            ~/Library/Caches/ms-playwright
-            C:\Users\runneradmin\AppData\Local\ms-playwright\
-          key: playwright-browsers_${{ runner.os }}-${{ hashFiles('node_modules/@playwright/test/package.json') }}
-      - run: npx playwright install
-      - run: npm i
-      - run: |
-          git config --global user.name "Playwright Job ${{ matrix.os }} ${{ matrix.shard }}"
-          git config --global user.email "slapshot@yext.com"
-      - run: npm run playwright -- --shard=${{ matrix.shard }}/4
+      - uses: ./.github/setup-acceptance
+
+      - run: npm run update-snapshots -- --shard=${{ matrix.shard }}/4
         working-directory: e2e-tests
+
       - uses: actions/upload-artifact@v3
         if: success() || failure()
         with:
@@ -41,13 +30,18 @@ jobs:
           path: ./e2e-tests/playwright-report/
           retention-days: 30
 
-      # This step will commit any new snapshots that weren't taken locally.
-      - name: Commit New Snapshots
+      - name: Commit Updated Snapshots
+        id: push-snapshots
         uses: EndBug/add-and-commit@v9
-        if: ${{ failure() && github.event_name == 'pull_request' }}
+        if: ${{ github.event_name == 'pull_request' }}
         with:
-          message: New snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 4
+          message: Updated snapshots for ${{ matrix.os }} ${{ matrix.shard }} of 4
           add: e2e-tests/__screenshots__/*.png
           push: true
           pull: --rebase --autostash
           default_author: github_actions
+
+      - name: Fail on snapshots push
+        run: |
+          if [[ ${{ steps.push-snapshots.outputs.pushed }} == true ]]; then exit 1; else exit 0; fi
+        shell: bash

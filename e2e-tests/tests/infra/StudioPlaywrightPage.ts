@@ -113,6 +113,7 @@ export default class StudioPlaywrightPage {
     }
     await expect(this.page).toHaveScreenshot();
     await this.clickModalButton(basicDataModal, "Save");
+    await this.page.getByRole("dialog").waitFor({ state: "hidden" });
   }
 
   private async clickModalButton(modalName: string, buttonName: string) {

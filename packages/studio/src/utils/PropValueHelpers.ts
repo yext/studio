@@ -27,6 +27,7 @@ export default class PropValueHelpers {
       case PropValueType.HexColor:
         return "#FFFFFF";
       case PropValueType.Array:
+      case PropValueType.TailwindClass:
         return "";
       default:
         console.error(
@@ -44,6 +45,7 @@ export default class PropValueHelpers {
       case PropValueType.string:
       case PropValueType.boolean:
       case PropValueType.HexColor:
+      case PropValueType.TailwindClass:
         return this.getPropInputDefaultValue(propType, PropValueKind.Literal);
       case PropValueType.Array:
         return [];

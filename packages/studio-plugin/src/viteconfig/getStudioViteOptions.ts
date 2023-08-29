@@ -21,5 +21,10 @@ export default function getStudioViteOptions(
 
   return {
     server: serverOptions,
+    resolve: {
+      alias: {
+        "@pathToUserProjectRoot": pathToUserProjectRoot,
+      },
+    },
   };
 }

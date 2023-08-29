@@ -11,6 +11,7 @@ const defaultValue = PropValueHelpers.getPropInputDefaultValue(
 interface ColorPickerProps {
   value: string | undefined;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  inputId?: string;
 }
 
 /**
@@ -19,6 +20,7 @@ interface ColorPickerProps {
 export default function ColorPicker({
   value,
   onChange,
+  inputId,
 }: ColorPickerProps): JSX.Element {
   const [inputValue, setInputValue] = useState(value);
   const isUndefinedValue = value === undefined;
@@ -38,6 +40,13 @@ export default function ColorPicker({
   if (isUndefinedValue) {
     return <span className="text-sm text-gray-400 mt-0.5 mb-1">#RRGGBB</span>;
   } else {
-    return <input type="color" onChange={handleChange} value={inputValue} />;
+    return (
+      <input
+        type="color"
+        onChange={handleChange}
+        value={inputValue}
+        id={inputId}
+      />
+    );
   }
 }

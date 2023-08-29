@@ -39,16 +39,20 @@ export default function PropEditor({
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
   const uniqueId = useMemo(() => v4(), []);
   const labelTooltipId = `${uniqueId}-label`;
+  const inputId = `${uniqueId}-input`;
+  const inputContainerClass = classNames({
+    "ml-2": isNested,
+  });
 
   return (
-    <div className="flex items-center mb-2 text-sm">
-      {renderBranchUI(isNested, "pb-10")}
-      <label>
-        <div className="flex">
-          <p className="pb-1" id={labelTooltipId}>
-            {propName}
-          </p>
-        </div>
+    <div className="flex mb-2 text-sm grow flex-col">
+      <div className="flex relative">
+        {isNested && renderBranchUI()}
+        <label className="pb-1" id={labelTooltipId} htmlFor={inputId}>
+          {propName}
+        </label>
+      </div>
+      <div className={inputContainerClass}>
         <PropInput
           {...{
             propType:
@@ -58,9 +62,10 @@ export default function PropEditor({
             propValue,
             onChange,
             propKind,
+            inputId,
           }}
         />
-      </label>
+      </div>
       {tooltip && (
         <Tooltip
           style={tooltipStyle}
@@ -73,10 +78,10 @@ export default function PropEditor({
   );
 }
 
-export function renderBranchUI(isNested?: boolean, additionalClasses = "") {
+export function renderBranchUI(additionalClasses = "") {
   const classes = classNames(
     "mr-1 text-gray-200 -ml-0.5 tracking-[-.2em] whitespace-nowrap",
     additionalClasses
   );
-  return isNested && <div className={classes}>---</div>;
+  return <div className={classes}>---</div>;
 }

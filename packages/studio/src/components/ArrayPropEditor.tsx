@@ -58,48 +58,50 @@ export default function ArrayPropEditor({
     [onChange]
   );
 
-  const containerClasses = classNames("flex text-sm", {
+  const containerClasses = classNames("flex grow text-sm", {
     "mb-2": !isNested,
   });
 
   const propTooltipId = `${uniqueId}-prop-tooltip`;
   const inputTooltipId = `${uniqueId}-input-tooltip`;
+  const inputId = `${uniqueId}-id`;
   const isUndefinedValue = propValue === undefined;
 
   return (
     <div className={containerClasses}>
-      {renderBranchUI(isNested)}
-      <div className="flex flex-col">
-        <label className="flex-col items-center">
+      {isNested && renderBranchUI()}
+      <div className="flex grow flex-col">
+        <label className="flex-col items-center" htmlFor={inputId}>
           <p className="pr-2 pb-1 font-semibold" id={propTooltipId}>
             {propName}
           </p>
-          {propMetadata.tooltip && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={propTooltipId}
-              content={propMetadata.tooltip}
-              place="left"
-            />
-          )}
-          <div id={inputTooltipId}>
-            <FieldPickerInput
-              onInputChange={onExpressionChange}
-              handleFieldSelection={onChange}
-              displayValue={isExpression ? value : ""}
-              fieldFilter={fieldPickerFilter}
-              disabled={!isExpression || isUndefinedValue}
-            />
-          </div>
-          {!isExpression && (
-            <Tooltip
-              style={tooltipStyle}
-              anchorId={inputTooltipId}
-              content="Disabled while items are present below"
-              place="left"
-            />
-          )}
         </label>
+        {propMetadata.tooltip && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={propTooltipId}
+            content={propMetadata.tooltip}
+            place="left"
+          />
+        )}
+        <div id={inputTooltipId}>
+          <FieldPickerInput
+            onInputChange={onExpressionChange}
+            handleFieldSelection={onChange}
+            displayValue={isExpression ? value : ""}
+            fieldFilter={fieldPickerFilter}
+            disabled={!isExpression || isUndefinedValue}
+            inputId={inputId}
+          />
+        </div>
+        {!isExpression && (
+          <Tooltip
+            style={tooltipStyle}
+            anchorId={inputTooltipId}
+            content="Disabled while items are present below"
+            place="left"
+          />
+        )}
         {!isUndefinedValue && (
           <LiteralEditor
             value={isExpression ? DEFAULT_ARRAY_LITERAL : value}
@@ -177,7 +179,7 @@ function LiteralEditor({
       )}
       <div className="flex items-center ml-2 mt-1">
         <div className="before:border-l-2 before:pt-3 pb-4"></div>
-        {renderBranchUI(true)}
+        {renderBranchUI()}
         <button
           className="flex gap-x-2 items-center bg-gray-200 hover:bg-gray-300
             rounded-md py-1 px-2"
