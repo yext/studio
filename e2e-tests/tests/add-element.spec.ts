@@ -12,9 +12,9 @@ studioTest("can add a Footer component", async ({ studioPage }) => {
   await studioPage.addElement("Footer", "Components");
   const previews = studioPage.preview.getByText("© 2023 Yext");
   await expect(previews).toHaveCount(1);
-  await studioPage.takeScreenshotAfterImgRender();
+  await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("LocationPage");
   await expect(pagePath).toHaveContents(expectedPage);
-  await studioPage.takeScreenshotAfterImgRender();
+  await studioPage.takePageScreenshotAfterImgRender();
 });

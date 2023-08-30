@@ -28,7 +28,7 @@ studioTest("can rearrange elements in tree", async ({ page, studioPage }) => {
   await page.waitForTimeout(1000);
   await page.mouse.up();
   await expect(studioPage.saveButton.button).toBeEnabled();
-  await studioPage.takeScreenshotAfterImgRender();
+  await studioPage.takePageScreenshotAfterImgRender();
 
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("LocationPage");
