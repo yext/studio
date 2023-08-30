@@ -14,6 +14,7 @@ import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import { addZundoMiddleware } from "./zundoMiddleware";
 import createStudioEnvDataSlice from "./slices/createStudioEnvDataSlice";
+import createAccountContentSlice from "./slices/createAccountContentSlice";
 
 enableMapSet();
 
@@ -48,6 +49,7 @@ const useStudioStore = create<StudioStore>()(
         ),
         studioConfig: lens(createStudioConfigSlice),
         studioEnvData: lens(createStudioEnvDataSlice),
+        accountContent: lens(createAccountContentSlice),
       };
     })
   )

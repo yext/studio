@@ -9,12 +9,31 @@ import StreamScopeParser, {
 } from "../../utils/StreamScopeParser";
 import { PageSettingsModalProps } from "./PageSettingsButton";
 import { StaticPageSettings } from "./StaticPageModal";
-import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
 import PageDataValidator from "../../utils/PageDataValidator";
 import { toast } from "react-toastify";
 import { isEqual } from "lodash";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
+
+export const streamScopeFormData: FormData<StreamScopeForm> = {
+  entityIds: {
+    description: "Entity IDs",
+    optional: true,
+    tooltip: "In the Yext platform, navigate to Content > Entities",
+  },
+  entityTypes: {
+    description: "Entity Type IDs",
+    optional: true,
+    tooltip:
+      "In the Yext platform, navigate to Content > Configuration > Entity Types",
+  },
+  savedFilterIds: {
+    description: "Saved Filter IDs",
+    optional: true,
+    tooltip:
+      "In the Yext platform, navigate to Content > Configuration > Saved Filters",
+  },
+};
 
 /**
  * EntityPageModal is a form modal that displays the page settings

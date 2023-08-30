@@ -12,7 +12,7 @@ it("can add a tailwind class", async () => {
   const onChange = jest.fn();
   renderPropInput("text-medium", onChange);
   const pickerIcon = await screen.findByRole("button", {
-    name: "Toggle tailwind class picker",
+    name: "Toggle pill picker",
   });
   expect(screen.queryByText("bg-primary")).toBeNull();
   await userEvent.click(pickerIcon);
