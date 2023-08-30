@@ -239,8 +239,12 @@ export default class StudioPlaywrightPage {
     for (const img of images) {
       await expect
         .poll(
-          async () =>
-            await img.evaluate((e) => (e as HTMLImageElement).complete)
+          async () =>{
+            return await img.evaluate((e) => (e as HTMLImageElement).complete)
+          }, {
+            message: "Wait for image render",
+            timeout: 500
+          }
         )
         .toBeTruthy();
     }
