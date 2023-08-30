@@ -81,7 +81,7 @@ export default class StudioPlaywrightPage {
     if (isEntityPage) {
       await this.page.getByRole("radio", { checked: false }).check();
     }
-    await expect(this.page).toHaveScreenshot();
+    await this.takeScreenshotAfterImgRender();
     await this.clickModalButton(pageTypeModal, "Next");
   }
 
@@ -92,7 +92,7 @@ export default class StudioPlaywrightPage {
       entityTypes: "Entity Type IDs",
       savedFilterIds: "Saved Filter IDs",
     };
-    await expect(this.page).toHaveScreenshot();
+    await this.takeScreenshotAfterImgRender();
     for (const field in streamScopeForm) {
       await this.typeIntoModal(
         streamScopeModal,
@@ -100,18 +100,18 @@ export default class StudioPlaywrightPage {
         streamScopeForm[field]
       );
     }
-    await expect(this.page).toHaveScreenshot();
+    await this.takeScreenshotAfterImgRender();
     await this.clickModalButton(streamScopeModal, "Next");
   }
 
   private async enterBasicPageData(pageName: string, urlSlug?: string) {
     const basicDataModal = "Page Name and URL";
-    await expect(this.page).toHaveScreenshot();
+    await this.takeScreenshotAfterImgRender();
     await this.typeIntoModal(basicDataModal, "Page Name", pageName);
     if (urlSlug) {
       await this.typeIntoModal(basicDataModal, "URL Slug", urlSlug);
     }
-    await expect(this.page).toHaveScreenshot();
+    await this.takeScreenshotAfterImgRender();
     await this.clickModalButton(basicDataModal, "Save");
     await this.page.getByRole("dialog").waitFor({ state: "hidden" });
   }
@@ -159,7 +159,7 @@ export default class StudioPlaywrightPage {
         name: "Remove Page",
       })
       .click();
-    await expect(this.page).toHaveScreenshot();
+    await this.takeScreenshotAfterImgRender();
     await this.page
       .getByRole("dialog", {
         name: "Delete Page Modal",
@@ -182,7 +182,7 @@ export default class StudioPlaywrightPage {
     shouldTakeScreenshots = false
   ) {
     const takeScreenshot = () =>
-      shouldTakeScreenshots && expect(this.page).toHaveScreenshot();
+      shouldTakeScreenshots && this.takeScreenshotAfterImgRender();
     await this.addElementButton.click();
     await takeScreenshot();
 
@@ -232,5 +232,19 @@ export default class StudioPlaywrightPage {
 
   getComponentPath(componentName: string) {
     return path.join(this.tmpDir, "src/components", componentName + ".tsx");
+  }
+
+  async waitForIFrameImagesToLoad() {
+    const images = await this.preview.getByRole("img").all()
+    for (const img of images) {
+      await expect.poll(async () => 
+          await img.evaluate(e => (e as HTMLImageElement).complete)
+      ).toBeTruthy()
+    }
+  }
+
+  async takeScreenshotAfterImgRender(){
+    await this.waitForIFrameImagesToLoad()
+    await expect(this.page).toHaveScreenshot()
   }
 }
