@@ -235,16 +235,19 @@ export default class StudioPlaywrightPage {
   }
 
   async waitForIFrameImagesToLoad() {
-    const images = await this.preview.getByRole("img").all()
+    const images = await this.preview.getByRole("img").all();
     for (const img of images) {
-      await expect.poll(async () => 
-          await img.evaluate(e => (e as HTMLImageElement).complete)
-      ).toBeTruthy()
+      await expect
+        .poll(
+          async () =>
+            await img.evaluate((e) => (e as HTMLImageElement).complete)
+        )
+        .toBeTruthy();
     }
   }
 
-  async takeScreenshotAfterImgRender(){
-    await this.waitForIFrameImagesToLoad()
-    await expect(this.page).toHaveScreenshot()
+  async takeScreenshotAfterImgRender() {
+    await this.waitForIFrameImagesToLoad();
+    await expect(this.page).toHaveScreenshot();
   }
 }
