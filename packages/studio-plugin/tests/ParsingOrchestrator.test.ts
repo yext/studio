@@ -13,6 +13,7 @@ import { Project } from "ts-morph";
 import fs from "fs";
 import prettyPrintError from "../src/errors/prettyPrintError";
 import { assertIsOk } from "./__utils__/asserts";
+import { createTestProject } from "./__utils__/createTestSourceFile";
 
 jest.mock("../src/errors/prettyPrintError");
 
