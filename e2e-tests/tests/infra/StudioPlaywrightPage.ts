@@ -244,7 +244,7 @@ export default class StudioPlaywrightPage {
           },
           {
             message: "Wait for image render",
-            timeout: 500,
+            timeout: 1000,
           }
         )
         .toBeTruthy();
