@@ -259,4 +259,9 @@ export default class StudioPlaywrightPage {
     await this.waitForIFrameImagesToLoad();
     await expect(this.page).toHaveScreenshot();
   }
+
+  async takePreviewScreenshotAfterImgRender() {
+    await this.waitForIFrameImagesToLoad();
+    await expect(this.preview.locator("body")).toHaveScreenshot();
+  }
 }

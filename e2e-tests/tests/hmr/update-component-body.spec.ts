@@ -18,13 +18,13 @@ studioTest(
 
     await studioPage.addElement("Button", "Components", false);
     await expect(updatedButtonPreviews).toHaveCount(0);
-    await expect(studioPage.preview.locator("body")).toHaveScreenshot();
+    await studioPage.takePreviewScreenshotAfterImgRender();
 
     const buttonPath = studioPage.getComponentPath("Button");
     fs.writeFileSync(buttonPath, updatedComponent);
     // Wait for the HMR to complete
     await page.waitForResponse(/Button\.tsx/, { timeout: 5000 });
     await expect(updatedButtonPreviews).toHaveCount(1);
-    await expect(studioPage.preview.locator("body")).toHaveScreenshot();
+    await studioPage.takePreviewScreenshotAfterImgRender();
   }
 );
