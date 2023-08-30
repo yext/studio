@@ -243,7 +243,7 @@ export default class StudioPlaywrightPage {
             return await img.evaluate((e) => (e as HTMLImageElement).complete);
           },
           {
-            message: "Wait for image render",
+            message: "Wait for images in page preview to render.",
             timeout: 1000,
           }
         )
