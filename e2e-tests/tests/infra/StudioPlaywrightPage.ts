@@ -239,8 +239,8 @@ export default class StudioPlaywrightPage {
     const imgPromises = images.map((img) =>
       expect
         .poll(
-          async () => {
-            return await img.evaluate((e) => (e as HTMLImageElement).complete);
+          () => {
+            return img.evaluate((e) => (e as HTMLImageElement).complete);
           },
           {
             message: "Wait for images in page preview to render.",
