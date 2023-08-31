@@ -32,4 +32,4 @@ function main() {
   bumpStudio(newVersion);
 }
 
-void main();
+main();
