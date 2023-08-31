@@ -12,5 +12,5 @@ studioTest("can fix an error page", async ({ page, studioPage }) => {
   fs.writeFileSync(pagePath, errorPageScript);
   await page.getByRole("button", { name: "ErrorPage", exact: true }).click();
   await expect(studioPage.saveButton.button).toBeDisabled();
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 });

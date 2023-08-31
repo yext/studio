@@ -12,9 +12,9 @@ studioTest("can add a static page", async ({ page, studioPage }) => {
   await expect(pageInTree).toHaveCount(0);
   await studioPage.addStaticPage("NewStaticPage", "index.html");
   await expect(pageInTree).toHaveCount(1);
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("NewStaticPage");
   await expect(pagePath).toHaveContents(expectedPage);
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 });
