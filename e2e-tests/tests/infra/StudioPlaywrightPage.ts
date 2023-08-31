@@ -247,7 +247,6 @@ export default class StudioPlaywrightPage {
     return path.join(this.tmpDir, "src/components", componentName + ".tsx");
   }
 
-
   async takePageScreenshotAfterImgRender() {
     await this.waitForIFrameImagesToLoad();
     await expect(this.page).toHaveScreenshot();
