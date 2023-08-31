@@ -9,10 +9,11 @@ import {
 } from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { GetFileMetadata } from "../../src/parsers/ComponentTreeParser";
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import ModuleFile from "../../src/sourcefiles/ModuleFile";
 import { assertIsOk } from "../__utils__/asserts";
-import createTestSourceFile from "../__utils__/createTestSourceFile";
+import createTestSourceFile, {
+  createTestProject,
+} from "../__utils__/createTestSourceFile";
 import upath from "upath";
 
 jest.mock("uuid");
@@ -40,7 +41,7 @@ const mockGetFileMetadata: GetFileMetadata = (filepath: string) => {
 };
 
 describe("getModuleMetadata", () => {
-  const project = createTsMorphProject();
+  const project = createTestProject();
   beforeEach(() => {
     mockUUID();
   });

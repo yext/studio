@@ -1,3 +1,5 @@
+import path from "path-browserify";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
  * In order to support dynamic imports from the browser on Windows,
@@ -8,5 +10,6 @@
 export default function dynamicImportFromBrowser(
   absFilepath: string
 ): Promise<any> {
-  return import(/* @vite-ignore */ "/@fs/" + absFilepath);
+  const importPath = path.join("/@fs", absFilepath);
+  return import(/* @vite-ignore */ importPath);
 }

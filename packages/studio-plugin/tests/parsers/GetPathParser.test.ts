@@ -1,6 +1,6 @@
-import { PropValueKind } from "../../lib";
 import GetPathParser from "../../src/parsers/GetPathParser";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
+import { PropValueKind } from "../../src/types";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 
 describe("parseGetPathValue", () => {

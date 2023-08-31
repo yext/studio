@@ -99,6 +99,7 @@ function createTempWorkingDir(testInfo: TestInfo, tailwindConfigPath?: string) {
   copy("localData");
   copy("sites-config");
   copy("studio.config.js");
+  copy("tsconfig.json");
 
   if (tailwindConfigPath) {
     fsExtra.copySync(

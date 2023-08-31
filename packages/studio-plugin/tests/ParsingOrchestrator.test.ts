@@ -1,6 +1,4 @@
-import ParsingOrchestrator, {
-  createTsMorphProject,
-} from "../src/ParsingOrchestrator";
+import ParsingOrchestrator from "../src/ParsingOrchestrator";
 import getUserPaths from "../src/parsers/getUserPaths";
 import upath from "upath";
 import {
@@ -15,6 +13,7 @@ import { Project } from "ts-morph";
 import fs from "fs";
 import prettyPrintError from "../src/errors/prettyPrintError";
 import { assertIsOk } from "./__utils__/asserts";
+import { createTestProject } from "./__utils__/createTestSourceFile";
 
 jest.mock("../src/errors/prettyPrintError");
 
@@ -233,7 +232,7 @@ function createParsingOrchestrator(opts?: {
   isPagesJS?: boolean;
 }) {
   const { getLocalDataMapping, paths, isPagesJS } = opts ?? {};
-  const tsMorphProject: Project = createTsMorphProject();
+  const tsMorphProject: Project = createTestProject();
   const orchestrator = new ParsingOrchestrator(
     tsMorphProject,
     {
