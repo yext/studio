@@ -1,14 +1,14 @@
 import { PropValueKind, PropValueType, SiteSettings } from "../../src/types";
 import SiteSettingsFile from "../../src/sourcefiles/SiteSettingsFile";
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { getSiteSettingsPath } from "../__utils__/getFixturePath";
 import fs from "fs";
 import { Project } from "ts-morph";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
 let tsMorphProject: Project;
 beforeEach(() => {
   jest.spyOn(fs, "writeFileSync").mockImplementation();
-  tsMorphProject = createTsMorphProject();
+  tsMorphProject = createTestProject();
 });
 
 describe("getSiteSettings", () => {

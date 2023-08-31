@@ -25,7 +25,7 @@ import {
 } from "../../src/types";
 import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
 const propShapeMultiFields: PropShape = {
   complexBannerText: {
@@ -61,7 +61,7 @@ describe("updateFile", () => {
   let tsMorphProject: Project;
   beforeEach(() => {
     jest.spyOn(fs, "writeFileSync").mockImplementation();
-    tsMorphProject = createTsMorphProject();
+    tsMorphProject = createTestProject();
   });
 
   describe("React component return statement", () => {

@@ -48,7 +48,9 @@ export default async function createStudioPlugin(
   await gitWrapper.setup();
 
   /** The ts-morph Project instance for the entire app. */
-  const tsMorphProject = createTsMorphProject();
+  const tsMorphProject = createTsMorphProject(
+    upath.join(pathToUserProjectRoot, "tsconfig.json")
+  );
   const localDataMappingManager = studioConfig.isPagesJSRepo
     ? new LocalDataMappingManager(studioConfig.paths.localData)
     : undefined;

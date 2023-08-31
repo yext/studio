@@ -8,9 +8,9 @@ import {
   fragmentComponent,
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
-import { createTsMorphProject } from "../../src/ParsingOrchestrator";
 import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
 jest.mock("uuid");
 
@@ -43,7 +43,7 @@ function createPageFile(pageName: string, isPagesJSRepo = false): PageFile {
   return new PageFile(
     getPagePath(pageName),
     mockGetFileMetadata,
-    createTsMorphProject(),
+    createTestProject(),
     isPagesJSRepo
   );
 }

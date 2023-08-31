@@ -1,8 +1,6 @@
 import { Project } from "ts-morph";
 import FileSystemManager from "../src/FileSystemManager";
-import ParsingOrchestrator, {
-  createTsMorphProject,
-} from "../src/ParsingOrchestrator";
+import ParsingOrchestrator from "../src/ParsingOrchestrator";
 import getUserPaths from "../src/parsers/getUserPaths";
 import upath from "upath";
 import fs from "fs";
@@ -13,6 +11,7 @@ import {
   FileMetadataKind,
   PageState,
 } from "../src/types";
+import { createTestProject } from "./__utils__/createTestSourceFile";
 
 const bannerComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -32,7 +31,7 @@ const projectRoot = upath.resolve(
   __dirname,
   "./__fixtures__/FileSystemManager"
 );
-const tsMorphProject: Project = createTsMorphProject();
+const tsMorphProject: Project = createTestProject();
 const paths = getUserPaths(projectRoot);
 paths.pages = upath.join(projectRoot, "pages");
 paths.modules = upath.join(projectRoot, "modules");
@@ -87,7 +86,7 @@ describe("updatePageFile", () => {
     );
   });
 
-  it("creates a new page file and add a page component based on new state", () => {
+  it("creates a new page file and adds a page component based on new state", () => {
     jest.spyOn(fs, "existsSync").mockImplementation(() => false);
     const fsMkdirSyncSpy = jest.spyOn(fs, "mkdirSync").mockImplementation();
     const fsOpenSyncSpy = jest
