@@ -236,10 +236,8 @@ export default class StudioPlaywrightPage {
 
   async waitForIFrameImagesToLoad() {
     const images = await this.preview.getByRole("img").all();
-    const imgPromises: Promise<void>[] = [];
-
-    for (const img of images) {
-      const pollForImageReady = expect
+    const imgPromises = images.map((img) =>
+      expect
         .poll(
           async () => {
             return await img.evaluate((e) => (e as HTMLImageElement).complete);
@@ -249,9 +247,8 @@ export default class StudioPlaywrightPage {
             timeout: 1000,
           }
         )
-        .toBeTruthy();
-      imgPromises.push(pollForImageReady);
-    }
+        .toBeTruthy()
+    );
     await Promise.all(imgPromises);
   }
 
