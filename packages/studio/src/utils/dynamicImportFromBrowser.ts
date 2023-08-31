@@ -1,4 +1,4 @@
-import path from 'path-browserify'
+import path from "path-browserify";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
@@ -10,6 +10,6 @@ import path from 'path-browserify'
 export default function dynamicImportFromBrowser(
   absFilepath: string
 ): Promise<any> {
-  const importPath = path.join('/@fs', absFilepath)
+  const importPath = path.join("/@fs", absFilepath);
   return import(/* @vite-ignore */ importPath);
 }
