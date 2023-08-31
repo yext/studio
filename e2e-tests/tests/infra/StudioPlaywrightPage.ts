@@ -238,15 +238,10 @@ export default class StudioPlaywrightPage {
     const images = await this.preview.getByRole("img").all();
     const imgPromises = images.map((img) =>
       expect
-        .poll(
-          () => {
-            return img.evaluate((e) => (e as HTMLImageElement).complete);
-          },
-          {
-            message: "Wait for images in page preview to render.",
-            timeout: 1000,
-          }
-        )
+        .poll(() => img.evaluate((e) => (e as HTMLImageElement).complete), {
+          message: "Wait for images in page preview to render.",
+          timeout: 1000,
+        })
         .toBeTruthy()
     );
     await Promise.all(imgPromises);
