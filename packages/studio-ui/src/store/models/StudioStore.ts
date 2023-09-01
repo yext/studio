@@ -23,5 +23,5 @@ export type StudioStore = {
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
   studioEnvData: StudioEnvDataSlice;
-  gitData?: GitData
+  gitData?: GitData;
 };

@@ -1,0 +1,19 @@
+name: main
+on: pull_request
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  automated-linting:
+    uses: ./.github/workflows/automated-linting.yml
+    secrets: inherit
+
+  run-tests:
+    needs: automated-linting
+    uses: ./.github/workflows/run-tests.yml
+
+  playwright:
+    needs: automated-linting
+    uses: ./.github/workflows/playwright.yml

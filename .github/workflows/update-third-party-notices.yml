@@ -1,0 +1,41 @@
+name: Update Third Party Notices
+on:
+  workflow_call:
+    secrets:
+      BOT_REPO_SCOPED_TOKEN:
+        required: true
+
+jobs:
+  license-check:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          registry-url: "https://registry.npmjs.org"
+      - run: npm install -g json@v11.0.0 generate-license-file@2.0.0
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.BOT_REPO_SCOPED_TOKEN }}
+
+      # this is done since studio is a monorepo.  a fresh reinstall without workspaces allows all
+      # node_modules to be installed within the current dir (instead of some at the root, with workspaces)
+      # NOTE: since only changes to THIRD-PARTY-NOTICES files are added, this change will not be pushed
+      - name: Clear workspace from package.json
+        run: json -I -f package.json -e 'this.workspaces=[]'
+
+      # npm install to generate node_modules which are required for generate-license-file to work
+      - working-directory: packages/studio
+        run: npm install; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
+      - working-directory: packages/studio-plugin
+        run: npm install; generate-license-file --input package.json --output THIRD-PARTY-NOTICES --overwrite
+
+      - name: Update THIRD-PARTY-NOTICES
+        id: update-notices
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Automated update to THIRD-PARTY-NOTICES from github action's 3rd party notices check"
+          add: '["packages/studio/THIRD-PARTY-NOTICES", "packages/studio-plugin/THIRD-PARTY-NOTICES"]'
+          push: true
+          default_author: github_actions
