@@ -2,10 +2,9 @@ import { useCallback } from "react";
 import { ReactComponent as X } from "../../icons/x.svg";
 import classNames from "classnames";
 import PillPicker from "./PillPicker";
-import { twMerge } from "tailwind-merge";
 
 const pillContainerClass =
-  "flex flex-wrap min-h-[38px] items-center border border-gray-300 rounded-lg pt-2 pb-1 px-2 w-full text-sm";
+  "flex flex-wrap min-h-[38px] items-center border border-gray-400 rounded-lg pt-2 pb-1 px-2 w-full text-sm";
 
 interface PillPickerInputProps {
   selectedItems: string[] | undefined;
@@ -14,7 +13,6 @@ interface PillPickerInputProps {
   emptyText: string;
   getDisplayName?: (item: string) => string;
   disabled?: boolean;
-  customContainerClasses?: string;
 }
 
 /**
@@ -27,7 +25,6 @@ export default function PillPickerInput({
   emptyText,
   getDisplayName,
   disabled,
-  customContainerClasses,
 }: PillPickerInputProps) {
   const hasAvailableItems = !!availableItems?.length;
   const isEmpty = !hasAvailableItems && !selectedItems?.length;
@@ -50,13 +47,10 @@ export default function PillPickerInput({
     [updateSelectedItems, selectedItems]
   );
 
-  const containerClasses = twMerge(
-    classNames(pillContainerClass, {
-      "bg-gray-50": disabled || isEmpty,
-      "pb-2 text-gray-500": isEmpty,
-    }),
-    customContainerClasses
-  );
+  const containerClasses = classNames(pillContainerClass, {
+    "bg-gray-50": disabled || isEmpty,
+    "pb-2 text-gray-500": isEmpty,
+  });
 
   if (isEmpty && !disabled) {
     return <div className={containerClasses}>{emptyText}</div>;

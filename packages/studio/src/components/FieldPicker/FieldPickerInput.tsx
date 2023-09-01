@@ -31,7 +31,7 @@ export default function FieldPickerInput({
   const filteredData = filterEntityData(fieldFilter, entityData);
   const hasFilteredData = Object.keys(filteredData).length > 0;
   const inputBoxCssClasses = classNames(
-    "border border-gray-300 focus:border-indigo-500 rounded-lg py-2 pl-2 w-full",
+    "border border-gray-400 focus:border-indigo-500 rounded-lg py-2 pl-2 w-full",
     hasFilteredData ? "pr-8" : "pr-2"
   );
 

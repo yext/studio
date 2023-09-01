@@ -48,15 +48,16 @@ export default function ScopeFilterField({
     <>
       <label id={field}>{description}</label>
       <Tooltip anchorSelect={`#${field}`} content={tooltip} />
-      <PillPickerInput
-        selectedItems={selectedIds}
-        availableItems={availableIds}
-        updateSelectedItems={updateFilterFieldIds}
-        getDisplayName={getDisplayName}
-        disabled={disabled}
-        customContainerClasses="mt-2 mb-4 border-gray-500"
-        emptyText={emptyTextData[field]}
-      />
+      <div className="mt-2 mb-4">
+        <PillPickerInput
+          selectedItems={selectedIds}
+          availableItems={availableIds}
+          updateSelectedItems={updateFilterFieldIds}
+          getDisplayName={getDisplayName}
+          disabled={disabled}
+          emptyText={emptyTextData[field]}
+        />
+      </div>
     </>
   );
 }
