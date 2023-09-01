@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo } from "react";
+import { useCallback, useContext, useMemo } from "react";
 import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 import AddPageContext from "./AddPageContext";
@@ -22,11 +22,12 @@ export default function StreamScopeCollector({
     store.accountContent.entitiesRecord,
   ]);
 
-  useEffect(() => {
+  const onConfirm = useCallback(async () => {
     if (streamScope === undefined) {
       setStreamScope({});
     }
-  }, [setStreamScope, streamScope]);
+    await handleConfirm();
+  }, [streamScope, setStreamScope, handleConfirm]);
 
   const updateStreamScope = useCallback(
     (field: string) => (selectedItems: string[] | undefined) => {
@@ -105,7 +106,7 @@ export default function StreamScopeCollector({
       isOpen={isOpen}
       title="Content Scope"
       handleClose={handleClose}
-      handleConfirm={handleConfirm}
+      handleConfirm={onConfirm}
       body={modalBodyContent}
       confirmButtonText="Next"
       isConfirmButtonDisabled={false}
