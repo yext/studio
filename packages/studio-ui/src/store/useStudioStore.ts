@@ -47,8 +47,7 @@ const useStudioStore = create<StudioStore>()(
           () => get().studioConfig
         ),
         studioConfig: lens(createStudioConfigSlice),
-        studioEnvData: lens(createStudioEnvDataSlice),
-        gitData: undefined
+        studioEnvData: lens(createStudioEnvDataSlice)
       };
     })
   )
