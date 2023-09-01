@@ -4,7 +4,6 @@ import { FlowStepModalProps } from "./FlowStep";
 import AddPageContext from "./AddPageContext";
 import useStudioStore from "../../store/useStudioStore";
 import { StreamScope } from "@yext/studio-plugin";
-import { streamScopeFormData } from "../PageSettingsButton/EntityPageModal";
 import ScopeFilterField, {
   ScopeFilterFieldProps,
 } from "../common/ScopeFilterField";
@@ -81,7 +80,6 @@ export default function StreamScopeCollector({
               field={field}
               selectedItems={selectedItems}
               disabled={data.allItems.length > 0 && hasOtherScopeFilters}
-              {...streamScopeFormData[field]}
               {...data}
             />
           );

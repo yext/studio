@@ -2,13 +2,12 @@ import { useCallback, useContext } from "react";
 import { Tooltip } from "react-tooltip";
 import PillPickerInput from "../PillPicker/PillPickerInput";
 import AddPageContext from "../AddPageButton/AddPageContext";
+import { streamScopeFormData } from "../PageSettingsButton/EntityPageModal";
 
 export interface ScopeFilterFieldProps {
   field: string;
-  description: string;
   allItems: string[];
   selectedItems: string[] | undefined;
-  tooltip: string;
   emptyText: string;
   getDisplayName?: (item: string) => string;
   disabled?: boolean;
@@ -16,16 +15,15 @@ export interface ScopeFilterFieldProps {
 
 export default function ScopeFilterField({
   field,
-  description,
   allItems,
   selectedItems,
-  tooltip,
   emptyText,
   getDisplayName,
   disabled,
 }: ScopeFilterFieldProps) {
   const { actions } = useContext(AddPageContext);
   const { setStreamScope } = actions;
+  const { tooltip, description } = streamScopeFormData[field];
 
   const updateStreamScope = useCallback(
     (selectedItems: string[]) => {
