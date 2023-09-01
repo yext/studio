@@ -13,8 +13,9 @@
     "target": "ESNext",
     "outDir": "lib",
     "types": [
+      "@yext/studio-plugin/virtual-module",
       "vite-plugin-svgr/client"
     ]
   },
-  "include": ["src", "../studio-plugin/src/utils/generateTailwindSafelist.ts"]
+  "include": ["src"]
 }

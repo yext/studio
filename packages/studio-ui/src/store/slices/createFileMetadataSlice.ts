@@ -5,14 +5,18 @@ import {
   FileMetadataKind,
   ModuleMetadata,
 } from "@yext/studio-plugin";
+import initialStudioData from "virtual_yext-studio";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import { SliceCreator } from "../models/utils";
+import removeTopLevelFragments from "../../utils/removeTopLevelFragments";
 
 const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   set,
   get
 ) => ({
-  UUIDToFileMetadata: {},
+  UUIDToFileMetadata: removeTopLevelFragments(
+    initialStudioData.UUIDToFileMetadata
+  ),
   UUIDToImportedComponent: {},
   setFileMetadata: (metadataUUID: string, metadata: FileMetadata) =>
     set((store) => {
