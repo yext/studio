@@ -24,7 +24,7 @@ function bumpStudio(newVersion) {
   // likely because the new version does not exist yet.
   packageJson.dependencies["@yext/studio-plugin"] = newVersion;
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-  execSync(`npm version ${newVersion} -w=packages/studio`);
+  execSync("npm version minor -w=packages/studio");
 }
 
 function main() {
