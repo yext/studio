@@ -28,24 +28,31 @@ export default function StreamScopeCollector({
     await handleConfirm();
   }, [streamScope, setStreamScope, handleConfirm]);
 
+  const updateStreamScope = useCallback(
+    (field: string) => (selectedItems: string[]) => {
+      const updatedStreamScope = {
+        ...(selectedItems.length && { [field]: selectedItems }),
+      };
+      setStreamScope(updatedStreamScope);
+    },
+    [setStreamScope]
+  );
+
   const scopeFormData: {
     [field in keyof StreamScope]: Pick<
       ScopeFilterFieldProps,
-      "emptyText" | "allItems" | "getDisplayName"
+      "allItems" | "getDisplayName"
     >;
   } = useMemo(
     () => ({
       entityIds: {
-        emptyText: "No entities found in the account.",
         // TODO (SLAP-2907): Populate dropdown from store
         allItems: [],
       },
       entityTypes: {
-        emptyText: "No entity types found in the account.",
         allItems: Object.keys(entitiesRecord),
       },
       savedFilterIds: {
-        emptyText: "No saved filters found in the account.",
         allItems: savedFilters.map((f) => f.id),
         getDisplayName: (item) => {
           const savedFilter = savedFilters.find((f) => f.id === item);
@@ -79,6 +86,7 @@ export default function StreamScopeCollector({
               key={field}
               field={field}
               selectedItems={selectedItems}
+              updateFilterFieldItems={updateStreamScope(field)}
               disabled={data.allItems.length > 0 && hasOtherScopeFilters}
               {...data}
             />
@@ -86,7 +94,7 @@ export default function StreamScopeCollector({
         })}
       </>
     );
-  }, [scopeFormData, streamScope]);
+  }, [scopeFormData, streamScope, updateStreamScope]);
 
   return (
     <DialogModal
