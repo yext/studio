@@ -3,6 +3,8 @@ import ActionsBar from "./components/ActionsBar";
 import Toast from "./components/Toast";
 import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
+import "./tailwind-directives.css";
+import "react-tooltip/dist/react-tooltip.css";
 
 export default function App() {
   return (
