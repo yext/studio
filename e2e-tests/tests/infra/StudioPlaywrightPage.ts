@@ -81,7 +81,7 @@ export default class StudioPlaywrightPage {
     if (isEntityPage) {
       await this.page.getByRole("radio", { checked: false }).check();
     }
-    await expect(this.page).toHaveScreenshot();
+    await this.takePageScreenshotAfterImgRender();
     await this.clickModalButton(pageTypeModal, "Next");
   }
 
@@ -92,7 +92,7 @@ export default class StudioPlaywrightPage {
       entityTypes: "Entity Type IDs",
       savedFilterIds: "Saved Filter IDs",
     };
-    await expect(this.page).toHaveScreenshot();
+    await this.takePageScreenshotAfterImgRender();
     for (const field in streamScopeForm) {
       await this.typeIntoModal(
         streamScopeModal,
@@ -100,18 +100,18 @@ export default class StudioPlaywrightPage {
         streamScopeForm[field]
       );
     }
-    await expect(this.page).toHaveScreenshot();
+    await this.takePageScreenshotAfterImgRender();
     await this.clickModalButton(streamScopeModal, "Next");
   }
 
   private async enterBasicPageData(pageName: string, urlSlug?: string) {
     const basicDataModal = "Page Name and URL";
-    await expect(this.page).toHaveScreenshot();
+    await this.takePageScreenshotAfterImgRender();
     await this.typeIntoModal(basicDataModal, "Page Name", pageName);
     if (urlSlug) {
       await this.typeIntoModal(basicDataModal, "URL Slug", urlSlug);
     }
-    await expect(this.page).toHaveScreenshot();
+    await this.takePageScreenshotAfterImgRender();
     await this.clickModalButton(basicDataModal, "Save");
     await this.page.getByRole("dialog").waitFor({ state: "hidden" });
   }
@@ -142,6 +142,19 @@ export default class StudioPlaywrightPage {
       .fill(text);
   }
 
+  private async waitForIFrameImagesToLoad() {
+    const images = await this.preview.getByRole("img").all();
+    const imgPromises = images.map((img) =>
+      expect
+        .poll(() => img.evaluate((e: HTMLImageElement) => e.complete), {
+          message: "Wait for images in page preview to render.",
+          timeout: 1000,
+        })
+        .toBeTruthy()
+    );
+    await Promise.all(imgPromises);
+  }
+
   async switchPage(pageName: string) {
     await this.pagesPanel
       .getByRole("button", {
@@ -159,7 +172,7 @@ export default class StudioPlaywrightPage {
         name: "Remove Page",
       })
       .click();
-    await expect(this.page).toHaveScreenshot();
+    await this.takePageScreenshotAfterImgRender();
     await this.page
       .getByRole("dialog", {
         name: "Delete Page Modal",
@@ -182,7 +195,7 @@ export default class StudioPlaywrightPage {
     shouldTakeScreenshots = false
   ) {
     const takeScreenshot = () =>
-      shouldTakeScreenshots && expect(this.page).toHaveScreenshot();
+      shouldTakeScreenshots && this.takePageScreenshotAfterImgRender();
     await this.addElementButton.click();
     await takeScreenshot();
 
@@ -232,5 +245,15 @@ export default class StudioPlaywrightPage {
 
   getComponentPath(componentName: string) {
     return path.join(this.tmpDir, "src/components", componentName + ".tsx");
+  }
+
+  async takePageScreenshotAfterImgRender() {
+    await this.waitForIFrameImagesToLoad();
+    await expect(this.page).toHaveScreenshot();
+  }
+
+  async takePreviewScreenshotAfterImgRender() {
+    await this.waitForIFrameImagesToLoad();
+    await expect(this.preview.locator("body")).toHaveScreenshot();
   }
 }

@@ -7,7 +7,7 @@ const expectedPage = fs.readFileSync(
   "utf-8"
 );
 
-studioTest("can remove a container component", async ({ page, studioPage }) => {
+studioTest("can remove a container component", async ({ studioPage }) => {
   const containerPreviews = studioPage.preview.getByText("I'm a container:");
   const childPreviews = studioPage.preview.getByText("false");
   await expect(containerPreviews).toHaveCount(1);
@@ -15,9 +15,9 @@ studioTest("can remove a container component", async ({ page, studioPage }) => {
   await studioPage.removeElement("Container");
   await expect(containerPreviews).toHaveCount(0);
   await expect(childPreviews).toHaveCount(0);
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("BasicPage");
   await expect(pagePath).toHaveContents(expectedPage);
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 });

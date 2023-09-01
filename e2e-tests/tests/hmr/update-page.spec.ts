@@ -9,7 +9,7 @@ const updatedPage = fs.readFileSync(
 
 studioTest(
   "can update page file and see changes in UI via HMR",
-  async ({ page, studioPage }) => {
+  async ({ studioPage }) => {
     const containerPreviews = studioPage.preview.getByText("I'm a container:");
     await expect(containerPreviews).toHaveCount(1);
     const buttonPreviews = studioPage.preview.getByText("Press me!");
@@ -19,6 +19,6 @@ studioTest(
     await expect(containerPreviews).toHaveCount(0);
     await expect(buttonPreviews).toHaveCount(2);
     await expect(studioPage.saveButton.button).toBeDisabled();
-    await expect(page).toHaveScreenshot();
+    await studioPage.takePageScreenshotAfterImgRender();
   }
 );

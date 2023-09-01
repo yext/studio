@@ -1,9 +1,8 @@
 import { studioTest } from "./infra/studioTest.js";
-import { expect } from "@playwright/test";
 
-studioTest("components with parsing errors", async ({ page, studioPage }) => {
+studioTest("components with parsing errors", async ({ studioPage }) => {
   await studioPage.switchPage("ErrorComponentPreviews");
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 
   await studioPage.preview
     .getByText(
@@ -11,8 +10,8 @@ studioTest("components with parsing errors", async ({ page, studioPage }) => {
     )
     .first()
     .hover();
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 
   await studioPage.setActiveComponent("ErrorComponent");
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 });
