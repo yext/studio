@@ -29,36 +29,23 @@ export default function StreamScopeCollector({
   }, [streamScope, setStreamScope, handleConfirm]);
 
   const updateStreamScope = useCallback(
-    (field: string) => (selectedItems: string[]) => {
+    (field: string) => (selectedIds: string[]) => {
       const updatedStreamScope = {
-        ...(selectedItems.length && { [field]: selectedItems }),
+        ...(selectedIds.length && { [field]: selectedIds }),
       };
       setStreamScope(updatedStreamScope);
     },
     [setStreamScope]
   );
 
-  const scopeFormData: {
-    [field in keyof StreamScope]: Pick<
-      ScopeFilterFieldProps,
-      "allItems" | "getDisplayName"
-    >;
+  const itemsMap: {
+    [field in keyof StreamScope]: ScopeFilterFieldProps["allItems"];
   } = useMemo(
     () => ({
-      entityIds: {
-        // TODO (SLAP-2907): Populate dropdown from store
-        allItems: [],
-      },
-      entityTypes: {
-        allItems: Object.keys(entitiesRecord),
-      },
-      savedFilterIds: {
-        allItems: savedFilters.map((f) => f.id),
-        getDisplayName: (item) => {
-          const savedFilter = savedFilters.find((f) => f.id === item);
-          return savedFilter ? getDisplayString(savedFilter) : item;
-        },
-      },
+      // TODO (SLAP-2907): Populate dropdown from store
+      entityIds: [],
+      entityTypes: Object.keys(entitiesRecord).map((id) => ({ id })),
+      savedFilterIds: savedFilters,
     }),
     [savedFilters, entitiesRecord]
   );
@@ -77,24 +64,24 @@ export default function StreamScopeCollector({
           Use one of the optional fields below to specify which entities this
           page can access.
         </div>
-        {Object.entries(scopeFormData).map(([field, data]) => {
-          const selectedItems: string[] | undefined = streamScope?.[field];
+        {Object.entries(itemsMap).map(([field, allItems]) => {
+          const selectedIds: string[] | undefined = streamScope?.[field];
           const hasOtherScopeFilters =
-            totalStreamScopeItems > (selectedItems?.length ?? 0);
+            totalStreamScopeItems > (selectedIds?.length ?? 0);
           return (
             <ScopeFilterField
               key={field}
               field={field}
-              selectedItems={selectedItems}
-              updateFilterFieldItems={updateStreamScope(field)}
-              disabled={data.allItems.length > 0 && hasOtherScopeFilters}
-              {...data}
+              allItems={allItems}
+              selectedIds={selectedIds}
+              updateFilterFieldIds={updateStreamScope(field)}
+              disabled={allItems.length > 0 && hasOtherScopeFilters}
             />
           );
         })}
       </>
     );
-  }, [scopeFormData, streamScope, updateStreamScope]);
+  }, [itemsMap, streamScope, updateStreamScope]);
 
   return (
     <DialogModal
@@ -107,14 +94,4 @@ export default function StreamScopeCollector({
       isConfirmButtonDisabled={false}
     />
   );
-}
-
-function getDisplayString({
-  id,
-  displayName,
-}: {
-  id: string;
-  displayName: string;
-}) {
-  return `${displayName} (id: ${id})`;
 }
