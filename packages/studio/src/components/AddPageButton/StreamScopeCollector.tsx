@@ -2,11 +2,12 @@ import { useCallback, useContext, useEffect, useMemo } from "react";
 import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 import AddPageContext from "./AddPageContext";
-import { Tooltip } from "react-tooltip";
 import useStudioStore from "../../store/useStudioStore";
 import { StreamScope } from "@yext/studio-plugin";
-import PillPickerInput from "../PillPicker/PillPickerInput";
 import { streamScopeFormData } from "../PageSettingsButton/EntityPageModal";
+import ScopeFilterField, {
+  ScopeFilterFieldProps,
+} from "../common/ScopeFilterField";
 
 export default function StreamScopeCollector({
   isOpen,
@@ -27,23 +28,19 @@ export default function StreamScopeCollector({
     }
   }, [setStreamScope, streamScope]);
 
-  const updateScopeItems = useCallback(
+  const updateStreamScope = useCallback(
     (field: string) => (selectedItems: string[] | undefined) => {
       const updatedStreamScope = {
-        ...streamScope,
-        [field]: selectedItems,
+        ...(selectedItems?.length && { [field]: selectedItems }),
       };
-      if (!selectedItems?.length) {
-        delete updatedStreamScope[field];
-      }
       setStreamScope(updatedStreamScope);
     },
-    [streamScope, setStreamScope]
+    [setStreamScope]
   );
 
   const scopeFormData: {
     [field in keyof StreamScope]: Pick<
-      ScopeFieldProps,
+      ScopeFilterFieldProps,
       "emptyText" | "allItems" | "getDisplayName"
     >;
   } = useMemo(
@@ -88,11 +85,11 @@ export default function StreamScopeCollector({
           const hasOtherScopeFilters =
             totalStreamScopeItems > (selectedItems?.length ?? 0);
           return (
-            <ScopeField
+            <ScopeFilterField
               key={field}
               field={field}
               selectedItems={selectedItems}
-              updateScopeItems={updateScopeItems(field)}
+              updateFilterFieldItems={updateStreamScope(field)}
               disabled={data.allItems.length > 0 && hasOtherScopeFilters}
               {...streamScopeFormData[field]}
               {...data}
@@ -101,7 +98,7 @@ export default function StreamScopeCollector({
         })}
       </>
     );
-  }, [scopeFormData, streamScope, updateScopeItems]);
+  }, [scopeFormData, streamScope, updateStreamScope]);
 
   return (
     <DialogModal
@@ -113,64 +110,6 @@ export default function StreamScopeCollector({
       confirmButtonText="Next"
       isConfirmButtonDisabled={false}
     />
-  );
-}
-
-interface ScopeFieldProps {
-  field: string;
-  description: string;
-  allItems: string[];
-  tooltip: string;
-  emptyText: string;
-  selectedItems: string[] | undefined;
-  updateScopeItems: (selectedItems: string[] | undefined) => void;
-  getDisplayName?: (item: string) => string;
-  disabled?: boolean;
-}
-
-function ScopeField({
-  field,
-  description,
-  allItems,
-  tooltip,
-  emptyText,
-  selectedItems,
-  updateScopeItems,
-  getDisplayName,
-  disabled,
-}: ScopeFieldProps) {
-  const addItem = useCallback(
-    (item: string) => {
-      updateScopeItems([...(selectedItems ?? []), item]);
-    },
-    [selectedItems, updateScopeItems]
-  );
-
-  const removeItem = useCallback(
-    (item: string) => {
-      updateScopeItems(selectedItems?.filter((i) => i !== item));
-    },
-    [selectedItems, updateScopeItems]
-  );
-
-  const availableItems = allItems.filter((i) => !selectedItems?.includes(i));
-  const labelId = `${field}-label`;
-
-  return (
-    <>
-      <label id={labelId}>{description}</label>
-      <Tooltip anchorSelect={`#${labelId}`} content={tooltip} />
-      <PillPickerInput
-        selectedItems={selectedItems}
-        availableItems={availableItems}
-        selectItem={addItem}
-        removeItem={removeItem}
-        getDisplayName={getDisplayName}
-        disabled={disabled}
-        customContainerClasses="mt-2 mb-4 border-gray-500"
-        emptyText={emptyText}
-      />
-    </>
   );
 }
 

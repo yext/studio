@@ -152,7 +152,6 @@ describe("PagesJS repo", () => {
       });
       await userEvent.click(entityTypesPicker);
       await userEvent.click(screen.getByText("location"));
-      await userEvent.click(entityTypesPicker);
       await userEvent.click(screen.getByText("restaurant"));
       await userEvent.click(nextButton);
 

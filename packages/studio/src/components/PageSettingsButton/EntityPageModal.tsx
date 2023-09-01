@@ -15,6 +15,7 @@ import { isEqual } from "lodash";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
+// TODO (SLAP-2918): Update modal to have stream scope dropdowns
 export const streamScopeFormData: FormData<StreamScopeForm> = {
   entityIds: {
     description: "Entity IDs",

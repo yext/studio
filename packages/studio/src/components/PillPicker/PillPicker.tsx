@@ -33,14 +33,6 @@ export default function PillPicker({
     setIsOpen((isOpen) => !isOpen);
   }, [disabled]);
 
-  const handleSelect = useCallback(
-    (item: string) => {
-      toggleOpen();
-      selectItem(item);
-    },
-    [toggleOpen, selectItem]
-  );
-
   const embedIconClasses = classNames("opacity-50", {
     "cursor-pointer hover:opacity-100": !disabled,
     "cursor-default": disabled,
@@ -54,7 +46,7 @@ export default function PillPicker({
         className={embedIconClasses}
         aria-label="Toggle pill picker"
       />
-      {isOpen && renderDropdown(availableItems, handleSelect, getDisplayName)}
+      {isOpen && renderDropdown(availableItems, selectItem, getDisplayName)}
     </div>
   );
 }
