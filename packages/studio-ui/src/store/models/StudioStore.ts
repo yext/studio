@@ -1,3 +1,4 @@
+import { GitData } from "@yext/studio-plugin";
 import StudioActions from "../StudioActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PagePreviewSlice from "./slices/PagePreviewSlice";
@@ -22,4 +23,5 @@ export type StudioStore = {
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
   studioEnvData: StudioEnvDataSlice;
+  gitData?: GitData
 };

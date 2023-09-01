@@ -5,23 +5,19 @@ import {
   StreamScope,
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
-import initialStudioData from "virtual_yext-studio";
+// import initialStudioData from "virtual_yext-studio";
 import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
 import createDetachAllModuleInstances from "./detachAllModuleInstances";
-import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
 import PropValueHelpers from "../../../utils/PropValueHelpers";
 
-const firstPageEntry = Object.entries(
-  initialStudioData.pageNameToPageState
-)?.sort()[0];
 
 const initialStates: PageSliceStates = {
-  pages: removeTopLevelFragments(initialStudioData.pageNameToPageState),
-  errorPages: initialStudioData.pageNameToErrorPageState,
-  activePageName: firstPageEntry?.[0],
-  activeEntityFile: firstPageEntry?.[1]?.pagesJS?.entityFiles?.[0],
+  pages: {},
+  errorPages: {},
+  activePageName: undefined,
+  activeEntityFile: undefined,
   activeComponentUUID: undefined,
   activeComponentRect: undefined,
   pendingChanges: {

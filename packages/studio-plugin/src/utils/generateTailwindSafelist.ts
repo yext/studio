@@ -1,4 +1,4 @@
-import type { StudioTailwindTheme } from "@yext/studio-plugin";
+import { StudioTailwindTheme } from "../types";
 
 /**
  * Generates a safelist for custom test colors, background colors, and font sizes.
