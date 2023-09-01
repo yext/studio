@@ -10,8 +10,7 @@ const pillContainerClass =
 interface PillPickerInputProps {
   selectedItems: string[] | undefined;
   availableItems: string[] | undefined;
-  selectItem: (item: string) => void;
-  removeItem: (item: string) => void;
+  updateSelectedItems: (selectedItems: string[]) => void;
   emptyText: string;
   getDisplayName?: (item: string) => string;
   disabled?: boolean;
@@ -24,8 +23,7 @@ interface PillPickerInputProps {
 export default function PillPickerInput({
   selectedItems,
   availableItems,
-  selectItem,
-  removeItem,
+  updateSelectedItems,
   emptyText,
   getDisplayName,
   disabled,
@@ -33,6 +31,24 @@ export default function PillPickerInput({
 }: PillPickerInputProps) {
   const hasAvailableItems = !!availableItems?.length;
   const isEmpty = !hasAvailableItems && !selectedItems?.length;
+
+  const addItem = useCallback(
+    (item: string) => {
+      const updatedSelectedItems = new Set(selectedItems);
+      updatedSelectedItems.add(item);
+      updateSelectedItems([...updatedSelectedItems]);
+    },
+    [updateSelectedItems, selectedItems]
+  );
+
+  const removeItem = useCallback(
+    (item: string) => {
+      const updatedSelectedItems = new Set(selectedItems);
+      updatedSelectedItems.delete(item);
+      updateSelectedItems([...updatedSelectedItems]);
+    },
+    [updateSelectedItems, selectedItems]
+  );
 
   const containerClasses = twMerge(
     classNames(pillContainerClass, {
@@ -61,7 +77,7 @@ export default function PillPickerInput({
       {hasAvailableItems && (
         <PillPicker
           availableItems={availableItems}
-          selectItem={selectItem}
+          selectItem={addItem}
           getDisplayName={getDisplayName}
           disabled={disabled}
         />

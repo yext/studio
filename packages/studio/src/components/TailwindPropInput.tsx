@@ -29,32 +29,16 @@ export default function TailwindPropInput({
 }: Props) {
   const availableClasses = useAvailableTailwindClasses(value);
 
-  const addTailwindClass = useCallback(
-    (tailwindClass: string) => {
-      const tailwindClasses = new Set(splitValue(value));
-      tailwindClasses.add(tailwindClass);
-      const combinedClass = [...tailwindClasses].join(" ");
-      onChange(combinedClass);
-    },
-    [onChange, value]
-  );
-
-  const removeTailwindClass = useCallback(
-    (tailwindClass: string) => {
-      const tailwindClasses = new Set(splitValue(value));
-      tailwindClasses.delete(tailwindClass);
-      const combinedClass = [...tailwindClasses].join(" ");
-      onChange(combinedClass);
-    },
-    [onChange, value]
+  const updateClasses = useCallback(
+    (classes: string[]) => onChange(classes.join(" ")),
+    [onChange]
   );
 
   return (
     <PillPickerInput
       selectedItems={splitValue(value)}
       availableItems={availableClasses}
-      selectItem={addTailwindClass}
-      removeItem={removeTailwindClass}
+      updateSelectedItems={updateClasses}
       emptyText="No custom tailwind config found."
       disabled={disabled}
     />

@@ -29,16 +29,6 @@ export default function StreamScopeCollector({
     await handleConfirm();
   }, [streamScope, setStreamScope, handleConfirm]);
 
-  const updateStreamScope = useCallback(
-    (field: string) => (selectedItems: string[] | undefined) => {
-      const updatedStreamScope = {
-        ...(selectedItems?.length && { [field]: selectedItems }),
-      };
-      setStreamScope(updatedStreamScope);
-    },
-    [setStreamScope]
-  );
-
   const scopeFormData: {
     [field in keyof StreamScope]: Pick<
       ScopeFilterFieldProps,
@@ -90,7 +80,6 @@ export default function StreamScopeCollector({
               key={field}
               field={field}
               selectedItems={selectedItems}
-              updateFilterFieldItems={updateStreamScope(field)}
               disabled={data.allItems.length > 0 && hasOtherScopeFilters}
               {...streamScopeFormData[field]}
               {...data}
@@ -99,7 +88,7 @@ export default function StreamScopeCollector({
         })}
       </>
     );
-  }, [scopeFormData, streamScope, updateStreamScope]);
+  }, [scopeFormData, streamScope]);
 
   return (
     <DialogModal
