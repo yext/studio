@@ -3,10 +3,24 @@ import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 import AddPageContext from "./AddPageContext";
 import useStudioStore from "../../store/useStudioStore";
-import { StreamScope } from "@yext/studio-plugin";
+import { MessageID, ResponseType, StreamScope } from "@yext/studio-plugin";
 import ScopeFilterField, {
   ScopeFilterFieldProps,
 } from "../common/ScopeFilterField";
+import sendMessage from "../../messaging/sendMessage";
+
+async function fetchInitialEntities(entityType: string) {
+  const entitiesResponse = await sendMessage(MessageID.GetEntities, {
+    entityType,
+    pageNum: 0
+  }, { hideSuccessToast: true });
+  if (entitiesResponse.type === ResponseType.Success) {
+    return entitiesResponse.entities;
+  }
+  return { entities: [], totalCount: 0 };
+}
+
+void fetchInitialEntities('location').then(res => console.log(res))
 
 export default function StreamScopeCollector({
   isOpen,
@@ -28,22 +42,17 @@ export default function StreamScopeCollector({
     await handleConfirm();
   }, [streamScope, setStreamScope, handleConfirm]);
 
-  const updateStreamScope = useCallback(
-    (field: string) => (selectedIds: string[]) => {
-      const updatedStreamScope = {
-        ...(selectedIds.length && { [field]: selectedIds }),
-      };
-      setStreamScope(updatedStreamScope);
-    },
-    [setStreamScope]
-  );
-
   const optionsMap: {
     [field in keyof StreamScope]: ScopeFilterFieldProps["filterOptions"];
   } = useMemo(
     () => ({
       // TODO (SLAP-2907): Populate dropdown from store
-      entityIds: [],
+      entityIds: [
+        {
+          id: 'entity id',
+          displayName: 'test',
+        }
+      ],
       entityTypes: Object.keys(entitiesRecord).map((id) => ({ id })),
       savedFilterIds: savedFilters,
     }),
@@ -57,6 +66,16 @@ export default function StreamScopeCollector({
       },
       0
     );
+
+    const updateStreamScope = (field: string) => (selectedIds: string[]) => {
+      if (selectedIds.length) {
+        setStreamScope({
+          [field]: selectedIds
+        })
+      } else {
+        setStreamScope({})
+      }
+    };
 
     return (
       <>
@@ -81,7 +100,7 @@ export default function StreamScopeCollector({
         })}
       </>
     );
-  }, [optionsMap, streamScope, updateStreamScope]);
+  }, [optionsMap, streamScope, setStreamScope]);
 
   return (
     <DialogModal
