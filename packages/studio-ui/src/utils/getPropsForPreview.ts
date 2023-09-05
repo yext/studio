@@ -8,7 +8,7 @@ import {
   PropVal,
   PropType,
 } from "@yext/studio-plugin";
-import { get } from "lodash";
+import get from "lodash/get";
 import TemplateExpressionFormatter from "./TemplateExpressionFormatter";
 
 /**

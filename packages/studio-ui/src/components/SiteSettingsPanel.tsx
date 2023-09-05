@@ -11,7 +11,7 @@ import {
   SiteSettingsVal,
 } from "@yext/studio-plugin";
 import React, { useCallback } from "react";
-import { startCase } from "lodash";
+import startCase from "lodash/startCase";
 import useStudioStore from "../store/useStudioStore";
 import PropInput from "./PropInput";
 

@@ -4,7 +4,7 @@ import {
   PageState,
   StreamScope,
 } from "@yext/studio-plugin";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import initialStudioData from "virtual_yext-studio";
 import DOMRectProperties from "../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../models/slices/PageSlice";

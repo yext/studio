@@ -10,7 +10,7 @@ import {
 import { Stream } from "@yext/pages";
 import PageSlice from "../models/slices/PageSlice";
 import sendMessage from "../../messaging/sendMessage";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import StudioActions from "../StudioActions";
 
 export default class GenerateTestDataAction {

@@ -11,7 +11,8 @@ import {
   ComponentState,
   ComponentStateKind,
   ErrorComponentState,
-  StandardComponentState,
+  RepeaterState,
+  StandardOrModuleComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
 import { FileMetadataKind, TypelessPropVal } from "../types";
@@ -71,13 +72,20 @@ export default class ComponentTreeParser {
     };
 
     if (component.isKind(SyntaxKind.JsxExpression)) {
-      throw new Error(
-        `Jsx nodes of kind "${component.getKindName()}" are not supported for direct use` +
-          " in page files."
+      const { selfClosingElement, listExpression } =
+        StaticParsingHelpers.parseJsxExpression(component);
+      const parsedRepeaterElement = this.parseRepeaterElement(
+        defaultImports,
+        selfClosingElement,
+        listExpression
       );
+      return {
+        ...commonComponentState,
+        ...parsedRepeaterElement,
+      };
     }
 
-    if (!TypeGuards.isNotFragmentElement(component)) {
+    if (!ComponentTreeParser.isNotFragmentElement(component)) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment,
@@ -98,12 +106,52 @@ export default class ComponentTreeParser {
     };
   }
 
+  private static isNotFragmentElement(
+    element: JsxElement | JsxSelfClosingElement | JsxFragment
+  ): element is JsxElement | JsxSelfClosingElement {
+    if (element.isKind(SyntaxKind.JsxFragment)) {
+      return false;
+    }
+    if (element.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      return true;
+    }
+    const name = StaticParsingHelpers.parseJsxElementName(element);
+    return !["Fragment", "React.Fragment"].includes(name);
+  }
+
+  private parseRepeaterElement(
+    defaultImports: Record<string, string>,
+    repeatedComponent: JsxSelfClosingElement,
+    listExpression: string
+  ): Omit<RepeaterState, "uuid" | "parentUUID"> {
+    const componentName =
+      StaticParsingHelpers.parseJsxElementName(repeatedComponent);
+    const parsedRepeatedComponent = this.parseElement(
+      repeatedComponent,
+      componentName,
+      defaultImports
+    );
+    if (parsedRepeatedComponent.kind === ComponentStateKind.BuiltIn) {
+      throw new Error(
+        "Error parsing map expression: repetition of built-in components is not supported."
+      );
+    }
+    return {
+      kind: ComponentStateKind.Repeater,
+      listExpression,
+      repeatedComponent: {
+        ...parsedRepeatedComponent,
+        componentName,
+      },
+    };
+  }
+
   private parseElement(
     component: JsxElement | JsxSelfClosingElement,
     componentName: string,
     defaultImports: Record<string, string>
   ):
-    | Pick<StandardComponentState, "kind" | "props" | "metadataUUID">
+    | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
     | Pick<BuiltInState, "kind" | "props">
     | Omit<ErrorComponentState, "componentName"> {
     const attributes: JsxAttributeLike[] = component.isKind(
@@ -149,8 +197,12 @@ export default class ComponentTreeParser {
         props,
       };
     }
-    const { metadataUUID, propShape } = fileMetadata;
+    const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;
 
+    const componentStateKind =
+      fileMetadataKind === FileMetadataKind.Module
+        ? ComponentStateKind.Module
+        : ComponentStateKind.Standard;
     const props = StaticParsingHelpers.parseJsxAttributes(
       attributes,
       propShape
@@ -173,7 +225,7 @@ export default class ComponentTreeParser {
     }
 
     return {
-      kind: ComponentStateKind.Standard,
+      kind: componentStateKind,
       metadataUUID,
       props,
     };

@@ -12,7 +12,7 @@ import { StaticPageSettings } from "./StaticPageModal";
 import { streamScopeFormData } from "../AddPageButton/StreamScopeCollector";
 import PageDataValidator from "../../utils/PageDataValidator";
 import { toast } from "react-toastify";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
