@@ -51,6 +51,13 @@ describe("PagesJS repo", () => {
     const originalStudioConfig = useStudioStore.getState().studioConfig;
     mockStore({
       studioConfig: { ...originalStudioConfig, isPagesJSRepo: true },
+      accountContent: {
+        savedFilters: [],
+        entitiesRecord: {
+          location: { entities: [], totalCount: 1 },
+          restaurant: { entities: [], totalCount: 1 },
+        },
+      },
     });
   });
 
@@ -140,10 +147,12 @@ describe("PagesJS repo", () => {
       await selectEntityPageType();
 
       const nextButton = screen.getByRole("button", { name: "Next" });
-      const entityTypesTextbox = screen.getByRole("textbox", {
-        name: "Entity Type IDs",
+      const entityTypesPicker = screen.getByRole("button", {
+        name: "Toggle pill picker",
       });
-      await userEvent.type(entityTypesTextbox, "location, restaurant");
+      await userEvent.click(entityTypesPicker);
+      await userEvent.click(screen.getByText("location"));
+      await userEvent.click(screen.getByText("restaurant"));
       await userEvent.click(nextButton);
 
       const saveButton = screen.getByRole("button", { name: "Save" });

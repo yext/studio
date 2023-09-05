@@ -1,4 +1,5 @@
 import StudioActions from "../StudioActions";
+import AccountContentSlice from "./slices/AccountContentSlice";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
 import PagePreviewSlice from "./slices/PagePreviewSlice";
 import PageSlice from "./slices/PageSlice";
@@ -22,4 +23,5 @@ export type StudioStore = {
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
   studioEnvData: StudioEnvDataSlice;
+  accountContent: AccountContentSlice;
 };
