@@ -17,6 +17,7 @@ function bumpStudioPlugin() {
 }
 
 function bumpStudio(newVersion) {
+  console.log("... bumping studio");
   const packageJsonPath = "./packages/studio/package.json";
   const packageJson = readJson(packageJsonPath);
   // `npm i @yext/studio-plugin@${newVersion} --save-exact` does not update the package json,
