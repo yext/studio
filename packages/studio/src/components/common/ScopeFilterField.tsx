@@ -14,7 +14,7 @@ const emptyTextData: { [field in keyof StreamScope]: string } = {
 
 export interface ScopeFilterFieldProps {
   field: string;
-  allItems: {
+  filterOptions: {
     id: string;
     displayName?: string;
   }[];
@@ -25,23 +25,23 @@ export interface ScopeFilterFieldProps {
 
 export default function ScopeFilterField({
   field,
-  allItems,
+  filterOptions,
   selectedIds,
   updateFilterFieldIds,
   disabled,
 }: ScopeFilterFieldProps) {
   const { tooltip, description } = streamScopeFormData[field];
-  const availableIds = allItems
-    .map((item) => item.id)
-    .filter((i) => !selectedIds?.includes(i));
+  const availableIds = filterOptions
+    .map((option) => option.id)
+    .filter((id) => !selectedIds?.includes(id));
 
   const getDisplayName = useCallback(
     (id: string) => {
-      const item = allItems.find((f) => f.id === id);
-      const displayName = item?.displayName;
+      const option = filterOptions.find((o) => o.id === id);
+      const displayName = option?.displayName;
       return displayName ? `${displayName} (id: ${id})` : id;
     },
-    [allItems]
+    [filterOptions]
   );
 
   return (

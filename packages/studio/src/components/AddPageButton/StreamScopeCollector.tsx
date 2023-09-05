@@ -38,8 +38,8 @@ export default function StreamScopeCollector({
     [setStreamScope]
   );
 
-  const itemsMap: {
-    [field in keyof StreamScope]: ScopeFilterFieldProps["allItems"];
+  const optionsMap: {
+    [field in keyof StreamScope]: ScopeFilterFieldProps["filterOptions"];
   } = useMemo(
     () => ({
       // TODO (SLAP-2907): Populate dropdown from store
@@ -64,7 +64,7 @@ export default function StreamScopeCollector({
           Use one of the optional fields below to specify which entities this
           page can access.
         </div>
-        {Object.entries(itemsMap).map(([field, allItems]) => {
+        {Object.entries(optionsMap).map(([field, filterOptions]) => {
           const selectedIds: string[] | undefined = streamScope?.[field];
           const hasOtherScopeFilters =
             totalStreamScopeItems > (selectedIds?.length ?? 0);
@@ -72,16 +72,16 @@ export default function StreamScopeCollector({
             <ScopeFilterField
               key={field}
               field={field}
-              allItems={allItems}
+              filterOptions={filterOptions}
               selectedIds={selectedIds}
               updateFilterFieldIds={updateStreamScope(field)}
-              disabled={allItems.length > 0 && hasOtherScopeFilters}
+              disabled={filterOptions.length > 0 && hasOtherScopeFilters}
             />
           );
         })}
       </>
     );
-  }, [itemsMap, streamScope, updateStreamScope]);
+  }, [optionsMap, streamScope, updateStreamScope]);
 
   return (
     <DialogModal
