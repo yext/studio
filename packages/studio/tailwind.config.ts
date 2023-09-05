@@ -50,7 +50,7 @@ export default {
   content: [
     path.resolve(__dirname, "src/**/*.{ts,tsx}"),
     path.resolve(__dirname, "index.html"),
-    path.resolve(__dirname, "../studio-ui/**/*.tsx"),
+    path.join(path.dirname(require.resolve("@yext/studio-ui")), "**/*.js"),
     ...transformedUserContent,
   ],
   safelist: generateTailwindSafelist(userTailwindTheme),
