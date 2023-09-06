@@ -56,8 +56,10 @@ const useStudioStore = create<StudioStore>()(
 );
 
 void useStudioStore.getState().actions.refreshActivePageEntities();
-void useStudioStore.getState().studioConfig.isPagesJSRepo &&
-  useStudioStore.getState().accountContent.refreshBaseAccountContent();
+void (
+  useStudioStore.getState().studioConfig.isPagesJSRepo &&
+  useStudioStore.getState().accountContent.refreshBaseAccountContent()
+);
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;
