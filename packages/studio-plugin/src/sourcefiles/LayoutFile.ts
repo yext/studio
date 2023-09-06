@@ -20,14 +20,14 @@ export default class LayoutFile {
     if (!defaultExportNode) {
       throw new Error("Layout must be declared as a default export.");
     }
-    if (defaultExportNode?.isKind(SyntaxKind.FunctionDeclaration)) {
+    if (defaultExportNode.isKind(SyntaxKind.FunctionDeclaration)) {
       defaultExportNode = defaultExportNode.getChildrenOfKind(SyntaxKind.Identifier)[0]
     }
 
-    if (!defaultExportNode?.isKind(SyntaxKind.Identifier)) {
+    if (!defaultExportNode.isKind(SyntaxKind.Identifier)) {
       throw new Error("Invalid layout declaration");
     }
-    return defaultExportNode?.getText();
+    return defaultExportNode.getText();
   }
 
   getFilepath() {
