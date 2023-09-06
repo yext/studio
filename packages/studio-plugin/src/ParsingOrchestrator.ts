@@ -185,13 +185,13 @@ export default class ParsingOrchestrator {
     );
     
     const layoutRecords = Object.keys(this.layoutFilenameToLayoutFile).reduce(
-      (prev, curr) => {
-        const layoutFile = this.layoutFilenameToLayoutFile[curr];
+      (prev, filename) => {
+        const layoutFile = this.layoutFilenameToLayoutFile[filename];
         const layoutName = layoutFile.getLayoutName()
-        prev.layoutNameToLayoutState[layoutName] = layoutFile.getLayoutState();
+        prev.layoutNameToLayoutPath[layoutName] = layoutFile.getFilepath();
         return prev;
       },
-      {layoutNameToLayoutState: {}}
+      {layoutNameToLayoutPath: {}}
     );
 
     return {

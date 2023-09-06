@@ -3,7 +3,7 @@ import { LayoutsSlice } from "../models/slices/LayoutsSlice";
 import { SliceCreator } from "../models/utils";
 
 const createLayoutsSlice: SliceCreator<LayoutsSlice> = () => ({
-  layouts: initialStudioData.layoutNameToLayoutState
+  layouts: initialStudioData.layoutNameToLayoutPath
 });
 
 export default createLayoutsSlice;

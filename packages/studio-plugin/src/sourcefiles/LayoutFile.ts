@@ -1,6 +1,5 @@
 import { Project, SyntaxKind } from "ts-morph";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import { LayoutState } from "../types/LayoutState";
 /**
  * LayoutFile is responsible for parsing a Layout File
  */
@@ -31,10 +30,7 @@ export default class LayoutFile {
     return defaultExportNode?.getText();
   }
 
-  getLayoutState(): LayoutState {
-    const filepath = this.filepath;
-    return {
-      filepath
-    }
+  getFilepath() {
+    return this.filepath
   }
 }
