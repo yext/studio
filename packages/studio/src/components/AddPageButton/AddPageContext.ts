@@ -1,5 +1,5 @@
 import { StreamScope } from "@yext/studio-plugin";
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 
 export interface AddPageData {
   isStatic: boolean;
@@ -15,6 +15,13 @@ export interface AddPageActions {
 export interface AddPageContextValue {
   state: AddPageData;
   actions: AddPageActions;
+}
+
+export function useStreamScope() {
+  const { state, actions } = useContext(AddPageContext);
+  const { streamScope } = state;
+  const { setStreamScope } = actions;
+  return [streamScope, setStreamScope] as const;
 }
 
 const AddPageContext = createContext<AddPageContextValue>(

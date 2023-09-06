@@ -16,7 +16,7 @@ import { isEqual } from "lodash";
 type EntityPageSettings = StaticPageSettings & StreamScopeForm;
 
 // TODO (SLAP-2918): Update modal to have stream scope dropdowns
-export const streamScopeFormData: FormData<StreamScopeForm> = {
+export const streamScopeFormData = {
   entityIds: {
     description: "Entity IDs",
     optional: true,
@@ -34,7 +34,7 @@ export const streamScopeFormData: FormData<StreamScopeForm> = {
     tooltip:
       "In the Yext platform, navigate to Content > Configuration > Saved Filters",
   },
-};
+} satisfies FormData<StreamScopeForm>;
 
 /**
  * EntityPageModal is a form modal that displays the page settings

@@ -56,6 +56,7 @@ const useStudioStore = create<StudioStore>()(
 );
 
 void useStudioStore.getState().actions.refreshActivePageEntities();
+void useStudioStore.getState().accountContent.initialize();
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;
