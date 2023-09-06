@@ -6,8 +6,10 @@ const createAccountContentSlice: SliceCreator<AccountContentSlice> = (set) => ({
   savedFilters: [],
   entitiesRecord: {},
   refreshBaseAccountContent: async () => {
-    const savedFilters = await fetchSavedFilters();
-    const entitiesRecord = await fetchEntitiesRecord();
+    const [savedFilters, entitiesRecord] = await Promise.all([
+      fetchSavedFilters(),
+      fetchEntitiesRecord(),
+    ]);
     set((store) => {
       store.savedFilters = savedFilters;
       store.entitiesRecord = entitiesRecord;
