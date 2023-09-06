@@ -60,14 +60,14 @@ export default function EntityIdField({
     setMaxPage(maxPage + 1);
   }, [entityType, fetchEntities, maxPage]);
 
-  const className = classNames('flex flex-col mb-1');
+  const className = classNames("flex flex-col mb-1");
 
   if (availableEntityTypes.length === 0) {
     return (
       <div className={className}>
         <StreamScopeFieldLabel streamScopeField="entityIds" />
-        <div className='border border-gray-400 min-h-[38px] rounded-lg pt-2 pb-1 px-2 w-full text-sm bg-gray-50 text-gray-500'>
-          {!disabled && 'No entity types found in the account.'}
+        <div className="border border-gray-400 min-h-[38px] rounded-lg pt-2 pb-1 px-2 w-full text-sm bg-gray-50 text-gray-500">
+          {!disabled && "No entity types found in the account."}
         </div>
       </div>
     );

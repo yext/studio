@@ -1,13 +1,13 @@
 import { SliceCreator } from "../models/utils";
 import AccountContentSlice from "../models/slices/AccountContentSlice";
-import { MessageID, ResponseType } from '@yext/studio-plugin';
-import sendMessage from '../../messaging/sendMessage';
+import { MessageID, ResponseType } from "@yext/studio-plugin";
+import sendMessage from "../../messaging/sendMessage";
 
 const createAccountContentSlice: SliceCreator<AccountContentSlice> = (set) => ({
   // TODO (SLAP-2906): Make API calls to populate this data
   savedFilters: [],
   entitiesRecord: {},
-  entityTypes: ['location', 'ce_person'],
+  entityTypes: ["location", "ce_person"],
   async fetchEntities(entityType: string, pageNum: number): Promise<void> {
     const res = await sendMessage(
       MessageID.GetEntities,

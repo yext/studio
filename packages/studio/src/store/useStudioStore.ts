@@ -56,8 +56,8 @@ const useStudioStore = create<StudioStore>()(
 );
 
 void useStudioStore.getState().actions.refreshActivePageEntities();
-void useStudioStore.getState().accountContent.fetchEntities('location', 0);
-void useStudioStore.getState().accountContent.fetchEntities('ce_person', 0);
+void useStudioStore.getState().accountContent.fetchEntities("location", 0);
+void useStudioStore.getState().accountContent.fetchEntities("ce_person", 0);
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;

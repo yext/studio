@@ -1,7 +1,7 @@
 import { EntitiesResponse, SavedFilterData } from "@yext/studio-plugin";
 
 type EntitiesRecord = {
-  [entityType: string]: EntitiesResponse
+  [entityType: string]: EntitiesResponse;
 };
 
 export default interface AccountContentSlice {
