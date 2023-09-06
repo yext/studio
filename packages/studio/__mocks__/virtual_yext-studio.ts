@@ -5,6 +5,7 @@ const mockFilepath = path.join(__dirname, "../tests/__mocks__");
 const mockStudioData: StudioData = {
   pageNameToPageState: {},
   pageNameToErrorPageState: {},
+  layoutNameToLayoutState: {},
   UUIDToFileMetadata: {},
   studioConfig: {
     openBrowser: true,
@@ -12,6 +13,7 @@ const mockStudioData: StudioData = {
       components: mockFilepath,
       pages: mockFilepath,
       modules: mockFilepath,
+      layouts: mockFilepath,
       siteSettings: mockFilepath,
       localData: mockFilepath,
     },

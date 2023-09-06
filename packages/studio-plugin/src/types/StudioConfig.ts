@@ -17,6 +17,7 @@ export interface StudioConfig {
    *  components:   `{pathToUserProjectRoot}/src/components`
    *  pages:        `{pathToUserProjectRoot}/src/pages`
    *  modules:      `{pathToUserProjectRoot}/src/modules`
+   *  layouts:      `{pathToUserProjectRoot}/src/layouts`
    *  siteSettings: `{pathToUserProjectRoot}/src/siteSettings.ts`
    *  localData:    `{pathToUserProjectRoot}/localData`
    * \}
