@@ -14,7 +14,7 @@ import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import { addZundoMiddleware } from "./zundoMiddleware";
 import createStudioEnvDataSlice from "./slices/createStudioEnvDataSlice";
-import createAccountContentSlice from "./slices/createAccountContentSlice";
+import createAccountContentSlice from "./slices/accountContent/createAccountContentSlice";
 
 enableMapSet();
 
@@ -56,6 +56,7 @@ const useStudioStore = create<StudioStore>()(
 );
 
 void useStudioStore.getState().actions.refreshActivePageEntities();
+void useStudioStore.getState().accountContent.refreshBaseAccountContent();
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;
