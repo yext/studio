@@ -1,28 +1,13 @@
 import { SliceCreator } from "../models/utils";
 import AccountContentSlice from "../models/slices/AccountContentSlice";
-import { MessageID, ResponseType } from "@yext/studio-plugin";
-import sendMessage from "../../messaging/sendMessage";
+import { MessageID, ResponseType } from '@yext/studio-plugin';
+import sendMessage from '../../messaging/sendMessage';
 
-const createAccountContentSlice: SliceCreator<AccountContentSlice> = (
-  set,
-  get
-) => ({
+const createAccountContentSlice: SliceCreator<AccountContentSlice> = (set) => ({
   // TODO (SLAP-2906): Make API calls to populate this data
   savedFilters: [],
   entitiesRecord: {},
-  entityTypes: [],
-  async refreshEntityTypes() {
-    const res = await sendMessage(MessageID.GetEntityTypes, null, {
-      hideSuccessToast: true,
-    });
-    if (res.type === ResponseType.Success) {
-      set((state) => {
-        state.entityTypes = res.entityTypes;
-      });
-    } else {
-      console.error(res.msg);
-    }
-  },
+  entityTypes: ['location', 'ce_person'],
   async fetchEntities(entityType: string, pageNum: number): Promise<void> {
     const res = await sendMessage(
       MessageID.GetEntities,
@@ -46,14 +31,6 @@ const createAccountContentSlice: SliceCreator<AccountContentSlice> = (
     } else {
       console.error(res.msg);
     }
-  },
-  async initialize() {
-    await get().refreshEntityTypes();
-    await Promise.all(
-      get().entityTypes.map((entityType) => {
-        return get().fetchEntities(entityType, 0);
-      })
-    );
   },
 });
 

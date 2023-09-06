@@ -20,15 +20,13 @@ export default function EntityIdField({
     store.accountContent.entitiesRecord,
     store.accountContent.fetchEntities,
   ]);
-  const [maxPage, setMaxPage] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-
   const availableEntityTypes = Object.entries(entitiesRecord)
     .filter(([_entityType, entityData]) => {
       return Object.values(entityData).length > 0;
     })
     .map((entry) => entry[0]);
-
+  const [maxPage, setMaxPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
   const [entityType, setEntityType] = useState<string | undefined>(
     availableEntityTypes[0]
   );
@@ -37,6 +35,7 @@ export default function EntityIdField({
     () => selectedIds?.map((id) => ({ value: id, label: id })),
     [selectedIds]
   );
+
   const onEntityTypeChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       setEntityType(e.target.value);
@@ -61,17 +60,21 @@ export default function EntityIdField({
     setMaxPage(maxPage + 1);
   }, [entityType, fetchEntities, maxPage]);
 
+  const className = classNames('flex flex-col mb-1');
+
   if (availableEntityTypes.length === 0) {
-    const className = classNames({
-      "bg-gray-50": disabled,
-    });
     return (
-      <div className={className}>No entity types found in the account.</div>
+      <div className={className}>
+        <StreamScopeFieldLabel streamScopeField="entityIds" />
+        <div className='border border-gray-400 min-h-[38px] rounded-lg pt-2 pb-1 px-2 w-full text-sm bg-gray-50 text-gray-500'>
+          {!disabled && 'No entity types found in the account.'}
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="flex flex-col mb-1">
+    <div className={className}>
       <StreamScopeFieldLabel streamScopeField="entityIds" />
       <label className="mt-2 text-sm flex flex-col">
         {!disabled && "Choosing from entities of type:"}

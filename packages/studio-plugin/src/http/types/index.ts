@@ -1,2 +1,2 @@
-export { EntitiesResponse, EntityData } from "./Entities";
+export { EntitiesResponse } from "./Entities";
 export { SavedFilterData } from "./SavedFilters";
