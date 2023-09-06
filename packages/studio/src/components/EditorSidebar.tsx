@@ -44,7 +44,6 @@ function renderTab(tab: Tab) {
       return (
         <>
           <EntityPicker />
-          <Divider />
           <PropsPanel />
         </>
       );
