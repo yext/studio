@@ -56,10 +56,10 @@ const useStudioStore = create<StudioStore>()(
 );
 
 void useStudioStore.getState().actions.refreshActivePageEntities();
-void (
-  useStudioStore.getState().studioConfig.isPagesJSRepo &&
-  useStudioStore.getState().accountContent.refreshBaseAccountContent()
-);
+// TODO: Once we know how the user's API key will be sourced, consider updating
+// this to check for the presence of the API key
+useStudioStore.getState().studioConfig.isPagesJSRepo &&
+  void useStudioStore.getState().accountContent.refreshBaseAccountContent();
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;
