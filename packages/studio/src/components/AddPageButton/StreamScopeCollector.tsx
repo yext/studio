@@ -56,6 +56,7 @@ export default function StreamScopeCollector({
             !!streamScope?.savedFilterIds?.length
           }
           updateSelection={updateSelection("entityIds")}
+          selectedIds={streamScope?.entityIds}
         />
         {streamScopeFields.map(([streamScopeField, options]) => {
           const selectedIds: string[] | undefined =

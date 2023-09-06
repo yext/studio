@@ -8,12 +8,20 @@ import getSelectCssClasses from "../../utils/getSelectCssClasses";
 interface Props {
   disabled: boolean;
   updateSelection: (selectedIds: string[]) => void;
+  selectedIds?: string[];
 }
 
-export default function EntityIdField({ disabled, updateSelection }: Props) {
-  const entitiesRecord = useStudioStore(
-    (store) => store.accountContent.entitiesRecord
-  );
+export default function EntityIdField({
+  disabled,
+  updateSelection,
+  selectedIds,
+}: Props) {
+  const [entitiesRecord, fetchEntities] = useStudioStore((store) => [
+    store.accountContent.entitiesRecord,
+    store.accountContent.fetchEntities,
+  ]);
+  const [maxPage, setMaxPage] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
 
   const availableEntityTypes = Object.entries(entitiesRecord)
     .filter(([_entityType, entityData]) => {
@@ -25,7 +33,10 @@ export default function EntityIdField({ disabled, updateSelection }: Props) {
     availableEntityTypes[0]
   );
   const entityOptions = useEntityOptions(entityType);
-
+  const selectedOptions = useMemo(
+    () => selectedIds?.map((id) => ({ value: id, label: id })),
+    [selectedIds]
+  );
   const onEntityTypeChange = useCallback(
     (e: ChangeEvent<HTMLSelectElement>) => {
       setEntityType(e.target.value);
@@ -40,6 +51,16 @@ export default function EntityIdField({ disabled, updateSelection }: Props) {
     [updateSelection]
   );
 
+  const onMenuScrollToBottom = useCallback(async () => {
+    if (!entityType) {
+      return;
+    }
+    setIsLoading(true);
+    await fetchEntities(entityType, maxPage + 1);
+    setIsLoading(false);
+    setMaxPage(maxPage + 1);
+  }, [entityType, fetchEntities, maxPage]);
+
   if (availableEntityTypes.length === 0) {
     const className = classNames({
       "bg-gray-50": disabled,
@@ -50,10 +71,10 @@ export default function EntityIdField({ disabled, updateSelection }: Props) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col mb-1">
       <StreamScopeFieldLabel streamScopeField="entityIds" />
       <label className="mt-2 text-sm flex flex-col">
-        Choosing entities of type:
+        {!disabled && "Choosing from entities of type:"}
         <select
           className={getSelectCssClasses()}
           onChange={onEntityTypeChange}
@@ -68,9 +89,12 @@ export default function EntityIdField({ disabled, updateSelection }: Props) {
       {!disabled && (
         <Select
           className="my-2"
-          options={entityOptions}
           isMulti={true}
           onChange={onEntityIdChange}
+          value={selectedOptions}
+          options={entityOptions}
+          onMenuScrollToBottom={onMenuScrollToBottom}
+          isLoading={isLoading}
         />
       )}
     </div>
@@ -89,7 +113,7 @@ function useEntityOptions(entityType?: string) {
     return Object.values(entitiesRecord[entityType] ?? []).map(
       (entityData) => ({
         value: entityData.id,
-        label: entityData.displayName,
+        label: `${entityData.displayName} (id: ${entityData.id})`,
       })
     );
   }, [entitiesRecord, entityType]);
