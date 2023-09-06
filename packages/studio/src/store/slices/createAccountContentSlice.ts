@@ -37,7 +37,6 @@ const createAccountContentSlice: SliceCreator<AccountContentSlice> = (
         prev[curr.id] = curr;
         return prev;
       }, {});
-      console.log("fetched entityes", entityType, fetchedEntities);
       set((state) => {
         state.entitiesRecord[entityType] = {
           ...state.entitiesRecord[entityType],
