@@ -22,7 +22,8 @@ export default function createConfigureStudioServer(
   orchestrator: ParsingOrchestrator,
   localDataMappingManager: LocalDataMappingManager | undefined,
   pathToUserProjectRoot: string,
-  userPaths: UserPaths
+  userPaths: UserPaths,
+  managementApiService?: ManagementApiService | undefined
 ) {
   /**
    * Sets up websocket listeners.
@@ -40,11 +41,10 @@ export default function createConfigureStudioServer(
     registerDeployListener(server, fileSystemManager, gitWrapper, orchestrator);
     localDataMappingManager &&
       registerGenerateTestData(server, localDataMappingManager);
-    const managementApiService = new ManagementApiService(
-      "d09a537e610988b568aaffa47f0e4c0b"
-    );
-    registerGetEntities(server, managementApiService);
-    registerGetSavedFilters(server, managementApiService);
-    registerGetEntityTypes(server, managementApiService);
+    if (managementApiService) {
+      registerGetEntities(server, managementApiService);
+      registerGetSavedFilters(server, managementApiService);
+      registerGetEntityTypes(server, managementApiService);
+    }
   };
 }
