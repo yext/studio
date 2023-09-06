@@ -228,10 +228,8 @@ export default class ParsingOrchestrator {
   }
 
   private initLayoutFilenameToLayoutFile(): Record<string, LayoutFile> {
-    if (!fs.existsSync(this.paths.pages)) {
-      throw new Error(
-        `The layout directory does not exist, expected directory to be at "${this.paths.layouts}".`
-      );
+    if (!fs.existsSync(this.paths.layouts)) {
+      return {};
     }
     const files = fs.readdirSync(this.paths.layouts, "utf-8");
     return files.reduce((layoutMap, filename) => {
