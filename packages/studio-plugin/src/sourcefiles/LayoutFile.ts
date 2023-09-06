@@ -7,21 +7,20 @@ export default class LayoutFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private filepath;
 
-  constructor(
-    filepath: string,
-    project: Project,
-  ) {
+  constructor(filepath: string, project: Project) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.filepath = filepath;
   }
 
   getLayoutName(): string {
-    let defaultExportNode = this.studioSourceFileParser.getDefaultExport()
+    let defaultExportNode = this.studioSourceFileParser.getDefaultExport();
     if (!defaultExportNode) {
       throw new Error("Layout must be declared as a default export.");
     }
     if (defaultExportNode.isKind(SyntaxKind.FunctionDeclaration)) {
-      defaultExportNode = defaultExportNode.getChildrenOfKind(SyntaxKind.Identifier)[0]
+      defaultExportNode = defaultExportNode.getChildrenOfKind(
+        SyntaxKind.Identifier
+      )[0];
     }
 
     if (!defaultExportNode.isKind(SyntaxKind.Identifier)) {
@@ -31,6 +30,6 @@ export default class LayoutFile {
   }
 
   getFilepath() {
-    return this.filepath
+    return this.filepath;
   }
 }

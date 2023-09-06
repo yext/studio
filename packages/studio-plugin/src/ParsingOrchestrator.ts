@@ -52,7 +52,7 @@ export default class ParsingOrchestrator {
     this.paths = studioConfig.paths;
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
-    this.layoutFilenameToLayoutFile = this.initLayoutFilenameToLayoutFile()
+    this.layoutFilenameToLayoutFile = this.initLayoutFilenameToLayoutFile();
   }
 
   getPageFile(pageName: string): PageFile {
@@ -73,7 +73,7 @@ export default class ParsingOrchestrator {
       pageEntityFiles
     );
   }
-  
+
   getLayoutFile(layoutFilename: string): LayoutFile {
     const layoutFile = this.layoutFilenameToLayoutFile[layoutFilename];
     if (layoutFile) {
@@ -81,7 +81,7 @@ export default class ParsingOrchestrator {
     }
     return new LayoutFile(
       upath.join(this.paths.layouts, layoutFilename + ".tsx"),
-      this.project,
+      this.project
     );
   }
 
@@ -149,7 +149,8 @@ export default class ParsingOrchestrator {
       const layoutFilename = upath.basename(filepath, ".tsx");
       delete this.layoutFilenameToLayoutFile[layoutFilename];
       if (fileExists) {
-        this.layoutFilenameToLayoutFile[layoutFilename] = this.getLayoutFile(layoutFilename);
+        this.layoutFilenameToLayoutFile[layoutFilename] =
+          this.getLayoutFile(layoutFilename);
       }
     }
     this.studioData = this.calculateStudioData();
@@ -183,15 +184,15 @@ export default class ParsingOrchestrator {
         pageNameToErrorPageState: {} as Record<string, ErrorPageState>,
       }
     );
-    
+
     const layoutRecords = Object.keys(this.layoutFilenameToLayoutFile).reduce(
       (prev, filename) => {
         const layoutFile = this.layoutFilenameToLayoutFile[filename];
-        const layoutName = layoutFile.getLayoutName()
+        const layoutName = layoutFile.getLayoutName();
         prev.layoutNameToLayoutPath[layoutName] = layoutFile.getFilepath();
         return prev;
       },
-      {layoutNameToLayoutPath: {}}
+      { layoutNameToLayoutPath: {} }
     );
 
     return {

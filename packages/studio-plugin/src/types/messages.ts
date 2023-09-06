@@ -30,7 +30,13 @@ export interface GenerateTestDataPayload {
 }
 
 export interface StudioHMRPayload {
-  updateType: "siteSettings" | "components" | "modules" | "layouts" | "pages" | "full";
+  updateType:
+    | "siteSettings"
+    | "components"
+    | "modules"
+    | "layouts"
+    | "pages"
+    | "full";
   studioData: StudioData;
   file: string;
 }

@@ -53,4 +53,4 @@ export default function LocationPage({ document }: TemplateProps) {
       </BusinessInfo>
     </>
   );
-} 
+}
