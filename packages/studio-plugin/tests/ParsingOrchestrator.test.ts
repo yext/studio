@@ -118,6 +118,10 @@ describe("aggregates data as expected", () => {
     });
   });
 
+  it("layouts", () => {
+    expect(studioData.layouts).toEqual(['basicLayout']);
+  });
+
   describe("PagesJS state", () => {
     it("aggregates pageNameToPageState as expected when receives a localDataMapping", () => {
       const getLocalDataMapping = () => ({
