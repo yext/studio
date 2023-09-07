@@ -17,7 +17,6 @@ export default async function hotReloadStore(payload: StudioHMRPayload) {
       await syncFileMetadata(studioData, payload.file);
       break;
     case "layouts":
-      // TODO
       break;
     case "pages":
       syncPages(studioData);
