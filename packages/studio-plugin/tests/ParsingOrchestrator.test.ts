@@ -119,7 +119,7 @@ describe("aggregates data as expected", () => {
   });
 
   it("layouts", () => {
-    expect(studioData.layouts).toEqual(['basicLayout']);
+    expect(studioData.layouts).toEqual(["basicLayout"]);
   });
 
   describe("PagesJS state", () => {
