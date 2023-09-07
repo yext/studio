@@ -25,7 +25,6 @@ export default function EntityIdField({
       return Object.values(entityData).length > 0;
     })
     .map((entry) => entry[0]);
-  const [maxPage, setMaxPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [entityType, setEntityType] = useState<string | undefined>(
     availableEntityTypes[0]
@@ -54,11 +53,14 @@ export default function EntityIdField({
     if (!entityType) {
       return;
     }
+    const currentNumEntities = Object.keys(entitiesRecord[entityType]).length;
+    if (currentNumEntities >= entitiesRecord[entityType].totalCount) {
+      return;
+    }
     setIsLoading(true);
-    await fetchEntities(entityType, maxPage + 1);
+    await fetchEntities(entityType, Math.floor(currentNumEntities / 50));
     setIsLoading(false);
-    setMaxPage(maxPage + 1);
-  }, [entityType, fetchEntities, maxPage]);
+  }, [entitiesRecord, entityType, fetchEntities]);
 
   const className = classNames("flex flex-col mb-1");
 
@@ -113,7 +115,7 @@ function useEntityOptions(entityType?: string) {
     if (!entityType) {
       return [];
     }
-    return Object.values(entitiesRecord[entityType] ?? []).map(
+    return Object.values(entitiesRecord[entityType]?.entities ?? []).map(
       (entityData) => ({
         value: entityData.id,
         label: `${entityData.displayName} (id: ${entityData.id})`,

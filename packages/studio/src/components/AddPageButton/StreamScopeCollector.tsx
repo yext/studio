@@ -92,15 +92,18 @@ export default function StreamScopeCollector({
 }
 
 function useStreamScopeFields() {
-  const [savedFilters, entityTypes] = useStudioStore((store) => [
+  const [savedFilters, entitiesRecord] = useStudioStore((store) => [
     store.accountContent.savedFilters,
-    store.accountContent.entityTypes,
+    store.accountContent.entitiesRecord,
   ]);
 
   return useMemo(() => {
     return [
-      ["entityTypes", entityTypes.map((entityType) => ({ id: entityType }))],
+      [
+        "entityTypes",
+        Object.keys(entitiesRecord).map((entityType) => ({ id: entityType })),
+      ],
       ["savedFilterIds", savedFilters],
     ] satisfies [keyof StreamScope, StreamScopeFieldProps["options"]][];
-  }, [entityTypes, savedFilters]);
+  }, [entitiesRecord, savedFilters]);
 }

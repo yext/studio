@@ -1,7 +1,7 @@
 import * as sendMessageModule from "../../../src/messaging/sendMessage";
 import { MessageID, ResponseType } from "@yext/studio-plugin";
 import {
-  fetchEntitiesRecord,
+  fetchInitialEntitiesRecord,
   fetchSavedFilters,
 } from "../../../src/store/slices/accountContent/utils";
 
@@ -30,7 +30,7 @@ describe("fetchSavedFilters", () => {
   });
 });
 
-describe("fetchEntitiesRecord", () => {
+describe("fetchInitialEntitiesRecord", () => {
   it("returns an empty entities record if error fetching entity types", async () => {
     jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
       return new Promise((resolve) =>
@@ -42,7 +42,7 @@ describe("fetchEntitiesRecord", () => {
     });
 
     expect(consoleErrorSpy).toBeCalledTimes(0);
-    const entitiesRecord = await fetchEntitiesRecord();
+    const entitiesRecord = await fetchInitialEntitiesRecord();
     expect(entitiesRecord).toEqual({});
     expect(consoleErrorSpy).toBeCalledTimes(1);
     expect(consoleErrorSpy).toBeCalledWith("msg");
@@ -99,7 +99,7 @@ describe("fetchEntitiesRecord", () => {
       });
 
     expect(consoleErrorSpy).toBeCalledTimes(0);
-    const entitiesRecord = await fetchEntitiesRecord();
+    const entitiesRecord = await fetchInitialEntitiesRecord();
     expect(entitiesRecord).toEqual({
       location: {
         totalCount: 1,
