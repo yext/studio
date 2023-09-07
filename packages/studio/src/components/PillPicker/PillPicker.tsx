@@ -58,7 +58,7 @@ function renderDropdown(
 ) {
   return (
     <div className="relative">
-      <ul className="absolute w-max bg-white mt-2 -right-2 rounded border shadow-2xl z-10 opacity-100">
+      <ul className="absolute w-max max-h-36 overflow-y-scroll bg-white mt-2 -right-2 rounded border shadow-2xl z-10 opacity-100">
         {items.map((item) => {
           return (
             <DropdownItem

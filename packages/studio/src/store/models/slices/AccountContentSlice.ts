@@ -7,4 +7,5 @@ type EntitiesRecord = {
 export default interface AccountContentSlice {
   savedFilters: SavedFilterData[];
   entitiesRecord: EntitiesRecord;
+  refreshBaseAccountContent: () => void;
 }

@@ -28,5 +28,9 @@ export default function mockStore(state: MockStudioStore) {
       ...useStudioStore.getState().previousSave,
       ...state.previousSave,
     },
+    accountContent: {
+      ...useStudioStore.getState().accountContent,
+      ...state.accountContent,
+    },
   });
 }
