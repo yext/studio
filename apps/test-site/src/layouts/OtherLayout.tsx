@@ -1,6 +1,5 @@
 function OtterLayout() {
-  return (<></>
-  );
+  return <></>;
 }
 
 export default OtterLayout;
