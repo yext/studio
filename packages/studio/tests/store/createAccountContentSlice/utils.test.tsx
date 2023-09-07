@@ -5,6 +5,12 @@ import {
   fetchSavedFilters,
 } from "../../../src/store/slices/accountContent/utils";
 
+let consoleErrorSpy: jest.SpyInstance;
+
+beforeEach(() => {
+  consoleErrorSpy = jest.spyOn(global.console, "error").mockImplementation();
+});
+
 describe("fetchSavedFilters", () => {
   it("returns an empty array if fetch returns an error", async () => {
     jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
@@ -16,8 +22,11 @@ describe("fetchSavedFilters", () => {
       );
     });
 
+    expect(consoleErrorSpy).toBeCalledTimes(0);
     const savedFilters = await fetchSavedFilters();
     expect(savedFilters).toEqual([]);
+    expect(consoleErrorSpy).toBeCalledTimes(1);
+    expect(consoleErrorSpy).toBeCalledWith("msg");
   });
 });
 
@@ -32,8 +41,11 @@ describe("fetchEntitiesRecord", () => {
       );
     });
 
+    expect(consoleErrorSpy).toBeCalledTimes(0);
     const entitiesRecord = await fetchEntitiesRecord();
     expect(entitiesRecord).toEqual({});
+    expect(consoleErrorSpy).toBeCalledTimes(1);
+    expect(consoleErrorSpy).toBeCalledWith("msg");
   });
 
   it("ignores entity types with zero entities or an error response", async () => {
@@ -86,6 +98,7 @@ describe("fetchEntitiesRecord", () => {
         }
       });
 
+    expect(consoleErrorSpy).toBeCalledTimes(0);
     const entitiesRecord = await fetchEntitiesRecord();
     expect(entitiesRecord).toEqual({
       location: {
@@ -98,5 +111,7 @@ describe("fetchEntitiesRecord", () => {
         ],
       },
     });
+    expect(consoleErrorSpy).toBeCalledTimes(1);
+    expect(consoleErrorSpy).toBeCalledWith("msg");
   });
 });

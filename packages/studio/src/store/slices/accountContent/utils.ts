@@ -7,9 +7,11 @@ export async function fetchSavedFilters() {
     null,
     { hideSuccessToast: true }
   );
-  return savedFiltersResponse.type === ResponseType.Success
-    ? savedFiltersResponse.savedFilters
-    : [];
+  if (savedFiltersResponse.type === ResponseType.Success) {
+    return savedFiltersResponse.savedFilters;
+  }
+  console.error(savedFiltersResponse.msg);
+  return [];
 }
 
 export async function fetchEntitiesRecord() {
@@ -19,6 +21,7 @@ export async function fetchEntitiesRecord() {
     { hideSuccessToast: true }
   );
   if (entityTypesResponse.type !== ResponseType.Success) {
+    console.error(entityTypesResponse.msg);
     return {};
   }
 
@@ -45,7 +48,9 @@ async function fetchInitialEntities(entityType: string) {
     },
     { hideSuccessToast: true }
   );
-  return entitiesResponse.type === ResponseType.Success
-    ? entitiesResponse.entities
-    : { entities: [], totalCount: 0 };
+  if (entitiesResponse.type === ResponseType.Success) {
+    return entitiesResponse.entities;
+  }
+  console.error(entitiesResponse.msg);
+  return { entities: [], totalCount: 0 };
 }
