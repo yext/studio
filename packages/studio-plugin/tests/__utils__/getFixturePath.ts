@@ -16,10 +16,6 @@ export function getModulePath(moduleName: string): string {
   return getFixturePath(upath.join("ModuleFile", moduleName + ".tsx"));
 }
 
-export function getLayoutPath(LayoutName: string): string {
-  return getFixturePath(upath.join("LayoutFile", LayoutName + ".tsx"));
-}
-
 export function getSiteSettingsPath(fileName = "siteSettings.ts"): string {
   return getFixturePath(upath.join("SiteSettingsFile", fileName));
 }

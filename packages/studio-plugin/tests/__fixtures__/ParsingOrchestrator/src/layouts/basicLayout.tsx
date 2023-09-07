@@ -1,6 +1,6 @@
 import Card from "../components/Card";
 
-export default function IndexPage() {
+export default function BasicLayout() {
   return (
     <div>
       <Card text="first!" />
