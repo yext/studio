@@ -7,6 +7,6 @@ type EntitiesRecord = {
 export default interface AccountContentSlice {
   savedFilters: SavedFilterData[];
   entitiesRecord: EntitiesRecord;
-  entityTypes: string[];
+  refreshBaseAccountContent: () => void;
   fetchEntities: (entityType: string, pageNum: number) => Promise<void>;
 }

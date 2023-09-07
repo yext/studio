@@ -14,7 +14,7 @@ import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import { addZundoMiddleware } from "./zundoMiddleware";
 import createStudioEnvDataSlice from "./slices/createStudioEnvDataSlice";
-import createAccountContentSlice from "./slices/createAccountContentSlice";
+import createAccountContentSlice from "./slices/accountContent/createAccountContentSlice";
 
 enableMapSet();
 
@@ -56,8 +56,10 @@ const useStudioStore = create<StudioStore>()(
 );
 
 void useStudioStore.getState().actions.refreshActivePageEntities();
-void useStudioStore.getState().accountContent.fetchEntities("location", 0);
-void useStudioStore.getState().accountContent.fetchEntities("ce_person", 0);
+// TODO: Once we know how the user's API key will be sourced, consider updating
+// this to check for the presence of the API key
+useStudioStore.getState().studioConfig.isPagesJSRepo &&
+  void useStudioStore.getState().accountContent.refreshBaseAccountContent();
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;
