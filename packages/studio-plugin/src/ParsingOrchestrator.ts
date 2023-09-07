@@ -20,7 +20,6 @@ import { Project } from "ts-morph";
 import typescript from "typescript";
 import { v4 } from "uuid";
 import { ParsingError } from "./errors/ParsingError";
-import LayoutFile from "./sourcefiles/LayoutFile";
 
 export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({
@@ -38,7 +37,7 @@ export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
   private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
-  private layoutFilenameToLayoutFile: Record<string, LayoutFile> = {};
+  private layoutNames: string[] = [];
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
   private paths: UserPaths;
@@ -52,7 +51,7 @@ export default class ParsingOrchestrator {
     this.paths = studioConfig.paths;
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
-    this.layoutFilenameToLayoutFile = this.initLayoutFilenameToLayoutFile();
+    this.layoutNames = this.initLayoutNames();
   }
 
   getPageFile(pageName: string): PageFile {
@@ -71,17 +70,6 @@ export default class ParsingOrchestrator {
       this.project,
       this.studioConfig.isPagesJSRepo,
       pageEntityFiles
-    );
-  }
-
-  getLayoutFile(layoutFilename: string): LayoutFile {
-    const layoutFile = this.layoutFilenameToLayoutFile[layoutFilename];
-    if (layoutFile) {
-      return layoutFile;
-    }
-    return new LayoutFile(
-      upath.join(this.paths.layouts, layoutFilename + ".tsx"),
-      this.project
     );
   }
 
@@ -146,11 +134,9 @@ export default class ParsingOrchestrator {
         this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
       }
     } else if (filepath.startsWith(this.paths.layouts)) {
-      const layoutFilename = upath.basename(filepath, ".tsx");
-      delete this.layoutFilenameToLayoutFile[layoutFilename];
-      if (fileExists) {
-        this.layoutFilenameToLayoutFile[layoutFilename] =
-          this.getLayoutFile(layoutFilename);
+      const layoutName = upath.basename(filepath, ".tsx");
+      if (fileExists && !this.layoutNames.includes(layoutName)) {
+        this.layoutNames.push(layoutName)
       }
     }
     this.studioData = this.calculateStudioData();
@@ -185,19 +171,9 @@ export default class ParsingOrchestrator {
       }
     );
 
-    const layoutRecords = Object.keys(this.layoutFilenameToLayoutFile).reduce(
-      (prev, filename) => {
-        const layoutFile = this.layoutFilenameToLayoutFile[filename];
-        const layoutName = layoutFile.getLayoutName();
-        prev.layoutNameToLayoutPath[layoutName] = layoutFile.getFilepath();
-        return prev;
-      },
-      { layoutNameToLayoutPath: {} }
-    );
-
     return {
       ...pageRecords,
-      ...layoutRecords,
+      layouts: this.layoutNames,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
       studioConfig: this.studioConfig,
@@ -228,16 +204,15 @@ export default class ParsingOrchestrator {
     return this.filepathToFileMetadata;
   }
 
-  private initLayoutFilenameToLayoutFile(): Record<string, LayoutFile> {
+  private initLayoutNames(): string[] {
     if (!fs.existsSync(this.paths.layouts)) {
-      return {};
+      return [];
     }
     const files = fs.readdirSync(this.paths.layouts, "utf-8");
-    return files.reduce((layoutMap, filename) => {
-      const layoutFilename = upath.basename(filename, ".tsx");
-      layoutMap[layoutFilename] = this.getLayoutFile(layoutFilename);
-      return layoutMap;
-    }, {} as Record<string, LayoutFile>);
+    return files.map((filename) => {
+      const layoutName = upath.basename(filename, ".tsx");
+      return layoutName;
+    });
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {

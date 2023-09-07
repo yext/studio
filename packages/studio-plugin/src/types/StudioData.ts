@@ -5,9 +5,9 @@ import { StudioConfigWithDefaulting } from "./StudioConfig";
 
 export interface StudioData {
   pageNameToPageState: Record<string, PageState>;
-  layoutNameToLayoutPath: Record<string, string>;
   pageNameToErrorPageState: Record<string, ErrorPageState>;
   UUIDToFileMetadata: Record<string, FileMetadata>;
+  layouts: string[];
   siteSettings?: SiteSettings;
   studioConfig: StudioConfigWithDefaulting;
   isWithinCBD: boolean;
