@@ -22,8 +22,8 @@
     "postcss": "^8.4.27",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "zundo": "2.0.0-beta.12",
-    "zustand": "^4.3.2"
+    "vite": "^4.4.7",
+    "vite-plugin-svgr": "^2.4.0"
   },
   "devDependencies": {
     "@types/node": "^18.11.15",
