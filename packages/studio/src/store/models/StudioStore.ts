@@ -1,5 +1,6 @@
 import StudioActions from "../StudioActions";
 import FileMetadataSlice from "./slices/FileMetadataSlice";
+import { LayoutsSlice } from "./slices/LayoutsSlice";
 import PagePreviewSlice from "./slices/PagePreviewSlice";
 import PageSlice from "./slices/PageSlice";
 import PreviousSaveSlice from "./slices/PreviousSaveSlice";
@@ -15,6 +16,7 @@ import StudioEnvDataSlice from "./slices/StudioEnvDataSlice";
 export type StudioStore = {
   fileMetadatas: FileMetadataSlice;
   pages: PageSlice;
+  layouts: LayoutsSlice;
   siteSettings: SiteSettingSlice;
   pagePreview: PagePreviewSlice;
   previousSave: PreviousSaveSlice;

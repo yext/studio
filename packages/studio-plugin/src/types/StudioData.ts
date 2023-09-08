@@ -7,6 +7,7 @@ export interface StudioData {
   pageNameToPageState: Record<string, PageState>;
   pageNameToErrorPageState: Record<string, ErrorPageState>;
   UUIDToFileMetadata: Record<string, FileMetadata>;
+  layouts: string[];
   siteSettings?: SiteSettings;
   studioConfig: StudioConfigWithDefaulting;
   isWithinCBD: boolean;

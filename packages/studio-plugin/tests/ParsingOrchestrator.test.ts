@@ -65,7 +65,7 @@ describe("aggregates data as expected", () => {
     studioData = orchestrator.getStudioData();
   });
 
-  it("UUIDToFileMetadata", () => {
+  it("properly populates UUIDToFileMetadata", () => {
     const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
     expect(fileMetadataArray).toHaveLength(4);
     expect(fileMetadataArray).toContainEqual(
@@ -104,18 +104,22 @@ describe("aggregates data as expected", () => {
     );
   });
 
-  it("pageNameToPageState", () => {
+  it("properly populates pageNameToPageState", () => {
     expect(studioData.pageNameToPageState).toEqual({
       basicPage: basicPageState,
       pageWithModules: pageWithModulesState,
     });
   });
 
-  it("siteSettings", () => {
+  it("properly populates siteSettings", () => {
     expect(studioData.siteSettings).toEqual({
       shape: expect.anything(),
       values: expect.anything(),
     });
+  });
+
+  it("properly populates layouts", () => {
+    expect(studioData.layouts).toEqual(["basicLayout"]);
   });
 
   describe("PagesJS state", () => {
