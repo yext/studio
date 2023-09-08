@@ -135,7 +135,11 @@ export default class ParsingOrchestrator {
       }
     } else if (filepath.startsWith(this.paths.layouts)) {
       const layoutName = upath.basename(filepath, ".tsx");
-      if (fileExists && !this.layoutNames.includes(layoutName)) {
+      const index = this.layoutNames.indexOf(layoutName)
+      if (index >= 0){
+        this.layoutNames.splice(index, 1)
+      }
+      if (fileExists) {
         this.layoutNames.push(layoutName);
       }
     }
