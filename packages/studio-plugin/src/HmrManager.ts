@@ -72,6 +72,7 @@ function getHMRUpdateType(file: string, userPaths: UserPaths) {
     "siteSettings",
     "components",
     "modules",
+    "layouts",
     "pages",
   ];
   return (

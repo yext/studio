@@ -37,6 +37,7 @@ export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
   private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
+  private layoutNames: string[] = [];
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
   private paths: UserPaths;
@@ -50,6 +51,7 @@ export default class ParsingOrchestrator {
     this.paths = studioConfig.paths;
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
+    this.layoutNames = this.initLayoutNames();
   }
 
   getPageFile(pageName: string): PageFile {
@@ -131,6 +133,15 @@ export default class ParsingOrchestrator {
       if (fileExists) {
         this.pageNameToPageFile[pageName] = this.getPageFile(pageName);
       }
+    } else if (filepath.startsWith(this.paths.layouts)) {
+      const layoutName = upath.basename(filepath, ".tsx");
+      const index = this.layoutNames.indexOf(layoutName);
+      if (index >= 0) {
+        this.layoutNames.splice(index, 1);
+      }
+      if (fileExists) {
+        this.layoutNames.push(layoutName);
+      }
     }
     this.studioData = this.calculateStudioData();
   }
@@ -166,6 +177,7 @@ export default class ParsingOrchestrator {
 
     return {
       ...pageRecords,
+      layouts: this.layoutNames,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
       studioConfig: this.studioConfig,
@@ -194,6 +206,17 @@ export default class ParsingOrchestrator {
     addDirectoryToMapping(this.paths.modules);
 
     return this.filepathToFileMetadata;
+  }
+
+  private initLayoutNames(): string[] {
+    if (!fs.existsSync(this.paths.layouts)) {
+      return [];
+    }
+    const files = fs.readdirSync(this.paths.layouts, "utf-8");
+    return files.map((filename) => {
+      const layoutName = upath.basename(filename, ".tsx");
+      return layoutName;
+    });
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {
