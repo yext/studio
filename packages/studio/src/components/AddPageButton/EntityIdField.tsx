@@ -1,9 +1,9 @@
-import Select, { MultiValue } from "react-select";
+import Select, { MultiValue, StylesConfig } from "react-select";
 import useStudioStore from "../../store/useStudioStore";
 import StreamScopeFieldLabel from "./StreamScopeFieldLabel";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
+import { pillContainerClass } from "../PillPicker/PillPickerInput";
 import classNames from "classnames";
-import getSelectCssClasses from "../../utils/getSelectCssClasses";
 
 interface Props {
   disabled: boolean;
@@ -20,11 +20,7 @@ export default function EntityIdField({
     store.accountContent.entitiesRecord,
     store.accountContent.fetchEntities,
   ]);
-  const availableEntityTypes = Object.entries(entitiesRecord)
-    .filter(([_entityType, entityData]) => {
-      return Object.values(entityData).length > 0;
-    })
-    .map((entry) => entry[0]);
+  const availableEntityTypes = disabled ? [] : Object.keys(entitiesRecord);
   const [isLoading, setIsLoading] = useState(false);
   const [entityType, setEntityType] = useState<string | undefined>(
     availableEntityTypes[0]
@@ -53,7 +49,9 @@ export default function EntityIdField({
     if (!entityType) {
       return;
     }
-    const currentNumEntities = Object.keys(entitiesRecord[entityType]).length;
+    const currentNumEntities = Object.keys(
+      entitiesRecord[entityType].entities
+    ).length;
     if (currentNumEntities >= entitiesRecord[entityType].totalCount) {
       return;
     }
@@ -62,13 +60,17 @@ export default function EntityIdField({
     setIsLoading(false);
   }, [entitiesRecord, entityType, fetchEntities]);
 
-  const className = classNames("flex flex-col mb-1");
+  const containerClass = "flex flex-col mb-4";
 
   if (availableEntityTypes.length === 0) {
     return (
-      <div className={className}>
+      <div className={containerClass}>
         <StreamScopeFieldLabel streamScopeField="entityIds" />
-        <div className="border border-gray-400 min-h-[38px] rounded-lg pt-2 pb-1 px-2 w-full text-sm bg-gray-50 text-gray-500">
+        <div
+          className={classNames(pillContainerClass, "mt-2", {
+            "bg-gray-50": disabled,
+          })}
+        >
           {!disabled && "No entity types found in the account."}
         </div>
       </div>
@@ -76,35 +78,45 @@ export default function EntityIdField({
   }
 
   return (
-    <div className={className}>
-      <StreamScopeFieldLabel streamScopeField="entityIds" />
-      <label className="mt-2 text-sm flex flex-col">
-        {!disabled && "Choosing from entities of type:"}
+    <div className={containerClass}>
+      <div>
+        <StreamScopeFieldLabel streamScopeField="entityIds" />
+      </div>
+      <div className="flex items-center mt-2">
         <select
-          className={getSelectCssClasses()}
+          className="disabled:bg-gray-100 border border-r-0 border-gray-400 text-gray-900 focus:ring-blue-500 focus:border-blue-500 py-2 pl-1 pr-1"
           onChange={onEntityTypeChange}
           disabled={disabled}
         >
-          {!disabled &&
-            availableEntityTypes.map((entityType) => (
-              <option key={entityType}>{entityType}</option>
-            ))}
+          {availableEntityTypes.map((entityType) => (
+            <option key={entityType}>{entityType}</option>
+          ))}
         </select>
-      </label>
-      {!disabled && (
         <Select
-          className="my-2"
+          className="grow"
           isMulti={true}
           onChange={onEntityIdChange}
           value={selectedOptions}
           options={entityOptions}
           onMenuScrollToBottom={onMenuScrollToBottom}
           isLoading={isLoading}
+          isSearchable={false}
+          placeholder="Select entity ids..."
+          styles={selectStyles}
         />
-      )}
+      </div>
     </div>
   );
 }
+
+const selectStyles = {
+  control: (base) => ({
+    ...base,
+    borderTopLeftRadius: "0",
+    borderBottomLeftRadius: "0",
+    borderColor: "rgb(156, 163, 175)",
+  }),
+} satisfies StylesConfig;
 
 function useEntityOptions(entityType?: string) {
   const entitiesRecord = useStudioStore(

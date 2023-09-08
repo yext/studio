@@ -37,8 +37,8 @@ const createAccountContentSlice: SliceCreator<AccountContentSlice> = (set) => ({
       }, {});
 
     set((state) => {
-      state.entitiesRecord[entityType] = {
-        ...state.entitiesRecord[entityType],
+      state.entitiesRecord[entityType].entities = {
+        ...state.entitiesRecord[entityType].entities,
         ...entityIdToEntityData,
       };
     });

@@ -3,7 +3,7 @@ import { ReactComponent as X } from "../../icons/x.svg";
 import classNames from "classnames";
 import PillPicker from "./PillPicker";
 
-const pillContainerClass =
+export const pillContainerClass =
   "flex flex-wrap min-h-[38px] items-center border border-gray-400 rounded-lg pt-2 pb-1 px-2 w-full text-sm";
 
 interface PillPickerInputProps {

@@ -11,7 +11,11 @@ export default function StreamScopeFieldLabel({ streamScopeField }: Props) {
   return (
     <label id={streamScopeField}>
       {description}
-      <Tooltip anchorSelect={`#${streamScopeField}`} content={tooltip} />
+      <Tooltip
+        anchorSelect={`#${streamScopeField}`}
+        content={tooltip}
+        place="top-start"
+      />
     </label>
   );
 }
