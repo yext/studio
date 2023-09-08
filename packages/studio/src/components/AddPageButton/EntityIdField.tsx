@@ -63,14 +63,16 @@ export default function EntityIdField({
   if (availableEntityTypes.length === 0) {
     return (
       <div className={containerClass}>
-        <StreamScopeFieldLabel streamScopeField="entityIds" />
+        <div>
+          <StreamScopeFieldLabel streamScopeField="entityIds" />
+        </div>
         <div
           className={classNames(
             pillContainerClass,
             "mt-2 bg-gray-50 text-gray-500 pb-2"
           )}
         >
-          {!disabled && "No entity types found in the account."}
+          {!disabled && "No entities found in the account."}
         </div>
       </div>
     );
@@ -83,7 +85,7 @@ export default function EntityIdField({
       </div>
       <div className="flex items-center mt-2">
         <select
-          className="disabled:bg-gray-100 border border-r-0 border-gray-400 text-gray-900 focus:ring-blue-500 focus:border-blue-500 py-2 pl-1 pr-1 text-sm h-[39px] rounded-l-lg"
+          className="disabled:bg-gray-100 border border-r-0 border-gray-400 text-gray-900 focus:ring-blue-500 focus:border-blue-500 py-2 pl-1 pr-1 text-sm h-[38px] rounded-l-lg"
           onChange={onEntityTypeChange}
           disabled={disabled}
         >
@@ -92,7 +94,7 @@ export default function EntityIdField({
           ))}
         </select>
         <Select
-          className="grow"
+          className="grow text-sm"
           isMulti={true}
           onChange={onEntityIdChange}
           value={selectedOptions}
@@ -116,10 +118,6 @@ const selectStyles = {
     borderColor: "rgb(156, 163, 175)",
     borderTopRightRadius: "0.5rem",
     borderBottomRightRadius: "0.5rem",
-  }),
-  menu: (base) => ({
-    ...base,
-    fontSize: "14px",
   }),
 } satisfies StylesConfig;
 

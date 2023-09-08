@@ -12,7 +12,7 @@ export interface EntitiesQueryParams extends BaseQueryParams {
   limit: number;
 }
 
-export interface EntityData {
+interface EntityData {
   id: string;
   displayName: string;
 }
