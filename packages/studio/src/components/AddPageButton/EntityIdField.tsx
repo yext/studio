@@ -66,7 +66,7 @@ export default function EntityIdField({
     return (
       <div className={containerClass}>
         <StreamScopeFieldLabel streamScopeField="entityIds" />
-        <div className={classNames(pillContainerClass, "mt-2 bg-gray-50")}>
+        <div className={classNames(pillContainerClass, "mt-2 bg-gray-50 text-gray-500 pb-2")}>
           {!disabled && "No entity types found in the account."}
         </div>
       </div>
