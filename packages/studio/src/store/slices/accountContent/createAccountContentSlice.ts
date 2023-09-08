@@ -5,7 +5,6 @@ import {
   fetchInitialEntitiesRecord,
   fetchSavedFilters,
 } from "./utils";
-import { EntityData } from "@yext/studio-plugin";
 
 const createAccountContentSlice: SliceCreator<AccountContentSlice> = (set) => ({
   savedFilters: [],
@@ -30,17 +29,8 @@ const createAccountContentSlice: SliceCreator<AccountContentSlice> = (set) => ({
       return;
     }
 
-    const entityIdToEntityData: Record<string, EntityData> =
-      res.entities.reduce((prev, curr) => {
-        prev[curr.id] = curr;
-        return prev;
-      }, {});
-
     set((state) => {
-      state.entitiesRecord[entityType].entities = {
-        ...state.entitiesRecord[entityType].entities,
-        ...entityIdToEntityData,
-      };
+      state.entitiesRecord[entityType].entities.push(...res.entities);
     });
   },
 });

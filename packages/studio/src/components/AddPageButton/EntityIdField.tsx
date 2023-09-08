@@ -49,9 +49,7 @@ export default function EntityIdField({
     if (!entityType) {
       return;
     }
-    const currentNumEntities = Object.keys(
-      entitiesRecord[entityType].entities
-    ).length;
+    const currentNumEntities = entitiesRecord[entityType].entities.length;
     if (currentNumEntities >= entitiesRecord[entityType].totalCount) {
       return;
     }
@@ -85,7 +83,7 @@ export default function EntityIdField({
       </div>
       <div className="flex items-center mt-2">
         <select
-          className="disabled:bg-gray-100 border border-r-0 border-gray-400 text-gray-900 focus:ring-blue-500 focus:border-blue-500 py-2 pl-1 pr-1"
+          className="disabled:bg-gray-100 border border-r-0 border-gray-400 text-gray-900 focus:ring-blue-500 focus:border-blue-500 py-2 pl-1 pr-1 text-sm h-[39px] rounded-l-lg"
           onChange={onEntityTypeChange}
           disabled={disabled}
         >
@@ -116,6 +114,12 @@ const selectStyles = {
     borderTopLeftRadius: "0",
     borderBottomLeftRadius: "0",
     borderColor: "rgb(156, 163, 175)",
+    borderTopRightRadius: "0.5rem",
+    borderBottomRightRadius: "0.5rem",
+  }),
+  menu: (base) => ({
+    ...base,
+    fontSize: "14px",
   }),
 } satisfies StylesConfig;
 
@@ -128,11 +132,9 @@ function useEntityOptions(entityType?: string) {
     if (!entityType) {
       return [];
     }
-    return Object.values(entitiesRecord[entityType]?.entities ?? []).map(
-      (entityData) => ({
-        value: entityData.id,
-        label: `${entityData.displayName} (id: ${entityData.id})`,
-      })
-    );
+    return entitiesRecord[entityType]?.entities.map((entityData) => ({
+      value: entityData.id,
+      label: `${entityData.displayName} (id: ${entityData.id})`,
+    }));
   }, [entitiesRecord, entityType]);
 }
