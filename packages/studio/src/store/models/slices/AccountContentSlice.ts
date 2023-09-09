@@ -8,4 +8,5 @@ export default interface AccountContentSlice {
   savedFilters: SavedFilterData[];
   entitiesRecord: EntitiesRecord;
   refreshBaseAccountContent: () => void;
+  fetchEntities: (entityType: string, pageNum: number) => Promise<void>;
 }

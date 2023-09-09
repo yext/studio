@@ -1,25 +1,20 @@
-import { useCallback, useContext, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
-import AddPageContext from "./AddPageContext";
+import { useStreamScope } from "./AddPageContext";
 import useStudioStore from "../../store/useStudioStore";
 import { StreamScope } from "@yext/studio-plugin";
-import ScopeFilterField, {
-  ScopeFilterFieldProps,
-} from "../common/ScopeFilterField";
+import StreamScopeField, {
+  StreamScopeFieldProps,
+} from "../common/StreamScopeField";
+import EntityIdField from "./EntityIdField";
 
 export default function StreamScopeCollector({
   isOpen,
   handleClose,
   handleConfirm,
 }: FlowStepModalProps) {
-  const { state, actions } = useContext(AddPageContext);
-  const { streamScope } = state;
-  const { setStreamScope } = actions;
-  const [savedFilters, entitiesRecord] = useStudioStore((store) => [
-    store.accountContent.savedFilters,
-    store.accountContent.entitiesRecord,
-  ]);
+  const [streamScope, setStreamScope] = useStreamScope();
 
   const onConfirm = useCallback(async () => {
     if (streamScope === undefined) {
@@ -28,27 +23,7 @@ export default function StreamScopeCollector({
     await handleConfirm();
   }, [streamScope, setStreamScope, handleConfirm]);
 
-  const updateStreamScope = useCallback(
-    (field: string) => (selectedIds: string[]) => {
-      const updatedStreamScope = {
-        ...(selectedIds.length && { [field]: selectedIds }),
-      };
-      setStreamScope(updatedStreamScope);
-    },
-    [setStreamScope]
-  );
-
-  const optionsMap: {
-    [field in keyof StreamScope]: ScopeFilterFieldProps["filterOptions"];
-  } = useMemo(
-    () => ({
-      // TODO (SLAP-2907): Populate dropdown from store
-      entityIds: [],
-      entityTypes: Object.keys(entitiesRecord).map((id) => ({ id })),
-      savedFilterIds: savedFilters,
-    }),
-    [savedFilters, entitiesRecord]
-  );
+  const streamScopeFields = useStreamScopeFields();
 
   const modalBodyContent = useMemo(() => {
     const totalStreamScopeItems = Object.values(streamScope ?? {}).reduce(
@@ -58,30 +33,50 @@ export default function StreamScopeCollector({
       0
     );
 
+    const updateSelection =
+      (streamScopeField: keyof StreamScope) => (selectedIds: string[]) => {
+        if (selectedIds.length) {
+          setStreamScope({
+            [streamScopeField]: selectedIds,
+          });
+        } else {
+          setStreamScope({});
+        }
+      };
+
     return (
       <>
         <div className="italic mb-4">
           Use one of the optional fields below to specify which entities this
           page can access.
         </div>
-        {Object.entries(optionsMap).map(([field, filterOptions]) => {
-          const selectedIds: string[] | undefined = streamScope?.[field];
+        <EntityIdField
+          disabled={
+            !!streamScope?.entityTypes?.length ||
+            !!streamScope?.savedFilterIds?.length
+          }
+          updateSelection={updateSelection("entityIds")}
+          selectedIds={streamScope?.entityIds}
+        />
+        {streamScopeFields.map(([streamScopeField, options]) => {
+          const selectedIds: string[] | undefined =
+            streamScope?.[streamScopeField];
           const hasOtherScopeFilters =
             totalStreamScopeItems > (selectedIds?.length ?? 0);
           return (
-            <ScopeFilterField
-              key={field}
-              field={field}
-              filterOptions={filterOptions}
+            <StreamScopeField
+              key={streamScopeField}
+              streamScopeField={streamScopeField}
+              options={options}
               selectedIds={selectedIds}
-              updateFilterFieldIds={updateStreamScope(field)}
-              disabled={filterOptions.length > 0 && hasOtherScopeFilters}
+              updateSelection={updateSelection(streamScopeField)}
+              disabled={hasOtherScopeFilters}
             />
           );
         })}
       </>
     );
-  }, [optionsMap, streamScope, updateStreamScope]);
+  }, [streamScopeFields, streamScope, setStreamScope]);
 
   return (
     <DialogModal
@@ -94,4 +89,21 @@ export default function StreamScopeCollector({
       isConfirmButtonDisabled={false}
     />
   );
+}
+
+function useStreamScopeFields() {
+  const [savedFilters, entitiesRecord] = useStudioStore((store) => [
+    store.accountContent.savedFilters,
+    store.accountContent.entitiesRecord,
+  ]);
+
+  return useMemo(() => {
+    return [
+      [
+        "entityTypes",
+        Object.keys(entitiesRecord).map((entityType) => ({ id: entityType })),
+      ],
+      ["savedFilterIds", savedFilters],
+    ] satisfies [keyof StreamScope, StreamScopeFieldProps["options"]][];
+  }, [entitiesRecord, savedFilters]);
 }

@@ -1,4 +1,5 @@
 import { ChangeEvent, useCallback } from "react";
+import getSelectCssClasses from "../utils/getSelectCssClasses";
 
 interface UnionPropInputProps {
   unionValues: string[];
@@ -6,9 +7,6 @@ interface UnionPropInputProps {
   onChange: (value: string) => void;
   disabled?: boolean;
 }
-
-export const selectCssClasses =
-  "disabled:bg-gray-100 border border-gray-400 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 p-2";
 
 /**
  * Renders the dropdown for a string union prop, that will update the
@@ -31,7 +29,7 @@ export default function UnionPropInput({
   return (
     <select
       onChange={handleChangeEvent}
-      className={selectCssClasses}
+      className={getSelectCssClasses()}
       value={propValue ?? ""}
       disabled={disabled}
     >

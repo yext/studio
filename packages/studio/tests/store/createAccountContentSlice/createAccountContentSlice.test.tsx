@@ -126,3 +126,40 @@ describe("refreshBaseAccountContent", () => {
     );
   });
 });
+
+it("fetchEntities appends new entities", async () => {
+  mockStore({
+    accountContent: {
+      entitiesRecord: {
+        location: {
+          entities: [],
+          totalCount: 1,
+        },
+      },
+    },
+  });
+  const entities = [
+    {
+      displayName: "name",
+      id: "id",
+    },
+  ];
+
+  jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
+    return new Promise((resolve) =>
+      resolve({
+        msg: "msg",
+        type: ResponseType.Success,
+        entities: {
+          entities,
+          totalCount: 1,
+        },
+      })
+    );
+  });
+
+  await useStudioStore.getState().accountContent.fetchEntities("location", 0);
+  expect(
+    useStudioStore.getState().accountContent.entitiesRecord["location"].entities
+  ).toEqual(entities);
+});

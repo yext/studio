@@ -1,61 +1,56 @@
-import { Tooltip } from "react-tooltip";
 import PillPickerInput from "../PillPicker/PillPickerInput";
-import { streamScopeFormData } from "../PageSettingsButton/EntityPageModal";
-import { StreamScope } from "@yext/studio-plugin";
 import { useCallback } from "react";
+import StreamScopeFieldLabel from "../AddPageButton/StreamScopeFieldLabel";
 
 // TODO (SLAP-2918): Combine this with streamScopeFormData once this component
 // is used for page settings
-const emptyTextData: { [field in keyof StreamScope]: string } = {
-  entityIds: "No entities found in the account.",
+const emptyTextData = {
   entityTypes: "No entity types found in the account.",
   savedFilterIds: "No saved filters found in the account.",
 };
 
-export interface ScopeFilterFieldProps {
-  field: string;
-  filterOptions: {
+export interface StreamScopeFieldProps {
+  streamScopeField: "entityTypes" | "savedFilterIds";
+  options: {
     id: string;
     displayName?: string;
   }[];
   selectedIds: string[] | undefined;
-  updateFilterFieldIds: (selectedIds: string[]) => void;
+  updateSelection: (selectedIds: string[]) => void;
   disabled?: boolean;
 }
 
-export default function ScopeFilterField({
-  field,
-  filterOptions,
+export default function StreamScopeField({
+  streamScopeField,
+  options,
   selectedIds,
-  updateFilterFieldIds,
+  updateSelection,
   disabled,
-}: ScopeFilterFieldProps) {
-  const { tooltip, description } = streamScopeFormData[field];
-  const availableIds = filterOptions
+}: StreamScopeFieldProps) {
+  const availableIds = options
     .map((option) => option.id)
     .filter((id) => !selectedIds?.includes(id));
 
   const getDisplayName = useCallback(
     (id: string) => {
-      const option = filterOptions.find((o) => o.id === id);
+      const option = options.find((o) => o.id === id);
       const displayName = option?.displayName;
       return displayName ? `${displayName} (id: ${id})` : id;
     },
-    [filterOptions]
+    [options]
   );
 
   return (
     <>
-      <label id={field}>{description}</label>
-      <Tooltip anchorSelect={`#${field}`} content={tooltip} />
+      <StreamScopeFieldLabel streamScopeField={streamScopeField} />
       <div className="mt-2 mb-4">
         <PillPickerInput
           selectedItems={selectedIds}
           availableItems={availableIds}
-          updateSelectedItems={updateFilterFieldIds}
+          updateSelectedItems={updateSelection}
           getDisplayName={getDisplayName}
           disabled={disabled}
-          emptyText={emptyTextData[field]}
+          emptyText={emptyTextData[streamScopeField]}
         />
       </div>
     </>

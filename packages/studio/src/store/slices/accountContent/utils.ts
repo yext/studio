@@ -14,7 +14,7 @@ export async function fetchSavedFilters() {
   return [];
 }
 
-export async function fetchEntitiesRecord() {
+export async function fetchInitialEntitiesRecord() {
   const entityTypesResponse = await sendMessage(
     MessageID.GetEntityTypes,
     null,
@@ -29,7 +29,10 @@ export async function fetchEntitiesRecord() {
     await Promise.all(
       entityTypesResponse.entityTypes.map(
         async (entityType): Promise<[string, EntitiesResponse]> => {
-          const entitiesResponse = await fetchInitialEntities(entityType);
+          const entitiesResponse = (await fetchEntities(entityType, 0)) ?? {
+            entities: [],
+            totalCount: 0,
+          };
           return [entityType, entitiesResponse];
         }
       )
@@ -39,18 +42,20 @@ export async function fetchEntitiesRecord() {
   return typeToEntitiesMap;
 }
 
-async function fetchInitialEntities(entityType: string) {
-  const entitiesResponse = await sendMessage(
+export async function fetchEntities(
+  entityType: string,
+  pageNum: number
+): Promise<EntitiesResponse | undefined> {
+  const res = await sendMessage(
     MessageID.GetEntities,
     {
       entityType,
-      pageNum: 0,
+      pageNum,
     },
     { hideSuccessToast: true }
   );
-  if (entitiesResponse.type === ResponseType.Success) {
-    return entitiesResponse.entities;
+  if (res.type === ResponseType.Success) {
+    return res.entities;
   }
-  console.error(entitiesResponse.msg);
-  return { entities: [], totalCount: 0 };
+  console.error(res.msg);
 }

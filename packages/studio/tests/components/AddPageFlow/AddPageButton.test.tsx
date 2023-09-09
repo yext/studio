@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AddPageButton from "../../../src/components/AddPageButton/AddPageButton";
 import useStudioStore from "../../../src/store/useStudioStore";
@@ -151,8 +151,12 @@ describe("PagesJS repo", () => {
         name: "Toggle pill picker",
       });
       await userEvent.click(entityTypesPicker);
-      await userEvent.click(screen.getByText("location"));
-      await userEvent.click(screen.getByText("restaurant"));
+      await userEvent.click(
+        within(screen.getByRole("list")).getByText("location")
+      );
+      await userEvent.click(
+        within(screen.getByRole("list")).getByText("restaurant")
+      );
       await userEvent.click(nextButton);
 
       const saveButton = screen.getByRole("button", { name: "Save" });
