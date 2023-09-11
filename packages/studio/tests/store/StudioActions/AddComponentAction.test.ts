@@ -27,14 +27,6 @@ const initialTree: ComponentState[] = [
     parentUUID: "mock-container-uuid",
   },
   {
-    componentName: "Mock-Module",
-    kind: ComponentStateKind.Module,
-    metadataUUID: "uuid-module",
-    props: {},
-    uuid: "mock-module-uuid",
-    parentUUID: "mock-container-uuid",
-  },
-  {
     kind: ComponentStateKind.Fragment,
     uuid: "mock-fragment-uuid",
   },
@@ -61,48 +53,13 @@ beforeEach(() => {
           metadataUUID: "uuid-container",
           acceptsChildren: true,
           filepath: "blah/Mock-Container.tsx",
-        },
-        "uuid-module": {
-          kind: FileMetadataKind.Module,
-          metadataUUID: "uuid-module",
-          componentTree: [],
-          filepath: "blah/Mock-Module.tsx",
-        },
-        StarModuleMetadataUUID: {
-          kind: FileMetadataKind.Module,
-          componentTree: initialTree,
-          metadataUUID: "StarModuleMetadataUUID",
-          filepath: "unused",
-        },
+        }
       },
     },
   });
 });
 
-describe("adds components to ModuleMetadata when a module is being edited", () => {
-  beforeEach(() => {
-    mockActivePageTree(
-      [
-        {
-          kind: ComponentStateKind.Module,
-          uuid: "ModuleState.uuid",
-          metadataUUID: "StarModuleMetadataUUID",
-          componentName: "StarModule",
-          props: {},
-        },
-      ],
-      "ModuleState.uuid"
-    );
-  });
-
-  insertionOrderTestSuite(() => {
-    return useStudioStore.getState().fileMetadatas.UUIDToFileMetadata[
-      "StarModuleMetadataUUID"
-    ];
-  });
-});
-
-describe("adds components to the active PageState when no module is being edited", () => {
+describe("adds components to the active PageState", () => {
   beforeEach(() => {
     mockActivePageTree(initialTree);
   });
@@ -164,20 +121,6 @@ function insertionOrderTestSuite(
           ...initialTree.slice(0, 2),
           { ...newComponentState, parentUUID: "mock-container-uuid" },
           ...initialTree.slice(2),
-        ],
-      })
-    );
-  });
-
-  it("puts new component directly after module if it is active component", () => {
-    useStudioStore.getState().pages.setActiveComponentUUID("mock-module-uuid");
-    useStudioStore.getState().actions.addComponent(componentMetadata);
-    expect(getExpectedObject()).toEqual(
-      expect.objectContaining({
-        componentTree: [
-          ...initialTree.slice(0, 3),
-          { ...newComponentState, parentUUID: "mock-container-uuid" },
-          ...initialTree.slice(3),
         ],
       })
     );

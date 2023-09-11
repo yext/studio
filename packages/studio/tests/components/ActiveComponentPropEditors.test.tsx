@@ -11,7 +11,6 @@ import {
   PropValues,
   PropValueType,
   StandardComponentState,
-  StandardOrModuleComponentState,
   TypeGuards,
   ValidFileMetadata,
 } from "@yext/studio-plugin";
@@ -74,40 +73,21 @@ const getComponentProps = () =>
   (
     useStudioStore
       .getState()
-      .actions.getActiveComponentState() as StandardOrModuleComponentState
+      .actions.getActiveComponentState() as StandardComponentState
   ).props;
 
 describe("ComponentStateKind.Component", () => {
-  testStandardOrModuleComponentState(
+  testStandardComponentState(
     activeComponentState,
     activeComponentMetadata
   );
 });
 
-describe("ComponentStateKind.Module", () => {
-  const activeModuleState: ComponentState = {
-    kind: ComponentStateKind.Module,
-    componentName: "ModuleBanner",
-    props: {},
-    uuid: "modulebanner-uuid",
-    metadataUUID: "modulebanner-metadata-uuid",
-  };
-
-  const activeModuleMetadata: FileMetadata = {
-    kind: FileMetadataKind.Module,
-    metadataUUID: "modulebanner-metadata-uuid",
-    filepath: "mock-filepath",
-    componentTree: [],
-  };
-  testStandardOrModuleComponentState(activeModuleState, activeModuleMetadata);
-});
-
-function testStandardOrModuleComponentState(
-  state: StandardOrModuleComponentState,
+function testStandardComponentState(
+  state: StandardComponentState,
   metadata: ValidFileMetadata
 ) {
-  const componentKindLabel =
-    state.kind === ComponentStateKind.Standard ? "component" : "module";
+  const componentKindLabel = "component";
 
   beforeEach(() => {
     mockStoreActiveComponent({
@@ -138,7 +118,7 @@ function testStandardOrModuleComponentState(
   });
 
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
-    const activeState: StandardOrModuleComponentState = {
+    const activeState: StandardComponentState = {
       ...state,
       props: {
         bgColor: {
@@ -181,7 +161,7 @@ function testStandardOrModuleComponentState(
         activeComponentMetadata?.kind === FileMetadataKind.Error ||
         !activeComponentMetadata?.propShape ||
         !activeComponentState ||
-        !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
+        !TypeGuards.isStandardComponentState(activeComponentState)
       ) {
         return null;
       }
@@ -192,7 +172,7 @@ function testStandardOrModuleComponentState(
         />
       );
     }
-    const activeComponent: StandardOrModuleComponentState = {
+    const activeComponent: StandardComponentState = {
       ...state,
       props: {
         title: {
@@ -781,7 +761,7 @@ function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape }) {
   const state = useStudioStore().pages.pages["index"].componentTree[0];
   return (
     <ActiveComponentPropEditors
-      activeComponentState={state as StandardOrModuleComponentState}
+      activeComponentState={state as StandardComponentState}
       propShape={props.propShape}
     />
   );

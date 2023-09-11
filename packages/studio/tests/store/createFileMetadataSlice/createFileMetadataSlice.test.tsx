@@ -1,7 +1,6 @@
 import {
   ComponentMetadata,
   FileMetadataKind,
-  ModuleMetadata,
   PropValueType,
 } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
@@ -19,12 +18,6 @@ const componentMetadata: ComponentMetadata = {
       required: false,
     },
   },
-};
-const moduleMetadata: ModuleMetadata = {
-  kind: FileMetadataKind.Module,
-  metadataUUID: "mock-metadataUUID",
-  filepath: "mock-filepath",
-  componentTree: [],
 };
 
 it("updates UUIDToFileMetadata using setFileMetadata", () => {
@@ -48,42 +41,6 @@ it("returns a FileMetadata using getFileMetadata", () => {
     .getState()
     .fileMetadatas.getFileMetadata("uuid-1");
   expect(fileMetadata).toEqual(componentMetadata);
-});
-
-it("errors when removeFileMetadata is called on a non-module", () => {
-  const initialState = {
-    UUIDToFileMetadata: {
-      "uuid-1": componentMetadata,
-    },
-  };
-  setInitialState(initialState);
-  const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-  useStudioStore.getState().fileMetadatas.removeFileMetadata("uuid-1");
-  expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
-  expect(consoleErrorSpy).toHaveBeenCalledWith(
-    "removeFileMetadata is only allowed for modules, not:",
-    FileMetadataKind.Component
-  );
-
-  const UUIDToFileMetadata =
-    useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
-  expect(UUIDToFileMetadata).toEqual(initialState.UUIDToFileMetadata);
-});
-
-it("removeFileMetadata can remove a module metadata", () => {
-  const initialState = {
-    UUIDToFileMetadata: {
-      "uuid-1": moduleMetadata,
-    },
-  };
-  setInitialState(initialState);
-  useStudioStore.getState().fileMetadatas.removeFileMetadata("uuid-1");
-  const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-  expect(consoleErrorSpy).toHaveBeenCalledTimes(0);
-
-  const UUIDToFileMetadata =
-    useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
-  expect(UUIDToFileMetadata).toEqual({});
 });
 
 it("updates UUIDToImportedComponent using setImportedComponent", () => {

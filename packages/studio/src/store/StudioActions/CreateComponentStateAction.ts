@@ -1,7 +1,6 @@
 import {
   ComponentStateKind,
-  FileMetadataKind,
-  StandardOrModuleComponentState,
+  StandardComponentState,
   ValidFileMetadata,
 } from "@yext/studio-plugin";
 import path from "path-browserify";
@@ -11,13 +10,10 @@ import PropValueHelpers from "../../utils/PropValueHelpers";
 export default class CreateComponentStateAction {
   createComponentState = (
     metadata: ValidFileMetadata
-  ): StandardOrModuleComponentState => {
+  ): StandardComponentState => {
     const componentName = path.basename(metadata.filepath, ".tsx");
-    const componentState: StandardOrModuleComponentState = {
-      kind:
-        metadata.kind === FileMetadataKind.Module
-          ? ComponentStateKind.Module
-          : ComponentStateKind.Standard,
+    const componentState: StandardComponentState = {
+      kind: ComponentStateKind.Standard,
       componentName,
       props: {
         ...PropValueHelpers.getDefaultPropValues(metadata.propShape ?? {}),

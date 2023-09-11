@@ -42,15 +42,13 @@ function PageItem({ pageName }: { pageName: string }) {
   const [
     updateActivePage,
     activePageName,
-    moduleUUIDBeingEdited,
     isPagesJSRepo,
   ] = useStudioStore((store) => [
     store.actions.updateActivePage,
     store.pages.activePageName,
-    store.pages.moduleUUIDBeingEdited,
     store.studioConfig.isPagesJSRepo,
   ]);
-  const isActivePage = !moduleUUIDBeingEdited && activePageName === pageName;
+  const isActivePage = activePageName === pageName;
   const checkClasses = classNames({
     invisible: !isActivePage,
   });

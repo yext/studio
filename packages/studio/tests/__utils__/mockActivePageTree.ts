@@ -3,11 +3,9 @@ import mockStore from "./mockStore";
 
 export function mockActivePageTree(
   componentTree: ComponentState[],
-  moduleUUIDBeingEdited?: string
 ) {
   mockStore({
     pages: {
-      moduleUUIDBeingEdited,
       activePageName: "pagename",
       pages: {
         pagename: {

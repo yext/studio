@@ -1,13 +1,10 @@
 import { useState, useCallback } from "react";
 import ElementSelector from "./ElementSelector";
 import renderIconForType from "../common/renderIconForType";
-import useStudioStore from "../../store/useStudioStore";
-import { FileMetadataKind } from "@yext/studio-plugin";
 
 export enum ElementType {
   Components = "Components",
   Containers = "Layouts",
-  Modules = "Modules",
 }
 /**
  * A menu for adding elements to the page.
@@ -32,20 +29,9 @@ function ElementTypeSwitcher(props: {
   setType: (elementType: ElementType) => void;
 }) {
   const { activeType, setType } = props;
-
-  const UUIDToFileMetadata = useStudioStore((store) => {
-    return store.fileMetadatas.UUIDToFileMetadata;
-  });
-  const numAvailableModules = Object.values(UUIDToFileMetadata).filter(
-    (metadata) => metadata.kind === FileMetadataKind.Module
-  ).length;
-
   return (
     <div className="flex px-4 pt-2 border-b">
       {Object.values(ElementType).map((elementType) => {
-        if (elementType === ElementType.Modules && numAvailableModules === 0) {
-          return null;
-        }
         return (
           <ElementTypeButton
             key={elementType}

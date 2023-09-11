@@ -1,20 +1,16 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
 import {
   FileMetadata,
-  FileMetadataKind,
-  ModuleMetadata,
   PageState,
   SiteSettingsValues,
 } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
 import upath from "upath";
-import { TypeGuards } from "../utils";
-import areEqualFileMetadata from "../utils/areEqualFileMetadata";
 
 /**
  * FileSystemWriter is a class for housing content modification logic
- * for Studio editable source files (e.g. SiteSettingsFile, ModuleFile and PageFile).
+ * for Studio editable source files (e.g. SiteSettingsFile and PageFile).
  */
 export class FileSystemWriter {
   constructor(
@@ -33,22 +29,6 @@ export class FileSystemWriter {
     pageFile.updatePageFile(pageState);
   }
 
-  /**
-   * Update the module file's content based on provided module metadata.
-   *
-   * @param moduleMetadata - the updated metadata for the module file
-   * @param moduleDependencies - the filepaths of any depended upon modules
-   */
-  writeToModuleFile(
-    moduleMetadata: ModuleMetadata,
-    moduleDependencies?: string[]
-  ): void {
-    FileSystemWriter.openFile(moduleMetadata.filepath);
-    const moduleFile = this.orchestrator.getModuleFile(moduleMetadata.filepath);
-    moduleFile.updateModuleFile(moduleMetadata, moduleDependencies);
-    this.orchestrator.reloadFile(moduleMetadata.filepath);
-  }
-
   writeToSiteSettings(siteSettingsValues: SiteSettingsValues): void {
     this.orchestrator.updateSiteSettings(siteSettingsValues);
   }
@@ -59,41 +39,12 @@ export class FileSystemWriter {
    */
   syncFileMetadata(updatedUUIDToFileMetadata: Record<string, FileMetadata>) {
     const UUIDToFileMetadata = this.orchestrator.getUUIDToFileMetadata();
-    Object.keys(UUIDToFileMetadata).forEach((moduleUUID) => {
-      if (!updatedUUIDToFileMetadata.hasOwnProperty(moduleUUID)) {
-        this.removeFile(UUIDToFileMetadata[moduleUUID].filepath);
-        this.orchestrator.reloadFile(UUIDToFileMetadata[moduleUUID].filepath);
+    Object.keys(UUIDToFileMetadata).forEach((metadataUUID) => {
+      if (!updatedUUIDToFileMetadata.hasOwnProperty(metadataUUID)) {
+        this.removeFile(UUIDToFileMetadata[metadataUUID].filepath);
+        this.orchestrator.reloadFile(UUIDToFileMetadata[metadataUUID].filepath);
       }
     });
-
-    const modulesToUpdate = new Set(
-      Object.keys(updatedUUIDToFileMetadata).filter((metadataUUID) => {
-        const updatedMetadata = updatedUUIDToFileMetadata[metadataUUID];
-        const isModule = updatedMetadata.kind === FileMetadataKind.Module;
-        return (
-          isModule &&
-          !areEqualFileMetadata(
-            updatedMetadata,
-            UUIDToFileMetadata[metadataUUID]
-          )
-        );
-      })
-    );
-
-    for (const moduleMetadataUUID of modulesToUpdate) {
-      const getModuleMetadata = (metadataUUID: string): ModuleMetadata => {
-        const metadata = updatedUUIDToFileMetadata[metadataUUID];
-        if (metadata?.kind !== FileMetadataKind.Module) {
-          throw new Error("Expected ModuleMetadata");
-        }
-        return metadata;
-      };
-      const moduleMetadata = getModuleMetadata(moduleMetadataUUID);
-      const moduleDependencies = moduleMetadata.componentTree
-        .filter(TypeGuards.isModuleState)
-        .map((m) => getModuleMetadata(m.metadataUUID).filepath);
-      this.writeToModuleFile(moduleMetadata, moduleDependencies);
-    }
   }
 
   static openFile(filepath: string) {

@@ -13,10 +13,9 @@ const mockPages: PagesRecord = {
 };
 
 const mockUUIDToFileMetadata: Record<string, FileMetadata> = {
-  "module-uuid": {
-    kind: FileMetadataKind.Module,
-    componentTree: [],
-    metadataUUID: "module-uuid",
+  "component-uuid": {
+    kind: FileMetadataKind.Component,
+    metadataUUID: "component-uuid",
     filepath: "mock-filepath",
   },
 };

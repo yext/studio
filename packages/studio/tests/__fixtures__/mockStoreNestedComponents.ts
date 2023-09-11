@@ -5,7 +5,6 @@ import {
   FileMetadataKind,
   FileMetadata,
   ComponentMetadata,
-  ModuleMetadata,
   ComponentState,
   StandardComponentState,
 } from "@yext/studio-plugin";
@@ -56,70 +55,9 @@ const containerMetadata: ComponentMetadata = {
   filepath: path.resolve(__dirname, "../__mocks__/Container.tsx"),
 };
 
-const moduleMetadata: ModuleMetadata = {
-  kind: FileMetadataKind.Module,
-  metadataUUID: "panel-metadata-uuid",
-  propShape: {
-    text: { type: PropValueType.string, required: false },
-  },
-  filepath: path.resolve(__dirname, "../__mocks__/Panel.tsx"),
-  componentTree: [
-    {
-      kind: ComponentStateKind.Fragment,
-      uuid: "fragment-uuid",
-    },
-    {
-      ...componentState,
-      uuid: "internal-banner-uuid-0",
-      props: {
-        title: {
-          kind: PropValueKind.Expression,
-          valueType: PropValueType.string,
-          value: "props.text",
-        },
-      },
-      parentUUID: "fragment-uuid",
-    },
-    {
-      ...componentState,
-      uuid: "internal-banner-uuid-1",
-      parentUUID: "fragment-uuid",
-    },
-  ],
-};
-
-const moduleWithObjPropsMetadata: ModuleMetadata = {
-  kind: FileMetadataKind.Module,
-  metadataUUID: "module-obj-props-metadata-uuid",
-  propShape: {
-    obj: {
-      type: PropValueType.Object,
-      required: false,
-      shape: {
-        text: { type: PropValueType.string, required: false },
-      },
-    },
-  },
-  filepath: "unused",
-  componentTree: [
-    {
-      ...componentState,
-      props: {
-        title: {
-          kind: PropValueKind.Expression,
-          valueType: PropValueType.string,
-          value: "`hello ${props.obj?.text}`",
-        },
-      },
-    },
-  ],
-};
-
 export const mockUUIDToFileMetadata: Record<string, FileMetadata> = {
   "banner-metadata-uuid": componentMetadata,
-  "container-metadata-uuid": containerMetadata,
-  "panel-metadata-uuid": moduleMetadata,
-  "module-obj-props-metadata-uuid": moduleWithObjPropsMetadata,
+  "container-metadata-uuid": containerMetadata
 };
 
 export const nestedComponentTree: ComponentState[] = [

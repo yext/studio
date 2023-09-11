@@ -28,12 +28,6 @@ beforeEach(() => {
           acceptsChildren: true,
           filepath: "blah/Mock-Container.tsx",
         },
-        "uuid-module": {
-          kind: FileMetadataKind.Module,
-          metadataUUID: "modu",
-          componentTree: [],
-          filepath: "blah/Mock-Module.tsx",
-        },
       },
     },
   });
@@ -43,7 +37,6 @@ it("renders Components on load", () => {
   render(<AddElementMenu closeMenu={closeMenu} />);
   expect(screen.getByText("Mock-Component")).toBeDefined();
   expect(screen.queryByText("Mock-Container")).toBeNull();
-  expect(screen.queryByText("Mock-Module")).toBeNull();
   expect(closeMenu).not.toBeCalled();
 });
 
@@ -67,7 +60,6 @@ it("can switch to Layouts", async () => {
   await userEvent.click(screen.getByText("Layouts"));
   expect(screen.queryByText("Mock-Component")).toBeNull();
   expect(screen.getByText("Mock-Container")).toBeDefined();
-  expect(screen.queryByText("Mock-Module")).toBeNull();
   expect(closeMenu).not.toBeCalled();
 });
 
@@ -80,31 +72,6 @@ it("can add a container to the tree", async () => {
       componentName: "Mock-Container",
       kind: ComponentStateKind.Standard,
       metadataUUID: "cont",
-      props: {},
-      uuid: expect.any(String),
-    },
-  ]);
-  expect(closeMenu).toBeCalledTimes(1);
-});
-
-it("can switch to Modules", async () => {
-  render(<AddElementMenu closeMenu={closeMenu} />);
-  await userEvent.click(screen.getByText("Modules"));
-  expect(screen.queryByText("Mock-Component")).toBeNull();
-  expect(screen.queryByText("Mock-Container")).toBeNull();
-  expect(screen.getByText("Mock-Module")).toBeDefined();
-  expect(closeMenu).not.toBeCalled();
-});
-
-it("can add a module to the tree", async () => {
-  render(<AddElementMenu closeMenu={closeMenu} />);
-  await userEvent.click(screen.getByText("Modules"));
-  await userEvent.click(screen.getByText("Mock-Module"));
-  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
-    {
-      componentName: "Mock-Module",
-      kind: ComponentStateKind.Module,
-      metadataUUID: "modu",
       props: {},
       uuid: expect.any(String),
     },

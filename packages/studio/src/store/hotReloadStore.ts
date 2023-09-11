@@ -13,9 +13,6 @@ export default async function hotReloadStore(payload: StudioHMRPayload) {
   const { updateType, studioData } = payload;
   switch (updateType) {
     case "components":
-    case "modules":
-      await syncFileMetadata(studioData, payload.file);
-      break;
     case "layouts":
       // TODO SLAP-2927
       break;

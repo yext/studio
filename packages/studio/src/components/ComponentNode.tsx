@@ -1,6 +1,5 @@
 import {
   ComponentState,
-  ComponentStateHelpers,
   ComponentStateKind,
 } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
@@ -54,9 +53,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     () => ({ paddingLeft: `${depth}em` }),
     [depth]
   );
-  const extractedState =
-    ComponentStateHelpers.extractRepeatedState(componentState);
-  const isErrorState = extractedState.kind === ComponentStateKind.Error;
+
+  const isErrorState = componentState.kind === ComponentStateKind.Error;
   const componentNodeClasses = classNames(
     "flex pr-4 items-center justify-between h-9",
     {
@@ -94,7 +92,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
         </span>
         {isErrorState && (
           <Tooltip
-            content={extractedState.message}
+            content={componentState.message}
             anchorId={anchorId}
             place="right"
             positionStrategy="fixed"

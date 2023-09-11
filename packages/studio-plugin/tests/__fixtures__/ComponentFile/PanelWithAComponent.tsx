@@ -1,4 +1,4 @@
-import ComplexBanner from "../../ComponentFile/ComplexBanner";
+import ComplexBanner from "./ComplexBanner";
 
 export default function Panel() {
   return <ComplexBanner />;

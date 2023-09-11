@@ -9,7 +9,7 @@ import { ValidFileMetadata } from "../types/FileMetadata";
 
 /**
  * FileMetadataParser is a class for housing shared parsing logic for
- * files of type FileMetadata (e.g. Module or Component) within Studio.
+ * files of type FileMetadata (i.e. Components) within Studio.
  */
 export default class FileMetadataParser {
   private propValuesParser: PropValuesParser;

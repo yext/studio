@@ -10,34 +10,10 @@ import {
 import mockStore from "../__utils__/mockStore";
 import {
   ComponentState,
-  ComponentStateKind,
-  ModuleState,
   PropValueKind,
   PropValueType,
-  RepeaterState,
 } from "@yext/studio-plugin";
 import useImportedComponents from "../../src/hooks/useImportedComponents";
-
-const moduleState: ModuleState = {
-  kind: ComponentStateKind.Module,
-  componentName: "Panel",
-  props: {
-    text: {
-      kind: PropValueKind.Literal,
-      value: "This is Panel module",
-      valueType: PropValueType.string,
-    },
-  },
-  uuid: "panel-uuid",
-  metadataUUID: "panel-metadata-uuid",
-};
-
-const repeaterState: RepeaterState = {
-  kind: ComponentStateKind.Repeater,
-  uuid: "panel-uuid",
-  listExpression: "document.favs",
-  repeatedComponent: moduleState,
-};
 
 const mockSetState = jest.fn();
 
@@ -59,36 +35,6 @@ describe("renders preview", () => {
     expect(banner2).toBeDefined();
   });
 
-  it("renders component tree with Module component type", async () => {
-    const tree = [moduleState];
-    await mockPreviewState(tree);
-    render(<PreviewPanel setTooltipProps={mockSetState} />);
-    const panel = await screen.findByText(/This is Panel module/);
-    const banner = await screen.findByText(/This is Banner/);
-    expect(panel).toBeDefined();
-    expect(banner).toBeDefined();
-  });
-
-  it("renders component tree with Repeater component over a module", async () => {
-    const tree = [repeaterState];
-    await mockPreviewState(tree);
-    render(<PreviewPanel setTooltipProps={mockSetState} />);
-    const panels = await screen.findAllByText(/This is Panel module/);
-    const banners = await screen.findAllByText(/This is Banner/);
-    expect(panels).toHaveLength(3);
-    expect(banners).toHaveLength(3);
-  });
-
-  it("does not render Repeater if list expression is not found", async () => {
-    const tree = [{ ...repeaterState, listExpression: "document.services" }];
-    await mockPreviewState(tree);
-    render(<PreviewPanel setTooltipProps={mockSetState} />);
-    const panels = screen.queryByText(/This is Panel module/);
-    const banners = screen.queryByText(/This is Banner/);
-    expect(panels).toBeNull();
-    expect(banners).toBeNull();
-  });
-
   it("renders component with transformed props", async () => {
     const tree: ComponentState[] = [
       {
@@ -105,17 +51,7 @@ describe("renders preview", () => {
             valueType: PropValueType.number,
           },
         },
-      },
-      {
-        ...moduleState,
-        props: {
-          text: {
-            kind: PropValueKind.Expression,
-            value: "siteSettings.someText",
-            valueType: PropValueType.string,
-          },
-        },
-      },
+      }
     ];
     await mockPreviewState(tree);
     render(<PreviewPanel setTooltipProps={mockSetState} />);
@@ -123,8 +59,6 @@ describe("renders preview", () => {
     expect(siteSettingsExpressionProp).toBeDefined();
     const documentExpressionProp = await screen.findByText(/123/);
     expect(documentExpressionProp).toBeDefined();
-    const moduleExpressionProp = await screen.findByText(/mock-text/);
-    expect(moduleExpressionProp).toBeDefined();
   });
 
   it("can render component using nested siteSettings expression", async () => {
@@ -170,32 +104,6 @@ describe("renders preview", () => {
     const nestedPropUsage = await screen.findByText(/eggyweggy/);
     expect(nestedPropUsage).toBeDefined();
   });
-
-  it("can render repeated module using item expression", async () => {
-    const tree: ComponentState[] = [
-      {
-        ...repeaterState,
-        repeatedComponent: {
-          ...moduleState,
-          props: {
-            text: {
-              kind: PropValueKind.Expression,
-              value: "item",
-              valueType: PropValueType.string,
-            },
-          },
-        },
-      },
-    ];
-    await mockPreviewState(tree);
-    render(<PreviewPanel setTooltipProps={mockSetState} />);
-    const catItemProp = await screen.findByText(/cat/);
-    expect(catItemProp).toBeDefined();
-    const dogItemProp = await screen.findByText(/dog/);
-    expect(dogItemProp).toBeDefined();
-    const sleepItemProp = await screen.findByText(/sleep/);
-    expect(sleepItemProp).toBeDefined();
-  });
 });
 
 it("clicking a component in the preview updates the activeComponentUUID", async () => {
@@ -214,33 +122,6 @@ it("clicking a component in the preview updates the activeComponentUUID", async 
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(
     "banner-uuid"
   );
-});
-
-it("can preview a module with object props", async () => {
-  const componentTree: ComponentState[] = [
-    {
-      kind: ComponentStateKind.Module,
-      componentName: "ModuleWithObjProps",
-      uuid: "module-obj-props-uuid",
-      metadataUUID: "module-obj-props-metadata-uuid",
-      props: {
-        obj: {
-          kind: PropValueKind.Literal,
-          valueType: PropValueType.Object,
-          value: {
-            text: {
-              kind: PropValueKind.Expression,
-              valueType: PropValueType.string,
-              value: "document.name",
-            },
-          },
-        },
-      },
-    },
-  ];
-  await mockPreviewState(componentTree);
-  render(<PreviewPanel setTooltipProps={mockSetState} />);
-  expect(screen.getByText("hello bob")).toBeDefined();
 });
 
 async function mockPreviewState(componentTree: ComponentState[]) {

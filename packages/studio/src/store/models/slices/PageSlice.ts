@@ -2,7 +2,6 @@ import {
   ComponentState,
   ErrorPageState,
   GetPathVal,
-  ModuleMetadata,
   PageState,
   StreamScope,
 } from "@yext/studio-plugin";
@@ -43,10 +42,6 @@ export interface PageSliceStates {
      */
     pagesToUpdate: Set<string>;
   };
-  /**
-   * The {@link ComponentState.uuid} for the module currently being edited, if it exists.
-   */
-  moduleUUIDBeingEdited?: string;
 }
 
 interface PageSliceActions {
@@ -65,7 +60,6 @@ interface PageSliceActions {
 
   setActiveComponentUUID: (activeComponentUUID: string | undefined) => void;
   setActiveComponentRect: (rect: DOMRectProperties | undefined) => void;
-  setModuleUUIDBeingEdited: (moduleStateUUID: string | undefined) => void;
 
   setActiveEntityFile: (activeEntityFile?: string) => void;
   setActivePageEntities: (
@@ -74,7 +68,6 @@ interface PageSliceActions {
   getActiveEntityData: () => Record<string, unknown> | undefined;
 
   clearPendingChanges: () => void;
-  detachAllModuleInstances: (metadata: ModuleMetadata) => void;
 }
 
 /**

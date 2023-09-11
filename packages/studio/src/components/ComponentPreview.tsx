@@ -1,7 +1,6 @@
 import {
   ComponentState,
   ComponentStateKind,
-  TypeGuards,
 } from "@yext/studio-plugin";
 import {
   createElement,
@@ -14,9 +13,7 @@ import usePreviewProps from "../hooks/usePreviewProps";
 import { ImportType } from "../store/models/ImportType";
 import useStudioStore from "../store/useStudioStore";
 import { ExpressionSources } from "../utils/getPropsForPreview";
-import RepeaterPreview from "./RepeaterPreview";
 import ErrorComponentPreview from "./ErrorComponentPreview";
-import ModulePreview from "./ModulePreview";
 import { ITooltip } from "react-tooltip";
 
 interface ComponentPreviewProps {
@@ -46,24 +43,7 @@ export default function ComponentPreview({
     createElement(type, previewProps, ...childElements)
   );
 
-  if (TypeGuards.isModuleState(componentState)) {
-    return (
-      <ModulePreview
-        previewProps={previewProps}
-        expressionSources={expressionSources}
-        moduleState={componentState}
-        setTooltipProps={setTooltipProps}
-      />
-    );
-  } else if (TypeGuards.isRepeaterState(componentState)) {
-    return (
-      <RepeaterPreview
-        repeaterState={componentState}
-        expressionSources={expressionSources}
-        setTooltipProps={setTooltipProps}
-      />
-    );
-  } else if (componentState.kind === ComponentStateKind.Error) {
+  if (componentState.kind === ComponentStateKind.Error) {
     return (
       <ErrorComponentPreview
         element={element}
@@ -84,9 +64,7 @@ function useElement(
   );
 
   const element: string | ImportType | undefined = useMemo(() => {
-    if (TypeGuards.isRepeaterState(c) || TypeGuards.isModuleState(c)) {
-      return undefined;
-    } else if (c.kind === ComponentStateKind.Fragment) {
+    if (c.kind === ComponentStateKind.Fragment) {
       return Fragment;
     } else if (c.kind === ComponentStateKind.BuiltIn) {
       return c.componentName;

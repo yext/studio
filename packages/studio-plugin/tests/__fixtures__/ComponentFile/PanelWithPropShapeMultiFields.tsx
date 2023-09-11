@@ -1,5 +1,4 @@
-import ComplexBanner from "../../ComponentFile/ComplexBanner";
-
+import ComplexBanner from "./ComplexBanner";
 export interface PanelProps {
   /**
    * @tooltip some banner title!
@@ -9,7 +8,6 @@ export interface PanelProps {
   /** @tooltip some boolean to toggle */
   complexBannerBool?: boolean;
 }
-
 export default function Panel() {
   return <ComplexBanner />;
 }

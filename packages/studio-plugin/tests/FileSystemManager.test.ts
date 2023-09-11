@@ -34,7 +34,6 @@ const projectRoot = upath.resolve(
 const tsMorphProject: Project = createTestProject();
 const paths = getUserPaths(projectRoot);
 paths.pages = upath.join(projectRoot, "pages");
-paths.modules = upath.join(projectRoot, "modules");
 
 const orchestrator = new ParsingOrchestrator(tsMorphProject, {
   paths,

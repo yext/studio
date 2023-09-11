@@ -12,7 +12,7 @@ type UserUpdatableStore = {
   fileMetadatas: Pick<FileMetadataSlice, "UUIDToFileMetadata">;
   pages: Pick<
     PageSlice,
-    "pages" | "activePageName" | "activeComponentUUID" | "moduleUUIDBeingEdited"
+    "pages" | "activePageName" | "activeComponentUUID"
   >;
 };
 
@@ -25,7 +25,7 @@ type UserUpdatableStore = {
 function getUserUpdatableStore(store: StudioStore): UserUpdatableStore {
   const { values } = store.siteSettings;
   const { UUIDToFileMetadata } = store.fileMetadatas;
-  const { pages, activePageName, activeComponentUUID, moduleUUIDBeingEdited } =
+  const { pages, activePageName, activeComponentUUID } =
     store.pages;
   return {
     siteSettings: {
@@ -38,7 +38,6 @@ function getUserUpdatableStore(store: StudioStore): UserUpdatableStore {
       pages,
       activePageName,
       activeComponentUUID,
-      moduleUUIDBeingEdited,
     },
   };
 }

@@ -33,7 +33,6 @@ export interface StudioHMRPayload {
   updateType:
     | "siteSettings"
     | "components"
-    | "modules"
     | "layouts"
     | "pages"
     | "full";

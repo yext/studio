@@ -3,14 +3,10 @@ import {
   ComponentStateKind,
   ComponentTreeHelpers,
   MessageID,
-  ModuleMetadata,
-  ModuleState,
   PropValues,
-  TypeGuards,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
-import { v4 } from "uuid";
 import sendMessage from "../messaging/sendMessage";
 import { cloneDeep } from "lodash";
 import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
@@ -62,10 +58,7 @@ export default class StudioActions {
   }
 
   getComponentTree = () => {
-    const moduleMetadataBeingEdited = this.getModuleMetadataBeingEdited();
-    return moduleMetadataBeingEdited
-      ? moduleMetadataBeingEdited.componentTree
-      : this.getPages().getActivePageState()?.componentTree;
+    return this.getPages().getActivePageState()?.componentTree;
   };
 
   getComponentState = (componentTree?: ComponentState[], uuid?: string) => {
@@ -90,18 +83,6 @@ export default class StudioActions {
     );
   };
 
-  getModuleMetadataBeingEdited = () => {
-    const { moduleUUIDBeingEdited, getActivePageState } = this.getPages();
-    const state = this.getComponentState(
-      getActivePageState()?.componentTree,
-      moduleUUIDBeingEdited
-    );
-    if (!state || !TypeGuards.isModuleState(state)) {
-      return undefined;
-    }
-    return this.getFileMetadatas().getModuleMetadata(state.metadataUUID);
-  };
-
   updateActiveComponentProps = (props: PropValues) => {
     const activeComponentState = this.getActiveComponentState();
     if (!activeComponentState) {
@@ -119,17 +100,7 @@ export default class StudioActions {
       );
     }
 
-    const updatedComponentState = TypeGuards.isRepeaterState(
-      activeComponentState
-    )
-      ? {
-          ...activeComponentState,
-          repeatedComponent: {
-            ...activeComponentState.repeatedComponent,
-            props,
-          },
-        }
-      : { ...activeComponentState, props };
+    const updatedComponentState ={ ...activeComponentState, props };
 
     this.replaceComponentState(
       activeComponentState.uuid,
@@ -138,15 +109,8 @@ export default class StudioActions {
   };
 
   updateComponentTree = (componentTree: ComponentState[]) => {
-    const moduleMetadataBeingEdited = this.getModuleMetadataBeingEdited();
     const activePageName = this.getPages().activePageName;
-
-    if (moduleMetadataBeingEdited) {
-      this.getFileMetadatas().setComponentTreeInModule(
-        moduleMetadataBeingEdited.metadataUUID,
-        componentTree
-      );
-    } else if (activePageName) {
+    if (activePageName) {
       this.getPages().setComponentTreeInPage(activePageName, componentTree);
     }
   };
@@ -184,38 +148,6 @@ export default class StudioActions {
     if (this.getPages().activeComponentUUID === componentUUID) {
       this.getPages().setActiveComponentUUID(undefined);
     }
-  };
-
-  /**
-   * @param moduleMetadata - the {@link ModuleMetadata} of the module to detach.
-   * @param instanceUUID - the instance to detach.
-   */
-  detachModuleInstance = (
-    moduleMetadata: ModuleMetadata,
-    moduleState: ModuleState
-  ) => {
-    const currentComponentTree = this.getComponentTree();
-    if (!currentComponentTree) {
-      return;
-    }
-    const updatedComponentTree = currentComponentTree.flatMap(
-      (componentState) => {
-        if (componentState.uuid !== moduleState.uuid) {
-          return componentState;
-        }
-        return ComponentTreeHelpers.mapComponentTreeParentsFirst<ComponentState>(
-          moduleMetadata.componentTree,
-          (child, parentValue) => {
-            return {
-              ...child,
-              uuid: v4(),
-              parentUUID: parentValue?.uuid ?? componentState.parentUUID,
-            };
-          }
-        );
-      }
-    );
-    this.updateComponentTree(updatedComponentTree);
   };
 
   deploy = async () => {

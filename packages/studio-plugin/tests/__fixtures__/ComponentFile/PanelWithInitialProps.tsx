@@ -1,4 +1,4 @@
-import ComplexBanner from "../../ComponentFile/ComplexBanner";
+import ComplexBanner from "./ComplexBanner";
 
 export interface PanelProps {
   /** @tooltip title for complex banner */

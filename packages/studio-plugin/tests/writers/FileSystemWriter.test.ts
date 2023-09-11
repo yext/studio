@@ -7,8 +7,7 @@ import { FileSystemWriter } from "../../src/writers/FileSystemWriter";
 import {
   ComponentState,
   ComponentStateKind,
-  FileMetadataKind,
-  ModuleMetadata,
+  PageState,
 } from "../../src/types";
 import { createTestProject } from "../__utils__/createTestSourceFile";
 
@@ -25,7 +24,6 @@ const projectRoot = upath.resolve(
 );
 const paths = getUserPaths(projectRoot);
 paths.pages = upath.join(projectRoot, "pages");
-paths.modules = upath.join(projectRoot, "modules");
 
 const bannerComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -35,20 +33,10 @@ const bannerComponentState: ComponentState = {
   metadataUUID: "mock-metadata-uuid",
 };
 
-const moduleMetadata: ModuleMetadata = {
-  kind: FileMetadataKind.Module,
-  componentTree: [
-    {
-      kind: ComponentStateKind.Fragment,
-      uuid: "mock-uuid-parent",
-    },
-    {
-      ...bannerComponentState,
-      parentUUID: "mock-uuid-parent",
-    },
-  ],
-  metadataUUID: "metadata-uuid",
-  filepath: upath.join(paths.modules, "UpdatedModule.tsx"),
+const pageState: PageState = {
+  componentTree: [bannerComponentState],
+  cssImports: [],
+  filepath: upath.join(paths.pages, "UpdatedPage.tsx"),
 };
 
 describe("syncFileMetadata", () => {
@@ -61,42 +49,16 @@ describe("syncFileMetadata", () => {
   });
   const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 
-  it("updates user module file based on new state", () => {
+  it("updates user file based on new state", () => {
     const fsWriteFileSyncSpy = jest
       .spyOn(fs, "writeFileSync")
       .mockImplementation();
 
-    fileWriter.writeToModuleFile(moduleMetadata);
+    fileWriter.writeToPageFile("UpdatedPage", pageState);
 
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("UpdatedModule.tsx"),
-      fs.readFileSync(upath.join(paths.modules, "UpdatedModule.tsx"), "utf-8")
+      expect.stringContaining("UpdatedPage.tsx"),
+      fs.readFileSync(upath.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
     );
-  });
-
-  it("creates a new module file and adds a component based on new state", () => {
-    const moduleFilepath = upath.join(paths.modules, "UpdatedModule.tsx");
-
-    jest.spyOn(fs, "existsSync").mockImplementation(() => false);
-    const fsWriteFileSyncSpy = jest
-      .spyOn(fs, "writeFileSync")
-      .mockImplementation();
-    const fsMkdirSyncSpy = jest
-      .spyOn(fs, "mkdirSync")
-      .mockImplementationOnce(jest.fn());
-    const fsOpenSyncSpy = jest
-      .spyOn(fs, "openSync")
-      .mockImplementationOnce(jest.fn());
-
-    fileWriter.writeToModuleFile(moduleMetadata);
-
-    expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
-      expect.stringContaining("UpdatedModule.tsx"),
-      fs.readFileSync(moduleFilepath, "utf-8")
-    );
-    expect(fsMkdirSyncSpy).toHaveBeenCalledWith(paths.modules, {
-      recursive: true,
-    });
-    expect(fsOpenSyncSpy).toHaveBeenCalledWith(moduleFilepath, "w");
   });
 });
