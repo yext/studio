@@ -40,9 +40,7 @@ async function fullSync(studioData: StudioData, file: string) {
 }
 
 async function syncFileMetadata(studioData: StudioData, file: string) {
-  const UUIDToFileMetadata = removeTopLevelFragments(
-    studioData.UUIDToFileMetadata
-  );
+  const UUIDToFileMetadata = studioData.UUIDToFileMetadata;
   useStudioStore.setState((store) => {
     store.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
     store.previousSave.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
