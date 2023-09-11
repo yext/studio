@@ -38,7 +38,7 @@ Now that you have a page, you probably want to do some things with it. Specifica
 
 ![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+9.18.10+AM.png)
 
-These are the various Components that can be added to your page. For now, you can ignore Layouts and Modules. Those will be described later. Once you select a Component, such as `Banner`, it will appear in the middle preview pane and on the left-hand side under `Layers`:
+These are the various Components that can be added to your page. For now, you can ignore Layouts which will be described later. Once you select a Component, such as `Banner`, it will appear in the middle preview pane and on the left-hand side under `Layers`:
 
 ![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-03+at+9.41.51+AM.png)
 
@@ -115,26 +115,6 @@ export const initialProps: SomeComponentProps = {
 When the new Component is added to a page, the `Properties` tab on the left-hand side will be seeded with the defaults.
 
 We've already added a few custom Components to the starter for you. One is a Banner, to prominently display an Entity's address. We also added an Entity Result Card and CTA in case you want to add Search functionality. You can use these Components as a guide when writing your own.
-
-## Reuse through Modules
-
-Users may find that they use a certain combination of Components often across pages. For example, they may often pair a Search Bar Component with a Results Component. Repeating this combination over and over, for each page is tedious. That's where Studio Modules come in. A Module represents a named combination of Components. They can be added to a Page just like a single Component.
-
-### Creating a Module
-
-Creating a Module is simple and can be done entirely within Studio. No Developer intervention is needed! To start, you will need to add a Layout. This is done by clicking the same Icon you did for adding a Component:
-
-![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+12.38.01+PM.png)
-
-A Layout groups a set of Studio Components. Once the Layout is in place on the page, add the Components that you want in the Layout. The Components will initially be siblings of the Layout. In the `Layers` pane, you will need to drag the Components under Layout.
-
-![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+1.07.06+PM.png)
-
-Once the Layout has all the necessary Components, click it and you will see a `Create Module` button appear:
-
-![enter image description here](https://yext-studio-images.s3.amazonaws.com/Screen+Shot+2023-02-02+at+1.00.17+PM.png)
-
-The button will open a modal that prompts you to name your Module. The Module is then available for use on any page! The TSX file for the Module will be under `src/modules` in the repo.
 
 ## Site Settings
 
