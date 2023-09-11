@@ -1,8 +1,0 @@
-**/coverage
-**/lib
-packages/studio-plugin/tests/__fixtures__/PageFile/noReturnParenthesesPage.tsx
-packages/studio-plugin/tests/__fixtures__/StudioConfigs/malformed/studio.config.js
-packages/studio/src/tailwind-full.css
-.github
-**/features.json
-**/localData/*.json
