@@ -1,7 +1,4 @@
-import {
-  ComponentMetadata,
-  FileMetadata,
-} from "@yext/studio-plugin";
+import { ComponentMetadata, FileMetadata } from "@yext/studio-plugin";
 import { ImportType } from "../ImportType";
 
 export interface FileMetadataSliceStates {
