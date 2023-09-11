@@ -8,9 +8,9 @@ import {
  * Iterates through a record of objects that contain a componentTree,
  * and removes all top level fragments.
  */
-export default function removeTopLevelFragments<
-  T extends PageState
->(record: Record<string, T>): Record<string, T> {
+export default function removeTopLevelFragments<T extends PageState>(
+  record: Record<string, T>
+): Record<string, T> {
   const entries = Object.entries(record).map(
     ([key, componentTreeContainer]) => {
       const updatedContainer = {
