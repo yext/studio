@@ -51,7 +51,7 @@ describe("renders preview", () => {
             valueType: PropValueType.number,
           },
         },
-      }
+      },
     ];
     await mockPreviewState(tree);
     render(<PreviewPanel setTooltipProps={mockSetState} />);

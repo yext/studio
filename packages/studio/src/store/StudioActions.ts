@@ -100,7 +100,7 @@ export default class StudioActions {
       );
     }
 
-    const updatedComponentState ={ ...activeComponentState, props };
+    const updatedComponentState = { ...activeComponentState, props };
 
     this.replaceComponentState(
       activeComponentState.uuid,

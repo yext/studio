@@ -156,18 +156,20 @@ describe("reloadFile", () => {
       );
     }
   `;
-  const getComponentTree = () => {
-    const pageState = orchestrator.getPageFile("reloadFilePage").getPageState();
-    assertIsOk(pageState);
-    return pageState.value.componentTree;
-  };
+    const getComponentTree = () => {
+      const pageState = orchestrator
+        .getPageFile("reloadFilePage")
+        .getPageState();
+      assertIsOk(pageState);
+      return pageState.value.componentTree;
+    };
 
-  const originalTree = getComponentTree();
-  expect(originalTree).toEqual([
-    expect.objectContaining({
-      kind: ComponentStateKind.Fragment,
-    }),
-  ]);
+    const originalTree = getComponentTree();
+    expect(originalTree).toEqual([
+      expect.objectContaining({
+        kind: ComponentStateKind.Fragment,
+      }),
+    ]);
 
     fs.writeFileSync(filepath, updatedFile);
     orchestrator.reloadFile(filepath);

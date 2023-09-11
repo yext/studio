@@ -9,10 +9,7 @@ export default function PropsPanel(): JSX.Element | null {
   if (!activeComponentWithProps) {
     return null;
   }
-  const {
-    activeComponentState,
-    propShape,
-  } = activeComponentWithProps;
+  const { activeComponentState, propShape } = activeComponentWithProps;
 
   return (
     <ActiveComponentPropEditors

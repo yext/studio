@@ -2,10 +2,7 @@ import {
   StandardComponentState,
   ComponentStateKind,
 } from "../../src/types/ComponentState";
-import {
-  getComponentPath,
-  getPagePath,
-} from "../__utils__/getFixturePath";
+import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 import fs from "fs";
 import { Project } from "ts-morph";
 import {
@@ -14,10 +11,7 @@ import {
 } from "../__fixtures__/componentStates";
 import ReactComponentFileWriter from "../../src/writers/ReactComponentFileWriter";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
-import {
-  PropValueKind,
-  PropValueType,
-} from "../../src/types";
+import { PropValueKind, PropValueType } from "../../src/types";
 import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import { createTestProject } from "../__utils__/createTestSourceFile";
@@ -265,9 +259,7 @@ describe("updateFile", () => {
     });
 
     it("adds missing imports", () => {
-      addFilesToProject(tsMorphProject, [
-        getComponentPath("SimpleBanner"),
-      ]);
+      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const filepath = getPagePath("updatePageFile/EmptyPage");
       createReactComponentFileWriter(
         tsMorphProject,
@@ -283,7 +275,7 @@ describe("updateFile", () => {
             uuid: "mock-uuid-1",
             parentUUID: "mock-uuid-0",
             metadataUUID: "mock-standard-metadata-uuid",
-          }
+          },
         ],
         cssImports: [],
       });
@@ -310,7 +302,7 @@ describe("updateFile", () => {
         expect.stringContaining("PageWithUnusedImports.tsx"),
         fs.readFileSync(getPagePath("updatePageFile/EmptyPage"), "utf-8")
       );
-    });  
+    });
   });
 
   describe("reactComponentNameSanitizer", () => {

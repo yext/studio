@@ -1,7 +1,4 @@
-import {
-  FileMetadataKind,
-  TypeGuards,
-} from "@yext/studio-plugin";
+import { FileMetadataKind, TypeGuards } from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
 export default function useActiveComponentWithProps() {

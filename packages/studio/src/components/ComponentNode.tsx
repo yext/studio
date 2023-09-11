@@ -1,7 +1,4 @@
-import {
-  ComponentState,
-  ComponentStateKind,
-} from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
 import ComponentKindIcon from "./ComponentKindIcon";

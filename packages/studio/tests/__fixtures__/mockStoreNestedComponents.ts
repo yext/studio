@@ -57,7 +57,7 @@ const containerMetadata: ComponentMetadata = {
 
 export const mockUUIDToFileMetadata: Record<string, FileMetadata> = {
   "banner-metadata-uuid": componentMetadata,
-  "container-metadata-uuid": containerMetadata
+  "container-metadata-uuid": containerMetadata,
 };
 
 export const nestedComponentTree: ComponentState[] = [

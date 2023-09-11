@@ -6,8 +6,6 @@ export enum FileMetadataKind {
   Error = "errorMetadata",
 }
 
-export type FileMetadata =
-  | ComponentMetadata
-  | ErrorFileMetadata;
+export type FileMetadata = ComponentMetadata | ErrorFileMetadata;
 
 export type ValidFileMetadata = Exclude<FileMetadata, ErrorFileMetadata>;

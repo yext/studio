@@ -1,9 +1,7 @@
 import { ComponentState } from "@yext/studio-plugin";
 import mockStore from "./mockStore";
 
-export function mockActivePageTree(
-  componentTree: ComponentState[],
-) {
+export function mockActivePageTree(componentTree: ComponentState[]) {
   mockStore({
     pages: {
       activePageName: "pagename",

@@ -1,7 +1,4 @@
-import {
-  ComponentState,
-  ComponentStateKind,
-} from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import {
   createElement,
   Dispatch,

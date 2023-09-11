@@ -10,10 +10,7 @@ import { StateCreator } from "zustand";
 type UserUpdatableStore = {
   siteSettings: Pick<SiteSettingSlice, "values">;
   fileMetadatas: Pick<FileMetadataSlice, "UUIDToFileMetadata">;
-  pages: Pick<
-    PageSlice,
-    "pages" | "activePageName" | "activeComponentUUID"
-  >;
+  pages: Pick<PageSlice, "pages" | "activePageName" | "activeComponentUUID">;
 };
 
 /**
@@ -25,8 +22,7 @@ type UserUpdatableStore = {
 function getUserUpdatableStore(store: StudioStore): UserUpdatableStore {
   const { values } = store.siteSettings;
   const { UUIDToFileMetadata } = store.fileMetadatas;
-  const { pages, activePageName, activeComponentUUID } =
-    store.pages;
+  const { pages, activePageName, activeComponentUUID } = store.pages;
   return {
     siteSettings: {
       values,

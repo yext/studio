@@ -4,11 +4,7 @@ import getUserPaths from "../../src/parsers/getUserPaths";
 import upath from "upath";
 import fs from "fs";
 import { FileSystemWriter } from "../../src/writers/FileSystemWriter";
-import {
-  ComponentState,
-  ComponentStateKind,
-  PageState,
-} from "../../src/types";
+import { ComponentState, ComponentStateKind, PageState } from "../../src/types";
 import { createTestProject } from "../__utils__/createTestSourceFile";
 
 jest.mock("fs", () => {

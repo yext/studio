@@ -14,8 +14,6 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
-  PropMetadata,
-  PropShape,
   PropVal,
   PropValueKind,
   PropValues,
@@ -143,9 +141,7 @@ export default class ReactComponentFileWriter {
     );
     const joinedElements = elements.join("\n");
     const wrappedElements =
-      elements.length > 1
-        ? `<>${joinedElements}</>`
-        : joinedElements;
+      elements.length > 1 ? `<>${joinedElements}</>` : joinedElements;
     return Writers.returnStatement(wrappedElements);
   }
 

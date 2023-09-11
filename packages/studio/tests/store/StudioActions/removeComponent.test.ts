@@ -1,7 +1,4 @@
-import {
-  ComponentState,
-  ComponentStateKind,
-} from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import { searchBarComponent } from "../../__fixtures__/componentStates";
 import mockStore from "../../__utils__/mockStore";

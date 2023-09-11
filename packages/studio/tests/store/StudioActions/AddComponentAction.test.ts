@@ -53,7 +53,7 @@ beforeEach(() => {
           metadataUUID: "uuid-container",
           acceptsChildren: true,
           filepath: "blah/Mock-Container.tsx",
-        }
+        },
       },
     },
   });

@@ -77,10 +77,7 @@ const getComponentProps = () =>
   ).props;
 
 describe("ComponentStateKind.Component", () => {
-  testStandardComponentState(
-    activeComponentState,
-    activeComponentMetadata
-  );
+  testStandardComponentState(activeComponentState, activeComponentMetadata);
 });
 
 function testStandardComponentState(

@@ -1,7 +1,7 @@
 import {
   ComponentState,
   ComponentStateKind,
-  FileMetadataKind
+  FileMetadataKind,
 } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
@@ -33,7 +33,6 @@ describe("getComponentTree", () => {
 });
 
 describe("updateComponentTree", () => {
-
   it("can rearrange the component tree when a page is being edited", () => {
     mockInitialStore();
     const updatedTree: ComponentState[] = [

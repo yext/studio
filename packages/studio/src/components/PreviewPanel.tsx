@@ -8,10 +8,9 @@ export default function PreviewPanel(props: {
   setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }) {
   const { setTooltipProps } = props;
-  const componentTree =
-    useStudioStore((store) => 
-      store.actions.getComponentTree(),
-    );
+  const componentTree = useStudioStore((store) =>
+    store.actions.getComponentTree()
+  );
 
   const pageExpressionSources = usePageExpressionSources();
   if (!componentTree) {

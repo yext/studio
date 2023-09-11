@@ -133,7 +133,7 @@ export default class ComponentTreeHelpers {
       ) {
         return [];
       }
-      
+
       const expressionPropValues = this.getExpressionUsagesFromProps(c.props);
       return expressionPropValues;
     });

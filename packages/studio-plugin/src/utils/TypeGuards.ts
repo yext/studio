@@ -175,7 +175,7 @@ export default class TypeGuards {
   ): element is JsxFragment {
     if (element.isKind(SyntaxKind.JsxFragment)) {
       return true;
-    } else if (element.isKind(SyntaxKind.JsxElement)){
+    } else if (element.isKind(SyntaxKind.JsxElement)) {
       const name = StaticParsingHelpers.parseJsxElementName(element);
       return ["Fragment", "React.Fragment"].includes(name);
     }
@@ -185,9 +185,7 @@ export default class TypeGuards {
   static isStandardComponentState(
     componentState: ComponentState
   ): componentState is StandardComponentState {
-    return (
-      componentState.kind === ComponentStateKind.Standard
-    );
+    return componentState.kind === ComponentStateKind.Standard;
   }
 
   static isSiteSettingsValues(

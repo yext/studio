@@ -1,6 +1,4 @@
-import {
-  ComponentStateKind,
-} from "@yext/studio-plugin";
+import { ComponentStateKind } from "@yext/studio-plugin";
 import mockStoreActiveComponent from "../__utils__/mockActiveComponentState";
 import PropsPanel from "../../src/components/PropsPanel";
 import { render } from "@testing-library/react";

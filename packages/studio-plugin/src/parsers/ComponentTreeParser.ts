@@ -70,7 +70,7 @@ export default class ComponentTreeParser {
       uuid: v4(),
     };
 
-    if (TypeGuards.isExpressionElement(component)){
+    if (TypeGuards.isExpressionElement(component)) {
       throw new Error(
         `Jsx nodes of kind "${component.getKindName()}" are not supported for direct use` +
           " in page files."
@@ -81,7 +81,7 @@ export default class ComponentTreeParser {
         kind: ComponentStateKind.Fragment,
       };
     }
-    
+
     const componentName = StaticParsingHelpers.parseJsxElementName(component);
     const parsedElement = this.parseElement(
       component,

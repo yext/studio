@@ -1,9 +1,5 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
-import {
-  FileMetadata,
-  PageState,
-  SiteSettingsValues,
-} from "../types";
+import { FileMetadata, PageState, SiteSettingsValues } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
 import upath from "upath";

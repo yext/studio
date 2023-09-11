@@ -31,7 +31,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
     set((store) => {
       store.UUIDToImportedComponent[uuid] = importedComponent;
     });
-  }
+  },
 });
 
 function assertIsComponentMetadata(

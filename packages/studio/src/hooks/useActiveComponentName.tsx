@@ -1,7 +1,4 @@
-import {
-  ComponentState,
-  ComponentStateKind,
-} from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 
 export default function useActiveComponentName(): string | undefined {
