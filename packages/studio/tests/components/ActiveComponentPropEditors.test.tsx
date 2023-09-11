@@ -12,7 +12,7 @@ import {
   PropValueType,
   StandardComponentState,
   TypeGuards,
-  ValidFileMetadata,
+  ComponentMetadata,
 } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -82,7 +82,7 @@ describe("ComponentStateKind.Component", () => {
 
 function testStandardComponentState(
   state: StandardComponentState,
-  metadata: ValidFileMetadata
+  metadata: ComponentMetadata
 ) {
   const componentKindLabel = "component";
 
