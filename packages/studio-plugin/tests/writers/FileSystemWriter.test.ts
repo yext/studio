@@ -4,7 +4,7 @@ import getUserPaths from "../../src/parsers/getUserPaths";
 import upath from "upath";
 import fs from "fs";
 import { FileSystemWriter } from "../../src/writers/FileSystemWriter";
-import { ComponentState, ComponentStateKind, PageState } from "../../src/types";
+import { ComponentState, ComponentStateKind, PageState, PropValueKind, PropValueType, SiteSettingsValues } from "../../src/types";
 import { createTestProject } from "../__utils__/createTestSourceFile";
 
 jest.mock("fs", () => {
@@ -20,6 +20,8 @@ const projectRoot = upath.resolve(
 );
 const paths = getUserPaths(projectRoot);
 paths.pages = upath.join(projectRoot, "pages");
+paths.siteSettings = upath.join(projectRoot, "siteSettings.ts");
+console.log(paths)
 
 const bannerComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -35,7 +37,15 @@ const pageState: PageState = {
   filepath: upath.join(paths.pages, "UpdatedPage.tsx"),
 };
 
-describe("syncFileMetadata", () => {
+const siteSettingsValues: SiteSettingsValues = {
+  experienceKey: {
+    kind: PropValueKind.Literal,
+    valueType: PropValueType.string, 
+    value: "slanswers"
+  }
+}
+
+describe("writers", () => {
   const tsMorphProject: Project = createTestProject();
   const orchestrator = new ParsingOrchestrator(tsMorphProject, {
     paths,
@@ -43,18 +53,29 @@ describe("syncFileMetadata", () => {
     isPagesJSRepo: false,
     port: 8080,
   });
+  
   const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 
-  it("updates user file based on new state", () => {
+  it("updates user page based on new state", () => {
     const fsWriteFileSyncSpy = jest
-      .spyOn(fs, "writeFileSync")
-      .mockImplementation();
-
+    .spyOn(fs, "writeFileSync")
+    .mockImplementation();
     fileWriter.writeToPageFile("UpdatedPage", pageState);
-
     expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
       expect.stringContaining("UpdatedPage.tsx"),
       fs.readFileSync(upath.join(paths.pages, "UpdatedPage.tsx"), "utf-8")
+    );
+  });
+
+  it("updates site settings based on new state", () => {
+    orchestrator.getStudioData();  // initializes this.siteSettingsFile
+    const fsWriteFileSyncSpy = jest
+    .spyOn(fs, "writeFileSync")
+    .mockImplementation();
+    fileWriter.writeToSiteSettings(siteSettingsValues);
+    expect(fsWriteFileSyncSpy).toHaveBeenCalledWith(
+      expect.stringContaining("siteSettings.ts"),
+      fs.readFileSync(paths.siteSettings, "utf-8")
     );
   });
 });
