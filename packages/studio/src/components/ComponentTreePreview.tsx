@@ -23,7 +23,7 @@ export default function ComponentTreePreview({
   const elements = useComponentTreeElements(
     componentTree,
     expressionSources,
-    setTooltipProps,
+    setTooltipProps
   );
   return <>{elements}</>;
 }
@@ -35,7 +35,7 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   expressionSources: ExpressionSources,
-  setTooltipProps: Dispatch<SetStateAction<ITooltip>>,
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>
 ): (JSX.Element | null)[] | null {
   return useMemo(() => {
     return ComponentTreeHelpers.mapComponentTree(
@@ -56,9 +56,5 @@ function useComponentTreeElements(
         );
       }
     );
-  }, [
-    componentTree,
-    expressionSources,
-    setTooltipProps,
-  ]);
+  }, [componentTree, expressionSources, setTooltipProps]);
 }
