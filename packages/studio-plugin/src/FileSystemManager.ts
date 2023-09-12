@@ -1,8 +1,4 @@
-import {
-  PageState,
-  SiteSettingsValues,
-  UserPaths,
-} from "./types";
+import { PageState, SiteSettingsValues, UserPaths } from "./types";
 import upath from "upath";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 

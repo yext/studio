@@ -35,7 +35,7 @@ it("enables the button when there are pending SiteSettingsValues changes", () =>
     previousSave: {
       siteSettings: {
         values: undefined,
-      }
+      },
     },
     siteSettings: {
       values: {
@@ -68,7 +68,7 @@ it("disables the button when there are no pending changes", () => {
             kind: PropValueKind.Literal,
           },
         },
-      }
+      },
     },
     siteSettings: {
       values: {

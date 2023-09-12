@@ -20,7 +20,7 @@ beforeEach(() => {
         pagesToRemove: new Set(["RemoveMe"]),
         pagesToUpdate: new Set(["UpdateMe"]),
       },
-    }
+    },
   });
 });
 

@@ -8,11 +8,7 @@ export default function executeSaveChanges(
   fileManager: FileSystemManager,
   orchestrator: ParsingOrchestrator
 ) {
-  const {
-    pageNameToPageState,
-    pendingChanges,
-    siteSettings,
-  } = saveData;
+  const { pageNameToPageState, pendingChanges, siteSettings } = saveData;
   pendingChanges.pagesToRemove.forEach((pageToRemove) => {
     const filepath =
       upath.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";

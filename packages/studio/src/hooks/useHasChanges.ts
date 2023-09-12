@@ -19,8 +19,6 @@ export default function useHasChanges() {
   );
 
   return (
-    pagesToRemove.size > 0 ||
-    pagesToUpdate.size > 0 ||
-    siteSettingsHaveChanged
+    pagesToRemove.size > 0 || pagesToUpdate.size > 0 || siteSettingsHaveChanged
   );
 }
