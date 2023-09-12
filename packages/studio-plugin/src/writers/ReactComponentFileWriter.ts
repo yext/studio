@@ -180,7 +180,6 @@ export default class ReactComponentFileWriter {
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
     defaultImports?: { name: string; moduleSpecifier: string }[];
-    propArgs?: string[] | string;
   }): void {
     let defaultExport: VariableDeclaration | FunctionDeclaration;
     try {
