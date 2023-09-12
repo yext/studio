@@ -151,7 +151,6 @@ export default class ComponentTreeParser {
     }
     const { metadataUUID, propShape } = fileMetadata;
 
-    const componentStateKind = ComponentStateKind.Standard;
     const props = StaticParsingHelpers.parseJsxAttributes(
       attributes,
       propShape
@@ -174,7 +173,7 @@ export default class ComponentTreeParser {
     }
 
     return {
-      kind: componentStateKind,
+      kind: ComponentStateKind.Standard,
       metadataUUID,
       props,
     };
