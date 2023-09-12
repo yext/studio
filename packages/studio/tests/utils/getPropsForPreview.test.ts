@@ -248,7 +248,6 @@ describe("template string literal value handling", () => {
       foo: "1 ${unknownSource.city} 2",
     });
   });
-
 });
 
 it("converts expressions using streams data into bracket syntax", () => {
