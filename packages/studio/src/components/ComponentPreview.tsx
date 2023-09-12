@@ -29,10 +29,7 @@ export default function ComponentPreview({
   childElements = [],
   setTooltipProps,
 }: ComponentPreviewProps): JSX.Element | null {
-  const previewProps = usePreviewProps(
-    componentState,
-    expressionSources,
-  );
+  const previewProps = usePreviewProps(componentState, expressionSources);
   const element = useElement(componentState, (type) =>
     createElement(type, previewProps, ...childElements)
   );

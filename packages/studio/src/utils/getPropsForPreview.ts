@@ -168,7 +168,7 @@ function getExpressionValue(
   propType: PropType,
   expressionSources: ExpressionSources
 ): string | number | boolean | null | Record<string, unknown> | unknown[] {
-  console.log(expression)
+  console.log(expression);
   function getValueFromPath(path: string, parentPath: keyof ExpressionSources) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {

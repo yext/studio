@@ -16,7 +16,7 @@ import {
  */
 export default function usePreviewProps(
   c: ComponentState | undefined,
-  expressionSources: ExpressionSources,
+  expressionSources: ExpressionSources
 ): Record<string, unknown> {
   const getFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.getFileMetadata
