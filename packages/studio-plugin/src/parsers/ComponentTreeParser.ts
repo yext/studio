@@ -70,12 +70,14 @@ export default class ComponentTreeParser {
       uuid: v4(),
     };
 
-    if (TypeGuards.isExpressionElement(component)) {
+    if (component.isKind(SyntaxKind.JsxExpression)) {
       throw new Error(
         `Jsx nodes of kind "${component.getKindName()}" are not supported for direct use` +
           " in page files."
       );
-    } else if (TypeGuards.isFragmentElement(component)) {
+    }
+    
+    if (!TypeGuards.isNotFragmentElement(component)) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment,

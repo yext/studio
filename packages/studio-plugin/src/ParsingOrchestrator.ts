@@ -222,7 +222,7 @@ export default class ParsingOrchestrator {
 
     throw new Error(
       `Could not get FileMetadata for ${absPath}, file does not ` +
-        `live inside the expected folder.`
+        `live inside the expected folder: ${this.paths.components}.`
     );
   };
 

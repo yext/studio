@@ -159,26 +159,18 @@ export default class TypeGuards {
   ): value is SiteSettingsExpression {
     return typeof value === "string" && value.startsWith("siteSettings.");
   }
-
-  static isExpressionElement(
-    element: JsxElement | JsxSelfClosingElement | JsxFragment | JsxExpression
-  ): element is JsxExpression {
-    if (element.isKind(SyntaxKind.JsxExpression)) {
-      return true;
-    }
-    return false;
-  }
-
-  static isFragmentElement(
-    element: JsxElement | JsxSelfClosingElement | JsxFragment | JsxExpression
-  ): element is JsxFragment {
+  
+  static isNotFragmentElement(
+    element: JsxElement | JsxSelfClosingElement | JsxFragment
+  ): element is JsxElement | JsxSelfClosingElement {
     if (element.isKind(SyntaxKind.JsxFragment)) {
-      return true;
-    } else if (element.isKind(SyntaxKind.JsxElement)) {
-      const name = StaticParsingHelpers.parseJsxElementName(element);
-      return ["Fragment", "React.Fragment"].includes(name);
+      return false;
     }
-    return false;
+    if (element.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      return true;
+    }
+    const name = StaticParsingHelpers.parseJsxElementName(element);
+    return !["Fragment", "React.Fragment"].includes(name);
   }
 
   static isSiteSettingsValues(
