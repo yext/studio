@@ -12,12 +12,11 @@ import {
 
 /**
  * Gets the previewable props for the specified component, with any expressions
- * hydrated from the expression sources and parent item.
+ * hydrated from the expression sources.
  */
 export default function usePreviewProps(
   c: ComponentState | undefined,
   expressionSources: ExpressionSources,
-  parentItem?: unknown
 ): Record<string, unknown> {
   const getFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.getFileMetadata
@@ -43,7 +42,6 @@ export default function usePreviewProps(
 
     return getPropsForPreview(c.props, fileMetadata?.propShape ?? {}, {
       ...expressionSources,
-      ...(parentItem !== undefined && { item: parentItem }),
     });
-  }, [c, expressionSources, parentItem, getFileMetadata]);
+  }, [c, expressionSources, getFileMetadata]);
 }

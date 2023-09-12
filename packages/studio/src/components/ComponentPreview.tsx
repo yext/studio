@@ -17,7 +17,6 @@ interface ComponentPreviewProps {
   componentState: ComponentState;
   expressionSources: ExpressionSources;
   childElements?: (JSX.Element | null)[];
-  parentItem?: unknown;
   setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
 }
 
@@ -29,12 +28,10 @@ export default function ComponentPreview({
   expressionSources,
   childElements = [],
   setTooltipProps,
-  parentItem,
 }: ComponentPreviewProps): JSX.Element | null {
   const previewProps = usePreviewProps(
     componentState,
     expressionSources,
-    parentItem
   );
   const element = useElement(componentState, (type) =>
     createElement(type, previewProps, ...childElements)

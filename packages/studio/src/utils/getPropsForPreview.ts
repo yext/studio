@@ -168,6 +168,7 @@ function getExpressionValue(
   propType: PropType,
   expressionSources: ExpressionSources
 ): string | number | boolean | null | Record<string, unknown> | unknown[] {
+  console.log(expression)
   function getValueFromPath(path: string, parentPath: keyof ExpressionSources) {
     const sourceObject = expressionSources[parentPath];
     if (!sourceObject) {
@@ -200,9 +201,6 @@ function getExpressionValue(
   if (expression.startsWith("props.")) {
     return getValueFromPath(expression, "props");
   }
-  if (expression.startsWith("item")) {
-    return getValueFromPath(expression, "item");
-  }
   console.warn(
     `Invalid expression: ${expression}.` +
       " Expressions must reference an expression source from",
@@ -231,4 +229,4 @@ function logInvalidExpressionWarning(
 
 export type ExpressionSources = {
   [key in "document" | "siteSettings" | "props"]?: Record<string, unknown>;
-} & { item?: unknown };
+};
