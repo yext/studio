@@ -1,5 +1,4 @@
 import {
-  TypeGuards,
   ComponentState,
   FileMetadataKind,
   ComponentStateKind,
@@ -31,7 +30,7 @@ export default function usePreviewProps(
       }, {});
     }
 
-    if (!c || !TypeGuards.isStandardComponentState(c)) {
+    if (!c || c.kind !== ComponentStateKind.Standard) {
       return {};
     }
 

@@ -128,7 +128,7 @@ export default class ComponentTreeHelpers {
   ): string[] {
     const expressions: string[] = componentTree.flatMap((c) => {
       if (
-        !TypeGuards.isStandardComponentState(c) &&
+        c.kind !== ComponentStateKind.Standard &&
         c.kind !== ComponentStateKind.Error
       ) {
         return [];

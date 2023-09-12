@@ -1,4 +1,4 @@
-import { FileMetadataKind, TypeGuards } from "@yext/studio-plugin";
+import { ComponentStateKind, FileMetadataKind } from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
 export default function useActiveComponentWithProps() {
@@ -14,7 +14,7 @@ export default function useActiveComponentWithProps() {
 
   if (
     !activeComponentState ||
-    !TypeGuards.isStandardComponentState(activeComponentState)
+    activeComponentState.kind !== ComponentStateKind.Standard
   ) {
     return null;
   }

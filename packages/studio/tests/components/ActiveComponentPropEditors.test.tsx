@@ -11,7 +11,6 @@ import {
   PropValues,
   PropValueType,
   StandardComponentState,
-  TypeGuards,
   ComponentMetadata,
 } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
@@ -158,7 +157,7 @@ function testStandardComponentState(
         activeComponentMetadata?.kind === FileMetadataKind.Error ||
         !activeComponentMetadata?.propShape ||
         !activeComponentState ||
-        !TypeGuards.isStandardComponentState(activeComponentState)
+        activeComponentState?.kind !== ComponentStateKind.Standard
       ) {
         return null;
       }

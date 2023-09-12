@@ -1,4 +1,4 @@
-import { ComponentState, FileMetadata, TypeGuards } from "@yext/studio-plugin";
+import { ComponentState, ComponentStateKind, FileMetadata } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 
 /**
@@ -12,7 +12,7 @@ export default function useActiveComponent(): {
     const activeComponentState = store.actions.getActiveComponentState();
     const activeComponentMetadata =
       activeComponentState &&
-      TypeGuards.isStandardComponentState(activeComponentState)
+      activeComponentState.kind === ComponentStateKind.Standard
         ? store.fileMetadatas.getFileMetadata(activeComponentState.metadataUUID)
         : undefined;
     return {

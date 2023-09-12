@@ -3,8 +3,7 @@ import {
   ComponentStateKind,
   ErrorComponentState,
   FileMetadata,
-  StandardComponentState,
-  TypeGuards,
+  StandardComponentState
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import dynamicImportFromBrowser from "../../utils/dynamicImportFromBrowser";
@@ -18,7 +17,7 @@ export default class ImportComponentAction {
 
   importComponent = async (c: ComponentState): Promise<void> => {
     if (
-      !TypeGuards.isStandardComponentState(c) &&
+      c.kind !== ComponentStateKind.Standard &&
       c.kind !== ComponentStateKind.Error
     ) {
       return;
