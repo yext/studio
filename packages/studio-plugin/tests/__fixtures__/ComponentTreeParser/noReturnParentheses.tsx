@@ -1,7 +1,7 @@
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 
-const IndexPage = () => {
+const Test = () => {
   return <><ComplexBanner /></>;
 };
 
-export default IndexPage;
+export default Test;

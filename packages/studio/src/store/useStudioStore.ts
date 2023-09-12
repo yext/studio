@@ -14,7 +14,7 @@ import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import { addZundoMiddleware } from "./zundoMiddleware";
 import createStudioEnvDataSlice from "./slices/createStudioEnvDataSlice";
-import createLayoutsSlice from "./slices/createLayoutSlice";
+import createLayoutSlice from "./slices/createLayoutSlice";
 
 enableMapSet();
 
@@ -36,7 +36,7 @@ const useStudioStore = create<StudioStore>()(
       return {
         fileMetadatas: lens(createFileMetadataSlice),
         pages: lens(createPageSlice),
-        layouts: lens(createLayoutsSlice),
+        layouts: lens(createLayoutSlice),
         siteSettings: lens(createSiteSettingSlice),
         pagePreview: lens(createPagePreviewSlice),
         createModule: getCreateModuleAction(get),

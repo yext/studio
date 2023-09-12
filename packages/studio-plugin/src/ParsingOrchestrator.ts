@@ -10,6 +10,7 @@ import {
   FileMetadataKind,
   ErrorFileMetadata,
   StudioConfigWithDefaulting,
+  LayoutMetadata,
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
@@ -20,6 +21,7 @@ import { Project } from "ts-morph";
 import typescript from "typescript";
 import { v4 } from "uuid";
 import { ParsingError } from "./errors/ParsingError";
+import LayoutFile from "./sourcefiles/LayoutFile";
 
 export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({
@@ -37,7 +39,7 @@ export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
   private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
-  private layoutNames: string[] = [];
+  private layoutNameToLayoutFile: Record<string, LayoutFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
   private paths: UserPaths;
@@ -51,7 +53,7 @@ export default class ParsingOrchestrator {
     this.paths = studioConfig.paths;
     this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
-    this.layoutNames = this.initLayoutNames();
+    this.layoutNameToLayoutFile = this.initLayoutNameToLayoutFile();
   }
 
   getPageFile(pageName: string): PageFile {
@@ -85,6 +87,18 @@ export default class ParsingOrchestrator {
     );
     this.filepathToModuleFile[filepath] = newModuleFile;
     return newModuleFile;
+  }
+
+  getLayoutFile(layoutName: string): LayoutFile {
+    const layoutFile = this.layoutNameToLayoutFile[layoutName];
+    if (layoutFile) {
+      return layoutFile;
+    }
+    return new LayoutFile(
+      upath.join(this.paths.layouts, layoutName + ".tsx"),
+      this.getFileMetadata,
+      this.project
+    );
   }
 
   getUUIDToFileMetadata() {
@@ -135,12 +149,10 @@ export default class ParsingOrchestrator {
       }
     } else if (filepath.startsWith(this.paths.layouts)) {
       const layoutName = upath.basename(filepath, ".tsx");
-      const index = this.layoutNames.indexOf(layoutName);
-      if (index >= 0) {
-        this.layoutNames.splice(index, 1);
-      }
+      delete this.layoutNameToLayoutFile[layoutName];
       if (fileExists) {
-        this.layoutNames.push(layoutName);
+        this.layoutNameToLayoutFile[layoutName] =
+          this.getLayoutFile(layoutName);
       }
     }
     this.studioData = this.calculateStudioData();
@@ -155,6 +167,7 @@ export default class ParsingOrchestrator {
 
   private calculateStudioData(): StudioData {
     const siteSettings = this.getSiteSettings();
+    const layoutNameToLayoutMetadata = this.getLayoutNameToLayoutMetadata();
     const pageRecords = Object.keys(this.pageNameToPageFile).reduce(
       (prev, curr) => {
         const pageStateResult = this.pageNameToPageFile[curr].getPageState();
@@ -177,7 +190,7 @@ export default class ParsingOrchestrator {
 
     return {
       ...pageRecords,
-      layouts: this.layoutNames,
+      layoutNameToLayoutMetadata,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
       studioConfig: this.studioConfig,
@@ -208,15 +221,30 @@ export default class ParsingOrchestrator {
     return this.filepathToFileMetadata;
   }
 
-  private initLayoutNames(): string[] {
+  private initLayoutNameToLayoutFile(): Record<string, LayoutFile> {
     if (!fs.existsSync(this.paths.layouts)) {
-      return [];
+      return {};
     }
     const files = fs.readdirSync(this.paths.layouts, "utf-8");
-    return files.map((filename) => {
+    return files.reduce((layoutMap, filename) => {
       const layoutName = upath.basename(filename, ".tsx");
-      return layoutName;
-    });
+      layoutMap[layoutName] = this.getLayoutFile(layoutName);
+      return layoutMap;
+    }, {} as Record<string, LayoutFile>);
+  }
+
+  private getLayoutNameToLayoutMetadata(): Record<string, LayoutMetadata> {
+    return Object.keys(this.layoutNameToLayoutFile).reduce(
+      (layoutRecord: Record<string, LayoutMetadata>, curr) => {
+        const layoutMetadataResult =
+          this.layoutNameToLayoutFile[curr].getLayoutMetadata();
+        if (layoutMetadataResult.isOk) {
+          layoutRecord[curr] = layoutMetadataResult.value;
+        }
+        return layoutRecord;
+      },
+      {}
+    );
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {

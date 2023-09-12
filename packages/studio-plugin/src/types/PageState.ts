@@ -1,11 +1,8 @@
 import { Stream } from "@yext/pages";
-import { ComponentState } from "./ComponentState";
 import { PropValueKind } from "./PropValues";
+import { LayoutMetadata } from "./LayoutMetadata";
 
-export type PageState = {
-  componentTree: ComponentState[];
-  cssImports: string[];
-  filepath: string;
+export type PageState = LayoutMetadata & {
   pagesJS?: PagesJsState;
 };
 

@@ -1,9 +1,9 @@
 import initialStudioData from "virtual_yext-studio";
-import { LayoutsSlice } from "../models/slices/LayoutsSlice";
+import { LayoutSlice } from "../models/slices/LayoutSlice";
 import { SliceCreator } from "../models/utils";
 
-const createLayoutsSlice: SliceCreator<LayoutsSlice> = () => ({
-  layouts: initialStudioData.layouts,
+const createLayoutSlice: SliceCreator<LayoutSlice> = () => ({
+  layouts: initialStudioData.layoutNameToLayoutMetadata,
 });
 
-export default createLayoutsSlice;
+export default createLayoutSlice;

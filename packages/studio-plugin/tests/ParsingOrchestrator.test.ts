@@ -119,7 +119,23 @@ describe("aggregates data as expected", () => {
   });
 
   it("properly populates layouts", () => {
-    expect(studioData.layouts).toEqual(["basicLayout"]);
+    expect(studioData.layoutNameToLayoutMetadata).toEqual({
+      BasicLayout: {
+        componentTree: [
+          expect.objectContaining({
+            componentName: "div",
+            kind: ComponentStateKind.BuiltIn,
+            parentUUID: undefined,
+          }),
+          expect.objectContaining({
+            componentName: "Card",
+            kind: ComponentStateKind.Standard,
+          }),
+        ],
+        filepath: expect.stringContaining("layouts/BasicLayout.tsx"),
+        cssImports: [],
+      },
+    });
   });
 
   describe("PagesJS state", () => {
@@ -179,16 +195,41 @@ it("throws when the pages folder does not exist", () => {
   );
 });
 
+it("throws an error when a layout imports components from unexpected folder", () => {
+  const updatedUserPaths = {
+    ...userPaths,
+    components: "thisFolderDoesNotExist",
+  };
+  createParsingOrchestrator({ paths: updatedUserPaths }).getStudioData();
+  expect(prettyPrintError).toHaveBeenCalledWith(
+    expect.stringMatching(/^Failed to parse LayoutMetadata/),
+    expect.stringMatching(/^Error: Could not get FileMetadata for/)
+  );
+});
+
+it("gracefully handles layouts folder that does not exist", () => {
+  const updatedUserPaths = { ...userPaths, layouts: "thisFolderDoesNotExist" };
+  const parsingOrchestrator = createParsingOrchestrator({
+    paths: updatedUserPaths,
+  });
+  expect(
+    parsingOrchestrator.getStudioData().layoutNameToLayoutMetadata
+  ).toEqual({});
+});
+
 describe("reloadFile", () => {
   const userPaths = getUserPaths(
     upath.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
   );
   const modulePath = upath.join(userPaths.modules, "BannerModule.tsx");
-  const originalFile = fs.readFileSync(modulePath, "utf-8");
+  const originalModuleFile = fs.readFileSync(modulePath, "utf-8");
+  const layoutPath = upath.join(userPaths.layouts, "BasicLayout.tsx");
+  const originalLayoutFile = fs.readFileSync(layoutPath, "utf-8");
   const orchestrator = createParsingOrchestrator({ paths: userPaths });
 
   afterEach(() => {
-    fs.writeFileSync(modulePath, originalFile);
+    fs.writeFileSync(modulePath, originalModuleFile);
+    fs.writeFileSync(layoutPath, originalLayoutFile);
   });
 
   it("reloadFile can reload a module file", () => {
@@ -224,6 +265,39 @@ describe("reloadFile", () => {
     const updatedTree = getComponentTree();
     expect(updatedTree).toEqual([
       expect.objectContaining({
+        componentName: "Banner",
+      }),
+    ]);
+  });
+
+  it("reloadFile can reload a layout file", () => {
+    const updatedLayoutFile = `
+    import Banner from "../components/Banner";
+
+    export default function BasicLayout() {
+      return <Banner />;
+    }
+  `;
+    const getComponentTree = () => {
+      const result = orchestrator
+        .getLayoutFile("BasicLayout")
+        .getLayoutMetadata();
+      assertIsOk(result);
+      return result.value.componentTree;
+    };
+    const originalTree = getComponentTree();
+    expect(originalTree).toEqual([
+      expect.objectContaining({
+        kind: ComponentStateKind.Fragment,
+      }),
+    ]);
+
+    fs.writeFileSync(layoutPath, updatedLayoutFile);
+    orchestrator.reloadFile(layoutPath);
+    const updatedTree = getComponentTree();
+    expect(updatedTree).toEqual([
+      expect.objectContaining({
+        kind: ComponentStateKind.Standard,
         componentName: "Banner",
       }),
     ]);

@@ -1,11 +1,14 @@
-import PageFile from "../../src/sourcefiles/PageFile";
-import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
-import { FileMetadata, FileMetadataKind } from "../../src/types";
+import { getComponentPath, getLayoutPath } from "../__utils__/getFixturePath";
+import {
+  ComponentStateKind,
+  FileMetadata,
+  FileMetadataKind,
+} from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
 import { createTestProject } from "../__utils__/createTestSourceFile";
+import LayoutFile from "../../src/sourcefiles/LayoutFile";
 
 jest.mock("uuid");
 
@@ -22,23 +25,22 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   };
 }
 
-function createPageFile(pageName: string, isPagesJSRepo = false): PageFile {
-  return new PageFile(
-    getPagePath(pageName),
+function createLayoutFile(layoutName: string): LayoutFile {
+  return new LayoutFile(
+    getLayoutPath(layoutName),
     mockGetFileMetadata,
-    createTestProject(),
-    isPagesJSRepo
+    createTestProject()
   );
 }
 
-describe("getPageState", () => {
+describe("getLayoutMetadata", () => {
   beforeEach(() => {
     mockUUID();
   });
 
   it("correctly parses component tree", () => {
-    const pageFile = createPageFile("entityTemplate");
-    const result = pageFile.getPageState();
+    const layoutFile = createLayoutFile("BasicLayout");
+    const result = layoutFile.getLayoutMetadata();
 
     assertIsOk(result);
     expect(result.value.componentTree).toEqual([
@@ -69,8 +71,8 @@ describe("getPageState", () => {
   });
 
   it("correctly parses CSS imports", () => {
-    const pageFile = createPageFile("entityTemplate");
-    const result = pageFile.getPageState();
+    const layoutFile = createLayoutFile("BasicLayout");
+    const result = layoutFile.getLayoutMetadata();
 
     assertIsOk(result);
     expect(result.value.cssImports).toEqual([
@@ -80,40 +82,19 @@ describe("getPageState", () => {
   });
 
   it("correctly gets filepath", () => {
-    const pageFile = createPageFile("entityTemplate");
-    const result = pageFile.getPageState();
+    const layoutFile = createLayoutFile("BasicLayout");
+    const result = layoutFile.getLayoutMetadata();
 
     assertIsOk(result);
-    expect(result.value.filepath).toEqual(getPagePath("entityTemplate"));
-  });
-
-  it("correctly gets getPathValue", () => {
-    const pageFile = createPageFile("entityTemplate", true);
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
-    expect(result.value.pagesJS?.getPathValue).toEqual({
-      kind: PropValueKind.Expression,
-      value: "document.slug",
-    });
-  });
-
-  it("correctly gets stream scope", () => {
-    const pageFile = createPageFile("entityTemplate", true);
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
-    expect(result.value.pagesJS?.streamScope).toEqual({
-      entityTypes: ["location"],
-    });
+    expect(result.value.filepath).toEqual(getLayoutPath("BasicLayout"));
   });
 
   describe("errors", () => {
-    it("returns an error if an error was thrown while parsing the page", () => {
+    it("returns an error if an error was thrown while parsing the layout", () => {
       const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-      const pageFile = createPageFile("errorPage");
+      const layoutFile = createLayoutFile("ErrorLayout");
 
-      expect(pageFile.getPageState()).toHaveErrorMessage(
+      expect(layoutFile.getLayoutMetadata()).toHaveErrorMessage(
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
       expect(consoleErrorSpy).toBeCalled();
