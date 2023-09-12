@@ -198,9 +198,6 @@ function getExpressionValue(
   if (TypeGuards.isStreamsDataExpression(expression)) {
     return getValueFromPath(expression, "document");
   }
-  if (expression.startsWith("props.")) {
-    return getValueFromPath(expression, "props");
-  }
   console.warn(
     `Invalid expression: ${expression}.` +
       " Expressions must reference an expression source from",
@@ -228,5 +225,5 @@ function logInvalidExpressionWarning(
 }
 
 export type ExpressionSources = {
-  [key in "document" | "siteSettings" | "props"]?: Record<string, unknown>;
+  [key in "document" | "siteSettings"]?: Record<string, unknown>;
 };

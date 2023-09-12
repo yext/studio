@@ -176,32 +176,6 @@ describe("expression value handling", () => {
     });
   });
 
-  it("can handle expressions that reference literal props", () => {
-    const transformedProps = transformFooProp("props.title", {
-      title: {
-        kind: PropValueKind.Literal,
-        valueType: PropValueType.string,
-        value: "the title prop",
-      },
-    });
-    expect(transformedProps).toEqual({
-      foo: "the title prop",
-    });
-  });
-
-  it("can handle expressions that reference expression props", () => {
-    const transformedProps = transformFooProp("props.title", {
-      title: {
-        kind: PropValueKind.Expression,
-        valueType: PropValueType.string,
-        value: "document.name",
-      },
-    });
-    expect(transformedProps).toEqual({
-      foo: "office space",
-    });
-  });
-
   it("can handle expression that references an array of objects", () => {
     const transformedProps = getPropsForPreview(
       {
@@ -275,21 +249,6 @@ describe("template string literal value handling", () => {
     });
   });
 
-  it("can handle an expression prop that references a parent expression prop", () => {
-    const transformedProps = transformFooProp(
-      "`childProp - ${props.parentExpression}`",
-      {
-        parentExpression: {
-          kind: PropValueKind.Expression,
-          valueType: PropValueType.string,
-          value: "`parentProp - ${document.name}`",
-        },
-      }
-    );
-    expect(transformedProps).toEqual({
-      foo: "childProp - parentProp - office space",
-    });
-  });
 });
 
 it("converts expressions using streams data into bracket syntax", () => {
