@@ -17,7 +17,6 @@ import {
   PropValueType,
   SiteSettingsShape,
   SiteSettingsValues,
-  StandardComponentState,
 } from "../types";
 
 import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
@@ -180,12 +179,6 @@ export default class TypeGuards {
       return ["Fragment", "React.Fragment"].includes(name);
     }
     return false;
-  }
-
-  static isStandardComponentState(
-    componentState: ComponentState
-  ): componentState is StandardComponentState {
-    return componentState.kind === ComponentStateKind.Standard;
   }
 
   static isSiteSettingsValues(
