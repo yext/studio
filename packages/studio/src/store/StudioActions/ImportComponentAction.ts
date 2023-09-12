@@ -3,7 +3,7 @@ import {
   ComponentStateKind,
   ErrorComponentState,
   FileMetadata,
-  StandardComponentState
+  StandardComponentState,
 } from "@yext/studio-plugin";
 import FileMetadataSlice from "../models/slices/FileMetadataSlice";
 import dynamicImportFromBrowser from "../../utils/dynamicImportFromBrowser";

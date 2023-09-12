@@ -1,4 +1,8 @@
-import { ComponentState, ComponentStateKind, FileMetadata } from "@yext/studio-plugin";
+import {
+  ComponentState,
+  ComponentStateKind,
+  FileMetadata,
+} from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 
 /**
