@@ -15,7 +15,7 @@ export enum MessageID {
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
 export interface SaveChangesPayload
-  extends Pick<StudioData, "pageNameToPageState" | "UUIDToFileMetadata"> {
+  extends Pick<StudioData, "pageNameToPageState"> {
   pendingChanges: {
     pagesToRemove: string[];
     pagesToUpdate: string[];

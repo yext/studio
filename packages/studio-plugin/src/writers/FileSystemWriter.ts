@@ -1,5 +1,5 @@
 import ParsingOrchestrator from "../ParsingOrchestrator";
-import { FileMetadata, PageState, SiteSettingsValues } from "../types";
+import { PageState, SiteSettingsValues } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
 import upath from "upath";
@@ -27,20 +27,6 @@ export class FileSystemWriter {
 
   writeToSiteSettings(siteSettingsValues: SiteSettingsValues): void {
     this.orchestrator.updateSiteSettings(siteSettingsValues);
-  }
-
-  /**
-   * Deletes all files corresponding to FileMetadata that exist in the previous UUIDToFileMetadata
-   * but not the updated UUIDToFileMetadata (i.e. FileMetadata that have been removed).
-   */
-  syncFileMetadata(updatedUUIDToFileMetadata: Record<string, FileMetadata>) {
-    const UUIDToFileMetadata = this.orchestrator.getUUIDToFileMetadata();
-    Object.keys(UUIDToFileMetadata).forEach((metadataUUID) => {
-      if (!updatedUUIDToFileMetadata.hasOwnProperty(metadataUUID)) {
-        this.removeFile(UUIDToFileMetadata[metadataUUID].filepath);
-        this.orchestrator.reloadFile(UUIDToFileMetadata[metadataUUID].filepath);
-      }
-    });
   }
 
   static openFile(filepath: string) {

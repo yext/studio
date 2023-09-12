@@ -1,5 +1,4 @@
 import {
-  FileMetadata,
   PageState,
   SiteSettingsValues,
   UserPaths,
@@ -38,9 +37,5 @@ export default class FileSystemManager {
 
   updateSiteSettings(siteSettingsValues: SiteSettingsValues) {
     this.writer.writeToSiteSettings(siteSettingsValues);
-  }
-
-  syncFileMetadata(UUIDToFileMetadata: Record<string, FileMetadata>) {
-    this.writer.syncFileMetadata(UUIDToFileMetadata);
   }
 }

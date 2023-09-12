@@ -11,10 +11,8 @@ export default function executeSaveChanges(
   const {
     pageNameToPageState,
     pendingChanges,
-    UUIDToFileMetadata,
     siteSettings,
   } = saveData;
-  fileManager.syncFileMetadata(UUIDToFileMetadata);
   pendingChanges.pagesToRemove.forEach((pageToRemove) => {
     const filepath =
       upath.join(fileManager.getUserPaths().pages, pageToRemove) + ".tsx";

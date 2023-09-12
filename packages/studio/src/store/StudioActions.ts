@@ -184,14 +184,10 @@ export default class StudioActions {
   };
 
   private updatePreviousSave = () => {
-    const { UUIDToFileMetadata } = this.getFileMetadatas();
     const { values } = this.getSiteSettings();
     const previousSaveState = cloneDeep({
       siteSettings: {
         values,
-      },
-      fileMetadatas: {
-        UUIDToFileMetadata,
       },
     });
     this.getPreviousSave().setPreviousSave(previousSaveState);
@@ -200,11 +196,9 @@ export default class StudioActions {
   private getSaveData = () => {
     const { pages, pendingChanges: pendingPageChanges } = this.getPages();
     const { pagesToRemove, pagesToUpdate } = pendingPageChanges;
-    const { UUIDToFileMetadata } = this.getFileMetadatas();
     const { values } = this.getSiteSettings();
     return {
       pageNameToPageState: pages,
-      UUIDToFileMetadata,
       pendingChanges: {
         pagesToRemove: [...pagesToRemove.keys()],
         pagesToUpdate: [...pagesToUpdate],

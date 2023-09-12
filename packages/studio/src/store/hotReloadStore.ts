@@ -43,7 +43,6 @@ async function syncFileMetadata(studioData: StudioData, file: string) {
   const UUIDToFileMetadata = studioData.UUIDToFileMetadata;
   useStudioStore.setState((store) => {
     store.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
-    store.previousSave.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
   });
   const fileMetadata = Object.values(UUIDToFileMetadata).find(
     (metadata) => metadata.filepath === file
