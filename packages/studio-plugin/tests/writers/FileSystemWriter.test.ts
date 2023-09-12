@@ -28,7 +28,6 @@ const projectRoot = upath.resolve(
 const paths = getUserPaths(projectRoot);
 paths.pages = upath.join(projectRoot, "pages");
 paths.siteSettings = upath.join(projectRoot, "siteSettings.ts");
-console.log(paths);
 
 const bannerComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -52,7 +51,7 @@ const siteSettingsValues: SiteSettingsValues = {
   },
 };
 
-describe("writers", () => {
+describe("writes to source files on new state", () => {
   const tsMorphProject: Project = createTestProject();
   const orchestrator = new ParsingOrchestrator(tsMorphProject, {
     paths,
@@ -60,7 +59,6 @@ describe("writers", () => {
     isPagesJSRepo: false,
     port: 8080,
   });
-
   const fileWriter = new FileSystemWriter(orchestrator, tsMorphProject);
 
   it("updates user page based on new state", () => {
