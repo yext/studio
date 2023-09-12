@@ -70,18 +70,6 @@ const arrayPropMetadata: PropMetadata = {
   },
   required: false,
 };
-
-const parentPropShape: PropShape = {
-  title: {
-    type: PropValueType.string,
-    required: false,
-  },
-  parentExpression: {
-    type: PropValueType.string,
-    required: false,
-  },
-};
-
 it("returns value as is for primitive prop of type Literal", () => {
   const transformedProps = getPropsForPreview(
     {
@@ -271,7 +259,7 @@ it("applies expression sources for streams data", () => {
   });
 });
 
-function transformFooProp(value: string, parentProps: PropValues = {}) {
+function transformFooProp(value: string) {
   return getPropsForPreview(
     {
       foo: {
@@ -283,11 +271,6 @@ function transformFooProp(value: string, parentProps: PropValues = {}) {
     propShape,
     {
       ...expressionSources,
-      props: getPropsForPreview(
-        parentProps,
-        parentPropShape,
-        expressionSources
-      ),
     }
   );
 }
