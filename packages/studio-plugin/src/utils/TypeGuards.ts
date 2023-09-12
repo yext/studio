@@ -1,6 +1,5 @@
 import {
   JsxElement,
-  JsxExpression,
   JsxFragment,
   JsxSelfClosingElement,
   SyntaxKind,
@@ -159,7 +158,7 @@ export default class TypeGuards {
   ): value is SiteSettingsExpression {
     return typeof value === "string" && value.startsWith("siteSettings.");
   }
-  
+
   static isNotFragmentElement(
     element: JsxElement | JsxSelfClosingElement | JsxFragment
   ): element is JsxElement | JsxSelfClosingElement {
