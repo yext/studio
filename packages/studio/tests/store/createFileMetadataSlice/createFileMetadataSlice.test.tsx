@@ -20,17 +20,6 @@ const componentMetadata: ComponentMetadata = {
   },
 };
 
-it("updates UUIDToFileMetadata using setFileMetadata", () => {
-  useStudioStore
-    .getState()
-    .fileMetadatas.setFileMetadata("some-uuid", componentMetadata);
-  const UUIDToFileMetadata =
-    useStudioStore.getState().fileMetadatas.UUIDToFileMetadata;
-  expect(UUIDToFileMetadata).toEqual({
-    "some-uuid": componentMetadata,
-  });
-});
-
 it("returns a FileMetadata using getFileMetadata", () => {
   setInitialState({
     UUIDToFileMetadata: {

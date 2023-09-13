@@ -13,10 +13,6 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
 ) => ({
   UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
   UUIDToImportedComponent: {},
-  setFileMetadata: (metadataUUID: string, metadata: FileMetadata) =>
-    set((store) => {
-      store.UUIDToFileMetadata[metadataUUID] = metadata;
-    }),
   getFileMetadata: (metadataUUID: string) =>
     get().UUIDToFileMetadata[metadataUUID],
   getComponentMetadata: (metadataUUID) => {
