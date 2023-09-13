@@ -2,6 +2,9 @@ import {
   ComponentState,
   ComponentStateKind,
   FileMetadataKind,
+  PropValueKind,
+  PropValueType,
+  PropValues,
 } from "@yext/studio-plugin";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
@@ -46,6 +49,29 @@ describe("updateComponentTree", () => {
     useStudioStore.getState().actions.updateComponentTree(updatedTree);
     const tree = useStudioStore.getState().actions.getComponentTree();
     expect(tree).toEqual(updatedTree);
+  });
+});
+
+describe("updateActiveComponentProps", () => {
+  it("updates the active component props in the current active page", () => {
+    mockInitialStore();
+    const updatedProps: PropValues = {
+      hi: {
+        kind: PropValueKind.Literal,
+        valueType: PropValueType.string,
+        value: "bye bye bocchi",
+      },
+    };
+    useStudioStore.getState().actions.updateActiveComponentProps(updatedProps);
+    const componentStateAfterUpdate = useStudioStore
+      .getState()
+      .actions.getActiveComponentState();
+    expect(componentStateAfterUpdate).toEqual(
+      expect.objectContaining({
+        componentName: "MyBanner",
+        props: updatedProps,
+      })
+    );
   });
 });
 
