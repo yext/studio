@@ -11,7 +11,6 @@ import {
   PropValues,
   PropValueType,
   StandardComponentState,
-  ComponentMetadata,
 } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -76,20 +75,12 @@ const getComponentProps = () =>
   ).props;
 
 describe("ComponentStateKind.Component", () => {
-  testStandardComponentState(activeComponentState, activeComponentMetadata);
-});
-
-function testStandardComponentState(
-  state: StandardComponentState,
-  metadata: ComponentMetadata
-) {
   const componentKindLabel = "component";
-
   beforeEach(() => {
     mockStoreActiveComponent({
-      activeComponent: state,
+      activeComponent: activeComponentState,
       activeComponentMetadata: {
-        ...metadata,
+        ...activeComponentMetadata,
         propShape,
       },
     });
@@ -98,14 +89,14 @@ function testStandardComponentState(
   it(`renders message when there are no editable props`, () => {
     render(
       <ActiveComponentPropEditors
-        activeComponentState={state}
+        activeComponentState={activeComponentState}
         propShape={propShape}
         shouldRenderProp={() => false}
       />
     );
 
     screen.getByText(
-      `${state.componentName} has no Editable Properties in this Panel.`
+      `${activeComponentState.componentName} has no Editable Properties in this Panel.`
     );
     expect(screen.queryByText("title")).toBeNull();
     expect(screen.queryByText("num")).toBeNull();
@@ -115,7 +106,7 @@ function testStandardComponentState(
 
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
     const activeState: StandardComponentState = {
-      ...state,
+      ...activeComponentState,
       props: {
         bgColor: {
           kind: PropValueKind.Literal,
@@ -139,7 +130,7 @@ function testStandardComponentState(
   it(`renders tooltip for each of the active ${componentKindLabel}'s props with docs`, async () => {
     render(
       <ActiveComponentPropEditors
-        activeComponentState={state}
+        activeComponentState={activeComponentState}
         propShape={propShape}
       />
     );
@@ -169,7 +160,7 @@ function testStandardComponentState(
       );
     }
     const activeComponent: StandardComponentState = {
-      ...state,
+      ...activeComponentState,
       props: {
         title: {
           kind: PropValueKind.Literal,
@@ -198,7 +189,7 @@ function testStandardComponentState(
       mockStoreActiveComponent({
         activeComponent: activeComponent,
         activeComponentMetadata: {
-          ...metadata,
+          ...activeComponentMetadata,
           propShape,
         },
       });
@@ -261,7 +252,7 @@ function testStandardComponentState(
       jest.useRealTimers();
     });
   });
-}
+});
 
 it("converts string literals to string expressions when propKind = Expression", async () => {
   const props: PropValues = {
