@@ -1,16 +1,16 @@
 import {
-  ComponentState,
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
   PropShape,
+  StandardComponentState,
 } from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
 export default function useActiveComponentWithProps(): {
   activeComponentMetadata: FileMetadata;
   propShape: PropShape;
-  activeComponentState: ComponentState;
+  activeComponentState: StandardComponentState;
 } | null {
   const { activeComponentMetadata, activeComponentState } =
     useActiveComponent();
