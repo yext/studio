@@ -23,10 +23,10 @@ export default class ImportComponentAction {
       return;
     }
 
-    await this.importStandardComponentState(c);
+    await this.importStandardOrErrorComponentState(c);
   };
 
-  private importStandardComponentState = async (
+  private importStandardOrErrorComponentState = async (
     componentState: StandardComponentState | ErrorComponentState
   ) => {
     const { metadataUUID, componentName } = componentState;
