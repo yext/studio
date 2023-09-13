@@ -15,8 +15,7 @@ export default function useActiveComponent(): {
   return useStudioStore((store) => {
     const activeComponentState = store.actions.getActiveComponentState();
     const activeComponentMetadata =
-      activeComponentState &&
-      activeComponentState.kind === ComponentStateKind.Standard
+      activeComponentState?.kind === ComponentStateKind.Standard
         ? store.fileMetadatas.getFileMetadata(activeComponentState.metadataUUID)
         : undefined;
     return {
