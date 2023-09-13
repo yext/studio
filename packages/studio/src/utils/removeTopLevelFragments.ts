@@ -11,17 +11,13 @@ import {
 export default function removeTopLevelFragments(
   record: Record<string, PageState>
 ): Record<string, PageState> {
-  const entries = Object.entries(record).map(
-    ([pageName, pageState]) => {
-      const updatedContainer = {
-        ...pageState,
-        componentTree: removeTopLevelFragmentsFromTree(
-          pageState.componentTree
-        ),
-      };
-      return [pageName, updatedContainer];
-    }
-  );
+  const entries = Object.entries(record).map(([pageName, pageState]) => {
+    const updatedContainer = {
+      ...pageState,
+      componentTree: removeTopLevelFragmentsFromTree(pageState.componentTree),
+    };
+    return [pageName, updatedContainer];
+  });
   return Object.fromEntries(entries);
 }
 
