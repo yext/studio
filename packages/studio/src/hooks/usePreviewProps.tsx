@@ -29,12 +29,12 @@ export default function usePreviewProps(
       }, {});
     }
 
-    if (!c || c.kind !== ComponentStateKind.Standard) {
+    if (c?.kind !== ComponentStateKind.Standard) {
       return {};
     }
 
     const fileMetadata = getFileMetadata(c.metadataUUID);
-    if (!fileMetadata || fileMetadata.kind === FileMetadataKind.Error) {
+    if (fileMetadata?.kind === FileMetadataKind.Error) {
       throw new Error(
         `Cannot get propShape for FileMetadata of ${c.componentName}`
       );
