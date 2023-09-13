@@ -23,17 +23,15 @@ export default function ElementSelector({
 
   const addableElements = Object.values(UUIDToFileMetadata).filter(
     (metadata): metadata is ComponentMetadata => {
+      if (metadata.kind !== FileMetadataKind.Component) {
+        return false;
+      };
       if (activeType === ElementType.Components) {
-        return (
-          metadata.kind === FileMetadataKind.Component &&
-          !metadata.acceptsChildren
-        );
-      } else {
-        return !!(
-          metadata.kind === FileMetadataKind.Component &&
-          metadata.acceptsChildren
-        );
+        return !metadata.acceptsChildren;
+      } else if (activeType === ElementType.Containers){
+        return !!metadata.acceptsChildren;
       }
+      return false
     }
   );
 
@@ -81,7 +79,7 @@ function Option({
 
   return (
     <button
-      className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 disabled:opacity-25 w-full text-left"
+      className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 w-full text-left"
       onClick={handleSelect}
       aria-label={`Add ${componentName} Element`}
     >
