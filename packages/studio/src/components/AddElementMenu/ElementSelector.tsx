@@ -25,13 +25,13 @@ export default function ElementSelector({
     (metadata): metadata is ComponentMetadata => {
       if (metadata.kind !== FileMetadataKind.Component) {
         return false;
-      };
+      }
       if (activeType === ElementType.Components) {
         return !metadata.acceptsChildren;
-      } else if (activeType === ElementType.Containers){
+      } else if (activeType === ElementType.Containers) {
         return !!metadata.acceptsChildren;
       }
-      return false
+      return false;
     }
   );
 
