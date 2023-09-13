@@ -9,6 +9,8 @@ import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
 import { createTestProject } from "../__utils__/createTestSourceFile";
 import LayoutFile from "../../src/sourcefiles/LayoutFile";
+import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
+import ComponentTreeParser from "../../src/parsers/ComponentTreeParser";
 
 jest.mock("uuid");
 
@@ -26,11 +28,15 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
 }
 
 function createLayoutFile(layoutName: string): LayoutFile {
-  return new LayoutFile(
+  const studioSourceFileParser = new StudioSourceFileParser(
     getLayoutPath(layoutName),
-    mockGetFileMetadata,
     createTestProject()
   );
+  const componentTreeParser = new ComponentTreeParser(
+    studioSourceFileParser,
+    mockGetFileMetadata
+  );
+  return new LayoutFile(studioSourceFileParser, componentTreeParser);
 }
 
 describe("getLayoutMetadata", () => {

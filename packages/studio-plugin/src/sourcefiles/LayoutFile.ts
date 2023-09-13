@@ -1,32 +1,19 @@
-import { Project } from "ts-morph";
 import { Result } from "true-myth";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
-import ComponentTreeParser, {
-  GetFileMetadata,
-} from "../parsers/ComponentTreeParser";
+import ComponentTreeParser from "../parsers/ComponentTreeParser";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import tryUsingResult from "../errors/tryUsingResult";
 import { LayoutMetadata } from "../types/LayoutMetadata";
 
 /**
- * LayoutFile is responsible for parsing and updating a single layout file, for
- * example `src/layouts/BasicProfile.tsx`.
+ * LayoutFile is responsible for parsing a single layout file, for example
+ * `src/layouts/BasicProfile.tsx`.
  */
 export default class LayoutFile {
-  private studioSourceFileParser: StudioSourceFileParser;
-  private componentTreeParser: ComponentTreeParser;
-
   constructor(
-    filepath: string,
-    getFileMetadata: GetFileMetadata,
-    project: Project
-  ) {
-    this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
-    this.componentTreeParser = new ComponentTreeParser(
-      this.studioSourceFileParser,
-      getFileMetadata
-    );
-  }
+    private studioSourceFileParser: StudioSourceFileParser,
+    private componentTreeParser: ComponentTreeParser
+  ) {}
 
   getLayoutMetadata(): Result<LayoutMetadata, ParsingError> {
     return tryUsingResult(

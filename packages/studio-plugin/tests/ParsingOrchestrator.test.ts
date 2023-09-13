@@ -104,7 +104,7 @@ describe("aggregates data as expected", () => {
     );
   });
 
-  it("properly populates pageNameToPageState", () => {
+  it("properly populates pageNameToPageState, ignoring sub-directories", () => {
     expect(studioData.pageNameToPageState).toEqual({
       basicPage: basicPageState,
       pageWithModules: pageWithModulesState,
@@ -118,7 +118,7 @@ describe("aggregates data as expected", () => {
     });
   });
 
-  it("properly populates layouts", () => {
+  it("properly populates layouts, ignoring sub-directories", () => {
     expect(studioData.layoutNameToLayoutMetadata).toEqual({
       BasicLayout: {
         componentTree: [
@@ -279,11 +279,9 @@ describe("reloadFile", () => {
     }
   `;
     const getComponentTree = () => {
-      const result = orchestrator
-        .getLayoutFile("BasicLayout")
-        .getLayoutMetadata();
-      assertIsOk(result);
-      return result.value.componentTree;
+      const layout =
+        orchestrator.getStudioData().layoutNameToLayoutMetadata["BasicLayout"];
+      return layout.componentTree;
     };
     const originalTree = getComponentTree();
     expect(originalTree).toEqual([

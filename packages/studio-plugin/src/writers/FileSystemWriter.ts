@@ -29,7 +29,7 @@ export class FileSystemWriter {
    * @param pageState - the updated state for the page file
    */
   writeToPageFile(pageName: string, pageState: PageState): void {
-    const pageFile = this.orchestrator.getPageFile(pageName);
+    const pageFile = this.orchestrator.getOrCreatePageFile(pageName);
     pageFile.updatePageFile(pageState);
   }
 
