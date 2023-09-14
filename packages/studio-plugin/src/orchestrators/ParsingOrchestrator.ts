@@ -17,9 +17,9 @@ import { Project } from "ts-morph";
 import typescript from "typescript";
 import { v4 } from "uuid";
 import { ParsingError } from "../errors/ParsingError";
-import initNameToSourceFile from "./initNameToSourceFile";
+import createFilenameMapping from "./createFilenameMapping";
 import LayoutOrchestrator from "./LayoutOrchestrator";
-import constructRecordsFromSourceFiles from "./constructRecordsFromSourceFiles";
+import separateErrorAndSuccessResults from "./separateErrorAndSuccessResults";
 
 export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({
@@ -143,14 +143,14 @@ export default class ParsingOrchestrator {
     const siteSettings = this.getSiteSettings();
     const layoutNameToLayoutState =
       this.layoutOrchestrator.getLayoutNameToLayoutState();
-    const pageRecords = constructRecordsFromSourceFiles(
+    const pageRecords = separateErrorAndSuccessResults(
       this.pageNameToPageFile,
       (pageFile) => pageFile.getPageState()
     );
 
     return {
-      pageNameToPageState: pageRecords.nameToSuccessData,
-      pageNameToErrorPageState: pageRecords.nameToError,
+      pageNameToPageState: pageRecords.successes,
+      pageNameToErrorPageState: pageRecords.errors,
       layoutNameToLayoutState,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
@@ -214,7 +214,7 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
-    return initNameToSourceFile(this.paths.pages, this.getOrCreatePageFile);
+    return createFilenameMapping(this.paths.pages, this.getOrCreatePageFile);
   }
 
   private getSiteSettings(): SiteSettings | undefined {

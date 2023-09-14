@@ -2,11 +2,11 @@ import { Project } from "ts-morph";
 import ComponentTreeParser from "../parsers/ComponentTreeParser";
 import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import LayoutFile from "../sourcefiles/LayoutFile";
-import { FileMetadata, UserPaths } from "../types";
-import initNameToSourceFile from "./initNameToSourceFile";
+import { FileMetadata, LayoutState, UserPaths } from "../types";
+import createFilenameMapping from "./createFilenameMapping";
 import fs from "fs";
 import upath from "upath";
-import constructRecordsFromSourceFiles from "./constructRecordsFromSourceFiles";
+import separateErrorAndSuccessResults from "./separateErrorAndSuccessResults";
 
 export default class LayoutOrchestrator {
   private layoutNameToLayoutFile: Record<string, LayoutFile> = {};
@@ -19,11 +19,11 @@ export default class LayoutOrchestrator {
     this.layoutNameToLayoutFile = this.initLayoutNameToLayoutFile();
   }
 
-  getLayoutNameToLayoutState() {
-    return constructRecordsFromSourceFiles(
+  getLayoutNameToLayoutState(): Record<string, LayoutState> {
+    return separateErrorAndSuccessResults(
       this.layoutNameToLayoutFile,
       (layoutFile) => layoutFile.getLayoutState()
-    ).nameToSuccessData;
+    ).successes;
   }
 
   refreshLayoutFile(filepath: string, fileExists: boolean) {
@@ -60,6 +60,9 @@ export default class LayoutOrchestrator {
     if (!fs.existsSync(this.paths.layouts)) {
       return {};
     }
-    return initNameToSourceFile(this.paths.layouts, this.getOrCreateLayoutFile);
+    return createFilenameMapping(
+      this.paths.layouts,
+      this.getOrCreateLayoutFile
+    );
   }
 }
