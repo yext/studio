@@ -5,7 +5,7 @@ export * from "./FileMetadata";
 export * from "./ErrorFileMetadata";
 export * from "./ComponentState";
 export * from "./PageState";
-export * from "./LayoutMetadata";
+export * from "./LayoutState";
 export * from "./StudioData";
 export * from "./UserPaths";
 export * from "./StudioConfig";

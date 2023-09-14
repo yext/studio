@@ -82,7 +82,7 @@ describe("aggregates data as expected", () => {
   });
 
   it("properly populates layouts, ignoring sub-directories", () => {
-    expect(studioData.layoutNameToLayoutMetadata).toEqual({
+    expect(studioData.layoutNameToLayoutState).toEqual({
       BasicLayout: {
         componentTree: [
           expect.objectContaining({
@@ -155,7 +155,7 @@ it("throws an error when a layout imports components from unexpected folder", ()
   };
   createParsingOrchestrator({ paths: updatedUserPaths }).getStudioData();
   expect(prettyPrintError).toHaveBeenCalledWith(
-    expect.stringMatching(/^Failed to parse LayoutMetadata/),
+    expect.stringMatching(/^Failed to parse LayoutState/),
     expect.stringMatching(/^Error: Could not get FileMetadata for/)
   );
 });
@@ -166,7 +166,7 @@ it("gracefully handles layouts folder that does not exist", () => {
     paths: updatedUserPaths,
   });
   expect(
-    parsingOrchestrator.getStudioData().layoutNameToLayoutMetadata
+    parsingOrchestrator.getStudioData().layoutNameToLayoutState
   ).toEqual({});
 });
 
@@ -235,7 +235,7 @@ describe("reloadFile", () => {
   `;
     const getComponentTree = () => {
       const layout =
-        orchestrator.getStudioData().layoutNameToLayoutMetadata["BasicLayout"];
+        orchestrator.getStudioData().layoutNameToLayoutState["BasicLayout"];
       return layout.componentTree;
     };
     const originalTree = getComponentTree();

@@ -4,7 +4,7 @@ import { SliceCreator } from "../models/utils";
 
 const createLayoutSlice: SliceCreator<LayoutSlice> = () => ({
   // TODO (SLAP-2930): Remove top-level fragments from layouts
-  layouts: initialStudioData.layoutNameToLayoutMetadata,
+  layouts: initialStudioData.layoutNameToLayoutState,
 });
 
 export default createLayoutSlice;

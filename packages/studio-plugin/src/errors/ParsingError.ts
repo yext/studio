@@ -3,7 +3,7 @@ import { StudioError } from "./StudioError";
 export enum ParsingErrorKind {
   FailedToParsePageState = "FailedToParsePageState",
   InvalidStudioConfig = "InvalidStudioConfig",
-  FailedToParseLayoutMetadata = "FailedToParseLayoutMetadata",
+  FailedToParseLayoutState = "FailedToParseLayoutState",
   FailedToParseComponentMetadata = "FailedToParseComponentMetadata",
 }
 

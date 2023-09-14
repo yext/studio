@@ -3,7 +3,7 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import ComponentTreeParser from "../parsers/ComponentTreeParser";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import tryUsingResult from "../errors/tryUsingResult";
-import { LayoutMetadata } from "../types/LayoutMetadata";
+import { LayoutState } from "../types/LayoutState";
 
 /**
  * LayoutFile is responsible for parsing a single layout file, for example
@@ -15,15 +15,15 @@ export default class LayoutFile {
     private componentTreeParser: ComponentTreeParser
   ) {}
 
-  getLayoutMetadata(): Result<LayoutMetadata, ParsingError> {
+  getLayoutState(): Result<LayoutState, ParsingError> {
     return tryUsingResult(
-      ParsingErrorKind.FailedToParseLayoutMetadata,
-      `Failed to parse LayoutMetadata for "${this.studioSourceFileParser.getFilepath()}"`,
-      this._getLayoutMetadata
+      ParsingErrorKind.FailedToParseLayoutState,
+      `Failed to parse LayoutState for "${this.studioSourceFileParser.getFilepath()}"`,
+      this._getLayoutState
     );
   }
 
-  private _getLayoutMetadata = (): LayoutMetadata => {
+  private _getLayoutState = (): LayoutState => {
     this.studioSourceFileParser.checkForSyntaxErrors();
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),

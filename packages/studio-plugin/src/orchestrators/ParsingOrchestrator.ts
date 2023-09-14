@@ -141,7 +141,7 @@ export default class ParsingOrchestrator {
 
   private calculateStudioData(): StudioData {
     const siteSettings = this.getSiteSettings();
-    const layoutNameToLayoutMetadata =
+    const layoutNameToLayoutState =
       this.layoutOrchestrator.getLayoutNameToLayoutState();
     const pageRecords = constructRecordsFromSourceFiles(
       this.pageNameToPageFile,
@@ -151,7 +151,7 @@ export default class ParsingOrchestrator {
     return {
       pageNameToPageState: pageRecords.nameToSuccessData,
       pageNameToErrorPageState: pageRecords.nameToError,
-      layoutNameToLayoutMetadata,
+      layoutNameToLayoutState,
       UUIDToFileMetadata: this.getUUIDToFileMetadata(),
       siteSettings,
       studioConfig: this.studioConfig,

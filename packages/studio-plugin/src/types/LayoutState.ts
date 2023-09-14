@@ -1,6 +1,6 @@
 import { ComponentState } from "./ComponentState";
 
-export type LayoutMetadata = {
+export type LayoutState = {
   componentTree: ComponentState[];
   cssImports: string[];
   filepath: string;

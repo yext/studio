@@ -22,7 +22,7 @@ export default class LayoutOrchestrator {
   getLayoutNameToLayoutState() {
     return constructRecordsFromSourceFiles(
       this.layoutNameToLayoutFile,
-      (layoutFile) => layoutFile.getLayoutMetadata()
+      (layoutFile) => layoutFile.getLayoutState()
     ).nameToSuccessData;
   }
 

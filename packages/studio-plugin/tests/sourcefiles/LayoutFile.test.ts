@@ -39,14 +39,14 @@ function createLayoutFile(layoutName: string): LayoutFile {
   return new LayoutFile(studioSourceFileParser, componentTreeParser);
 }
 
-describe("getLayoutMetadata", () => {
+describe("getLayoutState", () => {
   beforeEach(() => {
     mockUUID();
   });
 
   it("correctly parses component tree", () => {
     const layoutFile = createLayoutFile("BasicLayout");
-    const result = layoutFile.getLayoutMetadata();
+    const result = layoutFile.getLayoutState();
 
     assertIsOk(result);
     expect(result.value.componentTree).toEqual([
@@ -78,7 +78,7 @@ describe("getLayoutMetadata", () => {
 
   it("correctly parses CSS imports", () => {
     const layoutFile = createLayoutFile("BasicLayout");
-    const result = layoutFile.getLayoutMetadata();
+    const result = layoutFile.getLayoutState();
 
     assertIsOk(result);
     expect(result.value.cssImports).toEqual([
@@ -89,7 +89,7 @@ describe("getLayoutMetadata", () => {
 
   it("correctly gets filepath", () => {
     const layoutFile = createLayoutFile("BasicLayout");
-    const result = layoutFile.getLayoutMetadata();
+    const result = layoutFile.getLayoutState();
 
     assertIsOk(result);
     expect(result.value.filepath).toEqual(getLayoutPath("BasicLayout"));
@@ -100,7 +100,7 @@ describe("getLayoutMetadata", () => {
       const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
       const layoutFile = createLayoutFile("ErrorLayout");
 
-      expect(layoutFile.getLayoutMetadata()).toHaveErrorMessage(
+      expect(layoutFile.getLayoutState()).toHaveErrorMessage(
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
       expect(consoleErrorSpy).toBeCalled();
