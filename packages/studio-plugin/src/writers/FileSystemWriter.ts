@@ -1,4 +1,4 @@
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 import { PageState, SiteSettingsValues } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";

@@ -1,7 +1,7 @@
 import FileSystemManager from "../FileSystemManager";
 import { SaveChangesPayload } from "../types";
 import upath from "upath";
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 
 export default function executeSaveChanges(
   saveData: SaveChangesPayload,

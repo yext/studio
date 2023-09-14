@@ -8,18 +8,18 @@ import {
   FileMetadataKind,
   ErrorFileMetadata,
   StudioConfigWithDefaulting,
-} from "./types";
+} from "../types";
 import fs from "fs";
-import ComponentFile from "./sourcefiles/ComponentFile";
-import PageFile from "./sourcefiles/PageFile";
-import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
+import ComponentFile from "../sourcefiles/ComponentFile";
+import PageFile from "../sourcefiles/PageFile";
+import SiteSettingsFile from "../sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
 import typescript from "typescript";
 import { v4 } from "uuid";
-import { ParsingError } from "./errors/ParsingError";
-import initNameToSourceFile from "./orchestrators/initNameToSourceFile";
-import LayoutOrchestrator from "./orchestrators/LayoutOrchestrator";
-import constructRecordsFromSourceFiles from "./orchestrators/constructRecordsFromSourceFiles";
+import { ParsingError } from "../errors/ParsingError";
+import initNameToSourceFile from "./initNameToSourceFile";
+import LayoutOrchestrator from "./LayoutOrchestrator";
+import constructRecordsFromSourceFiles from "./constructRecordsFromSourceFiles";
 
 export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({

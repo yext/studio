@@ -1,5 +1,5 @@
-import ParsingOrchestrator from "../src/ParsingOrchestrator";
-import getUserPaths from "../src/parsers/getUserPaths";
+import ParsingOrchestrator from "../../src/orchestrators/ParsingOrchestrator";
+import getUserPaths from "../../src/parsers/getUserPaths";
 import upath from "upath";
 import {
   ComponentStateKind,
@@ -8,18 +8,18 @@ import {
   PropValueKind,
   StudioData,
   UserPaths,
-} from "../src/types";
+} from "../../src/types";
 import { Project } from "ts-morph";
 import fs from "fs";
-import prettyPrintError from "../src/errors/prettyPrintError";
-import { assertIsOk } from "./__utils__/asserts";
-import { createTestProject } from "./__utils__/createTestSourceFile";
+import prettyPrintError from "../../src/errors/prettyPrintError";
+import { assertIsOk } from "../__utils__/asserts";
+import { createTestProject } from "../__utils__/createTestSourceFile";
 
-jest.mock("../src/errors/prettyPrintError");
+jest.mock("../../src/errors/prettyPrintError");
 
 const projectRoot = upath.resolve(
   __dirname,
-  "./__fixtures__/ParsingOrchestrator"
+  "../__fixtures__/ParsingOrchestrator"
 );
 const userPaths = getUserPaths(projectRoot);
 
@@ -128,7 +128,7 @@ it("throws an error when the page imports components from unexpected folders", (
   const userPaths = getUserPaths("thisFolderDoesNotExist");
   userPaths.pages = upath.resolve(
     __dirname,
-    "./__fixtures__/ParsingOrchestrator/src/pages"
+    "../__fixtures__/ParsingOrchestrator/src/pages"
   );
   createParsingOrchestrator({ paths: userPaths }).getStudioData();
   expect(prettyPrintError).toHaveBeenCalledTimes(1);
@@ -140,7 +140,7 @@ it("throws an error when the page imports components from unexpected folders", (
 
 it("throws when the pages folder does not exist", () => {
   const userPaths = getUserPaths(
-    upath.resolve(__dirname, "./__fixtures__/ParsingOrchestrator")
+    upath.resolve(__dirname, "../__fixtures__/ParsingOrchestrator")
   );
   userPaths.pages = "thisFolderDoesNotExist";
   expect(() => createParsingOrchestrator({ paths: userPaths })).toThrow(
@@ -172,7 +172,7 @@ it("gracefully handles layouts folder that does not exist", () => {
 
 describe("reloadFile", () => {
   const userPaths = getUserPaths(
-    upath.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
+    upath.resolve(__dirname, "../__fixtures__/ParsingOrchestrator.reloadFile")
   );
   const filepath = upath.join(userPaths.pages, "reloadFilePage.tsx");
   const originalFile = fs.readFileSync(filepath, "utf-8");
