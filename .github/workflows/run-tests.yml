@@ -34,3 +34,4 @@ jobs:
       - run: npm run build
       - run: npm run build-test-site -w=apps/test-site
       - run: npm run typecheck-jest
+      - run: npm run size-limit -w=packages/studio-ui
