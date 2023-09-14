@@ -9,7 +9,6 @@ import initialStudioData from "virtual_yext-studio";
 import DOMRectProperties from "../../models/DOMRectProperties";
 import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
 import { SliceCreator } from "../../models/utils";
-import createDetachAllModuleInstances from "./detachAllModuleInstances";
 import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
 import PropValueHelpers from "../../../utils/PropValueHelpers";
 
@@ -28,7 +27,6 @@ const initialStates: PageSliceStates = {
     pagesToRemove: new Set<string>(),
     pagesToUpdate: new Set<string>(),
   },
-  moduleUUIDBeingEdited: undefined,
 };
 
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
@@ -196,22 +194,12 @@ export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
     },
   };
 
-  const moduleStateActions: Pick<PageSlice, "setModuleUUIDBeingEdited"> = {
-    setModuleUUIDBeingEdited(moduleStateUUID: string | undefined) {
-      set((store) => {
-        store.moduleUUIDBeingEdited = moduleStateUUID;
-      });
-    },
-  };
-
   return {
     ...initialStates,
     ...pageActions,
     ...activePageActions,
     ...pageComponentActions,
     ...activeEntityFileActions,
-    ...moduleStateActions,
-    detachAllModuleInstances: createDetachAllModuleInstances(get),
   };
 };
 

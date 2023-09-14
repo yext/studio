@@ -15,7 +15,7 @@ export enum MessageID {
 export const StudioHMRUpdateID = "studio:hmrUpdate";
 
 export interface SaveChangesPayload
-  extends Pick<StudioData, "pageNameToPageState" | "UUIDToFileMetadata"> {
+  extends Pick<StudioData, "pageNameToPageState"> {
   pendingChanges: {
     pagesToRemove: string[];
     pagesToUpdate: string[];
@@ -30,13 +30,7 @@ export interface GenerateTestDataPayload {
 }
 
 export interface StudioHMRPayload {
-  updateType:
-    | "siteSettings"
-    | "components"
-    | "modules"
-    | "layouts"
-    | "pages"
-    | "full";
+  updateType: "siteSettings" | "components" | "layouts" | "pages" | "full";
   studioData: StudioData;
   file: string;
 }

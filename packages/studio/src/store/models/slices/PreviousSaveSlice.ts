@@ -1,4 +1,3 @@
-import FileMetadataSlice from "./FileMetadataSlice";
 import SiteSettingSlice from "./SiteSettingsSlice";
 
 /**
@@ -6,7 +5,6 @@ import SiteSettingSlice from "./SiteSettingsSlice";
  */
 export interface PreviousSaveSliceState {
   siteSettings: Pick<SiteSettingSlice, "values">;
-  fileMetadatas: Pick<FileMetadataSlice, "UUIDToFileMetadata">;
 }
 
 export interface PreviousSaveSliceActions {

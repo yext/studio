@@ -1,7 +1,7 @@
 import useStudioStore from "../../../src/store/useStudioStore";
 import * as sendMessageModule from "../../../src/messaging/sendMessage";
 import mockStore from "../../__utils__/mockStore";
-import { FileMetadata, FileMetadataKind, MessageID } from "@yext/studio-plugin";
+import { MessageID } from "@yext/studio-plugin";
 import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 
 const mockPages: PagesRecord = {
@@ -9,15 +9,6 @@ const mockPages: PagesRecord = {
     componentTree: [],
     cssImports: [],
     filepath: "some/file/path",
-  },
-};
-
-const mockUUIDToFileMetadata: Record<string, FileMetadata> = {
-  "module-uuid": {
-    kind: FileMetadataKind.Module,
-    componentTree: [],
-    metadataUUID: "module-uuid",
-    filepath: "mock-filepath",
   },
 };
 
@@ -30,9 +21,6 @@ beforeEach(() => {
         pagesToUpdate: new Set(["UpdateMe"]),
       },
     },
-    fileMetadatas: {
-      UUIDToFileMetadata: mockUUIDToFileMetadata,
-    },
   });
 });
 
@@ -42,7 +30,6 @@ it("sends pending changes to server to update files", async () => {
   expect(sendMessageSpy).toBeCalledTimes(1);
   expect(sendMessageSpy).toBeCalledWith(MessageID.SaveChanges, {
     pageNameToPageState: mockPages,
-    UUIDToFileMetadata: mockUUIDToFileMetadata,
     pendingChanges: {
       pagesToRemove: ["RemoveMe"],
       pagesToUpdate: ["UpdateMe"],

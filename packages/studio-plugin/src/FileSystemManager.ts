@@ -1,9 +1,4 @@
-import {
-  FileMetadata,
-  PageState,
-  SiteSettingsValues,
-  UserPaths,
-} from "./types";
+import { PageState, SiteSettingsValues, UserPaths } from "./types";
 import upath from "upath";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 
@@ -38,9 +33,5 @@ export default class FileSystemManager {
 
   updateSiteSettings(siteSettingsValues: SiteSettingsValues) {
     this.writer.writeToSiteSettings(siteSettingsValues);
-  }
-
-  syncFileMetadata(UUIDToFileMetadata: Record<string, FileMetadata>) {
-    this.writer.syncFileMetadata(UUIDToFileMetadata);
   }
 }

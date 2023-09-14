@@ -1,12 +1,17 @@
 import {
-  ComponentStateHelpers,
   ComponentStateKind,
+  FileMetadata,
   FileMetadataKind,
-  TypeGuards,
+  PropShape,
+  StandardComponentState,
 } from "@yext/studio-plugin";
 import useActiveComponent from "./useActiveComponent";
 
-export default function useActiveComponentWithProps() {
+export default function useActiveComponentWithProps(): {
+  activeComponentMetadata: FileMetadata;
+  propShape: PropShape;
+  activeComponentState: StandardComponentState;
+} | null {
   const { activeComponentMetadata, activeComponentState } =
     useActiveComponent();
 
@@ -17,17 +22,7 @@ export default function useActiveComponentWithProps() {
     return null;
   }
 
-  if (
-    !activeComponentState ||
-    !TypeGuards.isEditableComponentState(activeComponentState)
-  ) {
-    return null;
-  }
-
-  const extractedComponentState =
-    ComponentStateHelpers.extractRepeatedState(activeComponentState);
-
-  if (extractedComponentState.kind === ComponentStateKind.Error) {
+  if (activeComponentState?.kind !== ComponentStateKind.Standard) {
     return null;
   }
 
@@ -35,6 +30,5 @@ export default function useActiveComponentWithProps() {
     activeComponentMetadata,
     propShape: activeComponentMetadata.propShape,
     activeComponentState,
-    extractedComponentState,
   };
 }

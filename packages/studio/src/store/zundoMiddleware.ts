@@ -1,4 +1,3 @@
-import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
 import SiteSettingSlice from "./models/slices/SiteSettingsSlice";
 import { StudioStore } from "./models/StudioStore";
@@ -9,11 +8,7 @@ import { StateCreator } from "zustand";
 
 type UserUpdatableStore = {
   siteSettings: Pick<SiteSettingSlice, "values">;
-  fileMetadatas: Pick<FileMetadataSlice, "UUIDToFileMetadata">;
-  pages: Pick<
-    PageSlice,
-    "pages" | "activePageName" | "activeComponentUUID" | "moduleUUIDBeingEdited"
-  >;
+  pages: Pick<PageSlice, "pages" | "activePageName" | "activeComponentUUID">;
 };
 
 /**
@@ -24,21 +19,15 @@ type UserUpdatableStore = {
  */
 function getUserUpdatableStore(store: StudioStore): UserUpdatableStore {
   const { values } = store.siteSettings;
-  const { UUIDToFileMetadata } = store.fileMetadatas;
-  const { pages, activePageName, activeComponentUUID, moduleUUIDBeingEdited } =
-    store.pages;
+  const { pages, activePageName, activeComponentUUID } = store.pages;
   return {
     siteSettings: {
       values,
-    },
-    fileMetadatas: {
-      UUIDToFileMetadata,
     },
     pages: {
       pages,
       activePageName,
       activeComponentUUID,
-      moduleUUIDBeingEdited,
     },
   };
 }

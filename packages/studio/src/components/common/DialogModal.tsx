@@ -37,7 +37,7 @@ export default function DialogModal({
     }
   );
 
-  const moduleBodyContent = useMemo(() => {
+  const modalBodyContent = useMemo(() => {
     return (
       <>
         <div className="flex justify-between items-center font-bold mb-4">
@@ -83,7 +83,7 @@ export default function DialogModal({
   return (
     <Modal
       isOpen={isOpen}
-      body={moduleBodyContent}
+      body={modalBodyContent}
       title={title}
       handleClose={handleClose}
     />

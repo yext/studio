@@ -4,7 +4,6 @@ import {
   PropValueKind,
   TypelessPropVal,
 } from "../types";
-import ComponentStateHelpers from "./ComponentStateHelpers";
 import ExpressionHelpers from "./ExpressionHelpers";
 import TypeGuards from "./TypeGuards";
 import { TEMPLATE_STRING_EXPRESSION_REGEX } from "../constants";
@@ -129,18 +128,14 @@ export default class ComponentTreeHelpers {
   ): string[] {
     const expressions: string[] = componentTree.flatMap((c) => {
       if (
-        !TypeGuards.isEditableComponentState(c) &&
+        c.kind !== ComponentStateKind.Standard &&
         c.kind !== ComponentStateKind.Error
       ) {
         return [];
       }
 
-      const props = ComponentStateHelpers.extractRepeatedState(c).props;
-      const expressionPropValues = this.getExpressionUsagesFromProps(props);
-
-      return TypeGuards.isRepeaterState(c)
-        ? [c.listExpression, ...expressionPropValues]
-        : expressionPropValues;
+      const expressionPropValues = this.getExpressionUsagesFromProps(c.props);
+      return expressionPropValues;
     });
     return expressions;
   }

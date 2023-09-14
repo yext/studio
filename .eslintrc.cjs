@@ -59,12 +59,6 @@ module.exports = {
       },
     },
     {
-      files: ["**/modules/*.tsx"],
-      rules: {
-        "@typescript-eslint/no-explicit-any": "off",
-      },
-    },
-    {
       files: ["**/*.js"],
       rules: {
         "tsdoc/syntax": "off",

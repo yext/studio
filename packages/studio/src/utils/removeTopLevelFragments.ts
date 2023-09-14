@@ -1,7 +1,6 @@
 import {
   ComponentStateKind,
   ComponentState,
-  FileMetadata,
   PageState,
 } from "@yext/studio-plugin";
 
@@ -9,15 +8,11 @@ import {
  * Iterates through a record of objects that contain a componentTree,
  * and removes all top level fragments.
  */
-export default function removeTopLevelFragments<
-  T extends PageState | FileMetadata
->(record: Record<string, T>): Record<string, T> {
+export default function removeTopLevelFragments<T extends PageState>(
+  record: Record<string, T>
+): Record<string, T> {
   const entries = Object.entries(record).map(
     ([key, componentTreeContainer]) => {
-      if (!("componentTree" in componentTreeContainer)) {
-        return [key, componentTreeContainer];
-      }
-
       const updatedContainer = {
         ...componentTreeContainer,
         componentTree: removeTopLevelFragmentsFromTree(

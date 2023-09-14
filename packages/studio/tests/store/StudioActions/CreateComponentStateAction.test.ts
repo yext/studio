@@ -2,7 +2,6 @@ import {
   ComponentMetadata,
   ComponentStateKind,
   FileMetadataKind,
-  ModuleMetadata,
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
@@ -30,10 +29,9 @@ it("creates the expected component state", () => {
 });
 
 it("adds default values for required props", () => {
-  const moduleMetadata: ModuleMetadata = {
-    kind: FileMetadataKind.Module,
-    filepath: "./ModuleLol.tsx",
-    componentTree: [],
+  const componentMetadata: ComponentMetadata = {
+    kind: FileMetadataKind.Component,
+    filepath: "./Component.tsx",
     metadataUUID: "unused",
     propShape: {
       document: {
@@ -56,7 +54,7 @@ it("adds default values for required props", () => {
 
   const actualState = useStudioStore
     .getState()
-    .actions.createComponentState(moduleMetadata);
+    .actions.createComponentState(componentMetadata);
 
   expect(actualState).toEqual(
     expect.objectContaining({
