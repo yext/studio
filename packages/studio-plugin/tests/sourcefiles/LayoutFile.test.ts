@@ -1,11 +1,19 @@
-import PageFile from "../../src/sourcefiles/PageFile";
-import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
-import { FileMetadata, FileMetadataKind } from "../../src/types";
+import { getComponentPath, getLayoutPath } from "../__utils__/getFixturePath";
+import {
+  ComponentStateKind,
+  FileMetadata,
+  FileMetadataKind,
+  LayoutState,
+} from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
 import { createTestProject } from "../__utils__/createTestSourceFile";
+import LayoutFile from "../../src/sourcefiles/LayoutFile";
+import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
+import ComponentTreeParser from "../../src/parsers/ComponentTreeParser";
+import { Ok } from "true-myth/dist/public/result";
+import { ParsingError } from "../../src/errors/ParsingError";
 
 jest.mock("uuid");
 
@@ -22,25 +30,32 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
   };
 }
 
-function createPageFile(pageName: string, isPagesJSRepo = false): PageFile {
-  return new PageFile(
-    getPagePath(pageName),
-    mockGetFileMetadata,
-    createTestProject(),
-    isPagesJSRepo
+function createLayoutFile(layoutName: string): LayoutFile {
+  const studioSourceFileParser = new StudioSourceFileParser(
+    getLayoutPath(layoutName),
+    createTestProject()
   );
+  const componentTreeParser = new ComponentTreeParser(
+    studioSourceFileParser,
+    mockGetFileMetadata
+  );
+  return new LayoutFile(studioSourceFileParser, componentTreeParser);
 }
 
-describe("getPageState", () => {
+function getLayoutState(layoutName: string): Ok<LayoutState, ParsingError> {
+  const layoutFile = createLayoutFile(layoutName);
+  const result = layoutFile.getLayoutState();
+  assertIsOk(result);
+  return result;
+}
+
+describe("getLayoutState", () => {
   beforeEach(() => {
     mockUUID();
   });
 
   it("correctly parses component tree", () => {
-    const pageFile = createPageFile("entityTemplate");
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
+    const result = getLayoutState("BasicLayout");
     expect(result.value.componentTree).toEqual([
       {
         kind: ComponentStateKind.Standard,
@@ -69,10 +84,7 @@ describe("getPageState", () => {
   });
 
   it("correctly parses CSS imports", () => {
-    const pageFile = createPageFile("entityTemplate");
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
+    const result = getLayoutState("BasicLayout");
     expect(result.value.cssImports).toEqual([
       "./index.css",
       "@yext/search-ui-react/index.css",
@@ -80,43 +92,19 @@ describe("getPageState", () => {
   });
 
   it("correctly gets filepath", () => {
-    const pageFile = createPageFile("entityTemplate");
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
-    expect(result.value.filepath).toEqual(getPagePath("entityTemplate"));
-  });
-
-  it("correctly gets getPathValue", () => {
-    const pageFile = createPageFile("entityTemplate", true);
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
-    expect(result.value.pagesJS?.getPathValue).toEqual({
-      kind: PropValueKind.Expression,
-      value: "document.slug",
-    });
-  });
-
-  it("correctly gets stream scope", () => {
-    const pageFile = createPageFile("entityTemplate", true);
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
-    expect(result.value.pagesJS?.streamScope).toEqual({
-      entityTypes: ["location"],
-    });
+    const result = getLayoutState("BasicLayout");
+    expect(result.value.filepath).toEqual(getLayoutPath("BasicLayout"));
   });
 
   describe("errors", () => {
-    it("returns an error if an error was thrown while parsing the page", () => {
+    it("returns an error if an error was thrown while parsing the layout", () => {
       const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
-      const pageFile = createPageFile("errorPage");
+      const layoutFile = createLayoutFile("ErrorLayout");
 
-      expect(pageFile.getPageState()).toHaveErrorMessage(
+      expect(layoutFile.getLayoutState()).toHaveErrorMessage(
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
-      expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
+      expect(consoleErrorSpy).toBeCalled();
     });
   });
 });

@@ -2,7 +2,7 @@ import { ViteDevServer } from "vite";
 import FileSystemManager from "../FileSystemManager";
 import GitWrapper from "../git/GitWrapper";
 import reloadGitData from "../git/reloadGitData";
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 import { MessageID, ResponseType, SaveChangesPayload } from "../types";
 import executeSaveChanges from "./executeSaveChanges";
 import { registerListener } from "./registerListener";

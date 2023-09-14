@@ -1,5 +1,5 @@
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 
-export default function IndexPage() {
+export default function Test() {
   return <>{true && <ComplexBanner title="first" />}</>;
 }

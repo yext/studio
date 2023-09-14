@@ -1,5 +1,5 @@
 import { Project } from "ts-morph";
-import ParsingOrchestrator from "../../src/ParsingOrchestrator";
+import ParsingOrchestrator from "../../src/orchestrators/ParsingOrchestrator";
 import getUserPaths from "../../src/parsers/getUserPaths";
 import upath from "upath";
 import fs from "fs";

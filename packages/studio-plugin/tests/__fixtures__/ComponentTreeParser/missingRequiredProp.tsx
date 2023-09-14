@@ -1,5 +1,5 @@
 import BannerRequiredProps from "../ComponentFile/BannerRequiredProps";
 
-export default function IndexPage() {
+export default function Test() {
   return <BannerRequiredProps />;
 }
