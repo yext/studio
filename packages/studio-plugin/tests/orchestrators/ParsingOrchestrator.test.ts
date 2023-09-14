@@ -165,9 +165,9 @@ it("gracefully handles layouts folder that does not exist", () => {
   const parsingOrchestrator = createParsingOrchestrator({
     paths: updatedUserPaths,
   });
-  expect(
-    parsingOrchestrator.getStudioData().layoutNameToLayoutState
-  ).toEqual({});
+  expect(parsingOrchestrator.getStudioData().layoutNameToLayoutState).toEqual(
+    {}
+  );
 });
 
 describe("reloadFile", () => {

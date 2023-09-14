@@ -4,6 +4,7 @@ import {
   ComponentStateKind,
   FileMetadata,
   FileMetadataKind,
+  LayoutState,
 } from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
@@ -11,6 +12,8 @@ import { createTestProject } from "../__utils__/createTestSourceFile";
 import LayoutFile from "../../src/sourcefiles/LayoutFile";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import ComponentTreeParser from "../../src/parsers/ComponentTreeParser";
+import { Ok } from "true-myth/dist/public/result";
+import { ParsingError } from "../../src/errors/ParsingError";
 
 jest.mock("uuid");
 
@@ -39,16 +42,20 @@ function createLayoutFile(layoutName: string): LayoutFile {
   return new LayoutFile(studioSourceFileParser, componentTreeParser);
 }
 
+function getLayoutState(layoutName: string): Ok<LayoutState, ParsingError> {
+  const layoutFile = createLayoutFile(layoutName);
+  const result = layoutFile.getLayoutState();
+  assertIsOk(result);
+  return result;
+}
+
 describe("getLayoutState", () => {
   beforeEach(() => {
     mockUUID();
   });
 
   it("correctly parses component tree", () => {
-    const layoutFile = createLayoutFile("BasicLayout");
-    const result = layoutFile.getLayoutState();
-
-    assertIsOk(result);
+    const result = getLayoutState("BasicLayout");
     expect(result.value.componentTree).toEqual([
       {
         kind: ComponentStateKind.Standard,
@@ -77,10 +84,7 @@ describe("getLayoutState", () => {
   });
 
   it("correctly parses CSS imports", () => {
-    const layoutFile = createLayoutFile("BasicLayout");
-    const result = layoutFile.getLayoutState();
-
-    assertIsOk(result);
+    const result = getLayoutState("BasicLayout");
     expect(result.value.cssImports).toEqual([
       "./index.css",
       "@yext/search-ui-react/index.css",
@@ -88,10 +92,7 @@ describe("getLayoutState", () => {
   });
 
   it("correctly gets filepath", () => {
-    const layoutFile = createLayoutFile("BasicLayout");
-    const result = layoutFile.getLayoutState();
-
-    assertIsOk(result);
+    const result = getLayoutState("BasicLayout");
     expect(result.value.filepath).toEqual(getLayoutPath("BasicLayout"));
   });
 
