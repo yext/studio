@@ -5,18 +5,18 @@ import {
 } from "@yext/studio-plugin";
 
 /**
- * Iterates through a record of PageStates and removes all top
- * level fragments from their componentTrees.
+ * Iterates through a record of objects that contain a componentTree,
+ * and removes all top level fragments.
  */
-export default function removeTopLevelFragments(
-  record: Record<string, PageState>
-): Record<string, PageState> {
-  const entries = Object.entries(record).map(([pageName, pageState]) => {
+export default function removeTopLevelFragments<T extends PageState>(
+  record: Record<string, T>
+): Record<string, T> {
+  const entries = Object.entries(record).map(([key, componentTreeContainer]) => {
     const updatedContainer = {
-      ...pageState,
-      componentTree: removeTopLevelFragmentsFromTree(pageState.componentTree),
+      ...componentTreeContainer,
+      componentTree: removeTopLevelFragmentsFromTree(componentTreeContainer.componentTree),
     };
-    return [pageName, updatedContainer];
+    return [key, updatedContainer];
   });
   return Object.fromEntries(entries);
 }
