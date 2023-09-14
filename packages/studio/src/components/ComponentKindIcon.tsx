@@ -1,4 +1,3 @@
-import { ReactComponent as Hexagon } from "../icons/hexagon.svg";
 import { ReactComponent as Box } from "../icons/box.svg";
 import { ReactComponent as Container } from "../icons/container.svg";
 import useStudioStore from "../store/useStudioStore";
@@ -19,11 +18,7 @@ export default function ComponentKindIcon(
     (store) => store.fileMetadatas.getComponentMetadata
   );
 
-  const { kind } = componentState;
-  if (kind === ComponentStateKind.Module) {
-    return <Hexagon />;
-  }
-  if (kind !== ComponentStateKind.Standard) {
+  if (componentState.kind !== ComponentStateKind.Standard) {
     return null;
   }
 

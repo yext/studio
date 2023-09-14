@@ -7,8 +7,8 @@ import ActivePagePanel from "./ActivePagePanel";
  * Renders the left sidebar of Studio, which lists all pages, indicates which
  * page is active, and displays the component tree for that active page.
  *
- * Allows the user to change which page is active and to rearrange the components and
- * modules in the component tree of the active page.
+ * Allows the user to change which page is active and to rearrange the components
+ * in the component tree of the active page.
  */
 export default function LeftSidebar(): JSX.Element {
   return (

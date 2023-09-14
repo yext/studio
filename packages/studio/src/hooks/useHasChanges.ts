@@ -7,9 +7,7 @@ export default function useHasChanges() {
     store.pages.pendingChanges.pagesToRemove,
     store.pages.pendingChanges.pagesToUpdate,
   ]);
-  const UUIDToFileMetadata = useStudioStore(
-    (store) => store.fileMetadatas.UUIDToFileMetadata
-  );
+
   const previousSave = useStudioStore((store) => store.previousSave);
   const siteSettingsValues = useStudioStore(
     (store) => store.siteSettings.values
@@ -19,15 +17,8 @@ export default function useHasChanges() {
     previousSave.siteSettings.values,
     siteSettingsValues
   );
-  const hasFileMetadataChanges = !isEqual(
-    previousSave.fileMetadatas.UUIDToFileMetadata,
-    UUIDToFileMetadata
-  );
 
   return (
-    pagesToRemove.size > 0 ||
-    pagesToUpdate.size > 0 ||
-    siteSettingsHaveChanged ||
-    hasFileMetadataChanges
+    pagesToRemove.size > 0 || pagesToUpdate.size > 0 || siteSettingsHaveChanged
   );
 }

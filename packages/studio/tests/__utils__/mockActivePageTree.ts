@@ -1,13 +1,9 @@
 import { ComponentState } from "@yext/studio-plugin";
 import mockStore from "./mockStore";
 
-export function mockActivePageTree(
-  componentTree: ComponentState[],
-  moduleUUIDBeingEdited?: string
-) {
+export function mockActivePageTree(componentTree: ComponentState[]) {
   mockStore({
     pages: {
-      moduleUUIDBeingEdited,
       activePageName: "pagename",
       pages: {
         pagename: {

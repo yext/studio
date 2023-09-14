@@ -1,4 +1,4 @@
-import { FileMetadataKind, ValidFileMetadata } from "@yext/studio-plugin";
+import { FileMetadataKind, ComponentMetadata } from "@yext/studio-plugin";
 import { useCallback } from "react";
 import useStudioStore from "../../store/useStudioStore";
 import path from "path-browserify";
@@ -22,20 +22,16 @@ export default function ElementSelector({
   });
 
   const addableElements = Object.values(UUIDToFileMetadata).filter(
-    (metadata): metadata is ValidFileMetadata => {
-      if (activeType === ElementType.Components) {
-        return (
-          metadata.kind === FileMetadataKind.Component &&
-          !metadata.acceptsChildren
-        );
-      } else if (activeType === ElementType.Containers) {
-        return !!(
-          metadata.kind === FileMetadataKind.Component &&
-          metadata.acceptsChildren
-        );
-      } else {
-        return metadata.kind === FileMetadataKind.Module;
+    (metadata): metadata is ComponentMetadata => {
+      if (metadata.kind !== FileMetadataKind.Component) {
+        return false;
       }
+      if (activeType === ElementType.Components) {
+        return !metadata.acceptsChildren;
+      } else if (activeType === ElementType.Containers) {
+        return !!metadata.acceptsChildren;
+      }
+      return false;
     }
   );
 
@@ -68,12 +64,9 @@ function Option({
   activeType,
   afterSelect,
 }: {
-  metadata: ValidFileMetadata;
+  metadata: ComponentMetadata;
 } & ElementSelectorProps) {
   const componentName = path.basename(metadata.filepath, ".tsx");
-  const moduleMetadataBeingEdited = useStudioStore((store) =>
-    store.actions.getModuleMetadataBeingEdited()
-  );
 
   const addComponent = useStudioStore((store) => {
     return store.actions.addComponent;
@@ -84,16 +77,11 @@ function Option({
     afterSelect?.();
   }, [afterSelect, addComponent, metadata]);
 
-  // Prevent users from adding infinite looping modules.
-  const isSameAsActiveModule =
-    moduleMetadataBeingEdited?.metadataUUID === metadata.metadataUUID;
-
   return (
     <button
-      className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 disabled:opacity-25 w-full text-left"
+      className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 w-full text-left"
       onClick={handleSelect}
       aria-label={`Add ${componentName} Element`}
-      disabled={isSameAsActiveModule}
     >
       {renderIconForType(activeType)}
       {componentName}

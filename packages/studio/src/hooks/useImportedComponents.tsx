@@ -3,8 +3,8 @@ import useStudioStore from "../store/useStudioStore";
 import { ComponentState } from "@yext/studio-plugin";
 
 /**
- * Load all functional component methods correspond to the components
- * and modules use in the provided page state's component tree.
+ * Load all functional component methods corresponding to the components
+ * used in the provided page state's component tree.
  */
 export default async function useImportedComponents(
   componentTree?: ComponentState[]

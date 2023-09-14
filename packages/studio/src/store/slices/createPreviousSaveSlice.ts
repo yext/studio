@@ -8,9 +8,6 @@ const createPreviousSaveSlice: SliceCreator<PreviousSaveSlice> = (set) => ({
   siteSettings: {
     values: initialStudioData.siteSettings?.values,
   },
-  fileMetadatas: {
-    UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
-  },
   setPreviousSave(saveState: PreviousSaveSliceState) {
     set(saveState);
   },

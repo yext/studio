@@ -63,7 +63,33 @@ describe("getPageState", () => {
           },
         },
         uuid: "mock-uuid-0",
-        metadataUUID: getComponentPath("ComplexBanner"),
+      },
+      ...componentTree,
+    ]);
+
+    expect(consoleWarnSpy).toBeCalledWith(
+      "Props for builtIn element: 'div' are currently not supported."
+    );
+  });
+
+  it("correctly parses page with nested banner components", () => {
+    const pageFile = createPageFile("nestedBannerPage");
+    const result = pageFile.getPageState();
+
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual(nestedBannerComponentTree);
+  });
+
+  it("correctly parses page with variable statement and no parentheses around return statement", () => {
+    const pageFile = createPageFile("noReturnParenthesesPage");
+    const result = pageFile.getPageState();
+
+    assertIsOk(result);
+    expect(result.value.componentTree).toEqual([
+      fragmentComponent,
+      {
+        ...componentTree[1],
+        uuid: "mock-uuid-1",
       },
     ]);
   });
@@ -116,7 +142,46 @@ describe("getPageState", () => {
       expect(pageFile.getPageState()).toHaveErrorMessage(
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
-      expect(consoleErrorSpy).toBeCalled();
+    });
+
+    it("throws an error when a JsxSpreadAttribute is found on the page", () => {
+      const pageFile = createPageFile("jsxSpreadAttributePage");
+
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        "Error parsing `{...props}`: JsxSpreadAttribute is not currently supported."
+      );
+    });
+
+    it("throws an error when JsxText is found on the page", () => {
+      const pageFile = createPageFile("jsxTextPage");
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        'Found JsxText with content "Text". JsxText is not currently supported.'
+      );
+    });
+
+    it("throws an error when a JsxExpression is found on the page", () => {
+      const pageFile = createPageFile("jsxExpressionPage");
+
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        'Jsx nodes of kind "JsxExpression" are not supported for direct use' +
+          " in page files."
+      );
+    });
+
+    it("throws when an ObjectLiteralExpression is returned by the page", () => {
+      const pageFile = createPageFile("returnsObject");
+
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        /^Unable to find top-level JSX element or JSX fragment/
+      );
+    });
+
+    it("throws when an ArrayLiteralExpression is returned by the page", () => {
+      const pageFile = createPageFile("returnsArray");
+
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        /^Unable to find top-level JSX element or JSX fragment/
+      );
     });
   });
 });

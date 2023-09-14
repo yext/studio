@@ -21,11 +21,8 @@ export default function AddElementButton(): JSX.Element | null {
   const activePageState = useStudioStore((store) => {
     return store.pages.getActivePageState();
   });
-  const moduleUUIDBeingEdited = useStudioStore(
-    (store) => store.pages.moduleUUIDBeingEdited
-  );
 
-  if (!activePageState && !moduleUUIDBeingEdited) {
+  if (!activePageState) {
     return null;
   }
 

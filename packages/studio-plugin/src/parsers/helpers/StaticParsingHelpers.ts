@@ -35,7 +35,6 @@ import {
 } from "../../types/PropShape";
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
-import RepeaterParsingHelpers from "./RepeaterParsingHelpers";
 
 export type ParsedImport = {
   source: string;
@@ -242,25 +241,6 @@ export default class StaticParsingHelpers {
       .flatMap((child) => this.parseJsxChild(child, handleJsxChild, self))
       .filter((child): child is T => !!child);
     return [self, ...children];
-  }
-
-  static parseJsxExpression(c: JsxExpression): {
-    selfClosingElement: JsxSelfClosingElement;
-    listExpression: string;
-  } {
-    const isMapExpression =
-      c
-        .getFirstDescendantByKind(SyntaxKind.PropertyAccessExpression)
-        ?.getLastChildByKind(SyntaxKind.Identifier)
-        ?.getText() === "map";
-
-    if (!isMapExpression) {
-      throw new Error(
-        `Jsx nodes of kind "${c.getKindName()}" are not supported for direct use` +
-          " in page files except for `map` function expressions."
-      );
-    }
-    return RepeaterParsingHelpers.parseMapExpression(c);
   }
 
   static parseJsxAttributes(

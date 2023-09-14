@@ -42,21 +42,6 @@ const basicPageState: PageState = {
   cssImports: [],
 };
 
-const pageWithModulesState: PageState = {
-  componentTree: [
-    expect.objectContaining({
-      componentName: "NestedBanner",
-      kind: ComponentStateKind.Standard,
-    }),
-    expect.objectContaining({
-      componentName: "NestedModule",
-      kind: ComponentStateKind.Module,
-    }),
-  ],
-  filepath: expect.anything(),
-  cssImports: [],
-};
-
 describe("aggregates data as expected", () => {
   const orchestrator = createParsingOrchestrator();
   let studioData: StudioData;
@@ -67,7 +52,7 @@ describe("aggregates data as expected", () => {
 
   it("properly populates UUIDToFileMetadata", () => {
     const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
-    expect(fileMetadataArray).toHaveLength(4);
+    expect(fileMetadataArray).toHaveLength(2);
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
         filepath: expect.stringContaining("components/Card.tsx"),
@@ -81,33 +66,11 @@ describe("aggregates data as expected", () => {
         acceptsChildren: true,
       })
     );
-    expect(fileMetadataArray).toContainEqual(
-      expect.objectContaining({
-        filepath: expect.stringContaining("modules/BannerWithCard.tsx"),
-        kind: FileMetadataKind.Module,
-        componentTree: [
-          expect.objectContaining({ componentName: "NestedBanner" }),
-          expect.objectContaining({ componentName: "Card" }),
-        ],
-      })
-    );
-    expect(fileMetadataArray).toContainEqual(
-      expect.objectContaining({
-        filepath: expect.stringContaining("modules/a/b/NestedModule.tsx"),
-        kind: FileMetadataKind.Module,
-        componentTree: [
-          expect.objectContaining({ kind: ComponentStateKind.Fragment }),
-          expect.objectContaining({ componentName: "BannerWithCard" }),
-          expect.objectContaining({ componentName: "BannerWithCard" }),
-        ],
-      })
-    );
   });
 
   it("properly populates pageNameToPageState, ignoring sub-directories", () => {
     expect(studioData.pageNameToPageState).toEqual({
       basicPage: basicPageState,
-      pageWithModules: pageWithModulesState,
     });
   });
 
@@ -156,16 +119,6 @@ describe("aggregates data as expected", () => {
             getPathValue: { kind: PropValueKind.Literal, value: "index.html" },
           },
         },
-        pageWithModules: {
-          ...pageWithModulesState,
-          pagesJS: {
-            getPathValue: {
-              kind: PropValueKind.Expression,
-              value: "document.slug",
-            },
-            streamScope: {},
-          },
-        },
       });
     });
   });
@@ -178,7 +131,7 @@ it("throws an error when the page imports components from unexpected folders", (
     "./__fixtures__/ParsingOrchestrator/src/pages"
   );
   createParsingOrchestrator({ paths: userPaths }).getStudioData();
-  expect(prettyPrintError).toHaveBeenCalledTimes(2);
+  expect(prettyPrintError).toHaveBeenCalledTimes(1);
   expect(prettyPrintError).toHaveBeenCalledWith(
     expect.stringMatching(/^Failed to parse PageState/),
     expect.stringMatching(/^Error: Could not get FileMetadata for/)
@@ -221,49 +174,51 @@ describe("reloadFile", () => {
   const userPaths = getUserPaths(
     upath.resolve(__dirname, "./__fixtures__/ParsingOrchestrator.reloadFile")
   );
-  const modulePath = upath.join(userPaths.modules, "BannerModule.tsx");
-  const originalModuleFile = fs.readFileSync(modulePath, "utf-8");
+  const filepath = upath.join(userPaths.pages, "reloadFilePage.tsx");
+  const originalFile = fs.readFileSync(filepath, "utf-8");
   const layoutPath = upath.join(userPaths.layouts, "BasicLayout.tsx");
   const originalLayoutFile = fs.readFileSync(layoutPath, "utf-8");
   const orchestrator = createParsingOrchestrator({ paths: userPaths });
 
   afterEach(() => {
-    fs.writeFileSync(modulePath, originalModuleFile);
+    fs.writeFileSync(filepath, originalFile);
     fs.writeFileSync(layoutPath, originalLayoutFile);
   });
 
-  it("reloadFile can reload a module file", () => {
-    const updatedModuleFile = `
-    import Banner from "../components/Banner";
+  it("reloadFile can reload a file", () => {
+    const updatedFile = `
+    import Banner from "../components/Banner"
 
-    export default function NestedModule() {
+    export default function reloadFilePage() {
       return (
+        <>
         <Banner />
+        </>
       );
     }
   `;
     const getComponentTree = () => {
-      const result = orchestrator.getModuleFile(modulePath).getModuleMetadata();
-      assertIsOk(result);
-      return result.value.componentTree;
+      const pageState = orchestrator
+        .getPageFile("reloadFilePage")
+        .getPageState();
+      assertIsOk(pageState);
+      return pageState.value.componentTree;
     };
+
     const originalTree = getComponentTree();
     expect(originalTree).toEqual([
       expect.objectContaining({
         kind: ComponentStateKind.Fragment,
       }),
-      expect.objectContaining({
-        componentName: "Banner",
-      }),
-      expect.objectContaining({
-        componentName: "Banner",
-      }),
     ]);
 
-    fs.writeFileSync(modulePath, updatedModuleFile);
-    orchestrator.reloadFile(modulePath);
+    fs.writeFileSync(filepath, updatedFile);
+    orchestrator.reloadFile(filepath);
     const updatedTree = getComponentTree();
     expect(updatedTree).toEqual([
+      expect.objectContaining({
+        kind: ComponentStateKind.Fragment,
+      }),
       expect.objectContaining({
         componentName: "Banner",
       }),

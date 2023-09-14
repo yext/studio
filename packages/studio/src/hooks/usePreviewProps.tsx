@@ -1,5 +1,4 @@
 import {
-  TypeGuards,
   ComponentState,
   FileMetadataKind,
   ComponentStateKind,
@@ -13,12 +12,11 @@ import {
 
 /**
  * Gets the previewable props for the specified component, with any expressions
- * hydrated from the expression sources and parent item.
+ * hydrated from the expression sources.
  */
 export default function usePreviewProps(
   c: ComponentState | undefined,
-  expressionSources: ExpressionSources,
-  parentItem?: unknown
+  expressionSources: ExpressionSources
 ): Record<string, unknown> {
   const getFileMetadata = useStudioStore(
     (store) => store.fileMetadatas.getFileMetadata
@@ -31,12 +29,12 @@ export default function usePreviewProps(
       }, {});
     }
 
-    if (!c || !TypeGuards.isStandardOrModuleComponentState(c)) {
+    if (c?.kind !== ComponentStateKind.Standard) {
       return {};
     }
 
     const fileMetadata = getFileMetadata(c.metadataUUID);
-    if (!fileMetadata || fileMetadata.kind === FileMetadataKind.Error) {
+    if (fileMetadata?.kind === FileMetadataKind.Error) {
       throw new Error(
         `Cannot get propShape for FileMetadata of ${c.componentName}`
       );
@@ -44,7 +42,6 @@ export default function usePreviewProps(
 
     return getPropsForPreview(c.props, fileMetadata?.propShape ?? {}, {
       ...expressionSources,
-      ...(parentItem !== undefined && { item: parentItem }),
     });
-  }, [c, expressionSources, parentItem, getFileMetadata]);
+  }, [c, expressionSources, getFileMetadata]);
 }

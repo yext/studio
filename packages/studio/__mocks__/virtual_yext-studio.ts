@@ -12,7 +12,6 @@ const mockStudioData: StudioData = {
     paths: {
       components: mockFilepath,
       pages: mockFilepath,
-      modules: mockFilepath,
       layouts: mockFilepath,
       siteSettings: mockFilepath,
       localData: mockFilepath,

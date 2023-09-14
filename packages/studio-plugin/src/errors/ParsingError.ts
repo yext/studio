@@ -5,7 +5,6 @@ export enum ParsingErrorKind {
   InvalidStudioConfig = "InvalidStudioConfig",
   FailedToParseLayoutMetadata = "FailedToParseLayoutMetadata",
   FailedToParseComponentMetadata = "FailedToParseComponentMetadata",
-  FailedToParseModuleMetadata = "FailedToParseModuleMetadata",
 }
 
 /**

@@ -20,7 +20,6 @@ export type StudioStore = {
   siteSettings: SiteSettingSlice;
   pagePreview: PagePreviewSlice;
   previousSave: PreviousSaveSlice;
-  createModule: (modulePath: string) => void;
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
   studioEnvData: StudioEnvDataSlice;

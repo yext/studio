@@ -13,7 +13,6 @@ export default async function hotReloadStore(payload: StudioHMRPayload) {
   const { updateType, studioData } = payload;
   switch (updateType) {
     case "components":
-    case "modules":
       await syncFileMetadata(studioData, payload.file);
       break;
     case "layouts":
@@ -41,12 +40,9 @@ async function fullSync(studioData: StudioData, file: string) {
 }
 
 async function syncFileMetadata(studioData: StudioData, file: string) {
-  const UUIDToFileMetadata = removeTopLevelFragments(
-    studioData.UUIDToFileMetadata
-  );
+  const UUIDToFileMetadata = studioData.UUIDToFileMetadata;
   useStudioStore.setState((store) => {
     store.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
-    store.previousSave.fileMetadatas.UUIDToFileMetadata = UUIDToFileMetadata;
   });
   const fileMetadata = Object.values(UUIDToFileMetadata).find(
     (metadata) => metadata.filepath === file
