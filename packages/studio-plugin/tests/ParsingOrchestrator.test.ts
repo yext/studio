@@ -199,7 +199,7 @@ describe("reloadFile", () => {
   `;
     const getComponentTree = () => {
       const pageState = orchestrator
-        .getPageFile("reloadFilePage")
+        .getOrCreatePageFile("reloadFilePage")
         .getPageState();
       assertIsOk(pageState);
       return pageState.value.componentTree;
