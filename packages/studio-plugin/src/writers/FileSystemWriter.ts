@@ -1,4 +1,4 @@
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 import { PageState, SiteSettingsValues } from "../types";
 import fs from "fs";
 import { Project } from "ts-morph";
@@ -21,7 +21,7 @@ export class FileSystemWriter {
    * @param pageState - the updated state for the page file
    */
   writeToPageFile(pageName: string, pageState: PageState): void {
-    const pageFile = this.orchestrator.getPageFile(pageName);
+    const pageFile = this.orchestrator.getOrCreatePageFile(pageName);
     pageFile.updatePageFile(pageState);
   }
 

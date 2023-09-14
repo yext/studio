@@ -1,6 +1,6 @@
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 
-export default function IndexPage() {
+export default function Test() {
   return {
     banner: <ComplexBanner />,
   };

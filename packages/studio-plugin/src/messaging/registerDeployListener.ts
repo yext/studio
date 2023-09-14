@@ -5,7 +5,7 @@ import executeSaveChanges from "./executeSaveChanges";
 import FileSystemManager from "../FileSystemManager";
 import GitWrapper from "../git/GitWrapper";
 import reloadGitData from "../git/reloadGitData";
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 
 export default function registerDeployListener(
   server: ViteDevServer,

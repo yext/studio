@@ -1,7 +1,7 @@
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 import NestedBanner from "../ComponentFile/NestedBanner";
 
-export default function IndexPage() {
+export default function Test() {
   return (
     <NestedBanner>
       <ComplexBanner title="first!" num={1} />

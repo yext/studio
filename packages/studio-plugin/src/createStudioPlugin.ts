@@ -3,7 +3,7 @@ import { simpleGit } from "simple-git";
 import getStudioConfig from "./parsers/getStudioConfig";
 import ParsingOrchestrator, {
   createTsMorphProject,
-} from "./ParsingOrchestrator";
+} from "./orchestrators/ParsingOrchestrator";
 import FileSystemManager from "./FileSystemManager";
 import { FileSystemWriter } from "./writers/FileSystemWriter";
 import { CliArgs } from "./types";
