@@ -10,7 +10,6 @@ interface ComponentTreePreviewProps {
   componentTree: ComponentState[];
   expressionSources: ExpressionSources;
   setTooltipProps: Dispatch<SetStateAction<ITooltip>>;
-  renderHighlightingContainer?: boolean;
 }
 
 /**
@@ -20,13 +19,11 @@ export default function ComponentTreePreview({
   componentTree,
   expressionSources,
   setTooltipProps,
-  renderHighlightingContainer = true,
 }: ComponentTreePreviewProps): JSX.Element {
   const elements = useComponentTreeElements(
     componentTree,
     expressionSources,
-    setTooltipProps,
-    renderHighlightingContainer
+    setTooltipProps
   );
   return <>{elements}</>;
 }
@@ -38,8 +35,7 @@ export default function ComponentTreePreview({
 function useComponentTreeElements(
   componentTree: ComponentState[],
   expressionSources: ExpressionSources,
-  setTooltipProps: Dispatch<SetStateAction<ITooltip>>,
-  renderHighlightingContainer?: boolean
+  setTooltipProps: Dispatch<SetStateAction<ITooltip>>
 ): (JSX.Element | null)[] | null {
   return useMemo(() => {
     return ComponentTreeHelpers.mapComponentTree(
@@ -53,11 +49,6 @@ function useComponentTreeElements(
             setTooltipProps={setTooltipProps}
           />
         );
-        if (!renderHighlightingContainer) {
-          return (
-            <ErrorBoundary key={c.uuid}>{renderedComponent}</ErrorBoundary>
-          );
-        }
         return (
           <HighlightingContainer key={c.uuid} uuid={c.uuid}>
             <ErrorBoundary>{renderedComponent}</ErrorBoundary>
@@ -65,10 +56,5 @@ function useComponentTreeElements(
         );
       }
     );
-  }, [
-    componentTree,
-    expressionSources,
-    renderHighlightingContainer,
-    setTooltipProps,
-  ]);
+  }, [componentTree, expressionSources, setTooltipProps]);
 }

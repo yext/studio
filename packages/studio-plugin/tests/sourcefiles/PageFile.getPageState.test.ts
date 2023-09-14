@@ -109,24 +109,6 @@ describe("getPageState", () => {
     );
   });
 
-  it("correctly parses page with repeater", () => {
-    const pageFile = createPageFile("repeaterPage");
-    const result = pageFile.getPageState();
-
-    assertIsOk(result);
-    expect(result.value.componentTree).toContainEqual({
-      kind: ComponentStateKind.Repeater,
-      uuid: "mock-uuid-1",
-      parentUUID: "mock-uuid-0",
-      listExpression: "document.services",
-      repeatedComponent: {
-        ...componentTree[1],
-        uuid: undefined,
-        parentUUID: undefined,
-      },
-    });
-  });
-
   it("correctly parses page with nested banner components", () => {
     const pageFile = createPageFile("nestedBannerPage");
     const result = pageFile.getPageState();
@@ -236,20 +218,12 @@ describe("getPageState", () => {
       );
     });
 
-    it("throws an error when a non-map JsxExpression is found on the page", () => {
+    it("throws an error when a JsxExpression is found on the page", () => {
       const pageFile = createPageFile("jsxExpressionPage");
 
       expect(pageFile.getPageState()).toHaveErrorMessage(
         'Jsx nodes of kind "JsxExpression" are not supported for direct use' +
-          " in page files except for `map` function expressions."
-      );
-    });
-
-    it("throws an error when a Repeater tries to repeat a built-in component", () => {
-      const pageFile = createPageFile("builtInRepeaterPage");
-
-      expect(pageFile.getPageState()).toHaveErrorMessage(
-        "Error parsing map expression: repetition of built-in components is not supported."
+          " in page files."
       );
     });
 

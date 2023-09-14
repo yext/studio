@@ -25,7 +25,7 @@ interface PropEditorProps {
 const tooltipStyle = { backgroundColor: "black" };
 
 /**
- * Renders an input editor for a single prop of a component or module.
+ * Renders an input editor for a single prop of a component.
  */
 export default function PropEditor({
   propName,

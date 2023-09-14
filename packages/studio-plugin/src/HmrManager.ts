@@ -71,7 +71,6 @@ function getHMRUpdateType(file: string, userPaths: UserPaths) {
   const updateTypes: Exclude<keyof UserPaths, "localData">[] = [
     "siteSettings",
     "components",
-    "modules",
     "layouts",
     "pages",
   ];

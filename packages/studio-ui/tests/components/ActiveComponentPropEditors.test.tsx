@@ -11,9 +11,6 @@ import {
   PropValues,
   PropValueType,
   StandardComponentState,
-  StandardOrModuleComponentState,
-  TypeGuards,
-  ValidFileMetadata,
 } from "@yext/studio-plugin";
 import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -74,46 +71,16 @@ const getComponentProps = () =>
   (
     useStudioStore
       .getState()
-      .actions.getActiveComponentState() as StandardOrModuleComponentState
+      .actions.getActiveComponentState() as StandardComponentState
   ).props;
 
 describe("ComponentStateKind.Component", () => {
-  testStandardOrModuleComponentState(
-    activeComponentState,
-    activeComponentMetadata
-  );
-});
-
-describe("ComponentStateKind.Module", () => {
-  const activeModuleState: ComponentState = {
-    kind: ComponentStateKind.Module,
-    componentName: "ModuleBanner",
-    props: {},
-    uuid: "modulebanner-uuid",
-    metadataUUID: "modulebanner-metadata-uuid",
-  };
-
-  const activeModuleMetadata: FileMetadata = {
-    kind: FileMetadataKind.Module,
-    metadataUUID: "modulebanner-metadata-uuid",
-    filepath: "mock-filepath",
-    componentTree: [],
-  };
-  testStandardOrModuleComponentState(activeModuleState, activeModuleMetadata);
-});
-
-function testStandardOrModuleComponentState(
-  state: StandardOrModuleComponentState,
-  metadata: ValidFileMetadata
-) {
-  const componentKindLabel =
-    state.kind === ComponentStateKind.Standard ? "component" : "module";
-
+  const componentKindLabel = "component";
   beforeEach(() => {
     mockStoreActiveComponent({
-      activeComponent: state,
+      activeComponent: activeComponentState,
       activeComponentMetadata: {
-        ...metadata,
+        ...activeComponentMetadata,
         propShape,
       },
     });
@@ -122,14 +89,14 @@ function testStandardOrModuleComponentState(
   it(`renders message when there are no editable props`, () => {
     render(
       <ActiveComponentPropEditors
-        activeComponentState={state}
+        activeComponentState={activeComponentState}
         propShape={propShape}
         shouldRenderProp={() => false}
       />
     );
 
     screen.getByText(
-      `${state.componentName} has no Editable Properties in this Panel.`
+      `${activeComponentState.componentName} has no Editable Properties in this Panel.`
     );
     expect(screen.queryByText("title")).toBeNull();
     expect(screen.queryByText("num")).toBeNull();
@@ -138,8 +105,8 @@ function testStandardOrModuleComponentState(
   });
 
   it(`renders prop editors for each of the active ${componentKindLabel}'s non string props`, () => {
-    const activeState: StandardOrModuleComponentState = {
-      ...state,
+    const activeState: StandardComponentState = {
+      ...activeComponentState,
       props: {
         bgColor: {
           kind: PropValueKind.Literal,
@@ -163,7 +130,7 @@ function testStandardOrModuleComponentState(
   it(`renders tooltip for each of the active ${componentKindLabel}'s props with docs`, async () => {
     render(
       <ActiveComponentPropEditors
-        activeComponentState={state}
+        activeComponentState={activeComponentState}
         propShape={propShape}
       />
     );
@@ -181,7 +148,7 @@ function testStandardOrModuleComponentState(
         activeComponentMetadata?.kind === FileMetadataKind.Error ||
         !activeComponentMetadata?.propShape ||
         !activeComponentState ||
-        !TypeGuards.isStandardOrModuleComponentState(activeComponentState)
+        activeComponentState?.kind !== ComponentStateKind.Standard
       ) {
         return null;
       }
@@ -192,8 +159,8 @@ function testStandardOrModuleComponentState(
         />
       );
     }
-    const activeComponent: StandardOrModuleComponentState = {
-      ...state,
+    const activeComponent: StandardComponentState = {
+      ...activeComponentState,
       props: {
         title: {
           kind: PropValueKind.Literal,
@@ -222,7 +189,7 @@ function testStandardOrModuleComponentState(
       mockStoreActiveComponent({
         activeComponent: activeComponent,
         activeComponentMetadata: {
-          ...metadata,
+          ...activeComponentMetadata,
           propShape,
         },
       });
@@ -285,7 +252,7 @@ function testStandardOrModuleComponentState(
       jest.useRealTimers();
     });
   });
-}
+});
 
 it("converts string literals to string expressions when propKind = Expression", async () => {
   const props: PropValues = {
@@ -781,7 +748,7 @@ function ActiveComponentPropEditorsWrapper(props: { propShape: PropShape }) {
   const state = useStudioStore().pages.pages["index"].componentTree[0];
   return (
     <ActiveComponentPropEditors
-      activeComponentState={state as StandardOrModuleComponentState}
+      activeComponentState={state as StandardComponentState}
       propShape={props.propShape}
     />
   );

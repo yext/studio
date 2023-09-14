@@ -13,7 +13,6 @@ import {
 } from "./types";
 import fs from "fs";
 import ComponentFile from "./sourcefiles/ComponentFile";
-import ModuleFile from "./sourcefiles/ModuleFile";
 import PageFile from "./sourcefiles/PageFile";
 import SiteSettingsFile from "./sourcefiles/SiteSettingsFile";
 import { Project } from "ts-morph";
@@ -35,7 +34,6 @@ export function createTsMorphProject(tsConfigFilePath: string) {
  */
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata>;
-  private filepathToModuleFile: Record<string, ModuleFile> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private layoutNames: string[] = [];
   private siteSettingsFile?: SiteSettingsFile;
@@ -73,20 +71,6 @@ export default class ParsingOrchestrator {
     );
   }
 
-  getModuleFile(filepath: string): ModuleFile {
-    const moduleFile = this.filepathToModuleFile[filepath];
-    if (moduleFile) {
-      return moduleFile;
-    }
-    const newModuleFile = new ModuleFile(
-      filepath,
-      this.getFileMetadata,
-      this.project
-    );
-    this.filepathToModuleFile[filepath] = newModuleFile;
-    return newModuleFile;
-  }
-
   getUUIDToFileMetadata() {
     const UUIDToFileMetadata = Object.values(
       this.filepathToFileMetadata
@@ -110,10 +94,7 @@ export default class ParsingOrchestrator {
       sourceFile?.refreshFromFileSystemSync();
     }
 
-    if (
-      filepath.startsWith(this.paths.modules) ||
-      filepath.startsWith(this.paths.components)
-    ) {
+    if (filepath.startsWith(this.paths.components)) {
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
@@ -203,8 +184,6 @@ export default class ParsingOrchestrator {
     };
 
     addDirectoryToMapping(this.paths.components);
-    addDirectoryToMapping(this.paths.modules);
-
     return this.filepathToFileMetadata;
   }
 
@@ -241,18 +220,9 @@ export default class ParsingOrchestrator {
       return result.value;
     }
 
-    if (absPath.startsWith(this.paths.modules)) {
-      const result = this.getModuleFile(absPath).getModuleMetadata();
-      if (result.isErr) {
-        return createErrorFileMetadata(result.error);
-      }
-      return result.value;
-    }
-
-    const { modules, components } = this.paths;
     throw new Error(
       `Could not get FileMetadata for ${absPath}, file does not ` +
-        `live inside the expected folders for modules: ${modules}, ${components}.`
+        `live inside the expected folder: ${this.paths.components}.`
     );
   };
 

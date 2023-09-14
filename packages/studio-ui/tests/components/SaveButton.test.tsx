@@ -36,9 +36,6 @@ it("enables the button when there are pending SiteSettingsValues changes", () =>
       siteSettings: {
         values: undefined,
       },
-      fileMetadatas: {
-        UUIDToFileMetadata: {},
-      },
     },
     siteSettings: {
       values: {
@@ -71,9 +68,6 @@ it("disables the button when there are no pending changes", () => {
             kind: PropValueKind.Literal,
           },
         },
-      },
-      fileMetadatas: {
-        UUIDToFileMetadata: {},
       },
     },
     siteSettings: {

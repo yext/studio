@@ -39,18 +39,14 @@ export default function ActivePagePanel(): JSX.Element {
 }
 
 function PageItem({ pageName }: { pageName: string }) {
-  const [
-    updateActivePage,
-    activePageName,
-    moduleUUIDBeingEdited,
-    isPagesJSRepo,
-  ] = useStudioStore((store) => [
-    store.actions.updateActivePage,
-    store.pages.activePageName,
-    store.pages.moduleUUIDBeingEdited,
-    store.studioConfig.isPagesJSRepo,
-  ]);
-  const isActivePage = !moduleUUIDBeingEdited && activePageName === pageName;
+  const [updateActivePage, activePageName, isPagesJSRepo] = useStudioStore(
+    (store) => [
+      store.actions.updateActivePage,
+      store.pages.activePageName,
+      store.studioConfig.isPagesJSRepo,
+    ]
+  );
+  const isActivePage = activePageName === pageName;
   const checkClasses = classNames({
     invisible: !isActivePage,
   });
