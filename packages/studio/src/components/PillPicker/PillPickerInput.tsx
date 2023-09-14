@@ -65,6 +65,7 @@ export default function PillPickerInput({
             removeItem={removeItem}
             item={item}
             displayName={getDisplayName?.(item)}
+            disabled={disabled}
           />
         );
       })}
@@ -84,20 +85,22 @@ function Pill(props: {
   item: string;
   removeItem: (val: string) => void;
   displayName?: string;
+  disabled?: boolean;
 }) {
-  const { item, removeItem, displayName } = props;
+  const { item, removeItem, displayName, disabled } = props;
 
   const handleClick = useCallback(() => {
     removeItem(item);
   }, [item, removeItem]);
 
   return (
-    <div
-      className="mr-1 mb-1 flex bg-sky-100 rounded px-1 hover:bg-sky-200 items-center whitespace-nowrap hover:cursor-pointer"
+    <button
+      className="mr-1 mb-1 flex bg-sky-100 rounded px-1 hover:bg-sky-200 items-center whitespace-nowrap hover:cursor-pointer disabled:bg-gray-200 "
       onClick={handleClick}
+      disabled={disabled}
     >
       {displayName ?? item}
       <X className="ml-1" />
-    </div>
+    </button>
   );
 }

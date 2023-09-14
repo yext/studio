@@ -20,7 +20,7 @@ export default function EntityIdField({
     store.accountContent.entitiesRecord,
     store.accountContent.fetchEntities,
   ]);
-  const availableEntityTypes = disabled ? [] : Object.keys(entitiesRecord);
+  const availableEntityTypes = Object.keys(entitiesRecord);
   const [isLoading, setIsLoading] = useState(false);
   const [entityType, setEntityType] = useState<string | undefined>(
     availableEntityTypes[0]
@@ -104,6 +104,7 @@ export default function EntityIdField({
           isSearchable={false}
           placeholder="Select entity ids..."
           styles={selectStyles}
+          isDisabled={disabled}
         />
       </div>
     </div>

@@ -1,6 +1,5 @@
 import { StreamScope } from "@yext/studio-plugin";
 import { Tooltip } from "react-tooltip";
-import { streamScopeFormData } from "../PageSettingsButton/EntityPageModal";
 
 interface Props {
   streamScopeField: keyof StreamScope;
@@ -19,3 +18,20 @@ export default function StreamScopeFieldLabel({ streamScopeField }: Props) {
     </label>
   );
 }
+
+const streamScopeFormData = {
+  entityIds: {
+    description: "Entity IDs",
+    tooltip: "In the Yext platform, navigate to Content > Entities",
+  },
+  entityTypes: {
+    description: "Entity Type IDs",
+    tooltip:
+      "In the Yext platform, navigate to Content > Configuration > Entity Types",
+  },
+  savedFilterIds: {
+    description: "Saved Filter IDs",
+    tooltip:
+      "In the Yext platform, navigate to Content > Configuration > Saved Filters",
+  },
+};
