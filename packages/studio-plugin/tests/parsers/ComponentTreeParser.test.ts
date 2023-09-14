@@ -88,20 +88,6 @@ describe("parseComponentTree", () => {
     );
   });
 
-  it("correctly parses file with repeater", () => {
-    expect(parseComponentTree("repeater")).toContainEqual({
-      kind: ComponentStateKind.Repeater,
-      uuid: "mock-uuid-1",
-      parentUUID: "mock-uuid-0",
-      listExpression: "document.services",
-      repeatedComponent: {
-        ...componentTree[1],
-        uuid: undefined,
-        parentUUID: undefined,
-      },
-    });
-  });
-
   it("correctly parses file with nested banner components", () => {
     expect(parseComponentTree("nestedBanner")).toEqual(
       nestedBannerComponentTree
@@ -129,9 +115,9 @@ describe("parseComponentTree", () => {
   });
 
   describe("throws errors", () => {
-    it("throws an error when the return statement has no top-level Jsx node", () => {
-      expect(() => parseComponentTree("noTopLevelJsx")).toThrowError(
-        /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
+    it("throws an error when a JsxExpression is found", () => {
+      expect(() => parseComponentTree("jsxExpression")).toThrowError(
+        /^Jsx nodes of kind "JsxExpression" are not supported for direct use/
       );
     });
 
@@ -147,27 +133,20 @@ describe("parseComponentTree", () => {
       );
     });
 
-    it("throws an error when a non-map JsxExpression is found", () => {
-      expect(() => parseComponentTree("jsxExpression")).toThrowError(
-        'Jsx nodes of kind "JsxExpression" are not supported for direct use' +
-          " in page files except for `map` function expressions."
-      );
-    });
-
-    it("throws an error when a Repeater tries to repeat a built-in component", () => {
-      expect(() => parseComponentTree("builtInRepeater")).toThrowError(
-        "Error parsing map expression: repetition of built-in components is not supported."
-      );
-    });
-
-    it("throws when an ObjectLiteralExpression is returned", () => {
-      expect(() => parseComponentTree("returnsObject")).toThrowError(
-        /^Unable to find top-level JSX element or JSX fragment/
+    it("throws an error when the return statement has no top-level Jsx node", () => {
+      expect(() => parseComponentTree("noTopLevelJsx")).toThrowError(
+        /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
     });
 
     it("throws when an ArrayLiteralExpression is returned", () => {
       expect(() => parseComponentTree("returnsArray")).toThrowError(
+        /^Unable to find top-level JSX element or JSX fragment/
+      );
+    });
+
+    it("throws when an ObjectLiteralExpression is returned", () => {
+      expect(() => parseComponentTree("returnsObject")).toThrowError(
         /^Unable to find top-level JSX element or JSX fragment/
       );
     });

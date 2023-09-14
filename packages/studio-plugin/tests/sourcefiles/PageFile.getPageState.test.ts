@@ -1,7 +1,7 @@
 import PageFile from "../../src/sourcefiles/PageFile";
 import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
+import { getPagePath } from "../__utils__/getFixturePath";
 import { FileMetadata, FileMetadataKind } from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
