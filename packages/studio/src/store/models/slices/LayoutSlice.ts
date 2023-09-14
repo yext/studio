@@ -2,8 +2,7 @@ import { LayoutState } from "@yext/studio-plugin";
 
 export interface LayoutSlice {
   /**
-   * A mapping of name to metadata for all layouts that can be applied through
-   * Studio.
+   * A mapping of name to LayoutState for layouts that can be applied via Studio.
    */
   layouts: Record<string, LayoutState>;
 }
