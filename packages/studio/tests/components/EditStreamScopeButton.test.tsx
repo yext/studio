@@ -55,11 +55,7 @@ beforeEach(() => {
             {
               id: "orange",
               displayName: "orange",
-            },
-            {
-              id: "raspberry",
-              displayName: "raspberry",
-            },
+            }
           ],
           totalCount: 1,
         },
