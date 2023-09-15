@@ -4,7 +4,8 @@ import renderIconForType from "../common/renderIconForType";
 
 export enum ElementType {
   Components = "Components",
-  Containers = "Layouts",
+  Containers = "Containers",
+  Layouts = "Layouts",
 }
 /**
  * A menu for adding elements to the page.

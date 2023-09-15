@@ -1,12 +1,10 @@
 import { FileMetadataKind, ComponentMetadata } from "@yext/studio-plugin";
-import { useCallback } from "react";
 import useStudioStore from "../../store/useStudioStore";
-import path from "path-browserify";
 import { ElementType } from "./AddElementMenu";
-import renderIconForType from "../common/renderIconForType";
+import AddElementOption from './AddElementOption';
 
-interface ElementSelectorProps {
-  activeType: ElementType;
+export interface ElementSelectorProps {
+  activeType: ElementType.Components | ElementType.Containers;
   afterSelect?: () => void;
 }
 
@@ -47,44 +45,14 @@ export default function ElementSelector({
     <div className="flex flex-col items-start py-1">
       {addableElements.map((metadata) => {
         return (
-          <Option
+          <AddElementOption
+            key={metadata.metadataUUID}
             metadata={metadata}
             activeType={activeType}
-            key={metadata.metadataUUID}
             afterSelect={afterSelect}
           />
         );
       })}
     </div>
-  );
-}
-
-function Option({
-  metadata,
-  activeType,
-  afterSelect,
-}: {
-  metadata: ComponentMetadata;
-} & ElementSelectorProps) {
-  const componentName = path.basename(metadata.filepath, ".tsx");
-
-  const addComponent = useStudioStore((store) => {
-    return store.actions.addComponent;
-  });
-
-  const handleSelect = useCallback(() => {
-    addComponent(metadata);
-    afterSelect?.();
-  }, [afterSelect, addComponent, metadata]);
-
-  return (
-    <button
-      className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 w-full text-left"
-      onClick={handleSelect}
-      aria-label={`Add ${componentName} Element`}
-    >
-      {renderIconForType(activeType)}
-      {componentName}
-    </button>
   );
 }
