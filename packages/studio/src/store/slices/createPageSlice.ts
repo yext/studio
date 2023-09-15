@@ -6,11 +6,11 @@ import {
 } from "@yext/studio-plugin";
 import { isEqual } from "lodash";
 import initialStudioData from "virtual_yext-studio";
-import DOMRectProperties from "../../models/DOMRectProperties";
-import PageSlice, { PageSliceStates } from "../../models/slices/PageSlice";
-import { SliceCreator } from "../../models/utils";
-import removeTopLevelFragments from "../../../utils/removeTopLevelFragments";
-import PropValueHelpers from "../../../utils/PropValueHelpers";
+import DOMRectProperties from "../models/DOMRectProperties";
+import PageSlice, { PageSliceStates } from "../models/slices/PageSlice";
+import { SliceCreator } from "../models/utils";
+import removeTopLevelFragments from "../../utils/removeTopLevelFragments";
+import PropValueHelpers from "../../utils/PropValueHelpers";
 
 const firstPageEntry = Object.entries(
   initialStudioData.pageNameToPageState
