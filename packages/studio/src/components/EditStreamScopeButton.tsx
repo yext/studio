@@ -1,4 +1,4 @@
-import { ReactComponent as Gear } from "../icons/gear.svg";
+import { ReactComponent as Scope } from "../icons/scope.svg";
 import { useCallback } from "react";
 import ButtonWithModal, { renderModalFunction } from "./common/ButtonWithModal";
 import EditStreamScopeModal from "./EditStreamScopeModal";
@@ -30,7 +30,7 @@ export default function EditStreamScopeButton({
 
   return (
     <ButtonWithModal
-      buttonContent={<Gear />}
+      buttonContent={<Scope />}
       renderModal={renderModal}
       ariaLabel={`Edit ${pageName} Stream Scope Settings`}
       buttonClassName="text-gray-800"
