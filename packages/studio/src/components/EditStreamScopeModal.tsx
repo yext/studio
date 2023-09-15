@@ -59,7 +59,7 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
   );
 
   const hasNoChanges = useMemo(
-    () => isEqual(selectedScope, originalScope), // different order is considered different
+    () => isEqual(selectedScope, originalScope),
     [selectedScope, originalScope]
   );
 
