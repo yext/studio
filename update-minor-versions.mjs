@@ -33,7 +33,7 @@ function readVersion(packageJsonPath) {
   const packageJson = readJson(packageJsonPath);
   const newVersion = packageJson?.version;
   if (!newVersion) {
-    throw new Error("Could not parse studio-plugin version from package.json");
+    throw new Error(`Could not parse version from package.json at ${packageJsonPath}`);
   }
   return newVersion;
 }
