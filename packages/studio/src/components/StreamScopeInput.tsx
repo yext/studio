@@ -30,7 +30,7 @@ export default function StreamScopeInput(props: StreamScopeInputProps) {
   );
 
   const filterIdOrEntityTypeSelected =
-    !!streamScope?.entityTypes?.length || !!streamScope?.savedFilterIds?.length;
+    !!(streamScope?.entityTypes?.length || streamScope?.savedFilterIds?.length);
 
   return (
     <>
