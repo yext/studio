@@ -27,7 +27,8 @@ export default function PillPickerInput({
   disabled,
 }: PillPickerInputProps) {
   const hasAvailableItems = !!availableItems?.length;
-  const isEmptyAndNoAvailbleItems = !hasAvailableItems && !selectedItems?.length;
+  const isEmptyAndNoAvailbleItems =
+    !hasAvailableItems && !selectedItems?.length;
 
   const addItem = useCallback(
     (item: string) => {
