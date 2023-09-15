@@ -16,7 +16,7 @@ export default async function hotReloadStore(payload: StudioHMRPayload) {
       await syncFileMetadata(studioData, payload.file);
       break;
     case "layouts":
-      // TODO SLAP-2930
+      syncLayouts(studioData);
       break;
     case "pages":
       syncPages(studioData);
@@ -32,6 +32,7 @@ export default async function hotReloadStore(payload: StudioHMRPayload) {
 
 async function fullSync(studioData: StudioData, file: string) {
   syncPages(studioData);
+  syncLayouts(studioData);
   await syncFileMetadata(studioData, file);
   syncSiteSettings(studioData);
   useStudioStore.setState((store) => {
@@ -78,6 +79,15 @@ function syncPages(studioData: StudioData) {
     store.pages.pendingChanges.pagesToRemove = new Set();
     store.pages.pendingChanges.pagesToUpdate = new Set();
     store.pages.activeComponentUUID = undefined;
+  });
+}
+
+function syncLayouts(studioData: StudioData) {
+  const layoutNameToLayoutState = removeTopLevelFragments(
+    studioData.layoutNameToLayoutState
+  );
+  useStudioStore.setState((store) => {
+    store.layouts.layouts = layoutNameToLayoutState;
   });
 }
 
