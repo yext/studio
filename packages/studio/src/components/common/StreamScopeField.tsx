@@ -39,7 +39,7 @@ export default function StreamScopeField({
     },
     [options]
   );
-  const displayedSelectedItems = availableIds.length ? selectedIds : [];
+  const displayedSelectedItems = options.length ? selectedIds : [];
 
   return (
     <>
