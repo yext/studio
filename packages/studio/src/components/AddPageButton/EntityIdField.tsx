@@ -4,7 +4,6 @@ import StreamScopeFieldLabel from "./StreamScopeFieldLabel";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { pillContainerClass } from "../PillPicker/PillPickerInput";
 import classNames from "classnames";
-import { ReactComponent as X } from "../../icons/x.svg";
 
 interface Props {
   disabled: boolean;
@@ -73,16 +72,7 @@ export default function EntityIdField({
             "mt-2 bg-gray-50 text-gray-500 pb-2"
           )}
         >
-          {selectedIds
-            ? selectedIds?.map((item) => {
-                return (
-                  <div className="mr-1 mb-1 flex bg-gray-200 text-black rounded px-1 items-center whitespace-nowrap">
-                    {item}
-                    <X className="ml-1" />
-                  </div>
-                );
-              })
-            : "No entities found in the account."}
+          No entities found in the account.
         </div>
       </div>
     );

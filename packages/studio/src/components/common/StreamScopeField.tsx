@@ -39,13 +39,14 @@ export default function StreamScopeField({
     },
     [options]
   );
+  const displayedSelectedItems = availableIds.length ? selectedIds : [];
 
   return (
     <>
       <StreamScopeFieldLabel streamScopeField={streamScopeField} />
       <div className="mt-2 mb-4">
         <PillPickerInput
-          selectedItems={selectedIds}
+          selectedItems={displayedSelectedItems}
           availableItems={availableIds}
           updateSelectedItems={updateSelection}
           getDisplayName={getDisplayName}
