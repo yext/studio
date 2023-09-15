@@ -21,20 +21,20 @@ beforeEach(() => {
       pages: {
         fruits: {
           ...basePageState,
-          pagesJS: { 
+          pagesJS: {
             getPathValue: undefined,
             streamScope: {
-              entityTypes: ["favoriteFruits"]
+              entityTypes: ["favoriteFruits"],
             },
           },
         },
         tooManyFruits: {
           ...basePageState,
-          pagesJS: { 
+          pagesJS: {
             getPathValue: undefined,
             streamScope: {
               entityIds: ["apple", "orange"],
-              entityTypes: ["favoriteFruits"]
+              entityTypes: ["favoriteFruits"],
             },
           },
         },
@@ -45,26 +45,32 @@ beforeEach(() => {
       isPagesJSRepo: true,
     },
     accountContent: {
-      entitiesRecord:{
+      entitiesRecord: {
         favoriteFruits: {
-          entities: [{
-            id: "apple", 
-            displayName: "apple"
-          },{
-            id: "orange", 
-            displayName: "orange"
-          },{
-            id: "raspberry", 
-            displayName: "raspberry"
-          }],
-          totalCount: 1
+          entities: [
+            {
+              id: "apple",
+              displayName: "apple",
+            },
+            {
+              id: "orange",
+              displayName: "orange",
+            },
+            {
+              id: "raspberry",
+              displayName: "raspberry",
+            },
+          ],
+          totalCount: 1,
         },
-      }, 
-      savedFilters: [{
-        id: "berries",
-        displayName: "berries"
-      }]
-    }
+      },
+      savedFilters: [
+        {
+          id: "berries",
+          displayName: "berries",
+        },
+      ],
+    },
   });
 });
 
@@ -72,7 +78,9 @@ it("displays the correct stream scope when modal opens", async () => {
   render(<EditStreamScopeButton pageName="fruits" />);
   const streamScopeButton = screen.getByRole("button");
   await userEvent.click(streamScopeButton);
-  const entityTypeSelection = screen.getByRole("button", {name: "favoriteFruits"})
+  const entityTypeSelection = screen.getByRole("button", {
+    name: "favoriteFruits",
+  });
   expect(entityTypeSelection).toBeDefined();
 });
 
@@ -84,11 +92,14 @@ it("updates stream scope with user input and regenerates test data for entity pa
   render(<EditStreamScopeButton pageName="fruits" />);
   const streamScopeButton = screen.getByRole("button");
   await userEvent.click(streamScopeButton);
-  const removeSelectedEntityType = screen.getByRole("button", {name: "favoriteFruits"})
-  await userEvent.click(removeSelectedEntityType)
-  const saveFilterDropdownButton = screen.getAllByLabelText("Toggle pill picker")[1]
+  const removeSelectedEntityType = screen.getByRole("button", {
+    name: "favoriteFruits",
+  });
+  await userEvent.click(removeSelectedEntityType);
+  const saveFilterDropdownButton =
+    screen.getAllByLabelText("Toggle pill picker")[1];
   await userEvent.click(saveFilterDropdownButton);
-  const savedFilter = screen.getByText("berries (id: berries)")
+  const savedFilter = screen.getByText("berries (id: berries)");
   await userEvent.click(savedFilter);
 
   function getEntityFiles(store: StudioStore) {
@@ -111,7 +122,7 @@ it("updates stream scope with user input and regenerates test data for entity pa
   const confirmButton = screen.getByRole("button", { name: "Confirm" });
   await userEvent.click(confirmButton);
   expect(updateStreamScopeSpy).toBeCalledWith("fruits", {
-    savedFilterIds: ["berries"]
+    savedFilterIds: ["berries"],
   });
   expect(useStudioStore.getState().pages.activeEntityFile).toBeUndefined();
   expect(getEntityFiles(useStudioStore.getState())).toEqual([
