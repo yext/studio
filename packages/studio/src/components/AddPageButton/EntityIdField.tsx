@@ -72,7 +72,7 @@ export default function EntityIdField({
             "mt-2 bg-gray-50 text-gray-500 pb-2"
           )}
         >
-          {!disabled && "No entities found in the account."}
+          "No entities found in the account."
         </div>
       </div>
     );

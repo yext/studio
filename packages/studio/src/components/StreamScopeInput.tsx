@@ -11,11 +11,10 @@ export interface StreamScopeInputProps {
   updateSelection: (
     streamScopeField: keyof StreamScope
   ) => (selectedIds: string[]) => void;
-  disabled?: boolean;
 }
 
 export default function StreamScopeInput(props: StreamScopeInputProps) {
-  const { streamScope, updateSelection, disabled } = props;
+  const { streamScope, updateSelection } = props;
   const streamScopeFields = useStreamScopeFields();
   const totalStreamScopeItems = Object.values(streamScope ?? {}).reduce(
     (numItems, scopeItems) => {
@@ -24,39 +23,20 @@ export default function StreamScopeInput(props: StreamScopeInputProps) {
     0
   );
 
-  if (disabled) {
-    return (
-      <>
-        <EntityIdField
-          disabled={true}
-          updateSelection={updateSelection("entityIds")}
-          selectedIds={streamScope?.entityIds}
-        />
-        {streamScopeFields.map(([streamScopeField, options]) => {
-          const selectedIds: string[] | undefined =
-            streamScope?.[streamScopeField];
-          return (
-            <StreamScopeField
-              key={streamScopeField}
-              streamScopeField={streamScopeField}
-              options={options}
-              selectedIds={selectedIds}
-              updateSelection={updateSelection(streamScopeField)}
-              disabled={true}
-            />
-          );
-        })}
-      </>
-    );
-  }
+  const multipleScopesSelected = !!(
+    (streamScope?.entityIds?.length && streamScope.entityTypes?.length) ||
+    (streamScope?.entityTypes?.length && streamScope.savedFilterIds?.length) ||
+    (streamScope?.savedFilterIds?.length && streamScope.entityIds?.length)
+  );
+
+  const filterIdOrEntityTypeSelected =
+  !!streamScope?.entityTypes?.length ||
+  !!streamScope?.savedFilterIds?.length;
 
   return (
     <>
       <EntityIdField
-        disabled={
-          !!streamScope?.entityTypes?.length ||
-          !!streamScope?.savedFilterIds?.length
-        }
+        disabled={filterIdOrEntityTypeSelected || multipleScopesSelected}
         updateSelection={updateSelection("entityIds")}
         selectedIds={streamScope?.entityIds}
       />
@@ -72,7 +52,7 @@ export default function StreamScopeInput(props: StreamScopeInputProps) {
             options={options}
             selectedIds={selectedIds}
             updateSelection={updateSelection(streamScopeField)}
-            disabled={hasOtherScopeFilters}
+            disabled={hasOtherScopeFilters || multipleScopesSelected}
           />
         );
       })}

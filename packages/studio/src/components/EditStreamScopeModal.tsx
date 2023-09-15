@@ -63,12 +63,6 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
     [selectedScope, originalScope]
   );
 
-  const disableAllInput = !!(
-    (streamScope?.entityIds && streamScope.entityTypes) ||
-    (streamScope?.entityTypes && streamScope.savedFilterIds) ||
-    (streamScope?.savedFilterIds && streamScope.entityIds)
-  );
-
   const modalBodyContent = useMemo(() => {
     return (
       <>
@@ -80,11 +74,10 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
         <StreamScopeInput
           streamScope={selectedScope}
           updateSelection={updateSelection}
-          disabled={disableAllInput}
         />
       </>
     );
-  }, [disableAllInput, selectedScope, updateSelection]);
+  }, [selectedScope, updateSelection]);
 
   const resetSelectedScopeAndClose = useCallback(() => {
     setSelectedScope(originalScope);
