@@ -29,8 +29,9 @@ export default function StreamScopeInput(props: StreamScopeInputProps) {
     (streamScope?.savedFilterIds?.length && streamScope.entityIds?.length)
   );
 
-  const filterIdOrEntityTypeSelected =
-    !!(streamScope?.entityTypes?.length || streamScope?.savedFilterIds?.length);
+  const filterIdOrEntityTypeSelected = !!(
+    streamScope?.entityTypes?.length || streamScope?.savedFilterIds?.length
+  );
 
   return (
     <>
