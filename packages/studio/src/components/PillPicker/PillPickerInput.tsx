@@ -96,7 +96,7 @@ function Pill(props: {
 
   return (
     <button
-      className="mr-1 mb-1 flex bg-sky-100 rounded px-1 hover:bg-sky-200 items-center whitespace-nowrap hover:cursor-pointer disabled:bg-gray-200 "
+      className="mr-1 mb-1 flex bg-sky-100 rounded px-1 hover:bg-red-100 items-center whitespace-nowrap hover:cursor-pointer disabled:bg-gray-200 "
       onClick={handleClick}
       disabled={disabled}
     >
