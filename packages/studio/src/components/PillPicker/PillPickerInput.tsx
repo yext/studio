@@ -27,7 +27,7 @@ export default function PillPickerInput({
   disabled,
 }: PillPickerInputProps) {
   const hasAvailableItems = !!availableItems?.length;
-  const isEmpty = !hasAvailableItems && !selectedItems?.length;
+  const isEmptyAndNoAvailbleItems = !hasAvailableItems && !selectedItems?.length;
 
   const addItem = useCallback(
     (item: string) => {
@@ -48,11 +48,11 @@ export default function PillPickerInput({
   );
 
   const containerClasses = classNames(pillContainerClass, {
-    "bg-gray-50": disabled || isEmpty,
-    "pb-2 text-gray-500": isEmpty,
+    "bg-gray-50": disabled || isEmptyAndNoAvailbleItems,
+    "pb-2 text-gray-500": isEmptyAndNoAvailbleItems,
   });
 
-  if (isEmpty && !disabled) {
+  if (isEmptyAndNoAvailbleItems) {
     return <div className={containerClasses}>{emptyText}</div>;
   }
 
