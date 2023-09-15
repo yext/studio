@@ -6,7 +6,7 @@ interface Props {
 }
 
 export default function StreamScopeFieldLabel({ streamScopeField }: Props) {
-  const { tooltip, description } = streamScopeFormData[streamScopeField];
+  const { tooltip, description } = streamScopeFieldData[streamScopeField];
   return (
     <label id={streamScopeField}>
       {description}
@@ -19,7 +19,7 @@ export default function StreamScopeFieldLabel({ streamScopeField }: Props) {
   );
 }
 
-const streamScopeFormData = {
+const streamScopeFieldData = {
   entityIds: {
     description: "Entity IDs",
     tooltip: "In the Yext platform, navigate to Content > Entities",
