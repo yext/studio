@@ -8,7 +8,7 @@ studioTest.use({
 studioTest("can deploy changes", async ({ studioPage }) => {
   const gitOps = studioPage.gitOps;
   const startingRef = await gitOps.getCurrentRef();
-  await studioPage.addElement("Container", "Layouts");
+  await studioPage.addElement("Container", "Containers");
   await studioPage.takePageScreenshotAfterImgRender();
 
   const numCommitsBeforeDeploy = await gitOps.getNumCommitsFromRef(startingRef);
