@@ -24,11 +24,8 @@ export default function StreamScopePicker(props: StreamScopePickerProps) {
     0
   );
 
-  const multipleScopesSelected = !!(
-    (streamScope?.entityIds?.length && streamScope.entityTypes?.length) ||
-    (streamScope?.entityTypes?.length && streamScope.savedFilterIds?.length) ||
-    (streamScope?.savedFilterIds?.length && streamScope.entityIds?.length)
-  );
+  const scopeFieldsSelections = streamScope && Object.values(streamScope).filter(selectedIds => selectedIds.length > 0);
+  const multipleScopesSelected = scopeFieldsSelections ? scopeFieldsSelections?.length > 1 : false;
 
   const filterIdOrEntityTypeSelected = !!(
     streamScope?.entityTypes?.length || streamScope?.savedFilterIds?.length

@@ -51,7 +51,7 @@ export default function StreamScopeField({
           availableItems={availableIds}
           updateSelectedItems={updateSelection}
           getDisplayName={getDisplayName}
-          disabled={disabled}
+          disabled={disabled || !options.length}
           emptyText={emptyTextData[streamScopeField]}
         />
       </div>
