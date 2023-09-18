@@ -53,7 +53,7 @@ export default function PillPickerInput({
     "pb-2 text-gray-500": isEmptyAndNoAvailbleItems,
   });
 
-  if (isEmptyAndNoAvailbleItems) {
+  if (isEmptyAndNoAvailbleItems && !disabled) {
     return <div className={containerClasses}>{emptyText}</div>;
   }
 
