@@ -1,6 +1,6 @@
 import Select, { MultiValue, StylesConfig } from "react-select";
 import useStudioStore from "../../store/useStudioStore";
-import StreamScopeFieldLabel from "./StreamScopeFieldLabel";
+import StreamScopeFieldLabel from "../common/StreamScopeFieldLabel";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { pillContainerClass } from "../PillPicker/PillPickerInput";
 import classNames from "classnames";
