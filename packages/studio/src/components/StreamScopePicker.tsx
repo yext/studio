@@ -6,8 +6,10 @@ import StreamScopeField, {
 } from "./common/StreamScopeField";
 import EntityIdField from "./AddPageButton/EntityIdField";
 
-export type updateScopeField = (selectedIds: string[]) => void
-export type updateScopeFieldFactory = (streamScopeField: keyof StreamScope) => updateScopeField
+export type updateScopeField = (selectedIds: string[]) => void;
+export type updateScopeFieldFactory = (
+  streamScopeField: keyof StreamScope
+) => updateScopeField;
 
 export interface StreamScopePickerProps {
   streamScope: StreamScope | undefined;
@@ -24,8 +26,12 @@ export default function StreamScopePicker(props: StreamScopePickerProps) {
     0
   );
 
-  const scopeFieldsSelections = streamScope && Object.values(streamScope).filter(selectedIds => selectedIds.length > 0);
-  const multipleScopesSelected = scopeFieldsSelections ? scopeFieldsSelections?.length > 1 : false;
+  const scopeFieldsSelections =
+    streamScope &&
+    Object.values(streamScope).filter((selectedIds) => selectedIds.length > 0);
+  const multipleScopesSelected = scopeFieldsSelections
+    ? scopeFieldsSelections?.length > 1
+    : false;
 
   const filterIdOrEntityTypeSelected = !!(
     streamScope?.entityTypes?.length || streamScope?.savedFilterIds?.length

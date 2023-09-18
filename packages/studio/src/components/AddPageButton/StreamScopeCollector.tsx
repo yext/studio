@@ -2,7 +2,9 @@ import { useCallback, useMemo } from "react";
 import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 import { useStreamScope } from "./AddPageContext";
-import StreamScopePicker, { updateScopeFieldFactory } from "../StreamScopePicker";
+import StreamScopePicker, {
+  updateScopeFieldFactory,
+} from "../StreamScopePicker";
 import { StreamScope } from "@yext/studio-plugin";
 
 export default function StreamScopeCollector({

@@ -1,6 +1,8 @@
 import { useCallback, useMemo, useState } from "react";
 import DialogModal from "./common/DialogModal";
-import StreamScopePicker, { updateScopeFieldFactory } from "./StreamScopePicker";
+import StreamScopePicker, {
+  updateScopeFieldFactory,
+} from "./StreamScopePicker";
 import { ResponseType, StreamScope } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { isEqual } from "lodash";
