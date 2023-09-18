@@ -60,15 +60,12 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
     []
   );
 
-  const hasNoChanges = useMemo(
-    () => {
-      const noScopeChanges = Object.keys(selectedScope).map((scope) =>
-        isEqual(sortBy(selectedScope[scope]), sortBy(originalScope[scope]))
-      )
-      return noScopeChanges.every(v => v)
-    },
-    [selectedScope, originalScope]
-  );
+  const hasNoChanges = useMemo(() => {
+    const noScopeChanges = Object.keys(selectedScope).map((scope) =>
+      isEqual(sortBy(selectedScope[scope]), sortBy(originalScope[scope]))
+    );
+    return noScopeChanges.every((v) => v);
+  }, [selectedScope, originalScope]);
 
   const modalBodyContent = useMemo(() => {
     return (
