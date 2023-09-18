@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 import { useStreamScope } from "./AddPageContext";
-import StreamScopeInput, { updateScopeFieldFactory } from "../StreamScopeInput";
+import StreamScopePicker, { updateScopeFieldFactory } from "../StreamScopePicker";
 import { StreamScope } from "@yext/studio-plugin";
 
 export default function StreamScopeCollector({
@@ -39,7 +39,7 @@ export default function StreamScopeCollector({
           Use one of the optional fields below to specify which entities this
           page can access.
         </div>
-        <StreamScopeInput
+        <StreamScopePicker
           streamScope={streamScope}
           updateSelection={updateSelection}
         />

@@ -9,12 +9,12 @@ import EntityIdField from "./AddPageButton/EntityIdField";
 export type updateScopeField = (selectedIds: string[]) => void
 export type updateScopeFieldFactory = (streamScopeField: keyof StreamScope) => updateScopeField
 
-export interface StreamScopeInputProps {
+export interface StreamScopePickerProps {
   streamScope: StreamScope | undefined;
   updateSelection: updateScopeFieldFactory;
 }
 
-export default function StreamScopeInput(props: StreamScopeInputProps) {
+export default function StreamScopePicker(props: StreamScopePickerProps) {
   const { streamScope, updateSelection } = props;
   const streamScopeFields = useStreamScopeFields();
   const totalStreamScopeItems = Object.values(streamScope ?? {}).reduce(

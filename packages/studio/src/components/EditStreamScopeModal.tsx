@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import DialogModal from "./common/DialogModal";
-import StreamScopeInput, { updateScopeFieldFactory } from "./StreamScopeInput";
+import StreamScopePicker, { updateScopeFieldFactory } from "./StreamScopePicker";
 import { ResponseType, StreamScope } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { isEqual } from "lodash";
@@ -71,7 +71,7 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
           can access. If multiple Stream Scopes were selected and all fields are
           disabled, see a developer to edit the Stream Scope.
         </div>
-        <StreamScopeInput
+        <StreamScopePicker
           streamScope={selectedScope}
           updateSelection={updateSelection}
         />
