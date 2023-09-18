@@ -7,6 +7,7 @@ interface EditStreamScopeButtonProps {
   pageName: string;
 }
 
+// TODO: Consolidate with PageSettingsButton once we rework Form Modal (from SLAP-2918)
 /**
  * Renders a button for editing the Stream Scope for an Entity page in a PagesJS repo.
  * When the button is clicked, a modal is displayed where the Stream Scope can
