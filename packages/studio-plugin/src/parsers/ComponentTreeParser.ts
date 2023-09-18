@@ -17,7 +17,7 @@ import { v4 } from "uuid";
 import { FileMetadataKind, TypelessPropVal } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 import MissingPropsChecker from "./MissingPropsChecker";
 
 export type GetFileMetadata = ParsingOrchestrator["getFileMetadata"];
