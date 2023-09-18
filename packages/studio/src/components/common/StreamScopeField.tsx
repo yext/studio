@@ -1,6 +1,7 @@
 import PillPickerInput from "../PillPicker/PillPickerInput";
 import { useCallback } from "react";
 import StreamScopeFieldLabel from "../AddPageButton/StreamScopeFieldLabel";
+import { updateScopeField } from "../StreamScopeInput";
 
 // TODO (SLAP-2918): Combine this with streamScopeFormData once this component
 // is used for page settings
@@ -16,7 +17,7 @@ export interface StreamScopeFieldProps {
     displayName?: string;
   }[];
   selectedIds: string[] | undefined;
-  updateSelection: (selectedIds: string[]) => void;
+  updateSelection: updateScopeField;
   disabled?: boolean;
 }
 

@@ -4,10 +4,11 @@ import StreamScopeFieldLabel from "./StreamScopeFieldLabel";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { pillContainerClass } from "../PillPicker/PillPickerInput";
 import classNames from "classnames";
+import { updateScopeField } from "../StreamScopeInput";
 
 interface Props {
   disabled: boolean;
-  updateSelection: (selectedIds: string[]) => void;
+  updateSelection: updateScopeField;
   selectedIds?: string[];
 }
 

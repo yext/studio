@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 import { useStreamScope } from "./AddPageContext";
-import StreamScopeInput from "../StreamScopeInput";
+import StreamScopeInput, { updateScopeFieldFactory } from "../StreamScopeInput";
 import { StreamScope } from "@yext/studio-plugin";
 
 export default function StreamScopeCollector({
@@ -19,7 +19,7 @@ export default function StreamScopeCollector({
     await handleConfirm();
   }, [streamScope, setStreamScope, handleConfirm]);
 
-  const updateSelection = useCallback(
+  const updateSelection: updateScopeFieldFactory = useCallback(
     (streamScopeField: keyof StreamScope) => (selectedIds: string[]) => {
       if (selectedIds.length) {
         setStreamScope({

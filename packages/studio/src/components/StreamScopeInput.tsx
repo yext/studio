@@ -6,11 +6,12 @@ import StreamScopeField, {
 } from "./common/StreamScopeField";
 import EntityIdField from "./AddPageButton/EntityIdField";
 
+export type updateScopeField = (selectedIds: string[]) => void
+export type updateScopeFieldFactory = (streamScopeField: keyof StreamScope) => updateScopeField
+
 export interface StreamScopeInputProps {
   streamScope: StreamScope | undefined;
-  updateSelection: (
-    streamScopeField: keyof StreamScope
-  ) => (selectedIds: string[]) => void;
+  updateSelection: updateScopeFieldFactory;
 }
 
 export default function StreamScopeInput(props: StreamScopeInputProps) {

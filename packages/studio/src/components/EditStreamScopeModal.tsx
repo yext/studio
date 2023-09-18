@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useState } from "react";
 import DialogModal from "./common/DialogModal";
-import StreamScopeInput from "./StreamScopeInput";
+import StreamScopeInput, { updateScopeFieldFactory } from "./StreamScopeInput";
 import { ResponseType, StreamScope } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import { isEqual } from "lodash";
@@ -45,7 +45,7 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
     updateStreamScope,
   ]);
 
-  const updateSelection = useCallback(
+  const updateSelection: updateScopeFieldFactory = useCallback(
     (streamScopeField: keyof StreamScope) => (selectedIds: string[]) => {
       if (selectedIds.length) {
         setSelectedScope({
