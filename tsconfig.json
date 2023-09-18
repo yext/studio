@@ -1,23 +1,7 @@
 {
+  "include": ["src", "tests", "global.d.ts"],
   "compilerOptions": {
-    "module": "ESNext",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "noImplicitAny": false,
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "forceConsistentCasingInFileNames": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
     "jsx": "react-jsx",
-    "target": "ESNext"
-  },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.js",
-    "packages/studio/postcss.config.cjs"
-  ]
+    "esModuleInterop": true
+  }
 }
