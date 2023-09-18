@@ -5,7 +5,7 @@ import StreamScopePicker, {
 } from "./StreamScopePicker";
 import { ResponseType, StreamScope } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
-import { isEqual } from "lodash";
+import { isEqual, sortBy } from "lodash";
 import { toast } from "react-toastify";
 
 export interface EditStreamScopeModalProps {
@@ -61,7 +61,12 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
   );
 
   const hasNoChanges = useMemo(
-    () => isEqual(selectedScope, originalScope),
+    () => {
+      const noScopeChanges = Object.keys(selectedScope).map((scope) =>
+        isEqual(sortBy(selectedScope[scope]), sortBy(originalScope[scope]))
+      )
+      return noScopeChanges.every(v => v)
+    },
     [selectedScope, originalScope]
   );
 
