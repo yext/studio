@@ -183,7 +183,7 @@ export default class StudioPlaywrightPage {
 
   async addElement(
     elementName: string,
-    category: "Components" | "Containers",
+    category: "Components" | "Containers" | "Layouts",
     shouldTakeScreenshots = true
   ) {
     await this.openAddElementMenu(category, shouldTakeScreenshots);
@@ -191,7 +191,7 @@ export default class StudioPlaywrightPage {
   }
 
   async openAddElementMenu(
-    category: "Components" | "Containers" = "Components",
+    category: "Components" | "Containers" | "Layouts" = "Components",
     shouldTakeScreenshots = false
   ) {
     const takeScreenshot = () =>
