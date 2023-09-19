@@ -4,7 +4,9 @@ import { SliceCreator } from "../models/utils";
 import removeTopLevelFragments from "../../utils/removeTopLevelFragments";
 
 const createLayoutSlice: SliceCreator<LayoutSlice> = () => ({
-  layouts: removeTopLevelFragments(initialStudioData.layoutNameToLayoutState),
+  layoutNameToLayoutState: removeTopLevelFragments(
+    initialStudioData.layoutNameToLayoutState
+  ),
 });
 
 export default createLayoutSlice;

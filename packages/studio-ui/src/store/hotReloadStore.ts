@@ -87,7 +87,7 @@ function syncLayouts(studioData: StudioData) {
     studioData.layoutNameToLayoutState
   );
   useStudioStore.setState((store) => {
-    store.layouts.layouts = layoutNameToLayoutState;
+    store.layouts.layoutNameToLayoutState = layoutNameToLayoutState;
   });
 }
 

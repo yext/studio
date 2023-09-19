@@ -10,6 +10,7 @@ export default function renderIconForType(type: ElementType) {
     case ElementType.Components:
       return <Box />;
     case ElementType.Containers:
+    case ElementType.Layouts:
       return <Container />;
     default:
       console.error(`Could not find Icon for type ${type}`);

@@ -20,13 +20,30 @@ beforeEach(() => {
         "uuid-component": {
           kind: FileMetadataKind.Component,
           metadataUUID: "comp",
-          filepath: "blah/Mock-Component.tsx",
+          filepath: "blah/MockComponent.tsx",
         },
         "uuid-container": {
           kind: FileMetadataKind.Component,
           metadataUUID: "cont",
           acceptsChildren: true,
-          filepath: "blah/Mock-Container.tsx",
+          filepath: "blah/MockContainer.tsx",
+        },
+      },
+    },
+    layouts: {
+      layoutNameToLayoutState: {
+        MyMockLayout: {
+          componentTree: [
+            {
+              kind: ComponentStateKind.Standard,
+              metadataUUID: "comp",
+              componentName: "MockComponent",
+              props: {},
+              uuid: "component-inside-layout-uuid",
+            },
+          ],
+          cssImports: [],
+          filepath: "/filepath/to/MyMockLayout.tsx",
         },
       },
     },
@@ -35,17 +52,17 @@ beforeEach(() => {
 
 it("renders Components on load", () => {
   render(<AddElementMenu closeMenu={closeMenu} />);
-  expect(screen.getByText("Mock-Component")).toBeDefined();
-  expect(screen.queryByText("Mock-Container")).toBeNull();
+  expect(screen.getByText("MockComponent")).toBeDefined();
+  expect(screen.queryByText("MockContainer")).toBeNull();
   expect(closeMenu).not.toBeCalled();
 });
 
 it("can add a component to the tree", async () => {
   render(<AddElementMenu closeMenu={closeMenu} />);
-  await userEvent.click(screen.getByText("Mock-Component"));
+  await userEvent.click(screen.getByText("MockComponent"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
-      componentName: "Mock-Component",
+      componentName: "MockComponent",
       kind: ComponentStateKind.Standard,
       metadataUUID: "comp",
       props: {},
@@ -55,23 +72,31 @@ it("can add a component to the tree", async () => {
   expect(closeMenu).toBeCalledTimes(1);
 });
 
-it("can switch to Layouts", async () => {
-  render(<AddElementMenu closeMenu={closeMenu} />);
-  await userEvent.click(screen.getByText("Layouts"));
-  expect(screen.queryByText("Mock-Component")).toBeNull();
-  expect(screen.getByText("Mock-Container")).toBeDefined();
-  expect(closeMenu).not.toBeCalled();
-});
-
 it("can add a container to the tree", async () => {
   render(<AddElementMenu closeMenu={closeMenu} />);
-  await userEvent.click(screen.getByText("Layouts"));
-  await userEvent.click(screen.getByText("Mock-Container"));
+  await userEvent.click(screen.getByText("Containers"));
+  await userEvent.click(screen.getByText("MockContainer"));
   expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
     {
-      componentName: "Mock-Container",
+      componentName: "MockContainer",
       kind: ComponentStateKind.Standard,
       metadataUUID: "cont",
+      props: {},
+      uuid: expect.any(String),
+    },
+  ]);
+  expect(closeMenu).toBeCalledTimes(1);
+});
+
+it("can add layouts to the tree", async () => {
+  render(<AddElementMenu closeMenu={closeMenu} />);
+  await userEvent.click(screen.getByText("Layouts"));
+  await userEvent.click(screen.getByText("MyMockLayout"));
+  expect(useStudioStore.getState().actions.getComponentTree()).toEqual([
+    {
+      componentName: "MockComponent",
+      kind: ComponentStateKind.Standard,
+      metadataUUID: "comp",
       props: {},
       uuid: expect.any(String),
     },

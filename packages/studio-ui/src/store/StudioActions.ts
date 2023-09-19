@@ -2,6 +2,7 @@ import {
   ComponentState,
   ComponentStateKind,
   ComponentTreeHelpers,
+  LayoutState,
   MessageID,
   PropValues,
 } from "@yext/studio-plugin";
@@ -20,6 +21,7 @@ import GenerateTestDataAction from "./StudioActions/GenerateTestDataAction";
 import CreatePageAction from "./StudioActions/CreatePageAction";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
 import path from "path-browserify";
+import { v4 } from "uuid";
 
 export default class StudioActions {
   public addComponent: AddComponentAction["addComponent"];
@@ -181,6 +183,26 @@ export default class StudioActions {
     );
     const entitiesRecord = Object.fromEntries(entityEntries);
     this.getPages().setActivePageEntities(entitiesRecord);
+  };
+
+  addLayout = (layoutState: LayoutState) => {
+    const tree = this.getComponentTree() ?? [];
+    const layoutTreeWithNewUUIDs: ComponentState[] =
+      ComponentTreeHelpers.mapComponentTreeParentsFirst(
+        layoutState.componentTree,
+        (componentState, parentState) => {
+          const updatedComponentState = {
+            ...componentState,
+            uuid: v4(),
+          };
+          if (parentState) {
+            updatedComponentState.parentUUID = parentState.uuid;
+          }
+          return updatedComponentState;
+        }
+      );
+    const updatedTree = layoutTreeWithNewUUIDs.concat(tree);
+    this.updateComponentTree(updatedTree);
   };
 
   private updatePreviousSave = () => {
