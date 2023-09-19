@@ -1,10 +1,11 @@
 import { useState, useCallback } from "react";
-import ElementSelector from "./ElementSelector";
+import AddElementList from "./AddElementList";
 import renderIconForType from "../common/renderIconForType";
 
 export enum ElementType {
   Components = "Components",
-  Containers = "Layouts",
+  Containers = "Containers",
+  Layouts = "Layouts",
 }
 /**
  * A menu for adding elements to the page.
@@ -19,7 +20,7 @@ export default function AddElementMenu({
   return (
     <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
       <ElementTypeSwitcher activeType={activeType} setType={setType} />
-      <ElementSelector activeType={activeType} afterSelect={closeMenu} />
+      <AddElementList activeType={activeType} afterSelect={closeMenu} />
     </div>
   );
 }
