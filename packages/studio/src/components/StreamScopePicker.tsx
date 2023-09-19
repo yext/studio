@@ -29,9 +29,7 @@ export default function StreamScopePicker(props: StreamScopePickerProps) {
   const scopeFieldsSelections =
     streamScope &&
     Object.values(streamScope).filter((selectedIds) => selectedIds.length > 0);
-  const multipleScopesSelected = scopeFieldsSelections
-    ? scopeFieldsSelections?.length > 1
-    : false;
+  const multipleScopesSelected = (scopeFieldsSelections?.length || 0) > 1;
 
   const filterIdOrEntityTypeSelected = !!(
     streamScope?.entityTypes?.length || streamScope?.savedFilterIds?.length
