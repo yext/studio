@@ -27,7 +27,8 @@ export default function PillPickerInput({
   disabled,
 }: PillPickerInputProps) {
   const hasAvailableItems = !!availableItems?.length;
-  const isEmpty = !hasAvailableItems && !selectedItems?.length;
+  const isEmptyAndNoAvailbleItems =
+    !hasAvailableItems && !selectedItems?.length;
 
   const addItem = useCallback(
     (item: string) => {
@@ -48,11 +49,11 @@ export default function PillPickerInput({
   );
 
   const containerClasses = classNames(pillContainerClass, {
-    "bg-gray-50": disabled || isEmpty,
-    "pb-2 text-gray-500": isEmpty,
+    "bg-gray-50": disabled || isEmptyAndNoAvailbleItems,
+    "pb-2 text-gray-500": isEmptyAndNoAvailbleItems,
   });
 
-  if (isEmpty && !disabled) {
+  if (isEmptyAndNoAvailbleItems) {
     return <div className={containerClasses}>{emptyText}</div>;
   }
 
@@ -65,6 +66,7 @@ export default function PillPickerInput({
             removeItem={removeItem}
             item={item}
             displayName={getDisplayName?.(item)}
+            disabled={disabled}
           />
         );
       })}
@@ -84,20 +86,22 @@ function Pill(props: {
   item: string;
   removeItem: (val: string) => void;
   displayName?: string;
+  disabled?: boolean;
 }) {
-  const { item, removeItem, displayName } = props;
+  const { item, removeItem, displayName, disabled } = props;
 
   const handleClick = useCallback(() => {
     removeItem(item);
   }, [item, removeItem]);
 
   return (
-    <div
-      className="mr-1 mb-1 flex bg-sky-100 rounded px-1 hover:bg-sky-200 items-center whitespace-nowrap hover:cursor-pointer"
+    <button
+      className="mr-1 mb-1 flex bg-sky-100 rounded px-1 hover:bg-red-100 items-center whitespace-nowrap hover:cursor-pointer disabled:bg-gray-200 "
       onClick={handleClick}
+      disabled={disabled}
     >
       {displayName ?? item}
       <X className="ml-1" />
-    </div>
+    </button>
   );
 }

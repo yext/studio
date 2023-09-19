@@ -1,13 +1,14 @@
 import Select, { MultiValue, StylesConfig } from "react-select";
 import useStudioStore from "../../store/useStudioStore";
-import StreamScopeFieldLabel from "./StreamScopeFieldLabel";
+import StreamScopeFieldLabel from "../common/StreamScopeFieldLabel";
 import { ChangeEvent, useCallback, useMemo, useState } from "react";
 import { pillContainerClass } from "../PillPicker/PillPickerInput";
 import classNames from "classnames";
+import { updateScopeField } from "../StreamScopePicker";
 
 interface Props {
   disabled: boolean;
-  updateSelection: (selectedIds: string[]) => void;
+  updateSelection: updateScopeField;
   selectedIds?: string[];
 }
 
@@ -20,7 +21,7 @@ export default function EntityIdField({
     store.accountContent.entitiesRecord,
     store.accountContent.fetchEntities,
   ]);
-  const availableEntityTypes = disabled ? [] : Object.keys(entitiesRecord);
+  const availableEntityTypes = Object.keys(entitiesRecord);
   const [isLoading, setIsLoading] = useState(false);
   const [entityType, setEntityType] = useState<string | undefined>(
     availableEntityTypes[0]
@@ -72,7 +73,7 @@ export default function EntityIdField({
             "mt-2 bg-gray-50 text-gray-500 pb-2"
           )}
         >
-          {!disabled && "No entities found in the account."}
+          No entities found in the account.
         </div>
       </div>
     );
@@ -104,6 +105,7 @@ export default function EntityIdField({
           isSearchable={false}
           placeholder="Select entity ids..."
           styles={selectStyles}
+          isDisabled={disabled}
         />
       </div>
     </div>

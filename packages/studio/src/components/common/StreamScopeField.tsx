@@ -1,6 +1,7 @@
 import PillPickerInput from "../PillPicker/PillPickerInput";
 import { useCallback } from "react";
-import StreamScopeFieldLabel from "../AddPageButton/StreamScopeFieldLabel";
+import StreamScopeFieldLabel from "./StreamScopeFieldLabel";
+import { updateScopeField } from "../StreamScopePicker";
 
 // TODO (SLAP-2918): Combine this with streamScopeFormData once this component
 // is used for page settings
@@ -16,7 +17,7 @@ export interface StreamScopeFieldProps {
     displayName?: string;
   }[];
   selectedIds: string[] | undefined;
-  updateSelection: (selectedIds: string[]) => void;
+  updateSelection: updateScopeField;
   disabled?: boolean;
 }
 
@@ -39,17 +40,18 @@ export default function StreamScopeField({
     },
     [options]
   );
+  const displayedSelectedItems = options.length ? selectedIds : [];
 
   return (
     <>
       <StreamScopeFieldLabel streamScopeField={streamScopeField} />
       <div className="mt-2 mb-4">
         <PillPickerInput
-          selectedItems={selectedIds}
+          selectedItems={displayedSelectedItems}
           availableItems={availableIds}
           updateSelectedItems={updateSelection}
           getDisplayName={getDisplayName}
-          disabled={disabled}
+          disabled={disabled || !options.length}
           emptyText={emptyTextData[streamScopeField]}
         />
       </div>

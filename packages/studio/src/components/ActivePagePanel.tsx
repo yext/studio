@@ -5,6 +5,7 @@ import { PropsWithChildren, useMemo } from "react";
 import RemovePageButton from "./RemovePageButton";
 import { Tooltip } from "react-tooltip";
 import PageSettingsButton from "./PageSettingsButton/PageSettingsButton";
+import EditStreamScopeButton from "./EditStreamScopeButton";
 
 /**
  * ActivePagePanel displays the available pages and allows the user to switch
@@ -59,6 +60,10 @@ function PageItem({ pageName }: { pageName: string }) {
     void updateActivePage(pageName);
   }
 
+  const isEntityPage = useStudioStore(
+    (store) => !!store.pages.pages[pageName].pagesJS?.streamScope
+  );
+
   return (
     <ListItem>
       <div className="flex items-center overflow-auto">
@@ -72,6 +77,7 @@ function PageItem({ pageName }: { pageName: string }) {
         </button>
       </div>
       <div className="flex items-center space-x-3">
+        {isEntityPage && <EditStreamScopeButton pageName={pageName} />}
         {isPagesJSRepo && <PageSettingsButton pageName={pageName} />}
         <RemovePageButton pageName={pageName} />
       </div>
