@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { ReactComponent as EmbedIcon } from "../../icons/embed.svg";
-import { useRootClose } from "@restart/ui";
+import useRootClose from "@restart/ui/useRootClose";
 import classNames from "classnames";
 
 interface PillPickerProps {
