@@ -2,7 +2,7 @@ import { FileMetadataKind, ComponentMetadata } from "@yext/studio-plugin";
 import useStudioStore from "../../store/useStudioStore";
 import AddElementOption from "./AddElementOption";
 import path from "path-browserify";
-import ElementIcon, { ElementType } from "../common/ElementIcon";
+import { ElementType } from "../common/ElementIcon";
 import { useMemo } from "react";
 
 interface AddElementListProps {
@@ -33,7 +33,7 @@ export default function AddElementList({
         return (
           <AddElementOption
             {...props}
-            icon={<ElementIcon type={activeType} />}
+            elementType={activeType}
           />
         );
       })}

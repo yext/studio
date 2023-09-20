@@ -9,14 +9,14 @@ export enum ElementType {
 }
 
 interface ElementIconProps {
-  type: ElementType;
+  elementType: ElementType;
 }
 
 /**
  * Returns the Icon that represents the provided Element Type.
  */
 export default function ElementIcon(props: ElementIconProps) {
-  switch (props.type) {
+  switch (props.elementType) {
     case ElementType.Components:
       return <Component />;
     case ElementType.Containers:
@@ -24,7 +24,7 @@ export default function ElementIcon(props: ElementIconProps) {
     case ElementType.Layouts:
       return <Layout />;
     default:
-      console.error(`Could not find Icon for type ${props.type}`);
+      console.error(`Could not find Icon for type ${props.elementType}`);
       return null;
   }
 }

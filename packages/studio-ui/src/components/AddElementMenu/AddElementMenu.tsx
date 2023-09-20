@@ -57,7 +57,7 @@ function ElementTypeButton(props: {
       disabled={isActiveType}
     >
       <span className="mr-2 pt-0.5">
-        <ElementIcon type={elementType} />
+        <ElementIcon elementType={elementType} />
       </span>
       <span>{elementType}</span>
     </button>

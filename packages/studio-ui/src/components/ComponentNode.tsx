@@ -88,7 +88,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
         <div className="pl-2">
-          <ElementIcon type={elementType} />
+          <ElementIcon elementType={elementType} />
         </div>
         <span className="pl-1.5">
           {getComponentDisplayName(componentState)}
