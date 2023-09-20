@@ -1,7 +1,7 @@
 import PageSlice from "./models/slices/PageSlice";
 import SiteSettingSlice from "./models/slices/SiteSettingsSlice";
 import { StudioStore } from "./models/StudioStore";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import { ZundoOptions, temporal } from "zundo";
 import { TemporalStudioStore } from "./useTemporalStore";
 import { StateCreator } from "zustand";

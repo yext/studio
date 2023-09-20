@@ -17,7 +17,6 @@ import { v4 } from "uuid";
 import { FileMetadataKind, TypelessPropVal } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
-import TypeGuards from "../utils/TypeGuards";
 import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 import MissingPropsChecker from "./MissingPropsChecker";
 
@@ -77,7 +76,7 @@ export default class ComponentTreeParser {
       );
     }
 
-    if (!TypeGuards.isNotFragmentElement(component)) {
+    if (!ComponentTreeParser.isNotFragmentElement(component)) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment,
@@ -96,6 +95,19 @@ export default class ComponentTreeParser {
       ...parsedElement,
       componentName,
     };
+  }
+
+  private static isNotFragmentElement(
+    element: JsxElement | JsxSelfClosingElement | JsxFragment
+  ): element is JsxElement | JsxSelfClosingElement {
+    if (element.isKind(SyntaxKind.JsxFragment)) {
+      return false;
+    }
+    if (element.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      return true;
+    }
+    const name = StaticParsingHelpers.parseJsxElementName(element);
+    return !["Fragment", "React.Fragment"].includes(name);
   }
 
   private parseElement(

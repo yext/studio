@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 import PropValueHelpers from "../../utils/PropValueHelpers";
 import { PropValueKind, PropValueType } from "@yext/studio-plugin";
 

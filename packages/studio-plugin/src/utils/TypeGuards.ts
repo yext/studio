@@ -1,10 +1,4 @@
 import {
-  JsxElement,
-  JsxFragment,
-  JsxSelfClosingElement,
-  SyntaxKind,
-} from "ts-morph";
-import {
   ComponentState,
   ComponentStateKind,
   FileMetadata,
@@ -18,7 +12,6 @@ import {
   SiteSettingsValues,
 } from "../types";
 
-import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
 import {
   SiteSettingsExpression,
   StreamsDataExpression,
@@ -157,19 +150,6 @@ export default class TypeGuards {
     value: unknown
   ): value is SiteSettingsExpression {
     return typeof value === "string" && value.startsWith("siteSettings.");
-  }
-
-  static isNotFragmentElement(
-    element: JsxElement | JsxSelfClosingElement | JsxFragment
-  ): element is JsxElement | JsxSelfClosingElement {
-    if (element.isKind(SyntaxKind.JsxFragment)) {
-      return false;
-    }
-    if (element.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      return true;
-    }
-    const name = StaticParsingHelpers.parseJsxElementName(element);
-    return !["Fragment", "React.Fragment"].includes(name);
   }
 
   static isSiteSettingsValues(

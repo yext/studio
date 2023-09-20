@@ -1,4 +1,4 @@
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import { Component, PropsWithChildren, ReactInstance } from "react";
 import DOMRectProperties from "../store/models/DOMRectProperties";
 import useStudioStore from "../store/useStudioStore";

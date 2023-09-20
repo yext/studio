@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { App, hotReloadStore } from "@yext/studio-ui";
-import { StudioHMRPayload, StudioHMRUpdateID } from "@yext/studio-plugin";
+import { App, hotReloadStore, StudioHMRUpdateID } from "@yext/studio-ui";
+import type { StudioHMRPayload } from "@yext/studio-plugin";
 import "./tailwind-directives.css";
 
 if (import.meta.hot) {

@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from "react";
 import useTemporalStore from "../store/useTemporalStore";
-import { debounce } from "lodash";
+import debounce from "lodash/debounce";
 
 /**
  * Updates a function so it doesn't trigger Zundo store updates until after a

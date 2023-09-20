@@ -1,5 +1,5 @@
 import useStudioStore from "../store/useStudioStore";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 
 export default function useHasChanges() {
   // TODO(SLAP-2556) Refactor pendingChanges to use PreviousSaveSlice

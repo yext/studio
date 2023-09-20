@@ -1,6 +1,6 @@
 import { useCallback, MouseEvent, CSSProperties } from "react";
 import { ReactComponent as VectorIcon } from "../../icons/vector.svg";
-import { startCase } from "lodash";
+import startCase from "lodash/startCase";
 
 const listStyles: CSSProperties = {
   minWidth: "200px",

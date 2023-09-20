@@ -9,7 +9,7 @@ import {
 import FileMetadataSlice from "./models/slices/FileMetadataSlice";
 import PageSlice from "./models/slices/PageSlice";
 import sendMessage from "../messaging/sendMessage";
-import { cloneDeep } from "lodash";
+import cloneDeep from "lodash/cloneDeep";
 import SiteSettingsSlice from "./models/slices/SiteSettingsSlice";
 import PreviousSaveSlice from "./models/slices/PreviousSaveSlice";
 import StudioConfigSlice from "./models/slices/StudioConfigSlice";
