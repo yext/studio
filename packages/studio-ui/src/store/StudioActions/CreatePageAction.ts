@@ -4,6 +4,7 @@ import {
   PageState,
   PagesJsState,
   ResponseType,
+  LayoutState,
 } from "@yext/studio-plugin";
 import path from "path-browserify";
 import StudioConfigSlice from "../models/slices/StudioConfigSlice";
@@ -21,7 +22,8 @@ export default class CreatePageAction {
   createPage = async (
     pageName: string,
     getPathValue?: GetPathVal,
-    streamScope?: StreamScope
+    streamScope?: StreamScope,
+    layout?: LayoutState
   ) => {
     const pagesPath = this.getStudioConfigSlice().paths.pages;
     const filepath = path.join(pagesPath, pageName + ".tsx");
@@ -31,7 +33,8 @@ export default class CreatePageAction {
       filepath,
       isPagesJSRepo,
       getPathValue,
-      streamScope
+      streamScope,
+      layout
     );
     this.getPageSlice().addPage(pageName, pageState);
 
@@ -51,11 +54,12 @@ export default class CreatePageAction {
     filepath: string,
     isPagesJSRepo: boolean,
     getPathValue?: GetPathVal,
-    streamScope?: StreamScope
+    streamScope?: StreamScope,
+    layout?: LayoutState
   ) {
     const pageState: PageState = {
-      componentTree: [],
-      cssImports: [],
+      componentTree: layout ? layout.componentTree : [],
+      cssImports: layout ? layout.cssImports : [],
       filepath,
     };
     if (isPagesJSRepo && getPathValue) {

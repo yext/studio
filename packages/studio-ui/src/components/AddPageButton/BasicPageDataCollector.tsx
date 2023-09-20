@@ -21,7 +21,7 @@ export default function BasicPageDataCollector({
   const isPagesJSRepo = useStudioStore(
     (store) => store.studioConfig.isPagesJSRepo
   );
-  const { state } = useContext(AddPageContext);
+  const { state, actions } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
   const pageDataValidator = useMemo(
     () => new PageDataValidator(isEntityPage),
@@ -53,19 +53,16 @@ export default function BasicPageDataCollector({
         setErrorMessage(validationResult.errorMessages.join("\r\n"));
         return false;
       }
-      try {
-        await handleConfirm(data.pageName, getPathValue);
-        return true;
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setErrorMessage(err.message);
-          return false;
-        } else {
-          throw err;
-        }
+      if (!getPathValue) {
+        setErrorMessage('Required "getPathValue" does not exist.');
+        return false;
       }
+      actions.setPageName(data.pageName);
+      actions.setGetPathVal(getPathValue);
+      await handleConfirm();
+      return true;
     },
-    [handleConfirm, isEntityPage, pageDataValidator]
+    [actions, handleConfirm, isEntityPage, pageDataValidator]
   );
 
   const transformOnChangeValue = useCallback(
@@ -84,10 +81,12 @@ export default function BasicPageDataCollector({
       title={modalTitle}
       formData={formData}
       initialFormValue={initialFormValue}
+      closeOnConfirm={false}
       errorMessage={errorMessage}
       handleClose={handleClose}
       handleConfirm={onConfirm}
       transformOnChangeValue={transformOnChangeValue}
+      confirmButtonText="Next"
     />
   );
 }
