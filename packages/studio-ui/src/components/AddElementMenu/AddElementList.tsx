@@ -30,12 +30,7 @@ export default function AddElementList({
   return (
     <div className="flex flex-col items-start py-1">
       {options.map((props) => {
-        return (
-          <AddElementOption
-            {...props}
-            elementType={activeType}
-          />
-        );
+        return <AddElementOption {...props} elementType={activeType} />;
       })}
     </div>
   );

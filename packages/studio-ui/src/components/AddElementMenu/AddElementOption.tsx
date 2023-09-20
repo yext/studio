@@ -15,7 +15,7 @@ export default function AddElementOption({
       onClick={handleSelect}
       aria-label={`Add ${displayName} Element`}
     >
-      <ElementIcon elementType={elementType} /> 
+      <ElementIcon elementType={elementType} />
       {displayName}
     </button>
   );
