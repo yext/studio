@@ -3,7 +3,13 @@ import userEvent from "@testing-library/user-event";
 import AddPageButton from "../../../src/components/AddPageButton/AddPageButton";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
-import { ComponentStateKind, LayoutState, PageState, PropValueKind, ResponseType } from "@yext/studio-plugin";
+import {
+  ComponentStateKind,
+  LayoutState,
+  PageState,
+  PropValueKind,
+  ResponseType,
+} from "@yext/studio-plugin";
 import * as sendMessageModule from "../../../src/messaging/sendMessage";
 
 const basicPageState: PageState = {
@@ -13,16 +19,18 @@ const basicPageState: PageState = {
 };
 
 const mockLayout: LayoutState = {
-  componentTree: [{
-    kind: ComponentStateKind.Standard,
-    componentName: "mockComponentName",
-    props: {},
-    uuid: "mockUUID",
-    metadataUUID: "mockMetadataUUID",
-  }],
+  componentTree: [
+    {
+      kind: ComponentStateKind.Standard,
+      componentName: "mockComponentName",
+      props: {},
+      uuid: "mockUUID",
+      metadataUUID: "mockMetadataUUID",
+    },
+  ],
   cssImports: [],
-  filepath: "mockLayoutFilepath"
-}
+  filepath: "mockLayoutFilepath",
+};
 
 beforeEach(() => {
   mockStore({
@@ -37,9 +45,9 @@ beforeEach(() => {
     },
     layouts: {
       layoutNameToLayoutState: {
-        mockLayout: mockLayout
-      }
-    }
+        mockLayout: mockLayout,
+      },
+    },
   });
 });
 
@@ -53,7 +61,7 @@ async function specifyName() {
 async function selectLayoutAndSave(layoutName: string) {
   await userEvent.selectOptions(
     screen.getByRole("combobox"),
-    screen.getByRole('option', {name: layoutName})
+    screen.getByRole("option", { name: layoutName })
   );
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
@@ -72,7 +80,7 @@ it("closes the modal after completing page name and layout modals in a non-Pages
   expect(useStudioStore.getState().pages.pages["test"]).toEqual({
     ...basicPageState,
     componentTree: mockLayout.componentTree,
-    cssImports: mockLayout.cssImports
+    cssImports: mockLayout.cssImports,
   });
 });
 
@@ -113,7 +121,9 @@ describe("PagesJS repo", () => {
     const pageTypeNextButton = screen.getByRole("button", { name: "Next" });
     await userEvent.click(pageTypeNextButton);
 
-    const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+    const basicPageDataNextButton = screen.getByRole("button", {
+      name: "Next",
+    });
     expect(basicPageDataNextButton).toBeDisabled();
     await specifyName();
     expect(basicPageDataNextButton).toBeDisabled();
@@ -130,7 +140,7 @@ describe("PagesJS repo", () => {
         entityFiles: ["mockLocalData.json"],
       },
       componentTree: mockLayout.componentTree,
-      cssImports: mockLayout.cssImports
+      cssImports: mockLayout.cssImports,
     });
 
     await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
@@ -171,14 +181,18 @@ describe("PagesJS repo", () => {
 
       await selectEntityPageType();
 
-      const streamScopeNextButton = screen.getByRole("button", { name: "Next" });
+      const streamScopeNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
       const entityTypesTextbox = screen.getByRole("textbox", {
         name: "Entity Type IDs",
       });
       await userEvent.type(entityTypesTextbox, "location, restaurant");
       await userEvent.click(streamScopeNextButton);
 
-      const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+      const basicPageDataNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
       expect(basicPageDataNextButton).toBeDisabled();
       await specifyName();
       expect(basicPageDataNextButton).toBeEnabled();
@@ -198,7 +212,7 @@ describe("PagesJS repo", () => {
           entityFiles: ["mockLocalData.json"],
         },
         componentTree: mockLayout.componentTree,
-        cssImports: mockLayout.cssImports
+        cssImports: mockLayout.cssImports,
       });
       await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
 
@@ -229,10 +243,14 @@ describe("PagesJS repo", () => {
 
       await selectEntityPageType();
 
-      const streamScopeNextButton = screen.getByRole("button", { name: "Next" });
+      const streamScopeNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
       await userEvent.click(streamScopeNextButton);
 
-      const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+      const basicPageDataNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
       expect(basicPageDataNextButton).toBeDisabled();
       await specifyName();
       await userEvent.click(basicPageDataNextButton);
@@ -271,7 +289,9 @@ describe("PagesJS repo", () => {
       await userEvent.click(pageTypeNextButton);
       await specifyName();
       await specifyUrl("=<>[[[[field]]");
-      const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+      const basicPageDataNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
       await userEvent.click(basicPageDataNextButton);
 
       expect(

@@ -18,12 +18,10 @@ export default function BasicPageDataCollector({
   handleConfirm,
 }: FlowStepModalProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isPagesJSRepo, pages] = useStudioStore(
-    (store) => [
-      store.studioConfig.isPagesJSRepo,
-      store.pages.pages
-    ]
-  );
+  const [isPagesJSRepo, pages] = useStudioStore((store) => [
+    store.studioConfig.isPagesJSRepo,
+    store.pages.pages,
+  ]);
   const { state, actions } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
   const pageDataValidator = useMemo(
@@ -69,7 +67,14 @@ export default function BasicPageDataCollector({
       await handleConfirm();
       return true;
     },
-    [actions, handleConfirm, isEntityPage, isPagesJSRepo, pageDataValidator, pages]
+    [
+      actions,
+      handleConfirm,
+      isEntityPage,
+      isPagesJSRepo,
+      pageDataValidator,
+      pages,
+    ]
   );
 
   const transformOnChangeValue = useCallback(
