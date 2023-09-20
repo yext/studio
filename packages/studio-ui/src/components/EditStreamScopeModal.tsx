@@ -5,7 +5,8 @@ import StreamScopePicker, {
 } from "./StreamScopePicker";
 import { ResponseType, StreamScope } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
-import { isEqual, sortBy } from "lodash";
+import isEqual from "lodash/isEqual";
+import sortBy from "lodash/sortBy";
 import { toast } from "react-toastify";
 
 export interface EditStreamScopeModalProps {
