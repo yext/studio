@@ -147,24 +147,6 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     },
   },
   {
-    kind: ComponentStateKind.Repeater,
-    repeatedComponent: {
-      kind: ComponentStateKind.Standard,
-      componentName: "ComplexBanner",
-      metadataUUID: "banner-metadata",
-      props: {
-        title: {
-          kind: PropValueKind.Expression,
-          value: "`this is ${document.stringLiteral}`",
-          valueType: PropValueType.string,
-        },
-      },
-    },
-    parentUUID: "mock-uuid-0",
-    uuid: "mock-uuid-2",
-    listExpression: "document.services",
-  },
-  {
     kind: ComponentStateKind.Standard,
     componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",

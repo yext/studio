@@ -10,9 +10,9 @@ studioTest("can remove a static page", async ({ page, studioPage }) => {
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("BasicPage");
   expect(fs.existsSync(pagePath)).toBeFalsy();
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 
   // Ensure that the page is still deleted after a browser refresh.
   await page.reload();
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 });

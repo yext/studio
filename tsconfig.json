@@ -18,6 +18,7 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
+    "**/*.mjs",
     "packages/studio/postcss.config.cjs"
   ]
 }

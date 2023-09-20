@@ -1,10 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App";
+import { App, hotReloadStore, StudioHMRUpdateID } from "@yext/studio-ui";
+import type { StudioHMRPayload } from "@yext/studio-plugin";
 import "./tailwind-directives.css";
-import "react-tooltip/dist/react-tooltip.css";
-import { StudioHMRPayload, StudioHMRUpdateID } from "@yext/studio-plugin";
-import hotReloadStore from "./store/hotReloadStore";
 
 if (import.meta.hot) {
   import.meta.hot.on(StudioHMRUpdateID, (hmrPayload: StudioHMRPayload) => {

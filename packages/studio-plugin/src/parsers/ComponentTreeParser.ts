@@ -11,15 +11,13 @@ import {
   ComponentState,
   ComponentStateKind,
   ErrorComponentState,
-  RepeaterState,
-  StandardOrModuleComponentState,
+  StandardComponentState,
 } from "../types/ComponentState";
 import { v4 } from "uuid";
 import { FileMetadataKind, TypelessPropVal } from "../types";
 import StudioSourceFileParser from "./StudioSourceFileParser";
 import StaticParsingHelpers from "./helpers/StaticParsingHelpers";
-import TypeGuards from "../utils/TypeGuards";
-import ParsingOrchestrator from "../ParsingOrchestrator";
+import ParsingOrchestrator from "../orchestrators/ParsingOrchestrator";
 import MissingPropsChecker from "./MissingPropsChecker";
 
 export type GetFileMetadata = ParsingOrchestrator["getFileMetadata"];
@@ -72,20 +70,13 @@ export default class ComponentTreeParser {
     };
 
     if (component.isKind(SyntaxKind.JsxExpression)) {
-      const { selfClosingElement, listExpression } =
-        StaticParsingHelpers.parseJsxExpression(component);
-      const parsedRepeaterElement = this.parseRepeaterElement(
-        defaultImports,
-        selfClosingElement,
-        listExpression
+      throw new Error(
+        `Jsx nodes of kind "${component.getKindName()}" are not supported for direct use` +
+          " in page files."
       );
-      return {
-        ...commonComponentState,
-        ...parsedRepeaterElement,
-      };
     }
 
-    if (!TypeGuards.isNotFragmentElement(component)) {
+    if (!ComponentTreeParser.isNotFragmentElement(component)) {
       return {
         ...commonComponentState,
         kind: ComponentStateKind.Fragment,
@@ -106,31 +97,17 @@ export default class ComponentTreeParser {
     };
   }
 
-  private parseRepeaterElement(
-    defaultImports: Record<string, string>,
-    repeatedComponent: JsxSelfClosingElement,
-    listExpression: string
-  ): Omit<RepeaterState, "uuid" | "parentUUID"> {
-    const componentName =
-      StaticParsingHelpers.parseJsxElementName(repeatedComponent);
-    const parsedRepeatedComponent = this.parseElement(
-      repeatedComponent,
-      componentName,
-      defaultImports
-    );
-    if (parsedRepeatedComponent.kind === ComponentStateKind.BuiltIn) {
-      throw new Error(
-        "Error parsing map expression: repetition of built-in components is not supported."
-      );
+  private static isNotFragmentElement(
+    element: JsxElement | JsxSelfClosingElement | JsxFragment
+  ): element is JsxElement | JsxSelfClosingElement {
+    if (element.isKind(SyntaxKind.JsxFragment)) {
+      return false;
     }
-    return {
-      kind: ComponentStateKind.Repeater,
-      listExpression,
-      repeatedComponent: {
-        ...parsedRepeatedComponent,
-        componentName,
-      },
-    };
+    if (element.isKind(SyntaxKind.JsxSelfClosingElement)) {
+      return true;
+    }
+    const name = StaticParsingHelpers.parseJsxElementName(element);
+    return !["Fragment", "React.Fragment"].includes(name);
   }
 
   private parseElement(
@@ -138,7 +115,7 @@ export default class ComponentTreeParser {
     componentName: string,
     defaultImports: Record<string, string>
   ):
-    | Pick<StandardOrModuleComponentState, "kind" | "props" | "metadataUUID">
+    | Pick<StandardComponentState, "kind" | "props" | "metadataUUID">
     | Pick<BuiltInState, "kind" | "props">
     | Omit<ErrorComponentState, "componentName"> {
     const attributes: JsxAttributeLike[] = component.isKind(
@@ -184,12 +161,8 @@ export default class ComponentTreeParser {
         props,
       };
     }
-    const { kind: fileMetadataKind, metadataUUID, propShape } = fileMetadata;
+    const { metadataUUID, propShape } = fileMetadata;
 
-    const componentStateKind =
-      fileMetadataKind === FileMetadataKind.Module
-        ? ComponentStateKind.Module
-        : ComponentStateKind.Standard;
     const props = StaticParsingHelpers.parseJsxAttributes(
       attributes,
       propShape
@@ -212,7 +185,7 @@ export default class ComponentTreeParser {
     }
 
     return {
-      kind: componentStateKind,
+      kind: ComponentStateKind.Standard,
       metadataUUID,
       props,
     };

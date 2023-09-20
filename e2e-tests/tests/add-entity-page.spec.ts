@@ -15,9 +15,9 @@ studioTest("can add an entity page", async ({ page, studioPage }) => {
   // the store with account content
   await studioPage.addEntityPage("EntityPage", {}, "entity-page");
   await expect(pageInTree).toHaveCount(1);
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const expectedPagePath = studioPage.getPagePath("EntityPage");
   await expect(expectedPagePath).toHaveContents(expectedPage);
-  await expect(page).toHaveScreenshot();
+  await studioPage.takePageScreenshotAfterImgRender();
 });

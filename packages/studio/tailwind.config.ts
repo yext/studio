@@ -7,7 +7,7 @@ import {
 } from "@yext/studio-plugin";
 import path from "path";
 import fs from "fs";
-import generateTailwindSafelist from "./src/utils/generateTailwindSafelist";
+import { generateTailwindSafelist } from "@yext/studio-plugin";
 
 const getRootDir = (): string => {
   const cliArgs: CliArgs = JSON.parse(
@@ -50,6 +50,7 @@ export default {
   content: [
     path.resolve(__dirname, "src/**/*.{ts,tsx}"),
     path.resolve(__dirname, "index.html"),
+    path.join(path.dirname(require.resolve("@yext/studio-ui")), "**/*.js"),
     ...transformedUserContent,
   ],
   safelist: generateTailwindSafelist(userTailwindTheme),

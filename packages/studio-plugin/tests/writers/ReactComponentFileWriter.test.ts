@@ -1,45 +1,20 @@
 import {
   StandardComponentState,
   ComponentStateKind,
-  RepeaterState,
 } from "../../src/types/ComponentState";
-import {
-  getComponentPath,
-  getModulePath,
-  getPagePath,
-} from "../__utils__/getFixturePath";
+import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
 import fs from "fs";
 import { Project } from "ts-morph";
 import {
-  complexBannerComponent,
   fragmentComponent,
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
 import ReactComponentFileWriter from "../../src/writers/ReactComponentFileWriter";
 import { addFilesToProject } from "../__utils__/addFilesToProject";
-import {
-  FileMetadataKind,
-  PropShape,
-  PropValueKind,
-  PropValueType,
-} from "../../src/types";
+import { PropValueKind, PropValueType } from "../../src/types";
 import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import { createTestProject } from "../__utils__/createTestSourceFile";
-
-const propShapeMultiFields: PropShape = {
-  complexBannerText: {
-    type: PropValueType.string,
-    tooltip: "some banner title!",
-    displayName: "Title!",
-    required: false,
-  },
-  complexBannerBool: {
-    type: PropValueType.boolean,
-    tooltip: "some boolean to toggle",
-    required: false,
-  },
-};
 
 function createReactComponentFileWriter(
   tsMorphProject: Project,
@@ -115,35 +90,6 @@ describe("updateFile", () => {
           getPagePath("updatePageFile/PageWithNestedComponents"),
           "utf-8"
         )
-      );
-    });
-
-    it("can write repeater component", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
-      const repeaterState: RepeaterState = {
-        kind: ComponentStateKind.Repeater,
-        uuid: "mock-uuid-0",
-        listExpression: "document.services",
-        repeatedComponent: {
-          kind: ComponentStateKind.Standard,
-          componentName: "ComplexBanner",
-          props: {},
-          metadataUUID: "mock-metadata-uuid",
-        },
-      };
-
-      const filepath = getPagePath("updatePageFile/PageWithAComponent");
-      createReactComponentFileWriter(
-        tsMorphProject,
-        filepath,
-        "IndexPage"
-      ).updateFile({
-        componentTree: [repeaterState],
-        cssImports: [],
-      });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("PageWithAComponent.tsx"),
-        fs.readFileSync(getPagePath("updatePageFile/PageWithRepeater"), "utf-8")
       );
     });
 
@@ -313,10 +259,7 @@ describe("updateFile", () => {
     });
 
     it("adds missing imports", () => {
-      addFilesToProject(tsMorphProject, [
-        getModulePath("PanelWithModules"),
-        getComponentPath("SimpleBanner"),
-      ]);
+      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const filepath = getPagePath("updatePageFile/EmptyPage");
       createReactComponentFileWriter(
         tsMorphProject,
@@ -332,14 +275,6 @@ describe("updateFile", () => {
             uuid: "mock-uuid-1",
             parentUUID: "mock-uuid-0",
             metadataUUID: "mock-standard-metadata-uuid",
-          },
-          {
-            kind: ComponentStateKind.Module,
-            componentName: "PanelWithModules",
-            props: {},
-            uuid: "mock-uuid-2",
-            parentUUID: "mock-uuid-0",
-            metadataUUID: "mock-module-metadata-uuid",
           },
         ],
         cssImports: [],
@@ -366,181 +301,6 @@ describe("updateFile", () => {
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithUnusedImports.tsx"),
         fs.readFileSync(getPagePath("updatePageFile/EmptyPage"), "utf-8")
-      );
-    });
-  });
-
-  describe("propShape", () => {
-    it("adds propShape interface when it does not already exist in file", () => {
-      const filepath = getModulePath("updateModuleFile/ModuleWithAComponent");
-      createReactComponentFileWriter(
-        tsMorphProject,
-        filepath,
-        "Panel"
-      ).updateFile({
-        moduleMetadata: {
-          kind: FileMetadataKind.Module,
-          propShape: {
-            complexBannerText: {
-              type: PropValueType.string,
-              tooltip: "title for complex banner",
-              required: false,
-            },
-          },
-          componentTree: [complexBannerComponent],
-          filepath: "some/file/path",
-          metadataUUID: "mock-metadata-uuid",
-        },
-        componentTree: [complexBannerComponent],
-      });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("ModuleWithAComponent.tsx"),
-        fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithPropShape"),
-          "utf-8"
-        )
-      );
-    });
-
-    it("updates the existing propShape interface in file", () => {
-      const filepath = getModulePath("updateModuleFile/ModuleWithPropShape");
-      createReactComponentFileWriter(
-        tsMorphProject,
-        filepath,
-        "Panel"
-      ).updateFile({
-        moduleMetadata: {
-          kind: FileMetadataKind.Module,
-          propShape: propShapeMultiFields,
-          componentTree: [complexBannerComponent],
-          filepath: "some/file/path",
-          metadataUUID: "mock-metadata-uuid",
-        },
-        componentTree: [complexBannerComponent],
-      });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("ModuleWithPropShape.tsx"),
-        fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithPropShapeMultiFields"),
-          "utf-8"
-        )
-      );
-    });
-
-    it("can update a prop interface with object props", () => {
-      const filepath = getModulePath("updateModuleFile/ModuleWithPropShape");
-      createReactComponentFileWriter(
-        tsMorphProject,
-        filepath,
-        "Panel"
-      ).updateFile({
-        moduleMetadata: {
-          kind: FileMetadataKind.Module,
-          componentTree: [complexBannerComponent],
-          filepath: "some/file/path",
-          metadataUUID: "mock-metadata-uuid",
-          propShape: {
-            obj: {
-              type: PropValueType.Object,
-              required: false,
-              shape: {
-                str: {
-                  type: PropValueType.string,
-                  required: false,
-                },
-                num: {
-                  type: PropValueType.number,
-                  required: false,
-                },
-              },
-            },
-          },
-        },
-        componentTree: [complexBannerComponent],
-      });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("ModuleWithPropShape.tsx"),
-        fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithObjProp"),
-          "utf-8"
-        )
-      );
-    });
-  });
-
-  describe("initialProps", () => {
-    it("adds initialProps variable when it does not already exist in file", () => {
-      const filepath = getModulePath("updateModuleFile/ModuleWithAComponent");
-      createReactComponentFileWriter(
-        tsMorphProject,
-        filepath,
-        "Panel"
-      ).updateFile({
-        moduleMetadata: {
-          kind: FileMetadataKind.Module,
-          propShape: {
-            complexBannerText: {
-              type: PropValueType.string,
-              tooltip: "title for complex banner",
-              required: false,
-            },
-          },
-          initialProps: {
-            complexBannerText: {
-              valueType: PropValueType.string,
-              value: "Hello world!",
-              kind: PropValueKind.Literal,
-            },
-          },
-          componentTree: [complexBannerComponent],
-          filepath: "some/file/path",
-          metadataUUID: "mock-metadata-uuid",
-        },
-        componentTree: [complexBannerComponent],
-      });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("ModuleWithAComponent.tsx"),
-        fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithInitialProps"),
-          "utf-8"
-        )
-      );
-    });
-
-    it("updates the existing initialProps variable in file", () => {
-      const filepath = getModulePath("updateModuleFile/ModuleWithInitialProps");
-      createReactComponentFileWriter(
-        tsMorphProject,
-        filepath,
-        "Panel"
-      ).updateFile({
-        moduleMetadata: {
-          kind: FileMetadataKind.Module,
-          propShape: propShapeMultiFields,
-          initialProps: {
-            complexBannerText: {
-              valueType: PropValueType.string,
-              value: "Welcome!",
-              kind: PropValueKind.Literal,
-            },
-            complexBannerBool: {
-              valueType: PropValueType.boolean,
-              value: true,
-              kind: PropValueKind.Literal,
-            },
-          },
-          componentTree: [complexBannerComponent],
-          filepath: "some/file/path",
-          metadataUUID: "mock-metadata-uuid",
-        },
-        componentTree: [complexBannerComponent],
-      });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("ModuleWithInitialProps.tsx"),
-        fs.readFileSync(
-          getModulePath("updateModuleFile/ModuleWithInitialPropsMultiFields"),
-          "utf-8"
-        )
       );
     });
   });

@@ -7,8 +7,8 @@ export interface UserPaths {
   components: string;
   /** The absolute path to the directory with the user's pages. */
   pages: string;
-  /** The absolute path to the directory with the user's modules. */
-  modules: string;
+  /** The absolute path to the directory with the user's layouts. */
+  layouts: string;
   /** The absolute path to the file with the user's site settings. */
   siteSettings: string;
   /** The absolute path to the directory with local entity data. */

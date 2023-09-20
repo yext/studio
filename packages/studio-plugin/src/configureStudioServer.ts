@@ -3,7 +3,7 @@ import FileSystemManager from "./FileSystemManager";
 import GitWrapper from "./git/GitWrapper";
 import registerDeployListener from "./messaging/registerDeployListener";
 import registerSaveChangesListener from "./messaging/registerSaveChangesListener";
-import ParsingOrchestrator from "./ParsingOrchestrator";
+import ParsingOrchestrator from "./orchestrators/ParsingOrchestrator";
 import registerGenerateTestData from "./messaging/registerGenerateTestData";
 import LocalDataMappingManager from "./LocalDataMappingManager";
 import HmrManager from "./HmrManager";

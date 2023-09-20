@@ -11,7 +11,7 @@ export default function getUserPaths(pathToProjectRoot: string): UserPaths {
   const pathToSrc = upath.join(pathToProjectRoot, "src");
   return {
     pages: upath.join(pathToSrc, "pages"),
-    modules: upath.join(pathToSrc, "modules"),
+    layouts: upath.join(pathToSrc, "layouts"),
     components: upath.join(pathToSrc, "components"),
     siteSettings: upath.join(pathToSrc, "siteSettings.ts"),
     localData: upath.join(pathToProjectRoot, "localData"),

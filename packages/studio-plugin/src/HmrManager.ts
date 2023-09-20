@@ -1,4 +1,4 @@
-import ParsingOrchestrator from "./ParsingOrchestrator";
+import ParsingOrchestrator from "./orchestrators/ParsingOrchestrator";
 import { StudioHMRPayload, StudioHMRUpdateID, UserPaths } from "./types";
 import { ViteDevServer } from "vite";
 import VirtualModuleID from "./VirtualModuleID";
@@ -71,7 +71,7 @@ function getHMRUpdateType(file: string, userPaths: UserPaths) {
   const updateTypes: Exclude<keyof UserPaths, "localData">[] = [
     "siteSettings",
     "components",
-    "modules",
+    "layouts",
     "pages",
   ];
   return (
