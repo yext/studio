@@ -28,7 +28,7 @@ export default function AddPageContextProvider(props: PropsWithChildren) {
           setState((state) => {
             return { ...state, pageName };
           }),
-        setGetPathVal: (getPathVal: GetPathVal) =>
+        setGetPathVal: (getPathVal?: GetPathVal) =>
           setState((state) => {
             return { ...state, getPathVal };
           }),

@@ -18,8 +18,11 @@ export default function BasicPageDataCollector({
   handleConfirm,
 }: FlowStepModalProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const isPagesJSRepo = useStudioStore(
-    (store) => store.studioConfig.isPagesJSRepo
+  const [isPagesJSRepo, pages] = useStudioStore(
+    (store) => [
+      store.studioConfig.isPagesJSRepo,
+      store.pages.pages
+    ]
   );
   const { state, actions } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
@@ -53,8 +56,12 @@ export default function BasicPageDataCollector({
         setErrorMessage(validationResult.errorMessages.join("\r\n"));
         return false;
       }
-      if (!getPathValue) {
-        setErrorMessage('Required "getPathValue" does not exist.');
+      if (isPagesJSRepo && !getPathValue) {
+        setErrorMessage("A getPath value is required.");
+        return false;
+      }
+      if (pages[data.pageName]) {
+        setErrorMessage(`Page name "${data.pageName}" is already used.`);
         return false;
       }
       actions.setPageName(data.pageName);
@@ -62,7 +69,7 @@ export default function BasicPageDataCollector({
       await handleConfirm();
       return true;
     },
-    [actions, handleConfirm, isEntityPage, pageDataValidator]
+    [actions, handleConfirm, isEntityPage, isPagesJSRepo, pageDataValidator, pages]
   );
 
   const transformOnChangeValue = useCallback(

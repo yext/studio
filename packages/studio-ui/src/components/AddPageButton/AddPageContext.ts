@@ -12,7 +12,7 @@ export interface AddPageActions {
   setIsStatic: (isStatic: boolean) => void;
   setStreamScope: (streamScope: StreamScope) => void;
   setPageName: (pageName: string) => void;
-  setGetPathVal: (getPathVal: GetPathVal) => void;
+  setGetPathVal: (getPathVal?: GetPathVal) => void;
   resetState: () => void;
 }
 
