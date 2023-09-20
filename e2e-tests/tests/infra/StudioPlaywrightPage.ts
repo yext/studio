@@ -63,7 +63,7 @@ export default class StudioPlaywrightPage {
     await this.addPageButton.click();
     await this.selectPageType(false);
     await this.enterBasicPageData(pageName, urlSlug);
-    await this.selectLayout(layoutName)
+    await this.selectLayout(layoutName);
   }
 
   async addEntityPage(
@@ -122,8 +122,10 @@ export default class StudioPlaywrightPage {
     const modalName = "Select Layout";
     await this.takePageScreenshotAfterImgRender();
     if (layoutName) {
-      const layoutModal = this.page.getByRole("dialog", {name: modalName})
-      await layoutModal.getByRole("combobox").selectOption({label: layoutName})
+      const layoutModal = this.page.getByRole("dialog", { name: modalName });
+      await layoutModal
+        .getByRole("combobox")
+        .selectOption({ label: layoutName });
       await this.takePageScreenshotAfterImgRender();
     }
     await this.clickModalButton(modalName, "Save");

@@ -8,7 +8,7 @@ const expectedPage = fs.readFileSync(
 );
 
 studioTest("can add a page using a layout", async ({ page, studioPage }) => {
-  const pageName = "LayoutPage"
+  const pageName = "LayoutPage";
   await studioPage.takePageScreenshotAfterImgRender();
   const pageInTree = page.getByText(pageName);
   await expect(pageInTree).toHaveCount(0);
