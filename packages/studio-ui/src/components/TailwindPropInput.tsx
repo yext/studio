@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useEffect, useRef, useState } from "react";
-import generateTailwindSafelist from "../utils/generateTailwindSafelist";
+import { generateTailwindSafelist } from "@yext/studio-plugin";
 import { StudioTailwindTheme } from "@yext/studio-plugin";
 import { ReactComponent as EmbedIcon } from "../icons/embed.svg";
 import { ReactComponent as X } from "../icons/x.svg";

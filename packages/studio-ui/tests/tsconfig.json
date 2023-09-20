@@ -1,6 +1,6 @@
 {
   "extends": "../tsconfig.json",
-  "include": ["**/*", "../src/index.d.ts"],
+  "include": ["**/*", "../src/global.d.ts"],
   "compilerOptions": {
     "noEmit": true,
     "types": [
