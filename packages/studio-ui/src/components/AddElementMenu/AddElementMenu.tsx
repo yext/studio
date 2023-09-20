@@ -1,12 +1,7 @@
 import { useState, useCallback } from "react";
 import AddElementList from "./AddElementList";
-import renderIconForType from "../common/renderIconForType";
+import ElementIcon, { ElementType } from "../common/ElementIcon";
 
-export enum ElementType {
-  Components = "Components",
-  Containers = "Containers",
-  Layouts = "Layouts",
-}
 /**
  * A menu for adding elements to the page.
  */
@@ -61,7 +56,9 @@ function ElementTypeButton(props: {
       onClick={onClick}
       disabled={isActiveType}
     >
-      <span className="mr-2 pt-0.5">{renderIconForType(elementType)}</span>
+      <span className="mr-2 pt-0.5">
+        <ElementIcon type={elementType} />
+      </span>
       <span>{elementType}</span>
     </button>
   );

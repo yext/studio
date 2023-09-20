@@ -1,12 +1,12 @@
 import { ComponentState, ComponentStateKind } from "@yext/studio-plugin";
 import { ReactComponent as Vector } from "../icons/vector.svg";
 import classNames from "classnames";
-import ComponentKindIcon from "./ComponentKindIcon";
 import { useCallback, useMemo, KeyboardEvent } from "react";
 import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import { Tooltip } from "react-tooltip";
+import ElementIcon, { ElementType } from "./common/ElementIcon";
 
 interface ComponentNodeProps {
   /** The ComponentState this node represents in a ComponentTree. */
@@ -26,14 +26,14 @@ interface ComponentNodeProps {
  */
 export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   const { componentState, depth, isOpen, onToggle, hasChild } = props;
-  const [activeComponentUUID, setActiveComponentUUID] = useStudioStore(
-    (store) => {
+  const [activeComponentUUID, setActiveComponentUUID, getComponentMetadata] =
+    useStudioStore((store) => {
       return [
         store.pages.activeComponentUUID,
         store.pages.setActiveComponentUUID,
+        store.fileMetadatas.getComponentMetadata,
       ];
-    }
-  );
+    });
 
   const isActiveComponent = activeComponentUUID === componentState.uuid;
 
@@ -61,6 +61,12 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     }
   );
   const anchorId = `ComponentNode-${componentState.uuid}`;
+  const acceptsChildren = componentState.metadataUUID
+    ? getComponentMetadata(componentState.metadataUUID).acceptsChildren
+    : undefined;
+  const elementType = acceptsChildren
+    ? ElementType.Containers
+    : ElementType.Components;
 
   const handleToggle = useCallback(() => {
     onToggle(componentState.uuid, !isOpen);
@@ -82,7 +88,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       >
         <Vector className={vectorClassName} onClick={handleToggle} />
         <div className="pl-2">
-          <ComponentKindIcon componentState={componentState} />
+          <ElementIcon type={elementType} />
         </div>
         <span className="pl-1.5">
           {getComponentDisplayName(componentState)}

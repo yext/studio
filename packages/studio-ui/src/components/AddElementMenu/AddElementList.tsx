@@ -1,9 +1,8 @@
 import { FileMetadataKind, ComponentMetadata } from "@yext/studio-plugin";
 import useStudioStore from "../../store/useStudioStore";
-import { ElementType } from "./AddElementMenu";
 import AddElementOption from "./AddElementOption";
 import path from "path-browserify";
-import renderIconForType from "../common/renderIconForType";
+import ElementIcon, { ElementType } from "../common/ElementIcon";
 import { useMemo } from "react";
 
 interface AddElementListProps {
@@ -32,7 +31,10 @@ export default function AddElementList({
     <div className="flex flex-col items-start py-1">
       {options.map((props) => {
         return (
-          <AddElementOption {...props} icon={renderIconForType(activeType)} />
+          <AddElementOption
+            {...props}
+            icon={<ElementIcon type={activeType} />}
+          />
         );
       })}
     </div>
