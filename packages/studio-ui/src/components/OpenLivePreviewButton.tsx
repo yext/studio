@@ -4,13 +4,12 @@ import classNames from "classnames";
 import { Result } from "true-myth";
 import { useCallback } from "react";
 
-//
+// The URL of the Landing Page of the PagesJS Dev Server. Port 5173 is hardcoded for now as it will be the PagesJS Dev port in most cases.
 export const PAGES_JS_LANDING_PAGE = "http://localhost:5173";
 
 /**
- * OpenLivePreviewButton is a button that when clicked, opens the
- * pages development server index page in a new tab.
- * Port 5173 hardcoded for now as it will be the pages dev port in most cases
+ * The button rendered by this Component opens a PagesJS-powered Preview of the current Page in a new tab.
+ * If the Page is an Entity Template, the Preview will use the currently selected Entity Data.
  */
 export default function OpenLivePreviewButton(): JSX.Element {
   let previewDisabled;
