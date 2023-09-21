@@ -5,6 +5,11 @@ import DialogModal from "../common/DialogModal";
 import { selectCssClasses } from "../UnionPropInput";
 import { twMerge } from "tailwind-merge";
 
+/**
+ * This modal allows the user to select a layout for their 
+ * new page.  If no layout is selected, then no layout will
+ * be applied.
+ */
 export default function LayoutSelector({
   isOpen,
   handleClose,
@@ -45,7 +50,7 @@ export default function LayoutSelector({
         <option key="" value="">
           No layout selected
         </option>
-        {Object.entries(layouts).map(([layoutName]) => (
+        {Object.keys(layouts).map((layoutName) => (
           <option key={layoutName} value={layoutName}>
             {layoutName}
           </option>
