@@ -19,13 +19,13 @@ export default function OpenLivePreviewButton(): JSX.Element {
   const [activePageName, activePageState, activeEntityData] = useStudioStore(
     (store) => [
       store.pages.activePageName as string,
-      store.pages.getActivePageState() as PageState,
+      store.pages.getActivePageState(),
       store.pages.getActiveEntityData(),
     ]
   );
 
-  const isPagesJSPage = !!activePageState.pagesJS;
-  if (isPagesJSPage) {
+  const isActivePagesJSPage = !!activePageState?.pagesJS;
+  if (isActivePagesJSPage) {
     const pagesJSState = activePageState.pagesJS as PagesJsState;
     const livePreviewUrlResult = getLivePreviewUrl(
       pagesJSState,
