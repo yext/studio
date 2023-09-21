@@ -31,7 +31,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
       return [
         store.pages.activeComponentUUID,
         store.pages.setActiveComponentUUID,
-        store.fileMetadatas.getComponentMetadata,
+        store.actions.getComponentMetadata,
       ];
     });
 
@@ -62,7 +62,7 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
   );
   const anchorId = `ComponentNode-${componentState.uuid}`;
   const acceptsChildren = componentState.metadataUUID
-    ? getComponentMetadata(componentState.metadataUUID).acceptsChildren
+    ? getComponentMetadata(componentState)?.acceptsChildren
     : undefined;
   const elementType = acceptsChildren
     ? ElementType.Containers
