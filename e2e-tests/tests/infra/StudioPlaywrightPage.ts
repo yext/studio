@@ -37,7 +37,7 @@ export default class StudioPlaywrightPage {
       name: "Remove Element",
     });
 
-    this.livePreviewButton = page.getByRole("link", {
+    this.livePreviewButton = page.getByRole("button", {
       name: "Live Preview",
     });
 
