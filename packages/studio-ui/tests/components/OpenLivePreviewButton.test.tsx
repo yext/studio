@@ -6,6 +6,17 @@ import mockActivePage from "../__utils__/mockActivePage";
 import { PageState, PropValueKind } from "@yext/studio-plugin";
 import mockStore from "../__utils__/mockStore";
 
+const ensureButtonAppearance = (
+  button: HTMLElement,
+  shouldBeEnabled: boolean
+) => {
+  expect(button).toBeDefined();
+  expect(button.textContent).toBe("Live Preview");
+  shouldBeEnabled
+    ? expect(button).toBeEnabled()
+    : expect(button).toBeDisabled();
+};
+
 describe("button is disabled properly", () => {
   it("disables the button when not a PagesJS page", () => {
     const pageState: PageState = {
@@ -17,9 +28,7 @@ describe("button is disabled properly", () => {
 
     render(<OpenLivePreviewButton />);
     const button = screen.getByRole("button");
-    expect(button).toBeDefined();
-    expect(button.textContent).toBe("Live Preview");
-    expect(button).toBeDisabled();
+    ensureButtonAppearance(button, false);
   });
 
   it("disables the button for Static page without a valid GetPathVal", () => {
@@ -35,9 +44,7 @@ describe("button is disabled properly", () => {
 
     render(<OpenLivePreviewButton />);
     const button = screen.getByRole("button");
-    expect(button).toBeDefined();
-    expect(button.textContent).toBe("Live Preview");
-    expect(button).toBeDisabled();
+    ensureButtonAppearance(button, false);
   });
 
   it("when an Entity's localData doesn't contain an id, the button is disabled", () => {
@@ -67,9 +74,7 @@ describe("button is disabled properly", () => {
 
     render(<OpenLivePreviewButton />);
     const button = screen.getByRole("button");
-    expect(button).toBeDefined();
-    expect(button.textContent).toBe("Live Preview");
-    expect(button).toBeDisabled();
+    ensureButtonAppearance(button, false);
   });
 });
 
@@ -92,7 +97,7 @@ describe("button links to correct preview url", () => {
 
     render(<OpenLivePreviewButton />);
     const button = screen.getByRole("button");
-    expect(button).toBeEnabled();
+    ensureButtonAppearance(button, true);
     button.click();
     expect(window.open).toBeCalledWith(
       `${PAGES_JS_LANDING_PAGE}/static-page`,
@@ -127,7 +132,7 @@ describe("button links to correct preview url", () => {
 
     render(<OpenLivePreviewButton />);
     const button = screen.getByRole("button");
-    expect(button).toBeEnabled();
+    ensureButtonAppearance(button, true);
     button.click();
     expect(window.open).toBeCalledWith(
       `${PAGES_JS_LANDING_PAGE}/testpage/123`,
