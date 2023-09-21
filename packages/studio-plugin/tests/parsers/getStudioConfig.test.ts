@@ -11,8 +11,8 @@ it("returns default config when studio config file is not found", async () => {
     paths: {
       components: "/test-site/src/components",
       localData: "/test-site/localData",
-      modules: "/test-site/src/modules",
       pages: "/test-site/src/pages",
+      layouts: "/test-site/src/layouts",
       siteSettings: "/test-site/src/siteSettings.ts",
     },
     port: 8080,
@@ -28,8 +28,8 @@ it("merges the user's studio config with the default config for unspecified fiel
     paths: {
       components: upath.join(projectRoot, "custom/components/folder/path"),
       localData: upath.join(projectRoot, "localData"),
-      modules: upath.join(projectRoot, "src", "modules"),
       pages: upath.join(projectRoot, "custom/pages/folder/path"),
+      layouts: upath.join(projectRoot, "src", "layouts"),
       siteSettings: upath.join(projectRoot, "src", "siteSettings.ts"),
     },
     port: 8080,

@@ -14,9 +14,6 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
-  ModuleMetadata,
-  PropMetadata,
-  PropShape,
   PropVal,
   PropValueKind,
   PropValues,
@@ -24,13 +21,12 @@ import {
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
-import { TypeGuards } from "../utils";
 import camelCase from "camelcase";
 import { CustomTags } from "../parsers/helpers/TypeNodeParsingHelper";
 
 /**
  * ReactComponentFileWriter is a class for housing data
- * updating logic for a React component file (e.g. ModuleFile or PageFile).
+ * updating logic for a React component file (i.e. PageFile).
  */
 export default class ReactComponentFileWriter {
   constructor(
@@ -130,20 +126,6 @@ export default class ReactComponentFileWriter {
           return c.fullText;
         } else if (c.kind === ComponentStateKind.Fragment) {
           return "<>\n" + children.join("\n") + "</>";
-        } else if (TypeGuards.isRepeaterState(c)) {
-          const { componentName, props } = c.repeatedComponent;
-          return (
-            `{${c.listExpression}.map((item, index) => ` +
-            this.createJsxSelfClosingElement(componentName, {
-              ...props,
-              key: {
-                kind: PropValueKind.Expression,
-                valueType: PropValueType.string,
-                value: "index",
-              },
-            }) +
-            `)}`
-          );
         } else if (children.length === 0) {
           return this.createJsxSelfClosingElement(c.componentName, c.props);
         } else {
@@ -159,9 +141,7 @@ export default class ReactComponentFileWriter {
     );
     const joinedElements = elements.join("\n");
     const wrappedElements =
-      elements.length > 1 || TypeGuards.isRepeaterState(componentTree[0])
-        ? `<>${joinedElements}</>`
-        : joinedElements;
+      elements.length > 1 ? `<>${joinedElements}</>` : joinedElements;
     return Writers.returnStatement(wrappedElements);
   }
 
@@ -181,53 +161,6 @@ export default class ReactComponentFileWriter {
     }
   }
 
-  private updatePropInterface(propShape: PropShape) {
-    const getTypeString = (propMetadata: PropMetadata) => {
-      if (propMetadata.type === PropValueType.Record) {
-        return "Record<string, any>";
-      } else if (propMetadata.type === PropValueType.Object) {
-        const stringifiedShape = Object.entries(propMetadata.shape).reduce(
-          (stringifiedShape, [propName, childMetadata]) => {
-            stringifiedShape += propName;
-            if (!childMetadata.required) {
-              stringifiedShape += "?";
-            }
-            stringifiedShape += ":" + getTypeString(childMetadata) + ",\n";
-            return stringifiedShape;
-          },
-          ""
-        );
-        return "{" + stringifiedShape + "}";
-      } else {
-        return propMetadata.type;
-      }
-    };
-    const interfaceName = `${this.componentName}Props`;
-    const getProperties = (propShape: PropShape) =>
-      Object.entries(propShape).map(([key, propMetadata]) => {
-        const docs = this.reconstructDocs(
-          propMetadata.tooltip,
-          propMetadata.displayName
-        );
-        return {
-          name: key,
-          type: getTypeString(propMetadata),
-          hasQuestionToken: !propMetadata.required,
-          ...docs,
-        };
-      });
-    const properties = getProperties(propShape);
-    this.studioSourceFileWriter.updateInterface(interfaceName, properties);
-  }
-
-  private updateInitialProps(initialProps: PropValues) {
-    this.studioSourceFileWriter.updateVariableStatement(
-      "initialProps",
-      this.studioSourceFileWriter.createPropsObjectLiteralWriter(initialProps),
-      `${this.componentName}Props`
-    );
-  }
-
   /**
    * Update a React component file, which include:
    * - file imports
@@ -237,20 +170,16 @@ export default class ReactComponentFileWriter {
    */
   updateFile({
     componentTree,
-    moduleMetadata,
     cssImports,
     onFileUpdate,
     defaultImports,
-    propArgs,
   }: {
     componentTree: ComponentState[];
-    moduleMetadata?: ModuleMetadata;
     cssImports?: string[];
     onFileUpdate?: (
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
     defaultImports?: { name: string; moduleSpecifier: string }[];
-    propArgs?: string[] | string;
   }): void {
     let defaultExport: VariableDeclaration | FunctionDeclaration;
     try {
@@ -274,21 +203,6 @@ export default class ReactComponentFileWriter {
       : defaultExport;
 
     onFileUpdate?.(functionComponent);
-    if (moduleMetadata) {
-      const { initialProps, propShape } = moduleMetadata;
-      if (initialProps) {
-        this.updateInitialProps(initialProps);
-      }
-      if (propShape && Object.keys(propShape).length !== 0) {
-        this.updatePropInterface(propShape);
-        this.studioSourceFileWriter.updateFunctionParameter(
-          functionComponent,
-          `${this.componentName}Props`,
-          propArgs
-        );
-      }
-    }
-
     this.updateReturnStatement(functionComponent, componentTree);
     this.studioSourceFileWriter.updateFileImports(
       {},

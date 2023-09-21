@@ -1,30 +1,17 @@
 import {
-  JsxElement,
-  JsxFragment,
-  JsxSelfClosingElement,
-  SyntaxKind,
-} from "ts-morph";
-import {
   ComponentState,
   ComponentStateKind,
-  EditableComponentState,
   FileMetadata,
-  FileMetadataKind,
-  ModuleMetadata,
-  ModuleState,
   PropShape,
   PropType,
   PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
-  RepeaterState,
   SiteSettingsShape,
   SiteSettingsValues,
-  StandardOrModuleComponentState,
 } from "../types";
 
-import StaticParsingHelpers from "../parsers/helpers/StaticParsingHelpers";
 import {
   SiteSettingsExpression,
   StreamsDataExpression,
@@ -163,56 +150,6 @@ export default class TypeGuards {
     value: unknown
   ): value is SiteSettingsExpression {
     return typeof value === "string" && value.startsWith("siteSettings.");
-  }
-
-  static isNotFragmentElement(
-    element: JsxElement | JsxSelfClosingElement | JsxFragment
-  ): element is JsxElement | JsxSelfClosingElement {
-    if (element.isKind(SyntaxKind.JsxFragment)) {
-      return false;
-    }
-    if (element.isKind(SyntaxKind.JsxSelfClosingElement)) {
-      return true;
-    }
-    const name = StaticParsingHelpers.parseJsxElementName(element);
-    return !["Fragment", "React.Fragment"].includes(name);
-  }
-
-  static isModuleMetadata(
-    metadata?: FileMetadata | null
-  ): metadata is ModuleMetadata {
-    return metadata?.kind === FileMetadataKind.Module;
-  }
-
-  static isModuleState(
-    componentState: ComponentState
-  ): componentState is ModuleState {
-    return componentState.kind === ComponentStateKind.Module;
-  }
-
-  static isStandardOrModuleComponentState(
-    componentState: ComponentState
-  ): componentState is StandardOrModuleComponentState {
-    return (
-      componentState.kind === ComponentStateKind.Module ||
-      componentState.kind === ComponentStateKind.Standard
-    );
-  }
-
-  static isRepeaterState(
-    componentState: ComponentState
-  ): componentState is RepeaterState {
-    return componentState.kind === ComponentStateKind.Repeater;
-  }
-
-  static isEditableComponentState(
-    componentState: ComponentState
-  ): componentState is EditableComponentState {
-    return (
-      componentState.kind === ComponentStateKind.Module ||
-      componentState.kind === ComponentStateKind.Standard ||
-      componentState.kind === ComponentStateKind.Repeater
-    );
   }
 
   static isSiteSettingsValues(

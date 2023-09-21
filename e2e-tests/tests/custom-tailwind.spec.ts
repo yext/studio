@@ -18,7 +18,7 @@ studioTest(
     const builtInTailwindClasses =
       "text-teal-300 line-through shadow-lg shadow-cyan-500/50";
     await classNameInput.type(safelistedClasses + builtInTailwindClasses);
-    await expect(studioPage.preview.locator("body")).toHaveScreenshot();
+    await studioPage.takePreviewScreenshotAfterImgRender();
   }
 );
 
@@ -39,7 +39,7 @@ studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
   await expect(editorSidebar).toHaveScreenshot();
   await editorSidebar.getByText("bg-primary").click();
   await expect(editorSidebar).toHaveScreenshot();
-  await expect(studioPage.preview.locator("body")).toHaveScreenshot();
+  await studioPage.takePreviewScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("BasicPage");
   const hasExpectedPageContents = fs

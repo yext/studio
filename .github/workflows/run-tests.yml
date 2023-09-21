@@ -2,7 +2,7 @@ name: Run Tests
 on: workflow_call
 
 jobs:
-  studio:
+  studio-ui:
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest]
@@ -11,7 +11,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/setup-ci
       - run: npm run build -w=packages/studio-plugin
-      - run: npm test -w=packages/studio -- --coverage=false
+      - run: npm test -w=packages/studio-ui -- --coverage=false
 
   studio_plugin:
     strategy:
@@ -32,4 +32,6 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/setup-ci
       - run: npm run build
+      - run: npm run build-test-site -w=apps/test-site
       - run: npm run typecheck-jest
+      - run: npm run size-limit -w=packages/studio-ui

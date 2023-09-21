@@ -36,25 +36,6 @@ describe("usesExpressionSource", () => {
     ).toBeTruthy();
   });
 
-  it("matches repeater list expression", () => {
-    const componentTree: ComponentState[] = [
-      {
-        kind: ComponentStateKind.Repeater,
-        uuid: "-uuid-",
-        listExpression: "document.someList",
-        repeatedComponent: {
-          kind: ComponentStateKind.Standard,
-          componentName: "-componentName-",
-          metadataUUID: "-metadatUUID-",
-          props: {},
-        },
-      },
-    ];
-    expect(
-      ComponentTreeHelpers.usesExpressionSource(componentTree, "document")
-    ).toBeTruthy();
-  });
-
   it("matches expression within object literal", () => {
     const componentTree = createComponentTree({
       documentUsage: {
