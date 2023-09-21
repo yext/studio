@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AddPageButton from "../../../src/components/AddPageButton/AddPageButton";
 import useStudioStore from "../../../src/store/useStudioStore";
@@ -191,10 +191,16 @@ describe("PagesJS repo", () => {
       const streamScopeNextButton = screen.getByRole("button", {
         name: "Next",
       });
-      const entityTypesTextbox = screen.getByRole("textbox", {
-        name: "Entity Type IDs",
+      const entityTypesPicker = screen.getByRole("button", {
+        name: "Toggle pill picker",
       });
-      await userEvent.type(entityTypesTextbox, "location, restaurant");
+      await userEvent.click(entityTypesPicker);
+      await userEvent.click(
+        within(screen.getByRole("list")).getByText("location")
+      );
+      await userEvent.click(
+        within(screen.getByRole("list")).getByText("restaurant")
+      );
       await userEvent.click(streamScopeNextButton);
 
       const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });

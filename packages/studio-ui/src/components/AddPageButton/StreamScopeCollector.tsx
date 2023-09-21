@@ -17,7 +17,7 @@ export default function StreamScopeCollector({
   const { updateState } = actions
 
   const onConfirm = useCallback(async () => {
-    updateState({streamScope});
+    updateState(streamScope ? {streamScope} : {streamScope: {}});
     await handleConfirm();
   }, [updateState, handleConfirm, streamScope]);
 
