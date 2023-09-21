@@ -54,8 +54,10 @@ export default function BasicPageDataCollector({
         setErrorMessage(validationResult.errorMessages.join("\r\n"));
         return false;
       }
-      actions.setPageName(data.pageName);
-      actions.setGetPathVal(getPathValue);
+      actions.updateState({
+        pageName: data.pageName,
+        getPathVal: getPathValue
+      });
       await handleConfirm();
       return true;
     },

@@ -36,7 +36,7 @@ export default function StreamScopeCollector({
   const onConfirm = useCallback(
     async (data: StreamScopeForm) => {
       const streamScope = StreamScopeParser.parseStreamScope(data);
-      actions.setStreamScope(streamScope);
+      actions.updateState({streamScope});
       await handleConfirm();
       return true;
     },

@@ -15,13 +15,13 @@ export default function PageTypeSelector({
 }: FlowStepModalProps) {
   const { state, actions } = useContext(AddPageContext);
   const { isStatic } = state;
-  const { setIsStatic } = actions;
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      setIsStatic(e.target.name === PageType.Static);
+      const isStatic = e.target.name === PageType.Static
+      actions.updateState({isStatic});
     },
-    [setIsStatic]
+    [actions]
   );
 
   const body = useMemo(
