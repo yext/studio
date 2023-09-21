@@ -7,7 +7,7 @@ import { GetPathVal, StreamScope } from "@yext/studio-plugin";
 
 const initialPageData: AddPageData = {
   isStatic: true,
-  pageName: ""
+  pageName: "",
 };
 
 export default function AddPageContextProvider(props: PropsWithChildren) {

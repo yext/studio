@@ -45,17 +45,17 @@ export default function LayoutSelector({
 
   const selectClasses = twMerge(selectCssClasses, "w-full mb-6");
   const body = (
-    <select 
-    className={selectClasses} 
-    onChange={handleChange} 
-    aria-label="Layout picker"
+    <select
+      className={selectClasses}
+      onChange={handleChange}
+      aria-label="Layout picker"
     >
       <option key="" value="">
         No layout selected
       </option>
       {Object.keys(layouts).map((layoutName) => (
-        <option 
-          key={layoutName} 
+        <option
+          key={layoutName}
           value={layoutName}
           aria-label={`${layoutName} layout`}
         >

@@ -309,7 +309,9 @@ describe("errors", () => {
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "universal");
-    const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+    const basicPageDataNextButton = screen.getByRole("button", {
+      name: "Next",
+    });
     await userEvent.click(basicPageDataNextButton);
     expect(
       screen.getByText('Page name "universal" is already used.')
@@ -322,7 +324,9 @@ describe("errors", () => {
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "***");
-    const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+    const basicPageDataNextButton = screen.getByRole("button", {
+      name: "Next",
+    });
     await userEvent.click(basicPageDataNextButton);
     expect(
       screen.getByText("Page name cannot contain the characters: *")
