@@ -6,7 +6,7 @@ import { selectCssClasses } from "../UnionPropInput";
 import { twMerge } from "tailwind-merge";
 
 /**
- * This modal allows the user to select a layout for their 
+ * This modal allows the user to select a layout for their
  * new page.  If no layout is selected, then no layout will
  * be applied.
  */
