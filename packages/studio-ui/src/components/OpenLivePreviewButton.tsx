@@ -1,4 +1,4 @@
-import { PageState, PagesJsState } from "@yext/studio-plugin";
+import { PagesJsState } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import classNames from "classnames";
 import { Result } from "true-myth";
