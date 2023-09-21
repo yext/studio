@@ -56,7 +56,7 @@ export default function BasicPageDataCollector({
       }
       actions.updateState({
         pageName: data.pageName,
-        getPathVal: getPathValue
+        getPathVal: getPathValue,
       });
       await handleConfirm();
       return true;

@@ -18,8 +18,8 @@ export default function PageTypeSelector({
 
   const onChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
-      const isStatic = e.target.name === PageType.Static
-      actions.updateState({isStatic});
+      const isStatic = e.target.name === PageType.Static;
+      actions.updateState({ isStatic });
     },
     [actions]
   );

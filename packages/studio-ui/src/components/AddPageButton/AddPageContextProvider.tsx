@@ -16,12 +16,12 @@ export default function AddPageContextProvider(props: PropsWithChildren) {
     () => ({
       state,
       actions: {
-        updateState: (newState: Partial<AddPageData> ) =>
+        updateState: (newState: Partial<AddPageData>) =>
           setState((oldState) => {
             return {
-              ...oldState, 
-              ...newState
-            }
+              ...oldState,
+              ...newState,
+            };
           }),
         resetState: () => setState(initialPageData),
       },

@@ -9,7 +9,7 @@ export interface AddPageData {
 }
 
 export interface AddPageActions {
-  updateState: (newState: Partial<AddPageData> ) => void;
+  updateState: (newState: Partial<AddPageData>) => void;
   resetState: () => void;
 }
 
