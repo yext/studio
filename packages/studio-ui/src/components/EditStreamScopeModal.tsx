@@ -73,8 +73,8 @@ export default function EditStreamScopeModal(props: EditStreamScopeModalProps) {
       <>
         <div className="italic mb-4">
           Use one of the optional fields below to edit which entities this page
-          can access. If multiple Stream Scopes were selected and all fields are
-          disabled, see a developer to edit the Stream Scope.
+          can access. If all fields are disabled, see a developer to edit the
+          content scope.
         </div>
         <StreamScopePicker
           streamScope={selectedScope}
