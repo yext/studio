@@ -25,7 +25,7 @@ export default function BasicPageDataCollector({
   const { state, actions } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
   const pageDataValidator = useMemo(
-    () => new PageDataValidator({isEntityPage, isPagesJSRepo, pages}),
+    () => new PageDataValidator({ isEntityPage, isPagesJSRepo, pages }),
     [isEntityPage, isPagesJSRepo, pages]
   );
 

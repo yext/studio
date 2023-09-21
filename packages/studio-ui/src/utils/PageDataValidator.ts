@@ -15,17 +15,17 @@ export default class PageDataValidator {
   private pages: PagesRecord;
 
   constructor({
-    isEntityPage, 
-    isPagesJSRepo, 
-    pages
-  }:{
-    isEntityPage: boolean, 
-    isPagesJSRepo: boolean, 
-    pages?: PagesRecord
+    isEntityPage,
+    isPagesJSRepo,
+    pages,
+  }: {
+    isEntityPage: boolean;
+    isPagesJSRepo: boolean;
+    pages?: PagesRecord;
   }) {
-      this.isEntityPage = isEntityPage ?? false;
-      this.isPagesJSRepo = isPagesJSRepo ?? false;
-      this.pages = pages ?? {};
+    this.isEntityPage = isEntityPage ?? false;
+    this.isPagesJSRepo = isPagesJSRepo ?? false;
+    this.pages = pages ?? {};
   }
 
   checkIsURLEditable(url?: string) {
@@ -41,7 +41,7 @@ export default class PageDataValidator {
   validate(pageData: { pageName?: string; url?: string }): ValidationResult {
     const errorMessages: string[] = [];
     const { pageName, url } = pageData;
-    if (pageName !== undefined){
+    if (pageName !== undefined) {
       errorMessages.push(...this.validatePageName(pageName));
       if (this.pages[pageName]) {
         errorMessages.push(`Page name "${pageName}" is already used.`);
@@ -51,11 +51,9 @@ export default class PageDataValidator {
     if (this.isPagesJSRepo && !url) {
       errorMessages.push("A URL is required.");
     }
-    
+
     if (url !== undefined)
-      errorMessages.push(
-        ...this.validateURLSlug(url, this.isEntityPage)
-      );
+      errorMessages.push(...this.validateURLSlug(url, this.isEntityPage));
     return {
       valid: errorMessages.length === 0,
       errorMessages: errorMessages,

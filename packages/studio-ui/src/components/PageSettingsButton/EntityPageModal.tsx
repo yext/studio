@@ -39,10 +39,13 @@ export default function EntityPageModal({
     store.pages.pages[pageName].pagesJS?.streamScope,
     store.pages.updateStreamScope,
     store.actions.generateTestData,
-    store.studioConfig.isPagesJSRepo
+    store.studioConfig.isPagesJSRepo,
   ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const pageDataValidator = useMemo(() => new PageDataValidator({isEntityPage: true, isPagesJSRepo }), [isPagesJSRepo]);
+  const pageDataValidator = useMemo(
+    () => new PageDataValidator({ isEntityPage: true, isPagesJSRepo }),
+    [isPagesJSRepo]
+  );
   const isURLEditable = useMemo(
     () => pageDataValidator.checkIsURLEditable(currGetPathValue?.value),
     [currGetPathValue?.value, pageDataValidator]

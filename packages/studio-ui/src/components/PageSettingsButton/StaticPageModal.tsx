@@ -18,13 +18,18 @@ export default function StaticPageModal({
   isOpen,
   handleClose,
 }: PageSettingsModalProps): JSX.Element {
-  const [isPagesJSRepo, currGetPathValue, updateGetPathValue] = useStudioStore((store) => [
-    store.studioConfig.isPagesJSRepo,
-    store.pages.pages[pageName].pagesJS?.getPathValue,
-    store.pages.updateGetPathValue,
-  ]);
+  const [isPagesJSRepo, currGetPathValue, updateGetPathValue] = useStudioStore(
+    (store) => [
+      store.studioConfig.isPagesJSRepo,
+      store.pages.pages[pageName].pagesJS?.getPathValue,
+      store.pages.updateGetPathValue,
+    ]
+  );
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const pageDataValidator = useMemo(() => new PageDataValidator({ isEntityPage: false, isPagesJSRepo }), [isPagesJSRepo]);
+  const pageDataValidator = useMemo(
+    () => new PageDataValidator({ isEntityPage: false, isPagesJSRepo }),
+    [isPagesJSRepo]
+  );
   const isURLEditable = useMemo(
     () => pageDataValidator.checkIsURLEditable(currGetPathValue?.value),
     [currGetPathValue?.value, pageDataValidator]

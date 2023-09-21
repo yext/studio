@@ -8,7 +8,10 @@ describe("URL slug validation", () => {
     errorMessages: string[],
     isEntityPage: boolean
   ) {
-    const validator = new PageDataValidator({isEntityPage, isPagesJSRepo: true});
+    const validator = new PageDataValidator({
+      isEntityPage,
+      isPagesJSRepo: true,
+    });
     const result: ValidationResult = validator.validate({ url: input });
     expect(result.valid).toBeFalsy();
     expect(result.errorMessages).toEqual(expect.arrayContaining(errorMessages));
@@ -20,7 +23,10 @@ describe("URL slug validation", () => {
   });
 
   it("does not give an error for valid document expression in an entity page", () => {
-    const validator = new PageDataValidator({isEntityPage: true, isPagesJSRepo: true});
+    const validator = new PageDataValidator({
+      isEntityPage: true,
+      isPagesJSRepo: true,
+    });
     const result = validator.validate({
       url: "${document.field}-${document.slug}",
     });
@@ -39,7 +45,10 @@ describe("URL slug validation", () => {
 
 describe("page name validation", () => {
   function expectPageNameError(input: string, errorMessages: string[]) {
-    const validator = new PageDataValidator({isEntityPage: false, isPagesJSRepo: true});
+    const validator = new PageDataValidator({
+      isEntityPage: false,
+      isPagesJSRepo: true,
+    });
     const result: ValidationResult = validator.validate({ pageName: input });
     expect(result.valid).toBeFalsy();
     expect(result.errorMessages).toEqual(expect.arrayContaining(errorMessages));
