@@ -23,8 +23,8 @@ export default class PageDataValidator {
     isPagesJSRepo: boolean;
     pages?: PagesRecord;
   }) {
-    this.isEntityPage = isEntityPage ?? false;
-    this.isPagesJSRepo = isPagesJSRepo ?? false;
+    this.isEntityPage = isEntityPage;
+    this.isPagesJSRepo = isPagesJSRepo;
     this.pages = pages ?? {};
   }
 
