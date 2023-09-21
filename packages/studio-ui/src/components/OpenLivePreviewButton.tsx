@@ -71,11 +71,11 @@ function getLivePreviewUrl(
   if (isEntityPage) {
     return entityData?.id
       ? Result.ok(`${PAGES_JS_LANDING_PAGE}/${pageName}/${entityData.id}`)
-      : Result.err(new Error("Bad"));
+      : Result.err(new Error("Cannot create Preview URL for Entity Page"));
   }
 
   const getPathVal = pagesJSState.getPathValue;
   return !!getPathVal
     ? Result.ok(`${PAGES_JS_LANDING_PAGE}/${getPathVal.value}`)
-    : Result.err(new Error("Bad"));
+    : Result.err(new Error("Cannot create Preview URL for Static Page"));
 }
