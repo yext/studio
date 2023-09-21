@@ -1,58 +1,65 @@
-import { useCallback, useContext } from "react";
-import FormModal, { FormData } from "../common/FormModal";
+import { useCallback, useMemo, useContext } from "react";
+import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
 import AddPageContext from "./AddPageContext";
-import StreamScopeParser, {
-  StreamScopeForm,
-} from "../../utils/StreamScopeParser";
-
-export const streamScopeFormData: FormData<StreamScopeForm> = {
-  entityIds: {
-    description: "Entity IDs",
-    optional: true,
-    tooltip: "In the Yext platform, navigate to Content > Entities",
-  },
-  entityTypes: {
-    description: "Entity Type IDs",
-    optional: true,
-    tooltip:
-      "In the Yext platform, navigate to Content > Configuration > Entity Types",
-  },
-  savedFilterIds: {
-    description: "Saved Filter IDs",
-    optional: true,
-    tooltip:
-      "In the Yext platform, navigate to Content > Configuration > Saved Filters",
-  },
-};
+import StreamScopePicker, {
+  updateScopeFieldFactory,
+} from "../StreamScopePicker";
+import { StreamScope } from "@yext/studio-plugin";
 
 export default function StreamScopeCollector({
   isOpen,
   handleClose,
   handleConfirm,
 }: FlowStepModalProps) {
-  const { actions } = useContext(AddPageContext);
+  const { state, actions } = useContext(AddPageContext);
+  const { streamScope } = state
+  const { updateState } = actions
 
-  const onConfirm = useCallback(
-    async (data: StreamScopeForm) => {
-      const streamScope = StreamScopeParser.parseStreamScope(data);
-      actions.updateState({ streamScope });
-      await handleConfirm();
-      return true;
+  const onConfirm = useCallback(async () => {
+    updateState({streamScope});
+    await handleConfirm();
+  }, [updateState, handleConfirm, streamScope]);
+
+  const updateSelection: updateScopeFieldFactory = useCallback(
+    (streamScopeField: keyof StreamScope) => (selectedIds: string[]) => {
+      if (selectedIds.length) {
+        updateState({
+          streamScope: {
+          [streamScopeField]: selectedIds,
+          }
+        });
+      } else {
+        updateState({streamScope: {}});
+      }
     },
-    [handleConfirm, actions]
+    [updateState]
   );
 
+  const modalBodyContent = useMemo(() => {
+    return (
+      <>
+        <div className="italic mb-4">
+          Use one of the optional fields below to specify which entities this
+          page can access.
+        </div>
+        <StreamScopePicker
+          streamScope={streamScope}
+          updateSelection={updateSelection}
+        />
+      </>
+    );
+  }, [streamScope, updateSelection]);
+
   return (
-    <FormModal
+    <DialogModal
       isOpen={isOpen}
       title="Content Scope"
-      instructions="Use the optional fields below to specify which entities this page can access. Values should be separated by commas."
-      formData={streamScopeFormData}
-      closeOnConfirm={false}
-      confirmButtonText="Next"
       handleClose={handleClose}
       handleConfirm={onConfirm}
+      body={modalBodyContent}
+      confirmButtonText="Next"
+      isConfirmButtonDisabled={false}
     />
   );
 }

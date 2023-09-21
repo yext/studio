@@ -16,6 +16,7 @@ import { STUDIO_PROCESS_ARGS_OBJ } from "./constants";
 import LocalDataMappingManager from "./LocalDataMappingManager";
 import getStudioViteOptions from "./viteconfig/getStudioViteOptions";
 import { createDevServer } from "@yext/pages";
+import ManagementApiService from "./http/ManagementApiService";
 
 /**
  * Handles server-client communication.
@@ -65,6 +66,12 @@ export default async function createStudioPlugin(
   );
 
   await pagesDevPortPromise;
+
+  const managementAPIService =
+    studioConfig.isPagesJSRepo && process.env.YEXT_STUDIO_API_KEY
+      ? new ManagementApiService(process.env.YEXT_STUDIO_API_KEY)
+      : undefined;
+
   return {
     name: "yext-studio-vite-plugin",
     config(config) {
@@ -94,7 +101,8 @@ export default async function createStudioPlugin(
       orchestrator,
       localDataMappingManager,
       pathToUserProjectRoot,
-      studioConfig.paths
+      studioConfig.paths,
+      managementAPIService
     ),
   };
 }

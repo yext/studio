@@ -89,6 +89,13 @@ describe("PagesJS repo", () => {
     const originalStudioConfig = useStudioStore.getState().studioConfig;
     mockStore({
       studioConfig: { ...originalStudioConfig, isPagesJSRepo: true },
+      accountContent: {
+        savedFilters: [],
+        entitiesRecord: {
+          location: { entities: [], totalCount: 1 },
+          restaurant: { entities: [], totalCount: 1 },
+        },
+      },
     });
   });
 
@@ -190,9 +197,7 @@ describe("PagesJS repo", () => {
       await userEvent.type(entityTypesTextbox, "location, restaurant");
       await userEvent.click(streamScopeNextButton);
 
-      const basicPageDataNextButton = screen.getByRole("button", {
-        name: "Next",
-      });
+      const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
       expect(basicPageDataNextButton).toBeDisabled();
       await specifyName();
       expect(basicPageDataNextButton).toBeEnabled();

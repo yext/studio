@@ -1,7 +1,7 @@
 module.exports = [
   {
     path: "lib/src/index.js",
-    limit: "700 kB",
+    limit: "850 kB",
     gzip: false,
   },
 ];

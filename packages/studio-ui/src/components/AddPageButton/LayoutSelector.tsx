@@ -2,8 +2,7 @@ import { ChangeEvent, useCallback, useState } from "react";
 import { FlowStepModalProps } from "./FlowStep";
 import useStudioStore from "../../store/useStudioStore";
 import DialogModal from "../common/DialogModal";
-import { selectCssClasses } from "../UnionPropInput";
-import { twMerge } from "tailwind-merge";
+import getSelectCssClasses from "../../utils/getSelectCssClasses";
 
 /**
  * This modal allows the user to select a layout for their
@@ -43,7 +42,7 @@ export default function LayoutSelector({
     [setSelectedLayout]
   );
 
-  const selectClasses = twMerge(selectCssClasses, "w-full mb-6");
+  const selectClasses = getSelectCssClasses("w-full mb-6");
   const body = (
     <select
       className={selectClasses}
