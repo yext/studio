@@ -13,11 +13,11 @@ export default function StreamScopeCollector({
   handleConfirm,
 }: FlowStepModalProps) {
   const { state, actions } = useContext(AddPageContext);
-  const { streamScope } = state
-  const { updateState } = actions
+  const { streamScope } = state;
+  const { updateState } = actions;
 
   const onConfirm = useCallback(async () => {
-    updateState(streamScope ? {streamScope} : {streamScope: {}});
+    updateState(streamScope ? { streamScope } : { streamScope: {} });
     await handleConfirm();
   }, [updateState, handleConfirm, streamScope]);
 
@@ -26,11 +26,11 @@ export default function StreamScopeCollector({
       if (selectedIds.length) {
         updateState({
           streamScope: {
-          [streamScopeField]: selectedIds,
-          }
+            [streamScopeField]: selectedIds,
+          },
         });
       } else {
-        updateState({streamScope: {}});
+        updateState({ streamScope: {} });
       }
     },
     [updateState]

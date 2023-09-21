@@ -20,11 +20,10 @@ export default function PageSettingsModal({
   isOpen,
   handleClose,
 }: PageSettingsModalProps): JSX.Element {
-  const [isEntityPage, isPagesJSRepo] = useStudioStore(
-    (store) => [
-      !!store.pages.pages[pageName].pagesJS?.streamScope,
-      store.studioConfig.isPagesJSRepo
-    ]);
+  const [isEntityPage, isPagesJSRepo] = useStudioStore((store) => [
+    !!store.pages.pages[pageName].pagesJS?.streamScope,
+    store.studioConfig.isPagesJSRepo,
+  ]);
   const [currGetPathValue, updateGetPathValue] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,

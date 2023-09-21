@@ -203,7 +203,9 @@ describe("PagesJS repo", () => {
       );
       await userEvent.click(streamScopeNextButton);
 
-      const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+      const basicPageDataNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
       expect(basicPageDataNextButton).toBeDisabled();
       await specifyName();
       expect(basicPageDataNextButton).toBeEnabled();
