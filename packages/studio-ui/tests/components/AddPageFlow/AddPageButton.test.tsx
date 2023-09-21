@@ -61,7 +61,7 @@ async function specifyName() {
 async function selectLayoutAndSave(layoutName: string) {
   await userEvent.selectOptions(
     screen.getByRole("combobox"),
-    screen.getByRole("option", { name: layoutName })
+    screen.getByRole("option", { name: `${layoutName} layout` })
   );
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
@@ -99,7 +99,7 @@ describe("PagesJS repo", () => {
     await userEvent.type(urlTextbox, url);
   }
 
-  it("closes modal after page type, name, and lauout for static page", async () => {
+  it("closes modal after page type, name, and layout for static page", async () => {
     jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
       return new Promise((resolve) =>
         resolve({
@@ -269,7 +269,7 @@ describe("PagesJS repo", () => {
           entityFiles: ["mockLocalData.json"],
         },
       });
-      await waitFor(() => expect(screen.queryByText("Next")).toBeNull());
+      await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
 
       expect(useStudioStore.getState().pages.activeEntityFile).toEqual(
         "mockLocalData.json"
@@ -309,8 +309,8 @@ describe("errors", () => {
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "universal");
-    const saveButton = screen.getByRole("button", { name: "Next" });
-    await userEvent.click(saveButton);
+    const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+    await userEvent.click(basicPageDataNextButton);
     expect(
       screen.getByText('Page name "universal" is already used.')
     ).toBeDefined();
@@ -322,8 +322,8 @@ describe("errors", () => {
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "***");
-    const saveButton = screen.getByRole("button", { name: "Next" });
-    await userEvent.click(saveButton);
+    const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+    await userEvent.click(basicPageDataNextButton);
     expect(
       screen.getByText("Page name cannot contain the characters: *")
     ).toBeDefined();

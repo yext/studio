@@ -42,7 +42,7 @@ function AddPageButtonInternal() {
           break;
         case FlowStep.SelectLayout:
           await createPage(
-            state.pageName || "",
+            state.pageName,
             state.getPathVal,
             state.streamScope,
             layout

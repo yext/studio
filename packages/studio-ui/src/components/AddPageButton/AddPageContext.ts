@@ -4,7 +4,7 @@ import { createContext } from "react";
 export interface AddPageData {
   isStatic: boolean;
   streamScope?: StreamScope;
-  pageName?: string;
+  pageName: string;
   getPathVal?: GetPathVal;
 }
 
