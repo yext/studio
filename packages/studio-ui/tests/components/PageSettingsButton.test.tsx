@@ -3,10 +3,7 @@ import userEvent from "@testing-library/user-event";
 import useStudioStore from "../../src/store/useStudioStore";
 import mockStore from "../__utils__/mockStore";
 import PageSettingsButton from "../../src/components/PageSettingsButton/PageSettingsButton";
-import { PageState, PropValueKind, ResponseType } from "@yext/studio-plugin";
-import { checkTooltipFunctionality } from "../__utils__/helpers";
-import * as sendMessageModule from "../../src/messaging/sendMessage";
-import { StudioStore } from "../../src/store/models/StudioStore";
+import { PageState, PropValueKind } from "@yext/studio-plugin";
 
 const basePageState: PageState = {
   componentTree: [],
@@ -130,95 +127,6 @@ it("updates getPath value with square and curly bracket expression", async () =>
     kind: PropValueKind.Expression,
     value: "`${document.slug}-${document.services[0]}-${document.id}`",
   });
-});
-
-it("displays the correct stream scope when modal opens", async () => {
-  render(<PageSettingsButton pageName="fruits" />);
-  const pageSettingsButton = screen.getByRole("button");
-  await userEvent.click(pageSettingsButton);
-  const entityIDsTextbox = screen.getByRole("textbox", { name: "Entity IDs" });
-  const entityTypesTextbox = screen.getByRole("textbox", {
-    name: "Entity Type IDs",
-  });
-  const savedFilterIDsTextbox = screen.getByRole("textbox", {
-    name: "Saved Filter IDs",
-  });
-  expect(entityIDsTextbox).toHaveValue("apple,orange");
-  expect(entityTypesTextbox).toHaveValue("");
-  expect(savedFilterIDsTextbox).toHaveValue("banana");
-});
-
-it("updates stream scope with user input and regenerates test data for entity page with undefined getPath", async () => {
-  const updateStreamScopeSpy = jest.spyOn(
-    useStudioStore.getState().pages,
-    "updateStreamScope"
-  );
-  render(<PageSettingsButton pageName="fruits" />);
-  const pageSettingsButton = screen.getByRole("button");
-  await userEvent.click(pageSettingsButton);
-  const entityTypesTextbox = screen.getByRole("textbox", {
-    name: "Entity Type IDs",
-  });
-  const savedFilterIDsTextbox = screen.getByRole("textbox", {
-    name: "Saved Filter IDs",
-  });
-  await userEvent.type(entityTypesTextbox, "kiwi");
-  await userEvent.type(savedFilterIDsTextbox, ",pineapple");
-
-  function getEntityFiles(store: StudioStore) {
-    return store.pages.pages["fruits"].pagesJS?.entityFiles;
-  }
-  expect(getEntityFiles(useStudioStore.getState())).toBeUndefined();
-  jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
-    return new Promise((resolve) =>
-      resolve({
-        msg: "msg",
-        type: ResponseType.Success,
-        mappingJson: {
-          fruits: ["mockLocalData.json"],
-        },
-      })
-    );
-  });
-  const saveButton = screen.getByRole("button", { name: "Save" });
-  await userEvent.click(saveButton);
-  expect(updateStreamScopeSpy).toBeCalledWith("fruits", {
-    entityIds: ["apple", "orange"],
-    entityTypes: ["kiwi"],
-    savedFilterIds: ["banana", "pineapple"],
-  });
-  expect(useStudioStore.getState().pages.activeEntityFile).toBeUndefined();
-  expect(getEntityFiles(useStudioStore.getState())).toEqual([
-    "mockLocalData.json",
-  ]);
-
-  await userEvent.click(pageSettingsButton);
-  expect(entityTypesTextbox).toHaveValue("kiwi");
-  expect(savedFilterIDsTextbox).toHaveValue("banana,pineapple");
-});
-
-it("shows a tooltip when hovering over the label", async () => {
-  const entityIdsMessage =
-    "In the Yext platform, navigate to Content > Entities";
-  const entityTypesMessage =
-    "In the Yext platform, navigate to Content > Configuration > Entity Types";
-  const savedFilterIdsMessage =
-    "In the Yext platform, navigate to Content > Configuration > Saved Filters";
-  render(<PageSettingsButton pageName="fruits" />);
-  const pageSettingsButton = screen.getByRole("button");
-  await userEvent.click(pageSettingsButton);
-  await checkTooltipFunctionality(
-    entityIdsMessage,
-    screen.getByText("Entity IDs")
-  );
-  await checkTooltipFunctionality(
-    entityTypesMessage,
-    screen.getByText("Entity Type IDs")
-  );
-  await checkTooltipFunctionality(
-    savedFilterIdsMessage,
-    screen.getByText("Saved Filter IDs")
-  );
 });
 
 async function cannotEditURL(pageName: string) {

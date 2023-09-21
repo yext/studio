@@ -1,11 +1,9 @@
-import useStudioStore from "../../store/useStudioStore";
 import { ReactComponent as Gear } from "../../icons/gear.svg";
 import { useCallback } from "react";
 import ButtonWithModal, {
   renderModalFunction,
 } from "../common/ButtonWithModal";
-import StaticPageModal from "./StaticPageModal";
-import EntityPageModal from "./EntityPageModal";
+import PageSettingsModal from "./PageSettingsModal";
 
 export interface PageSettingsModalProps {
   pageName: string;
@@ -25,15 +23,8 @@ interface PageSettingsButtonProps {
 export default function PageSettingsButton({
   pageName,
 }: PageSettingsButtonProps): JSX.Element {
-  const isEntityPage = useStudioStore(
-    (store) => !!store.pages.pages[pageName].pagesJS?.streamScope
-  );
-
   const renderModal: renderModalFunction = useCallback(
     (isOpen, handleClose) => {
-      const PageSettingsModal = isEntityPage
-        ? EntityPageModal
-        : StaticPageModal;
       return (
         <PageSettingsModal
           pageName={pageName}
@@ -42,7 +33,7 @@ export default function PageSettingsButton({
         />
       );
     },
-    [isEntityPage, pageName]
+    [pageName]
   );
 
   return (

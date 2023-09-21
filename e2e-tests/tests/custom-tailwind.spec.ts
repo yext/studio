@@ -33,7 +33,7 @@ studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
   const editorSidebar = page.getByTestId("EditorSidebar");
   await expect(editorSidebar).toHaveScreenshot();
   const classPicker = editorSidebar.getByRole("button", {
-    name: "Toggle tailwind class picker",
+    name: "Toggle pill picker",
   });
   await classPicker.click();
   await expect(editorSidebar).toHaveScreenshot();
