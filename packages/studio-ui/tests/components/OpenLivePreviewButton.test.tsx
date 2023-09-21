@@ -1,14 +1,137 @@
 import { render, screen } from "@testing-library/react";
-import OpenLivePreviewButton from "../../src/components/OpenLivePreviewButton";
+import OpenLivePreviewButton, {
+  PAGES_JS_LANDING_PAGE,
+} from "../../src/components/OpenLivePreviewButton";
+import mockActivePage from "../__utils__/mockActivePage";
+import { PageState, PropValueKind } from "@yext/studio-plugin";
+import mockStore from "../__utils__/mockStore";
 
-it("renders the live preview button", () => {
-  render(<OpenLivePreviewButton />);
-  expect(screen.getByRole("link")).toBeDefined();
-  expect(screen.getByRole("link").textContent).toBe("Live Preview");
+describe("button is disabled properly", () => {
+  it("disables the button when not a PagesJS page", () => {
+    const pageState: PageState = {
+      componentTree: [],
+      cssImports: [],
+      filepath: "some/file/path.tsx",
+    };
+    mockActivePage(pageState);
+
+    render(<OpenLivePreviewButton />);
+    const button = screen.getByRole("button");
+    expect(button).toBeDefined();
+    expect(button.textContent).toBe("Live Preview");
+    expect(button).toBeDisabled();
+  });
+
+  it("disables the button for Static page without a valid GetPathVal", () => {
+    const pageState: PageState = {
+      componentTree: [],
+      cssImports: [],
+      filepath: "some/file/path.tsx",
+      pagesJS: {
+        getPathValue: undefined,
+      },
+    };
+    mockActivePage(pageState);
+
+    render(<OpenLivePreviewButton />);
+    const button = screen.getByRole("button");
+    expect(button).toBeDefined();
+    expect(button.textContent).toBe("Live Preview");
+    expect(button).toBeDisabled();
+  });
+
+  it("when an Entity's localData doesn't contain an id, the button is disabled", () => {
+    const pageState: PageState = {
+      componentTree: [],
+      cssImports: [],
+      filepath: "some/file/path.tsx",
+      pagesJS: {
+        getPathValue: undefined,
+        streamScope: {
+          entityIds: ["abc"],
+        },
+      },
+    };
+
+    mockStore({
+      pages: {
+        activePageName: "testpage",
+        pages: {
+          testpage: pageState,
+        },
+        getActiveEntityData: () => {
+          return {};
+        },
+      },
+    });
+
+    render(<OpenLivePreviewButton />);
+    const button = screen.getByRole("button");
+    expect(button).toBeDefined();
+    expect(button.textContent).toBe("Live Preview");
+    expect(button).toBeDisabled();
+  });
 });
 
-it("opens the pages development server when clicked", () => {
-  render(<OpenLivePreviewButton />);
-  expect(screen.getByRole("link")).toBeDefined();
-  expect(screen.getByRole("link").textContent).toBe("Live Preview");
+describe("button links to correct preview url", () => {
+  window.open = jest.fn();
+
+  it("preview url for Static Page is correct", () => {
+    const pageState: PageState = {
+      componentTree: [],
+      cssImports: [],
+      filepath: "some/file/path.tsx",
+      pagesJS: {
+        getPathValue: {
+          kind: PropValueKind.Literal,
+          value: "static-page",
+        },
+      },
+    };
+    mockActivePage(pageState);
+
+    render(<OpenLivePreviewButton />);
+    const button = screen.getByRole("button");
+    expect(button).toBeEnabled();
+    button.click();
+    expect(window.open).toBeCalledWith(
+      `${PAGES_JS_LANDING_PAGE}/static-page`,
+      "_blank"
+    );
+  });
+
+  it("preview url for Entity Page is correct", () => {
+    const pageState: PageState = {
+      componentTree: [],
+      cssImports: [],
+      filepath: "some/file/path.tsx",
+      pagesJS: {
+        getPathValue: undefined,
+        streamScope: {
+          entityIds: ["abc"],
+        },
+      },
+    };
+
+    mockStore({
+      pages: {
+        activePageName: "testpage",
+        pages: {
+          testpage: pageState,
+        },
+        getActiveEntityData: () => {
+          return { id: "123" };
+        },
+      },
+    });
+
+    render(<OpenLivePreviewButton />);
+    const button = screen.getByRole("button");
+    expect(button).toBeEnabled();
+    button.click();
+    expect(window.open).toBeCalledWith(
+      `${PAGES_JS_LANDING_PAGE}/testpage/123`,
+      "_blank"
+    );
+  });
 });
