@@ -5,21 +5,22 @@ import PageDataValidator, {
 describe("URL slug validation", () => {
   function expectURLError(
     input: string,
-    errorMessage: string[],
-    isEntityPage?: boolean
+    errorMessages: string[],
+    isEntityPage: boolean
   ) {
-    const validator = new PageDataValidator(isEntityPage);
+    const validator = new PageDataValidator({isEntityPage, isPagesJSRepo: true});
     const result: ValidationResult = validator.validate({ url: input });
-    expect(result).toEqual({ valid: false, errorMessages: errorMessage });
+    expect(result.valid).toBeFalsy();
+    expect(result.errorMessages).toEqual(expect.arrayContaining(errorMessages));
   }
 
   it("gives an error for document expression in a static field", () => {
     const errorMessage = "URL slug contains invalid characters: {}";
-    expectURLError("${document.field}", [errorMessage]);
+    expectURLError("${document.field}", [errorMessage], false);
   });
 
   it("does not give an error for valid document expression in an entity page", () => {
-    const validator = new PageDataValidator(true);
+    const validator = new PageDataValidator({isEntityPage: true, isPagesJSRepo: true});
     const result = validator.validate({
       url: "${document.field}-${document.slug}",
     });
@@ -37,10 +38,11 @@ describe("URL slug validation", () => {
 });
 
 describe("page name validation", () => {
-  function expectPageNameError(input: string, errorMessage: string[]) {
-    const validator = new PageDataValidator();
+  function expectPageNameError(input: string, errorMessages: string[]) {
+    const validator = new PageDataValidator({isEntityPage: false, isPagesJSRepo: true});
     const result: ValidationResult = validator.validate({ pageName: input });
-    expect(result).toEqual({ valid: false, errorMessages: errorMessage });
+    expect(result.valid).toBeFalsy();
+    expect(result.errorMessages).toEqual(expect.arrayContaining(errorMessages));
   }
 
   it("gives an error for an empty string pagename", () => {

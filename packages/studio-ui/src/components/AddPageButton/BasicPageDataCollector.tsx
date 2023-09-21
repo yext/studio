@@ -25,8 +25,8 @@ export default function BasicPageDataCollector({
   const { state, actions } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
   const pageDataValidator = useMemo(
-    () => new PageDataValidator(isEntityPage),
-    [isEntityPage]
+    () => new PageDataValidator({isEntityPage, isPagesJSRepo, pages}),
+    [isEntityPage, isPagesJSRepo, pages]
   );
 
   const formData: FormData<BasicPageData> = useMemo(
@@ -54,27 +54,12 @@ export default function BasicPageDataCollector({
         setErrorMessage(validationResult.errorMessages.join("\r\n"));
         return false;
       }
-      if (isPagesJSRepo && !getPathValue) {
-        setErrorMessage("A getPath value is required.");
-        return false;
-      }
-      if (pages[data.pageName]) {
-        setErrorMessage(`Page name "${data.pageName}" is already used.`);
-        return false;
-      }
       actions.setPageName(data.pageName);
       actions.setGetPathVal(getPathValue);
       await handleConfirm();
       return true;
     },
-    [
-      actions,
-      handleConfirm,
-      isEntityPage,
-      isPagesJSRepo,
-      pageDataValidator,
-      pages,
-    ]
+    [actions, handleConfirm, isEntityPage, pageDataValidator]
   );
 
   const transformOnChangeValue = useCallback(
