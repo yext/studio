@@ -3,13 +3,33 @@ import userEvent from "@testing-library/user-event";
 import AddPageButton from "../../../src/components/AddPageButton/AddPageButton";
 import useStudioStore from "../../../src/store/useStudioStore";
 import mockStore from "../../__utils__/mockStore";
-import { PageState, PropValueKind, ResponseType } from "@yext/studio-plugin";
+import {
+  ComponentStateKind,
+  LayoutState,
+  PageState,
+  PropValueKind,
+  ResponseType,
+} from "@yext/studio-plugin";
 import * as sendMessageModule from "../../../src/messaging/sendMessage";
 
 const basicPageState: PageState = {
   componentTree: [],
   cssImports: [],
   filepath: expect.stringContaining("test.tsx"),
+};
+
+const mockLayout: LayoutState = {
+  componentTree: [
+    {
+      kind: ComponentStateKind.Standard,
+      componentName: "mockComponentName",
+      props: {},
+      uuid: "mockUUID",
+      metadataUUID: "mockMetadataUUID",
+    },
+  ],
+  cssImports: [],
+  filepath: "mockLayoutFilepath",
 };
 
 beforeEach(() => {
@@ -19,8 +39,13 @@ beforeEach(() => {
         universal: {
           componentTree: [],
           cssImports: [],
-          filepath: "mock-filepath",
+          filepath: "mockFilepath",
         },
+      },
+    },
+    layouts: {
+      layoutNameToLayoutState: {
+        mockLayout: mockLayout,
       },
     },
   });
@@ -33,17 +58,30 @@ async function specifyName() {
   await userEvent.type(nameTextbox, "test");
 }
 
-it("closes the modal when a page name is added in a non-PagesJS repo", async () => {
-  const addPageSpy = jest.spyOn(useStudioStore.getState().pages, "addPage");
+async function selectLayoutAndSave(layoutName: string) {
+  await userEvent.selectOptions(
+    screen.getByRole("combobox"),
+    screen.getByRole("option", { name: layoutName })
+  );
+  const saveButton = screen.getByRole("button", { name: "Save" });
+  await userEvent.click(saveButton);
+}
+
+it("closes the modal after completing page name and layout modals in a non-PagesJS repo", async () => {
   render(<AddPageButton />);
   const addPageButton = screen.getByRole("button");
   await userEvent.click(addPageButton);
-  const saveButton = screen.getByRole("button", { name: "Save" });
-  expect(saveButton).toBeDisabled();
+  const basicPageDataNextButton = screen.getByRole("button", { name: "Next" });
+  expect(basicPageDataNextButton).toBeDisabled();
   await specifyName();
-  await userEvent.click(saveButton);
-  expect(addPageSpy).toBeCalledWith("test", basicPageState);
+  await userEvent.click(basicPageDataNextButton);
+  await selectLayoutAndSave("mockLayout");
   await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
+  expect(useStudioStore.getState().pages.pages["test"]).toEqual({
+    ...basicPageState,
+    componentTree: mockLayout.componentTree,
+    cssImports: mockLayout.cssImports,
+  });
 });
 
 describe("PagesJS repo", () => {
@@ -68,7 +106,7 @@ describe("PagesJS repo", () => {
     await userEvent.type(urlTextbox, url);
   }
 
-  it("closes modal when page type, name, and url are specified for static page", async () => {
+  it("closes modal after page type, name, and layout for static page", async () => {
     jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
       return new Promise((resolve) =>
         resolve({
@@ -87,16 +125,18 @@ describe("PagesJS repo", () => {
 
     const defaultRadioButton = screen.getByRole("radio", { checked: true });
     expect(defaultRadioButton).toHaveAttribute("name", "Static");
-    const nextButton = screen.getByRole("button", { name: "Next" });
-    await userEvent.click(nextButton);
+    const pageTypeNextButton = screen.getByRole("button", { name: "Next" });
+    await userEvent.click(pageTypeNextButton);
 
-    const saveButton = screen.getByRole("button", { name: "Save" });
-    expect(saveButton).toBeDisabled();
+    const basicPageDataNextButton = screen.getByRole("button", {
+      name: "Next",
+    });
+    expect(basicPageDataNextButton).toBeDisabled();
     await specifyName();
-    expect(saveButton).toBeDisabled();
+    expect(basicPageDataNextButton).toBeDisabled();
     await specifyUrl("testing");
-    await userEvent.click(saveButton);
-
+    await userEvent.click(basicPageDataNextButton);
+    await selectLayoutAndSave("mockLayout");
     expect(useStudioStore.getState().pages.pages["test"]).toEqual({
       ...basicPageState,
       pagesJS: {
@@ -106,6 +146,8 @@ describe("PagesJS repo", () => {
         },
         entityFiles: ["mockLocalData.json"],
       },
+      componentTree: mockLayout.componentTree,
+      cssImports: mockLayout.cssImports,
     });
 
     await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
@@ -127,7 +169,7 @@ describe("PagesJS repo", () => {
       await userEvent.click(nextButton);
     }
 
-    it("closes modal once page type, stream scope, name, and url are specified", async () => {
+    it("closes modal once page type, stream scope, name, url, and layout are specified", async () => {
       render(<AddPageButton />);
       jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
         return new Promise((resolve) =>
@@ -146,7 +188,9 @@ describe("PagesJS repo", () => {
 
       await selectEntityPageType();
 
-      const nextButton = screen.getByRole("button", { name: "Next" });
+      const streamScopeNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
       const entityTypesPicker = screen.getByRole("button", {
         name: "Toggle pill picker",
       });
@@ -157,14 +201,18 @@ describe("PagesJS repo", () => {
       await userEvent.click(
         within(screen.getByRole("list")).getByText("restaurant")
       );
-      await userEvent.click(nextButton);
+      await userEvent.click(streamScopeNextButton);
 
-      const saveButton = screen.getByRole("button", { name: "Save" });
-      expect(saveButton).toBeDisabled();
+      const basicPageDataNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
+      expect(basicPageDataNextButton).toBeDisabled();
       await specifyName();
-      expect(saveButton).toBeEnabled();
+      expect(basicPageDataNextButton).toBeEnabled();
       await specifyUrl("-[[[[id]]");
-      await userEvent.click(saveButton);
+      await userEvent.click(basicPageDataNextButton);
+
+      await selectLayoutAndSave("mockLayout");
 
       expect(useStudioStore.getState().pages.pages["test"]).toEqual({
         ...basicPageState,
@@ -176,6 +224,8 @@ describe("PagesJS repo", () => {
           streamScope: { entityTypes: ["location", "restaurant"] },
           entityFiles: ["mockLocalData.json"],
         },
+        componentTree: mockLayout.componentTree,
+        cssImports: mockLayout.cssImports,
       });
       await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
 
@@ -187,21 +237,8 @@ describe("PagesJS repo", () => {
       });
     });
 
-    it("does not require changes to stream scope or url slug", async () => {
+    it("does not require changes to stream scope, url slug, or layout", async () => {
       render(<AddPageButton />);
-
-      const addPageButton = screen.getByRole("button");
-      await userEvent.click(addPageButton);
-
-      await selectEntityPageType();
-
-      const nextButton = screen.getByRole("button", { name: "Next" });
-      await userEvent.click(nextButton);
-
-      const saveButton = screen.getByRole("button", { name: "Save" });
-      expect(saveButton).toBeDisabled();
-      await specifyName();
-
       jest.spyOn(sendMessageModule, "default").mockImplementation(() => {
         return new Promise((resolve) =>
           resolve({
@@ -213,6 +250,25 @@ describe("PagesJS repo", () => {
           })
         );
       });
+
+      const addPageButton = screen.getByRole("button");
+      await userEvent.click(addPageButton);
+
+      await selectEntityPageType();
+
+      const streamScopeNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
+      await userEvent.click(streamScopeNextButton);
+
+      const basicPageDataNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
+      expect(basicPageDataNextButton).toBeDisabled();
+      await specifyName();
+      await userEvent.click(basicPageDataNextButton);
+
+      const saveButton = screen.getByRole("button", { name: "Save" });
       await userEvent.click(saveButton);
 
       expect(useStudioStore.getState().pages.pages["test"]).toEqual({
@@ -241,18 +297,20 @@ describe("PagesJS repo", () => {
       const addPageButton = screen.getByRole("button");
       await userEvent.click(addPageButton);
       await selectEntityPageType();
-      const nextButton = screen.getByRole("button", { name: "Next" });
-      await userEvent.click(nextButton);
-      await userEvent.click(nextButton);
+      const pageTypeNextButton = screen.getByRole("button", { name: "Next" });
+      await userEvent.click(pageTypeNextButton);
+      await userEvent.click(pageTypeNextButton);
       await specifyName();
       await specifyUrl("=<>[[[[field]]");
-      const saveButton = screen.getByRole("button", { name: "Save" });
-      await userEvent.click(saveButton);
+      const basicPageDataNextButton = screen.getByRole("button", {
+        name: "Next",
+      });
+      await userEvent.click(basicPageDataNextButton);
 
       expect(
         screen.getByText("URL slug contains invalid characters: <>")
       ).toBeDefined();
-      expect(screen.getByRole("button", { name: "Save" })).toBeDisabled();
+      expect(basicPageDataNextButton).toBeDisabled();
     });
   });
 });
@@ -264,8 +322,10 @@ describe("errors", () => {
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "universal");
-    const saveButton = screen.getByRole("button", { name: "Save" });
-    await userEvent.click(saveButton);
+    const basicPageDataNextButton = screen.getByRole("button", {
+      name: "Next",
+    });
+    await userEvent.click(basicPageDataNextButton);
     expect(
       screen.getByText('Page name "universal" is already used.')
     ).toBeDefined();
@@ -277,8 +337,10 @@ describe("errors", () => {
     await userEvent.click(addPageButton);
     const textbox = screen.getByRole("textbox");
     await userEvent.type(textbox, "***");
-    const saveButton = screen.getByRole("button", { name: "Save" });
-    await userEvent.click(saveButton);
+    const basicPageDataNextButton = screen.getByRole("button", {
+      name: "Next",
+    });
+    await userEvent.click(basicPageDataNextButton);
     expect(
       screen.getByText("Page name cannot contain the characters: *")
     ).toBeDefined();

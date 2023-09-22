@@ -3,10 +3,10 @@ import AddPageContext, {
   AddPageContextValue,
   AddPageData,
 } from "./AddPageContext";
-import { StreamScope } from "@yext/studio-plugin";
 
 const initialPageData: AddPageData = {
   isStatic: true,
+  pageName: "",
 };
 
 export default function AddPageContextProvider(props: PropsWithChildren) {
@@ -16,9 +16,13 @@ export default function AddPageContextProvider(props: PropsWithChildren) {
     () => ({
       state,
       actions: {
-        setIsStatic: (isStatic: boolean) => setState({ ...state, isStatic }),
-        setStreamScope: (streamScope: StreamScope) =>
-          setState({ ...state, streamScope }),
+        updateState: (newState: Partial<AddPageData>) =>
+          setState((oldState) => {
+            return {
+              ...oldState,
+              ...newState,
+            };
+          }),
         resetState: () => setState(initialPageData),
       },
     }),

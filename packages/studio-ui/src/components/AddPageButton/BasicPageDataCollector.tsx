@@ -18,14 +18,15 @@ export default function BasicPageDataCollector({
   handleConfirm,
 }: FlowStepModalProps) {
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const isPagesJSRepo = useStudioStore(
-    (store) => store.studioConfig.isPagesJSRepo
-  );
-  const { state } = useContext(AddPageContext);
+  const [isPagesJSRepo, pages] = useStudioStore((store) => [
+    store.studioConfig.isPagesJSRepo,
+    store.pages.pages,
+  ]);
+  const { state, actions } = useContext(AddPageContext);
   const isEntityPage = isPagesJSRepo && !state.isStatic;
   const pageDataValidator = useMemo(
-    () => new PageDataValidator(isEntityPage),
-    [isEntityPage]
+    () => new PageDataValidator({ isEntityPage, isPagesJSRepo, pages }),
+    [isEntityPage, isPagesJSRepo, pages]
   );
 
   const formData: FormData<BasicPageData> = useMemo(
@@ -53,19 +54,14 @@ export default function BasicPageDataCollector({
         setErrorMessage(validationResult.errorMessages.join("\r\n"));
         return false;
       }
-      try {
-        await handleConfirm(data.pageName, getPathValue);
-        return true;
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setErrorMessage(err.message);
-          return false;
-        } else {
-          throw err;
-        }
-      }
+      actions.updateState({
+        pageName: data.pageName,
+        getPathVal: getPathValue,
+      });
+      await handleConfirm();
+      return true;
     },
-    [handleConfirm, isEntityPage, pageDataValidator]
+    [actions, handleConfirm, isEntityPage, pageDataValidator]
   );
 
   const transformOnChangeValue = useCallback(
@@ -84,10 +80,12 @@ export default function BasicPageDataCollector({
       title={modalTitle}
       formData={formData}
       initialFormValue={initialFormValue}
+      closeOnConfirm={false}
       errorMessage={errorMessage}
       handleClose={handleClose}
       handleConfirm={onConfirm}
       transformOnChangeValue={transformOnChangeValue}
+      confirmButtonText="Next"
     />
   );
 }

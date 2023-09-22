@@ -1,3 +1,5 @@
+import { PagesRecord } from "../store/models/slices/PageSlice";
+
 export interface ValidationResult {
   valid: boolean;
   errorMessages: string[];
@@ -8,12 +10,22 @@ export interface ValidationResult {
  * for validation of user-inputted page data.
  */
 export default class PageDataValidator {
-  private isEntityPage = false;
+  private isEntityPage: boolean;
+  private isPagesJSRepo: boolean;
+  private pages: PagesRecord;
 
-  constructor(isEntityPage?: boolean) {
-    if (isEntityPage) {
-      this.isEntityPage = isEntityPage;
-    }
+  constructor({
+    isEntityPage,
+    isPagesJSRepo,
+    pages,
+  }: {
+    isEntityPage: boolean;
+    isPagesJSRepo: boolean;
+    pages?: PagesRecord;
+  }) {
+    this.isEntityPage = isEntityPage;
+    this.isPagesJSRepo = isPagesJSRepo;
+    this.pages = pages ?? {};
   }
 
   checkIsURLEditable(url?: string) {
@@ -28,12 +40,14 @@ export default class PageDataValidator {
    */
   validate(pageData: { pageName?: string; url?: string }): ValidationResult {
     const errorMessages: string[] = [];
-    if (pageData.pageName !== undefined)
-      errorMessages.push(...this.validatePageName(pageData.pageName));
-    if (pageData.url !== undefined)
-      errorMessages.push(
-        ...this.validateURLSlug(pageData.url, this.isEntityPage)
-      );
+    const { pageName, url } = pageData;
+    if (pageName !== undefined) {
+      errorMessages.push(...this.validatePageName(pageName));
+    }
+
+    if (this.isPagesJSRepo) {
+      errorMessages.push(...this.validateURL(url));
+    }
     return {
       valid: errorMessages.length === 0,
       errorMessages: errorMessages,
@@ -61,6 +75,19 @@ export default class PageDataValidator {
     }
     if (pageName.length > 255) {
       errorMessages.push("Page name must be 255 characters or less.");
+    }
+    if (this.pages[pageName]) {
+      errorMessages.push(`Page name "${pageName}" is already used.`);
+    }
+    return errorMessages;
+  }
+
+  private validateURL(url: string | undefined) {
+    const errorMessages: string[] = [];
+    if (!url) {
+      errorMessages.push("A URL is required.");
+    } else {
+      errorMessages.push(...this.validateURLSlug(url, this.isEntityPage));
     }
     return errorMessages;
   }

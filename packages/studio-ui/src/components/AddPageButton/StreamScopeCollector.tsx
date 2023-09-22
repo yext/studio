@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useContext } from "react";
 import DialogModal from "../common/DialogModal";
 import { FlowStepModalProps } from "./FlowStep";
-import { useStreamScope } from "./AddPageContext";
+import AddPageContext from "./AddPageContext";
 import StreamScopePicker, {
   updateScopeFieldFactory,
 } from "../StreamScopePicker";
@@ -12,26 +12,30 @@ export default function StreamScopeCollector({
   handleClose,
   handleConfirm,
 }: FlowStepModalProps) {
-  const [streamScope, setStreamScope] = useStreamScope();
+  const { state, actions } = useContext(AddPageContext);
+  const { streamScope } = state;
+  const { updateState } = actions;
 
   const onConfirm = useCallback(async () => {
-    if (streamScope === undefined) {
-      setStreamScope({});
+    if (!streamScope) {
+      updateState({ streamScope: {} });
     }
     await handleConfirm();
-  }, [streamScope, setStreamScope, handleConfirm]);
+  }, [updateState, handleConfirm, streamScope]);
 
   const updateSelection: updateScopeFieldFactory = useCallback(
     (streamScopeField: keyof StreamScope) => (selectedIds: string[]) => {
       if (selectedIds.length) {
-        setStreamScope({
-          [streamScopeField]: selectedIds,
+        updateState({
+          streamScope: {
+            [streamScopeField]: selectedIds,
+          },
         });
       } else {
-        setStreamScope({});
+        updateState({ streamScope: {} });
       }
     },
-    [setStreamScope]
+    [updateState]
   );
 
   const modalBodyContent = useMemo(() => {
