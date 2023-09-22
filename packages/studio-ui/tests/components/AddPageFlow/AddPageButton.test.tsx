@@ -61,7 +61,7 @@ async function specifyName() {
 async function selectLayoutAndSave(layoutName: string) {
   await userEvent.selectOptions(
     screen.getByRole("combobox"),
-    screen.getByRole("option", { name: `${layoutName} layout` })
+    screen.getByRole("option", { name: layoutName })
   );
   const saveButton = screen.getByRole("button", { name: "Save" });
   await userEvent.click(saveButton);
