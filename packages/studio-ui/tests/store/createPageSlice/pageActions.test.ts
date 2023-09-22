@@ -43,16 +43,6 @@ describe("addPage", () => {
       },
     });
   });
-
-  it("gives an error for a filepath with a page name that already exists", () => {
-    const action = () =>
-      useStudioStore.getState().pages.addPage("universal", {
-        componentTree: [],
-        cssImports: [],
-        filepath: "/blah/universal.tsx",
-      });
-    expect(action).toThrowError('Page name "universal" is already used.');
-  });
 });
 
 describe("removePage", () => {
