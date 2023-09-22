@@ -31,5 +31,11 @@ export default defineConfig((args: ConfigEnv): UserConfig => {
     css: {
       postcss: __dirname,
     },
+    optimizeDeps: {
+      exclude: [
+        'virtual_yext-studio',
+        'virtual_yext-studio-git-data'
+      ]
+    }
   };
 });
