@@ -1,11 +1,13 @@
+import ElementIcon, { ElementType } from "../common/ElementIcon";
+
 export default function AddElementOption({
   displayName,
   handleSelect,
-  icon,
+  elementType,
 }: {
   displayName: string;
   handleSelect?: () => void;
-  icon: JSX.Element | null;
+  elementType: ElementType;
 }) {
   return (
     <button
@@ -13,7 +15,7 @@ export default function AddElementOption({
       onClick={handleSelect}
       aria-label={`Add ${displayName} Element`}
     >
-      {icon}
+      <ElementIcon elementType={elementType} />
       {displayName}
     </button>
   );

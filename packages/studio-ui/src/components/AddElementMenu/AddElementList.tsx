@@ -1,9 +1,8 @@
 import { FileMetadataKind, ComponentMetadata } from "@yext/studio-plugin";
 import useStudioStore from "../../store/useStudioStore";
-import { ElementType } from "./AddElementMenu";
 import AddElementOption from "./AddElementOption";
 import path from "path-browserify";
-import renderIconForType from "../common/renderIconForType";
+import { ElementType, getElementType } from "../common/ElementIcon";
 import { useMemo } from "react";
 
 interface AddElementListProps {
@@ -31,9 +30,7 @@ export default function AddElementList({
   return (
     <div className="flex flex-col items-start py-1">
       {options.map((props) => {
-        return (
-          <AddElementOption {...props} icon={renderIconForType(activeType)} />
-        );
+        return <AddElementOption {...props} elementType={activeType} />;
       })}
     </div>
   );
@@ -69,12 +66,7 @@ function useOptions(activeType: ElementType, afterSelect?: () => void) {
         if (metadata.kind !== FileMetadataKind.Component) {
           return false;
         }
-        if (activeType === ElementType.Components) {
-          return !metadata.acceptsChildren;
-        } else if (activeType === ElementType.Containers) {
-          return !!metadata.acceptsChildren;
-        }
-        return false;
+        return activeType === getElementType(metadata);
       })
       .map((componentMetadata) => {
         return {
