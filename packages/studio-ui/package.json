@@ -1,6 +1,6 @@
 {
   "name": "@yext/studio-ui",
-  "version": "0.23.1-beta.0",
+  "version": "0.23.1",
   "types": "./lib/src/index.d.ts",
   "main": "./lib/src/index.js",
   "type": "module",
