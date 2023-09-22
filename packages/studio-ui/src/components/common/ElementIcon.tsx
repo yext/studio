@@ -1,6 +1,7 @@
 import { ReactComponent as Component } from "../../icons/square-solid.svg";
 import { ReactComponent as Container } from "../../icons/square-empty.svg";
 import { ReactComponent as Layout } from "../../icons/mosaic.svg";
+import { ComponentMetadata } from "@yext/studio-plugin";
 
 export enum ElementType {
   Components = "Components",
@@ -27,4 +28,11 @@ export default function ElementIcon(props: ElementIconProps) {
       console.error(`Could not find Icon for type ${props.elementType}`);
       return null;
   }
+}
+
+export function getElementType(metadata: ComponentMetadata): ElementType{
+  if (metadata.acceptsChildren){
+    return ElementType.Containers
+  }
+  return ElementType.Components
 }

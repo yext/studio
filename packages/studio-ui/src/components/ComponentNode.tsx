@@ -6,7 +6,7 @@ import useStudioStore from "../store/useStudioStore";
 import RemoveElementButton from "./RemoveElementButton";
 import { getComponentDisplayName } from "../hooks/useActiveComponentName";
 import { Tooltip } from "react-tooltip";
-import ElementIcon, { ElementType } from "./common/ElementIcon";
+import ElementIcon, { ElementType, getElementType } from "./common/ElementIcon";
 
 interface ComponentNodeProps {
   /** The ComponentState this node represents in a ComponentTree. */
@@ -61,12 +61,8 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     }
   );
   const anchorId = `ComponentNode-${componentState.uuid}`;
-  const acceptsChildren = componentState.metadataUUID
-    ? getComponentMetadata(componentState)?.acceptsChildren
-    : undefined;
-  const elementType = acceptsChildren
-    ? ElementType.Containers
-    : ElementType.Components;
+  const componentMetadata = getComponentMetadata(componentState)
+  const elementType = componentMetadata ? getElementType(componentMetadata) : ElementType.Components
 
   const handleToggle = useCallback(() => {
     onToggle(componentState.uuid, !isOpen);
