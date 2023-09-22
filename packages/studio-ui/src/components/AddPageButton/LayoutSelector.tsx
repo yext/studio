@@ -49,14 +49,9 @@ export default function LayoutSelector({
       onChange={handleChange}
       aria-label="Layout picker"
     >
-      <option>
-        No layout selected
-      </option>
+      <option>No layout selected</option>
       {Object.keys(layouts).map((layoutName) => (
-        <option
-          key={layoutName}
-          value={layoutName}
-        >
+        <option key={layoutName} value={layoutName}>
           {layoutName}
         </option>
       ))}
