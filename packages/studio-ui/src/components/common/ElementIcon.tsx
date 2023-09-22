@@ -30,9 +30,9 @@ export default function ElementIcon(props: ElementIconProps) {
   }
 }
 
-export function getElementType(metadata: ComponentMetadata): ElementType{
-  if (metadata.acceptsChildren){
-    return ElementType.Containers
+export function getElementType(metadata: ComponentMetadata): ElementType {
+  if (metadata.acceptsChildren) {
+    return ElementType.Containers;
   }
-  return ElementType.Components
+  return ElementType.Components;
 }

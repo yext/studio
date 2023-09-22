@@ -66,7 +66,7 @@ function useOptions(activeType: ElementType, afterSelect?: () => void) {
         if (metadata.kind !== FileMetadataKind.Component) {
           return false;
         }
-        return activeType === getElementType(metadata)
+        return activeType === getElementType(metadata);
       })
       .map((componentMetadata) => {
         return {

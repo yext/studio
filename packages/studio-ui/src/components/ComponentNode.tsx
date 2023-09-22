@@ -61,8 +61,10 @@ export default function ComponentNode(props: ComponentNodeProps): JSX.Element {
     }
   );
   const anchorId = `ComponentNode-${componentState.uuid}`;
-  const componentMetadata = getComponentMetadata(componentState)
-  const elementType = componentMetadata ? getElementType(componentMetadata) : ElementType.Components
+  const componentMetadata = getComponentMetadata(componentState);
+  const elementType = componentMetadata
+    ? getElementType(componentMetadata)
+    : ElementType.Components;
 
   const handleToggle = useCallback(() => {
     onToggle(componentState.uuid, !isOpen);
