@@ -43,17 +43,11 @@ export default class PageDataValidator {
     const { pageName, url } = pageData;
     if (pageName !== undefined) {
       errorMessages.push(...this.validatePageName(pageName));
-      if (this.pages[pageName]) {
-        errorMessages.push(`Page name "${pageName}" is already used.`);
-      }
     }
 
-    if (this.isPagesJSRepo && !url) {
-      errorMessages.push("A URL is required.");
+    if (this.isPagesJSRepo) {
+      errorMessages.push(...this.validateURL(url));
     }
-
-    if (url !== undefined)
-      errorMessages.push(...this.validateURLSlug(url, this.isEntityPage));
     return {
       valid: errorMessages.length === 0,
       errorMessages: errorMessages,
@@ -82,6 +76,19 @@ export default class PageDataValidator {
     if (pageName.length > 255) {
       errorMessages.push("Page name must be 255 characters or less.");
     }
+    if (this.pages[pageName]) {
+      errorMessages.push(`Page name "${pageName}" is already used.`);
+    }
+    return errorMessages;
+  }
+
+  private validateURL(url: string | undefined) {
+    const errorMessages: string[] = [];
+      if (!url) {
+        errorMessages.push("A URL is required.");
+      } else {
+        errorMessages.push(...this.validateURLSlug(url, this.isEntityPage));
+      }
     return errorMessages;
   }
 
