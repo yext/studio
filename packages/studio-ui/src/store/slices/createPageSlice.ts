@@ -32,7 +32,6 @@ const initialStates: PageSliceStates = {
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pageActions = {
     addPage: (pageName: string, page: PageState) => {
-
       set((store) => {
         store.pages[pageName] = page;
         store.pendingChanges.pagesToUpdate.add(pageName);
