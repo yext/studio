@@ -84,11 +84,11 @@ export default class PageDataValidator {
 
   private validateURL(url: string | undefined) {
     const errorMessages: string[] = [];
-      if (!url) {
-        errorMessages.push("A URL is required.");
-      } else {
-        errorMessages.push(...this.validateURLSlug(url, this.isEntityPage));
-      }
+    if (!url) {
+      errorMessages.push("A URL is required.");
+    } else {
+      errorMessages.push(...this.validateURLSlug(url, this.isEntityPage));
+    }
     return errorMessages;
   }
 
