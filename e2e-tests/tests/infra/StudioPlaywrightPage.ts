@@ -59,21 +59,24 @@ export default class StudioPlaywrightPage {
     this.gitOps = new GitOperations(git);
   }
 
-  async addStaticPage(pageName: string, urlSlug: string) {
+  async addStaticPage(pageName: string, urlSlug: string, layoutName?: string) {
     await this.addPageButton.click();
     await this.selectPageType(false);
     await this.enterBasicPageData(pageName, urlSlug);
+    await this.selectLayout(layoutName);
   }
 
   async addEntityPage(
     pageName: string,
     streamScopeForm?: StreamScopeForm,
-    urlSlug?: string
+    urlSlug?: string,
+    layoutName?: string
   ) {
     await this.addPageButton.click();
     await this.selectPageType(true);
     await this.enterStreamScope(streamScopeForm);
     await this.enterBasicPageData(pageName, urlSlug);
+    await this.selectLayout(layoutName);
   }
 
   private async selectPageType(isEntityPage: boolean) {
@@ -112,7 +115,20 @@ export default class StudioPlaywrightPage {
       await this.typeIntoModal(basicDataModal, "URL Slug", urlSlug);
     }
     await this.takePageScreenshotAfterImgRender();
-    await this.clickModalButton(basicDataModal, "Save");
+    await this.clickModalButton(basicDataModal, "Next");
+  }
+
+  private async selectLayout(layoutName?: string) {
+    const modalName = "Select Layout";
+    await this.takePageScreenshotAfterImgRender();
+    if (layoutName) {
+      const layoutModal = this.page.getByRole("dialog", { name: modalName });
+      await layoutModal
+        .getByRole("combobox")
+        .selectOption({ label: layoutName });
+      await this.takePageScreenshotAfterImgRender();
+    }
+    await this.clickModalButton(modalName, "Save");
     await this.page.getByRole("dialog").waitFor({ state: "hidden" });
   }
 

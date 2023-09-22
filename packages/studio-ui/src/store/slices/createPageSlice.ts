@@ -32,10 +32,6 @@ const initialStates: PageSliceStates = {
 export const createPageSlice: SliceCreator<PageSlice> = (set, get) => {
   const pageActions = {
     addPage: (pageName: string, page: PageState) => {
-      if (get().pages[pageName]) {
-        throw new Error(`Page name "${pageName}" is already used.`);
-      }
-
       set((store) => {
         store.pages[pageName] = page;
         store.pendingChanges.pagesToUpdate.add(pageName);

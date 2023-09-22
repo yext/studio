@@ -20,17 +20,18 @@ export default function PageSettingsModal({
   isOpen,
   handleClose,
 }: PageSettingsModalProps): JSX.Element {
-  const isEntityPage = useStudioStore(
-    (store) => !!store.pages.pages[pageName].pagesJS?.streamScope
-  );
+  const [isEntityPage, isPagesJSRepo] = useStudioStore((store) => [
+    !!store.pages.pages[pageName].pagesJS?.streamScope,
+    store.studioConfig.isPagesJSRepo,
+  ]);
   const [currGetPathValue, updateGetPathValue] = useStudioStore((store) => [
     store.pages.pages[pageName].pagesJS?.getPathValue,
     store.pages.updateGetPathValue,
   ]);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const pageDataValidator = useMemo(
-    () => new PageDataValidator(isEntityPage),
-    [isEntityPage]
+    () => new PageDataValidator({ isEntityPage: true, isPagesJSRepo }),
+    [isPagesJSRepo]
   );
   const isURLEditable = useMemo(
     () => pageDataValidator.checkIsURLEditable(currGetPathValue?.value),
