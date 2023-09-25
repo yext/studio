@@ -43,7 +43,6 @@ export default function DeployButton() {
   const isDisabled = deployInProgress || (!hasChanges && !canPush.status);
 
   return (
-    <div className="flex flex-col">
     <button
       className="ml-4 py-1 px-3 text-white rounded-md disabled:bg-gray-400 bg-blue-600 hover:bg-blue-700"
       onClick={handleClick}
@@ -59,9 +58,5 @@ export default function DeployButton() {
         />
       )}
     </button>
-    <span>GIT DATA: {JSON.stringify(canPush)}</span>
-    <span>hasChanges: {String(hasChanges)}</span>
-    <span>deployInProgress: {String(deployInProgress)}</span>
-    </div>
   );
 }
