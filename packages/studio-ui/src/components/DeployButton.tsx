@@ -27,9 +27,9 @@ export default function DeployButton() {
     // Setting it back to false immediately after awaiting the deploy action
     // can lead to an intermediate state when deployInProgress is false
     // but the HMR update hasn't completed yet, resulting in a momentary flicker.
-    // if (!canPush) {
+    if (!canPush.status) {
       setDeployInProgress(false);
-    // }
+    }
   }, [canPush]);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function DeployButton() {
     }
   }, [hasChanges]);
 
-  const isDisabled = deployInProgress || (!hasChanges && !canPush);
+  const isDisabled = deployInProgress || (!hasChanges && !canPush.status);
 
   return (
     <div className="flex flex-col">
@@ -61,6 +61,7 @@ export default function DeployButton() {
     </button>
     <span>GIT DATA: {JSON.stringify(canPush)}</span>
     <span>hasChanges: {String(hasChanges)}</span>
+    <span>isDisabled: {String(isDisabled)}</span>
     </div>
   );
 }
