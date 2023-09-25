@@ -12,9 +12,7 @@ import useStudioStore from "../store/useStudioStore";
  * and redo actions, and adding elements.
  */
 export default function ActionsBar(): JSX.Element {
-  const studioInCBD = useStudioStore(
-    (store) => store.envData.isWithinCBD
-  );
+  const studioInCBD = useStudioStore((store) => store.envData.isWithinCBD);
   return (
     <div className="flex bg-gray-100 py-3 items-center px-4">
       <AddElementButton />
