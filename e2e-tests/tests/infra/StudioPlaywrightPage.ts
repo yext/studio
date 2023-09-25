@@ -263,6 +263,18 @@ export default class StudioPlaywrightPage {
     return path.join(this.tmpDir, "src/components", componentName + ".tsx");
   }
 
+  async openViewportMenu() {
+    await this.page
+      .getByRole("button", { name: "See Available Viewports" })
+      .click();
+  }
+
+  async setViewport(viewportName: string) {
+    await this.page
+      .getByRole("button", { name: `Select ${viewportName} Viewport` })
+      .click();
+  }
+
   async takePageScreenshotAfterImgRender() {
     await this.waitForIFrameImagesToLoad();
     await expect(this.page).toHaveScreenshot();
