@@ -18,7 +18,20 @@ const ensureButtonAppearance = (
 };
 
 describe("button is disabled properly", () => {
-  it("disables the button when not a PagesJS page", () => {
+  it("disables the button when there is no active page", () => {
+    mockStore({
+      pages: {
+        getActivePageState: () => undefined,
+        getActiveEntityData: () => undefined
+      }
+    });
+
+    render(<OpenLivePreviewButton />);
+    const button = screen.getByRole("button");
+    ensureButtonAppearance(button, false);
+  });
+
+  it("disables the button when active page is not a PagesJS Template", () => {
     const pageState: PageState = {
       componentTree: [],
       cssImports: [],

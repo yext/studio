@@ -1,4 +1,4 @@
-import { PagesJsState } from "@yext/studio-plugin";
+import { PageState, PagesJsState } from "@yext/studio-plugin";
 import useStudioStore from "../store/useStudioStore";
 import classNames from "classnames";
 import { Result } from "true-myth";
@@ -12,9 +12,6 @@ export const PAGES_JS_LANDING_PAGE = "http://localhost:5173";
  * If the Page is an Entity Template, the Preview will use the currently selected Entity Data.
  */
 export default function OpenLivePreviewButton(): JSX.Element {
-  let previewDisabled;
-  let livePreviewUrl;
-
   const [activePageName, activePageState, activeEntityData] = useStudioStore(
     (store) => [
       store.pages.activePageName as string,
@@ -23,29 +20,22 @@ export default function OpenLivePreviewButton(): JSX.Element {
     ]
   );
 
-  const isActivePagesJSPage = !!activePageState?.pagesJS;
-  if (isActivePagesJSPage) {
-    const pagesJSState = activePageState.pagesJS as PagesJsState;
-    const livePreviewUrlResult = getLivePreviewUrl(
-      pagesJSState,
-      activePageName,
-      activeEntityData
-    );
-    previewDisabled = livePreviewUrlResult.isErr;
-    livePreviewUrl = livePreviewUrlResult.isOk && livePreviewUrlResult.value;
-  } else {
-    previewDisabled = true;
-  }
+  const livePreviewUrlResult = getLivePreviewUrl(
+    activePageState,
+    activePageName,
+    activeEntityData
+  );
 
   const onClick = useCallback(() => {
-    livePreviewUrl && window.open(livePreviewUrl, "_blank");
-  }, [livePreviewUrl]);
+    livePreviewUrlResult.map((url) => window.open(url, "_blank"));
+  }, [livePreviewUrlResult]);
+
   const buttonClasses = classNames(
     "rounded-md px-2 py-1 flex items-center gap-x-2 text-white",
     {
-      "bg-gray-400": previewDisabled,
+      "bg-gray-400": livePreviewUrlResult.isErr,
       "bg-blue-600 shadow-md hover:bg-blue-700 hover:shadow-lg":
-        !previewDisabled,
+        livePreviewUrlResult.isOk,
     }
   );
 
@@ -53,7 +43,7 @@ export default function OpenLivePreviewButton(): JSX.Element {
     <div className="relative inline-block">
       <button
         className={buttonClasses}
-        disabled={previewDisabled}
+        disabled={livePreviewUrlResult.isErr}
         onClick={onClick}
       >
         Live Preview
@@ -63,19 +53,26 @@ export default function OpenLivePreviewButton(): JSX.Element {
 }
 
 function getLivePreviewUrl(
-  pagesJSState: PagesJsState,
+  activePageState: PageState | undefined,
   pageName: string,
   entityData?: Record<string, unknown>
 ): Result<string, Error> {
-  const isEntityPage = !!pagesJSState.streamScope;
-  if (isEntityPage) {
-    return entityData?.id
-      ? Result.ok(`${PAGES_JS_LANDING_PAGE}/${pageName}/${entityData.id}`)
-      : Result.err(new Error("Cannot create Preview URL for Entity Page"));
-  }
+  const isActivePagesJSPage = !!activePageState?.pagesJS;
 
-  const getPathVal = pagesJSState.getPathValue;
-  return !!getPathVal
-    ? Result.ok(`${PAGES_JS_LANDING_PAGE}/${getPathVal.value}`)
-    : Result.err(new Error("Cannot create Preview URL for Static Page"));
+  if (isActivePagesJSPage) {
+    const pagesJSState = activePageState.pagesJS as PagesJsState;
+    const isEntityPage = !!pagesJSState.streamScope;
+    if (isEntityPage) {
+      return entityData?.id
+        ? Result.ok(`${PAGES_JS_LANDING_PAGE}/${pageName}/${entityData.id}`)
+        : Result.err(new Error("Cannot create Preview URL for Entity Page"));
+    }
+
+    const getPathVal = pagesJSState.getPathValue;
+    return !!getPathVal
+      ? Result.ok(`${PAGES_JS_LANDING_PAGE}/${getPathVal.value}`)
+      : Result.err(new Error("Cannot create Preview URL for Static Page"));
+  } else {
+    return Result.err(new Error("There is no active PagesJS Template"));
+  }
 }
