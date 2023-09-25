@@ -33,7 +33,7 @@ export async function hotReloadStudioData(payload: StudioHMRPayload) {
 export function hotReloadGitData(payload: GitDataHMRPayload) {
   const { gitData } = payload;
   useStudioStore.setState((store) => {
-    store.studioGitData = { ...gitData }
+    store.studioGitData = gitData
   });
 }
 

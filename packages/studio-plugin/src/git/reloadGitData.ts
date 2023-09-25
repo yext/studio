@@ -18,6 +18,8 @@ export default async function reloadGitData(
   server.ws.send({
     type: "custom",
     event: GitDataHMRUpdateID,
-    data: gitWrapper.getStoredData(), 
+    data: {
+      gitData: gitWrapper.getStoredData()
+    }
   });
 }
