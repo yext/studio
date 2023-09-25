@@ -19,7 +19,7 @@ export default async function reloadGitData(
     type: "custom",
     event: GitDataHMRUpdateID,
     data: {
-      gitData: gitWrapper.getStoredData()
-    }
+      gitData: gitWrapper.getStoredData(),
+    },
   });
 }

@@ -1,4 +1,8 @@
-import { GitDataHMRPayload, StudioData, StudioHMRPayload } from "@yext/studio-plugin";
+import {
+  GitDataHMRPayload,
+  StudioData,
+  StudioHMRPayload,
+} from "@yext/studio-plugin";
 import useStudioStore from "./useStudioStore";
 import removeTopLevelFragments from "../utils/removeTopLevelFragments";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
@@ -33,7 +37,7 @@ export async function hotReloadStudioData(payload: StudioHMRPayload) {
 export function hotReloadGitData(payload: GitDataHMRPayload) {
   const { gitData } = payload;
   useStudioStore.setState((store) => {
-    store.studioGitData = gitData
+    store.studioGitData = gitData;
   });
 }
 
