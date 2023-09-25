@@ -2,43 +2,55 @@ import { useCallback } from "react";
 import { VIEWPORTS, Viewport } from "./defaults";
 import useStudioStore from "../../store/useStudioStore";
 
-interface OptionProps extends Viewport {
+export interface ViewportMenuProps {
   closeMenu: () => void;
 }
 
-export default function ViewportMenu(props: {
-  closeMenu: () => void;
-}): JSX.Element {
-  return (
-    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg flex flex-col items-start py-1">
-      {Object.values(VIEWPORTS).map((val) => {
-        return <Option key={val.name} closeMenu={props.closeMenu} {...val} />;
-      })}
-    </div>
-  );
-}
-
-function Option({ name: viewportOption, closeMenu, styles }: OptionProps) {
+export default function ViewportMenu({
+  closeMenu,
+}: ViewportMenuProps): JSX.Element {
   const [setViewport] = useStudioStore((store) => [
     store.pagePreview.setViewport,
   ]);
 
-  const handleSelect = useCallback(() => {
-    closeMenu();
-    const viewport =
-      VIEWPORTS[viewportOption.replace(/\s+/g, "").toLowerCase()] ??
-      VIEWPORTS["resetviewport"];
-    setViewport(viewport);
-  }, [closeMenu, viewportOption, setViewport]);
+  const handleSelect = useCallback(
+    (viewport: Viewport) => {
+      setViewport(viewport);
+      closeMenu();
+    },
+    [closeMenu, setViewport]
+  );
+
+  return (
+    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg flex flex-col items-start py-1">
+      {Object.values(VIEWPORTS).map((val) => {
+        return (
+          <Option key={val.name} viewport={val} handleSelect={handleSelect} />
+        );
+      })}
+    </div>
+  );
+}
+interface OptionProps {
+  viewport: Viewport;
+  handleSelect: (viewport) => void;
+}
+
+function Option({ viewport, handleSelect }: OptionProps) {
+  const onClick = useCallback(
+    () => handleSelect(viewport),
+    [handleSelect, viewport]
+  );
+  const { name, styles } = viewport;
 
   return (
     <button
       className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 w-full text-left"
-      onClick={handleSelect}
-      aria-label={`Select ${viewportOption} Viewport`}
+      onClick={onClick}
+      aria-label={`Select ${name} Viewport`}
     >
       <div className="flex flex-row gap-x-2 items-center">
-        {viewportOption}
+        {name}
         <div className="opacity-75">
           {styles && styles.width + "x" + styles.height}
         </div>
