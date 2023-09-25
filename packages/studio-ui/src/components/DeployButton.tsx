@@ -11,7 +11,7 @@ const tooltipAnchorID = "YextStudio-deployButton";
 export default function DeployButton() {
   const [deploy, canPush] = useStudioStore((store) => [
     store.actions.deploy,
-    store.studioGitData.canPush,
+    store.gitData.canPush,
   ]);
   const [deployInProgress, setDeployInProgress] = useState(false);
   const hasChanges = useHasChanges();

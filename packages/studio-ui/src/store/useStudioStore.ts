@@ -12,8 +12,8 @@ import StudioActions from "./StudioActions";
 import createStudioConfigSlice from "./slices/createStudioConfigSlice";
 import createPreviousSaveSlice from "./slices/createPreviousSaveSlice";
 import { addZundoMiddleware } from "./zundoMiddleware";
-import createStudioEnvDataSlice from "./slices/createStudioEnvDataSlice";
-import createStudioGitDataSlice from "./slices/createStudioGitDataSlice";
+import createEnvDataSlice from "./slices/createEnvDataSlice";
+import createGitDataSlice from "./slices/createGitDataSlice";
 import createAccountContentSlice from "./slices/accountContent/createAccountContentSlice";
 import createLayoutSlice from "./slices/createLayoutSlice";
 
@@ -49,8 +49,8 @@ const useStudioStore = create<StudioStore>()(
           () => get().studioConfig
         ),
         studioConfig: lens(createStudioConfigSlice),
-        studioEnvData: lens(createStudioEnvDataSlice),
-        studioGitData: lens(createStudioGitDataSlice),
+        envData: lens(createEnvDataSlice),
+        gitData: lens(createGitDataSlice),
         accountContent: lens(createAccountContentSlice),
       };
     })

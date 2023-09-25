@@ -7,8 +7,8 @@ import PageSlice from "./slices/PageSlice";
 import PreviousSaveSlice from "./slices/PreviousSaveSlice";
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
 import StudioConfigSlice from "./slices/StudioConfigSlice";
-import StudioEnvDataSlice from "./slices/StudioEnvDataSlice";
-import StudioGitDataSlice from "./slices/StudioGitDataSlice";
+import EnvDataSlice from "./slices/EnvDataSlice";
+import GitDataSlice from "./slices/GitDataSlice";
 
 /**
  * The overall shape of the Zustand store as the state manager for Studio.
@@ -24,7 +24,7 @@ export type StudioStore = {
   previousSave: PreviousSaveSlice;
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
-  studioEnvData: StudioEnvDataSlice;
-  studioGitData: StudioGitDataSlice;
+  envData: EnvDataSlice;
+  gitData: GitDataSlice;
   accountContent: AccountContentSlice;
 };

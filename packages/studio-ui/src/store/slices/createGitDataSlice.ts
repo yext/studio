@@ -1,8 +1,8 @@
-import StudioGitDataSlice from "../models/slices/StudioGitDataSlice";
+import GitDataSlice from "../models/slices/GitDataSlice";
 import { SliceCreator } from "../models/utils";
 import initialGitData from "virtual_yext-studio-git-data";
 
-const createStudioEnvDataSlice: SliceCreator<StudioGitDataSlice> = () => ({
+const createStudioEnvDataSlice: SliceCreator<GitDataSlice> = () => ({
   canPush: initialGitData.canPush,
 });
 
