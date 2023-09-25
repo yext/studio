@@ -22,8 +22,8 @@ describe("button is disabled properly", () => {
     mockStore({
       pages: {
         getActivePageState: () => undefined,
-        getActiveEntityData: () => undefined
-      }
+        getActiveEntityData: () => undefined,
+      },
     });
 
     render(<OpenLivePreviewButton />);
