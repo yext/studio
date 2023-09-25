@@ -18,7 +18,7 @@ export default class StudioPlaywrightPage {
   readonly livePreviewButton: Locator;
   readonly preview: FrameLocator;
   readonly saveButton: ToastActionButton;
-  readonly deployButton: Locator;
+  readonly deployButton: ToastActionButton;
   readonly gitOps: GitOperations;
 
   constructor(private page: Page, private tmpDir: string) {
@@ -49,9 +49,11 @@ export default class StudioPlaywrightPage {
       "Save Changes to Repository"
     );
 
-    this.deployButton = page.getByRole("button", {
-      name: "Deploy",
-    });
+    this.deployButton = new ToastActionButton(
+      this.page,
+      "Deployed successfully.",
+      "Deploy Changes to Repository"
+    );
 
     const git = simpleGit(tmpDir);
     this.gitOps = new GitOperations(git);
