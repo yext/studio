@@ -8,6 +8,7 @@ import PreviousSaveSlice from "./slices/PreviousSaveSlice";
 import SiteSettingSlice from "./slices/SiteSettingsSlice";
 import StudioConfigSlice from "./slices/StudioConfigSlice";
 import StudioEnvDataSlice from "./slices/StudioEnvDataSlice";
+import StudioGitDataSlice from "./slices/StudioGitDataSlice";
 
 /**
  * The overall shape of the Zustand store as the state manager for Studio.
@@ -24,5 +25,6 @@ export type StudioStore = {
   actions: StudioActions;
   studioConfig: StudioConfigSlice;
   studioEnvData: StudioEnvDataSlice;
+  studioGitData: StudioGitDataSlice;
   accountContent: AccountContentSlice;
 };

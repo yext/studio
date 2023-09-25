@@ -1,17 +1,18 @@
 import useStudioStore from "../store/useStudioStore";
 import { useCallback, useEffect, useState } from "react";
-import gitData from "virtual_yext-studio-git-data";
 import useHasChanges from "../hooks/useHasChanges";
 import { Tooltip } from "react-tooltip";
 
-const canPush = gitData.canPush.status;
 const tooltipAnchorID = "YextStudio-deployButton";
 
 /**
  * Renders a button for saving, committing, and pushing changes.
  */
 export default function DeployButton() {
-  const deploy = useStudioStore((store) => store.actions.deploy);
+  const [deploy, canPush] = useStudioStore((store) => [
+    store.actions.deploy,
+    store.studioGitData.canPush
+  ]);
   const [deployInProgress, setDeployInProgress] = useState(false);
   const hasChanges = useHasChanges();
 
@@ -26,10 +27,10 @@ export default function DeployButton() {
     // Setting it back to false immediately after awaiting the deploy action
     // can lead to an intermediate state when deployInProgress is false
     // but the HMR update hasn't completed yet, resulting in a momentary flicker.
-    if (!canPush) {
+    // if (!canPush) {
       setDeployInProgress(false);
-    }
-  }, []);
+    // }
+  }, [canPush]);
 
   useEffect(() => {
     // Websockets do not currently work in CBD, which prevents the gitData useEffect from correctly setting
@@ -49,11 +50,11 @@ export default function DeployButton() {
       aria-label="Deploy Changes to Repository"
     >
       <span id={tooltipAnchorID}>Deploy</span>
-      {isDisabled && gitData.canPush.reason && (
+      {isDisabled && canPush.reason && (
         <Tooltip
           className="z-20"
           anchorId={tooltipAnchorID}
-          content={gitData.canPush.reason}
+          content={canPush.reason}
         />
       )}
     </button>
