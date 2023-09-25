@@ -1,4 +1,4 @@
-import { StudioData, StudioHMRPayload } from "@yext/studio-plugin";
+import { GitDataHMRPayload, StudioData, StudioHMRPayload } from "@yext/studio-plugin";
 import useStudioStore from "./useStudioStore";
 import removeTopLevelFragments from "../utils/removeTopLevelFragments";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
@@ -9,7 +9,7 @@ import getFunctionComponent from "../utils/getFunctionComponent";
  * A handler for custom Studio HMR events.
  * When a custom studio HMR event is received, updates the store.
  */
-export default async function hotReloadStore(payload: StudioHMRPayload) {
+export async function hotReloadStudioData(payload: StudioHMRPayload) {
   const { updateType, studioData } = payload;
   switch (updateType) {
     case "components":
@@ -28,6 +28,13 @@ export default async function hotReloadStore(payload: StudioHMRPayload) {
       await fullSync(studioData, payload.file);
       break;
   }
+}
+
+export function hotReloadGitData(payload: GitDataHMRPayload) {
+  const { gitData } = payload;
+  useStudioStore.setState((store) => {
+    store.studioGitData = { ...gitData }
+  });
 }
 
 async function fullSync(studioData: StudioData, file: string) {
