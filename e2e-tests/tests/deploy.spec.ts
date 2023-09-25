@@ -8,14 +8,16 @@ studioTest.use({
 studioTest("can deploy changes", async ({ studioPage }) => {
   const gitOps = studioPage.gitOps;
   const startingRef = await gitOps.getCurrentRef();
-  await studioPage.addElement("Container", "Containers");
-  await studioPage.takePageScreenshotAfterImgRender();
+  const deployButton = studioPage.deployButton
+  await expect(deployButton).toHaveScreenshot();
+  await studioPage.addElement("Container", "Containers", false);
+  await expect(deployButton).toHaveScreenshot();
 
   const numCommitsBeforeDeploy = await gitOps.getNumCommitsFromRef(startingRef);
   expect(numCommitsBeforeDeploy).toEqual(0);
   await studioPage.deployButton.click();
 
-  await studioPage.takePageScreenshotAfterImgRender();
+  await expect(deployButton).toHaveScreenshot();
   const numCommitsMade = await gitOps.getNumCommitsFromRef(startingRef);
   expect(numCommitsMade).toEqual(1);
   const commitMsg = await gitOps.getCommitMessage();
