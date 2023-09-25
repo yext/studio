@@ -40,7 +40,7 @@ export default function DeployButton() {
     }
   }, [hasChanges]);
 
-  const isDisabled = deployInProgress || (!hasChanges && !canPush.status);
+  const isDisabled = deployInProgress || (!hasChanges && !canPush?.status);
 
   return (
     <div className="flex flex-col">
