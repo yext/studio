@@ -67,8 +67,7 @@ async function syncFileMetadata(studioData: StudioData, file: string) {
     file + `?timestamp=${Date.now()}`
   );
   const componentFunction = getFunctionComponent(
-    importedFile,
-    path.basename(file, ".tsx")
+    importedFile
   );
   if (componentFunction) {
     useStudioStore

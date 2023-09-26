@@ -16,7 +16,6 @@ import StudioConfigSlice from "./models/slices/StudioConfigSlice";
 import AddComponentAction from "./StudioActions/AddComponentAction";
 import CreateComponentStateAction from "./StudioActions/CreateComponentStateAction";
 import UpdateActivePageAction from "./StudioActions/UpdateActivePageAction";
-import ImportComponentAction from "./StudioActions/ImportComponentAction";
 import GenerateTestDataAction from "./StudioActions/GenerateTestDataAction";
 import CreatePageAction from "./StudioActions/CreatePageAction";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
@@ -27,7 +26,6 @@ export default class StudioActions {
   public addComponent: AddComponentAction["addComponent"];
   public createComponentState: CreateComponentStateAction["createComponentState"];
   public updateActivePage: UpdateActivePageAction["updateActivePage"];
-  public importComponent: ImportComponentAction["importComponent"];
   public generateTestData: GenerateTestDataAction["generateTestData"];
   public createPage: CreatePageAction["createPage"];
 
@@ -45,9 +43,6 @@ export default class StudioActions {
       getPages,
       this
     ).updateActivePage;
-    this.importComponent = new ImportComponentAction(
-      getFileMetadatas
-    ).importComponent;
     this.generateTestData = new GenerateTestDataAction(
       getPages,
       this

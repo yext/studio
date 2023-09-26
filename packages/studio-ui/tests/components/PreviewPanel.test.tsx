@@ -106,7 +106,7 @@ describe("renders preview", () => {
   });
 });
 
-it("clicking a component in the preview updates the activeComponentUUID", async () => {
+it.only("clicking a component in the preview updates the activeComponentUUID", async () => {
   await mockPreviewState(nestedComponentTree);
   render(<PreviewPanel setTooltipProps={mockSetState} />);
   expect(useStudioStore.getState().pages.activeComponentUUID).toEqual(

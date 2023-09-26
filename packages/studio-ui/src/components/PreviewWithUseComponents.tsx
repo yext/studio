@@ -1,4 +1,4 @@
-import useImportedComponents from "../hooks/useImportedComponents";
+import useImportedComponents from "../utils/loadComponents";
 import useStudioStore from "../store/useStudioStore";
 import PreviewPanel from "./PreviewPanel";
 import Highlighter from "./Highlighter";
@@ -14,10 +14,6 @@ export default function PreviewWithUseComponents() {
     anchorSelect: "",
   });
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null);
-  const componentTree = useStudioStore((store) =>
-    store.actions.getComponentTree()
-  );
-  void useImportedComponents(componentTree);
 
   return (
     <>
