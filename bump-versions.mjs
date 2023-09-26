@@ -10,12 +10,14 @@ function bumpStudio() {
   packageJson.dependencies["@yext/studio-ui"] = newVersion;
   fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
   bumpPackage("studio");
-  execSync("npm i")
+  execSync("npm i");
 }
 
 function bumpPackage(packageName) {
   console.log(`... bumping ${packageName}`);
-  execSync(`npm version ${newVersion} -w=packages/${packageName} --workspaces-update=false`);
+  execSync(
+    `npm version ${newVersion} -w=packages/${packageName} --workspaces-update=false`
+  );
 }
 
 function readJson(filepath) {
