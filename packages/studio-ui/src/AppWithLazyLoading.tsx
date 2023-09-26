@@ -71,7 +71,5 @@ function renderBundleMessage(appLoaded: boolean) {
   });
   const msg = appLoaded ? "JS bundle loaded!" : "... loading JS bundle ...";
 
-  return (
-    <div className={className}>{msg}</div>
-  );
+  return <div className={className}>{msg}</div>;
 }
