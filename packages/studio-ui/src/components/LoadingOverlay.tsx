@@ -14,12 +14,12 @@ export default function LoadingOverlay(props: PropsWithChildren) {
     loadComponents();
   }, []);
 
-  const appClassname = classNames('transition-opacity delay-300 duration-1000', {
+  const appClassname = classNames('transition-opacity delay-1000 duration-1000', {
     'opacity-100': finishedLoading,
     'opacity-0 invisible': !finishedLoading
   })
 
-  const overlayClassname = classNames('transition-opacity delay-100 duration-1000 h-full w-full fixed flex justify-center items-center flex-col', {
+  const overlayClassname = classNames('transition-opacity delay-1000 duration-1000 h-full w-full fixed flex justify-center items-center flex-col', {
     'opacity-100': !finishedLoading,
     'opacity-0': finishedLoading
   })

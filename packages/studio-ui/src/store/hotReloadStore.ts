@@ -6,7 +6,6 @@ import {
 import useStudioStore from "./useStudioStore";
 import removeTopLevelFragments from "../utils/removeTopLevelFragments";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
-import path from "path-browserify";
 import getFunctionComponent from "../utils/getFunctionComponent";
 
 /**
