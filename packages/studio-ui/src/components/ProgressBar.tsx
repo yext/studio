@@ -6,7 +6,7 @@ function ProgressBar(props: { progressFraction: number }) {
   const progressStyles: CSSProperties = useMemo(() => {
     return {
       width: `${Math.ceil(props.progressFraction * 100)}%`,
-      transition: `width ${Math.floor(2 - props.progressFraction)}s`,
+      transition: `width 1s`,
     };
   }, [props.progressFraction]);
 
