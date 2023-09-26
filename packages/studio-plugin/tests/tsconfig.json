@@ -1,9 +1,0 @@
-{
-  "include": ["**/*"],
-  "extends": "../tsconfig.json",
-  "compilerOptions": {
-    "noEmit": true,
-    "types": ["jest", "./__setup__/setup-env.ts"]
-  },
-  "exclude": ["__fixtures__"]
-}
