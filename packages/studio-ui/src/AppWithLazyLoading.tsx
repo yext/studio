@@ -3,6 +3,7 @@ import { Suspense, lazy, useEffect, useState } from "react";
 import useStudioStore from "./store/useStudioStore";
 import ProgressBar from "./components/ProgressBar";
 import loadComponents from "./utils/loadComponents";
+import classNames from "classnames";
 
 const AppPromise = import("./App");
 const App = lazy(() => AppPromise);
@@ -25,23 +26,12 @@ export default function AppWithLazyLoading() {
       loading={!componentsLoaded || !appLoaded}
       overlay={
         <>
-          <ProgressBar progressFraction={loadedCount / totalCount} />
-          <div className="text-indigo-800 animate-pulse">
-            {componentsLoaded ? (
-              <span>components loaded!</span>
-            ) : (
-              <span>
-                loading components... ({loadedCount}/{totalCount})
-              </span>
-            )}
-          </div>
-          <div className="animate-pulse text-sky-600">
-            {appLoaded ? (
-              <span>JS bundle loaded!</span>
-            ) : (
-              <span>... loading JS bundle ...</span>
-            )}
-          </div>
+          {renderComponentLoadingProgress(
+            loadedCount,
+            totalCount,
+            componentsLoaded
+          )}
+          {renderBundleMessage(appLoaded)}
         </>
       }
     >
@@ -49,5 +39,41 @@ export default function AppWithLazyLoading() {
         <App />
       </Suspense>
     </LoadingOverlay>
+  );
+}
+
+function renderComponentLoadingProgress(
+  loadedCount: number,
+  totalCount: number,
+  componentsLoaded: boolean
+) {
+  const msg = componentsLoaded
+    ? "components loaded!"
+    : `loading components... (${loadedCount}/${totalCount})`;
+
+  return (
+    <>
+      <ProgressBar progressFraction={loadedCount / totalCount} />
+      <div
+        className={classNames("text-indigo-800", {
+          "animate-pulse": !componentsLoaded,
+        })}
+      >
+        {msg}
+      </div>
+    </>
+  );
+}
+
+function renderBundleMessage(appLoaded: boolean) {
+  const className = classNames("text-sky-600 mt-4", {
+    "animate-pulse": !appLoaded,
+  });
+  const msg = appLoaded ? "JS bundle loaded!" : "... loading JS bundle ...";
+
+  return (
+    <>
+      <div className={className}>{msg}</div>
+    </>
   );
 }

@@ -1,8 +1,6 @@
 import { PropsWithChildren, ReactNode } from "react";
 import classNames from "classnames";
 
-const TRANSITION_CLASSES = "transition-opacity duration-500";
-
 export default function LoadingOverlay(
   props: PropsWithChildren<{
     loading: boolean;
@@ -11,13 +9,16 @@ export default function LoadingOverlay(
 ) {
   const { loading, overlay } = props;
 
-  const childrenWrapperClassname = classNames(TRANSITION_CLASSES, {
-    "opacity-100": !loading,
-    "opacity-0 invisible": loading,
-  });
+  const childrenWrapperClassname = classNames(
+    "transition-opacity duration-500 delay-100",
+    {
+      "opacity-100": !loading,
+      "opacity-0 invisible": loading,
+    }
+  );
 
   const overlayClassname = classNames(
-    TRANSITION_CLASSES,
+    "transition-opacity duration-500 delay-100",
     "h-full w-full fixed flex justify-center items-center flex-col",
     {
       "opacity-100": loading,
