@@ -3,6 +3,7 @@ import { StudioData } from "./StudioData";
 import { FeaturesJson } from "./PagesJS";
 import { EntitiesRequest, EntitiesResponse } from "../http/types/Entities";
 import { SavedFilterData } from "../http/types/SavedFilters";
+import { GitData } from "./GitData";
 
 export enum MessageID {
   SaveChanges = "studio:saveChanges",
@@ -12,7 +13,8 @@ export enum MessageID {
   GetSavedFilters = "studio:getSavedFilters",
   GetEntityTypes = "studio:getEntityTypes",
 }
-export const StudioHMRUpdateID = "studio:hmrUpdate";
+export const StudioHMRUpdateID = "studio:studioDataHmrUpdate";
+export const GitDataHMRUpdateID = "studio:gitDataHmrUpdate";
 
 export interface SaveChangesPayload
   extends Pick<StudioData, "pageNameToPageState"> {
@@ -33,6 +35,10 @@ export interface StudioHMRPayload {
   updateType: "siteSettings" | "components" | "layouts" | "pages" | "full";
   studioData: StudioData;
   file: string;
+}
+
+export interface GitDataHMRPayload {
+  gitData: GitData;
 }
 
 export type StudioEventMap = {
