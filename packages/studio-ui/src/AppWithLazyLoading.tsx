@@ -5,8 +5,8 @@ import ProgressBar from "./components/ProgressBar";
 import loadComponents from "./utils/loadComponents";
 import classNames from "classnames";
 
-const AppPromise = import("./App");
-const App = lazy(() => AppPromise);
+const StudioAppPromise = import("./Studio");
+const Studio = lazy(() => StudioAppPromise);
 
 export default function AppWithLazyLoading() {
   const [loadedCount, totalCount] = useStudioStore((store) => [
@@ -18,7 +18,7 @@ export default function AppWithLazyLoading() {
 
   useEffect(() => {
     loadComponents();
-    void AppPromise.then(() => setAppLoaded(true));
+    void StudioAppPromise.then(() => setAppLoaded(true));
   }, []);
 
   return (
@@ -36,7 +36,7 @@ export default function AppWithLazyLoading() {
       }
     >
       <Suspense>
-        <App />
+        <Studio />
       </Suspense>
     </LoadingOverlay>
   );
