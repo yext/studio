@@ -4,7 +4,7 @@ import Toast from "./components/Toast";
 import PreviewWithUseComponents from "./components/PreviewWithUseComponents";
 import LeftSidebar from "./components/LeftSidebar";
 
-export default function Studio() {
+export default function App() {
   return (
     <>
       <Toast />
