@@ -14,7 +14,7 @@ export default function ViewportButton(): JSX.Element {
 
   return (
     <div ref={containerRef}>
-      <button onClick={handleClick}>
+      <button onClick={handleClick} aria-label="See Available Viewports">
         <Icon />
       </button>
       {isOpen && <ViewportMenu closeMenu={handleClose} />}

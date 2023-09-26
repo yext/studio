@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { VIEWPORTS, Viewport } from "./defaults";
 import useStudioStore from "../../store/useStudioStore";
+import classNames from "classnames";
 
 export interface ViewportMenuProps {
   closeMenu: () => void;
@@ -9,8 +10,9 @@ export interface ViewportMenuProps {
 export default function ViewportMenu({
   closeMenu,
 }: ViewportMenuProps): JSX.Element {
-  const [setViewport] = useStudioStore((store) => [
+  const [setViewport, currentViewport] = useStudioStore((store) => [
     store.pagePreview.setViewport,
+    store.pagePreview.viewport,
   ]);
 
   const handleSelect = useCallback(
@@ -23,9 +25,17 @@ export default function ViewportMenu({
 
   return (
     <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg flex flex-col items-start py-1">
-      {Object.values(VIEWPORTS).map((val) => {
+      {Object.values(VIEWPORTS).map((viewport) => {
         return (
-          <Option key={val.name} viewport={val} handleSelect={handleSelect} />
+          <Option
+            key={viewport.name}
+            viewport={viewport}
+            handleSelect={handleSelect}
+            isCurrentlySelected={
+              viewport.name !== VIEWPORTS.resetviewport.name &&
+              viewport === currentViewport
+            }
+          />
         );
       })}
     </div>
@@ -33,19 +43,27 @@ export default function ViewportMenu({
 }
 interface OptionProps {
   viewport: Viewport;
+  isCurrentlySelected: boolean;
   handleSelect: (viewport) => void;
 }
 
-function Option({ viewport, handleSelect }: OptionProps) {
+function Option({ viewport, isCurrentlySelected, handleSelect }: OptionProps) {
   const onClick = useCallback(
     () => handleSelect(viewport),
     [handleSelect, viewport]
   );
   const { name, styles } = viewport;
+  const className = classNames(
+    "flex items-center gap-x-2 px-6 py-2 cursor-pointer w-full text-left",
+    {
+      "bg-gray-300": isCurrentlySelected,
+      "hover:bg-gray-100": !isCurrentlySelected,
+    }
+  );
 
   return (
     <button
-      className="flex items-center gap-x-2 px-6 py-2 cursor-pointer hover:bg-gray-100 w-full text-left"
+      className={className}
       onClick={onClick}
       aria-label={`Select ${name} Viewport`}
     >
