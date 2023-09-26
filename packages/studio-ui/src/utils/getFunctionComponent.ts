@@ -1,4 +1,4 @@
-import { ImportType } from '../store/models/ImportType';
+import { ImportType } from "../store/models/ImportType";
 
 export default function getFunctionComponent(
   importedValue: Record<string, unknown>

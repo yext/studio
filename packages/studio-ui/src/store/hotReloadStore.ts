@@ -65,9 +65,7 @@ async function syncFileMetadata(studioData: StudioData, file: string) {
   const importedFile = await dynamicImportFromBrowser(
     file + `?timestamp=${Date.now()}`
   );
-  const componentFunction = getFunctionComponent(
-    importedFile
-  );
+  const componentFunction = getFunctionComponent(importedFile);
   if (componentFunction) {
     useStudioStore
       .getState()

@@ -1,5 +1,3 @@
-import useImportedComponents from "../utils/loadComponents";
-import useStudioStore from "../store/useStudioStore";
 import PreviewPanel from "./PreviewPanel";
 import Highlighter from "./Highlighter";
 import IFramePortal from "./IFramePortal";
