@@ -28,8 +28,8 @@ export default function LoadingOverlay(
 
   return (
     <>
-      <div className={overlayClassname}>{overlay}</div>
       <div className={childrenWrapperClassname}>{props.children}</div>
+      <div className={overlayClassname}>{overlay}</div>
     </>
   );
 }
