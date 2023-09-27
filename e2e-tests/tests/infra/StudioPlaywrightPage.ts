@@ -284,4 +284,19 @@ export default class StudioPlaywrightPage {
     await this.waitForIFrameImagesToLoad();
     await expect(this.preview.locator("body")).toHaveScreenshot();
   }
+
+  async reload() {
+    await this.page.reload();
+    await this.waitForLoadState();
+  }
+
+  /**
+   * Waits for the LoadingOverlay to finish.
+   */
+  async waitForLoadState() {
+    await this.page.waitForLoadState();
+    await expect(
+      this.page.getByRole("button", { name: "Open Add Element Menu" })
+    ).toBeVisible();
+  }
 }

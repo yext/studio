@@ -10,26 +10,26 @@ export default function LoadingOverlay(
   const { loading, overlay } = props;
 
   const childrenWrapperClassname = classNames(
-    "transition-opacity duration-500 delay-100",
+    "transition-opacity duration-500",
     {
       "opacity-100": !loading,
-      "opacity-0 invisible": loading,
+      "opacity-0 pointer-events-none": loading,
     }
   );
 
   const overlayClassname = classNames(
-    "transition-opacity duration-500 delay-100",
-    "h-full w-full fixed flex justify-center items-center flex-col",
+    "transition-opacity duration-500",
+    "h-full w-full flex absolute justify-center items-center flex-col",
     {
       "opacity-100": loading,
-      "opacity-0": !loading,
+      "opacity-0 pointer-events-none": !loading,
     }
   );
 
   return (
     <>
-      <div className={childrenWrapperClassname}>{props.children}</div>
       <div className={overlayClassname}>{overlay}</div>
+      <div className={childrenWrapperClassname}>{props.children}</div>
     </>
   );
 }
