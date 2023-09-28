@@ -1,6 +1,6 @@
 import { HexColor, TailwindClass } from "@yext/studio";
 import { NestedProp } from "../types/exportedTypes";
-
+import Header from "./Header";
 export interface BannerData {
   /**
    * @tooltip Banner's title
@@ -41,6 +41,8 @@ export default function Banner(props: BannerData) {
           (interval) => `Start: ${interval.start} End: ${interval.end}, `
         )}
       </p>
+      <Header
+      title="hello"></Header>
     </div>
   );
 }

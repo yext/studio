@@ -14,32 +14,26 @@ export default function createStudioStylingPlugin(): PluginOption {
   return {
     name: "css-inline",
     enforce: "pre",
-    resolveId(id, importer) {
+    async resolveId(id, importer) {
       if (!importer) {
         return;
       }
-      const extName = upath.extname(id);
-      if (!extName) {
-        return;
+
+      // this breaks it for some reason.
+      if (id.includes("react/jsx-dev-runtime")) { 
+        return
       }
 
       const parentComponentName = getUUIDNameQueryParam(importer);
-      let filepath;
-
       if (parentComponentName) {
-        filepath = addQueryParam(
+        const filepath = addQueryParam(
           id,
           "studioComponentUUID",
           parentComponentName
         );
-      }
-      // const isStyle = extName === ".css" || extName === ".scss"
-      // if (isStyle && !parentComponentName) {
-      //   filepath = addQueryParam(id, "studioPageName", upath.basename(id, upath.extname(id)))
-      //   console.log(filepath)
-      // }
-      if (filepath) {
-        return this.resolve(filepath, importer);
+        if (filepath) {
+            return this.resolve(filepath, importer)
+        }
       }
     },
   };

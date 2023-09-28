@@ -43,11 +43,12 @@ export default function IFramePortal(
 }
 
 function useParentDocumentStyles(iframeDocument: Document | undefined) {
-  const [activePage, fileMetadatas, componentTree] = useStudioStore(
+  const [activePage, fileMetadatas, componentTree, importedComponents] = useStudioStore(
     (studio) => [
       studio.pages.activePageName,
       studio.fileMetadatas.UUIDToFileMetadata,
       studio.pages.getActivePageState()?.componentTree,
+      studio.fileMetadatas.UUIDToImportedComponent
     ]
   );
 
@@ -62,9 +63,11 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         const cloneNode: Node = el.cloneNode(true);
         const componentUUID = getUUIDQueryParam(filepath);
         const isTailwindDirective = getIsTailwindDirective(filepath);
+        if (importedComponents.hasOwnProperty(componentUUID)) {
+          el.disabled = true;
+        }
         if (componentTree?.some((el) => el.metadataUUID === componentUUID)) {
           iframeDocument.head.appendChild(cloneNode);
-          el.disabled = true;
         }
         if (isTailwindDirective) {
           iframeDocument.head.appendChild(cloneNode);
@@ -80,7 +83,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         }
       };
     }
-  }, [iframeDocument, activePage, fileMetadatas, componentTree]);
+  }, [iframeDocument, activePage, fileMetadatas, componentTree, importedComponents]);
 }
 
 const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
