@@ -43,14 +43,13 @@ export default function IFramePortal(
 }
 
 function useParentDocumentStyles(iframeDocument: Document | undefined) {
-  const [activePage, fileMetadatas, componentTree, importedComponents] = useStudioStore(
-    (studio) => [
+  const [activePage, fileMetadatas, componentTree, importedComponents] =
+    useStudioStore((studio) => [
       studio.pages.activePageName,
       studio.fileMetadatas.UUIDToFileMetadata,
       studio.pages.getActivePageState()?.componentTree,
-      studio.fileMetadatas.UUIDToImportedComponent
-    ]
-  );
+      studio.fileMetadatas.UUIDToImportedComponent,
+    ]);
 
   useEffect(() => {
     if (iframeDocument) {
@@ -83,7 +82,13 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         }
       };
     }
-  }, [iframeDocument, activePage, fileMetadatas, componentTree, importedComponents]);
+  }, [
+    iframeDocument,
+    activePage,
+    fileMetadatas,
+    componentTree,
+    importedComponents,
+  ]);
 }
 
 const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {

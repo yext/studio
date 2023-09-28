@@ -41,8 +41,7 @@ export default function Banner(props: BannerData) {
           (interval) => `Start: ${interval.start} End: ${interval.end}, `
         )}
       </p>
-      <Header
-      title="hello"></Header>
+      <Header title="hello"></Header>
     </div>
   );
 }

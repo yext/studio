@@ -1,5 +1,4 @@
 import { PluginOption } from "vite";
-import upath from "upath";
 
 /**
  * Handles placing custom-labeled style tags to Studio HTML
@@ -20,8 +19,8 @@ export default function createStudioStylingPlugin(): PluginOption {
       }
 
       // this breaks it for some reason.
-      if (id.includes("react/jsx-dev-runtime")) { 
-        return
+      if (id.includes("react/jsx-dev-runtime")) {
+        return;
       }
 
       const parentComponentName = getUUIDNameQueryParam(importer);
@@ -32,7 +31,7 @@ export default function createStudioStylingPlugin(): PluginOption {
           parentComponentName
         );
         if (filepath) {
-            return this.resolve(filepath, importer)
+          return this.resolve(filepath, importer);
         }
       }
     },
