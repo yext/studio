@@ -1,5 +1,4 @@
 import { PluginOption } from "vite";
-
 /**
  * Handles placing custom-labeled style tags to Studio HTML
  * by injecting query information into vite's "data-vite-dev-id"
@@ -18,7 +17,7 @@ export default function createStudioStylingPlugin(): PluginOption {
         return;
       }
 
-      // this breaks it for some reason.
+      // this breaks it for some reason. will look into.
       if (id.includes("react/jsx-dev-runtime")) {
         return;
       }
