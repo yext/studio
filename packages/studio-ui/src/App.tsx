@@ -6,7 +6,7 @@ import LeftSidebar from "./components/LeftSidebar";
 
 export default function App() {
   return (
-    <div className="App">
+    <>
       <Toast />
       <div className="flex flex-col w-screen h-screen">
         <ActionsBar />
@@ -16,6 +16,6 @@ export default function App() {
           <EditorSidebar />
         </div>
       </div>
-    </div>
+    </>
   );
 }

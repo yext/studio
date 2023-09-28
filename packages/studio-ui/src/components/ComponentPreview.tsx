@@ -62,8 +62,8 @@ function useElement(
     } else {
       const importedComponent = UUIDToImportedComponent[c.metadataUUID];
       if (!importedComponent) {
-        console.warn(
-          `Expected to find component loaded for ${c.componentName} but none found - possibly due to a race condition.`
+        console.error(
+          `Expected to find component loaded for ${c.componentName} but none found.`
         );
         return undefined;
       }

@@ -1,4 +1,4 @@
-import { within, screen, render, renderHook } from "@testing-library/react";
+import { within, screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import PreviewPanel from "../../src/components/PreviewPanel";
 import useStudioStore from "../../src/store/useStudioStore";
@@ -13,7 +13,7 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import useImportedComponents from "../../src/hooks/useImportedComponents";
+import loadComponents from "../../src/utils/loadComponents";
 
 const mockSetState = jest.fn();
 
@@ -169,5 +169,5 @@ async function mockPreviewState(componentTree: ComponentState[]) {
     },
   });
   await useStudioStore.getState().actions.updateActivePage("universalPage");
-  await renderHook(() => useImportedComponents(componentTree)).result.current;
+  await Promise.all(loadComponents());
 }

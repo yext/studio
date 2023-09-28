@@ -13,6 +13,6 @@ studioTest("can remove a static page", async ({ page, studioPage }) => {
   await studioPage.takePageScreenshotAfterImgRender();
 
   // Ensure that the page is still deleted after a browser refresh.
-  await page.reload();
+  await studioPage.reload();
   await studioPage.takePageScreenshotAfterImgRender();
 });

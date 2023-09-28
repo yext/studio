@@ -34,8 +34,8 @@ export const studioTest = base.extend<StudioTestFixtures>({
     const opts = { createRemote, debug, testInfo, tailwindConfigPath };
     await setupAcceptance(opts, async (port: number, tmpDir: string) => {
       await page.goto("localhost:" + port);
-      await page.waitForLoadState();
       const studioPage = new StudioPlaywrightPage(page, tmpDir);
+      await studioPage.waitForLoadState();
       await use(studioPage);
     });
   },

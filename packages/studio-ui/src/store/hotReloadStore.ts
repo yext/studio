@@ -6,7 +6,6 @@ import {
 import useStudioStore from "./useStudioStore";
 import removeTopLevelFragments from "../utils/removeTopLevelFragments";
 import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
-import path from "path-browserify";
 import getFunctionComponent from "../utils/getFunctionComponent";
 
 /**
@@ -66,10 +65,7 @@ async function syncFileMetadata(studioData: StudioData, file: string) {
   const importedFile = await dynamicImportFromBrowser(
     file + `?timestamp=${Date.now()}`
   );
-  const componentFunction = getFunctionComponent(
-    importedFile,
-    path.basename(file, ".tsx")
-  );
+  const componentFunction = getFunctionComponent(importedFile);
   if (componentFunction) {
     useStudioStore
       .getState()

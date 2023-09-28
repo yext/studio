@@ -1,107 +1,113 @@
 {
-  "__": {
-    "entityPageSet": {},
-    "name": "LocationPage",
-    "streamId": "studio-stream-id-LocationPage",
-    "templateType": "JS"
-  },
-  "address": {
-    "city": "Chicago",
-    "countryCode": "US",
-    "line1": "500 West Madison St.",
-    "line2": "Suite 2810",
-    "localizedCountryName": "United States",
-    "localizedRegionName": "Illinois",
-    "postalCode": "60661",
-    "region": "IL"
-  },
-  "addressHidden": false,
-  "businessId": 3350634,
-  "c_features": ["BIG_STORE"],
-  "cityCoordinate": {
-    "latitude": 41.879535,
-    "longitude": -87.624333
-  },
-  "description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
-  "displayCoordinate": {
-    "latitude": 41.8823062,
-    "longitude": -87.6403882
-  },
-  "geocodedCoordinate": {
-    "latitude": 41.8823062,
-    "longitude": -87.6403882
-  },
-  "hours": {
-    "friday": {
-      "isClosed": true
-    },
-    "monday": {
-      "isClosed": true
-    },
-    "saturday": {
-      "isClosed": true
-    },
-    "sunday": {
-      "openIntervals": [
-        {
-          "end": "14:00",
-          "start": "01:00"
-        }
-      ]
-    },
-    "thursday": {
-      "isClosed": true
-    },
-    "tuesday": {
-      "isClosed": true
-    },
-    "wednesday": {
-      "isClosed": true
-    }
-  },
-  "id": "1659277149695818196",
-  "isoRegionCode": "IL",
-  "key": "0:LocationPage:knowledgeGraph:18715001:en",
-  "locale": "en",
-  "mainPhone": "+12129943900",
-  "meta": {
-    "entityType": {
-      "id": "location",
-      "uid": 0
-    },
-    "locale": "en"
-  },
-  "name": "Office Space 2",
-  "ref_categories": [
-    {
-      "id": "668",
-      "name": "Software Consultant",
-      "uid": 668
-    }
-  ],
-  "ref_listings": [],
-  "ref_reviewsAgg": [],
-  "routableCoordinate": {
-    "latitude": 41.8818647,
-    "longitude": -87.6404641
-  },
-  "services": ["Dogs", "Cats", "Sleep"],
-  "siteDomain": "",
-  "siteId": 0,
-  "siteInternalHostName": "",
-  "slug": "office/1659277149695818196",
-  "timezone": "America/Chicago",
-  "uid": 18715001,
-  "websiteUrl": {
-    "preferDisplayUrl": false,
-    "url": "https://locations.yext.com/us/il/chicago/500-west-madison-st-.html"
-  },
-  "yextDisplayCoordinate": {
-    "latitude": 41.8823062,
-    "longitude": -87.6403882
-  },
-  "yextRoutableCoordinate": {
-    "latitude": 41.8818647,
-    "longitude": -87.6404641
-  }
+	"__": {
+		"entityPageSet": {},
+		"name": "LocationPage",
+		"streamId": "studio-stream-id-LocationPage",
+		"templateType": "JS"
+	},
+	"address": {
+		"city": "Chicago",
+		"countryCode": "US",
+		"line1": "500 West Madison St.",
+		"line2": "Suite 2810",
+		"localizedCountryName": "United States",
+		"localizedRegionName": "Illinois",
+		"postalCode": "60661",
+		"region": "IL"
+	},
+	"addressHidden": false,
+	"businessId": 3350634,
+	"c_features": [
+		"BIG_STORE"
+	],
+	"cityCoordinate": {
+		"latitude": 41.879535,
+		"longitude": -87.624333
+	},
+	"description": "Yext is the global digital knowledge management leader, and our Knowledge Engine puts businesses in control of their digital knowledge.",
+	"displayCoordinate": {
+		"latitude": 41.8823062,
+		"longitude": -87.6403882
+	},
+	"geocodedCoordinate": {
+		"latitude": 41.8823062,
+		"longitude": -87.6403882
+	},
+	"hours": {
+		"friday": {
+			"isClosed": true
+		},
+		"monday": {
+			"isClosed": true
+		},
+		"saturday": {
+			"isClosed": true
+		},
+		"sunday": {
+			"openIntervals": [
+				{
+					"end": "14:00",
+					"start": "01:00"
+				}
+			]
+		},
+		"thursday": {
+			"isClosed": true
+		},
+		"tuesday": {
+			"isClosed": true
+		},
+		"wednesday": {
+			"isClosed": true
+		}
+	},
+	"id": "1659277149695818196",
+	"isoRegionCode": "IL",
+	"key": "0:LocationPage:knowledgeGraph:18715001:en",
+	"locale": "en",
+	"mainPhone": "+12129943900",
+	"meta": {
+		"entityType": {
+			"id": "location",
+			"uid": 0
+		},
+		"locale": "en"
+	},
+	"name": "Office Space 2",
+	"ref_categories": [
+		{
+			"id": "668",
+			"name": "Software Consultant",
+			"uid": 668
+		}
+	],
+	"ref_listings": [],
+	"ref_reviewsAgg": [],
+	"routableCoordinate": {
+		"latitude": 41.8818647,
+		"longitude": -87.6404641
+	},
+	"services": [
+		"Dogs",
+		"Cats",
+		"Sleep"
+	],
+	"siteDomain": "",
+	"siteId": 0,
+	"siteInternalHostName": "",
+	"slug": "office/1659277149695818196",
+	"timezone": "America/Chicago",
+	"uid": 18715001,
+	"websiteUrl": {
+		"preferDisplayUrl": false,
+		"url": "https://locations.yext.com/us/il/chicago/500-west-madison-st-.html"
+	},
+	"yextDisplayCoordinate": {
+		"latitude": 41.8823062,
+		"longitude": -87.6403882
+	},
+	"yextRoutableCoordinate": {
+		"latitude": 41.8818647,
+		"longitude": -87.6404641
+	}
 }
