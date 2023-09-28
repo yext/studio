@@ -23,7 +23,7 @@ export default function createStudioStylingPlugin(): PluginOption {
         return;
       }
 
-      const parentComponentName = getUUIDNameQueryParam(importer);
+      const parentComponentName = getUUIDQueryParam(importer);
       if (parentComponentName) {
         const filepath = addQueryParam(
           id,
@@ -38,7 +38,7 @@ export default function createStudioStylingPlugin(): PluginOption {
   };
 }
 
-export function getUUIDNameQueryParam(filepath: string) {
+export function getUUIDQueryParam(filepath: string) {
   const getComponentNameRE = /(?<=\?.*studioComponentUUID=)[a-zA-Z0-9-]*/;
   const componentNameResult = filepath.match(getComponentNameRE);
   return componentNameResult ? String(componentNameResult) : undefined;
