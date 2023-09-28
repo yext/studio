@@ -69,7 +69,9 @@ function renderBundleMessage(appLoaded: boolean) {
   const className = classNames("text-sky-600 mt-4", {
     "animate-pulse": !appLoaded,
   });
-  const msg = appLoaded ? "Studio resources loaded!" : "... loading Studio resources ...";
+  const msg = appLoaded
+    ? "Studio resources loaded!"
+    : "... loading Studio resources ...";
 
   return <div className={className}>{msg}</div>;
 }
