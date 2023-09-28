@@ -15,7 +15,8 @@ export default function loadComponents(): Promise<void>[] {
         return;
       }
       const importedModule = await dynamicImportFromBrowser(
-        fileMetadata.filepath + `?studioComponentUUID=${fileMetadata.metadataUUID}`
+        fileMetadata.filepath +
+          `?studioComponentUUID=${fileMetadata.metadataUUID}`
       );
       const functionComponent = getFunctionComponent(importedModule);
       if (functionComponent) {

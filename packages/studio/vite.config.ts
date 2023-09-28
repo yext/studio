@@ -28,7 +28,12 @@ export default defineConfig((args: ConfigEnv): UserConfig => {
         input: ["index.html", "src/store/useStudioStore.ts"],
       },
     },
-    plugins: [react(), createStudioStylingPlugin(), createStudioPlugin(args), svgr() as PluginOption],
+    plugins: [
+      react(),
+      createStudioStylingPlugin(),
+      createStudioPlugin(args),
+      svgr() as PluginOption,
+    ],
     css: {
       postcss: __dirname,
     },

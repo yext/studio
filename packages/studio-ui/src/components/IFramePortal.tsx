@@ -43,24 +43,26 @@ export default function IFramePortal(
 }
 
 function useParentDocumentStyles(iframeDocument: Document | undefined) {
-  const [activePage, fileMetadatas, componentTree] = useStudioStore((studio) => [
-    studio.pages.activePageName,
-    studio.fileMetadatas.UUIDToFileMetadata,
-    studio.pages.getActivePageState()?.componentTree
-  ]);
+  const [activePage, fileMetadatas, componentTree] = useStudioStore(
+    (studio) => [
+      studio.pages.activePageName,
+      studio.fileMetadatas.UUIDToFileMetadata,
+      studio.pages.getActivePageState()?.componentTree,
+    ]
+  );
 
   useEffect(() => {
     if (iframeDocument) {
       const inlineStyles = document.head.getElementsByTagName("style");
       for (const el of inlineStyles) {
-        const filepath = el.getAttribute("data-vite-dev-id")
+        const filepath = el.getAttribute("data-vite-dev-id");
         if (!filepath) {
           continue;
         }
-        const cloneNode: Node = el.cloneNode(true)
-        const componentUUID = getUUIDQueryParam(filepath)
-        const isTailwindDirective = getIsTailwindDirective(filepath)
-        if(componentTree?.some(el => el.metadataUUID === componentUUID)) {
+        const cloneNode: Node = el.cloneNode(true);
+        const componentUUID = getUUIDQueryParam(filepath);
+        const isTailwindDirective = getIsTailwindDirective(filepath);
+        if (componentTree?.some((el) => el.metadataUUID === componentUUID)) {
           iframeDocument.head.appendChild(cloneNode);
           el.disabled = true;
         }
@@ -68,7 +70,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
           iframeDocument.head.appendChild(cloneNode);
         }
       }
-  
+
       return () => {
         const styleElements = Array.prototype.slice.call(
           iframeDocument.head.getElementsByTagName("style")
@@ -111,12 +113,12 @@ const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
 };
 
 function getUUIDQueryParam(filepath: string) {
-  const getComponentNameRE = /(?<=\?.*studioComponentUUID=)[a-zA-Z0-9-]*/
-  const componentNameResult = filepath.match(getComponentNameRE) 
-  return String(componentNameResult)
+  const getComponentNameRE = /(?<=\?.*studioComponentUUID=)[a-zA-Z0-9-]*/;
+  const componentNameResult = filepath.match(getComponentNameRE);
+  return String(componentNameResult);
 }
 
 function getIsTailwindDirective(filepath: string) {
-  const isTailwindDirectiveRE = /\/tailwind-directives.css/
-  return !!filepath.match(isTailwindDirectiveRE) 
+  const isTailwindDirectiveRE = /\/tailwind-directives.css/;
+  return !!filepath.match(isTailwindDirectiveRE);
 }
