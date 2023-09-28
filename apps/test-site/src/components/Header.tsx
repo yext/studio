@@ -1,4 +1,5 @@
 import { HexColor } from "@yext/studio";
+import "../main.css"
 
 export interface HeaderProps {
   /** Title of the Header */
