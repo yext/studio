@@ -62,9 +62,6 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         const cloneNode: Node = el.cloneNode(true);
         const componentUUID = getUUIDQueryParam(filepath);
         const isTailwindDirective = getIsTailwindDirective(filepath);
-        if (importedComponents.hasOwnProperty(componentUUID)) {
-          el.disabled = true;
-        }
         if (componentTree?.some((el) => el.metadataUUID === componentUUID)) {
           iframeDocument.head.appendChild(cloneNode);
         }
