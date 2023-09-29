@@ -14,7 +14,7 @@ export default function AppWithLazyLoading() {
     Object.keys(store.fileMetadatas.UUIDToFileMetadata).length,
   ]);
 
-  const loadedCount = importedComponents.length
+  const loadedCount = importedComponents.length;
   const componentsLoaded = loadedCount === totalCount;
   const [appLoaded, setAppLoaded] = useState(false);
 
@@ -23,7 +23,7 @@ export default function AppWithLazyLoading() {
     void AppPromise.then(() => setAppLoaded(true));
   }, []);
 
-  useEffect(() =>{
+  useEffect(() => {
     const inlineStyles = document.head.getElementsByTagName("style");
     for (const el of inlineStyles) {
       const filepath = el.getAttribute("data-vite-dev-id");
@@ -35,7 +35,7 @@ export default function AppWithLazyLoading() {
         el.disabled = true;
       }
     }
-  }, [importedComponents])
+  }, [importedComponents]);
 
   return (
     <LoadingOverlay
