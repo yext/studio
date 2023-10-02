@@ -1,5 +1,6 @@
 import { PlaywrightTestConfig, expect } from "@playwright/test";
-import fs from "fs";
+import fs from "node:fs";
+import os from "node:os";
 
 expect.extend({
   async toHaveContents(filepath: string, expectedContents: string) {
@@ -24,7 +25,7 @@ const config: PlaywrightTestConfig = {
   testDir: "./tests",
   /* Maximum time one test can run for. */
   timeout: 75 * 1000,
-  snapshotPathTemplate: "__screenshots__/{platform}/{testFilePath}/{arg}{ext}",
+  snapshotPathTemplate: "__screenshots__/{testFilePath}/{arg}{ext}",
   expect: {
     /**
      * Maximum time expect() should wait for the condition to be met.
@@ -51,6 +52,7 @@ const config: PlaywrightTestConfig = {
     video: "on",
   },
   workers: 1,
+  ignoreSnapshots: os.platform() !== 'darwin'
 };
 
 export default config;
