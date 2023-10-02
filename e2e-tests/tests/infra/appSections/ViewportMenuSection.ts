@@ -4,7 +4,7 @@ import { Page, expect } from "@playwright/test";
  * A Playwright wrapper around the Viewport Selection functionality.
  */
 export default class ViewportMenuSection {
-  constructor(private page: Page) {};
+  constructor(private page: Page) {}
 
   async openViewportMenu() {
     await this.page
@@ -19,6 +19,8 @@ export default class ViewportMenuSection {
   }
 
   async takeScreenshot() {
-    await expect(this.page.getByTestId("viewport-selection")).toHaveScreenshot();
+    await expect(
+      this.page.getByTestId("viewport-selection")
+    ).toHaveScreenshot();
   }
 }
