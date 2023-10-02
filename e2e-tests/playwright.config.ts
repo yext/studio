@@ -52,7 +52,7 @@ const config: PlaywrightTestConfig = {
     video: "on",
   },
   workers: 1,
-  ignoreSnapshots: os.platform() !== 'darwin'
+  ignoreSnapshots: os.platform() !== "darwin",
 };
 
 export default config;
