@@ -13,7 +13,6 @@ export default function AppWithLazyLoading() {
     Object.keys(store.fileMetadatas.UUIDToImportedComponent).length,
     Object.keys(store.fileMetadatas.UUIDToFileMetadata).length,
   ]);
-
   const componentsLoaded = loadedCount === totalCount;
   const [appLoaded, setAppLoaded] = useState(false);
 
