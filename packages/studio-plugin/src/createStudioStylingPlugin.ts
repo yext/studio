@@ -1,29 +1,29 @@
-import { ModuleGraph, ModuleNode, PluginOption } from "vite";
-import upath from "upath"
+import { ModuleGraph, PluginOption } from "vite";
+import upath from "upath";
 
 export default function createStudioStylingPlugin(): PluginOption {
   let moduleGraph: ModuleGraph;
-  const importerToCssMap: Record<string, Set<string>> = {}
+  const importerToCssMap: Record<string, Set<string>> = {};
 
-  function updateImporterToCssMap(id: string, importer: string,) {
-    const cssFilepath = getFormattedFilepath(id, upath.dirname(importer))
-    const importerNode = moduleGraph.getModuleById(importer)
+  function updateImporterToCssMap(id: string, importer: string) {
+    const cssFilepath = getFormattedFilepath(id, upath.dirname(importer));
+    const importerNode = moduleGraph.getModuleById(importer);
     if (!importerNode) {
-      throw Error("CSS/SCSS file importer not found.")
+      throw Error("CSS/SCSS file importer not found.");
     }
     const importers = new Set([importerNode]);
     importers.forEach((importer) => {
-      if (!importer?.file){
-        return
+      if (!importer?.file) {
+        return;
       }
-      if (!importerToCssMap.hasOwnProperty(importer.file)){
-        importerToCssMap[importer.file] = new Set;
+      if (!importerToCssMap.hasOwnProperty(importer.file)) {
+        importerToCssMap[importer.file] = new Set();
       }
-      importerToCssMap[importer.file].add(cssFilepath)
+      importerToCssMap[importer.file].add(cssFilepath);
       importer.importers.forEach((importer) => {
-        importers.add(importer)
-      })
-    })
+        importers.add(importer);
+      });
+    });
   }
 
   return {
@@ -33,45 +33,47 @@ export default function createStudioStylingPlugin(): PluginOption {
       moduleGraph = server.moduleGraph;
     },
     resolveId(id, importer) {
-      if (!importer){
+      if (!importer) {
         return;
       }
       if (!isStylingFile(id) || getQueryParameterExists(id, "studioStyling")) {
-        return
+        return;
       }
-      updateImporterToCssMap(id, importer)
-      return id.replace(".css", ".studiostyling.js")
-    }, 
+      updateImporterToCssMap(id, importer);
+      return id.replace(".css", ".studiostyling.js");
+    },
     load(id) {
       if (id.includes(".studiostyling.js")) {
         const arrVersion: Record<string, string[]> = {};
         Object.entries(importerToCssMap).forEach(([importer, cssSet]) => {
-          arrVersion[importer] = Array.from(cssSet)
-        })
+          arrVersion[importer] = Array.from(cssSet);
+        });
         return `
         import { setCssStyling } from '@yext/studio-ui'
         setCssStyling(${JSON.stringify(arrVersion)})
-        `
+        `;
       }
-    }
+    },
   };
 }
 
 function getFormattedFilepath(id: string, importer: string) {
   if (id.startsWith(".")) {
-    return upath.join(importer, id)
+    return upath.join(importer, id);
   }
-  return id
+  return id;
 }
 
-function getQueryParameterExists(filepath: string, queryParameter: string): boolean {
+function getQueryParameterExists(
+  filepath: string,
+  queryParameter: string
+): boolean {
   const queryParameterRE = new RegExp(`^.*?.*${queryParameter}`);
   const queryParameterResult = filepath.match(queryParameterRE);
   return !!queryParameterResult;
 }
 
 function isStylingFile(id: string): boolean {
-  const extName = upath.extname(id)
-  return !!(extName.match(/.[s]?css/))
-
+  const extName = upath.extname(id);
+  return !!extName.match(/.[s]?css/);
 }

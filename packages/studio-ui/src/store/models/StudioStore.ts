@@ -28,5 +28,5 @@ export type StudioStore = {
   envData: EnvDataSlice;
   gitData: GitDataSlice;
   accountContent: AccountContentSlice;
-  cssStyling: CssSlice
+  cssStyling: CssSlice;
 };

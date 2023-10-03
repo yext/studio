@@ -45,14 +45,19 @@ export default function IFramePortal(
 }
 
 function useParentDocumentStyles(iframeDocument: Document | undefined) {
-  const [activePage, fileMetadatas, componentTree, importedComponents, cssStyling] =
-    useStudioStore((studio) => [
-      studio.pages.activePageName,
-      studio.fileMetadatas.UUIDToFileMetadata,
-      studio.pages.getActivePageState()?.componentTree,
-      studio.fileMetadatas.UUIDToImportedComponent,
-      studio.cssStyling.importerToCssMap
-    ]);
+  const [
+    activePage,
+    fileMetadatas,
+    componentTree,
+    importedComponents,
+    cssStyling,
+  ] = useStudioStore((studio) => [
+    studio.pages.activePageName,
+    studio.fileMetadatas.UUIDToFileMetadata,
+    studio.pages.getActivePageState()?.componentTree,
+    studio.fileMetadatas.UUIDToImportedComponent,
+    studio.cssStyling.importerToCssMap,
+  ]);
 
   const injectTailwindDirectives = useCallback(() => {
     const inlineStyles = document.head.getElementsByTagName("style");
@@ -68,28 +73,28 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
       const cloneNode: Node = el.cloneNode(true);
       iframeDocument?.head.appendChild(cloneNode);
     }
-  }, [iframeDocument]) 
+  }, [iframeDocument]);
 
   useEffect(() => {
     if (!iframeDocument) {
-      return
+      return;
     }
     componentTree?.forEach((componentState) => {
       if (!componentState.metadataUUID) {
-        return
+        return;
       }
-      const filename = fileMetadatas[componentState.metadataUUID].filepath
+      const filename = fileMetadatas[componentState.metadataUUID].filepath;
       if (!cssStyling.hasOwnProperty(filename)) {
-        return
+        return;
       }
       cssStyling[filename].forEach((cssFilepath) => {
         return dynamicImport(`${cssFilepath}?inline`).then((response) => {
           const styleTag: HTMLStyleElement = document.createElement("style");
-          iframeDocument.head.appendChild(styleTag)
-          styleTag.innerText = response
-        })
-      })
-    })
+          iframeDocument.head.appendChild(styleTag);
+          styleTag.innerText = response;
+        });
+      });
+    });
 
     injectTailwindDirectives();
     return () => {
@@ -100,7 +105,15 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         el.remove();
       }
     };
-  }, [iframeDocument, activePage, fileMetadatas, componentTree, importedComponents, cssStyling, injectTailwindDirectives]);
+  }, [
+    iframeDocument,
+    activePage,
+    fileMetadatas,
+    componentTree,
+    importedComponents,
+    cssStyling,
+    injectTailwindDirectives,
+  ]);
 }
 
 function getIsTailwindDirective(filepath: string) {
@@ -109,11 +122,15 @@ function getIsTailwindDirective(filepath: string) {
 }
 
 async function dynamicImport(filepath: string) {
-  const contents = (await dynamicImportFromBrowser(filepath + "?studioStyling")).default
-  return contents
+  const contents = (await dynamicImportFromBrowser(filepath + "?studioStyling"))
+    .default;
+  return contents;
 }
 
-const useViewportOption = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
+const useViewportOption = (
+  viewport: Viewport,
+  previewRef: RefObject<HTMLDivElement>
+) => {
   const [css, setCss] = useState(
     (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
       (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)

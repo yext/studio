@@ -1,4 +1,3 @@
-
 import CssSlice from "../models/slices/CssSlice";
 import { SliceCreator } from "../models/utils";
 
@@ -10,10 +9,12 @@ const createAccountContentSlice: SliceCreator<CssSlice> = (set) => ({
         if (!store.importerToCssMap.hasOwnProperty(importer)) {
           store.importerToCssMap[importer] = new Set();
         }
-        cssSet.forEach(cssFile => store.importerToCssMap[importer].add(cssFile))
-      })
+        cssSet.forEach((cssFile) =>
+          store.importerToCssMap[importer].add(cssFile)
+        );
+      });
     });
-  }
+  },
 });
 
 export default createAccountContentSlice;

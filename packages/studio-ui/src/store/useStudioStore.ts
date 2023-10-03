@@ -53,7 +53,7 @@ const useStudioStore = create<StudioStore>()(
         envData: lens(createEnvDataSlice),
         gitData: lens(createGitDataSlice),
         accountContent: lens(createAccountContentSlice),
-        cssStyling: lens(createCssStylingSlice)
+        cssStyling: lens(createCssStylingSlice),
       };
     })
   )
@@ -66,7 +66,7 @@ useStudioStore.getState().studioConfig.isPagesJSRepo &&
   void useStudioStore.getState().accountContent.refreshBaseAccountContent();
 
 export function setCssStyling(cssSet: Record<string, string[]>) {
-  useStudioStore.getState().cssStyling.setImporterToCssMap(cssSet)
+  useStudioStore.getState().cssStyling.setImporterToCssMap(cssSet);
 }
 
 export type UseStudioStore = typeof useStudioStore;
