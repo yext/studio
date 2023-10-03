@@ -1,4 +1,4 @@
 export default interface CssSlice {
-  cssToImporterMap: Record<string, Set<string>>;
-  setCssToImporterMap(id: string, importersSet: string[]);
+  importerToCssMap: Record<string, Set<string>>;
+  setImporterToCssMap(importerToCssMap: Record<string, string[]>);
 }

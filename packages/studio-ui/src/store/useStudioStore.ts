@@ -65,8 +65,8 @@ void useStudioStore.getState().actions.refreshActivePageEntities();
 useStudioStore.getState().studioConfig.isPagesJSRepo &&
   void useStudioStore.getState().accountContent.refreshBaseAccountContent();
 
-export function setCssStyling(id: string, importersSet: string[]) {
-  useStudioStore.getState().cssStyling.setCssToImporterMap(id, importersSet)
+export function setCssStyling(cssSet: Record<string, string[]>) {
+  useStudioStore.getState().cssStyling.setImporterToCssMap(cssSet)
 }
 
 export type UseStudioStore = typeof useStudioStore;

@@ -3,7 +3,7 @@ import upath from "upath"
 
 export default function createStudioStylingPlugin(): PluginOption {
   let moduleGraph: ModuleGraph;
-  const cssToImporterMap: Record<string, Set<string>> = {}
+  const importerToCssMap: Record<string, Set<string>> = {}
 
   return {
     name: "StudioStyling",
@@ -26,23 +26,27 @@ export default function createStudioStylingPlugin(): PluginOption {
         importers.push(...Array.from(moduleGraph.getModuleById(importer)?.importers ?? []))
         while (importers.length) {  // TODO circular dependences?
           const importer = importers.shift();
-          if (!cssToImporterMap.hasOwnProperty(studioStylingId)){
-            cssToImporterMap[studioStylingId] = new Set;
+          if (!importer?.file){
+            continue
           }
-          if (importer?.file){
-            cssToImporterMap[studioStylingId].add(importer.file)
+          if (!importerToCssMap.hasOwnProperty(importer.file)){
+            importerToCssMap[importer.file] = new Set;
           }
-          importers.concat(Array.from(importer?.importers ?? []))
+          importerToCssMap[importer.file].add(studioStylingId)
+          importers.concat(Array.from(importer.importers ?? []))
         }
         return studioStylingId
       }
     }, 
     load(id) {
       if (id.includes(".studiostyling")) {
-        const arr = Array.from(cssToImporterMap[id]).join('","')
+        const arrVersion: Record<string, string[]> = {};
+        Object.entries(importerToCssMap).forEach(([importer, cssSet]) => {
+          arrVersion[importer] = Array.from(cssSet)
+        })
         return `
         import { setCssStyling } from '@yext/studio-ui'
-        setCssStyling("${id}", ["${arr}"])
+        setCssStyling(${JSON.stringify(arrVersion)})
         `
       }
     }

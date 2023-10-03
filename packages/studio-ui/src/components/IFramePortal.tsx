@@ -49,7 +49,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
       studio.fileMetadatas.UUIDToFileMetadata,
       studio.pages.getActivePageState()?.componentTree,
       studio.fileMetadatas.UUIDToImportedComponent,
-      studio.cssStyling.cssToImporterMap
+      studio.cssStyling.importerToCssMap
     ]);
 
   useEffect(() => {

@@ -1,6 +1,8 @@
 import { HexColor, TailwindClass } from "@yext/studio";
 import { NestedProp } from "../types/exportedTypes";
 import Header from "./Header";
+import "../main2.css";
+
 export interface BannerData {
   /**
    * @tooltip Banner's title
