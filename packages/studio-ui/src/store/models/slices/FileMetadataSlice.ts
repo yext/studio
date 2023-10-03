@@ -6,12 +6,15 @@ export interface FileMetadataSliceStates {
   UUIDToFileMetadata: Record<string, FileMetadata>;
   /** Component's metadata uuid and its functional component method. */
   UUIDToImportedComponent: Record<string, ImportType>;
+  /** CSS/SCSS imported from each Component */
+  filepathToCssClasses: Record<string, Set<string>>;
 }
 
 export interface FileMetadataSliceActions {
   getFileMetadata: (metadataUUID: string) => FileMetadata | undefined;
   getComponentMetadata: (metadataUUID: string) => ComponentMetadata;
   setImportedComponent: (uuid: string, importedComponent: ImportType) => void;
+  updateFilepathToCssClasses(FilepathToCssClasses: Record<string, string[]>);
 }
 
 /**

@@ -13,6 +13,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
 ) => ({
   UUIDToFileMetadata: initialStudioData.UUIDToFileMetadata,
   UUIDToImportedComponent: {},
+  filepathToCssClasses: {},
   getFileMetadata: (metadataUUID: string) =>
     get().UUIDToFileMetadata[metadataUUID],
   getComponentMetadata: (metadataUUID) => {
@@ -23,6 +24,18 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
   setImportedComponent(uuid, importedComponent) {
     set((store) => {
       store.UUIDToImportedComponent[uuid] = importedComponent;
+    });
+  },
+  updateFilepathToCssClasses: (filepathToCssClasses: Record<string, string[]>) => {
+    set((store) => {
+      Object.entries(filepathToCssClasses).forEach(([importer, FilepathToCssClasses]) => {
+        if (!store.filepathToCssClasses.hasOwnProperty(importer)) {
+          store.filepathToCssClasses[importer] = new Set();
+        }
+        FilepathToCssClasses.forEach((cssFile) =>
+          store.filepathToCssClasses[importer].add(cssFile)
+        );
+      });
     });
   },
 });

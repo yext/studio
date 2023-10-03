@@ -16,7 +16,6 @@ import createEnvDataSlice from "./slices/createEnvDataSlice";
 import createGitDataSlice from "./slices/createGitDataSlice";
 import createAccountContentSlice from "./slices/accountContent/createAccountContentSlice";
 import createLayoutSlice from "./slices/createLayoutSlice";
-import createCssStylingSlice from "./slices/createCssStylingSlice";
 
 enableMapSet();
 
@@ -53,7 +52,6 @@ const useStudioStore = create<StudioStore>()(
         envData: lens(createEnvDataSlice),
         gitData: lens(createGitDataSlice),
         accountContent: lens(createAccountContentSlice),
-        cssStyling: lens(createCssStylingSlice),
       };
     })
   )
@@ -65,8 +63,8 @@ void useStudioStore.getState().actions.refreshActivePageEntities();
 useStudioStore.getState().studioConfig.isPagesJSRepo &&
   void useStudioStore.getState().accountContent.refreshBaseAccountContent();
 
-export function setCssStyling(cssSet: Record<string, string[]>) {
-  useStudioStore.getState().cssStyling.setImporterToCssMap(cssSet);
+export function updateFilepathToCssClasses(filepathToCssClasses: Record<string, string[]>) {
+  useStudioStore.getState().fileMetadatas.updateFilepathToCssClasses(filepathToCssClasses);
 }
 
 export type UseStudioStore = typeof useStudioStore;
