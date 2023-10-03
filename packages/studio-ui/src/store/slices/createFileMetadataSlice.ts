@@ -26,16 +26,20 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
       store.UUIDToImportedComponent[uuid] = importedComponent;
     });
   },
-  updateFilepathToCssClasses: (filepathToCssClasses: Record<string, string[]>) => {
+  updateFilepathToCssClasses: (
+    filepathToCssClasses: Record<string, string[]>
+  ) => {
     set((store) => {
-      Object.entries(filepathToCssClasses).forEach(([importer, FilepathToCssClasses]) => {
-        if (!store.filepathToCssClasses.hasOwnProperty(importer)) {
-          store.filepathToCssClasses[importer] = new Set();
+      Object.entries(filepathToCssClasses).forEach(
+        ([importer, FilepathToCssClasses]) => {
+          if (!store.filepathToCssClasses.hasOwnProperty(importer)) {
+            store.filepathToCssClasses[importer] = new Set();
+          }
+          FilepathToCssClasses.forEach((cssFile) =>
+            store.filepathToCssClasses[importer].add(cssFile)
+          );
         }
-        FilepathToCssClasses.forEach((cssFile) =>
-          store.filepathToCssClasses[importer].add(cssFile)
-        );
-      });
+      );
     });
   },
 });
