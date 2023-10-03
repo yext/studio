@@ -27,7 +27,7 @@ export default function createStudioStylingPlugin(): PluginOption {
   }
 
   return {
-    name: "StudioStyling",
+    name: "yext-studio-styling-plugin",
     enforce: "pre",
     configureServer(server) {
       moduleGraph = server.moduleGraph;
