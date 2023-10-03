@@ -50,8 +50,8 @@ export default function createStudioStylingPlugin(): PluginOption {
       if (id.includes(".studiostyling.js")) {
         const importerToCssArrayMap = convertSetMapToArrayMap(importerToCssMap);
         return `
-        import { updateFilepathToCssClasses } from '@yext/studio-ui';
-        updateFilepathToCssClasses(${JSON.stringify(importerToCssArrayMap)});
+        import { updateFilepathToCssFiles } from '@yext/studio-ui';
+        updateFilepathToCssFiles(${JSON.stringify(importerToCssArrayMap)});
         `;
       }
     },

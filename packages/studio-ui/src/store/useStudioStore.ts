@@ -63,12 +63,12 @@ void useStudioStore.getState().actions.refreshActivePageEntities();
 useStudioStore.getState().studioConfig.isPagesJSRepo &&
   void useStudioStore.getState().accountContent.refreshBaseAccountContent();
 
-export function updateFilepathToCssClasses(
-  filepathToCssClasses: Record<string, string[]>
+export function updateFilepathToCssFiles(
+  filepathToCssFiles: Record<string, string[]>
 ) {
   useStudioStore
     .getState()
-    .fileMetadatas.updateFilepathToCssClasses(filepathToCssClasses);
+    .fileMetadatas.updateFilepathToCssFiles(filepathToCssFiles);
 }
 
 export type UseStudioStore = typeof useStudioStore;

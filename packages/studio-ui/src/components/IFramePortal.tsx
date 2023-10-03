@@ -56,7 +56,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
     studio.fileMetadatas.UUIDToFileMetadata,
     studio.pages.getActivePageState()?.componentTree,
     studio.fileMetadatas.UUIDToImportedComponent,
-    studio.fileMetadatas.filepathToCssClasses,
+    studio.fileMetadatas.filepathToCssFiles,
   ]);
 
   const injectTailwindDirectives = useCallback(() => {
