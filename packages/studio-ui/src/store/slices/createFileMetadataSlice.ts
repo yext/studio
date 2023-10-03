@@ -26,9 +26,7 @@ const createFileMetadataSlice: SliceCreator<FileMetadataSlice> = (
       store.UUIDToImportedComponent[uuid] = importedComponent;
     });
   },
-  updateFilepathToCssFiles: (
-    filepathToCssFiles: Record<string, string[]>
-  ) => {
+  updateFilepathToCssFiles: (filepathToCssFiles: Record<string, string[]>) => {
     set((store) => {
       Object.entries(filepathToCssFiles).forEach(
         ([importer, filepathToCssFiles]) => {
