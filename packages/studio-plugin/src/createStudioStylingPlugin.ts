@@ -44,13 +44,10 @@ export default function createStudioStylingPlugin(): PluginOption {
     },
     load(id) {
       if (id.includes(".studiostyling.js")) {
-        const arrVersion: Record<string, string[]> = {};
-        Object.entries(importerToCssMap).forEach(([importer, cssSet]) => {
-          arrVersion[importer] = Array.from(cssSet);
-        });
+        const importerToCssArrayMap = convertSetMapToArrayMap(importerToCssMap);
         return `
-        import { setCssStyling } from '@yext/studio-ui'
-        setCssStyling(${JSON.stringify(arrVersion)})
+        import { setCssStyling } from '@yext/studio-ui';
+        setCssStyling(${JSON.stringify(importerToCssArrayMap)});
         `;
       }
     },
@@ -75,5 +72,13 @@ function getQueryParameterExists(
 
 function isStylingFile(id: string): boolean {
   const extName = upath.extname(id);
-  return !!extName.match(/.[s]?css/);
+  return !!(extName.match(/.[s]?css/))
+}
+
+function convertSetMapToArrayMap(setMap: Record<string, Set<string>>): Record<string, string[]> {
+  const importerToCssArrayMap: Record<string, string[]> = {};
+  Object.entries(setMap).forEach(([importer, cssSet]) => {
+    importerToCssArrayMap[importer] = Array.from(cssSet);
+  })
+  return importerToCssArrayMap;
 }

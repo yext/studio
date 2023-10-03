@@ -9,12 +9,11 @@ const AppPromise = import("./App");
 const App = lazy(() => AppPromise);
 
 export default function AppWithLazyLoading() {
-  const [importedComponents, totalCount] = useStudioStore((store) => [
-    Object.keys(store.fileMetadatas.UUIDToImportedComponent),
+  const [loadedCount, totalCount] = useStudioStore((store) => [
+    Object.keys(store.fileMetadatas.UUIDToImportedComponent).length,
     Object.keys(store.fileMetadatas.UUIDToFileMetadata).length,
   ]);
 
-  const loadedCount = importedComponents.length;
   const componentsLoaded = loadedCount === totalCount;
   const [appLoaded, setAppLoaded] = useState(false);
 
@@ -22,20 +21,6 @@ export default function AppWithLazyLoading() {
     loadComponents();
     void AppPromise.then(() => setAppLoaded(true));
   }, []);
-
-  useEffect(() => {
-    const inlineStyles = document.head.getElementsByTagName("style");
-    for (const el of inlineStyles) {
-      const filepath = el.getAttribute("data-vite-dev-id");
-      if (!filepath) {
-        continue;
-      }
-      const componentUUID = getUUIDQueryParam(filepath);
-      if (componentUUID && importedComponents.includes(componentUUID)) {
-        el.disabled = true;
-      }
-    }
-  }, [importedComponents]);
 
   return (
     <LoadingOverlay
@@ -90,10 +75,4 @@ function renderBundleMessage(appLoaded: boolean) {
     : "... loading Studio resources ...";
 
   return <div className={className}>{msg}</div>;
-}
-
-function getUUIDQueryParam(filepath: string) {
-  const getComponentNameRE = /(?<=\?.*studioComponentUUID=)[a-zA-Z0-9-]*/;
-  const componentNameResult = filepath.match(getComponentNameRE);
-  return componentNameResult ? String(componentNameResult) : undefined;
 }
