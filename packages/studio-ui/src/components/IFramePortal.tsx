@@ -11,6 +11,7 @@ import {
 import useStudioStore from "../store/useStudioStore";
 import { twMerge } from "tailwind-merge";
 import { Viewport } from "./Viewport/defaults";
+import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
 
 export default function IFramePortal(
   props: PropsWithChildren<{
@@ -53,24 +54,39 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
     ]);
 
   useEffect(() => {
+    async function dynamicImport(filepath: string) {
+      const contents = (await dynamicImportFromBrowser(filepath)).default
+      return contents
+    }
     if (iframeDocument) {
-      console.log(cssStyling)
-      // const inlineStyles = document.head.getElementsByTagName("style");
-      // for (const el of inlineStyles) {
-      //   const filepath = el.getAttribute("data-vite-dev-id");
-      //   if (!filepath) {
-      //     continue;
-      //   }
-      //   const cloneNode: Node = el.cloneNode(true);
-      //   const componentUUID = getUUIDQueryParam(filepath);
-      //   const isTailwindDirective = getIsTailwindDirective(filepath);
-      //   if (componentTree?.some((el) => el.metadataUUID === componentUUID)) {
-      //     iframeDocument.head.appendChild(cloneNode);
-      //   }
-      //   if (isTailwindDirective) {
-      //     iframeDocument.head.appendChild(cloneNode);
-      //   }
-      // }
+      componentTree?.map((componentState) => {
+        if (componentState.metadataUUID) {
+          const filename = fileMetadatas[componentState.metadataUUID].filepath
+          console.log(filename)
+          if (cssStyling.hasOwnProperty(filename)) {
+            cssStyling[filename].forEach((cssFilepath) => {
+              return dynamicImport(`${cssFilepath}?inline`).then((response) => {
+                const styleTag: HTMLStyleElement = document.createElement("style");
+                iframeDocument.head.appendChild(styleTag)
+                styleTag.innerText = response
+              })
+            })
+          }
+        }
+      })
+
+      const inlineStyles = document.head.getElementsByTagName("style");
+      for (const el of inlineStyles) {
+        const filepath = el.getAttribute("data-vite-dev-id");
+        if (!filepath) {
+          continue;
+        }
+        const cloneNode: Node = el.cloneNode(true);
+        const isTailwindDirective = getIsTailwindDirective(filepath);
+        if (isTailwindDirective) {
+          iframeDocument.head.appendChild(cloneNode);
+        }
+      }
 
       return () => {
         const styleElements = Array.prototype.slice.call(
@@ -81,13 +97,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         }
       };
     }
-  }, [
-    iframeDocument,
-    activePage,
-    fileMetadatas,
-    componentTree,
-    importedComponents,
-  ]);
+  }, [iframeDocument, activePage, fileMetadatas, componentTree, importedComponents, cssStyling]);
 }
 
 const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
@@ -118,12 +128,6 @@ const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
 
   return css;
 };
-
-function getUUIDQueryParam(filepath: string) {
-  const getComponentNameRE = /(?<=\?.*studioComponentUUID=)[a-zA-Z0-9-]*/;
-  const componentNameResult = filepath.match(getComponentNameRE);
-  return String(componentNameResult);
-}
 
 function getIsTailwindDirective(filepath: string) {
   const isTailwindDirectiveRE = /\/tailwind-directives.css/;

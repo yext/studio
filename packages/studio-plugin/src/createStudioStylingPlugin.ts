@@ -18,8 +18,9 @@ export default function createStudioStylingPlugin(): PluginOption {
       const extName = upath.extname(id)
       if (extName === ".css") {
         const originalImporter = moduleGraph.getModuleById(importer)
-        const studioStylingId = id.replace(".css", ".studiostyling").replace(/^[./]*/, "")
-        const importers: ModuleNode[] = []; // TODO currently don't use absolute paths. must do.
+        const importeeFilepath = getFormattedFilepath(id, upath.dirname(importer))
+        const studioStylingId = importeeFilepath.replace(".css", ".studiostyling.js")
+        const importers: ModuleNode[] = [];
         if (originalImporter) {
           importers.push(originalImporter)
         }
@@ -32,7 +33,7 @@ export default function createStudioStylingPlugin(): PluginOption {
           if (!importerToCssMap.hasOwnProperty(importer.file)){
             importerToCssMap[importer.file] = new Set;
           }
-          importerToCssMap[importer.file].add(studioStylingId)
+          importerToCssMap[importer.file].add(importeeFilepath)
           importers.concat(Array.from(importer.importers ?? []))
         }
         return studioStylingId
@@ -51,4 +52,11 @@ export default function createStudioStylingPlugin(): PluginOption {
       }
     }
   };
+}
+
+function getFormattedFilepath(id: string, importer: string) {
+  if (id.startsWith(".")) {
+    return upath.join(importer, id)
+  }
+  return id
 }
