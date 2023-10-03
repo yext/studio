@@ -36,7 +36,11 @@ export default function createStudioStylingPlugin(): PluginOption {
       if (!importer) {
         return;
       }
-      if (!isStylingFile(id) || getQueryParameterExists(id, "studioStyling")) {
+      if (
+        !isStylingFile(id) ||
+        getQueryParameterExists(id, "studioStyling") ||
+        getQueryParameterExists(id, "dynamicStudioImport")
+      ) {
         return;
       }
       updateImporterToCssMap(id, importer);

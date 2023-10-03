@@ -88,7 +88,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         return;
       }
       cssStyling[filename].forEach((cssFilepath) => {
-        return dynamicImport(`${cssFilepath}?inline`).then((response) => {
+        return dynamicImport(cssFilepath).then((response) => {
           const styleTag: HTMLStyleElement = document.createElement("style");
           iframeDocument.head.appendChild(styleTag);
           styleTag.innerText = response;
@@ -122,8 +122,9 @@ function getIsTailwindDirective(filepath: string) {
 }
 
 async function dynamicImport(filepath: string) {
-  const contents = (await dynamicImportFromBrowser(filepath + "?studioStyling"))
-    .default;
+  const contents = (
+    await dynamicImportFromBrowser(filepath + "?inline&dynamicStudioImport")
+  ).default;
   return contents;
 }
 
