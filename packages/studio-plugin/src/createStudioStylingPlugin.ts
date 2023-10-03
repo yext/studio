@@ -1,62 +1,50 @@
-import { PluginOption } from "vite";
-/**
- * Handles placing custom-labeled style tags to Studio HTML
- * by injecting query information into vite's "data-vite-dev-id"
- * attribute on styletags.
- *
- * This is used to identify which styles are to be added to the
- * Studio preview window depending on the current contents of the
- * component tree.
- */
+import { ModuleGraph, ModuleNode, PluginOption } from "vite";
+import upath from "upath"
+
 export default function createStudioStylingPlugin(): PluginOption {
+  let moduleGraph: ModuleGraph;
+  const cssToImporterMap: Record<string, Set<string>> = {}
+
   return {
-    name: "css-inline",
+    name: "StudioStyling",
     enforce: "pre",
-    async resolveId(id, importer) {
-      if (!importer) {
-        return;
-      }
-
-      // this breaks it for some reason. will look into.
-      if (id.includes("react/jsx-dev-runtime")) {
-        return;
-      }
-
-      const parentComponentName = getUUIDQueryParam(importer);
-      if (parentComponentName) {
-        const filepath = addQueryParam(
-          id,
-          "studioComponentUUID",
-          parentComponentName
-        );
-        if (filepath) {
-          return this.resolve(filepath, importer);
-        }
-      }
+    configureServer(server) {
+      moduleGraph = server.moduleGraph;
     },
+    resolveId(id, importer) {
+      if (!importer){
+        return
+      }
+      const extName = upath.extname(id)
+      if (extName === ".css") {
+        const originalImporter = moduleGraph.getModuleById(importer)
+        const studioStylingId = id.replace(".css", ".studiostyling").replace(/^[./]*/, "")
+        const importers: ModuleNode[] = []; // TODO currently don't use absolute paths. must do.
+        if (originalImporter) {
+          importers.push(originalImporter)
+        }
+        importers.push(...Array.from(moduleGraph.getModuleById(importer)?.importers ?? []))
+        while (importers.length) {  // TODO circular dependences?
+          const importer = importers.shift();
+          if (!cssToImporterMap.hasOwnProperty(studioStylingId)){
+            cssToImporterMap[studioStylingId] = new Set;
+          }
+          if (importer?.file){
+            cssToImporterMap[studioStylingId].add(importer.file)
+          }
+          importers.concat(Array.from(importer?.importers ?? []))
+        }
+        return studioStylingId
+      }
+    }, 
+    load(id) {
+      if (id.includes(".studiostyling")) {
+        const arr = Array.from(cssToImporterMap[id]).join('","')
+        return `
+        import { setCssStyling } from '@yext/studio-ui'
+        setCssStyling("${id}", ["${arr}"])
+        `
+      }
+    }
   };
-}
-
-export function getUUIDQueryParam(filepath: string) {
-  const getComponentNameRE = /(?<=\?.*studioComponentUUID=)[a-zA-Z0-9-]*/;
-  const componentNameResult = filepath.match(getComponentNameRE);
-  return componentNameResult ? String(componentNameResult) : undefined;
-}
-
-function addQueryParam(filepath: string, query: string, value?: string) {
-  if (filepath.includes(query)) {
-    return undefined;
-  }
-  const hasQuery = !!filepath.match(/\?/);
-  let newFilepath = filepath;
-  if (hasQuery) {
-    newFilepath = newFilepath.concat("&&");
-  } else {
-    newFilepath = newFilepath.concat("?");
-  }
-  newFilepath = newFilepath.concat(query);
-  if (value) {
-    newFilepath = newFilepath.concat(`=${value}`);
-  }
-  return newFilepath;
 }

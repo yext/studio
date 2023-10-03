@@ -43,32 +43,34 @@ export default function IFramePortal(
 }
 
 function useParentDocumentStyles(iframeDocument: Document | undefined) {
-  const [activePage, fileMetadatas, componentTree, importedComponents] =
+  const [activePage, fileMetadatas, componentTree, importedComponents, cssStyling] =
     useStudioStore((studio) => [
       studio.pages.activePageName,
       studio.fileMetadatas.UUIDToFileMetadata,
       studio.pages.getActivePageState()?.componentTree,
       studio.fileMetadatas.UUIDToImportedComponent,
+      studio.cssStyling.cssToImporterMap
     ]);
 
   useEffect(() => {
     if (iframeDocument) {
-      const inlineStyles = document.head.getElementsByTagName("style");
-      for (const el of inlineStyles) {
-        const filepath = el.getAttribute("data-vite-dev-id");
-        if (!filepath) {
-          continue;
-        }
-        const cloneNode: Node = el.cloneNode(true);
-        const componentUUID = getUUIDQueryParam(filepath);
-        const isTailwindDirective = getIsTailwindDirective(filepath);
-        if (componentTree?.some((el) => el.metadataUUID === componentUUID)) {
-          iframeDocument.head.appendChild(cloneNode);
-        }
-        if (isTailwindDirective) {
-          iframeDocument.head.appendChild(cloneNode);
-        }
-      }
+      console.log(cssStyling)
+      // const inlineStyles = document.head.getElementsByTagName("style");
+      // for (const el of inlineStyles) {
+      //   const filepath = el.getAttribute("data-vite-dev-id");
+      //   if (!filepath) {
+      //     continue;
+      //   }
+      //   const cloneNode: Node = el.cloneNode(true);
+      //   const componentUUID = getUUIDQueryParam(filepath);
+      //   const isTailwindDirective = getIsTailwindDirective(filepath);
+      //   if (componentTree?.some((el) => el.metadataUUID === componentUUID)) {
+      //     iframeDocument.head.appendChild(cloneNode);
+      //   }
+      //   if (isTailwindDirective) {
+      //     iframeDocument.head.appendChild(cloneNode);
+      //   }
+      // }
 
       return () => {
         const styleElements = Array.prototype.slice.call(

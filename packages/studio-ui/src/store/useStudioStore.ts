@@ -16,6 +16,7 @@ import createEnvDataSlice from "./slices/createEnvDataSlice";
 import createGitDataSlice from "./slices/createGitDataSlice";
 import createAccountContentSlice from "./slices/accountContent/createAccountContentSlice";
 import createLayoutSlice from "./slices/createLayoutSlice";
+import createCssStylingSlice from "./slices/createCssStylingSlice";
 
 enableMapSet();
 
@@ -52,6 +53,7 @@ const useStudioStore = create<StudioStore>()(
         envData: lens(createEnvDataSlice),
         gitData: lens(createGitDataSlice),
         accountContent: lens(createAccountContentSlice),
+        cssStyling: lens(createCssStylingSlice)
       };
     })
   )
@@ -62,6 +64,10 @@ void useStudioStore.getState().actions.refreshActivePageEntities();
 // this to check for the presence of the API key
 useStudioStore.getState().studioConfig.isPagesJSRepo &&
   void useStudioStore.getState().accountContent.refreshBaseAccountContent();
+
+export function setCssStyling(id: string, importersSet: string[]) {
+  useStudioStore.getState().cssStyling.setCssToImporterMap(id, importersSet)
+}
 
 export type UseStudioStore = typeof useStudioStore;
 export default useStudioStore;
