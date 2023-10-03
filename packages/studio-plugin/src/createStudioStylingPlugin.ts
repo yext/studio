@@ -5,6 +5,27 @@ export default function createStudioStylingPlugin(): PluginOption {
   let moduleGraph: ModuleGraph;
   const importerToCssMap: Record<string, Set<string>> = {}
 
+  function updateImporterToCssMap(id: string, importer: string,) {
+    const cssFilepath = getFormattedFilepath(id, upath.dirname(importer))
+    const importerNode = moduleGraph.getModuleById(importer)
+    if (!importerNode) {
+      throw Error("CSS/SCSS file importer not found.")
+    }
+    const importers = new Set([importerNode]);
+    importers.forEach((importer) => {
+      if (!importer?.file){
+        return
+      }
+      if (!importerToCssMap.hasOwnProperty(importer.file)){
+        importerToCssMap[importer.file] = new Set;
+      }
+      importerToCssMap[importer.file].add(cssFilepath)
+      importer.importers.forEach((importer) => {
+        importers.add(importer)
+      })
+    })
+  }
+
   return {
     name: "StudioStyling",
     enforce: "pre",
@@ -13,34 +34,16 @@ export default function createStudioStylingPlugin(): PluginOption {
     },
     resolveId(id, importer) {
       if (!importer){
+        return;
+      }
+      if (!isStylingFile(id) || getQueryParameterExists(id, "studioStyling")) {
         return
       }
-      const extName = upath.extname(id)
-      if (extName === ".css") {
-        const originalImporter = moduleGraph.getModuleById(importer)
-        const importeeFilepath = getFormattedFilepath(id, upath.dirname(importer))
-        const studioStylingId = importeeFilepath.replace(".css", ".studiostyling.js")
-        const importers: ModuleNode[] = [];
-        if (originalImporter) {
-          importers.push(originalImporter)
-        }
-        importers.push(...Array.from(moduleGraph.getModuleById(importer)?.importers ?? []))
-        while (importers.length) {  // TODO circular dependences?
-          const importer = importers.shift();
-          if (!importer?.file){
-            continue
-          }
-          if (!importerToCssMap.hasOwnProperty(importer.file)){
-            importerToCssMap[importer.file] = new Set;
-          }
-          importerToCssMap[importer.file].add(importeeFilepath)
-          importers.concat(Array.from(importer.importers ?? []))
-        }
-        return studioStylingId
-      }
+      updateImporterToCssMap(id, importer)
+      return id.replace(".css", ".studiostyling.js")
     }, 
     load(id) {
-      if (id.includes(".studiostyling")) {
+      if (id.includes(".studiostyling.js")) {
         const arrVersion: Record<string, string[]> = {};
         Object.entries(importerToCssMap).forEach(([importer, cssSet]) => {
           arrVersion[importer] = Array.from(cssSet)
@@ -59,4 +62,16 @@ function getFormattedFilepath(id: string, importer: string) {
     return upath.join(importer, id)
   }
   return id
+}
+
+function getQueryParameterExists(filepath: string, queryParameter: string): boolean {
+  const queryParameterRE = new RegExp(`^.*?.*${queryParameter}`);
+  const queryParameterResult = filepath.match(queryParameterRE);
+  return !!queryParameterResult;
+}
+
+function isStylingFile(id: string): boolean {
+  const extName = upath.extname(id)
+  return !!(extName.match(/.[s]?css/))
+
 }

@@ -4,6 +4,7 @@ import {
   PropsWithChildren,
   RefObject,
   SetStateAction,
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -27,7 +28,7 @@ export default function IFramePortal(
   const iframeCSS = twMerge(
     "mr-auto ml-auto border-2",
     viewport.css,
-    useCSS(viewport, previewRef)
+    useViewportOption(viewport, previewRef)
   );
 
   return (
@@ -53,53 +54,66 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
       studio.cssStyling.importerToCssMap
     ]);
 
-  useEffect(() => {
-    async function dynamicImport(filepath: string) {
-      const contents = (await dynamicImportFromBrowser(filepath)).default
-      return contents
-    }
-    if (iframeDocument) {
-      componentTree?.map((componentState) => {
-        if (componentState.metadataUUID) {
-          const filename = fileMetadatas[componentState.metadataUUID].filepath
-          if (cssStyling.hasOwnProperty(filename)) {
-            cssStyling[filename].forEach((cssFilepath) => {
-              return dynamicImport(`${cssFilepath}?inline`).then((response) => {
-                const styleTag: HTMLStyleElement = document.createElement("style");
-                iframeDocument.head.appendChild(styleTag)
-                styleTag.innerText = response
-              })
-            })
-          }
-        }
-      })
-
-      const inlineStyles = document.head.getElementsByTagName("style");
-      for (const el of inlineStyles) {
-        const filepath = el.getAttribute("data-vite-dev-id");
-        if (!filepath) {
-          continue;
-        }
-        const cloneNode: Node = el.cloneNode(true);
-        const isTailwindDirective = getIsTailwindDirective(filepath);
-        if (isTailwindDirective) {
-          iframeDocument.head.appendChild(cloneNode);
-        }
+  const injectTailwindDirectives = useCallback(() => {
+    const inlineStyles = document.head.getElementsByTagName("style");
+    for (const el of inlineStyles) {
+      const filepath = el.getAttribute("data-vite-dev-id");
+      if (!filepath) {
+        continue;
       }
-
-      return () => {
-        const styleElements = Array.prototype.slice.call(
-          iframeDocument.head.getElementsByTagName("style")
-        );
-        for (const el of styleElements) {
-          el.remove();
-        }
-      };
+      const isTailwindDirective = getIsTailwindDirective(filepath);
+      if (!isTailwindDirective) {
+        continue;
+      }
+      const cloneNode: Node = el.cloneNode(true);
+      iframeDocument?.head.appendChild(cloneNode);
     }
-  }, [iframeDocument, activePage, fileMetadatas, componentTree, importedComponents, cssStyling]);
+  }, [iframeDocument]) 
+
+  useEffect(() => {
+    if (!iframeDocument) {
+      return
+    }
+    componentTree?.forEach((componentState) => {
+      if (!componentState.metadataUUID) {
+        return
+      }
+      const filename = fileMetadatas[componentState.metadataUUID].filepath
+      if (!cssStyling.hasOwnProperty(filename)) {
+        return
+      }
+      cssStyling[filename].forEach((cssFilepath) => {
+        return dynamicImport(`${cssFilepath}?inline`).then((response) => {
+          const styleTag: HTMLStyleElement = document.createElement("style");
+          iframeDocument.head.appendChild(styleTag)
+          styleTag.innerText = response
+        })
+      })
+    })
+
+    injectTailwindDirectives();
+    return () => {
+      const styleElements = Array.prototype.slice.call(
+        iframeDocument.head.getElementsByTagName("style")
+      );
+      for (const el of styleElements) {
+        el.remove();
+      }
+    };
+  }, [iframeDocument, activePage, fileMetadatas, componentTree, importedComponents, cssStyling, injectTailwindDirectives]);
 }
 
-const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
+function getIsTailwindDirective(filepath: string) {
+  const isTailwindDirectiveRE = /\/tailwind-directives.css/;
+  return !!filepath.match(isTailwindDirectiveRE);
+}
+
+async function dynamicImport(filepath: string) {
+  const contents = (await dynamicImportFromBrowser(filepath + "?studioStyling")).default
+  return contents
+}
+
+const useViewportOption = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
   const [css, setCss] = useState(
     (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
       (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
@@ -127,8 +141,3 @@ const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
 
   return css;
 };
-
-function getIsTailwindDirective(filepath: string) {
-  const isTailwindDirectiveRE = /\/tailwind-directives.css/;
-  return !!filepath.match(isTailwindDirectiveRE);
-}
