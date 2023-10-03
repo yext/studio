@@ -62,7 +62,6 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
       componentTree?.map((componentState) => {
         if (componentState.metadataUUID) {
           const filename = fileMetadatas[componentState.metadataUUID].filepath
-          console.log(filename)
           if (cssStyling.hasOwnProperty(filename)) {
             cssStyling[filename].forEach((cssFilepath) => {
               return dynamicImport(`${cssFilepath}?inline`).then((response) => {
