@@ -4,6 +4,7 @@ import path from "path";
 import GitOperations from "./GitOperations.js";
 import simpleGit from "simple-git";
 import { StreamScope } from "@yext/studio-plugin";
+import ViewportMenuSection from "./appSections/ViewportMenuSection.js";
 
 export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
@@ -20,6 +21,7 @@ export default class StudioPlaywrightPage {
   readonly saveButton: ToastActionButton;
   readonly deployButton: ToastActionButton;
   readonly gitOps: GitOperations;
+  readonly viewportMenuSection: ViewportMenuSection;
 
   constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
@@ -57,6 +59,8 @@ export default class StudioPlaywrightPage {
 
     const git = simpleGit(tmpDir);
     this.gitOps = new GitOperations(git);
+
+    this.viewportMenuSection = new ViewportMenuSection(this.page);
   }
 
   async addStaticPage(pageName: string, urlSlug: string, layoutName?: string) {
@@ -164,7 +168,7 @@ export default class StudioPlaywrightPage {
       expect
         .poll(() => img.evaluate((e: HTMLImageElement) => e.complete), {
           message: "Wait for images in page preview to render.",
-          timeout: 1000,
+          timeout: 5000,
         })
         .toBeTruthy()
     );
@@ -261,18 +265,6 @@ export default class StudioPlaywrightPage {
 
   getComponentPath(componentName: string) {
     return path.join(this.tmpDir, "src/components", componentName + ".tsx");
-  }
-
-  async openViewportMenu() {
-    await this.page
-      .getByRole("button", { name: "See Available Viewports" })
-      .click();
-  }
-
-  async setViewport(viewportName: string) {
-    await this.page
-      .getByRole("button", { name: `Select ${viewportName} Viewport` })
-      .click();
   }
 
   async takePageScreenshotAfterImgRender() {

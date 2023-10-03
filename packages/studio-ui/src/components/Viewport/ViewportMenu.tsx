@@ -24,7 +24,10 @@ export default function ViewportMenu({
   );
 
   return (
-    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg flex flex-col items-start py-1">
+    <div
+      className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg flex flex-col items-start py-1"
+      data-testid="viewport-selection"
+    >
       {Object.values(VIEWPORTS).map((viewport) => {
         return (
           <Option
