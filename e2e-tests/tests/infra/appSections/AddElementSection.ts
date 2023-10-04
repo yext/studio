@@ -35,7 +35,9 @@ export default class AddElementSection {
     }
 
     if (elementType) {
-      const categoryButton = this.page.getByRole("button", { name: elementType });
+      const categoryButton = this.page.getByRole("button", {
+        name: elementType,
+      });
       await categoryButton.click();
     }
   }
