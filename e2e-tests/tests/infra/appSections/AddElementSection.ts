@@ -6,16 +6,14 @@ type ElementType = "Components" | "Containers" | "Layouts";
  * A Playwright wrapper around the Add Element functionality.
  */
 export default class AddElementSection {
-  private addElementButton;
-  private addElementMenu;
-  private isMenuOpen;
+  private addElementButton: Locator;
+  private addElementMenu: Locator;
 
   constructor(private page: Page) {
     this.addElementButton = page.getByRole("button", {
       name: "Open Add Element Menu",
     });
     this.addElementMenu = page.getByTestId("add-element-menu");
-    this.isMenuOpen = false;
   }
 
   getAddElementLocator(elementName: string): Locator {
@@ -26,11 +24,11 @@ export default class AddElementSection {
 
   async toggleAddElementMenu() {
     await this.addElementButton.click();
-    this.isMenuOpen = !this.isMenuOpen;
   }
 
   private async selectElementType(elementType?: ElementType) {
-    if (!this.isMenuOpen) {
+    const isMenuOpen = (await this.addElementMenu.count()) > 0;
+    if (!isMenuOpen) {
       await this.toggleAddElementMenu();
     }
 
