@@ -60,17 +60,9 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
   ]);
 
   const injectTailwindDirectives = useCallback(() => {
-    const inlineStyles = document.head.getElementsByTagName("style");
-    for (const el of inlineStyles) {
-      const filepath = el.getAttribute("data-vite-dev-id");
-      if (!filepath) {
-        continue;
-      }
-      const isTailwindDirective = getIsTailwindDirective(filepath);
-      if (!isTailwindDirective) {
-        continue;
-      }
-      const cloneNode: Node = el.cloneNode(true);
+    const tailwindDirectiveStyleTag = document.querySelector('[data-vite-dev-id$="tailwind-directives.css?studioStyling"]')
+    if(tailwindDirectiveStyleTag) {
+      const cloneNode: Node = tailwindDirectiveStyleTag.cloneNode(true);
       iframeDocument?.head.appendChild(cloneNode);
     }
   }, [iframeDocument]);
@@ -79,6 +71,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
     if (!iframeDocument) {
       return;
     }
+    injectTailwindDirectives();
     componentTree?.forEach((componentState) => {
       if (!componentState.metadataUUID) {
         return;
@@ -95,8 +88,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         });
       });
     });
-
-    injectTailwindDirectives();
+    
     return () => {
       const styleElements = Array.prototype.slice.call(
         iframeDocument.head.getElementsByTagName("style")
@@ -114,11 +106,6 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
     cssStyling,
     injectTailwindDirectives,
   ]);
-}
-
-function getIsTailwindDirective(filepath: string) {
-  const isTailwindDirectiveRE = /\/tailwind-directives.css/;
-  return !!filepath.match(isTailwindDirectiveRE);
 }
 
 async function dynamicImport(filepath: string) {
