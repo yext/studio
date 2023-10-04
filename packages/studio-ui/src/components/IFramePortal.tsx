@@ -60,8 +60,10 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
   ]);
 
   const injectTailwindDirectives = useCallback(() => {
-    const tailwindDirectiveStyleTag = document.querySelector('[data-vite-dev-id$="tailwind-directives.css?studioStyling"]')
-    if(tailwindDirectiveStyleTag) {
+    const tailwindDirectiveStyleTag = document.querySelector(
+      '[data-vite-dev-id$="tailwind-directives.css?studioStyling"]'
+    );
+    if (tailwindDirectiveStyleTag) {
       const cloneNode: Node = tailwindDirectiveStyleTag.cloneNode(true);
       iframeDocument?.head.appendChild(cloneNode);
     }
@@ -88,7 +90,7 @@ function useParentDocumentStyles(iframeDocument: Document | undefined) {
         });
       });
     });
-    
+
     return () => {
       const styleElements = Array.prototype.slice.call(
         iframeDocument.head.getElementsByTagName("style")
