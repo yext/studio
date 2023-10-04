@@ -10,7 +10,7 @@ studioTest(
   "can display styles from a custom tailwind config",
   async ({ studioPage }) => {
     await studioPage.removeElement("div");
-    await studioPage.addElement("Button", "Components", false);
+    await studioPage.addElementSection.addComponent("Button");
     await studioPage.setActiveComponent("Button");
     const classNameInput = studioPage.getPropInput("className");
     await classNameInput.clear();
@@ -28,7 +28,7 @@ const expectedPageContents = `export default function BasicPage() {
 
 studioTest("TailwindClass prop editor", async ({ studioPage, page }) => {
   await studioPage.removeElement("div");
-  await studioPage.addElement("CustomTailwindButton", "Components", false);
+  await studioPage.addElementSection.addComponent("CustomTailwindButton");
   await studioPage.setActiveComponent("CustomTailwindButton");
   const editorSidebar = page.getByTestId("EditorSidebar");
   await expect(editorSidebar).toHaveScreenshot();

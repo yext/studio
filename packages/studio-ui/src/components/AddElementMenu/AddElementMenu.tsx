@@ -13,7 +13,7 @@ export default function AddElementMenu({
   const [activeType, setType] = useState<ElementType>(ElementType.Components);
 
   return (
-    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg">
+    <div className="absolute z-20 rounded bg-white text-sm text-gray-700 shadow-lg" data-testid="add-element-menu">
       <ElementTypeSwitcher activeType={activeType} setType={setType} />
       <AddElementList activeType={activeType} afterSelect={closeMenu} />
     </div>
