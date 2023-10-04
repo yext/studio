@@ -49,7 +49,7 @@ function setInitialState(initialState: Partial<FileMetadataSliceStates>): void {
   const baseState: FileMetadataSliceStates = {
     UUIDToFileMetadata: {},
     UUIDToImportedComponent: {},
-    filepathToCssFiles: {}
+    filepathToCssFiles: {},
   };
   mockStore({ fileMetadatas: { ...baseState, ...initialState } });
 }
