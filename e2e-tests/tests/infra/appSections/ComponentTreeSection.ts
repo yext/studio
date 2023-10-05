@@ -15,9 +15,12 @@ export default class ComponentTreeSection {
     });
   }
 
-  async setActiveElement(name: string, index = 0) {
-    const component = this.componentTree.getByText(name).nth(index);
+  getElement(name: string, index = 0): Locator {
+    return this.componentTree.getByText(name).nth(index);
+  }
 
+  async setActiveElement(name: string, index = 0) {
+    const component = this.getElement(name, index);
     await component.click();
   }
 
