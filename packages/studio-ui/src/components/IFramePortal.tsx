@@ -45,37 +45,44 @@ export default function IFramePortal(
 }
 
 function useInjectIframeCss(iframeDocument: Document | undefined) {
-  const [componentTree, getComponentMetadata, activePage, fileMetadatas] = useStudioStore((store) => [
-    store.actions.getComponentTree(),
-    store.fileMetadatas.getComponentMetadata,
-    store.pages.activePageName,
-    store.fileMetadatas.UUIDToFileMetadata
-  ]);
+  const [componentTree, getComponentMetadata, activePage, fileMetadatas] =
+    useStudioStore((store) => [
+      store.actions.getComponentTree(),
+      store.fileMetadatas.getComponentMetadata,
+      store.pages.activePageName,
+      store.fileMetadatas.UUIDToFileMetadata,
+    ]);
 
   useEffect(() => {
     if (!iframeDocument) {
-      return
+      return;
     }
     componentTree?.forEach((component) => {
-      const metadataUUID = component.metadataUUID
+      const metadataUUID = component.metadataUUID;
       if (!metadataUUID) {
-        return
+        return;
       }
-      const cssImports = getComponentMetadata(metadataUUID).cssImports
+      const cssImports = getComponentMetadata(metadataUUID).cssImports;
       cssImports?.forEach((cssFilepath) => {
         void dynamicImportFromBrowser(cssFilepath + "?inline").then(
-          importedCss => addStyleToIframe(importedCss.default, iframeDocument)
-        )
-      })
-    })
+          (importedCss) => addStyleToIframe(importedCss.default, iframeDocument)
+        );
+      });
+    });
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [componentTree, getComponentMetadata, iframeDocument, activePage, fileMetadatas]);
-  
+  }, [
+    componentTree,
+    getComponentMetadata,
+    iframeDocument,
+    activePage,
+    fileMetadatas,
+  ]);
+
   function addStyleToIframe(stying: string, iframeDocument: Document) {
-    const styleEl = document.createElement("style")
-    styleEl.innerText = stying
+    const styleEl = document.createElement("style");
+    styleEl.innerText = stying;
     iframeDocument.head.appendChild(styleEl);
   }
 
@@ -89,7 +96,10 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
   }
 }
 
-const useViewportOption = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
+const useViewportOption = (
+  viewport: Viewport,
+  previewRef: RefObject<HTMLDivElement>
+) => {
   const [css, setCss] = useState(
     (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
       (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)

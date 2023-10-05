@@ -8,7 +8,7 @@ import tryUsingResult from "../errors/tryUsingResult";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { Result } from "true-myth";
 import dependencyTree from "dependency-tree";
-import upath from "upath"
+import upath from "upath";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -44,17 +44,19 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-    const cssImports = dependencyTree.toList({
-      filename: filepath,
-      directory: upath.dirname(filepath),
-    }).filter((entry) => entry.includes(".css"))
-    
+    const cssImports = dependencyTree
+      .toList({
+        filename: filepath,
+        directory: upath.dirname(filepath),
+      })
+      .filter((entry) => entry.includes(".css"));
+
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
       filepath,
-      cssImports
+      cssImports,
     };
   };
 }
