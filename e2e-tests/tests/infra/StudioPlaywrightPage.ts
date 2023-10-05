@@ -5,6 +5,7 @@ import GitOperations from "./GitOperations.js";
 import simpleGit from "simple-git";
 import { StreamScope } from "@yext/studio-plugin";
 import ViewportMenuSection from "./appSections/ViewportMenuSection.js";
+import AddElementSection from "./appSections/AddElementSection.js";
 
 export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
@@ -14,7 +15,6 @@ export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
   readonly pagesPanel: Locator;
   readonly componentTree: Locator;
-  readonly addElementButton: Locator;
   readonly removeElementButton: Locator;
   readonly livePreviewButton: Locator;
   readonly preview: FrameLocator;
@@ -22,6 +22,7 @@ export default class StudioPlaywrightPage {
   readonly deployButton: ToastActionButton;
   readonly gitOps: GitOperations;
   readonly viewportMenuSection: ViewportMenuSection;
+  readonly addElementSection: AddElementSection;
 
   constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
@@ -30,10 +31,6 @@ export default class StudioPlaywrightPage {
 
     this.pagesPanel = page.locator(':text("Pages") + ul');
     this.componentTree = page.locator(':text("Layers") + ul');
-
-    this.addElementButton = page.getByRole("button", {
-      name: "Open Add Element Menu",
-    });
 
     this.removeElementButton = page.getByRole("button", {
       name: "Remove Element",
@@ -61,6 +58,7 @@ export default class StudioPlaywrightPage {
     this.gitOps = new GitOperations(git);
 
     this.viewportMenuSection = new ViewportMenuSection(this.page);
+    this.addElementSection = new AddElementSection(this.page);
   }
 
   async addStaticPage(pageName: string, urlSlug: string, layoutName?: string) {
@@ -199,37 +197,6 @@ export default class StudioPlaywrightPage {
       })
       .getByRole("button", { name: "Delete" })
       .click();
-  }
-
-  async addElement(
-    elementName: string,
-    category: "Components" | "Containers" | "Layouts",
-    shouldTakeScreenshots = true
-  ) {
-    await this.openAddElementMenu(category, shouldTakeScreenshots);
-    await this.getAddElementLocator(elementName).click();
-  }
-
-  async openAddElementMenu(
-    category: "Components" | "Containers" | "Layouts" = "Components",
-    shouldTakeScreenshots = false
-  ) {
-    const takeScreenshot = () =>
-      shouldTakeScreenshots && this.takePageScreenshotAfterImgRender();
-    await this.addElementButton.click();
-    await takeScreenshot();
-
-    const categoryButton = this.page.getByRole("button", { name: category });
-    if (await categoryButton.isEnabled()) {
-      await categoryButton.click();
-      await takeScreenshot();
-    }
-  }
-
-  getAddElementLocator(elementName: string) {
-    return this.page.getByRole("button", {
-      name: `Add ${elementName} Element`,
-    });
   }
 
   async removeElement(elementName: string, index?: number) {
