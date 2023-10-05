@@ -18,6 +18,7 @@ import {
   JsxExpression,
   TypeAliasDeclaration,
   JsxAttribute,
+  LeftHandSideExpression,
 } from "ts-morph";
 import {
   ArrayProp,
@@ -203,7 +204,11 @@ export default class StaticParsingHelpers {
   }
 
   static getEscapedName(
-    p: PropertySignature | PropertyAssignment | TypeAliasDeclaration
+    p:
+      | PropertySignature
+      | PropertyAssignment
+      | TypeAliasDeclaration
+      | LeftHandSideExpression
   ): string {
     return p.getSymbolOrThrow().getEscapedName();
   }

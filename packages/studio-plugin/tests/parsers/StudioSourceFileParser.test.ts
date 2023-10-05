@@ -200,6 +200,59 @@ describe("parseShape", () => {
     });
   });
 
+  it("can parse an interface with inherited properties", () => {
+    const parser = createParser(
+      `interface BaseProps {
+        title?: string
+      }
+  
+      interface HelloProps {
+        hello: {
+          world?: string
+        }
+      }
+      
+      export interface Props extends BaseProps, HelloProps {
+        hello: {
+          world: string
+        }
+      }`
+    );
+
+    expect(parser.parseTypeReference("Props")?.type).toEqual({
+      title: {
+        kind: ParsedTypeKind.Simple,
+        required: false,
+        type: "string",
+      },
+      hello: {
+        kind: ParsedTypeKind.Object,
+        required: true,
+        type: {
+          world: {
+            kind: ParsedTypeKind.Simple,
+            required: true,
+            type: "string",
+          },
+        },
+      },
+    });
+  });
+
+  it("throws an error if the inherited type is not an object type", () => {
+    const parser = createParser(
+      `import { MyString } from "../__fixtures__/StudioSourceFileParser/exportedTypes";
+      
+      export interface Props extends MyString {
+        title: string;
+      }`
+    );
+
+    expect(() => parser.parseTypeReference("Props")).toThrowError(
+      "Error parsing interface: Unable to resolve inherited type MyString to an object type."
+    );
+  });
+
   it("can parse a sub-property with a renamed nested type from an external package", () => {
     const parser = createParser(
       `import { ApplyFiltersButtonProps } from "@yext/search-ui-react";
