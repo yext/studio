@@ -17,28 +17,28 @@ studioTest(
     const buttonPreviews = studioPage.preview.getByText("Press me!");
     await expect(buttonPreviews).toHaveCount(0);
 
-    await studioPage.addElement("Button", "Components");
+    const addElementSection = studioPage.addElementSection;
+
+    await addElementSection.addComponent("Button");
     await expect(buttonPreviews).toHaveCount(1);
     await studioPage.takePageScreenshotAfterImgRender();
 
     expect(
       await studioPage.getStringPropValue("className", "Button", 0)
     ).toEqual("px-4 py-2 text-lg border-4 border-green-500");
-    await studioPage.takePageScreenshotAfterImgRender();
 
     const buttonPath = studioPage.getComponentPath("Button");
     fs.writeFileSync(buttonPath, updatedComponent);
     // Wait for the HMR to complete
     await page.waitForResponse(/Button\.tsx/, { timeout: 5000 });
 
-    await studioPage.addElement("Button", "Components");
+    await addElementSection.addComponent("Button");
     await expect(buttonPreviews).toHaveCount(2);
     await studioPage.takePageScreenshotAfterImgRender();
 
     expect(
       await studioPage.getStringPropValue("className", "Button", 1)
     ).toEqual("px-4");
-    await studioPage.takePageScreenshotAfterImgRender();
 
     await studioPage.saveButton.click();
     const pagePath = studioPage.getPagePath("BasicPage");

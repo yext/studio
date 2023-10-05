@@ -6,7 +6,7 @@ import { Page, expect } from "@playwright/test";
 export default class ViewportMenuSection {
   constructor(private page: Page) {}
 
-  async openViewportMenu() {
+  async toggleViewportMenu() {
     await this.page
       .getByRole("button", { name: "See Available Viewports" })
       .click();
