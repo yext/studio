@@ -11,6 +11,7 @@ import {
 import useStudioStore from "../store/useStudioStore";
 import { twMerge } from "tailwind-merge";
 import { Viewport } from "./Viewport/defaults";
+import dynamicImportFromBrowser from "../utils/dynamicImportFromBrowser";
 
 export default function IFramePortal(
   props: PropsWithChildren<{
@@ -21,12 +22,13 @@ export default function IFramePortal(
 ) {
   const previewRef = useRef<HTMLDivElement>(null);
   const iframeDocument = props.iframeEl?.contentWindow?.document;
+  useInjectIframeCss(iframeDocument);
+
   const [viewport] = useStudioStore((store) => [store.pagePreview.viewport]);
-  useParentDocumentStyles(iframeDocument);
   const iframeCSS = twMerge(
     "mr-auto ml-auto border-2",
     viewport.css,
-    useCSS(viewport, previewRef)
+    useViewportOption(viewport, previewRef)
   );
 
   return (
@@ -42,21 +44,52 @@ export default function IFramePortal(
   );
 }
 
-function useParentDocumentStyles(iframeDocument: Document | undefined) {
+function useInjectIframeCss(iframeDocument: Document | undefined) {
+  const [componentTree, getComponentMetadata, activePage, fileMetadatas] = useStudioStore((store) => [
+    store.actions.getComponentTree(),
+    store.fileMetadatas.getComponentMetadata,
+    store.pages.activePageName,
+    store.fileMetadatas.UUIDToFileMetadata
+  ]);
+
   useEffect(() => {
-    if (iframeDocument) {
-      const inlineStyles = document.head.getElementsByTagName("style");
-      const stylesheets = document.head.querySelectorAll(
-        'link[rel="stylesheet"]'
-      );
-      for (const el of [...inlineStyles, ...stylesheets]) {
-        iframeDocument.head.appendChild(el.cloneNode(true));
-      }
+    if (!iframeDocument) {
+      return
     }
-  }, [iframeDocument]);
+    componentTree?.forEach((component) => {
+      const metadataUUID = component.metadataUUID
+      if (!metadataUUID) {
+        return
+      }
+      const cssImports = getComponentMetadata(metadataUUID).cssImports
+      cssImports?.forEach((cssFilepath) => {
+        void dynamicImportFromBrowser(cssFilepath + "?inline").then(
+          importedCss => addStyleToIframe(importedCss.default, iframeDocument)
+        )
+      })
+    })
+    return () => {
+      clearStylingFromIframe(iframeDocument);
+    };
+  }, [componentTree, getComponentMetadata, iframeDocument, activePage, fileMetadatas]);
+  
+  function addStyleToIframe(stying: string, iframeDocument: Document) {
+    const styleEl = document.createElement("style")
+    styleEl.innerText = stying
+    iframeDocument.head.appendChild(styleEl);
+  }
+
+  function clearStylingFromIframe(iframeDocument: Document) {
+    const styleElements = Array.prototype.slice.call(
+      iframeDocument.head.getElementsByTagName("style")
+    );
+    for (const el of styleElements) {
+      el.remove();
+    }
+  }
 }
 
-const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
+const useViewportOption = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
   const [css, setCss] = useState(
     (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
       (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
@@ -81,6 +114,5 @@ const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
     }
     return () => resizeObserver.disconnect();
   });
-
   return css;
 };
