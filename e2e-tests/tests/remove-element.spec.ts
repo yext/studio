@@ -20,7 +20,7 @@ studioTest("can remove a container component", async ({ studioPage }) => {
   await expect(containerPreviews).toHaveCount(0);
   await expect(childPreviews).toHaveCount(0);
 
-  // TODO: Scope this to Screenshot of Preview pane. 
+  // TODO: Scope this to Screenshot of Preview pane.
   await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("BasicPage");
