@@ -28,6 +28,7 @@ describe("getComponentMetadata", () => {
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
       propShape: { title: { type: "string", required: false } },
+      cssImports: [],
     });
   });
 
@@ -44,6 +45,7 @@ describe("getComponentMetadata", () => {
       kind: "componentMetadata",
       propShape: {},
       acceptsChildren: true,
+      cssImports: [],
     });
   });
 
@@ -150,6 +152,7 @@ describe("getComponentMetadata", () => {
           ],
         },
       },
+      cssImports: []
     };
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
