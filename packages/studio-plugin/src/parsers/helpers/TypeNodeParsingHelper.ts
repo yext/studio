@@ -137,12 +137,49 @@ export default class TypeNodeParsingHelper {
     }
   }
 
+  private static getInheritedShape(
+    shapeDeclaration: InterfaceDeclaration | TypeLiteralNode,
+    parseTypeReference: (identifier: string) => ParsedType | undefined
+  ): ParsedShape {
+    if (!shapeDeclaration.isKind(SyntaxKind.InterfaceDeclaration)) {
+      return {};
+    }
+
+    const heritageClause = shapeDeclaration.getHeritageClauseByKind(
+      SyntaxKind.ExtendsKeyword
+    );
+    if (!heritageClause) {
+      return {};
+    }
+
+    const inheritedTypes = heritageClause.getTypeNodes();
+    return inheritedTypes.reduce((inheritedShape, inheritedType) => {
+      const typeName = StaticParsingHelpers.getEscapedName(
+        inheritedType.getExpression()
+      );
+      const parsedType = parseTypeReference(typeName);
+      if (parsedType?.kind === ParsedTypeKind.Object) {
+        return {
+          ...inheritedShape,
+          ...parsedType.type,
+        };
+      } else {
+        throw new Error(
+          `Error parsing interface: Unable to resolve inherited type ${typeName} to an object type.`
+        );
+      }
+    }, {} as ParsedShape);
+  }
+
   private static handleObjectType(
     shapeDeclaration: InterfaceDeclaration | TypeLiteralNode,
     parseTypeReference: (identifier: string) => ParsedType | undefined
   ): ObjectParsedType {
     const properties = shapeDeclaration.getProperties();
-    const parsedShape: ParsedShape = {};
+    const parsedShape = this.getInheritedShape(
+      shapeDeclaration,
+      parseTypeReference
+    );
 
     properties.forEach((p) => {
       const propertyName = StaticParsingHelpers.getEscapedName(p);
