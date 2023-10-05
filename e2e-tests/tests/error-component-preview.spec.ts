@@ -12,6 +12,6 @@ studioTest("components with parsing errors", async ({ studioPage }) => {
     .hover();
   await studioPage.takePageScreenshotAfterImgRender();
 
-  await studioPage.setActiveComponent("ErrorComponent");
+  await studioPage.componentTreeSection.setActiveElement("ErrorComponent");
   await studioPage.takePageScreenshotAfterImgRender();
 });
