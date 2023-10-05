@@ -152,7 +152,7 @@ describe("getComponentMetadata", () => {
           ],
         },
       },
-      cssImports: []
+      cssImports: [],
     };
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
