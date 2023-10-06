@@ -45,7 +45,7 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-    const cssImports = getCssFilesFromModuleGraph(this.moduleGraph)
+    const cssImports = getCssFilesFromModuleGraph(this.moduleGraph);
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
@@ -60,9 +60,9 @@ function getCssFilesFromModuleGraph(moduleGraph: Tree): string[] {
   let cssFiles: Set<string> = new Set();
   Object.entries(moduleGraph).forEach(([key, val]) => {
     if (key.includes(".css")) {
-      cssFiles = new Set([...cssFiles, key])
+      cssFiles = new Set([...cssFiles, key]);
     }
-    cssFiles = new Set([...cssFiles, ...getCssFilesFromModuleGraph(val)])
-  })
-  return Array.from(cssFiles)
+    cssFiles = new Set([...cssFiles, ...getCssFilesFromModuleGraph(val)]);
+  });
+  return Array.from(cssFiles);
 }

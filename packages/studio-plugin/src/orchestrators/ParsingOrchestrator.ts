@@ -41,7 +41,7 @@ export default class ParsingOrchestrator {
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
-  private filepathToModuleGraph: Tree = {}
+  private filepathToModuleGraph: Tree = {};
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -167,9 +167,9 @@ export default class ParsingOrchestrator {
       this.filepathToModuleGraph[absPath] = dependencyTree({
         filename: absPath,
         directory: upath.dirname(absPath),
-        visited: this.filepathToModuleGraph
-      })
-    }
+        visited: this.filepathToModuleGraph,
+      });
+    };
 
     const addDirectoryToMapping = (folderPath: string) => {
       if (!fs.existsSync(folderPath)) {
@@ -204,13 +204,15 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      const moduleGraph = this.filepathToModuleGraph[absPath]
+      const moduleGraph = this.filepathToModuleGraph[absPath];
       if (!moduleGraph) {
-        throw new Error(
-          `Could not retrieve ModuleGraph for ${absPath}.`
-        );
+        throw new Error(`Could not retrieve ModuleGraph for ${absPath}.`);
       }
-      const componentFile = new ComponentFile(absPath, this.project, moduleGraph);
+      const componentFile = new ComponentFile(
+        absPath,
+        this.project,
+        moduleGraph
+      );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
         return createErrorFileMetadata(result.error);
