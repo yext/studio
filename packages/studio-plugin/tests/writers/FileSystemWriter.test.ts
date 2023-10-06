@@ -13,6 +13,10 @@ import {
   SiteSettingsValues,
 } from "../../src/types";
 import { createTestProject } from "../__utils__/createTestSourceFile";
+import * as uuidUtils from "uuid";
+
+jest.mock("uuid");
+jest.spyOn(uuidUtils, "v4").mockReturnValue("mock-metadata-uuid");
 
 jest.mock("fs", () => {
   const actualFs = jest.requireActual("fs");
@@ -27,6 +31,7 @@ const projectRoot = upath.resolve(
 );
 const paths = getUserPaths(projectRoot);
 paths.pages = upath.join(projectRoot, "pages");
+paths.components = upath.join(projectRoot, "components");
 paths.siteSettings = upath.join(projectRoot, "siteSettings.ts");
 
 const bannerComponentState: ComponentState = {

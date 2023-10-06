@@ -105,7 +105,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-1",
-    metadataUUID: "banner-metadata",
+    metadataUUID: "mock-metadata-uuid",
     props: {
       title: {
         kind: PropValueKind.Expression,
@@ -151,7 +151,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-3",
-    metadataUUID: "banner-metadata",
+    metadataUUID: "mock-metadata-uuid",
     props: {
       title: {
         kind: PropValueKind.Expression,
@@ -165,7 +165,7 @@ export const streamConfigMultipleFieldsComponentTree: ComponentState[] = [
     componentName: "ComplexBanner",
     parentUUID: "mock-uuid-0",
     uuid: "mock-uuid-4",
-    metadataUUID: "banner-metadata",
+    metadataUUID: "mock-metadata-uuid",
     props: {
       title: {
         kind: PropValueKind.Literal,

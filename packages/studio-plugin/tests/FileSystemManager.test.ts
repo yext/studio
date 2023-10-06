@@ -12,6 +12,10 @@ import {
   PageState,
 } from "../src/types";
 import { createTestProject } from "./__utils__/createTestSourceFile";
+import * as uuidUtils from "uuid";
+
+jest.mock("uuid");
+jest.spyOn(uuidUtils, "v4").mockReturnValue("mock-metadata-uuid");
 
 const bannerComponentState: ComponentState = {
   kind: ComponentStateKind.Standard,
@@ -34,6 +38,7 @@ const projectRoot = upath.resolve(
 const tsMorphProject: Project = createTestProject();
 const paths = getUserPaths(projectRoot);
 paths.pages = upath.join(projectRoot, "pages");
+paths.components = upath.join(projectRoot, "components");
 
 const orchestrator = new ParsingOrchestrator(tsMorphProject, {
   paths,
