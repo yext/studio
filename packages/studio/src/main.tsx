@@ -8,7 +8,7 @@ import {
   GitDataHMRUpdateID,
 } from "@yext/studio-ui";
 import type { StudioHMRPayload, GitDataHMRPayload } from "@yext/studio-plugin";
-import "./tailwind-directives.css?studioCss";
+import "./tailwind-directives.css";
 
 if (import.meta.hot) {
   import.meta.hot.on(StudioHMRUpdateID, (hmrPayload: StudioHMRPayload) => {
