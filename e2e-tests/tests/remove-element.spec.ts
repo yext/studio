@@ -10,11 +10,17 @@ const expectedPage = fs.readFileSync(
 studioTest("can remove a container component", async ({ studioPage }) => {
   const containerPreviews = studioPage.preview.getByText("I'm a container:");
   const childPreviews = studioPage.preview.getByText("false");
+  const componentTreeSection = studioPage.componentTreeSection;
+
   await expect(containerPreviews).toHaveCount(1);
   await expect(childPreviews).toHaveCount(1);
-  await studioPage.removeElement("Container");
+  await componentTreeSection.takeScreenshot();
+  await componentTreeSection.removeElement("Container");
+  await componentTreeSection.takeScreenshot();
   await expect(containerPreviews).toHaveCount(0);
   await expect(childPreviews).toHaveCount(0);
+
+  // TODO: Scope this to Screenshot of Preview pane.
   await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath("BasicPage");

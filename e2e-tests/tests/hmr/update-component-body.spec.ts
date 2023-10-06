@@ -10,7 +10,7 @@ const updatedComponent = fs.readFileSync(
 studioTest(
   "can update the body of a component and see it updated via HMR",
   async ({ page, studioPage }) => {
-    await studioPage.removeElement("Container");
+    await studioPage.componentTreeSection.removeElement("Container");
     const updatedButtonPreviews = studioPage.preview.getByText(
       "this is the updated component body"
     );

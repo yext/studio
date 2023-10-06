@@ -6,6 +6,7 @@ import simpleGit from "simple-git";
 import { StreamScope } from "@yext/studio-plugin";
 import ViewportMenuSection from "./appSections/ViewportMenuSection.js";
 import AddElementSection from "./appSections/AddElementSection.js";
+import ComponentTreeSection from "./appSections/ComponentTreeSection.js";
 
 export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
@@ -14,8 +15,6 @@ export type StreamScopeForm = {
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
   readonly pagesPanel: Locator;
-  readonly componentTree: Locator;
-  readonly removeElementButton: Locator;
   readonly livePreviewButton: Locator;
   readonly preview: FrameLocator;
   readonly saveButton: ToastActionButton;
@@ -23,6 +22,7 @@ export default class StudioPlaywrightPage {
   readonly gitOps: GitOperations;
   readonly viewportMenuSection: ViewportMenuSection;
   readonly addElementSection: AddElementSection;
+  readonly componentTreeSection: ComponentTreeSection;
 
   constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
@@ -30,12 +30,6 @@ export default class StudioPlaywrightPage {
     });
 
     this.pagesPanel = page.locator(':text("Pages") + ul');
-    this.componentTree = page.locator(':text("Layers") + ul');
-
-    this.removeElementButton = page.getByRole("button", {
-      name: "Remove Element",
-    });
-
     this.livePreviewButton = page.getByRole("button", {
       name: "Live Preview",
     });
@@ -59,6 +53,7 @@ export default class StudioPlaywrightPage {
 
     this.viewportMenuSection = new ViewportMenuSection(this.page);
     this.addElementSection = new AddElementSection(this.page);
+    this.componentTreeSection = new ComponentTreeSection(this.page);
   }
 
   async addStaticPage(pageName: string, urlSlug: string, layoutName?: string) {
@@ -199,18 +194,6 @@ export default class StudioPlaywrightPage {
       .click();
   }
 
-  async removeElement(elementName: string, index?: number) {
-    await this.setActiveComponent(elementName, index);
-    await this.removeElementButton.click();
-  }
-
-  async setActiveComponent(componentName: string, componentIndex = 0) {
-    const component = this.componentTree
-      .getByText(componentName)
-      .nth(componentIndex);
-    await component.click();
-  }
-
   getPropInput(propName: string) {
     return this.page.getByRole("textbox", { name: propName });
   }
@@ -220,7 +203,10 @@ export default class StudioPlaywrightPage {
     componentName: string,
     componentIndex?: number
   ) {
-    await this.setActiveComponent(componentName, componentIndex);
+    await this.componentTreeSection.setActiveElement(
+      componentName,
+      componentIndex
+    );
     await this.page.getByRole("button", { name: "Props" }).click();
     const input = this.getPropInput(propName);
     return input.getAttribute("value");
