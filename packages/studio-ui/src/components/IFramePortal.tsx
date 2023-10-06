@@ -53,7 +53,7 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
     pageCss,
   ] = useStudioStore((store) => [
     store.actions.getComponentTree(),
-    store.fileMetadatas.getComponentMetadata,
+    store.actions.getComponentMetadata,
     store.pages.activePageName,
     store.fileMetadatas.UUIDToFileMetadata,
     store.pages.getActivePageState()?.cssImports,
@@ -64,11 +64,7 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
       return;
     }
     componentTree?.forEach((component) => {
-      const metadataUUID = component.metadataUUID;
-      if (!metadataUUID) {
-        return;
-      }
-      const cssImports = getComponentMetadata(metadataUUID).cssImports;
+      const cssImports = getComponentMetadata(component)?.cssImports;
       cssImports?.forEach((cssFilepath) => {
         void dynamicImportFromBrowser(cssFilepath + "?inline").then(
           (importedCss) => addStyleToIframe(importedCss.default, iframeDocument)
