@@ -45,12 +45,13 @@ export default function IFramePortal(
 }
 
 function useInjectIframeCss(iframeDocument: Document | undefined) {
-  const [componentTree, getComponentMetadata, activePage, fileMetadatas] =
+  const [componentTree, getComponentMetadata, activePage, fileMetadatas, pageCss] =
     useStudioStore((store) => [
       store.actions.getComponentTree(),
       store.fileMetadatas.getComponentMetadata,
       store.pages.activePageName,
       store.fileMetadatas.UUIDToFileMetadata,
+      store.pages.getActivePageState()?.cssImports
     ]);
 
   useEffect(() => {
@@ -69,6 +70,12 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
         );
       });
     });
+    pageCss?.forEach((cssFilepath) => {
+      void dynamicImportFromBrowser(cssFilepath + "?inline").then(
+        (importedCss) => addStyleToIframe(importedCss.default, iframeDocument)
+      );
+    })
+
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
@@ -78,6 +85,7 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
     iframeDocument,
     activePage,
     fileMetadatas,
+    pageCss
   ]);
 
   function addStyleToIframe(stying: string, iframeDocument: Document) {

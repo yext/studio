@@ -105,7 +105,8 @@ export default class StudioSourceFileParser {
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source } = StaticParsingHelpers.parseImport(importDeclaration);
       if (source.endsWith(".css")) {
-        cssImports.push(source);
+        const absPath = upath.join(upath.dirname(this.sourceFile.getFilePath()), source)
+        cssImports.push(absPath);
       }
     });
     return cssImports;
