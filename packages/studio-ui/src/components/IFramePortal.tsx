@@ -87,7 +87,7 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
   }
 
   function clearStylingFromIframe(iframeDocument: Document) {
-    const styleElements = Array.prototype.slice.call(
+    const styleElements = Array.from(
       iframeDocument.head.getElementsByTagName("style")
     );
     for (const el of styleElements) {
