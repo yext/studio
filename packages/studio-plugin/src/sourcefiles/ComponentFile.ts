@@ -7,8 +7,7 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import tryUsingResult from "../errors/tryUsingResult";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { Result } from "true-myth";
-import dependencyTree from "dependency-tree";
-import upath from "upath";
+import { Tree } from "dependency-tree";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -17,12 +16,14 @@ import upath from "upath";
 export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private fileMetadataParser: FileMetadataParser;
+  private moduleGraph: Tree;
 
-  constructor(filepath: string, project: Project) {
+  constructor(filepath: string, project: Project, moduleGraph: Tree) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
     );
+    this.moduleGraph = moduleGraph;
   }
 
   getComponentMetadata(): Result<ComponentMetadata, ParsingError> {
@@ -44,13 +45,7 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-    const cssImports = dependencyTree
-      .toList({
-        filename: filepath,
-        directory: upath.dirname(filepath),
-      })
-      .filter((entry) => entry.includes(".css"));
-
+    const cssImports = getCssFilesFromModuleGraph(this.moduleGraph)
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
@@ -59,4 +54,15 @@ export default class ComponentFile {
       cssImports,
     };
   };
+}
+
+function getCssFilesFromModuleGraph(moduleGraph: Tree): string[] {
+  let cssFiles: Set<string> = new Set();
+  Object.entries(moduleGraph).forEach(([key, val]) => {
+    if (key.includes(".css")) {
+      cssFiles = new Set([...cssFiles, key])
+    }
+    cssFiles = new Set([...cssFiles, ...getCssFilesFromModuleGraph(val)])
+  })
+  return Array.from(cssFiles)
 }

@@ -20,6 +20,7 @@ import { ParsingError } from "../errors/ParsingError";
 import createFilenameMapping from "./createFilenameMapping";
 import LayoutOrchestrator from "./LayoutOrchestrator";
 import separateErrorAndSuccessResults from "./separateErrorAndSuccessResults";
+import dependencyTree, { Tree } from "dependency-tree";
 
 export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({
@@ -40,6 +41,7 @@ export default class ParsingOrchestrator {
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
+  private filepathToModuleGraph: Tree = {}
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -161,6 +163,13 @@ export default class ParsingOrchestrator {
 
   private initFilepathToFileMetadata(): Record<string, FileMetadata> {
     this.filepathToFileMetadata = {};
+    const updateFilepathToModuleGraph = (absPath) => {
+      this.filepathToModuleGraph[absPath] = dependencyTree({
+        filename: absPath,
+        directory: upath.dirname(absPath),
+        visited: this.filepathToModuleGraph
+      })
+    }
 
     const addDirectoryToMapping = (folderPath: string) => {
       if (!fs.existsSync(folderPath)) {
@@ -171,6 +180,7 @@ export default class ParsingOrchestrator {
         if (fs.lstatSync(absPath).isDirectory()) {
           addDirectoryToMapping(absPath);
         } else {
+          updateFilepathToModuleGraph(absPath);
           this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
         }
       });
@@ -194,7 +204,13 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      const componentFile = new ComponentFile(absPath, this.project);
+      const moduleGraph = this.filepathToModuleGraph[absPath]
+      if (!moduleGraph) {
+        throw new Error(
+          `Could not retrieve ModuleGraph for ${absPath}.`
+        );
+      }
+      const componentFile = new ComponentFile(absPath, this.project, moduleGraph);
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
         return createErrorFileMetadata(result.error);
