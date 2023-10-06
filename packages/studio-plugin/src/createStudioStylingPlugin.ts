@@ -2,9 +2,9 @@ import upath from "upath";
 import { PluginOption } from "vite";
 /**
  * Adds the ?inline query parameter to all CSS imports
- * unless they are CSS from Studio, which are
- * imported with the `?studioCss` query parameter. This
- * prevents user styling from affecting Studio UI.
+ * unless they are CSS from Studio, which is determined
+ * from the path of its importer. This prevents user styling 
+ * from affecting Studio UI.
  */
 export default function createStudioStylingPlugin(): PluginOption {
   return {
@@ -14,7 +14,7 @@ export default function createStudioStylingPlugin(): PluginOption {
       if (!importer) {
         return;
       }
-      if (isStudioCss(id)) {
+      if (isImportedByStudio(importer)) {
         return;
       }
       if (isStyleFile(id)) {
@@ -30,8 +30,8 @@ export default function createStudioStylingPlugin(): PluginOption {
   };
 }
 
-function isStudioCss(id: string) {
-  return !!id.match(/.*\?.*studioCss.*/);
+function isImportedByStudio(id: string) {
+  return !!(id.match(/.*@yext\/studio.*/) || id.match(/.*packages\/studio*/));
 }
 
 function isStyleFile(id: string) {
