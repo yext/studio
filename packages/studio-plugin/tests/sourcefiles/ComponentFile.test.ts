@@ -9,7 +9,7 @@ import {
 import { assertIsOk } from "../__utils__/asserts";
 import upath from "upath";
 import { createTestProject } from "../__utils__/createTestSourceFile";
-import DependencyTree from "dependency-tree"
+import DependencyTree from "dependency-tree";
 
 describe("getComponentMetadata", () => {
   beforeEach(() => {
@@ -196,12 +196,18 @@ describe("getComponentMetadata", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
     const dependencyTree = DependencyTree({
       filename: pathToComponent,
-      directory: upath.dirname(pathToComponent)
-    })
+      directory: upath.dirname(pathToComponent),
+    });
 
-    const componentFile = new ComponentFile(pathToComponent, project, dependencyTree);
+    const componentFile = new ComponentFile(
+      pathToComponent,
+      project,
+      dependencyTree
+    );
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
-    expect(result.value).toHaveProperty("cssImports", [expect.stringContaining("index.css")])
-  })
+    expect(result.value).toHaveProperty("cssImports", [
+      expect.stringContaining("index.css"),
+    ]);
+  });
 });
