@@ -25,6 +25,8 @@
     "@yext/pages": "^1.0.0-rc.1",
     "@yext/studio": "*",
     "@yext/types": "^0.1.12-alpha",
+    "autoprefixer": "^10.4.8",
+    "postcss": "^8.4.16",
     "eslint": "^8.11.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-react-perf": "^3.3.1",
