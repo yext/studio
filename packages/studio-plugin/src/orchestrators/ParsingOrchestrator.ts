@@ -204,14 +204,14 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      const moduleGraph = this.filepathToModuleGraph[absPath];
-      if (!moduleGraph) {
+      const componentModuleGraph = this.filepathToModuleGraph[absPath];
+      if (!componentModuleGraph) {
         throw new Error(`Could not retrieve ModuleGraph for ${absPath}.`);
       }
       const componentFile = new ComponentFile(
         absPath,
         this.project,
-        moduleGraph
+        componentModuleGraph
       );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
