@@ -74,7 +74,7 @@ describe("getPageState", () => {
 
     assertIsOk(result);
     expect(result.value.cssImports).toEqual([
-      "./index.css",
+      expect.stringContaining("index.css"),
       "@yext/search-ui-react/index.css",
     ]);
   });

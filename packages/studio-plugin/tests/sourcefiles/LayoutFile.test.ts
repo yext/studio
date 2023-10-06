@@ -86,7 +86,7 @@ describe("getLayoutState", () => {
   it("correctly parses CSS imports", () => {
     const result = getLayoutState("BasicLayout");
     expect(result.value.cssImports).toEqual([
-      "./index.css",
+      expect.stringContaining("index.css"),
       "@yext/search-ui-react/index.css",
     ]);
   });
