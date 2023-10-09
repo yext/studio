@@ -70,7 +70,6 @@ describe("updateFile", () => {
           { ...commonComplexBannerState, uuid: "mock-uuid-0" },
           { ...commonComplexBannerState, uuid: "mock-uuid-1" },
         ],
-        cssImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -90,7 +89,6 @@ describe("updateFile", () => {
         "IndexPage"
       ).updateFile({
         componentTree: nestedBannerComponentTree,
-        cssImports: [],
         UUIDToFileMetadata: computeUUIDToFileMetadata({
           [getComponentPath("ComplexBanner")]: "ComplexBanner",
           [getComponentPath("NestedBanner")]: "NestedBanner",
@@ -148,7 +146,6 @@ describe("updateFile", () => {
             metadataUUID: getComponentPath("BannerUsingObject"),
           },
         ],
-        cssImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -203,7 +200,6 @@ describe("updateFile", () => {
             metadataUUID: getComponentPath("BannerUsingArrays"),
           },
         ],
-        cssImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -231,7 +227,6 @@ describe("updateFile", () => {
             metadataUUID: "mock-metadata-uuid",
           },
         ],
-        cssImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -245,26 +240,6 @@ describe("updateFile", () => {
   });
 
   describe("imports", () => {
-    it("adds css imports", () => {
-      const filepath = getPagePath("updatePageFile/EmptyPage");
-      createReactComponentFileWriter(
-        tsMorphProject,
-        filepath,
-        "IndexPage"
-      ).updateFile({
-        componentTree: [fragmentComponent],
-        cssImports: ["../index.css", "./App.css"],
-        UUIDToFileMetadata,
-      });
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        expect.stringContaining("EmptyPage.tsx"),
-        fs.readFileSync(
-          getPagePath("updatePageFile/PageWithCssImports"),
-          "utf-8"
-        )
-      );
-    });
-
     it("adds missing imports", () => {
       const filepath = getPagePath("updatePageFile/EmptyPage");
       createReactComponentFileWriter(
@@ -283,7 +258,6 @@ describe("updateFile", () => {
             metadataUUID: "mock-standard-metadata-uuid",
           },
         ],
-        cssImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -303,7 +277,6 @@ describe("updateFile", () => {
         "IndexPage"
       ).updateFile({
         componentTree: [fragmentComponent],
-        cssImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -338,7 +311,6 @@ describe("updateFile", () => {
             metadataUUID: "mock-text-metadata-uuid",
           },
         ],
-        cssImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
