@@ -42,7 +42,10 @@ export default class AddPageSection {
     await this.clickModalButton("Next");
   }
 
-  async enterStreamScope(streamScopeForm?: StreamScopeForm, shouldTakeSnapshots = false) {
+  async enterStreamScope(
+    streamScopeForm?: StreamScopeForm,
+    shouldTakeSnapshots = false
+  ) {
     this.setModalScreen("Content Scope");
     const takeSnapshot = async () =>
       shouldTakeSnapshots && (await this.takeScreenshot());
