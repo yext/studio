@@ -10,7 +10,12 @@ const expectedPage = fs.readFileSync(
 studioTest("can add a static page", async ({ page, studioPage }) => {
   const pageInTree = page.getByText("NewStaticPage");
   await expect(pageInTree).toHaveCount(0);
-  await studioPage.addStaticPage("NewStaticPage", "index.html");
+
+  const addPageSection = studioPage.addPageSection;
+  await addPageSection.selectPageType(false, true);
+  await addPageSection.enterBasicPageData("NewStaticPage", "index.html", true);
+  await addPageSection.selectLayout();
+
   await expect(pageInTree).toHaveCount(1);
   await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
