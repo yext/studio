@@ -1,11 +1,11 @@
-import { Page, expect } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 
 /**
  * A Playwright wrapper around the Add Page flow.
  */
 export default class AddPageSection {
-  private addPageButton;
-  private modalScreen;
+  private addPageButton: Locator;
+  private modalScreen: Locator;
 
   constructor(private page: Page) {
     this.addPageButton = page.getByRole("button", {
@@ -37,14 +37,20 @@ export default class AddPageSection {
     await this.clickModalButton("Next");
   }
 
-  async selectLayout(layoutName?: string, shouldTakeSnapshot = false) {
+  async selectLayout(layoutName?: string, shouldTakeSnapshots = false) {
     this.setModalScreen("Select Layout");
+    const takeSnapshot = async () =>
+      shouldTakeSnapshots && (await this.takeScreenshot());
+
+    await takeSnapshot();
     if (layoutName) {
+      // TODO - Take Screenshot of Expanded Dropdown
       await this.modalScreen
         .getByRole("combobox")
         .selectOption({ label: layoutName });
+      await takeSnapshot();
     }
-    shouldTakeSnapshot && (await this.takeScreenshot());
+
     await this.clickModalButton("Save");
     await this.page.getByRole("dialog").waitFor({ state: "hidden" });
   }
