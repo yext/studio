@@ -1,6 +1,6 @@
 import { ArrowFunction, FunctionDeclaration, Project } from "ts-morph";
 import { Result } from "true-myth";
-import { PageState } from "../types";
+import { FileMetadata, PageState } from "../types";
 import TemplateConfigWriter from "../writers/TemplateConfigWriter";
 import ReactComponentFileWriter from "../writers/ReactComponentFileWriter";
 import upath from "upath";
@@ -110,8 +110,12 @@ export default class PageFile {
    * source file will be mutated to update the template configuration.
    *
    * @param updatedPageState - the updated state for the page file
+   * @param UUIDToFileMetadata - mapping of metadataUUID to FileMetadata
    */
-  updatePageFile(updatedPageState: PageState): void {
+  updatePageFile(
+    updatedPageState: PageState,
+    UUIDToFileMetadata: Record<string, FileMetadata>
+  ): void {
     const onFileUpdate = (
       pageComponent: FunctionDeclaration | ArrowFunction
     ) => {
@@ -134,6 +138,7 @@ export default class PageFile {
       componentTree: updatedPageState.componentTree,
       cssImports: updatedPageState.cssImports,
       onFileUpdate,
+      UUIDToFileMetadata,
     });
   }
 }

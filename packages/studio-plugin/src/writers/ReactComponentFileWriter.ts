@@ -14,15 +14,19 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import {
   ComponentState,
   ComponentStateKind,
+  ErrorComponentState,
+  FileMetadata,
   PropVal,
   PropValueKind,
   PropValues,
   PropValueType,
+  StandardComponentState,
 } from "../types";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import camelCase from "camelcase";
 import { CustomTags } from "../parsers/helpers/TypeNodeParsingHelper";
+import getImportSpecifier from "../utils/getImportSpecifier";
 
 /**
  * ReactComponentFileWriter is a class for housing data
@@ -162,6 +166,39 @@ export default class ReactComponentFileWriter {
   }
 
   /**
+   * Gets the import data for each component in the component tree that is
+   * defined in the user's repo (e.g. in `src/components`). Note, for now, we
+   * only allow default imports for components.
+   */
+  private getComponentImports(
+    componentTree: ComponentState[],
+    UUIDToFileMetadata: Record<string, FileMetadata>
+  ): { name: string; moduleSpecifier: string }[] {
+    return componentTree
+      .filter(
+        (c): c is StandardComponentState | ErrorComponentState =>
+          c.kind === ComponentStateKind.Standard ||
+          c.kind === ComponentStateKind.Error
+      )
+      .filter((c) => {
+        if (UUIDToFileMetadata[c.metadataUUID]) {
+          return true;
+        }
+        console.error(
+          `Error adding import in ${this.componentName}: unable to find metadata for ${c.componentName}.`
+        );
+        return false;
+      })
+      .map((c) => {
+        const moduleSpecifier = getImportSpecifier(
+          this.studioSourceFileParser.getFilepath(),
+          UUIDToFileMetadata[c.metadataUUID].filepath
+        );
+        return { name: c.componentName, moduleSpecifier };
+      });
+  }
+
+  /**
    * Update a React component file, which include:
    * - file imports
    * - const variable "initialProps"
@@ -170,16 +207,16 @@ export default class ReactComponentFileWriter {
    */
   updateFile({
     componentTree,
+    UUIDToFileMetadata,
     cssImports,
     onFileUpdate,
-    defaultImports,
   }: {
     componentTree: ComponentState[];
+    UUIDToFileMetadata: Record<string, FileMetadata>;
     cssImports?: string[];
     onFileUpdate?: (
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
-    defaultImports?: { name: string; moduleSpecifier: string }[];
   }): void {
     let defaultExport: VariableDeclaration | FunctionDeclaration;
     try {
@@ -207,7 +244,7 @@ export default class ReactComponentFileWriter {
     this.studioSourceFileWriter.updateFileImports(
       {},
       cssImports,
-      defaultImports
+      this.getComponentImports(componentTree, UUIDToFileMetadata)
     );
     this.studioSourceFileWriter.writeToFile();
   }
