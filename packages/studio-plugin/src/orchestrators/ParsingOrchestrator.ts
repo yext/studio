@@ -41,7 +41,7 @@ export default class ParsingOrchestrator {
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
-  private dependencyGraph: Tree = {};
+  private dependencyTree: Tree = {};
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -173,7 +173,7 @@ export default class ParsingOrchestrator {
         if (fs.lstatSync(absPath).isDirectory()) {
           addDirectoryToMapping(absPath);
         } else {
-          this.updateDependencyGraph(absPath);
+          this.updateDependencyTree(absPath);
           this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
         }
       });
@@ -183,12 +183,19 @@ export default class ParsingOrchestrator {
     return this.filepathToFileMetadata;
   }
 
-  private updateDependencyGraph(absPath) {
-    this.dependencyGraph[absPath] = dependencyTree({
+  private updateDependencyTree(absPath) {
+    this.dependencyTree[absPath] = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
-      visited: this.dependencyGraph,
+      visited: this.dependencyTree,
     });
+  }
+  
+  private getComponentDependencyTree(absFilepath: string) {
+    if (!this.dependencyTree.hasOwnProperty(absFilepath)) {
+      this.updateDependencyTree(absFilepath);
+    }
+    return this.dependencyTree[absFilepath]
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {
@@ -205,14 +212,10 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      const componentModuleGraph = this.dependencyGraph[absPath];
-      if (!componentModuleGraph) {
-        this.updateDependencyGraph(absPath);
-      }
       const componentFile = new ComponentFile(
         absPath,
         this.project,
-        componentModuleGraph
+        this.getComponentDependencyTree(absPath)
       );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
