@@ -1,4 +1,7 @@
-import { getImportSpecifier, getImportSpecifierWithExtension } from "../../src/utils/getImportSpecifier";
+import {
+  getImportSpecifier,
+  getImportSpecifierWithExtension,
+} from "../../src/utils/getImportSpecifier";
 
 it("can import between two component files in the same directory", () => {
   const baseFile = "/src/component/BaseFile.tsx";
@@ -20,4 +23,4 @@ it("can preserve extensions", () => {
   expect(getImportSpecifierWithExtension(baseFile, toBeImported)).toEqual(
     "../../c/d/main.css"
   );
-})
+});
