@@ -4,7 +4,7 @@ import { Locator, Page, expect } from "@playwright/test";
  * A Playwright wrapper around the Add Page flow.
  */
 export default class AddPageSection {
-  private addPageButton;
+  private addPageButton: Locator;
   private modalScreen: Locator;
 
   constructor(private page: Page) {
