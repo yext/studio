@@ -3,15 +3,10 @@ import ToastActionButton from "./ToastActionButton.js";
 import path from "path";
 import GitOperations from "./GitOperations.js";
 import simpleGit from "simple-git";
-import { StreamScope } from "@yext/studio-plugin";
 import ViewportMenuSection from "./appSections/ViewportMenuSection.js";
 import AddElementSection from "./appSections/AddElementSection.js";
 import ComponentTreeSection from "./appSections/ComponentTreeSection.js";
 import AddPageSection from "./appSections/AddPageSection.js";
-
-export type StreamScopeForm = {
-  [key in keyof StreamScope]: string;
-};
 
 export default class StudioPlaywrightPage {
   readonly addPageButton: Locator;
@@ -57,105 +52,6 @@ export default class StudioPlaywrightPage {
     this.addElementSection = new AddElementSection(this.page);
     this.componentTreeSection = new ComponentTreeSection(this.page);
     this.addPageSection = new AddPageSection(this.page);
-  }
-
-  async addStaticPage(pageName: string, urlSlug: string, layoutName?: string) {
-    await this.addPageButton.click();
-    await this.selectPageType(false);
-    await this.enterBasicPageData(pageName, urlSlug);
-    await this.selectLayout(layoutName);
-  }
-
-  async addEntityPage(
-    pageName: string,
-    streamScopeForm?: StreamScopeForm,
-    urlSlug?: string,
-    layoutName?: string
-  ) {
-    await this.addPageButton.click();
-    await this.selectPageType(true);
-    await this.enterStreamScope(streamScopeForm);
-    await this.enterBasicPageData(pageName, urlSlug);
-    await this.selectLayout(layoutName);
-  }
-
-  private async selectPageType(isEntityPage: boolean) {
-    const pageTypeModal = "Select Page Type";
-    if (isEntityPage) {
-      await this.page.getByRole("radio", { checked: false }).check();
-    }
-    await this.takePageScreenshotAfterImgRender();
-    await this.clickModalButton(pageTypeModal, "Next");
-  }
-
-  private async enterStreamScope(streamScopeForm?: StreamScopeForm) {
-    const streamScopeModal = "Content Scope";
-    const streamScopeTextboxNames: StreamScopeForm = {
-      entityIds: "Entity IDs",
-      entityTypes: "Entity Type IDs",
-      savedFilterIds: "Saved Filter IDs",
-    };
-    await this.takePageScreenshotAfterImgRender();
-    for (const field in streamScopeForm) {
-      await this.typeIntoModal(
-        streamScopeModal,
-        streamScopeTextboxNames[field],
-        streamScopeForm[field]
-      );
-    }
-    await this.takePageScreenshotAfterImgRender();
-    await this.clickModalButton(streamScopeModal, "Next");
-  }
-
-  private async enterBasicPageData(pageName: string, urlSlug?: string) {
-    const basicDataModal = "Page Name and URL";
-    await this.takePageScreenshotAfterImgRender();
-    await this.typeIntoModal(basicDataModal, "Page Name", pageName);
-    if (urlSlug) {
-      await this.typeIntoModal(basicDataModal, "URL Slug", urlSlug);
-    }
-    await this.takePageScreenshotAfterImgRender();
-    await this.clickModalButton(basicDataModal, "Next");
-  }
-
-  private async selectLayout(layoutName?: string) {
-    const modalName = "Select Layout";
-    await this.takePageScreenshotAfterImgRender();
-    if (layoutName) {
-      const layoutModal = this.page.getByRole("dialog", { name: modalName });
-      await layoutModal
-        .getByRole("combobox")
-        .selectOption({ label: layoutName });
-      await this.takePageScreenshotAfterImgRender();
-    }
-    await this.clickModalButton(modalName, "Save");
-    await this.page.getByRole("dialog").waitFor({ state: "hidden" });
-  }
-
-  private async clickModalButton(modalName: string, buttonName: string) {
-    const modal = this.page.getByRole("dialog", {
-      name: modalName,
-    });
-    await modal
-      .getByRole("button", {
-        name: buttonName,
-      })
-      .click();
-  }
-
-  private async typeIntoModal(
-    modalName: string,
-    textboxName: string,
-    text: string
-  ) {
-    const modal = this.page.getByRole("dialog", {
-      name: modalName,
-    });
-    await modal
-      .getByRole("textbox", {
-        name: textboxName,
-      })
-      .fill(text);
   }
 
   private async waitForIFrameImagesToLoad() {

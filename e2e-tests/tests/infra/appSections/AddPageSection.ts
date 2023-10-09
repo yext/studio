@@ -1,4 +1,9 @@
 import { Locator, Page, expect } from "@playwright/test";
+import { StreamScope } from "@yext/studio-plugin";
+
+type StreamScopeForm = {
+  [key in keyof StreamScope]: string;
+};
 
 /**
  * A Playwright wrapper around the Add Page flow.
@@ -34,6 +39,28 @@ export default class AddPageSection {
       await this.typeIntoModal("URL Slug", urlSlug);
     }
     shouldTakeSnapshot && (await this.takeScreenshot());
+    await this.clickModalButton("Next");
+  }
+
+  async enterStreamScope(streamScopeForm?: StreamScopeForm, shouldTakeSnapshots = false) {
+    this.setModalScreen("Content Scope");
+    const takeSnapshot = async () =>
+      shouldTakeSnapshots && (await this.takeScreenshot());
+    await takeSnapshot();
+
+    const streamScopeTextboxNames: StreamScopeForm = {
+      entityIds: "Entity IDs",
+      entityTypes: "Entity Type IDs",
+      savedFilterIds: "Saved Filter IDs",
+    };
+    // TODO - Take Snapshots showing each dropdown expanded.
+    for (const field in streamScopeForm) {
+      await this.typeIntoModal(
+        streamScopeTextboxNames[field],
+        streamScopeForm[field]
+      );
+    }
+    await takeSnapshot();
     await this.clickModalButton("Next");
   }
 
