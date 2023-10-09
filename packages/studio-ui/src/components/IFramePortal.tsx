@@ -60,21 +60,24 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
   ]);
 
   useEffect(() => {
+    function addIframeStyleOrThrow(iframeDocument: Document, filepath: string) {
+      dynamicImportFromBrowser(filepath + "?inline").then(
+        (importedCss) => addStyleToIframe(importedCss.default, iframeDocument)
+      ).catch((error) => {
+        throw new Error(`${filepath} was unable to be dynamically imported. ${error}`)
+      });
+    }
     if (!iframeDocument) {
       return;
     }
     componentTree?.forEach((component) => {
       const cssImports = getComponentMetadata(component)?.cssImports;
       cssImports?.forEach((cssFilepath) => {
-        void dynamicImportFromBrowser(cssFilepath + "?inline").then(
-          (importedCss) => addStyleToIframe(importedCss.default, iframeDocument)
-        );
+        addIframeStyleOrThrow(iframeDocument, cssFilepath);
       });
     });
     pageCss?.forEach((cssFilepath) => {
-      void dynamicImportFromBrowser(cssFilepath + "?inline").then(
-        (importedCss) => addStyleToIframe(importedCss.default, iframeDocument)
-      );
+      addIframeStyleOrThrow(iframeDocument, cssFilepath);
     });
 
     return () => {
