@@ -136,7 +136,6 @@ export default class PageFile {
 
     this.reactComponentFileWriter.updateFile({
       componentTree: updatedPageState.componentTree,
-      cssImports: updatedPageState.cssImports,
       onFileUpdate,
       UUIDToFileMetadata,
     });

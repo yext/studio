@@ -50,16 +50,14 @@ export default class StudioSourceFileWriter {
 
   /**
    * Mutates the source file by adding missing import declarations for identifiers
-   * that are referenced in the file, removing import declarations that are no longer
-   * needed, and adding any provided css imports.
+   * that are referenced in the file and removing import declarations that are no longer
+   * needed.
    *
    * @param namedImports - named imports to add to the file
-   * @param cssImports - css file paths to add as import declarations to the file
    * @param defaultImports - any default imports to add to the file
    */
   updateFileImports(
     namedImports: Record<string, string[]>,
-    cssImports?: string[],
     defaultImports?: { name: string; moduleSpecifier: string }[]
   ) {
     const structures: OptionalKind<ImportDeclarationStructure>[] = Object.keys(
@@ -76,11 +74,6 @@ export default class StudioSourceFileWriter {
       });
     });
     this.sourceFile.fixMissingImports();
-    cssImports?.forEach((importSource) => {
-      this.sourceFile.addImportDeclaration({
-        moduleSpecifier: importSource,
-      });
-    });
     this.sourceFile.organizeImports();
   }
 
