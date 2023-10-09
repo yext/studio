@@ -183,13 +183,13 @@ export default class ParsingOrchestrator {
     return this.filepathToFileMetadata;
   }
 
- private updateDependencyGraph (absPath) {
+  private updateDependencyGraph(absPath) {
     this.dependencyGraph[absPath] = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
       visited: this.dependencyGraph,
     });
-  };
+  }
 
   private getFileMetadata = (absPath: string): FileMetadata => {
     if (this.filepathToFileMetadata[absPath]) {
@@ -207,7 +207,7 @@ export default class ParsingOrchestrator {
     if (absPath.startsWith(this.paths.components)) {
       const componentModuleGraph = this.dependencyGraph[absPath];
       if (!componentModuleGraph) {
-        this.updateDependencyGraph(absPath)
+        this.updateDependencyGraph(absPath);
       }
       const componentFile = new ComponentFile(
         absPath,
