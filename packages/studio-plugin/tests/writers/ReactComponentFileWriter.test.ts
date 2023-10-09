@@ -10,11 +10,24 @@ import {
   nestedBannerComponentTree,
 } from "../__fixtures__/componentStates";
 import ReactComponentFileWriter from "../../src/writers/ReactComponentFileWriter";
-import { addFilesToProject } from "../__utils__/addFilesToProject";
-import { PropValueKind, PropValueType } from "../../src/types";
+import {
+  FileMetadata,
+  FileMetadataKind,
+  PropValueKind,
+  PropValueType,
+} from "../../src/types";
 import StudioSourceFileWriter from "../../src/writers/StudioSourceFileWriter";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import { createTestProject } from "../__utils__/createTestSourceFile";
+
+const UUIDToFileMetadata = computeUUIDToFileMetadata({
+  "mock-metadata-uuid": "ComplexBanner",
+  [getComponentPath("BannerUsingObject")]: "BannerUsingObject",
+  [getComponentPath("BannerUsingArrays")]: "BannerUsingArrays",
+  "mock-standard-metadata-uuid": "SimpleBanner",
+  "mock-container-metadata-uuid": "Container",
+  "mock-text-metadata-uuid": "Text",
+});
 
 function createReactComponentFileWriter(
   tsMorphProject: Project,
@@ -41,7 +54,6 @@ describe("updateFile", () => {
 
   describe("React component return statement", () => {
     it("adds top-level sibling component", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const filepath = getPagePath("updatePageFile/PageWithAComponent");
       const commonComplexBannerState: Omit<StandardComponentState, "uuid"> = {
         kind: ComponentStateKind.Standard,
@@ -59,6 +71,7 @@ describe("updateFile", () => {
           { ...commonComplexBannerState, uuid: "mock-uuid-1" },
         ],
         cssImports: [],
+        UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithAComponent.tsx"),
@@ -70,11 +83,6 @@ describe("updateFile", () => {
     });
 
     it("nests component with new sibling and children components", () => {
-      addFilesToProject(tsMorphProject, [
-        getComponentPath("ComplexBanner"),
-        getComponentPath("NestedBanner"),
-      ]);
-
       const filepath = getPagePath("updatePageFile/PageWithAComponent");
       createReactComponentFileWriter(
         tsMorphProject,
@@ -83,6 +91,10 @@ describe("updateFile", () => {
       ).updateFile({
         componentTree: nestedBannerComponentTree,
         cssImports: [],
+        UUIDToFileMetadata: computeUUIDToFileMetadata({
+          [getComponentPath("ComplexBanner")]: "ComplexBanner",
+          [getComponentPath("NestedBanner")]: "NestedBanner",
+        }),
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithAComponent.tsx"),
@@ -94,10 +106,6 @@ describe("updateFile", () => {
     });
 
     it("can write object props", () => {
-      addFilesToProject(tsMorphProject, [
-        getComponentPath("BannerUsingObject"),
-      ]);
-
       const filepath = getPagePath("updatePageFile/PageWithObjectProp");
       createReactComponentFileWriter(
         tsMorphProject,
@@ -141,6 +149,7 @@ describe("updateFile", () => {
           },
         ],
         cssImports: [],
+        UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithObjectProp.tsx"),
@@ -152,10 +161,6 @@ describe("updateFile", () => {
     });
 
     it("can write array props", () => {
-      addFilesToProject(tsMorphProject, [
-        getComponentPath("BannerUsingArrays"),
-      ]);
-
       const filepath = getPagePath("updatePageFile/PageWithArrayProps");
       createReactComponentFileWriter(
         tsMorphProject,
@@ -199,6 +204,7 @@ describe("updateFile", () => {
           },
         ],
         cssImports: [],
+        UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithArrayProps.tsx"),
@@ -210,7 +216,6 @@ describe("updateFile", () => {
     });
 
     it("remove components that are not part of the new component tree", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("ComplexBanner")]);
       const filepath = getPagePath("updatePageFile/PageWithNestedComponents");
       createReactComponentFileWriter(
         tsMorphProject,
@@ -227,6 +232,7 @@ describe("updateFile", () => {
           },
         ],
         cssImports: [],
+        UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithNestedComponents.tsx"),
@@ -248,6 +254,7 @@ describe("updateFile", () => {
       ).updateFile({
         componentTree: [fragmentComponent],
         cssImports: ["../index.css", "./App.css"],
+        UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("EmptyPage.tsx"),
@@ -259,7 +266,6 @@ describe("updateFile", () => {
     });
 
     it("adds missing imports", () => {
-      addFilesToProject(tsMorphProject, [getComponentPath("SimpleBanner")]);
       const filepath = getPagePath("updatePageFile/EmptyPage");
       createReactComponentFileWriter(
         tsMorphProject,
@@ -278,6 +284,7 @@ describe("updateFile", () => {
           },
         ],
         cssImports: [],
+        UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("EmptyPage.tsx"),
@@ -297,10 +304,49 @@ describe("updateFile", () => {
       ).updateFile({
         componentTree: [fragmentComponent],
         cssImports: [],
+        UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("PageWithUnusedImports.tsx"),
         fs.readFileSync(getPagePath("updatePageFile/EmptyPage"), "utf-8")
+      );
+    });
+
+    it("correctly imports Container and Text components", () => {
+      const filepath = getPagePath("updatePageFile/EmptyPage");
+      createReactComponentFileWriter(
+        tsMorphProject,
+        filepath,
+        "IndexPage"
+      ).updateFile({
+        componentTree: [
+          fragmentComponent,
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "Container",
+            props: {},
+            uuid: "mock-uuid-1",
+            parentUUID: "mock-uuid-0",
+            metadataUUID: "mock-container-metadata-uuid",
+          },
+          {
+            kind: ComponentStateKind.Standard,
+            componentName: "Text",
+            props: {},
+            uuid: "mock-uuid-2",
+            parentUUID: "mock-uuid-0",
+            metadataUUID: "mock-text-metadata-uuid",
+          },
+        ],
+        cssImports: [],
+        UUIDToFileMetadata,
+      });
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
+        expect.stringContaining("EmptyPage.tsx"),
+        fs.readFileSync(
+          getPagePath("updatePageFile/PageWithContainerAndText"),
+          "utf-8"
+        )
       );
     });
   });
@@ -315,7 +361,7 @@ describe("updateFile", () => {
         tsMorphProject,
         filepath,
         inputName
-      ).updateFile({ componentTree: [] });
+      ).updateFile({ componentTree: [], UUIDToFileMetadata });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
         expect.stringContaining("EmptyFile"),
         expect.stringContaining(`export default function ${outputName}() {}`)
@@ -341,3 +387,21 @@ describe("updateFile", () => {
     });
   });
 });
+
+/**
+ * Takes a mapping of metadataUUID to component name and outputs
+ * UUIDToFileMetadata.
+ */
+function computeUUIDToFileMetadata(components: Record<string, string>) {
+  return Object.entries(components).reduce(
+    (UUIDToFileMetadata, [metadataUUID, componentName]) => {
+      UUIDToFileMetadata[metadataUUID] = {
+        kind: FileMetadataKind.Component,
+        metadataUUID,
+        filepath: getComponentPath(componentName),
+      };
+      return UUIDToFileMetadata;
+    },
+    {} as Record<string, FileMetadata>
+  );
+}

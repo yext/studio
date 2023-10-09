@@ -22,7 +22,8 @@ export class FileSystemWriter {
    */
   writeToPageFile(pageName: string, pageState: PageState): void {
     const pageFile = this.orchestrator.getOrCreatePageFile(pageName);
-    pageFile.updatePageFile(pageState);
+    const UUIDToFileMetadata = this.orchestrator.getUUIDToFileMetadata();
+    pageFile.updatePageFile(pageState, UUIDToFileMetadata);
   }
 
   writeToSiteSettings(siteSettingsValues: SiteSettingsValues): void {
