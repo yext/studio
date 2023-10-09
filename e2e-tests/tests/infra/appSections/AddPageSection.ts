@@ -2,7 +2,7 @@ import { Locator, Page, expect } from "@playwright/test";
 import { StreamScope } from "@yext/studio-plugin";
 
 type StreamScopeForm = {
-  [key in keyof StreamScope]: string;
+  [key in keyof StreamScope]: string[];
 };
 
 /**
@@ -51,7 +51,7 @@ export default class AddPageSection {
       shouldTakeSnapshots && (await this.takeScreenshot());
     await takeSnapshot();
 
-    const streamScopeTextboxNames: StreamScopeForm = {
+    const streamScopeTextboxNames = {
       entityIds: "Entity IDs",
       entityTypes: "Entity Type IDs",
       savedFilterIds: "Saved Filter IDs",
@@ -60,7 +60,7 @@ export default class AddPageSection {
     for (const field in streamScopeForm) {
       await this.typeIntoModal(
         streamScopeTextboxNames[field],
-        streamScopeForm[field]
+        streamScopeForm[field].join(",")
       );
     }
     await takeSnapshot();
