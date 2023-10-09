@@ -190,12 +190,12 @@ export default class ParsingOrchestrator {
       visited: this.dependencyTree,
     });
   }
-  
+
   private getComponentDependencyTree(absFilepath: string) {
     if (!this.dependencyTree.hasOwnProperty(absFilepath)) {
       this.updateDependencyTree(absFilepath);
     }
-    return this.dependencyTree[absFilepath]
+    return this.dependencyTree[absFilepath];
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {
