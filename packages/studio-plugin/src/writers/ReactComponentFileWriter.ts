@@ -208,10 +208,12 @@ export default class ReactComponentFileWriter {
   updateFile({
     componentTree,
     UUIDToFileMetadata,
+    cssImports,
     onFileUpdate,
   }: {
     componentTree: ComponentState[];
     UUIDToFileMetadata: Record<string, FileMetadata>;
+    cssImports?: string[];
     onFileUpdate?: (
       functionComponent: FunctionDeclaration | ArrowFunction
     ) => void;
@@ -241,6 +243,7 @@ export default class ReactComponentFileWriter {
     this.updateReturnStatement(functionComponent, componentTree);
     this.studioSourceFileWriter.updateFileImports(
       {},
+      cssImports,
       this.getComponentImports(componentTree, UUIDToFileMetadata)
     );
     this.studioSourceFileWriter.writeToFile();
