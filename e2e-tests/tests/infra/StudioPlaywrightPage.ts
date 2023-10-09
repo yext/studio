@@ -9,7 +9,6 @@ import ComponentTreeSection from "./appSections/ComponentTreeSection.js";
 import AddPageSection from "./appSections/AddPageSection.js";
 
 export default class StudioPlaywrightPage {
-  readonly addPageButton: Locator;
   readonly pagesPanel: Locator;
   readonly livePreviewButton: Locator;
   readonly preview: FrameLocator;
@@ -22,10 +21,6 @@ export default class StudioPlaywrightPage {
   readonly addPageSection: AddPageSection;
 
   constructor(private page: Page, private tmpDir: string) {
-    this.addPageButton = page.getByRole("button", {
-      name: "Add Page",
-    });
-
     this.pagesPanel = page.locator(':text("Pages") + ul');
     this.livePreviewButton = page.getByRole("button", {
       name: "Live Preview",

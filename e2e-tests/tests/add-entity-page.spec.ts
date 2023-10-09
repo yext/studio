@@ -13,8 +13,8 @@ studioTest("can add an entity page", async ({ page, studioPage }) => {
 
   const addPageSection = studioPage.addPageSection;
   await addPageSection.selectPageType(true);
-  await addPageSection.enterBasicPageData("EntityPage", "entity-page");
   await addPageSection.enterStreamScope({}, true);
+  await addPageSection.enterBasicPageData("EntityPage", "entity-page");
   await addPageSection.selectLayout();
 
   // TODO: Specify a stream scope once we can supply an API key for populating
