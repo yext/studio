@@ -62,7 +62,10 @@ function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
     if (filename.includes(".css")) {
       cssFiles.add(filename);
     }
-    cssFiles = new Set([...cssFiles, ...getCssFilesFromDependencyTree(subDependencyTree)]);
+    cssFiles = new Set([
+      ...cssFiles,
+      ...getCssFilesFromDependencyTree(subDependencyTree),
+    ]);
   });
   return Array.from(cssFiles);
 }
