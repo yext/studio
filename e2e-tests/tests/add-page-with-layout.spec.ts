@@ -9,12 +9,15 @@ const expectedPage = fs.readFileSync(
 
 studioTest("can add a page using a layout", async ({ page, studioPage }) => {
   const pageName = "LayoutPage";
-  await studioPage.takePageScreenshotAfterImgRender();
   const pageInTree = page.getByText(pageName);
   await expect(pageInTree).toHaveCount(0);
-  await studioPage.addStaticPage(pageName, "index.html", "LocationLayout");
+
+  const addPageSection = studioPage.addPageSection;
+  await addPageSection.selectPageType(false);
+  await addPageSection.enterBasicPageData(pageName, "index.html");
+  await addPageSection.selectLayout("LocationLayout", true);
+
   await expect(pageInTree).toHaveCount(1);
-  await studioPage.takePageScreenshotAfterImgRender();
   await studioPage.saveButton.click();
   const pagePath = studioPage.getPagePath(pageName);
   await expect(pagePath).toHaveContents(expectedPage);
