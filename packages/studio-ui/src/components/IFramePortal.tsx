@@ -61,11 +61,15 @@ function useInjectIframeCss(iframeDocument: Document | undefined) {
 
   useEffect(() => {
     function addIframeStyleOrThrow(iframeDocument: Document, filepath: string) {
-      dynamicImportFromBrowser(filepath + "?inline").then(
-        (importedCss) => addStyleToIframe(importedCss.default, iframeDocument)
-      ).catch((error) => {
-        throw new Error(`${filepath} was unable to be dynamically imported. ${error}`)
-      });
+      dynamicImportFromBrowser(filepath + "?inline")
+        .then((importedCss) =>
+          addStyleToIframe(importedCss.default, iframeDocument)
+        )
+        .catch((error) => {
+          throw new Error(
+            `${filepath} was unable to be dynamically imported. ${error}`
+          );
+        });
     }
     if (!iframeDocument) {
       return;
