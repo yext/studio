@@ -22,7 +22,7 @@ export function getImportSpecifier(
 }
 
 /**
- * Calculates the import needed to import a file into another, 
+ * Calculates the import needed to import a file into another,
  * including the extension.
  *
  * Assumes given paths are absolute.
@@ -31,6 +31,6 @@ export function getImportSpecifierWithExtension(
   baseFilePath: string,
   filePathToBeImported: string
 ) {
-  const extension = upath.extname(filePathToBeImported)
+  const extension = upath.extname(filePathToBeImported);
   return getImportSpecifier(baseFilePath, filePathToBeImported) + extension;
 }

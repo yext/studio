@@ -79,7 +79,10 @@ export default class StudioSourceFileWriter {
     this.sourceFile.fixMissingImports();
     cssImports?.forEach((importSource) => {
       this.sourceFile.addImportDeclaration({
-        moduleSpecifier: getImportSpecifierWithExtension(this.sourceFile.getFilePath(), importSource),
+        moduleSpecifier: getImportSpecifierWithExtension(
+          this.sourceFile.getFilePath(),
+          importSource
+        ),
       });
     });
     this.sourceFile.organizeImports();
