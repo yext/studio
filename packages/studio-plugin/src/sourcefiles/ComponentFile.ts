@@ -60,7 +60,7 @@ function getCssFilesFromModuleGraph(moduleGraph: Tree): string[] {
   let cssFiles: Set<string> = new Set();
   Object.entries(moduleGraph).forEach(([key, val]) => {
     if (key.includes(".css")) {
-      cssFiles = new Set([...cssFiles, key]);
+      cssFiles.add(key);
     }
     cssFiles = new Set([...cssFiles, ...getCssFilesFromModuleGraph(val)]);
   });
