@@ -16,14 +16,14 @@ import { Tree } from "dependency-tree";
 export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private fileMetadataParser: FileMetadataParser;
-  private moduleGraph: Tree;
+  private dependencyTree: Tree;
 
-  constructor(filepath: string, project: Project, moduleGraph: Tree) {
+  constructor(filepath: string, project: Project, dependencyTree: Tree) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
     );
-    this.moduleGraph = moduleGraph;
+    this.dependencyTree = dependencyTree;
   }
 
   getComponentMetadata(): Result<ComponentMetadata, ParsingError> {
@@ -45,7 +45,7 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-    const cssImports = getCssFilesFromModuleGraph(this.moduleGraph);
+    const cssImports = getCssFilesFromDependencyTree(this.dependencyTree);
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
@@ -56,13 +56,13 @@ export default class ComponentFile {
   };
 }
 
-function getCssFilesFromModuleGraph(moduleGraph: Tree): string[] {
+function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
   let cssFiles: Set<string> = new Set();
-  Object.entries(moduleGraph).forEach(([key, val]) => {
-    if (key.includes(".css")) {
-      cssFiles.add(key);
+  Object.entries(dependencyTree).forEach(([filename, subDependencyTree]) => {
+    if (filename.includes(".css")) {
+      cssFiles.add(filename);
     }
-    cssFiles = new Set([...cssFiles, ...getCssFilesFromModuleGraph(val)]);
+    cssFiles = new Set([...cssFiles, ...getCssFilesFromDependencyTree(subDependencyTree)]);
   });
   return Array.from(cssFiles);
 }
