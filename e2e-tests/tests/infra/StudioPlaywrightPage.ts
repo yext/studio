@@ -7,6 +7,7 @@ import { StreamScope } from "@yext/studio-plugin";
 import ViewportMenuSection from "./appSections/ViewportMenuSection.js";
 import AddElementSection from "./appSections/AddElementSection.js";
 import ComponentTreeSection from "./appSections/ComponentTreeSection.js";
+import AddPageSection from "./appSections/AddPageSection.js";
 
 export type StreamScopeForm = {
   [key in keyof StreamScope]: string;
@@ -23,6 +24,7 @@ export default class StudioPlaywrightPage {
   readonly viewportMenuSection: ViewportMenuSection;
   readonly addElementSection: AddElementSection;
   readonly componentTreeSection: ComponentTreeSection;
+  readonly addPageSection: AddPageSection;
 
   constructor(private page: Page, private tmpDir: string) {
     this.addPageButton = page.getByRole("button", {
@@ -54,6 +56,7 @@ export default class StudioPlaywrightPage {
     this.viewportMenuSection = new ViewportMenuSection(this.page);
     this.addElementSection = new AddElementSection(this.page);
     this.componentTreeSection = new ComponentTreeSection(this.page);
+    this.addPageSection = new AddPageSection(this.page);
   }
 
   async addStaticPage(pageName: string, urlSlug: string, layoutName?: string) {
