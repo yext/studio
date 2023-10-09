@@ -41,7 +41,7 @@ export default class ParsingOrchestrator {
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
-  private filepathToModuleGraph: Tree = {};
+  private dependencyGraph: Tree = {};
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -164,10 +164,10 @@ export default class ParsingOrchestrator {
   private initFilepathToFileMetadata(): Record<string, FileMetadata> {
     this.filepathToFileMetadata = {};
     const updateFilepathToModuleGraph = (absPath) => {
-      this.filepathToModuleGraph[absPath] = dependencyTree({
+      this.dependencyGraph[absPath] = dependencyTree({
         filename: absPath,
         directory: upath.dirname(absPath),
-        visited: this.filepathToModuleGraph,
+        visited: this.dependencyGraph,
       });
     };
 
@@ -204,9 +204,9 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      const componentModuleGraph = this.filepathToModuleGraph[absPath];
+      const componentModuleGraph = this.dependencyGraph[absPath];
       if (!componentModuleGraph) {
-        throw new Error(`Could not retrieve ModuleGraph for ${absPath}.`);
+        throw new Error(`Could not retrieve dependency graph for ${absPath}.`);
       }
       const componentFile = new ComponentFile(
         absPath,
