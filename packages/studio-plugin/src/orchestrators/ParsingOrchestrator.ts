@@ -183,7 +183,7 @@ export default class ParsingOrchestrator {
     return this.filepathToFileMetadata;
   }
 
-  private updateDependencyTree(absPath) {
+  private updateDependencyTree(absPath: string) {
     this.dependencyTree[absPath] = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
@@ -191,7 +191,7 @@ export default class ParsingOrchestrator {
     });
   }
 
-  private getComponentDependencyTree(absFilepath: string) {
+  private getOrCreateDependencyTree(absFilepath: string): Tree {
     if (!this.dependencyTree.hasOwnProperty(absFilepath)) {
       this.updateDependencyTree(absFilepath);
     }
@@ -215,7 +215,7 @@ export default class ParsingOrchestrator {
       const componentFile = new ComponentFile(
         absPath,
         this.project,
-        this.getComponentDependencyTree(absPath)
+        this.getOrCreateDependencyTree(absPath)
       );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
