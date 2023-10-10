@@ -20,6 +20,7 @@ import { ParsingError } from "../errors/ParsingError";
 import createFilenameMapping from "./createFilenameMapping";
 import LayoutOrchestrator from "./LayoutOrchestrator";
 import separateErrorAndSuccessResults from "./separateErrorAndSuccessResults";
+import dependencyTree, { Tree } from "dependency-tree";
 
 export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({
@@ -40,6 +41,7 @@ export default class ParsingOrchestrator {
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
+  private dependencyTree: Tree = {};
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -172,12 +174,28 @@ export default class ParsingOrchestrator {
           addDirectoryToMapping(absPath);
         } else {
           this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
+          this.updateDependencyTree(absPath);
         }
       });
     };
 
     addDirectoryToMapping(this.paths.components);
     return this.filepathToFileMetadata;
+  }
+
+  private updateDependencyTree(absPath) {
+    this.dependencyTree[absPath] = dependencyTree({
+      filename: absPath,
+      directory: upath.dirname(absPath),
+      visited: this.dependencyTree,
+    });
+  }
+
+  private getComponentDependencyTree(absFilepath: string) {
+    if (!this.dependencyTree.hasOwnProperty(absFilepath)) {
+      this.updateDependencyTree(absFilepath);
+    }
+    return this.dependencyTree[absFilepath];
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {
@@ -194,7 +212,11 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      const componentFile = new ComponentFile(absPath, this.project);
+        const componentFile = new ComponentFile(
+        absPath,
+        this.project,
+        this.getComponentDependencyTree(absPath)
+      );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
         return createErrorFileMetadata(result.error);
