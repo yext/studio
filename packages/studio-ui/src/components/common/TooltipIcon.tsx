@@ -22,7 +22,6 @@ export default function TooltipIcon({ content, styles }: TooltipIconProps) {
         anchorId={tooltipId}
         content={content}
         place="left"
-        isOpen={true}
       />
     </div>
   );
