@@ -188,7 +188,7 @@ export default class ParsingOrchestrator {
       filename: absPath,
       directory: upath.dirname(absPath),
       visited: this.dependencyTree,
-    })[absPath];
+    });
   }
 
   private getComponentDependencyTree(absFilepath: string) {
