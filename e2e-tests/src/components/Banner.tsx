@@ -1,7 +1,10 @@
 import { HexColor } from "@yext/studio";
 
 export interface BannerProps {
-  /** banner's title */
+  /**
+   * @tooltip Banner's title
+   * @displayName Title
+   */
   title?: string;
   num?: number;
   bool?: boolean;
