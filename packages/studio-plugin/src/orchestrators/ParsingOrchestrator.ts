@@ -165,18 +165,27 @@ export default class ParsingOrchestrator {
   private initFilepathToFileMetadata() {
     const addDirectoryToMapping = (absPath: string) => {
       this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
-    }
-    this.traverseAllFilesInDirectory(this.paths.components, addDirectoryToMapping);
+    };
+    this.traverseAllFilesInDirectory(
+      this.paths.components,
+      addDirectoryToMapping
+    );
   }
 
   private initDependencyTree() {
     const updateDependencyTree = (absPath: string) => {
-      this.updateDependencyTree(absPath)
-    }
-    this.traverseAllFilesInDirectory(this.paths.components, updateDependencyTree);
+      this.updateDependencyTree(absPath);
+    };
+    this.traverseAllFilesInDirectory(
+      this.paths.components,
+      updateDependencyTree
+    );
   }
 
-  private traverseAllFilesInDirectory(folderPath: string, traverseFunction:(string) => void) {
+  private traverseAllFilesInDirectory(
+    folderPath: string,
+    traverseFunction: (string) => void
+  ) {
     if (!fs.existsSync(folderPath)) {
       return;
     }
@@ -185,11 +194,10 @@ export default class ParsingOrchestrator {
       if (fs.lstatSync(absPath).isDirectory()) {
         this.traverseAllFilesInDirectory(absPath, traverseFunction);
       } else {
-        traverseFunction(absPath)
+        traverseFunction(absPath);
       }
     });
-  };
-
+  }
 
   private updateDependencyTree(absPath: string) {
     this.dependencyTree[absPath] = dependencyTree({
