@@ -35,7 +35,7 @@ export function createTsMorphProject(tsConfigFilePath: string) {
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.
  */
 export default class ParsingOrchestrator {
-  private filepathToFileMetadata: Record<string, FileMetadata>;
+  private filepathToFileMetadata: Record<string, FileMetadata> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
@@ -50,7 +50,8 @@ export default class ParsingOrchestrator {
     private getLocalDataMapping?: () => Record<string, string[]>
   ) {
     this.paths = studioConfig.paths;
-    this.filepathToFileMetadata = this.initFilepathToFileMetadata();
+    this.initDependencyTree();
+    this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
     this.layoutOrchestrator = new LayoutOrchestrator(
       this.paths,
@@ -161,27 +162,34 @@ export default class ParsingOrchestrator {
     };
   }
 
-  private initFilepathToFileMetadata(): Record<string, FileMetadata> {
-    this.filepathToFileMetadata = {};
-
-    const addDirectoryToMapping = (folderPath: string) => {
-      if (!fs.existsSync(folderPath)) {
-        return;
-      }
-      fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
-        const absPath = upath.join(folderPath, filename);
-        if (fs.lstatSync(absPath).isDirectory()) {
-          addDirectoryToMapping(absPath);
-        } else {
-          this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
-          this.updateDependencyTree(absPath);
-        }
-      });
-    };
-
-    addDirectoryToMapping(this.paths.components);
-    return this.filepathToFileMetadata;
+  private initFilepathToFileMetadata() {
+    const addDirectoryToMapping = (absPath: string) => {
+      this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
+    }
+    this.traverseAllFilesInDirectory(this.paths.components, addDirectoryToMapping);
   }
+
+  private initDependencyTree() {
+    const updateDependencyTree = (absPath: string) => {
+      this.updateDependencyTree(absPath)
+    }
+    this.traverseAllFilesInDirectory(this.paths.components, updateDependencyTree);
+  }
+
+  private traverseAllFilesInDirectory(folderPath: string, traverseFunction:(string) => void) {
+    if (!fs.existsSync(folderPath)) {
+      return;
+    }
+    fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
+      const absPath = upath.join(folderPath, filename);
+      if (fs.lstatSync(absPath).isDirectory()) {
+        this.traverseAllFilesInDirectory(absPath, traverseFunction);
+      } else {
+        traverseFunction(absPath)
+      }
+    });
+  };
+
 
   private updateDependencyTree(absPath: string) {
     this.dependencyTree[absPath] = dependencyTree({
