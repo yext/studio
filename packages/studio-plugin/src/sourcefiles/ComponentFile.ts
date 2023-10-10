@@ -17,7 +17,11 @@ export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string, project: Project, private dependencyTree: Tree) {
+  constructor(
+    filepath: string,
+    project: Project,
+    private dependencyTree: Tree
+  ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
