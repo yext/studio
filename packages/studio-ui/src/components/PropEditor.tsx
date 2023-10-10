@@ -6,12 +6,12 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
 import { v4 } from "uuid";
 import classNames from "classnames";
 import { useMemo } from "react";
+import TooltipIcon from "./common/TooltipIcon";
 
 interface PropEditorProps {
   propName: string;
@@ -21,8 +21,6 @@ interface PropEditorProps {
   onPropChange: (propVal: PropVal) => void;
   isNested?: boolean;
 }
-
-const tooltipStyle = { backgroundColor: "black" };
 
 /**
  * Renders an input editor for a single prop of a component.
@@ -38,7 +36,6 @@ export default function PropEditor({
   const { type, tooltip } = propMetadata;
   const onChange = useOnPropChange(propKind, propName, onPropChange, type);
   const uniqueId = useMemo(() => v4(), []);
-  const labelTooltipId = `${uniqueId}-label`;
   const inputId = `${uniqueId}-input`;
   const inputContainerClass = classNames({
     "ml-2": isNested,
@@ -48,9 +45,12 @@ export default function PropEditor({
     <div className="flex mb-2 text-sm grow flex-col">
       <div className="flex relative">
         {isNested && renderBranchUI()}
-        <label className="pb-1" id={labelTooltipId} htmlFor={inputId}>
-          {propName}
-        </label>
+        <div className="flex flex-row">
+          <label className="pb-1" htmlFor={inputId}>
+            {propName}
+          </label>
+          {tooltip && <TooltipIcon content={tooltip} />}
+        </div>
       </div>
       <div className={inputContainerClass}>
         <PropInput
@@ -66,14 +66,6 @@ export default function PropEditor({
           }}
         />
       </div>
-      {tooltip && (
-        <Tooltip
-          style={tooltipStyle}
-          anchorId={labelTooltipId}
-          content={tooltip}
-          place="left"
-        />
-      )}
     </div>
   );
 }
