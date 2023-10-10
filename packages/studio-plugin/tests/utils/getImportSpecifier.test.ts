@@ -1,4 +1,7 @@
-import getImportSpecifier from "../../src/utils/getImportSpecifier";
+import { 
+  getImportSpecifier, 
+  getImportSpecifierWithExtension
+} from "../../src/utils/getImportSpecifier";
 
 it("can import between two component files in the same directory", () => {
   const baseFile = "/src/component/BaseFile.tsx";
@@ -11,5 +14,13 @@ it("can import files in separate folders", () => {
   const toBeImported = "/c/d/NewFile.tsx";
   expect(getImportSpecifier(baseFile, toBeImported)).toEqual(
     "../../c/d/NewFile"
+  );
+});
+
+it("can preserve extensions", () => {
+  const baseFile = "/a/b/BaseFile.tsx";
+  const toBeImported = "/c/d/main.css";
+  expect(getImportSpecifierWithExtension(baseFile, toBeImported)).toEqual(
+    "../../c/d/main.css"
   );
 });

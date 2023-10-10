@@ -14,6 +14,7 @@ import {
 import prettier from "prettier";
 import fs from "fs";
 import { PropVal, PropValueKind, PropValues, PropValueType } from "../types";
+import { getImportSpecifierWithExtension } from "../utils/getImportSpecifier";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -78,7 +79,10 @@ export default class StudioSourceFileWriter {
     this.sourceFile.fixMissingImports();
     cssImports?.forEach((importSource) => {
       this.sourceFile.addImportDeclaration({
-        moduleSpecifier: importSource,
+        moduleSpecifier: getImportSpecifierWithExtension(
+          this.sourceFile.getFilePath(),
+          importSource
+        ),
       });
     });
     this.sourceFile.organizeImports();
