@@ -107,10 +107,10 @@ export default class StudioSourceFileParser {
           upath.dirname(this.sourceFile.getFilePath()),
           source
         );
-        return absPath
+        return absPath;
       }
-      return source
-    }
+      return source;
+    };
 
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source } = StaticParsingHelpers.parseImport(importDeclaration);

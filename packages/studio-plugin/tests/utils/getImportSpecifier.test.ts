@@ -1,6 +1,6 @@
-import { 
-  getImportSpecifier, 
-  getImportSpecifierWithExtension
+import {
+  getImportSpecifier,
+  getImportSpecifierWithExtension,
 } from "../../src/utils/getImportSpecifier";
 
 it("can import between two component files in the same directory", () => {

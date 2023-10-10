@@ -21,7 +21,6 @@ export function getImportSpecifier(
   return importPath;
 }
 
-
 /**
  * Calculates the import needed to import a file into another,
  * including the extension.
