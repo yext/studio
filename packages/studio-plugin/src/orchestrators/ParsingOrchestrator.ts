@@ -212,7 +212,7 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-        const componentFile = new ComponentFile(
+      const componentFile = new ComponentFile(
         absPath,
         this.project,
         this.getComponentDependencyTree(absPath)
