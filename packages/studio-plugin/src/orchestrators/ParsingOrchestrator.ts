@@ -36,12 +36,12 @@ export function createTsMorphProject(tsConfigFilePath: string) {
  */
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata> = {};
+  private filepathToDependencyTree: Record<string, Tree> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
-  private dependencyTree: Tree = {};
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -50,7 +50,7 @@ export default class ParsingOrchestrator {
     private getLocalDataMapping?: () => Record<string, string[]>
   ) {
     this.paths = studioConfig.paths;
-    this.initDependencyTree();
+    this.initFilepathToDependencyTree();
     this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
     this.layoutOrchestrator = new LayoutOrchestrator(
@@ -172,9 +172,9 @@ export default class ParsingOrchestrator {
     );
   }
 
-  private initDependencyTree() {
+  private initFilepathToDependencyTree() {
     const updateDependencyTree = (absPath: string) => {
-      this.updateDependencyTree(absPath);
+      this.updateFilepathToDependencyTree(absPath);
     };
     this.traverseAllFilesInDirectory(
       this.paths.components,
@@ -199,19 +199,19 @@ export default class ParsingOrchestrator {
     });
   }
 
-  private updateDependencyTree(absPath: string) {
-    this.dependencyTree[absPath] = dependencyTree({
+  private updateFilepathToDependencyTree(absPath: string) {
+    this.filepathToDependencyTree[absPath] = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
-      visited: this.dependencyTree,
+      visited: this.filepathToDependencyTree,
     });
   }
 
   private getOrCreateDependencyTree(absFilepath: string): Tree {
-    if (!this.dependencyTree.hasOwnProperty(absFilepath)) {
-      this.updateDependencyTree(absFilepath);
+    if (!this.filepathToDependencyTree.hasOwnProperty(absFilepath)) {
+      this.updateFilepathToDependencyTree(absFilepath);
     }
-    return this.dependencyTree[absFilepath];
+    return this.filepathToDependencyTree[absFilepath];
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {

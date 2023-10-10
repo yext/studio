@@ -16,14 +16,12 @@ import { Tree } from "dependency-tree";
 export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private fileMetadataParser: FileMetadataParser;
-  private dependencyTree: Tree;
 
-  constructor(filepath: string, project: Project, dependencyTree: Tree) {
+  constructor(filepath: string, project: Project, private dependencyTree: Tree) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
     );
-    this.dependencyTree = dependencyTree;
   }
 
   getComponentMetadata(): Result<ComponentMetadata, ParsingError> {
