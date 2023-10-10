@@ -53,7 +53,13 @@ export default function PropEditor({
           <label className="pb-1" htmlFor={inputId}>
             {propName}
           </label>
-          {tooltip && <Info id={labelTooltipId} className="ml-3 pb-1" data-testid="prop-tooltip"/>}
+          {tooltip && (
+            <Info
+              id={labelTooltipId}
+              className="ml-3 pb-1"
+              data-testid="prop-tooltip"
+            />
+          )}
         </div>
       </div>
       <div className={inputContainerClass}>
