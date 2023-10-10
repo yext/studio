@@ -9,6 +9,7 @@ import {
 import { Tooltip } from "react-tooltip";
 import PropInput from "./PropInput";
 import useOnPropChange from "../hooks/useOnPropChange";
+import { ReactComponent as Info } from "../icons/info.svg";
 import { v4 } from "uuid";
 import classNames from "classnames";
 import { useMemo } from "react";
@@ -48,9 +49,12 @@ export default function PropEditor({
     <div className="flex mb-2 text-sm grow flex-col">
       <div className="flex relative">
         {isNested && renderBranchUI()}
-        <label className="pb-1" id={labelTooltipId} htmlFor={inputId}>
-          {propName}
-        </label>
+        <div className="flex flex-row">
+          <label className="pb-1" htmlFor={inputId}>
+            {propName}
+          </label>
+          {tooltip && <Info id={labelTooltipId} className="ml-3 pb-1" data-testid="prop-tooltip"/>}
+        </div>
       </div>
       <div className={inputContainerClass}>
         <PropInput
