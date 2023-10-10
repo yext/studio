@@ -184,7 +184,7 @@ export default class ParsingOrchestrator {
 
   private traverseAllFilesInDirectory(
     folderPath: string,
-    traverseFunction: (string) => void
+    traverseFunction: (absPath: string) => void
   ) {
     if (!fs.existsSync(folderPath)) {
       return;
