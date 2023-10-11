@@ -9,7 +9,7 @@ import {
 import { assertIsOk } from "../__utils__/asserts";
 import upath from "upath";
 import { createTestProject } from "../__utils__/createTestSourceFile";
-import DependencyTree from "dependency-tree";
+import dependencyTree from "dependency-tree";
 
 describe("getComponentMetadata", () => {
   beforeEach(() => {
@@ -194,7 +194,7 @@ describe("getComponentMetadata", () => {
 
   it("Can properly parse its dependency tree for CSS files.", () => {
     const pathToComponent = getComponentPath("ComplexBanner");
-    const dependencyTree = DependencyTree({
+    const componentDependencyTree = dependencyTree({
       filename: pathToComponent,
       directory: upath.dirname(pathToComponent),
     });
@@ -202,7 +202,7 @@ describe("getComponentMetadata", () => {
     const componentFile = new ComponentFile(
       pathToComponent,
       project,
-      dependencyTree
+      componentDependencyTree
     );
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
