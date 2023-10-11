@@ -71,5 +71,5 @@ function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
     },
     new Set<string>()
   );
-  return Array.from(cssFiles);
+  return [...cssFiles];
 }
