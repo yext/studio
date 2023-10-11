@@ -113,6 +113,7 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
+      delete this.filepathToDependencyTree[filepath]
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
@@ -216,7 +217,6 @@ export default class ParsingOrchestrator {
   };
 
   private updateFilepathToDependencyTree(absPath: string) {
-    delete this.filepathToDependencyTree[absPath];
     this.filepathToDependencyTree[absPath] = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
