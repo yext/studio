@@ -23,13 +23,13 @@ describe("getComponentMetadata", () => {
       filename: pathToComponent,
       directory: upath.dirname(pathToComponent),
     });
-  
+
     const componentFile = new ComponentFile(
       pathToComponent,
       project,
       componentDependencyTree
     );
-    return componentFile
+    return componentFile;
   }
 
   it("can parse a simple Banner component", () => {
@@ -217,7 +217,9 @@ describe("getComponentMetadata", () => {
   });
 
   it("Can properly parse transitively imported CSS files.", () => {
-    const componentFile = makeComponentFileWithDependencyTree("TransitiveCssComponent");
+    const componentFile = makeComponentFileWithDependencyTree(
+      "TransitiveCssComponent"
+    );
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value).toHaveProperty("cssImports", [
