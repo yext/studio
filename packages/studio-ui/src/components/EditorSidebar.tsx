@@ -6,6 +6,7 @@ import { ReactComponent as Globe } from "../icons/globe.svg";
 import { ReactComponent as Content } from "../icons/content.svg";
 import SiteSettingsPanel from "./SiteSettingsPanel";
 import EntityPicker from "./EntityPicker";
+import CollapsibleSidebar from "./CollapsibleSidebar";
 
 enum Tab {
   Props = "Props",
@@ -25,16 +26,18 @@ export default function EditorSidebar(): JSX.Element {
   const [selectedTab, setTab] = useState<Tab>(Tab.Props);
 
   return (
-    <div className="w-1/4 px-4 flex flex-col" data-testid="EditorSidebar">
-      <OptionPicker
-        options={Tab}
-        icons={tabIcons}
-        defaultOption={Tab.Props}
-        onSelect={setTab}
-      />
-      <Divider />
-      {renderTab(selectedTab)}
-    </div>
+    <CollapsibleSidebar side="right" >
+      <div className="flex flex-col" data-testid="EditorSidebar">
+        <OptionPicker
+          options={Tab}
+          icons={tabIcons}
+          defaultOption={Tab.Props}
+          onSelect={setTab}
+        />
+        <Divider />
+        {renderTab(selectedTab)}
+      </div>
+    </CollapsibleSidebar>
   );
 }
 

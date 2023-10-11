@@ -2,6 +2,7 @@ import ComponentTree from "./ComponentTree";
 import Divider from "./common/Divider";
 import AddPageButton from "./AddPageButton/AddPageButton";
 import ActivePagePanel from "./ActivePagePanel";
+import CollapsibleSidebar from "./CollapsibleSidebar";
 
 /**
  * Renders the left sidebar of Studio, which lists all pages, indicates which
@@ -12,15 +13,19 @@ import ActivePagePanel from "./ActivePagePanel";
  */
 export default function LeftSidebar(): JSX.Element {
   return (
-    <div className="flex flex-col w-1/4 px-4">
-      <div className="flex flex-row font-bold py-4 pr-2 justify-between items-center">
-        Pages
-        <AddPageButton />
+    <CollapsibleSidebar
+      side="left"
+    >
+      <div className="flex flex-col">
+        <div className="flex flex-row font-bold py-4 pr-2 justify-between items-center">
+          Pages
+          <AddPageButton />
+        </div>
+        <ActivePagePanel />
+        <Divider />
+        <div className="font-bold">Layers</div>
+        <ComponentTree />
       </div>
-      <ActivePagePanel />
-      <Divider />
-      <div className="font-bold">Layers</div>
-      <ComponentTree />
-    </div>
+    </CollapsibleSidebar>
   );
 }
