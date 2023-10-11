@@ -27,6 +27,7 @@ export default function CollapsibleSidebar({side, children}: PropsWithChildren<C
       <div className={justifyButtonStyle}>
       <button
         onClick={toggleOpen}
+        aria-label={`Collapse ${side} sidebar`}
       >
         <Hamburger className="h-5 m-2"/>
       </button>
