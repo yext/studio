@@ -399,6 +399,7 @@ function computeUUIDToFileMetadata(components: Record<string, string>) {
         kind: FileMetadataKind.Component,
         metadataUUID,
         filepath: getComponentPath(componentName),
+        cssImports: [],
       };
       return UUIDToFileMetadata;
     },

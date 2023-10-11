@@ -33,6 +33,7 @@ const UUIDToFileMetadata: Record<string, FileMetadata> = {
     kind: FileMetadataKind.Component,
     metadataUUID: "mock-metadata-uuid",
     filepath: getComponentPath("ComplexBanner"),
+    cssImports: [],
   },
 };
 

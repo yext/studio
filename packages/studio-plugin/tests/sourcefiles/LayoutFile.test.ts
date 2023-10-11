@@ -27,6 +27,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
       bool: { type: PropValueType.boolean, required: false },
     },
     filepath,
+    cssImports: [],
   };
 }
 

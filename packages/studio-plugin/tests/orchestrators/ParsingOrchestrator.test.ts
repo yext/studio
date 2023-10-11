@@ -57,6 +57,7 @@ describe("aggregates data as expected", () => {
       expect.objectContaining({
         filepath: expect.stringContaining("components/Card.tsx"),
         kind: FileMetadataKind.Component,
+        cssImports: [expect.stringContaining("index.css")],
       })
     );
     expect(fileMetadataArray).toContainEqual(
