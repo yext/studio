@@ -20,6 +20,7 @@ import { ParsingError } from "../errors/ParsingError";
 import createFilenameMapping from "./createFilenameMapping";
 import LayoutOrchestrator from "./LayoutOrchestrator";
 import separateErrorAndSuccessResults from "./separateErrorAndSuccessResults";
+import dependencyTree, { Tree } from "dependency-tree";
 
 export function createTsMorphProject(tsConfigFilePath: string) {
   return new Project({
@@ -34,7 +35,8 @@ export function createTsMorphProject(tsConfigFilePath: string) {
  * ParsingOrchestrator aggregates data for passing through the Studio vite plugin.
  */
 export default class ParsingOrchestrator {
-  private filepathToFileMetadata: Record<string, FileMetadata>;
+  private filepathToFileMetadata: Record<string, FileMetadata> = {};
+  private filepathToDependencyTree: Record<string, Tree> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
@@ -111,6 +113,7 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
+      delete this.filepathToDependencyTree[filepath];
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
@@ -194,7 +197,12 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      const componentFile = new ComponentFile(absPath, this.project);
+      this.updateFilepathToDependencyTree(absPath);
+      const componentFile = new ComponentFile(
+        absPath,
+        this.project,
+        this.filepathToDependencyTree[absPath]
+      );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
         return createErrorFileMetadata(result.error);
@@ -207,6 +215,14 @@ export default class ParsingOrchestrator {
         `live inside the expected folder: ${this.paths.components}.`
     );
   };
+
+  private updateFilepathToDependencyTree(absPath: string) {
+    this.filepathToDependencyTree[absPath] = dependencyTree({
+      filename: absPath,
+      directory: upath.dirname(absPath),
+      visited: this.filepathToDependencyTree,
+    });
+  }
 
   private initPageNameToPageFile(): Record<string, PageFile> {
     if (!fs.existsSync(this.paths.pages)) {
