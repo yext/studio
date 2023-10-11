@@ -114,6 +114,8 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
+      delete this.filepathToDependencyTree[filepath]
+      this.updateFilepathToDependencyTree(filepath)
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
@@ -211,13 +213,6 @@ export default class ParsingOrchestrator {
     });
   }
 
-  private getOrCreateDependencyTree(absFilepath: string): Tree {
-    if (!this.filepathToDependencyTree.hasOwnProperty(absFilepath)) {
-      this.updateFilepathToDependencyTree(absFilepath);
-    }
-    return this.filepathToDependencyTree[absFilepath];
-  }
-
   private getFileMetadata = (absPath: string): FileMetadata => {
     if (this.filepathToFileMetadata[absPath]) {
       return this.filepathToFileMetadata[absPath];
@@ -235,7 +230,7 @@ export default class ParsingOrchestrator {
       const componentFile = new ComponentFile(
         absPath,
         this.project,
-        this.getOrCreateDependencyTree(absPath)
+        this.filepathToDependencyTree[absPath]
       );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
