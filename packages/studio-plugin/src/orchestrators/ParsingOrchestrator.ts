@@ -50,7 +50,6 @@ export default class ParsingOrchestrator {
     private getLocalDataMapping?: () => Record<string, string[]>
   ) {
     this.paths = studioConfig.paths;
-    this.initFilepathToDependencyTree();
     this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
     this.layoutOrchestrator = new LayoutOrchestrator(
@@ -114,8 +113,6 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
-      delete this.filepathToDependencyTree[filepath];
-      this.updateFilepathToDependencyTree(filepath);
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
@@ -164,53 +161,25 @@ export default class ParsingOrchestrator {
     };
   }
 
-  private initFilepathToFileMetadata() {
-    const assignFilepathToFileMetadata = (absPath: string) => {
-      this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
-    };
-    this.traverseAllFilesInDirectory(
-      this.paths.components,
-      assignFilepathToFileMetadata
-    );
-  }
+  private initFilepathToFileMetadata(): Record<string, FileMetadata> {
+    this.filepathToFileMetadata = {};
 
-  private initFilepathToDependencyTree() {
-    const updateDependencyTree = (absPath: string) => {
-      this.updateFilepathToDependencyTree(absPath);
-    };
-    this.traverseAllFilesInDirectory(
-      this.paths.components,
-      updateDependencyTree
-    );
-  }
-
-  /**
-   * Takes in a directory and calls fileAction on all
-   * files in the directory and its subdirectories.
-   */
-  private traverseAllFilesInDirectory(
-    folderPath: string,
-    fileAction: (absPath: string) => void
-  ) {
-    if (!fs.existsSync(folderPath)) {
-      return;
-    }
-    fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
-      const absPath = upath.join(folderPath, filename);
-      if (fs.lstatSync(absPath).isDirectory()) {
-        this.traverseAllFilesInDirectory(absPath, fileAction);
-      } else {
-        fileAction(absPath);
+    const addDirectoryToMapping = (folderPath: string) => {
+      if (!fs.existsSync(folderPath)) {
+        return;
       }
-    });
-  }
+      fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
+        const absPath = upath.join(folderPath, filename);
+        if (fs.lstatSync(absPath).isDirectory()) {
+          addDirectoryToMapping(absPath);
+        } else {
+          this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
+        }
+      });
+    };
 
-  private updateFilepathToDependencyTree(absPath: string) {
-    this.filepathToDependencyTree[absPath] = dependencyTree({
-      filename: absPath,
-      directory: upath.dirname(absPath),
-      visited: this.filepathToDependencyTree,
-    });
+    addDirectoryToMapping(this.paths.components);
+    return this.filepathToFileMetadata;
   }
 
   private getFileMetadata = (absPath: string): FileMetadata => {
@@ -227,6 +196,7 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
+      this.updateFilepathToDependencyTree(absPath)
       const componentFile = new ComponentFile(
         absPath,
         this.project,
@@ -244,6 +214,15 @@ export default class ParsingOrchestrator {
         `live inside the expected folder: ${this.paths.components}.`
     );
   };
+
+  private updateFilepathToDependencyTree(absPath: string) {
+    delete this.filepathToDependencyTree[absPath]
+    this.filepathToDependencyTree[absPath] = dependencyTree({
+      filename: absPath,
+      directory: upath.dirname(absPath),
+      visited: this.filepathToDependencyTree,
+    });
+  }
 
   private initPageNameToPageFile(): Record<string, PageFile> {
     if (!fs.existsSync(this.paths.pages)) {
