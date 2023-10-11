@@ -17,6 +17,21 @@ describe("getComponentMetadata", () => {
   });
   const project = createTestProject();
 
+  function makeComponentFileWithDependencyTree(componentName: string) {
+    const pathToComponent = getComponentPath(componentName);
+    const componentDependencyTree = dependencyTree({
+      filename: pathToComponent,
+      directory: upath.dirname(pathToComponent),
+    });
+  
+    const componentFile = new ComponentFile(
+      pathToComponent,
+      project,
+      componentDependencyTree
+    );
+    return componentFile
+  }
+
   it("can parse a simple Banner component", () => {
     const pathToComponent = getComponentPath("SimpleBanner");
     const componentFile = new ComponentFile(pathToComponent, project, {});
@@ -193,17 +208,16 @@ describe("getComponentMetadata", () => {
   });
 
   it("Can properly parse its dependency tree for CSS files.", () => {
-    const pathToComponent = getComponentPath("ComplexBanner");
-    const componentDependencyTree = dependencyTree({
-      filename: pathToComponent,
-      directory: upath.dirname(pathToComponent),
-    });
+    const componentFile = makeComponentFileWithDependencyTree("ComplexBanner");
+    const result = componentFile.getComponentMetadata();
+    assertIsOk(result);
+    expect(result.value).toHaveProperty("cssImports", [
+      expect.stringContaining("index.css"),
+    ]);
+  });
 
-    const componentFile = new ComponentFile(
-      pathToComponent,
-      project,
-      componentDependencyTree
-    );
+  it("Can properly parse transitively imported CSS files.", () => {
+    const componentFile = makeComponentFileWithDependencyTree("TransitiveCssComponent");
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value).toHaveProperty("cssImports", [
