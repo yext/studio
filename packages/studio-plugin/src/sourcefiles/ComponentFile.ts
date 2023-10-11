@@ -59,15 +59,14 @@ export default class ComponentFile {
 }
 
 function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
-  let cssFiles: Set<string> = new Set();
-  Object.entries(dependencyTree).forEach(([filename, subDependencyTree]) => {
+  const cssFiles = Object.entries(dependencyTree).reduce((cssFiles, [filename, subDependencyTree]) => {
     if (filename.includes(".css")) {
       cssFiles.add(filename);
     }
-    cssFiles = new Set([
+    return new Set([
       ...cssFiles,
       ...getCssFilesFromDependencyTree(subDependencyTree),
     ]);
-  });
+  }, new Set<string>())
   return Array.from(cssFiles);
 }
