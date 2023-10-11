@@ -114,8 +114,8 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
-      delete this.filepathToDependencyTree[filepath]
-      this.updateFilepathToDependencyTree(filepath)
+      delete this.filepathToDependencyTree[filepath];
+      this.updateFilepathToDependencyTree(filepath);
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
