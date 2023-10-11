@@ -30,6 +30,6 @@ export default defineConfig((args: ConfigEnv): UserConfig => {
     plugins: [react(), createStudioPlugin(args), svgr() as PluginOption],
     css: {
       postcss: __dirname,
-    }
+    },
   };
 });

@@ -18,7 +18,15 @@ cli
   .action((options: CliArgs) => {
     spawnSync(
       "npx",
-      ["cross-env", NODE_OPTIONS, "npx", "vite", "--force", "--config", pathToViteConfig],
+      [
+        "cross-env",
+        NODE_OPTIONS,
+        "npx",
+        "vite",
+        "--force",
+        "--config",
+        pathToViteConfig,
+      ],
       {
         stdio: ["ignore", "inherit", "inherit"],
         env: {
