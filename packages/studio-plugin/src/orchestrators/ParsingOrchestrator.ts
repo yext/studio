@@ -196,7 +196,7 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      this.updateFilepathToDependencyTree(absPath)
+      this.updateFilepathToDependencyTree(absPath);
       const componentFile = new ComponentFile(
         absPath,
         this.project,
@@ -216,7 +216,7 @@ export default class ParsingOrchestrator {
   };
 
   private updateFilepathToDependencyTree(absPath: string) {
-    delete this.filepathToDependencyTree[absPath]
+    delete this.filepathToDependencyTree[absPath];
     this.filepathToDependencyTree[absPath] = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
