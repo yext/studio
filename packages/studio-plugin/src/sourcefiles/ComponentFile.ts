@@ -7,6 +7,7 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import tryUsingResult from "../errors/tryUsingResult";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { Result } from "true-myth";
+import { Tree } from "dependency-tree";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -16,7 +17,11 @@ export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string, project: Project) {
+  constructor(
+    filepath: string,
+    project: Project,
+    private dependencyTree: Tree
+  ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
@@ -43,12 +48,29 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-
+    const cssImports = getCssFilesFromDependencyTree(this.dependencyTree);
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
       filepath,
+      cssImports,
     };
   };
+}
+
+function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
+  const cssFiles = Object.entries(dependencyTree).reduce(
+    (cssFiles, [filename, subDependencyTree]) => {
+      if (filename.includes(".css")) {
+        cssFiles.add(filename);
+      }
+      return new Set([
+        ...cssFiles,
+        ...getCssFilesFromDependencyTree(subDependencyTree),
+      ]);
+    },
+    new Set<string>()
+  );
+  return [...cssFiles];
 }

@@ -102,6 +102,7 @@ function mockInitialStore() {
           metadataUUID: "bannerMeta",
           kind: FileMetadataKind.Component,
           filepath: "component-filepath",
+          cssImports: [],
         },
       },
     },
