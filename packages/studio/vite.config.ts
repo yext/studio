@@ -30,9 +30,6 @@ export default defineConfig((args: ConfigEnv): UserConfig => {
     plugins: [react(), createStudioPlugin(args), svgr() as PluginOption],
     css: {
       postcss: __dirname,
-    },
-    optimizeDeps: {
-      exclude: ["virtual_yext-studio", "virtual_yext-studio-git-data"],
-    },
+    }
   };
 });
