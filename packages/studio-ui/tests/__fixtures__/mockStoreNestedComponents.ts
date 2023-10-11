@@ -44,6 +44,7 @@ const componentMetadata: ComponentMetadata = {
     },
   },
   filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
+  cssImports: [],
 };
 
 const containerMetadata: ComponentMetadata = {
@@ -53,6 +54,7 @@ const containerMetadata: ComponentMetadata = {
     text: { type: PropValueType.string, required: false },
   },
   filepath: path.resolve(__dirname, "../__mocks__/Container.tsx"),
+  cssImports: [],
 };
 
 export const mockUUIDToFileMetadata: Record<string, FileMetadata> = {
