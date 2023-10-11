@@ -15,6 +15,11 @@
       "import": "./lib/createStudioPlugin.js",
       "require": "./lib/createStudioPlugin.js"
     },
+    "./src/createStudioStylingPlugin": {
+      "types": "./lib/createStudioStylingPlugin.d.ts",
+      "import": "./lib/createStudioStylingPlugin.js",
+      "require": "./lib/createStudioStylingPlugin.js"
+    },
     "./virtual-module": {
       "types": "./virtual-module.d.ts"
     }
