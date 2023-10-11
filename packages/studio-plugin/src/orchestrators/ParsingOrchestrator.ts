@@ -50,7 +50,7 @@ export default class ParsingOrchestrator {
     private getLocalDataMapping?: () => Record<string, string[]>
   ) {
     this.paths = studioConfig.paths;
-    this.filepathToFileMetadata = this.initFilepathToFileMetadata();	
+    this.filepathToFileMetadata = this.initFilepathToFileMetadata();
     this.pageNameToPageFile = this.initPageNameToPageFile();
     this.layoutOrchestrator = new LayoutOrchestrator(
       this.paths,
