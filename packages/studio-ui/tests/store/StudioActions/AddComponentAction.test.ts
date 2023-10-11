@@ -47,14 +47,14 @@ beforeEach(() => {
           kind: FileMetadataKind.Component,
           metadataUUID: "uuid-component",
           filepath: "blah/Mock-Component.tsx",
-          cssImports: []
+          cssImports: [],
         },
         "uuid-container": {
           kind: FileMetadataKind.Component,
           metadataUUID: "uuid-container",
           acceptsChildren: true,
           filepath: "blah/Mock-Container.tsx",
-          cssImports: []
+          cssImports: [],
         },
       },
     },
@@ -78,7 +78,7 @@ function insertionOrderTestSuite(
     kind: FileMetadataKind.Component,
     filepath: "./blah/AddedComp.tsx",
     metadataUUID: "unused",
-    cssImports: []
+    cssImports: [],
   };
 
   const newComponentState: ComponentState = {

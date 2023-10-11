@@ -18,7 +18,7 @@ const componentMetadata: ComponentMetadata = {
       required: false,
     },
   },
-  cssImports: []
+  cssImports: [],
 };
 
 it("returns a FileMetadata using getFileMetadata", () => {

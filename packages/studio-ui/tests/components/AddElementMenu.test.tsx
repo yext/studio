@@ -21,14 +21,14 @@ beforeEach(() => {
           kind: FileMetadataKind.Component,
           metadataUUID: "comp",
           filepath: "blah/MockComponent.tsx",
-          cssImports: []
+          cssImports: [],
         },
         "uuid-container": {
           kind: FileMetadataKind.Component,
           metadataUUID: "cont",
           acceptsChildren: true,
           filepath: "blah/MockContainer.tsx",
-          cssImports: []
+          cssImports: [],
         },
       },
     },
