@@ -163,12 +163,12 @@ export default class ParsingOrchestrator {
   }
 
   private initFilepathToFileMetadata() {
-    const addDirectoryToMapping = (absPath: string) => {
+    const assignFilepathToFileMetadata = (absPath: string) => {
       this.filepathToFileMetadata[absPath] = this.getFileMetadata(absPath);
     };
     this.traverseAllFilesInDirectory(
       this.paths.components,
-      addDirectoryToMapping
+      assignFilepathToFileMetadata
     );
   }
 
@@ -182,9 +182,13 @@ export default class ParsingOrchestrator {
     );
   }
 
+  /**
+   * Takes in a directory and calls fileAction on all
+   * files in the directory and its subdirectories.
+   */
   private traverseAllFilesInDirectory(
     folderPath: string,
-    traverseFunction: (absPath: string) => void
+    fileAction: (absPath: string) => void
   ) {
     if (!fs.existsSync(folderPath)) {
       return;
@@ -192,9 +196,9 @@ export default class ParsingOrchestrator {
     fs.readdirSync(folderPath, "utf-8").forEach((filename) => {
       const absPath = upath.join(folderPath, filename);
       if (fs.lstatSync(absPath).isDirectory()) {
-        this.traverseAllFilesInDirectory(absPath, traverseFunction);
+        this.traverseAllFilesInDirectory(absPath, fileAction);
       } else {
-        traverseFunction(absPath);
+        fileAction(absPath);
       }
     });
   }
