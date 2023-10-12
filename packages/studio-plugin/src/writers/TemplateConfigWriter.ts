@@ -77,7 +77,10 @@ export default class TemplateConfigWriter {
     const documentFieldRegEx = /^document.(.+)/;
     const newFields = [...usedDocumentPaths]
       .filter((documentPath) => documentFieldRegEx.test(documentPath))
-      .map(documentPath => (documentFieldRegEx.exec(documentPath) as RegExpExecArray)[1]);
+      .map(
+        (documentPath) =>
+          (documentFieldRegEx.exec(documentPath) as RegExpExecArray)[1]
+      );
 
     return {
       ...currentTemplateConfig,
