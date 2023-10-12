@@ -9,7 +9,7 @@ describe("getImportSpecifer", () => {
     const toBeImported = "/src/component/NewFile.tsx";
     expect(getImportSpecifier(baseFile, toBeImported)).toEqual("./NewFile");
   });
-  
+
   it("can import files in separate folders", () => {
     const baseFile = "/a/b/BaseFile.tsx";
     const toBeImported = "/c/d/NewFile.tsx";
@@ -17,7 +17,7 @@ describe("getImportSpecifer", () => {
       "../../c/d/NewFile"
     );
   });
-})
+});
 
 describe("getImportSpecifierWithExtension", () => {
   it("can preserve extensions", () => {
@@ -27,5 +27,4 @@ describe("getImportSpecifierWithExtension", () => {
       "../../c/d/main.css"
     );
   });
-})
-
+});
