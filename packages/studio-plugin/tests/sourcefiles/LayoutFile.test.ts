@@ -90,9 +90,9 @@ describe("getLayoutState", () => {
 
   it("correctly parses CSS imports", () => {
     const result = getLayoutState("BasicLayout");
-    const expectedCssPath = getFixturePath("LayoutFile/index.css");
+    const expectedIndexCssPath = getFixturePath("LayoutFile/index.css");
     expect(result.value.cssImports).toEqual([
-      expectedCssPath,
+      expectedIndexCssPath,
       "@yext/search-ui-react/index.css",
     ]);
   });
