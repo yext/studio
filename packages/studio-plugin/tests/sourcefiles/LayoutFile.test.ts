@@ -88,10 +88,13 @@ describe("getLayoutState", () => {
     ]);
   });
 
-  it("correctly parses CSS relative imports as absolute paths", () => {
+  it("correctly parses CSS imports", () => {
     const result = getLayoutState("BasicLayout");
     const expectedCssPath = getFixturePath("LayoutFile/index.css");
-    expect(result.value.cssImports).toEqual([expectedCssPath]);
+    expect(result.value.cssImports).toEqual([
+      expectedCssPath,
+      "@yext/search-ui-react/index.css"
+    ]);
   });
 
   it("correctly gets filepath", () => {

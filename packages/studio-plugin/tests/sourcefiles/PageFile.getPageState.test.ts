@@ -73,13 +73,16 @@ describe("getPageState", () => {
     ]);
   });
 
-  it("correctly parses CSS relative imports as absolute paths", () => {
+  it("correctly parses CSS  imports", () => {
     const pageFile = createPageFile("entityTemplate");
     const result = pageFile.getPageState();
 
     assertIsOk(result);
     const expectedCssPath = getFixturePath("PageFile/index.css");
-    expect(result.value.cssImports).toEqual([expectedCssPath]);
+    expect(result.value.cssImports).toEqual([
+      expectedCssPath,
+      "@yext/search-ui-react/index.css"
+    ]);
   });
 
   it("correctly gets filepath", () => {
