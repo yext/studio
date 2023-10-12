@@ -79,12 +79,12 @@ export default class StudioSourceFileWriter {
     });
     this.sourceFile.fixMissingImports();
     cssImports?.forEach((importSource) => {
-      const moduleSpecifier = upath.isAbsolute(importSource) ?
-      getImportSpecifierWithExtension(
-        this.sourceFile.getFilePath(),
-        importSource
-      )
-      : importSource
+      const moduleSpecifier = upath.isAbsolute(importSource)
+        ? getImportSpecifierWithExtension(
+            this.sourceFile.getFilePath(),
+            importSource
+          )
+        : importSource;
       this.sourceFile.addImportDeclaration({ moduleSpecifier });
     });
     this.sourceFile.organizeImports();
