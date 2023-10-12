@@ -6,7 +6,7 @@ export const config: TemplateConfig = {
     $id: "studio-stream-id-test",
     localization: { locales: ["en"] },
     filter: {},
-    fields: ["arrayIndex", "objectField"],
+    fields: ["arrayIndex", "objectField.attr1", "objectField.attr2"],
   },
 };
 

@@ -7,7 +7,7 @@ import {
 } from "../constants";
 import { ComponentState } from "../types/ComponentState";
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
-import pagesJSFieldsMerger from "../utils/StreamConfigFieldsMerger";
+import getStreamFields from "../utils/getStreamFields";
 import PagesJsWriter from "./PagesJsWriter";
 import { GetPathVal, PagesJsState } from "../types";
 import TemplateConfigParser from "../parsers/TemplateConfigParser";
@@ -74,11 +74,10 @@ export default class TemplateConfigWriter {
     );
 
     const currentFields = currentTemplateConfig?.stream?.fields || [];
+    const documentFieldRegEx = /^document.(.+)/;
     const newFields = [...usedDocumentPaths]
-      // Stream config's fields do not allow specifying an index or sub-field of a field.
-      .map((documentPath) => /^document\.([^[.]+)/.exec(documentPath))
-      .filter((matchResults) => matchResults && matchResults.length >= 2)
-      .map((matchResults) => (matchResults as RegExpExecArray)[1]);
+      .filter((documentPath) => documentFieldRegEx.test(documentPath))
+      .map(documentPath => (documentFieldRegEx.exec(documentPath) as RegExpExecArray)[1]);
 
     return {
       ...currentTemplateConfig,
@@ -87,7 +86,7 @@ export default class TemplateConfigWriter {
         localization: STREAM_LOCALIZATION,
         ...currentTemplateConfig?.stream,
         filter: entityPageState.streamScope,
-        fields: pagesJSFieldsMerger(currentFields, newFields),
+        fields: getStreamFields(currentFields, newFields),
       },
     };
   }
