@@ -1,4 +1,8 @@
 import { PluginOption } from "vite";
+import upath from 'upath';
+import { fileURLToPath } from 'url';
+const currentDir = upath.dirname(fileURLToPath(import.meta.url));
+const packagesDir = upath.resolve(currentDir, "../..")
 
 /**
  * Adds the ?inline query parameter to all CSS imports
@@ -32,8 +36,8 @@ export default function createStudioStylingPlugin(): PluginOption {
   };
 }
 
-function isImportedByStudio(id: string) {
-  return !!(id.match(/.*@yext\/studio.*/) || id.match(/.*packages\/studio*/));
+function isImportedByStudio(importer: string) {
+  return !!(importer.match(/.*@yext\/studio.*/) || importer.startsWith(packagesDir));
 }
 
 function isStyleFile(id: string) {
