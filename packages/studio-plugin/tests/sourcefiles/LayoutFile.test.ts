@@ -1,5 +1,9 @@
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getLayoutPath } from "../__utils__/getFixturePath";
+import {
+  getComponentPath,
+  getFixturePath,
+  getLayoutPath,
+} from "../__utils__/getFixturePath";
 import {
   ComponentStateKind,
   FileMetadata,
@@ -86,8 +90,9 @@ describe("getLayoutState", () => {
 
   it("correctly parses CSS imports", () => {
     const result = getLayoutState("BasicLayout");
+    const expectedIndexCssPath = getFixturePath("LayoutFile/index.css");
     expect(result.value.cssImports).toEqual([
-      "./index.css",
+      expectedIndexCssPath,
       "@yext/search-ui-react/index.css",
     ]);
   });
