@@ -103,12 +103,12 @@ export default class StudioSourceFileParser {
     const cssImports: string[] = [];
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source } = StaticParsingHelpers.parseImport(importDeclaration);
-      const isRelativeCssImport = source.endsWith(".css") && source.startsWith(".")
+      const isRelativeCssImport =
+        source.endsWith(".css") && source.startsWith(".");
       if (isRelativeCssImport) {
-        cssImports.push(upath.resolve(
-          upath.dirname(this.sourceFile.getFilePath()),
-          source
-        ));
+        cssImports.push(
+          upath.resolve(upath.dirname(this.sourceFile.getFilePath()), source)
+        );
       }
     });
     return cssImports;
