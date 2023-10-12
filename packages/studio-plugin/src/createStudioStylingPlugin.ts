@@ -1,4 +1,5 @@
 import { PluginOption } from "vite";
+
 /**
  * Adds the ?inline query parameter to all CSS imports
  * unless they are CSS from Studio, which is determined
