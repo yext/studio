@@ -19,7 +19,7 @@ export default function CollapsibleSidebar({
     "justify-end": side === "left",
   });
 
-  const sidebarStyle = classNames("flex grow", {
+  const sidebarStyle = classNames({
     hidden: !open,
   });
 
