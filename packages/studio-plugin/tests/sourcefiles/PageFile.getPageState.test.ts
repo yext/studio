@@ -1,7 +1,11 @@
 import PageFile from "../../src/sourcefiles/PageFile";
 import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
+import {
+  getComponentPath,
+  getFixturePath,
+  getPagePath,
+} from "../__utils__/getFixturePath";
 import { FileMetadata, FileMetadataKind } from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
@@ -74,8 +78,9 @@ describe("getPageState", () => {
     const result = pageFile.getPageState();
 
     assertIsOk(result);
+    const expectedIndexCssPath = getFixturePath("PageFile/index.css");
     expect(result.value.cssImports).toEqual([
-      "./index.css",
+      expectedIndexCssPath,
       "@yext/search-ui-react/index.css",
     ]);
   });

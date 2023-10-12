@@ -2,7 +2,11 @@ import {
   StandardComponentState,
   ComponentStateKind,
 } from "../../src/types/ComponentState";
-import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
+import {
+  getComponentPath,
+  getFixturePath,
+  getPagePath,
+} from "../__utils__/getFixturePath";
 import fs from "fs";
 import { Project } from "ts-morph";
 import {
@@ -247,13 +251,15 @@ describe("updateFile", () => {
   describe("imports", () => {
     it("adds css imports", () => {
       const filepath = getPagePath("updatePageFile/EmptyPage");
+      const indexCssPath = getFixturePath("PageFile/index.css");
+      const appCssPath = getFixturePath("PageFile/updatePageFile/App.css");
       createReactComponentFileWriter(
         tsMorphProject,
         filepath,
         "IndexPage"
       ).updateFile({
         componentTree: [fragmentComponent],
-        cssImports: ["../index.css", "./App.css"],
+        cssImports: [indexCssPath, appCssPath],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
