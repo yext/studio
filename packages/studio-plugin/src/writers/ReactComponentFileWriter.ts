@@ -26,7 +26,7 @@ import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import camelCase from "camelcase";
 import { CustomTags } from "../parsers/helpers/TypeNodeParsingHelper";
-import getImportSpecifier from "../utils/getImportSpecifier";
+import { getImportSpecifier } from "../utils/getImportSpecifier";
 
 /**
  * ReactComponentFileWriter is a class for housing data
