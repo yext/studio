@@ -1,5 +1,9 @@
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getFixturePath, getLayoutPath } from "../__utils__/getFixturePath";
+import {
+  getComponentPath,
+  getFixturePath,
+  getLayoutPath,
+} from "../__utils__/getFixturePath";
 import {
   ComponentStateKind,
   FileMetadata,
@@ -86,10 +90,8 @@ describe("getLayoutState", () => {
 
   it("correctly parses CSS relative imports as absolute paths", () => {
     const result = getLayoutState("BasicLayout");
-    const expectedCssPath = getFixturePath("LayoutFile/index.css")
-    expect(result.value.cssImports).toEqual([
-      expectedCssPath,
-    ]);
+    const expectedCssPath = getFixturePath("LayoutFile/index.css");
+    expect(result.value.cssImports).toEqual([expectedCssPath]);
   });
 
   it("correctly gets filepath", () => {
