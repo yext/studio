@@ -47,7 +47,7 @@ function isStyleFile(id: string) {
 }
 
 function addQueryParameter(id: string, queryParameter: string) {
-  if (id.match(new RegExp(`.*?.*${queryParameter}`))) {
+  if (id.match(new RegExp(`.*\\?(.*&)?${queryParameter}`))) {
     return id;
   }
   const joinCharacter = id.includes("?") ? "&" : "?";
