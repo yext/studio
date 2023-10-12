@@ -1,4 +1,3 @@
-import upath from "upath";
 import { PluginOption } from "vite";
 /**
  * Adds the ?inline query parameter to all CSS imports
@@ -10,7 +9,7 @@ export default function createStudioStylingPlugin(): PluginOption {
   return {
     name: "yext-studio-style-plugin",
     enforce: "pre",
-    resolveId(id, importer) {
+    async resolveId(id, importer) {
       if (!importer) {
         return;
       }
@@ -18,13 +17,11 @@ export default function createStudioStylingPlugin(): PluginOption {
         return;
       }
       if (isStyleFile(id)) {
-        if (upath.isAbsolute(id)) {
-          return addQueryParameter(id, "inline");
+        const resolvedId = (await this.resolve(id, importer, {skipSelf: true}))?.id
+        if (resolvedId) {
+          return(addQueryParameter(resolvedId, "inline"))
         }
-        return upath.join(
-          upath.dirname(importer),
-          addQueryParameter(id, "inline")
-        );
+        throw new Error("Styling file could not be resolved by yext-studio-style-plugin")
       }
     },
   };
