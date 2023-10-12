@@ -37,7 +37,7 @@ function isImportedByStudio(id: string) {
 }
 
 function isStyleFile(id: string) {
-  return !!id.match(/.*\.s?css.*/);
+  return !!id.match(/.*\.css.*/);
 }
 
 function addQueryParameter(id: string, queryParameter: string) {
