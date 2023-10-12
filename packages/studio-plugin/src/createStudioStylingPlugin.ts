@@ -17,11 +17,15 @@ export default function createStudioStylingPlugin(): PluginOption {
         return;
       }
       if (isStyleFile(id)) {
-        const resolvedId = (await this.resolve(id, importer, {skipSelf: true}))?.id
+        const resolvedId = (
+          await this.resolve(id, importer, { skipSelf: true })
+        )?.id;
         if (resolvedId) {
-          return(addQueryParameter(resolvedId, "inline"))
+          return addQueryParameter(resolvedId, "inline");
         }
-        throw new Error("Styling file could not be resolved by yext-studio-style-plugin")
+        throw new Error(
+          "Styling file could not be resolved by yext-studio-style-plugin"
+        );
       }
     },
   };
