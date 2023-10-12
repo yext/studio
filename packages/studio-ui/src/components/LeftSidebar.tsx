@@ -14,7 +14,7 @@ import CollapsibleSidebar from "./CollapsibleSidebar";
 export default function LeftSidebar(): JSX.Element {
   return (
     <CollapsibleSidebar side="left">
-      <div className="flex flex-col">
+      <div className="flex flex-col grow px-4">
         <div className="flex flex-row font-bold py-4 pr-2 justify-between items-center">
           Pages
           <AddPageButton />

@@ -14,18 +14,18 @@ export default function CollapsibleSidebar({
     setOpen(!open);
   }, [open]);
 
-  const justifyButtonStyle = classNames({
-    "flex justify-start": side === "right",
-    "flex justify-end": side === "left",
+  const justifyButtonStyle = classNames("flex", {
+    "justify-start": side === "right",
+    "justify-end": side === "left",
   });
 
-  const sidebarStyle = classNames("flex flex-col px-4", {
+  const sidebarStyle = classNames("flex grow", {
     hidden: !open,
   });
 
   return (
     <div
-      className={classNames({
+      className={classNames("flex flex-col", {
         "w-1/4": open,
       })}
     >
