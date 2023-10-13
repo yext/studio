@@ -38,8 +38,10 @@ export default function createStudioStylingPlugin(): PluginOption {
 
 function isImportedByStudio(importer: string) {
   const unixImporter = upath.toUnix(importer);
-  return unixImporter.startsWith(packagesDir) || 
-    unixImporter.match(/.*\/node_modules\/@yext\/studio.*/);
+  return (
+    unixImporter.startsWith(packagesDir) ||
+    unixImporter.match(/.*\/node_modules\/@yext\/studio.*/)
+  );
 }
 
 function isStyleFile(id: string) {
