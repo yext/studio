@@ -45,7 +45,8 @@ function isImportedByStudio(importer: string) {
 }
 
 function isStyleFile(id: string) {
-  return !!id.match(/.*\.s?css.*/);
+  const idWithoutQueryParams = id.split("?")[0]
+  return !!idWithoutQueryParams.endsWith(".css");
 }
 
 function addQueryParameter(id: string, queryParameter: string) {
