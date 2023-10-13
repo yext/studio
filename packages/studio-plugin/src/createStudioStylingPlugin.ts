@@ -38,7 +38,7 @@ export default function createStudioStylingPlugin(): PluginOption {
 
 function isImportedByStudio(importer: string) {
   return !!(
-    importer.match(/.*@yext\/studio.*/) || importer.startsWith(packagesDir)
+    importer.match(/.*@yext[\\\\/]studio.*/) || importer.startsWith(packagesDir)
   );
 }
 
