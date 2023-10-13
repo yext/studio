@@ -37,8 +37,9 @@ export default function createStudioStylingPlugin(): PluginOption {
 }
 
 function isImportedByStudio(importer: string) {
+  const unixImporter = upath.toUnix(importer)
   return !!(
-    importer.match(/.*@yext[\\\\/]studio.*/) || importer.startsWith(packagesDir)
+    unixImporter.match(/.*\/node_modules\/@yext\/studio.*/) || importer.startsWith(packagesDir)
   );
 }
 
