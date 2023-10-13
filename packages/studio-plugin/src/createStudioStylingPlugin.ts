@@ -2,7 +2,7 @@ import { PluginOption } from "vite";
 import upath from "upath";
 import { fileURLToPath } from "url";
 const currentDir = upath.dirname(fileURLToPath(import.meta.url));
-const packagesDir = upath.resolve(currentDir, `..${upath.sep}..`)
+const packagesDir = upath.resolve(currentDir, `..${upath.sep}..`);
 
 /**
  * Adds the ?inline query parameter to all CSS imports
