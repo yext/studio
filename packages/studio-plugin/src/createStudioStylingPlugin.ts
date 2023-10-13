@@ -46,7 +46,10 @@ function isImportedByStudio(importer: string) {
 
 function isStyleFile(id: string) {
   const idWithoutQueryParams = id.split("?")[0];
-  return !!(idWithoutQueryParams.endsWith(".css") || idWithoutQueryParams.endsWith(".scss"));
+  return !!(
+    idWithoutQueryParams.endsWith(".css") ||
+    idWithoutQueryParams.endsWith(".scss")
+  );
 }
 
 function addQueryParameter(id: string, queryParameter: string) {
