@@ -30,8 +30,8 @@ export default defineConfig((args: ConfigEnv): UserConfig => {
     },
     plugins: [
       react(),
-      createStudioPlugin(args),
       createStudioStylingPlugin(),
+      createStudioPlugin(args),
       svgr() as PluginOption,
     ],
     css: {
