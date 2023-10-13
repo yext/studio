@@ -2,7 +2,7 @@ import { PluginOption } from "vite";
 import upath from "upath";
 import { fileURLToPath } from "url";
 const currentDir = upath.dirname(fileURLToPath(import.meta.url));
-const packagesDir = upath.resolve(currentDir, `..${upath.sep}..`);
+const packagesDir = upath.toUnix(upath.resolve(currentDir, `../..`));
 
 /**
  * Adds the ?inline query parameter to all CSS imports
@@ -40,7 +40,7 @@ function isImportedByStudio(importer: string) {
   const unixImporter = upath.toUnix(importer);
   return !!(
     unixImporter.match(/.*\/node_modules\/@yext\/studio.*/) ||
-    importer.startsWith(packagesDir)
+    unixImporter.startsWith(packagesDir)
   );
 }
 
