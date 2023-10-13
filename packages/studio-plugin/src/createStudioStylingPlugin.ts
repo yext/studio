@@ -38,10 +38,8 @@ export default function createStudioStylingPlugin(): PluginOption {
 
 function isImportedByStudio(importer: string) {
   const unixImporter = upath.toUnix(importer);
-  return !!(
-    unixImporter.match(/.*\/node_modules\/@yext\/studio.*/) ||
-    unixImporter.startsWith(packagesDir)
-  );
+  return unixImporter.startsWith(packagesDir) || 
+    unixImporter.match(/.*\/node_modules\/@yext\/studio.*/);
 }
 
 function isStyleFile(id: string) {
@@ -53,7 +51,7 @@ function isStyleFile(id: string) {
 }
 
 function addQueryParameter(id: string, queryParameter: string) {
-  if (id.match(new RegExp(`.*\\?(.*&)?${queryParameter}`))) {
+  if (id.match(new RegExp(`.*\\?(.*&)?${queryParameter}(&.*)?$`))) {
     return id;
   }
   const joinCharacter = id.includes("?") ? "&" : "?";
