@@ -38,9 +38,7 @@ export default function createStudioStylingPlugin(): PluginOption {
 
 function isImportedByStudio(importer: string) {
   const unixImporter = upath.toUnix(importer);
-  return !!(
-    unixImporter.match(new RegExp(`${studioPackagesDir}/studio(-.*)?`))
-    );
+  return !!unixImporter.match(new RegExp(`${studioPackagesDir}/studio(-.*)?`));
 }
 
 function isStyleFile(id: string) {
