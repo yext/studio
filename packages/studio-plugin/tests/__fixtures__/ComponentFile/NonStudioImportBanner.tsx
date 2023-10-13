@@ -1,4 +1,4 @@
-import { HexColor } from "@yext/studio-plugin";
+import { HexColor } from "../StudioSourceFileParser/exportedTypes";
 
 export interface NonStudioImportBannerProps {
   bgColor: HexColor;
