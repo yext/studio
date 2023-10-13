@@ -14,13 +14,7 @@ import {
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
  */
 export default class PropShapeParser {
-  private studioImports: string[];
-
-  constructor(private studioSourceFileParser: StudioSourceFileParser) {
-    this.studioImports =
-      this.studioSourceFileParser.parseNamedImports()[STUDIO_PACKAGE_NAME] ??
-      [];
-  }
+  constructor(private studioSourceFileParser: StudioSourceFileParser) {}
 
   /**
    * Get the PropShape of a specific type or interface.
@@ -76,6 +70,17 @@ export default class PropShapeParser {
   ): PropType {
     const { kind, type, unionValues } = parsedType;
 
+    if (kind === ParsedTypeKind.StringLiteral) {
+      return {
+        type: PropValueType.string,
+        unionValues: [type],
+      };
+    }
+    if (kind === ParsedTypeKind.Studio) {
+      return {
+        type,
+      };
+    }
     if (kind === ParsedTypeKind.Array) {
       const itemType = this.getPropType(type, identifier, onProp);
       return {
@@ -88,6 +93,10 @@ export default class PropShapeParser {
         type: PropValueType.Object,
         shape: nestedShape,
       };
+    } else if (TypeGuards.isStudioPropValueType(type)) {
+      throw new Error(
+        `Prop type ${type} is invalid because it is not imported from ${STUDIO_PACKAGE_NAME}`
+      );
     } else if (type === "Record<string, any>") {
       return {
         type: PropValueType.Record,
@@ -95,21 +104,13 @@ export default class PropShapeParser {
         recordValue: "any",
       };
     } else if (
-      !TypeGuards.isPropValueType(type) ||
-      type === PropValueType.Object ||
-      type === PropValueType.Array
+      type === PropValueType.Record ||
+      type.startsWith(PropValueType.Record + "<")
     ) {
+      throw new Error("Only Records of Record<string, any> are supported.");
+    } else if (!TypeGuards.isPrimitiveProp(type)) {
       throw new Error(
         `Unrecognized type ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}`
-      );
-    } else if (type === PropValueType.Record) {
-      throw new Error("Only Records of Record<string, any> are supported.");
-    } else if (
-      !TypeGuards.isPrimitiveProp(type) &&
-      !this.studioImports.includes(type)
-    ) {
-      throw new Error(
-        `Missing import from ${STUDIO_PACKAGE_NAME} for ${type} in ${identifier} within ${this.studioSourceFileParser.getFilename()}.`
       );
     } else if (unionValues) {
       return {

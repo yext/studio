@@ -11,14 +11,17 @@ import {
 } from "ts-morph";
 import { PropValueType } from "../../types";
 import StaticParsingHelpers from "./StaticParsingHelpers";
-import { TypeGuards } from "../../utils";
+import TypeGuards, { StudioPropValueType } from "../../utils/TypeGuards";
 import StringUnionParsingHelper from "./StringUnionParsingHelper";
+import { ParsedImport } from "../StudioSourceFileParser";
+import { STUDIO_PACKAGE_NAME } from "../../constants";
 
 export type ParsedType =
   | SimpleParsedType
   | ObjectParsedType
   | StringLiteralType
-  | ArrayParsedType;
+  | ArrayParsedType
+  | StudioParsedType;
 
 export type SimpleParsedType = {
   kind: ParsedTypeKind.Simple;
@@ -44,6 +47,12 @@ type ArrayParsedType = {
   unionValues?: never;
 };
 
+type StudioParsedType = {
+  kind: ParsedTypeKind.Studio;
+  type: StudioPropValueType;
+  unionValues?: never;
+};
+
 export type ParsedShape = { [key: string]: ParsedProperty };
 
 export type ParsedProperty = ParsedType & {
@@ -57,6 +66,7 @@ export enum ParsedTypeKind {
   Object = "object",
   StringLiteral = "stringLiteral",
   Array = "array",
+  Studio = "studio",
 }
 
 export enum CustomTags {
@@ -229,7 +239,10 @@ export default class TypeNodeParsingHelper {
     type: string,
     parseTypeReference: (identifier: string) => ParsedType | undefined
   ): ParsedType {
-    if (!TypeGuards.isPropValueType(type)) {
+    if (
+      !TypeGuards.isPropValueType(type) ||
+      TypeGuards.isStudioPropValueType(type)
+    ) {
       const externalParsedType = parseTypeReference(type);
       if (externalParsedType) {
         return externalParsedType;
@@ -255,6 +268,23 @@ export default class TypeNodeParsingHelper {
       if (tag.getTagName() === customTag && commentText) {
         return commentText;
       }
+    }
+  }
+
+  static parseStudioType({
+    importName,
+    importSource,
+    isDefault,
+  }: ParsedImport): StudioParsedType | undefined {
+    if (
+      !isDefault &&
+      TypeGuards.isStudioPropValueType(importName) &&
+      importSource === STUDIO_PACKAGE_NAME
+    ) {
+      return {
+        kind: ParsedTypeKind.Studio,
+        type: importName,
+      };
     }
   }
 }

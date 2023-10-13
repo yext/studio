@@ -37,10 +37,15 @@ import {
 import TypeGuards from "../../utils/TypeGuards";
 import TsMorphHelpers from "./TsMorphHelpers";
 
-export type ParsedImport = {
+type ParsedImportSource = {
   source: string;
   defaultImport?: string;
-  namedImports: string[];
+  namedImports: NamedImport[];
+};
+
+export type NamedImport = {
+  name: string;
+  alias?: string;
 };
 
 /**
@@ -180,7 +185,7 @@ export default class StaticParsingHelpers {
     return parsedValues;
   }
 
-  static parseImport(importDeclaration: ImportDeclaration): ParsedImport {
+  static parseImport(importDeclaration: ImportDeclaration): ParsedImportSource {
     const source: string = importDeclaration.getModuleSpecifierValue();
     const importClause = importDeclaration.getImportClause();
     //  Ignore imports like `import 'index.css'` which lack an import clause
@@ -193,9 +198,12 @@ export default class StaticParsingHelpers {
     const defaultImport: string | undefined = importClause
       .getDefaultImport()
       ?.getText();
-    const namedImports: string[] = importClause
+    const namedImports: NamedImport[] = importClause
       .getNamedImports()
-      .map((n) => n.getName());
+      .map((n) => ({
+        name: n.getName(),
+        alias: n.getAliasNode()?.getText(),
+      }));
     return {
       source,
       namedImports,

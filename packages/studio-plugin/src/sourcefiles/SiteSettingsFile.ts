@@ -26,6 +26,7 @@ export default class SiteSettingsFile {
   }
 
   getSiteSettings(): SiteSettings {
+    this.studioSourceFileParser.checkForMissingImports();
     const siteSettingsShape: PropShape =
       this.propShapeParser.parseShape("SiteSettings");
     const values = this.propValuesParser.parsePropValues(siteSettingsShape);

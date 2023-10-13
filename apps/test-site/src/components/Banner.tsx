@@ -1,5 +1,5 @@
 import { HexColor, TailwindClass } from "@yext/studio";
-import { NestedProp } from "../types/exportedTypes";
+import { NestedProp as ObjectProp } from "../types/exportedTypes";
 
 export interface BannerData {
   /**
@@ -10,7 +10,7 @@ export interface BannerData {
   num?: number;
   bool?: boolean;
   bgColor?: HexColor;
-  obj?: NestedProp;
+  obj?: ObjectProp;
   /**
    * @tooltip Start and End are required for each interval.
    * @displayName Intervals

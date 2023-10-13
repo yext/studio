@@ -165,11 +165,37 @@ describe("parseShape", () => {
     });
   });
 
-  it("does not handle importing a type under an alias", () => {
+  it("can parse a type imported under an alias", () => {
     const parser = createParser(
-      `import { TitleType as MyProps } from "../__fixtures__/ComponentFile/BannerUsingTypeForProps";`
+      `import { TitleType as MyProps } from "../__fixtures__/StudioSourceFileParser/exportedTypes.ts";`
     );
-    expect(parser.parseTypeReference("MyProps")?.type).toBeUndefined();
+    expect(parser.parseTypeReference("MyProps")?.type).toEqual({
+      title: {
+        kind: ParsedTypeKind.Simple,
+        required: false,
+        type: "string",
+      },
+    });
+  });
+
+  it("can parse a Studio type imported under an alias", () => {
+    const parser = createParser(
+      `import { HexColor as MyColor } from "@yext/studio";`
+    );
+    expect(parser.parseTypeReference("MyColor")).toEqual({
+      kind: ParsedTypeKind.Studio,
+      type: "HexColor",
+    });
+  });
+
+  it("can parse a Studio type imported from another file under an alias", () => {
+    const parser = createParser(
+      `import { Color as MyColor } from "../__fixtures__/StudioSourceFileParser/exportedTypes.ts";`
+    );
+    expect(parser.parseTypeReference("MyColor")).toEqual({
+      kind: ParsedTypeKind.Studio,
+      type: "HexColor",
+    });
   });
 
   it("can parse an interface with the same name as an import before aliasing", () => {
@@ -413,12 +439,17 @@ function createParser(sourceCode: string) {
 }
 
 describe("parseNamedImports", () => {
-  it("does not support aliased imports", () => {
+  it("supports aliased imports", () => {
     const parser = createParser(
       `import { TheirType as MyAlias } from "aPackage";`
     );
     expect(parser.parseNamedImports()).toEqual({
-      aPackage: ["TheirType"],
+      aPackage: [
+        {
+          name: "TheirType",
+          alias: "MyAlias",
+        },
+      ],
     });
   });
 });
