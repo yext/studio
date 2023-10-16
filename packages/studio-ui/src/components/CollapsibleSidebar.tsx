@@ -9,32 +9,34 @@ export default function CollapsibleSidebar({
   side,
   children,
 }: PropsWithChildren<CollapsibleSidebarProps>): JSX.Element {
-  const [open, setOpen] = useState(true);
-  const toggleOpen = useCallback(() => {
-    setOpen(!open);
-  }, [open]);
+  const [isOpen, setIsOpen] = useState(true);
+  const toggleIsOpen = useCallback(() => {
+    setIsOpen(isOpen => !isOpen)
+  }, []);
 
+  const sidebarStyle = classNames("flex flex-col", {
+    "w-1/4": isOpen,
+  })
+  
   const justifyButtonStyle = classNames("flex", {
     "justify-start": side === "right",
     "justify-end": side === "left",
   });
 
-  const sidebarStyle = classNames("flex flex-col grow", {
-    hidden: !open,
+  const childrenStyle = classNames("flex flex-col grow", {
+    hidden: !isOpen,
   });
 
   return (
     <div
-      className={classNames("flex flex-col", {
-        "w-1/4": open,
-      })}
+      className={sidebarStyle}
     >
       <div className={justifyButtonStyle}>
-        <button onClick={toggleOpen} aria-label={`Collapse ${side} sidebar`}>
+        <button onClick={toggleIsOpen} aria-label={`Collapse ${side} sidebar`}>
           <Hamburger className="h-5 m-2" />
         </button>
       </div>
-      <div className={sidebarStyle}>{children}</div>
+      <div className={childrenStyle}>{children}</div>
     </div>
   );
 }
