@@ -11,13 +11,13 @@ export default function CollapsibleSidebar({
 }: PropsWithChildren<CollapsibleSidebarProps>): JSX.Element {
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = useCallback(() => {
-    setIsOpen(isOpen => !isOpen)
+    setIsOpen((isOpen) => !isOpen);
   }, []);
 
   const sidebarStyle = classNames("flex flex-col", {
     "w-1/4": isOpen,
-  })
-  
+  });
+
   const justifyButtonStyle = classNames("flex", {
     "justify-start": side === "right",
     "justify-end": side === "left",
@@ -28,9 +28,7 @@ export default function CollapsibleSidebar({
   });
 
   return (
-    <div
-      className={sidebarStyle}
-    >
+    <div className={sidebarStyle}>
       <div className={justifyButtonStyle}>
         <button onClick={toggleIsOpen} aria-label={`Collapse ${side} sidebar`}>
           <Hamburger className="h-5 m-2" />
