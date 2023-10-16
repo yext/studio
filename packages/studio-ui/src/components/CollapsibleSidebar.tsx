@@ -11,7 +11,8 @@ export default function CollapsibleSidebar({
 }: PropsWithChildren<CollapsibleSidebarProps>): JSX.Element {
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = useCallback(() => setIsOpen((isOpen) => !isOpen), []);
-  const arrowRight = (side === "right" && isOpen) || (side === "left" && !isOpen)
+  const arrowRight =
+    (side === "right" && isOpen) || (side === "left" && !isOpen);
   const containerStyle = classNames("flex flex-row", {
     "w-1/4": isOpen,
   });
@@ -21,13 +22,13 @@ export default function CollapsibleSidebar({
   });
 
   const arrowStyle = classNames("h-3 m-0.5", {
-    "rotate-180": arrowRight
-  })
+    "rotate-180": arrowRight,
+  });
 
   const arrowMarginStyle = classNames("flex bg-gray-200 border-2", {
-    "hover:border-l-blue-700": !arrowRight , 
-    "hover:border-r-blue-700": arrowRight
-  })
+    "hover:border-l-blue-700": !arrowRight,
+    "hover:border-r-blue-700": arrowRight,
+  });
 
   const renderCollapseButton = useCallback(() => {
     return (
@@ -39,8 +40,8 @@ export default function CollapsibleSidebar({
           <Arrow className={arrowStyle} />
         </button>
       </div>
-    )
-  }, [arrowMarginStyle, arrowStyle, side, toggleIsOpen])
+    );
+  }, [arrowMarginStyle, arrowStyle, side, toggleIsOpen]);
 
   return (
     <div className={containerStyle}>
