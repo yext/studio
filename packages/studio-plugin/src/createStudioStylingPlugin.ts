@@ -2,7 +2,7 @@ import { PluginOption } from "vite";
 
 /**
  * Adds the ?inline query parameter to all CSS imports
- * unless they are CSS from Studio. This prevents user 
+ * unless they are CSS from Studio. This prevents user
  * styling from affecting Studio UI.
  */
 export default function createStudioStylingPlugin(): PluginOption {
