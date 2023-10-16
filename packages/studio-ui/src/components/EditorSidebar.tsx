@@ -26,7 +26,7 @@ export default function EditorSidebar(): JSX.Element {
   const [selectedTab, setTab] = useState<Tab>(Tab.Props);
 
   return (
-    <CollapsibleSidebar side="right" >
+    <CollapsibleSidebar side="right">
       <div className="flex flex-col grow px-4" data-testid="EditorSidebar">
         <OptionPicker
           options={Tab}
