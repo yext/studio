@@ -6,6 +6,7 @@ import {
   UserConfig,
 } from "vite";
 import createStudioPlugin from "@yext/studio-plugin/src/createStudioPlugin";
+import createStudioStylingPlugin from "@yext/studio-plugin/src/createStudioStylingPlugin";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 
@@ -27,7 +28,12 @@ export default defineConfig((args: ConfigEnv): UserConfig => {
         input: ["index.html", "src/store/useStudioStore.ts"],
       },
     },
-    plugins: [react(), createStudioPlugin(args), svgr() as PluginOption],
+    plugins: [
+      react(),
+      createStudioStylingPlugin(),
+      createStudioPlugin(args),
+      svgr() as PluginOption,
+    ],
     css: {
       postcss: __dirname,
     },
