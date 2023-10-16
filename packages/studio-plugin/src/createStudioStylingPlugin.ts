@@ -1,8 +1,4 @@
 import { PluginOption } from "vite";
-import upath from "upath";
-import { fileURLToPath } from "url";
-const currentDir = upath.dirname(fileURLToPath(import.meta.url));
-const studioPackagesDir = upath.resolve(currentDir, "../..");
 
 /**
  * Adds the ?inline query parameter to all CSS imports
@@ -18,7 +14,7 @@ export default function createStudioStylingPlugin(): PluginOption {
       if (!importer) {
         return;
       }
-      if (isImportedByStudio(importer)) {
+      if (isImportedByStudio(id)) {
         return;
       }
       if (isStyleFile(id)) {
@@ -36,9 +32,8 @@ export default function createStudioStylingPlugin(): PluginOption {
   };
 }
 
-function isImportedByStudio(importer: string) {
-  const unixImporter = upath.toUnix(importer);
-  return !!unixImporter.match(new RegExp(`${studioPackagesDir}/studio(-.*)?`));
+function isImportedByStudio(id: string) {
+  return includesQueryParameter(id, "studioStyling")
 }
 
 function isStyleFile(id: string) {
@@ -50,9 +45,13 @@ function isStyleFile(id: string) {
 }
 
 function addQueryParameter(id: string, queryParameter: string) {
-  if (id.match(new RegExp(`.*\\?(.*&)?${queryParameter}(&.*)?$`))) {
+  if (includesQueryParameter(id, queryParameter)) {
     return id;
   }
   const joinCharacter = id.includes("?") ? "&" : "?";
   return `${id}${joinCharacter}${queryParameter}`;
+}
+
+function includesQueryParameter(id: string, queryParam: string) {
+  return !!id.match(new RegExp(`.*\\?(.*&)?${queryParam}(&.*)?$`))
 }
