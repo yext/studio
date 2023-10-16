@@ -36,7 +36,7 @@ export default function createStudioStylingPlugin(): PluginOption {
 }
 
 function isImportedByStudio(id: string) {
-  return includesQueryParameter(id, "studioStyling")
+  return includesQueryParameter(id, "studioStyling");
 }
 
 function isStyleFile(id: string) {
@@ -56,5 +56,5 @@ function addQueryParameter(id: string, queryParameter: string) {
 }
 
 function includesQueryParameter(id: string, queryParam: string) {
-  return !!id.match(new RegExp(`.*\\?(.*&)?${queryParam}(&.*)?$`))
+  return !!id.match(new RegExp(`.*\\?(.*&)?${queryParam}(&.*)?$`));
 }
