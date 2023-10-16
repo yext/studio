@@ -24,7 +24,8 @@ export default function createStudioStylingPlugin(): PluginOption {
           return addQueryParameter(resolvedId, "inline");
         }
         throw new Error(
-          `Styling file ${id} could not be resolved by yext-studio-style-plugin. File was imported by ${importer}.`
+          `Styling file ${id} could not be resolved by yext-studio-style-plugin. ` + 
+          `File was imported by ${importer}.`
         );
       }
     },
