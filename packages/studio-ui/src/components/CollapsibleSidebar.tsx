@@ -28,11 +28,12 @@ export default function CollapsibleSidebar({
   return (
     <div className={containerStyle}>
       <div className={justifyButtonStyle}>
-        <button onClick={toggleIsOpen} aria-label={
-          isOpen 
-          ? `Collapse ${side} sidebar`
-          : `Expand ${side} sidebar`}
-          >
+        <button
+          onClick={toggleIsOpen}
+          aria-label={
+            isOpen ? `Collapse ${side} sidebar` : `Expand ${side} sidebar`
+          }
+        >
           <Hamburger className="h-5 m-2" />
         </button>
       </div>
