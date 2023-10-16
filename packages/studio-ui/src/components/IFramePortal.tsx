@@ -22,11 +22,11 @@ export default function IFramePortal(
   const previewRef = useRef<HTMLDivElement>(null);
   const iframeDocument = props.iframeEl?.contentWindow?.document;
   const [viewport] = useStudioStore((store) => [store.pagePreview.viewport]);
-  useParentDocumentStyles(iframeDocument);
+  useInjectUserStyles(iframeDocument);
   const iframeCSS = twMerge(
     "mr-auto ml-auto",
     viewport.css,
-    useCSS(viewport, previewRef)
+    useViewportOption(viewport, previewRef)
   );
 
   return (
@@ -42,21 +42,58 @@ export default function IFramePortal(
   );
 }
 
-function useParentDocumentStyles(iframeDocument: Document | undefined) {
+function useInjectUserStyles(iframeDocument: Document | undefined) {
+  const [
+    componentTree,
+    getComponentMetadata,
+    activePage,
+    UUIDToFileMetadata,
+    pageCss,
+  ] = useStudioStore((store) => [
+    store.actions.getComponentTree(),
+    store.actions.getComponentMetadata,
+    store.pages.activePageName,
+    store.fileMetadatas.UUIDToFileMetadata,
+    store.pages.getActivePageState()?.cssImports,
+  ]);
   useEffect(() => {
-    if (iframeDocument) {
-      const inlineStyles = document.head.getElementsByTagName("style");
-      const stylesheets = document.head.querySelectorAll(
-        'link[rel="stylesheet"]'
-      );
-      for (const el of [...inlineStyles, ...stylesheets]) {
-        iframeDocument.head.appendChild(el.cloneNode(true));
-      }
+    if (!iframeDocument) {
+      return;
     }
-  }, [iframeDocument]);
+    componentTree?.forEach((component) => {
+      const cssImports = getComponentMetadata(component)?.cssImports;
+      cssImports?.forEach((cssFilepath) => {
+        injectStyleIntoIframe(iframeDocument, cssFilepath);
+      });
+    });
+    pageCss?.forEach((cssFilepath) => {
+        injectStyleIntoIframe(iframeDocument, cssFilepath);
+    });
+
+    return () => {
+      clearStylingFromIframe(iframeDocument);
+    };
+  }, [componentTree, getComponentMetadata, iframeDocument, pageCss, activePage, UUIDToFileMetadata]);
 }
 
-const useCSS = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
+function clearStylingFromIframe(iframeDocument: Document) {
+  const styleElements = Array.from(
+    iframeDocument.head.getElementsByTagName("style")
+  );
+  for (const el of styleElements) {
+    el.remove();
+  }
+}
+
+function injectStyleIntoIframe(iframeDocument: Document | undefined, filepath: string) {
+  const originalStyletag = document.querySelector(`[studio-style-filepath='${filepath}']`)
+  if (originalStyletag && iframeDocument) {
+    const iframeStyletag = originalStyletag.cloneNode(true)
+    iframeDocument.head.appendChild(iframeStyletag)
+  }
+}
+
+const useViewportOption = (viewport: Viewport, previewRef: RefObject<HTMLDivElement>) => {
   const [css, setCss] = useState(
     (viewport.styles?.width ?? 0) * (previewRef.current?.clientHeight ?? 0) >
       (viewport.styles?.height ?? 0) * (previewRef.current?.clientWidth ?? 0)
