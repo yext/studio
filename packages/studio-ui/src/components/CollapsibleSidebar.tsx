@@ -21,7 +21,7 @@ export default function CollapsibleSidebar({
     "justify-end": side === "left",
   });
 
-  const sidebarStyle = classNames("flex flex-col grow", {
+  const childrenStyle = classNames("flex flex-col grow", {
     hidden: !isOpen,
   });
 
@@ -37,7 +37,7 @@ export default function CollapsibleSidebar({
           <Hamburger className="h-5 m-2" />
         </button>
       </div>
-      <div className={sidebarStyle}>{children}</div>
+      <div className={childrenStyle}>{children}</div>
     </div>
   );
 }
