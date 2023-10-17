@@ -28,41 +28,35 @@ export function loadComponents(): Promise<void>[] {
 }
 
 /**
- * Load all user styling as disabled style tags in Studio's iframe.
+ * Load all user styling as disabled style tags in Studio's head.
  */
 export function loadStyling() {
-  const studioStore = useStudioStore.getState()
-  const UUIDToFileMetadata = studioStore.fileMetadatas.UUIDToFileMetadata
-  const pages = studioStore.pages.pages
+  const studioStore = useStudioStore.getState();
+  const UUIDToFileMetadata = studioStore.fileMetadatas.UUIDToFileMetadata;
+  const pages = studioStore.pages.pages;
 
-  Object.values(UUIDToFileMetadata).forEach(
-    (fileMetadata) => {
-      if (fileMetadata.kind === FileMetadataKind.Component) {
-        importAndInjectIntoStudio(fileMetadata.cssImports);
-      }
+  Object.values(UUIDToFileMetadata).forEach((fileMetadata) => {
+    if (fileMetadata.kind === FileMetadataKind.Component) {
+      importAndInjectIntoStudio(fileMetadata.cssImports);
     }
-  );
+  });
 
-  Object.values(pages).forEach(
-    (page) => {
-      importAndInjectIntoStudio(page.cssImports);
-    }
-  );
+  Object.values(pages).forEach((page) => {
+    importAndInjectIntoStudio(page.cssImports);
+  });
 }
 
 function importAndInjectIntoStudio(cssImports: string[]) {
   cssImports.forEach(async (filepath) => {
-    await dynamicImportFromBrowser(
-      filepath
-    ).then((styling) => {
-      if (document.querySelector(`[studio-style-filepath='${filepath}']`)){
-        return
+    await dynamicImportFromBrowser(filepath).then((styling) => {
+      if (document.querySelector(`[studio-style-filepath='${filepath}']`)) {
+        return;
       }
-      const styleEl = document.createElement("style")
+      const styleEl = document.createElement("style");
       styleEl.innerText = styling.default;
-      styleEl.setAttribute("studio-style-filepath", filepath)
-      document.head.appendChild(styleEl)
+      styleEl.setAttribute("studio-style-filepath", filepath);
+      document.head.appendChild(styleEl);
       styleEl.disabled = true;
     });
-  })
+  });
 }

@@ -2,7 +2,7 @@ import LoadingOverlay from "./components/LoadingOverlay";
 import { Suspense, lazy, useEffect, useState } from "react";
 import useStudioStore from "./store/useStudioStore";
 import ProgressBar from "./components/ProgressBar";
-import { loadComponents, loadStyling } from "./utils/preloadStudio";
+import { loadComponents, loadStyling } from "./utils/loadUserAssets";
 import classNames from "classnames";
 
 const AppPromise = import("./App");
