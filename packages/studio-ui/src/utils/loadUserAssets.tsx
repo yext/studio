@@ -42,7 +42,6 @@ export function loadStyling() {
   }
 
   for (const page of Object.values(pages)) {
-    console.log(page.cssImports);
     importAndInjectIntoStudio(page.cssImports);
   }
 }
