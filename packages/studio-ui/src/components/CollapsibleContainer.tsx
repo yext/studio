@@ -2,17 +2,18 @@ import classNames from "classnames";
 import { PropsWithChildren, useCallback, useState } from "react";
 import { ReactComponent as Arrow } from "../icons/chevron-left.svg";
 
-interface CollapsibleSidebarProps {
-  side: "right" | "left";
+interface CollapsibleContainerProps {
+  collapseDirection: "right" | "left";
 }
-export default function CollapsibleSidebar({
-  side,
+
+export default function CollapsibleContainer({
+  collapseDirection,
   children,
-}: PropsWithChildren<CollapsibleSidebarProps>): JSX.Element {
+}: PropsWithChildren<CollapsibleContainerProps>): JSX.Element {
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = useCallback(() => setIsOpen((isOpen) => !isOpen), []);
   const arrowRight =
-    (side === "right" && isOpen) || (side === "left" && !isOpen);
+    (collapseDirection === "right" && isOpen) || (collapseDirection === "left" && !isOpen);
   const containerStyle = classNames("flex", {
     "w-1/4": isOpen,
   });
@@ -35,19 +36,19 @@ export default function CollapsibleSidebar({
       <div className={arrowMarginStyle}>
         <button
           onClick={toggleIsOpen}
-          aria-label={`Collapse/Expand ${side} sidebar`}
+          aria-label={`Collapse/Expand ${collapseDirection} sidebar`}
         >
           <Arrow className={arrowStyle} />
         </button>
       </div>
     );
-  }, [arrowMarginStyle, arrowStyle, side, toggleIsOpen]);
+  }, [arrowMarginStyle, arrowStyle, collapseDirection, toggleIsOpen]);
 
   return (
     <div className={containerStyle}>
-      {side === "right" && renderCollapseButton()}
+      {collapseDirection === "right" && renderCollapseButton()}
       <div className={childrenStyle}>{children}</div>
-      {side === "left" && renderCollapseButton()}
+      {collapseDirection === "left" && renderCollapseButton()}
     </div>
   );
 }
