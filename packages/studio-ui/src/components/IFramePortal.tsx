@@ -90,10 +90,7 @@ function clearStylingFromIframe(iframeDocument: Document) {
   });
 }
 
-function injectStyleIntoIframe(
-  iframeDocument: Document,
-  filepath: string
-) {
+function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   const originalStyletag = document.querySelector(
     `[studio-style-filepath='${filepath}']`
   );
