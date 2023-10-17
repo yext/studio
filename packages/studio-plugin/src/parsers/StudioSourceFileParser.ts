@@ -255,7 +255,7 @@ export default class StudioSourceFileParser {
       return;
     }
     const studioType = TypeNodeParsingHelper.parseStudioType(importData);
-    return studioType ? studioType : this.parseImportedShape(importData);
+    return studioType ?? this.parseImportedShape(importData);
   };
 
   /**
