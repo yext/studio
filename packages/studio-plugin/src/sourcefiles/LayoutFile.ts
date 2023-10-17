@@ -25,6 +25,7 @@ export default class LayoutFile {
 
   private _getLayoutState = (): LayoutState => {
     this.studioSourceFileParser.checkForSyntaxErrors();
+    this.studioSourceFileParser.checkForMissingImports();
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
     });

@@ -1,5 +1,5 @@
 export interface MissingImportBannerProps {
-  bgColor: HexColor;
+  bgColor: Color;
 }
 
 export default function MissingImportBanner(props: MissingImportBannerProps) {

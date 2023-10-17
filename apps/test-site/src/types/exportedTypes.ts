@@ -1,10 +1,10 @@
-import { HexColor } from "@yext/studio";
+import { HexColor as Color } from "@yext/studio";
 
 export interface NestedProp {
   nestedString?: string;
   nestedBool?: boolean;
   nestedObj?: {
     nestedNum?: number;
-    nestedColor?: HexColor;
+    nestedColor?: Color;
   };
 }

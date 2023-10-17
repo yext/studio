@@ -23,6 +23,10 @@ type PrimitivePropValueType =
   | PropValueType.string
   | PropValueType.boolean;
 
+export type StudioPropValueType =
+  | PropValueType.HexColor
+  | PropValueType.TailwindClass;
+
 /**
  * A static class for housing various typeguards used by Studio.
  */
@@ -124,6 +128,12 @@ export default class TypeGuards {
       PropValueType.string,
       PropValueType.number,
     ].includes(propValueType as PropValueType);
+  }
+
+  static isStudioPropValueType(type: string): type is StudioPropValueType {
+    return (
+      type === PropValueType.HexColor || type === PropValueType.TailwindClass
+    );
   }
 
   static isPropValueType(type: string): type is PropValueType {

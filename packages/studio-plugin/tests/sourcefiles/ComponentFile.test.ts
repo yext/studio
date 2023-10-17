@@ -156,11 +156,54 @@ describe("getComponentMetadata", () => {
     expect(result.value).toEqual(expectedComponentMetadata);
   });
 
-  it("Throws an Error when an import for HexColor is missing", () => {
+  it("correctly parses a string literal type", () => {
+    const pathToComponent = getComponentPath("StringLiteralBanner");
+    const componentFile = new ComponentFile(pathToComponent, project);
+    const result = componentFile.getComponentMetadata();
+    assertIsOk(result);
+    expect(result.value.propShape).toEqual({
+      title: {
+        type: "string",
+        unionValues: ["number"],
+        required: false,
+      },
+    });
+  });
+
+  it("can parse a type that shares the same name as a Studio type", () => {
+    const pathToComponent = getComponentPath("StudioTypeNameBanner");
+    const componentFile = new ComponentFile(pathToComponent, project);
+    const result = componentFile.getComponentMetadata();
+    assertIsOk(result);
+    expect(result.value.propShape).toEqual({
+      bgColor: {
+        type: "string",
+        required: true,
+      },
+    });
+  });
+
+  it("Throws an Error if HexColor is not imported from Studio", () => {
+    const pathToComponent = getComponentPath("NonStudioImportBanner");
+    const componentFile = new ComponentFile(pathToComponent, project);
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
+      "Prop type HexColor is invalid because it is not imported from @yext/studio"
+    );
+  });
+
+  it("Throws an Error if imported prop interface is missing HexColor import", () => {
+    const pathToComponent = getComponentPath("MissingExternalImportBanner");
+    const componentFile = new ComponentFile(pathToComponent, project);
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
+      "Prop type HexColor is invalid because it is not imported from @yext/studio"
+    );
+  });
+
+  it("Throws an Error when an import is missing", () => {
     const pathToComponent = getComponentPath("MissingImportBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
     expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
-      /^Missing import from/
+      /^Missing import statement\(s\) in MissingImportBanner.tsx/
     );
   });
 
