@@ -13,7 +13,8 @@ export default function CollapsibleContainer({
   const [isOpen, setIsOpen] = useState(true);
   const toggleIsOpen = useCallback(() => setIsOpen((isOpen) => !isOpen), []);
   const arrowRight =
-    (collapseDirection === "right" && isOpen) || (collapseDirection === "left" && !isOpen);
+    (collapseDirection === "right" && isOpen) ||
+    (collapseDirection === "left" && !isOpen);
   const containerStyle = classNames("flex", {
     "w-1/4": isOpen,
   });
