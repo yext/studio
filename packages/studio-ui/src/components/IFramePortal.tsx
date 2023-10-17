@@ -24,13 +24,13 @@ export default function IFramePortal(
   const [viewport] = useStudioStore((store) => [store.pagePreview.viewport]);
   useParentDocumentStyles(iframeDocument);
   const iframeCSS = twMerge(
-    "mr-auto ml-auto border-2",
+    "mr-auto ml-auto",
     viewport.css,
     useCSS(viewport, previewRef)
   );
 
   return (
-    <div ref={previewRef} className="grow w-1/3 bg-white border-8 shadow">
+    <div ref={previewRef} className="grow w-1/3 bg-white border-y-8">
       <iframe
         id="iframe"
         title={props.title}
