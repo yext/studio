@@ -1,7 +1,7 @@
 import { RefObject, useEffect, useState } from "react";
 import { Viewport } from "../components/Viewport/defaults";
 
-export default function useViewportOption (
+export default function useViewportOption(
   viewport: Viewport,
   previewRef: RefObject<HTMLDivElement>
 ) {
@@ -31,4 +31,4 @@ export default function useViewportOption (
   });
 
   return css;
-};
+}

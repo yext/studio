@@ -1,7 +1,9 @@
 import { useEffect } from "react";
 import useStudioStore from "../store/useStudioStore";
 
-export default function useInjectUserStyles(iframeDocument: Document | undefined) {
+export default function useInjectUserStyles(
+  iframeDocument: Document | undefined
+) {
   const [
     componentTree,
     getComponentMetadata,
@@ -49,10 +51,7 @@ function clearStylingFromIframe(iframeDocument: Document) {
   });
 }
 
-function injectStyleIntoIframe(
-  iframeDocument: Document,
-  filepath: string
-) {
+function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   const originalStyletag = document.querySelector(
     `[studio-style-filepath='${filepath}']`
   );
