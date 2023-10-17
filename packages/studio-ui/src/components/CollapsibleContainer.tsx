@@ -19,7 +19,7 @@ export default function CollapsibleContainer({
     "w-1/4": isOpen,
   });
 
-  const childrenStyle = classNames("flex flex-col grow", {
+  const contentStyle = classNames("flex flex-col grow", {
     hidden: !isOpen,
   });
 
@@ -48,7 +48,7 @@ export default function CollapsibleContainer({
   return (
     <div className={containerStyle}>
       {collapseDirection === "right" && renderCollapseButton()}
-      <div className={childrenStyle}>{children}</div>
+      <div className={contentStyle}>{children}</div>
       {collapseDirection === "left" && renderCollapseButton()}
     </div>
   );
