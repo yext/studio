@@ -15,6 +15,7 @@ import TypeGuards, { StudioPropValueType } from "../../utils/TypeGuards";
 import StringUnionParsingHelper from "./StringUnionParsingHelper";
 import { ParsedImport } from "../StudioSourceFileParser";
 import { STUDIO_PACKAGE_NAME } from "../../constants";
+import UtilityTypeParsingHelper from "./UtilityTypeParsingHelper";
 
 export type ParsedType =
   | SimpleParsedType
@@ -111,6 +112,16 @@ export default class TypeNodeParsingHelper {
     name: string,
     parseTypeReference: (identifier: string) => ParsedType | undefined
   ): ParsedType {
+    if (typeNode.isKind(SyntaxKind.TypeReference)) {
+      const parsedUtilityType = UtilityTypeParsingHelper.parseUtilityType(
+        typeNode,
+        (node: TypeNode) => this.parseTypeNode(node, name, parseTypeReference)
+      );
+      if (parsedUtilityType) {
+        return parsedUtilityType;
+      }
+    }
+
     if (typeNode.isKind(SyntaxKind.TypeLiteral)) {
       return this.handleObjectType(typeNode, parseTypeReference);
     } else if (

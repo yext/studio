@@ -26,7 +26,7 @@ export default class PropShapeParser {
     const parsedType =
       this.studioSourceFileParser.parseTypeReference(identifier);
     if (!parsedType) {
-      return {};
+      throw new Error(`Unable to resolve type ${identifier}.`);
     }
     if (parsedType.kind !== ParsedTypeKind.Object) {
       throw new Error(`Error parsing ${identifier}: Expected object.`);
@@ -44,30 +44,25 @@ export default class PropShapeParser {
       .filter((propName) => !onProp || onProp(propName))
       .forEach((propName) => {
         const rawProp = rawProps[propName];
-        propShape[propName] = this.toPropMetadata(rawProp, identifier, onProp);
+        propShape[propName] = this.toPropMetadata(rawProp, identifier);
       });
     return propShape;
   }
 
   private toPropMetadata(
     rawProp: ParsedProperty,
-    identifier: string,
-    onProp?: (propName: string) => boolean
+    identifier: string
   ): PropMetadata {
     const { required, tooltip, displayName } = rawProp;
     return {
-      ...(tooltip && { tooltip: tooltip }),
+      ...(tooltip && { tooltip }),
       ...(displayName && { displayName }),
       required,
-      ...this.getPropType(rawProp, identifier, onProp),
+      ...this.getPropType(rawProp, identifier),
     };
   }
 
-  private getPropType(
-    parsedType: ParsedType,
-    identifier: string,
-    onProp?: (propName: string) => boolean
-  ): PropType {
+  private getPropType(parsedType: ParsedType, identifier: string): PropType {
     const { kind, type, unionValues } = parsedType;
 
     if (kind === ParsedTypeKind.StringLiteral) {
@@ -75,20 +70,18 @@ export default class PropShapeParser {
         type: PropValueType.string,
         unionValues: [type],
       };
-    }
-    if (kind === ParsedTypeKind.Studio) {
+    } else if (kind === ParsedTypeKind.Studio) {
       return {
         type,
       };
-    }
-    if (kind === ParsedTypeKind.Array) {
-      const itemType = this.getPropType(type, identifier, onProp);
+    } else if (kind === ParsedTypeKind.Array) {
+      const itemType = this.getPropType(type, identifier);
       return {
         type: PropValueType.Array,
         itemType,
       };
     } else if (kind === ParsedTypeKind.Object) {
-      const nestedShape = this.toPropShape(type, identifier, onProp);
+      const nestedShape = this.toPropShape(type, identifier);
       return {
         type: PropValueType.Object,
         shape: nestedShape,

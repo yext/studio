@@ -184,6 +184,34 @@ it("throws an error if Array TypeReference is missing a type param", () => {
   ).toThrowError("One type param expected for Array type. Found 0.");
 });
 
+it("can parse a prop with an Omit utility type", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      omit: Omit<{ name?: string, nope: number }, "nope">;
+    }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    omit: {
+      kind: ParsedTypeKind.Object,
+      required: true,
+      type: {
+        name: {
+          kind: ParsedTypeKind.Simple,
+          required: false,
+          type: "string",
+        },
+      },
+    },
+  });
+});
+
 it("can parse the @displayName and @tooltip tag", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {

@@ -183,6 +183,14 @@ describe("getComponentMetadata", () => {
     });
   });
 
+  it("Throws an Error if the prop interface is a utility type", () => {
+    const pathToComponent = getComponentPath("UtilityTypeBanner");
+    const componentFile = new ComponentFile(pathToComponent, project);
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
+      'Unable to resolve type Omit<UtilityTypeBannerProps, "missing">.'
+    );
+  });
+
   it("Throws an Error if HexColor is not imported from Studio", () => {
     const pathToComponent = getComponentPath("NonStudioImportBanner");
     const componentFile = new ComponentFile(pathToComponent, project);
