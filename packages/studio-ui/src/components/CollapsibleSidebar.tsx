@@ -13,7 +13,7 @@ export default function CollapsibleSidebar({
   const toggleIsOpen = useCallback(() => setIsOpen((isOpen) => !isOpen), []);
   const arrowRight =
     (side === "right" && isOpen) || (side === "left" && !isOpen);
-  const containerStyle = classNames("flex flex-row", {
+  const containerStyle = classNames("flex", {
     "w-1/4": isOpen,
   });
 
@@ -26,8 +26,8 @@ export default function CollapsibleSidebar({
   });
 
   const arrowMarginStyle = classNames("flex bg-gray-200 border-2", {
-    "hover:border-l-blue-700": !arrowRight,
     "hover:border-r-blue-700": arrowRight,
+    "hover:border-l-blue-700": !arrowRight,
   });
 
   const renderCollapseButton = useCallback(() => {
