@@ -35,23 +35,24 @@ export function loadStyling() {
   const UUIDToFileMetadata = studioStore.fileMetadatas.UUIDToFileMetadata;
   const pages = studioStore.pages.pages;
 
-  Object.values(UUIDToFileMetadata).forEach((fileMetadata) => {
+  for (const fileMetadata of Object.values(UUIDToFileMetadata)) {
     if (fileMetadata.kind === FileMetadataKind.Component) {
       importAndInjectIntoStudio(fileMetadata.cssImports);
     }
-  });
+  }
 
-  Object.values(pages).forEach((page) => {
+  for (const page of Object.values(pages)) {
+    console.log(page.cssImports)
     importAndInjectIntoStudio(page.cssImports);
-  });
+  }
 }
 
 function importAndInjectIntoStudio(cssImports: string[]) {
   cssImports.forEach(async (filepath) => {
+    if (document.querySelector(`[studio-style-filepath='${filepath}']`)) {
+      return;
+    }
     await dynamicImportFromBrowser(filepath).then((styling) => {
-      if (document.querySelector(`[studio-style-filepath='${filepath}']`)) {
-        return;
-      }
       const styleEl = document.createElement("style");
       styleEl.innerText = styling.default;
       styleEl.setAttribute("studio-style-filepath", filepath);
