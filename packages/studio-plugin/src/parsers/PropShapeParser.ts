@@ -44,25 +44,30 @@ export default class PropShapeParser {
       .filter((propName) => !onProp || onProp(propName))
       .forEach((propName) => {
         const rawProp = rawProps[propName];
-        propShape[propName] = this.toPropMetadata(rawProp, identifier);
+        propShape[propName] = this.toPropMetadata(rawProp, identifier, onProp);
       });
     return propShape;
   }
 
   private toPropMetadata(
     rawProp: ParsedProperty,
-    identifier: string
+    identifier: string,
+    onProp?: (propName: string) => boolean
   ): PropMetadata {
     const { required, tooltip, displayName } = rawProp;
     return {
       ...(tooltip && { tooltip }),
       ...(displayName && { displayName }),
       required,
-      ...this.getPropType(rawProp, identifier),
+      ...this.getPropType(rawProp, identifier, onProp),
     };
   }
 
-  private getPropType(parsedType: ParsedType, identifier: string): PropType {
+  private getPropType(
+    parsedType: ParsedType,
+    identifier: string,
+    onProp?: (propName: string) => boolean
+  ): PropType {
     const { kind, type, unionValues } = parsedType;
 
     if (kind === ParsedTypeKind.StringLiteral) {
@@ -81,7 +86,7 @@ export default class PropShapeParser {
         itemType,
       };
     } else if (kind === ParsedTypeKind.Object) {
-      const nestedShape = this.toPropShape(type, identifier);
+      const nestedShape = this.toPropShape(type, identifier, onProp);
       return {
         type: PropValueType.Object,
         shape: nestedShape,
