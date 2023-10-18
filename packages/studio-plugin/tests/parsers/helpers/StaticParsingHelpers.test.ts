@@ -1,13 +1,13 @@
 import { JsxAttributeLike, SyntaxKind } from "ts-morph";
-import { PropShape } from "../../src/types/PropShape";
+import { PropShape } from "../../../src/types/PropShape";
 import {
   PropValueKind,
   PropValueType,
   PropValues,
-} from "../../src/types/PropValues";
-import StaticParsingHelpers from "../../src/parsers/helpers/StaticParsingHelpers";
-import createTestSourceFile from "../__utils__/createTestSourceFile";
-import expectSyntaxKind from "../__utils__/expectSyntaxKind";
+} from "../../../src/types/PropValues";
+import StaticParsingHelpers from "../../../src/parsers/helpers/StaticParsingHelpers";
+import createTestSourceFile from "../../__utils__/createTestSourceFile";
+import expectSyntaxKind from "../../__utils__/expectSyntaxKind";
 
 describe("parseObjectLiteral", () => {
   it("parsing an object literal with an expression", () => {

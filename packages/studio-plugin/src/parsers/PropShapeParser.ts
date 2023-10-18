@@ -8,7 +8,7 @@ import {
   ParsedShape,
   ParsedType,
   ParsedTypeKind,
-} from "./helpers/TypeNodeParsingHelper";
+} from "./helpers/TypeNodeParsingHelpers";
 
 /**
  * PropShapeParser is a class for parsing a typescript interface into a PropShape.
