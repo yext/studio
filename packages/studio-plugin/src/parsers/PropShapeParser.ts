@@ -80,7 +80,7 @@ export default class PropShapeParser {
         type,
       };
     } else if (kind === ParsedTypeKind.Array) {
-      const itemType = this.getPropType(type, identifier);
+      const itemType = this.getPropType(type, identifier, onProp);
       return {
         type: PropValueType.Array,
         itemType,
