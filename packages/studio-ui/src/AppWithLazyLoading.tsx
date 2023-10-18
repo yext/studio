@@ -18,7 +18,7 @@ export default function AppWithLazyLoading() {
 
   useEffect(() => {
     loadComponents();
-    loadStyling();
+    void loadStyling();
     void AppPromise.then(() => setAppLoaded(true));
   }, []);
 

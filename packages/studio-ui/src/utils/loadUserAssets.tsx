@@ -30,24 +30,24 @@ export function loadComponents(): Promise<void>[] {
 /**
  * Load all user styling as disabled style tags in Studio's head.
  */
-export function loadStyling() {
+export async function loadStyling() {
   const studioStore = useStudioStore.getState();
   const UUIDToFileMetadata = studioStore.fileMetadatas.UUIDToFileMetadata;
   const pages = studioStore.pages.pages;
 
   for (const fileMetadata of Object.values(UUIDToFileMetadata)) {
     if (fileMetadata.kind === FileMetadataKind.Component) {
-      importAndInjectIntoStudio(fileMetadata.cssImports);
+      await importAndInjectIntoStudio(fileMetadata.cssImports);
     }
   }
 
   for (const page of Object.values(pages)) {
-    importAndInjectIntoStudio(page.cssImports);
+    await importAndInjectIntoStudio(page.cssImports);
   }
 }
 
-function importAndInjectIntoStudio(cssImports: string[]) {
-  cssImports.forEach(async (filepath) => {
+async function importAndInjectIntoStudio(cssImports: string[]) {
+  for (const filepath of Object.values(cssImports)) {
     if (document.querySelector(`[studio-style-filepath='${filepath}']`)) {
       return;
     }
@@ -58,5 +58,5 @@ function importAndInjectIntoStudio(cssImports: string[]) {
       document.head.appendChild(styleEl);
       styleEl.disabled = true;
     });
-  });
+    };
 }
