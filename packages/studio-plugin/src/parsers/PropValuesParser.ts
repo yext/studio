@@ -75,11 +75,16 @@ export default class PropValuesParser {
   private parseRawVal(
     propName: string,
     rawVal: TypelessPropVal,
-    propType: PropType,
+    propType: PropType | undefined,
     propShape: PropShape
   ): PropVal {
+    if (!propType) {
+      throw new Error(
+        `Could not find prop type for ${propName} in ${propShape}`
+      );
+    }
     if (rawVal.kind === PropValueKind.Expression) {
-      throw new Error(`Expressions are not supported within object literal.`);
+      throw new Error("Expressions are not supported within object literal.");
     }
     const typeMatchErrorMessage = `Error parsing value of ${propName} in ${JSON.stringify(
       propShape,

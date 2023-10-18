@@ -215,6 +215,14 @@ describe("getComponentMetadata", () => {
     );
   });
 
+  it("Throws an Error when an prop type is missing for prop within initialProps", () => {
+    const pathToComponent = getComponentPath("MissingTypeInitialBanner");
+    const componentFile = new ComponentFile(pathToComponent, project);
+    expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
+      /^Could not find prop type for/
+    );
+  });
+
   it("Throws an Error when an Expression is used within initialProps", () => {
     const pathToComponent = getComponentPath("ExpressionInitialBanner");
     const componentFile = new ComponentFile(pathToComponent, project);

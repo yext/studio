@@ -151,7 +151,7 @@ describe("omit", () => {
 
   it("throws an error if the omit type is not a string literal or union of string literals", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyOmit = Omit<{ name?: string, num: number, arr: boolean[] }, { num: number }>;
+      `type MyOmit = Omit<{ name?: string, num: number, arr: boolean[] }, Array<string>>;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
