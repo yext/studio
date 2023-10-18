@@ -81,7 +81,7 @@ describe("parseJsxAttributes", () => {
   };
 
   it("skips special React props", () => {
-    const sourceCode = `function Test() { return <Banner title="Name" key={1} />; }`;
+    const sourceCode = `<Banner title="Name" key={1} />`;
     const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     const receivedPropValues = StaticParsingHelpers.parseJsxAttributes(
       jsxAttributes,
@@ -97,16 +97,30 @@ describe("parseJsxAttributes", () => {
     expect(receivedPropValues).toEqual(expectedPropValues);
   });
 
-  it("throws an error if a prop type isn't found", () => {
-    const sourceCode = `function Test() { return <Banner num={1} />; }`;
+  it("throws an error if a prop type isn't found for top-level prop", () => {
+    const sourceCode = `function Test() { return <Banner number={1} />; }`;
     const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     expect(() =>
-      StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)
+      StaticParsingHelpers.parseJsxAttributes(jsxAttributes, {})
     ).toThrowError(/^Could not find prop metadata for:/);
   });
 
+  it("throws an error if a prop type isn't found for a nested prop", () => {
+    const sourceCode = `function Test(props: { obj: {} }) { return <Banner obj={{ num: 1 }} />; }`;
+    const jsxAttributes = getJsxAttributesFromSource(sourceCode);
+    expect(() =>
+      StaticParsingHelpers.parseJsxAttributes(jsxAttributes, {
+        obj: {
+          type: PropValueType.Object,
+          required: true,
+          shape: {},
+        },
+      })
+    ).toThrowError(/^Could not find prop metadata for prop/);
+  });
+
   it("throws an error if a prop value is invalid", () => {
-    const sourceCode = `function Test() { return <Banner title={1} />; }`;
+    const sourceCode = `<Banner title={1} />`;
     const jsxAttributes = getJsxAttributesFromSource(sourceCode);
     expect(() =>
       StaticParsingHelpers.parseJsxAttributes(jsxAttributes, propShape)

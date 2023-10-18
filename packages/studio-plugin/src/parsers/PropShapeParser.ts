@@ -26,7 +26,7 @@ export default class PropShapeParser {
     const parsedType =
       this.studioSourceFileParser.parseTypeReference(identifier);
     if (!parsedType) {
-      return {};
+      throw new Error(`Unable to resolve type ${identifier}.`);
     }
     if (parsedType.kind !== ParsedTypeKind.Object) {
       throw new Error(`Error parsing ${identifier}: Expected object.`);
@@ -56,7 +56,7 @@ export default class PropShapeParser {
   ): PropMetadata {
     const { required, tooltip, displayName } = rawProp;
     return {
-      ...(tooltip && { tooltip: tooltip }),
+      ...(tooltip && { tooltip }),
       ...(displayName && { displayName }),
       required,
       ...this.getPropType(rawProp, identifier, onProp),
@@ -75,13 +75,11 @@ export default class PropShapeParser {
         type: PropValueType.string,
         unionValues: [type],
       };
-    }
-    if (kind === ParsedTypeKind.Studio) {
+    } else if (kind === ParsedTypeKind.Studio) {
       return {
         type,
       };
-    }
-    if (kind === ParsedTypeKind.Array) {
+    } else if (kind === ParsedTypeKind.Array) {
       const itemType = this.getPropType(type, identifier, onProp);
       return {
         type: PropValueType.Array,
