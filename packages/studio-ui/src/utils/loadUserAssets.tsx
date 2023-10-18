@@ -58,5 +58,5 @@ async function importAndInjectIntoStudio(cssImports: string[]) {
       document.head.appendChild(styleEl);
       styleEl.disabled = true;
     });
-    };
+  }
 }
