@@ -159,13 +159,10 @@ describe("omit", () => {
     );
 
     const omitType: ParsedType = {
-      kind: ParsedTypeKind.Object,
+      kind: ParsedTypeKind.Array,
       type: {
-        num: {
-          kind: ParsedTypeKind.Simple,
-          required: true,
-          type: "number",
-        },
+        kind: ParsedTypeKind.Simple,
+        type: "string",
       },
     };
 
