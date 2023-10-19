@@ -34,7 +34,7 @@ export async function loadStyling() {
   const studioStore = useStudioStore.getState();
   const UUIDToFileMetadata = studioStore.fileMetadatas.UUIDToFileMetadata;
   const pages = studioStore.pages.pages;
-  const layouts = studioStore.layouts.layoutNameToLayoutState
+  const layouts = studioStore.layouts.layoutNameToLayoutState;
 
   for (const fileMetadata of Object.values(UUIDToFileMetadata)) {
     if (fileMetadata.kind === FileMetadataKind.Component) {
@@ -45,7 +45,7 @@ export async function loadStyling() {
   for (const page of Object.values(pages)) {
     await importAndInjectIntoStudio(page.cssImports);
   }
-  
+
   for (const layout of Object.values(layouts)) {
     await importAndInjectIntoStudio(layout.cssImports);
   }
