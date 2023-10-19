@@ -4,17 +4,13 @@ import useStudioStore from "../store/useStudioStore";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const [
-    componentTree,
-    getComponentMetadata,
-    UUIDToFileMetadata,
-    pageCss,
-  ] = useStudioStore((store) => [
-    store.actions.getComponentTree(),
-    store.actions.getComponentMetadata,
-    store.fileMetadatas.UUIDToFileMetadata,
-    store.pages.getActivePageState()?.cssImports,
-  ]);
+  const [componentTree, getComponentMetadata, UUIDToFileMetadata, pageCss] =
+    useStudioStore((store) => [
+      store.actions.getComponentTree(),
+      store.actions.getComponentMetadata,
+      store.fileMetadatas.UUIDToFileMetadata,
+      store.pages.getActivePageState()?.cssImports,
+    ]);
   useEffect(() => {
     if (!iframeDocument) {
       return;
