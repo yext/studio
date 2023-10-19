@@ -11,11 +11,13 @@ import { StudioStore } from "../store/models/StudioStore";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const [componentCss, pageCss] =
-    useStudioStore((store) => [
+  const [componentCss, pageCss] = useStudioStore(
+    (store) => [
       getComponentTreeCss(store),
       store.pages.getActivePageState()?.cssImports,
-    ], isEqual);
+    ],
+    isEqual
+  );
 
   useEffect(() => {
     if (!iframeDocument) {
@@ -26,7 +28,7 @@ export default function useInjectUserStyles(
       injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
     pageCss?.forEach((cssFilepath) => {
-      console.log(cssFilepath)
+      console.log(cssFilepath);
       injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
 
@@ -37,8 +39,8 @@ export default function useInjectUserStyles(
 }
 
 function getComponentTreeCss(store: StudioStore) {
-  const componentTree = store.actions.getComponentTree()
-  const getComponentMetadata = store.actions.getComponentMetadata
+  const componentTree = store.actions.getComponentTree();
+  const getComponentMetadata = store.actions.getComponentMetadata;
 
   const componentCss = new Set<string>();
   componentTree?.forEach((component) => {
@@ -47,7 +49,7 @@ function getComponentTreeCss(store: StudioStore) {
       componentCss.add(cssFilepath);
     });
   });
-  return componentCss
+  return componentCss;
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
