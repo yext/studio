@@ -50,8 +50,13 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   const styletagIdAttribute = `[${UserCustomStyletagAttribute}='${filepath}']`;
   const parentDocumentStyletag = document.querySelector(styletagIdAttribute);
   const oldIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
+  if (!parentDocumentStyletag) {
+    console.warn(`${filepath} was not able to be loaded into the Studio Preview. ` +
+    "This is likely because it is a newly added CSS file. Refresh Studio to update.");
+    return;
+  }
 
-  if (parentDocumentStyletag && !oldIframeStyletag) {
+  if (!oldIframeStyletag) {
     const newIframeStyletag = parentDocumentStyletag.cloneNode(true);
     iframeDocument.head.appendChild(newIframeStyletag);
   }
