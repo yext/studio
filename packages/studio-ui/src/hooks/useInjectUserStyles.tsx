@@ -6,17 +6,18 @@ export const UserCustomStyletagAttribute = "studio-user-custom-style";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const [componentTree, getComponentMetadata, UUIDToFileMetadata, pageCss] =
+  const [getComponentMetadata, activePageState, UUIDToFileMetadata] =
     useStudioStore((store) => [
-      store.actions.getComponentTree(),
       store.actions.getComponentMetadata,
-      store.fileMetadatas.UUIDToFileMetadata,
-      store.pages.getActivePageState()?.cssImports,
+      store.pages.getActivePageState(),
+      store.fileMetadatas.UUIDToFileMetadata
     ]);
   useEffect(() => {
-    if (!iframeDocument) {
+    if (!iframeDocument || !activePageState) {
       return;
     }
+    
+    const {componentTree, cssImports: pageCss} = activePageState
     componentTree?.forEach((component) => {
       const cssImports = getComponentMetadata(component)?.cssImports;
       cssImports?.forEach((cssFilepath) => {
@@ -30,13 +31,7 @@ export default function useInjectUserStyles(
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [
-    componentTree,
-    getComponentMetadata,
-    iframeDocument,
-    pageCss,
-    UUIDToFileMetadata,
-  ]);
+  }, [getComponentMetadata, iframeDocument, UUIDToFileMetadata, activePageState]);
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
