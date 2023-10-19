@@ -31,7 +31,13 @@ export default function useInjectUserStyles(
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [getComponentMetadata, iframeDocument, UUIDToFileMetadata, componentTree, pageCss]);
+  }, [
+    getComponentMetadata,
+    iframeDocument,
+    UUIDToFileMetadata,
+    componentTree,
+    pageCss,
+  ]);
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
