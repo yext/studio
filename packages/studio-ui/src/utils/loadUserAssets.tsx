@@ -54,7 +54,9 @@ export async function loadStyling() {
 
 async function importAndInjectIntoStudio(cssImports: string[]) {
   for (const filepath of Object.values(cssImports)) {
-    if (document.querySelector(`[${UserCustomStyletagAttribute}='${filepath}']`)) {
+    if (
+      document.querySelector(`[${UserCustomStyletagAttribute}='${filepath}']`)
+    ) {
       return;
     }
     await dynamicImportFromBrowser(filepath).then((styling) => {
