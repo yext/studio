@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import useStudioStore from "../store/useStudioStore";
+import { USER_CUSTOM_STYLE_ATTRIBUTE } from "../utils/loadUserAssets";
 
-export const UserCustomStyletagAttribute = "studio-user-custom-style";
-
+/**
+ * This hook injects user styling from the Studio document head into the 
+ * Studio Preview iframe's document head.
+ */
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
@@ -48,13 +51,13 @@ function clearStylingFromIframe(iframeDocument: Document) {
 }
 
 function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
-  const styletagIdAttribute = `[${UserCustomStyletagAttribute}='${filepath}']`;
+  const styletagIdAttribute = `[${USER_CUSTOM_STYLE_ATTRIBUTE}='${filepath}']`;
   const parentDocumentStyletag = document.querySelector(styletagIdAttribute);
   const oldIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
   if (!parentDocumentStyletag) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
-        "This is likely because it is a newly added CSS file. Refresh Studio to update."
+        "If this is a newly added CSS file, refresh Studio to update."
     );
     return;
   }
