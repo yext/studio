@@ -1,6 +1,6 @@
 import useTemporalStore from "../store/useTemporalStore";
 import { ReactComponent as Undo } from "../icons/undo.svg";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import classNames from "classnames";
 
 /**
@@ -21,6 +21,17 @@ export default function UndoRedo(): JSX.Element {
   const handleRedo = useCallback(() => {
     redo();
   }, [redo]);
+
+  const handleUndoKeydown = useCallback((event: KeyboardEvent) => {
+    event.preventDefault()
+    if ((event.ctrlKey || event.metaKey) && event.key === "z") {
+      undo()
+    }
+  }, [undo])
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleUndoKeydown)
+  }, [handleUndoKeydown]);
 
   const disableUndo = pastStates.length === 0;
   const disableRedo = futureStates.length === 0;
