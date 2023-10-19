@@ -52,10 +52,11 @@ function clearStylingFromIframe(iframeDocument: Document) {
 }
 
 function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
-  const originalStyletag = document.querySelector(
-    `[studio-style-filepath='${filepath}']`
-  );
-  if (originalStyletag) {
+  const styletagIdAttribute = `[studio-style-filepath='${filepath}']`;
+  const originalStyletag = document.querySelector(styletagIdAttribute);
+  const oldIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
+  
+  if (originalStyletag && !oldIframeStyletag) {
     const iframeStyletag = originalStyletag.cloneNode(true);
     iframeDocument.head.appendChild(iframeStyletag);
   }
