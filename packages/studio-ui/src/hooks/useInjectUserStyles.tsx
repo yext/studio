@@ -10,14 +10,14 @@ export default function useInjectUserStyles(
     useStudioStore((store) => [
       store.actions.getComponentMetadata,
       store.pages.getActivePageState(),
-      store.fileMetadatas.UUIDToFileMetadata
+      store.fileMetadatas.UUIDToFileMetadata,
     ]);
   useEffect(() => {
     if (!iframeDocument || !activePageState) {
       return;
     }
-    
-    const {componentTree, cssImports: pageCss} = activePageState
+
+    const { componentTree, cssImports: pageCss } = activePageState;
     componentTree?.forEach((component) => {
       const cssImports = getComponentMetadata(component)?.cssImports;
       cssImports?.forEach((cssFilepath) => {
@@ -31,7 +31,12 @@ export default function useInjectUserStyles(
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [getComponentMetadata, iframeDocument, UUIDToFileMetadata, activePageState]);
+  }, [
+    getComponentMetadata,
+    iframeDocument,
+    UUIDToFileMetadata,
+    activePageState,
+  ]);
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
