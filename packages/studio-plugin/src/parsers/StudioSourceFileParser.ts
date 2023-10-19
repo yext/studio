@@ -21,7 +21,7 @@ import TypeNodeParsingHelper, {
 import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup";
 import { TypelessPropVal } from "../types";
-import cabinet from "filing-cabinet"
+import cabinet from "filing-cabinet";
 
 export type ParsedImport = {
   importSource: string;
@@ -126,13 +126,13 @@ export default class StudioSourceFileParser {
 
     const getAbsoluteFilepath = (filepath: string) => {
       if (upath.isAbsolute(filepath)) {
-        return filepath
-      } 
+        return filepath;
+      }
       const resolvedPath = cabinet({
         partial: filepath,
         directory: upath.dirname(this.sourceFile.getFilePath()),
-        filename: this.sourceFile.getFilePath()
-      })
+        filename: this.sourceFile.getFilePath(),
+      });
       if (!resolvedPath) {
         throw new Error(
           `${filepath} could not be resolved when parsing CSS for templates.`
