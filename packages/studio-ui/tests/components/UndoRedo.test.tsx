@@ -46,6 +46,24 @@ describe("Undo/redo", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 
+  it("undoes last state update using control + z", async () => {
+    render(<UndoRedo />);
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard('{Control>}z{/Control}')
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+  });
+
+  it("undoes last state update using command + z", async () => {
+    render(<UndoRedo />);
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard('{Meta>}z{/Meta}')
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+  });
+
   it("redoes single state update when redo is clicked", async () => {
     const undo = useTemporalStore((store) => store.undo);
     undo();
