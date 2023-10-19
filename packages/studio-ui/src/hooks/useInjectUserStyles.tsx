@@ -3,7 +3,7 @@ import useStudioStore from "../store/useStudioStore";
 import { USER_CUSTOM_STYLE_ATTRIBUTE } from "../utils/loadUserAssets";
 
 /**
- * This hook injects user styling from the Studio document head into the 
+ * This hook injects user styling from the Studio document head into the
  * Studio Preview iframe's document head.
  */
 export default function useInjectUserStyles(
