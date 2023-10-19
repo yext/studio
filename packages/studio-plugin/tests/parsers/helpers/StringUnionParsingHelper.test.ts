@@ -1,7 +1,7 @@
 import { SyntaxKind } from "ts-morph";
 import StringUnionParsingHelper from "../../../src/parsers/helpers/StringUnionParsingHelper";
 import createTestSourceFile from "../../__utils__/createTestSourceFile";
-import { ParsedTypeKind } from "../../../src/parsers/helpers/TypeNodeParsingHelper";
+import { ParsedTypeKind } from "../../../src/parsers/helpers/TypeNodeParsingHelpers";
 
 it("does not handle StringKeywords within unions", () => {
   const { sourceFile } = createTestSourceFile(

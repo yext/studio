@@ -2,7 +2,7 @@ import { SyntaxKind } from "ts-morph";
 import StudioSourceFileParser from "../../src/parsers/StudioSourceFileParser";
 import createTestSourceFile from "../__utils__/createTestSourceFile";
 import expectSyntaxKind from "../__utils__/expectSyntaxKind";
-import { ParsedTypeKind } from "../../src/parsers/helpers/TypeNodeParsingHelper";
+import { ParsedTypeKind } from "../../src/parsers/helpers/TypeNodeParsingHelpers";
 import upath from "upath";
 
 describe("parseExportedObjectLiteral", () => {

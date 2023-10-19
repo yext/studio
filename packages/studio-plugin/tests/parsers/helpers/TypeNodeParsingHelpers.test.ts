@@ -1,7 +1,7 @@
 import { SyntaxKind } from "ts-morph";
 import TypeNodeParsingHelper, {
   ParsedTypeKind,
-} from "../../../src/parsers/helpers/TypeNodeParsingHelper";
+} from "../../../src/parsers/helpers/TypeNodeParsingHelpers";
 import createTestSourceFile from "../../__utils__/createTestSourceFile";
 import { PropValueType } from "../../../src/types";
 
@@ -184,7 +184,7 @@ it("throws an error if Array TypeReference is missing a type param", () => {
   ).toThrowError("One type param expected for Array type. Found 0.");
 });
 
-it("can parse a prop with an Omit utility type", () => {
+it("can parse a prop with a utility type", () => {
   const { sourceFile } = createTestSourceFile(
     `export type MyProps = {
       omit: Omit<{ name?: string, nope: number }, "nope">;
