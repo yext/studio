@@ -7,13 +7,11 @@ export default function useInjectUserStyles(
   const [
     componentTree,
     getComponentMetadata,
-    activePage,
     UUIDToFileMetadata,
     pageCss,
   ] = useStudioStore((store) => [
     store.actions.getComponentTree(),
     store.actions.getComponentMetadata,
-    store.pages.activePageName,
     store.fileMetadatas.UUIDToFileMetadata,
     store.pages.getActivePageState()?.cssImports,
   ]);
@@ -39,7 +37,6 @@ export default function useInjectUserStyles(
     getComponentMetadata,
     iframeDocument,
     pageCss,
-    activePage,
     UUIDToFileMetadata,
   ]);
 }
