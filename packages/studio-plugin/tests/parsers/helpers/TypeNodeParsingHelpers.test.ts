@@ -1,7 +1,7 @@
 import { SyntaxKind } from "ts-morph";
 import TypeNodeParsingHelper, {
   ParsedTypeKind,
-} from "../../../src/parsers/helpers/TypeNodeParsingHelper";
+} from "../../../src/parsers/helpers/TypeNodeParsingHelpers";
 import createTestSourceFile from "../../__utils__/createTestSourceFile";
 import { PropValueType } from "../../../src/types";
 
@@ -182,6 +182,34 @@ it("throws an error if Array TypeReference is missing a type param", () => {
   expect(() =>
     TypeNodeParsingHelper.parseShape(typeAlias, externalShapeParser)
   ).toThrowError("One type param expected for Array type. Found 0.");
+});
+
+it("can parse a prop with a utility type", () => {
+  const { sourceFile } = createTestSourceFile(
+    `export type MyProps = {
+      omit: Omit<{ name?: string, nope: number }, "nope">;
+    }`
+  );
+  const typeAlias = sourceFile.getFirstDescendantByKindOrThrow(
+    SyntaxKind.TypeAliasDeclaration
+  );
+  const parsedShape = TypeNodeParsingHelper.parseShape(
+    typeAlias,
+    externalShapeParser
+  );
+  expect(parsedShape.type).toEqual({
+    omit: {
+      kind: ParsedTypeKind.Object,
+      required: true,
+      type: {
+        name: {
+          kind: ParsedTypeKind.Simple,
+          required: false,
+          type: "string",
+        },
+      },
+    },
+  });
 });
 
 it("can parse the @displayName and @tooltip tag", () => {

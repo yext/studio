@@ -83,6 +83,11 @@ export default class StaticParsingHelpers {
         const propValues: PropValues = {};
         Object.entries(typelessValues).forEach(([propName, value]) => {
           const childMetadata = propType.shape[propName];
+          if (!childMetadata) {
+            throw new Error(
+              `Could not find prop metadata for prop ${propName} in ${propType.shape}.`
+            );
+          }
           propValues[propName] = this.addTypesToPropVal(value, childMetadata);
         });
         return propValues;
