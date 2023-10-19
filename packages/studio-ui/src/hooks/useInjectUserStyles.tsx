@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { USER_CUSTOM_STYLE_ATTRIBUTE } from "../utils/loadUserAssets";
+import { isEqual } from "lodash";
+import { StudioStore } from "../store/models/StudioStore";
 
 /**
  * This hook injects user styling from the Studio document head into the
@@ -9,38 +11,43 @@ import { USER_CUSTOM_STYLE_ATTRIBUTE } from "../utils/loadUserAssets";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const [componentTree, getComponentMetadata, UUIDToFileMetadata, pageCss] =
+  const [componentCss, pageCss] =
     useStudioStore((store) => [
-      store.actions.getComponentTree(),
-      store.actions.getComponentMetadata,
-      store.fileMetadatas.UUIDToFileMetadata,
+      getComponentTreeCss(store),
       store.pages.getActivePageState()?.cssImports,
-    ]);
+    ], isEqual);
+
   useEffect(() => {
     if (!iframeDocument) {
       return;
     }
 
-    componentTree?.forEach((component) => {
-      const cssImports = getComponentMetadata(component)?.cssImports;
-      cssImports?.forEach((cssFilepath) => {
-        injectStyleIntoIframe(iframeDocument, cssFilepath);
-      });
+    componentCss.forEach((cssFilepath) => {
+      injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
     pageCss?.forEach((cssFilepath) => {
+      console.log(cssFilepath)
       injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
 
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [
-    getComponentMetadata,
-    iframeDocument,
-    UUIDToFileMetadata,
-    componentTree,
-    pageCss,
-  ]);
+  }, [iframeDocument, pageCss, componentCss]);
+}
+
+function getComponentTreeCss(store: StudioStore) {
+  const componentTree = store.actions.getComponentTree()
+  const getComponentMetadata = store.actions.getComponentMetadata
+
+  const componentCss = new Set<string>();
+  componentTree?.forEach((component) => {
+    const cssImports = getComponentMetadata(component)?.cssImports;
+    cssImports?.forEach((cssFilepath) => {
+      componentCss.add(cssFilepath);
+    });
+  });
+  return componentCss
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
@@ -58,7 +65,7 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
         "If this is a newly added CSS file, refresh Studio to update. " +
-        "Note: Unsaved changes will be deleted on page refresh."
+        "Note that unsaved changes will be deleted on page refresh."
     );
     return;
   }
