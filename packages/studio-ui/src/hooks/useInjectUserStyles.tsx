@@ -57,8 +57,9 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   if (!parentDocumentStyletag) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
-        "If this is a newly added CSS file, refresh Studio to update."
-    );
+        "If this is a newly added CSS file, refresh Studio to update. " +
+        "Note: Unsaved changes will be deleted on page refresh."
+        );
     return;
   }
 
