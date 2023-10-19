@@ -22,15 +22,18 @@ export default function UndoRedo(): JSX.Element {
     redo();
   }, [redo]);
 
-  const handleUndoKeydown = useCallback((event: KeyboardEvent) => {
-    event.preventDefault()
-    if ((event.ctrlKey || event.metaKey) && event.key === "z") {
-      undo()
-    }
-  }, [undo])
+  const handleUndoKeydown = useCallback(
+    (event: KeyboardEvent) => {
+      event.preventDefault();
+      if ((event.ctrlKey || event.metaKey) && event.key === "z") {
+        undo();
+      }
+    },
+    [undo]
+  );
 
   useEffect(() => {
-    document.addEventListener("keydown", handleUndoKeydown)
+    document.addEventListener("keydown", handleUndoKeydown);
   }, [handleUndoKeydown]);
 
   const disableUndo = pastStates.length === 0;
