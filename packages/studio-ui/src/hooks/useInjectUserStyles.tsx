@@ -51,8 +51,10 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   const parentDocumentStyletag = document.querySelector(styletagIdAttribute);
   const oldIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
   if (!parentDocumentStyletag) {
-    console.warn(`${filepath} was not able to be loaded into the Studio Preview. ` +
-    "This is likely because it is a newly added CSS file. Refresh Studio to update.");
+    console.warn(
+      `${filepath} was not able to be loaded into the Studio Preview. ` +
+        "This is likely because it is a newly added CSS file. Refresh Studio to update."
+    );
     return;
   }
 
