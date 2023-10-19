@@ -51,7 +51,7 @@ describe("Undo/redo", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
     );
-    await userEvent.keyboard('{Control>}z{/Control}')
+    await userEvent.keyboard("{Control>}z{/Control}");
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 
@@ -60,7 +60,7 @@ describe("Undo/redo", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
     );
-    await userEvent.keyboard('{Meta>}z{/Meta}')
+    await userEvent.keyboard("{Meta>}z{/Meta}");
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 
