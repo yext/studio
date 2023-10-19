@@ -2,6 +2,7 @@ import useStudioStore from "../store/useStudioStore";
 import getFunctionComponent from "./getFunctionComponent";
 import dynamicImportFromBrowser from "./dynamicImportFromBrowser";
 import { FileMetadataKind } from "@yext/studio-plugin";
+import { UserCustomStyletagAttribute } from "../hooks/useInjectUserStyles";
 
 /**
  * Load all of the user's components into the store.
@@ -53,13 +54,13 @@ export async function loadStyling() {
 
 async function importAndInjectIntoStudio(cssImports: string[]) {
   for (const filepath of Object.values(cssImports)) {
-    if (document.querySelector(`[studio-style-filepath='${filepath}']`)) {
+    if (document.querySelector(`[${UserCustomStyletagAttribute}='${filepath}']`)) {
       return;
     }
     await dynamicImportFromBrowser(filepath).then((styling) => {
       const styleEl = document.createElement("style");
       styleEl.innerText = styling.default;
-      styleEl.setAttribute("studio-style-filepath", filepath);
+      styleEl.setAttribute(UserCustomStyletagAttribute, filepath);
       document.head.appendChild(styleEl);
       styleEl.disabled = true;
     });

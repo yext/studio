@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import useStudioStore from "../store/useStudioStore";
 
+export const UserCustomStyletagAttribute = "studio-user-custom-style";
+
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
@@ -45,12 +47,12 @@ function clearStylingFromIframe(iframeDocument: Document) {
 }
 
 function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
-  const styletagIdAttribute = `[studio-style-filepath='${filepath}']`;
-  const originalStyletag = document.querySelector(styletagIdAttribute);
+  const styletagIdAttribute = `[${UserCustomStyletagAttribute}='${filepath}']`;
+  const parentDocumentStyletag = document.querySelector(styletagIdAttribute);
   const oldIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
 
-  if (originalStyletag && !oldIframeStyletag) {
-    const iframeStyletag = originalStyletag.cloneNode(true);
-    iframeDocument.head.appendChild(iframeStyletag);
+  if (parentDocumentStyletag && !oldIframeStyletag) {
+    const newIframeStyletag = parentDocumentStyletag.cloneNode(true);
+    iframeDocument.head.appendChild(newIframeStyletag);
   }
 }
