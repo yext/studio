@@ -113,7 +113,9 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
-      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(path => upath.toUnix(path) === filepath)
+      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(
+        (path) => upath.toUnix(path) === filepath
+      );
       if (componentDepTreeRoot) {
         delete this.dependencyTrees[componentDepTreeRoot];
       }
@@ -201,11 +203,11 @@ export default class ParsingOrchestrator {
 
     if (absPath.startsWith(this.paths.components)) {
       this.updateFilepathToDependencyTree(absPath);
-      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(path => upath.toUnix(path) === absPath)
+      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(
+        (path) => upath.toUnix(path) === absPath
+      );
       if (!componentDepTreeRoot) {
-        throw new Error(
-          `Could not find dependency tree for ${absPath}`
-        )
+        throw new Error(`Could not find dependency tree for ${absPath}`);
       }
       const componentFile = new ComponentFile(
         absPath,
@@ -231,10 +233,7 @@ export default class ParsingOrchestrator {
       directory: upath.dirname(absPath),
       visited: this.dependencyTrees,
     });
-    this.dependencyTrees = Object.assign(
-      this.dependencyTrees,
-      newDepTree
-    )
+    this.dependencyTrees = Object.assign(this.dependencyTrees, newDepTree);
   }
 
   private initPageNameToPageFile(): Record<string, PageFile> {
