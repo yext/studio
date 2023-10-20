@@ -81,9 +81,9 @@ export default class StudioSourceFileWriter {
       const moduleSpecifier = importSource.includes("/node_modules/")
         ? importSource.split("/node_modules/")[1]
         : getImportSpecifierWithExtension(
-          this.sourceFile.getFilePath(),
-          importSource
-        );
+            this.sourceFile.getFilePath(),
+            importSource
+          );
       this.sourceFile.addImportDeclaration({ moduleSpecifier });
     });
     this.sourceFile.organizeImports();
