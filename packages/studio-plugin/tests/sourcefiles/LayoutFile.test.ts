@@ -92,8 +92,7 @@ describe("getLayoutState", () => {
     const result = getLayoutState("BasicLayout");
     const expectedIndexCssPath = getFixturePath("LayoutFile/index.css");
     expect(result.value.cssImports).toEqual([
-      expectedIndexCssPath,
-      "@yext/search-ui-react/index.css",
+      expectedIndexCssPath
     ]);
   });
 

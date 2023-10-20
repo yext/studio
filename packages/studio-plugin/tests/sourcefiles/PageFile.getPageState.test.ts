@@ -80,8 +80,7 @@ describe("getPageState", () => {
     assertIsOk(result);
     const expectedIndexCssPath = getFixturePath("PageFile/index.css");
     expect(result.value.cssImports).toEqual([
-      expectedIndexCssPath,
-      "@yext/search-ui-react/index.css",
+      expectedIndexCssPath
     ]);
   });
 
