@@ -135,15 +135,16 @@ export default class StudioSourceFileParser {
       });
       if (!resolvedPath) {
         throw new Error(
-          `${importPath} could not be resolved when parsing` + 
-          `${this.sourceFile.getFilePath()} for CSS imports.`
+          `${importPath} could not be resolved when parsing` +
+            `${this.sourceFile.getFilePath()} for CSS imports.`
         );
       }
       return upath.toUnix(resolvedPath);
     };
 
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
-      const { source: importPath } = StaticParsingHelpers.parseImport(importDeclaration);
+      const { source: importPath } =
+        StaticParsingHelpers.parseImport(importDeclaration);
       if (importPath.endsWith(".css")) {
         cssImports.push(getImportAbsoluteFilepath(importPath));
       }
