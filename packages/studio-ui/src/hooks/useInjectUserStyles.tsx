@@ -28,7 +28,6 @@ export default function useInjectUserStyles(
       injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
     pageCss?.forEach((cssFilepath) => {
-      console.log(cssFilepath);
       injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
 
