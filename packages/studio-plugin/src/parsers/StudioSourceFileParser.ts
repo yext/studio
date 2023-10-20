@@ -126,7 +126,7 @@ export default class StudioSourceFileParser {
 
     const getAbsoluteFilepath = (filepath: string) => {
       if (upath.isAbsolute(filepath)) {
-        return filepath;
+        return upath.toUnix(filepath);
       }
       const resolvedPath = cabinet({
         partial: filepath,
@@ -138,7 +138,7 @@ export default class StudioSourceFileParser {
           `${filepath} could not be resolved when parsing CSS for templates.`
         );
       }
-      return resolvedPath;
+      return upath.toUnix(resolvedPath);
     };
 
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
