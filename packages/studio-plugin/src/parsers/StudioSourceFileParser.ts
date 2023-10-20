@@ -124,27 +124,28 @@ export default class StudioSourceFileParser {
   parseCssImports(): string[] {
     const cssImports: string[] = [];
 
-    const getAbsoluteFilepath = (filepath: string) => {
-      if (upath.isAbsolute(filepath)) {
-        return upath.toUnix(filepath);
+    const getImportAbsoluteFilepath = (importPath: string) => {
+      if (upath.isAbsolute(importPath)) {
+        return upath.toUnix(importPath);
       }
       const resolvedPath = cabinet({
-        partial: filepath,
+        partial: importPath,
         directory: upath.dirname(this.sourceFile.getFilePath()),
         filename: this.sourceFile.getFilePath(),
       });
       if (!resolvedPath) {
         throw new Error(
-          `${filepath} could not be resolved when parsing CSS for templates.`
+          `${importPath} could not be resolved when parsing` + 
+          `${this.sourceFile.getFilePath()} for CSS imports.`
         );
       }
       return upath.toUnix(resolvedPath);
     };
 
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
-      const { source } = StaticParsingHelpers.parseImport(importDeclaration);
-      if (source.endsWith(".css")) {
-        cssImports.push(getAbsoluteFilepath(source));
+      const { source: importPath } = StaticParsingHelpers.parseImport(importDeclaration);
+      if (importPath.endsWith(".css")) {
+        cssImports.push(getImportAbsoluteFilepath(importPath));
       }
     });
     return cssImports;
