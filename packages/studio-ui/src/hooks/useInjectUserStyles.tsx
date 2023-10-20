@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { USER_CUSTOM_STYLE_ATTRIBUTE } from "../utils/loadUserAssets";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 import { StudioStore } from "../store/models/StudioStore";
 
 /**
