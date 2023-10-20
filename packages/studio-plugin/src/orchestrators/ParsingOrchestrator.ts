@@ -36,7 +36,7 @@ export function createTsMorphProject(tsConfigFilePath: string) {
  */
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata> = {};
-  private filepathToDependencyTree: Record<string, Tree> = {};
+  private dependencyTrees: Record<string, Tree> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
@@ -113,7 +113,10 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
-      delete this.filepathToDependencyTree[filepath];
+      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(path => upath.toUnix(path) === filepath)
+      if (componentDepTreeRoot) {
+        delete this.dependencyTrees[componentDepTreeRoot];
+      }
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
           this.filepathToFileMetadata[filepath].metadataUUID;
@@ -198,10 +201,16 @@ export default class ParsingOrchestrator {
 
     if (absPath.startsWith(this.paths.components)) {
       this.updateFilepathToDependencyTree(absPath);
+      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(path => upath.toUnix(path) === absPath)
+      if (!componentDepTreeRoot) {
+        throw new Error(
+          `Could not find dependency tree for ${absPath}`
+        )
+      }
       const componentFile = new ComponentFile(
         absPath,
         this.project,
-        this.filepathToDependencyTree[absPath]
+        this.dependencyTrees[componentDepTreeRoot]
       );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
@@ -217,11 +226,15 @@ export default class ParsingOrchestrator {
   };
 
   private updateFilepathToDependencyTree(absPath: string) {
-    this.filepathToDependencyTree[absPath] = dependencyTree({
+    const newDepTree = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
-      visited: this.filepathToDependencyTree,
+      visited: this.dependencyTrees,
     });
+    this.dependencyTrees = Object.assign(
+      this.dependencyTrees,
+      newDepTree
+    )
   }
 
   private initPageNameToPageFile(): Record<string, PageFile> {
