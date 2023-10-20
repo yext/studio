@@ -36,12 +36,14 @@ export function createTsMorphProject(tsConfigFilePath: string) {
  */
 export default class ParsingOrchestrator {
   private filepathToFileMetadata: Record<string, FileMetadata> = {};
-  private dependencyTrees: Record<string, Tree> = {};
   private pageNameToPageFile: Record<string, PageFile> = {};
   private siteSettingsFile?: SiteSettingsFile;
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
+  /** This tree contains a root for each Component File. */
+  private dependencyTreesObject: Record<string, Tree> = {};
+
 
   /** All paths are assumed to be absolute. */
   constructor(
@@ -113,11 +115,9 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
-      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(
-        (path) => upath.toUnix(path) === filepath
-      );
+      const componentDepTreeRoot = this.getComponentDepTreeRoot(filepath)
       if (componentDepTreeRoot) {
-        delete this.dependencyTrees[componentDepTreeRoot];
+        delete this.dependencyTreesObject[componentDepTreeRoot];
       }
       if (this.filepathToFileMetadata.hasOwnProperty(filepath)) {
         const originalMetadataUUID =
@@ -203,16 +203,14 @@ export default class ParsingOrchestrator {
 
     if (absPath.startsWith(this.paths.components)) {
       this.updateDependencyTrees(absPath);
-      const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(
-        (path) => upath.toUnix(path) === absPath
-      );
+      const componentDepTreeRoot = this.getComponentDepTreeRoot(absPath)
       if (!componentDepTreeRoot) {
         throw new Error(`Could not find dependency tree for ${absPath}`);
       }
       const componentFile = new ComponentFile(
         absPath,
         this.project,
-        this.dependencyTrees[componentDepTreeRoot]
+        this.dependencyTreesObject[componentDepTreeRoot]
       );
       const result = componentFile.getComponentMetadata();
       if (result.isErr) {
@@ -231,10 +229,22 @@ export default class ParsingOrchestrator {
     const newDepTree = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
-      visited: this.dependencyTrees,
+      visited: this.dependencyTreesObject,
     });
-    this.dependencyTrees = Object.assign(this.dependencyTrees, newDepTree);
+    this.dependencyTreesObject = Object.assign(this.dependencyTreesObject, newDepTree);
   }
+
+  /**
+   * Given a Unix filepath, this function finds the corresponding 
+   * dependency tree root.  This is important since the paths within 
+   * the dependency tree may be either Unix or Windows.
+   */
+  private getComponentDepTreeRoot(unixFilepath: string){
+    return Object.keys(this.dependencyTreesObject).find(
+      (path) => upath.toUnix(path) === unixFilepath
+    );
+  }
+
 
   private initPageNameToPageFile(): Record<string, PageFile> {
     if (!fs.existsSync(this.paths.pages)) {
