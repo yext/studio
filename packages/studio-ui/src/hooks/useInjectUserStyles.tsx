@@ -6,7 +6,9 @@ import { StudioStore } from "../store/models/StudioStore";
 
 /**
  * This hook injects user styling from the Studio document head into the
- * Studio Preview iframe's document head.
+ * Studio Preview iframe's document head.  It only injects the relevant
+ * styling of the current active page and component tree.  Styling is cleared
+ * from the iframe before each injection.
  */
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined

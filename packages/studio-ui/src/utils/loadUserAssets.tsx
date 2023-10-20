@@ -31,6 +31,9 @@ export function loadComponents(): Promise<void>[] {
 
 /**
  * Load all user styling as disabled style tags in Studio's head.
+ * Each style tags contains the styling file's contents and 
+ * is labeled with the absolute path to the corresponding 
+ * user styling file.
  */
 export async function loadStyling() {
   const studioStore = useStudioStore.getState();
