@@ -13,7 +13,7 @@ import { StudioStore } from "../store/models/StudioStore";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const [componentCss, pageCss] = useStudioStore(
+  const [componentTreeCss, pageCss] = useStudioStore(
     (store) => [
       getComponentTreeCssImports(store),
       store.pages.getActivePageState()?.cssImports,
@@ -26,7 +26,7 @@ export default function useInjectUserStyles(
       return;
     }
 
-    componentCss.forEach((cssFilepath) => {
+    componentTreeCss.forEach((cssFilepath) => {
       injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
     pageCss?.forEach((cssFilepath) => {
@@ -36,7 +36,7 @@ export default function useInjectUserStyles(
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [iframeDocument, pageCss, componentCss]);
+  }, [iframeDocument, pageCss, componentTreeCss]);
 }
 
 function getComponentTreeCssImports(store: StudioStore) {
