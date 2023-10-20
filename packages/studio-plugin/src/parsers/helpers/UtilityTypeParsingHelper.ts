@@ -24,6 +24,8 @@ export default class UtilityTypeParsingHelper {
           return this.handleOmit;
         case "Pick":
           return this.handlePick;
+        case "Required":
+          return this.handleRequired;
       }
     })();
     return utilityTypeHandler?.(typeArgs, parseTypeNode);
@@ -97,6 +99,41 @@ export default class UtilityTypeParsingHelper {
     return {
       ...fullType,
       type: reducedShape,
+    };
+  };
+
+  private static handleRequired: UtilityTypeHandler = (
+    typeArgs,
+    parseTypeNode
+  ) => {
+    if (typeArgs.length !== 1) {
+      throw new Error(
+        `One type param expected for Required utility type. Found ${typeArgs.length}.`
+      );
+    }
+
+    const originalType = parseTypeNode(typeArgs[0]);
+
+    if (originalType.kind !== ParsedTypeKind.Object) {
+      return originalType;
+    }
+
+    const updatedShape: ParsedShape = Object.entries(originalType.type).reduce(
+      (updatedShape, [key, property]) => {
+        return {
+          ...updatedShape,
+          [key]: {
+            ...property,
+            required: true,
+          },
+        };
+      },
+      {}
+    );
+
+    return {
+      ...originalType,
+      type: updatedShape,
     };
   };
 }

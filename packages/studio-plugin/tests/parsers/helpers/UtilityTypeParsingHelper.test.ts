@@ -3,6 +3,7 @@ import createTestSourceFile from "../../__utils__/createTestSourceFile";
 import UtilityTypeParsingHelper from "../../../src/parsers/helpers/UtilityTypeParsingHelper";
 import {
   ParsedProperty,
+  ParsedShape,
   ParsedType,
   ParsedTypeKind,
 } from "../../../src/parsers/helpers/TypeNodeParsingHelpers";
@@ -22,7 +23,7 @@ const numProp: ParsedProperty = {
 
 const arrProp: ParsedProperty = {
   kind: ParsedTypeKind.Array,
-  required: true,
+  required: false,
   type: {
     kind: ParsedTypeKind.Simple,
     type: "boolean",
@@ -38,18 +39,23 @@ const fullObjectType: ParsedType = {
   },
 };
 
+const testParsedType: ParsedType = {
+  kind: ParsedTypeKind.StringLiteral,
+  type: "test",
+};
+
 function mockedParseTypeNodeCreator(
-  omitType: ParsedType,
-  fullType = cloneDeep(fullObjectType)
+  nonObjType = testParsedType,
+  objType = cloneDeep(fullObjectType)
 ): (node: TypeNode) => ParsedType {
   return (node: TypeNode) =>
-    node.isKind(SyntaxKind.TypeLiteral) ? fullType : omitType;
+    node.isKind(SyntaxKind.TypeLiteral) ? objType : nonObjType;
 }
 
 describe("omit", () => {
   it("can handle a single omitted type", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyOmit = Omit<{ name?: string, num: number, arr: boolean[] }, "num">;
+      `type MyOmit = Omit<{ name?: string, num: number, arr?: boolean[] }, "num">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -67,7 +73,7 @@ describe("omit", () => {
 
   it("can handle multiple omitted types", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyOmit = Omit<{ name?: string, num: number, arr: boolean[] }, "name" | "num">;
+      `type MyOmit = Omit<{ name?: string, num: number, arr?: boolean[] }, "name" | "num">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -86,7 +92,7 @@ describe("omit", () => {
 
   it("can handle non-overlapping omitted type", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyOmit = Omit<{ name?: string, num: number, arr: boolean[] }, "boo">;
+      `type MyOmit = Omit<{ name?: string, num: number, arr?: boolean[] }, "boo">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -114,21 +120,16 @@ describe("omit", () => {
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
       SyntaxKind.TypeReference
     );
-    const testParsedType: ParsedType = {
-      kind: ParsedTypeKind.StringLiteral,
-      type: "test",
-    };
-
     const parsedType = UtilityTypeParsingHelper.parseUtilityType(
       typeRef,
-      mockedParseTypeNodeCreator(testParsedType, testParsedType)
+      mockedParseTypeNodeCreator()
     );
     expect(parsedType).toEqual(testParsedType);
   });
 
   it("throws an error if there an incorrect number of type arguments", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyOmit = Omit<{ name?: string, num: number, arr: boolean[] }, "name", "num">;
+      `type MyOmit = Omit<{ name?: string, num: number, arr?: boolean[] }, "name", "num">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -148,7 +149,7 @@ describe("omit", () => {
 
   it("throws an error if the omit type is not a string literal or union of string literals", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyOmit = Omit<{ name?: string, num: number, arr: boolean[] }, Array<string>>;
+      `type MyOmit = Omit<{ name?: string, num: number, arr?: boolean[] }, Array<string>>;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -177,7 +178,7 @@ describe("omit", () => {
 describe("pick", () => {
   it("can handle a single picked type", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyPick = Pick<{ name?: string, num: number, arr: boolean[] }, "num">;
+      `type MyPick = Pick<{ name?: string, num: number, arr?: boolean[] }, "num">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -195,7 +196,7 @@ describe("pick", () => {
 
   it("can handle multiple picked types", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyPick = Pick<{ name?: string, num: number, arr: boolean[] }, "name" | "num">;
+      `type MyPick = Pick<{ name?: string, num: number, arr?: boolean[] }, "name" | "num">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -214,7 +215,7 @@ describe("pick", () => {
 
   it("throws an error if there an incorrect number of type arguments", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyPick = Pick<{ name?: string, num: number, arr: boolean[] }, "name", "num">;
+      `type MyPick = Pick<{ name?: string, num: number, arr?: boolean[] }, "name", "num">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -240,15 +241,10 @@ describe("pick", () => {
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
       SyntaxKind.TypeReference
     );
-    const testParsedType: ParsedType = {
-      kind: ParsedTypeKind.StringLiteral,
-      type: "test",
-    };
-
     expect(() =>
       UtilityTypeParsingHelper.parseUtilityType(
         typeRef,
-        mockedParseTypeNodeCreator(testParsedType, testParsedType)
+        mockedParseTypeNodeCreator()
       )
     ).toThrowError(
       `Only object types are supported for first type arg of Pick utility type. Found ${testParsedType}.`
@@ -257,7 +253,7 @@ describe("pick", () => {
 
   it("throws an error if the pick type is not a string literal or union of string literals", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyPick = Pick<{ name?: string, num: number, arr: boolean[] }, Array<string>>;
+      `type MyPick = Pick<{ name?: string, num: number, arr?: boolean[] }, Array<string>>;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -284,7 +280,7 @@ describe("pick", () => {
 
   it("throws an error if pick types include one not a key in original type", () => {
     const { sourceFile } = createTestSourceFile(
-      `type MyPick = Pick<{ name?: string, num: number, arr: boolean[] }, "name" | "boo">;
+      `type MyPick = Pick<{ name?: string, num: number, arr?: boolean[] }, "name" | "boo">;
       }`
     );
     const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
@@ -302,6 +298,111 @@ describe("pick", () => {
       )
     ).toThrowError(
       `Cannot pick key boo that is not present in type ${fullObjectType.type}.`
+    );
+  });
+});
+
+describe("required", () => {
+  it("can handle an object type", () => {
+    const { sourceFile } = createTestSourceFile(
+      `type MyRequired = Required<{ name?: string, num: number, arr?: boolean[] }>;
+      }`
+    );
+    const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.TypeReference
+    );
+    const parsedType = UtilityTypeParsingHelper.parseUtilityType(
+      typeRef,
+      mockedParseTypeNodeCreator()
+    );
+    expect(parsedType?.type).toEqual({
+      name: {
+        kind: ParsedTypeKind.Simple,
+        required: true,
+        type: "string",
+      },
+      num: numProp,
+      arr: {
+        kind: ParsedTypeKind.Array,
+        required: true,
+        type: {
+          kind: ParsedTypeKind.Simple,
+          type: "boolean",
+        },
+      },
+    });
+  });
+
+  it("does not change optional sub-fields", () => {
+    const { sourceFile } = createTestSourceFile(
+      `type MyRequired = Required<{ obj?: { rare?: boolean; } }>;
+      }`
+    );
+    const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.TypeReference
+    );
+    const objParsedShape: ParsedShape = {
+      rare: {
+        kind: ParsedTypeKind.Simple,
+        required: false,
+        type: "boolean",
+      },
+    };
+    const fullParsedType: ParsedType = {
+      kind: ParsedTypeKind.Object,
+      type: {
+        obj: {
+          kind: ParsedTypeKind.Object,
+          required: false,
+          type: objParsedShape,
+        },
+      },
+    };
+
+    const parsedType = UtilityTypeParsingHelper.parseUtilityType(
+      typeRef,
+      mockedParseTypeNodeCreator(undefined, fullParsedType)
+    );
+    expect(parsedType?.type).toEqual({
+      obj: {
+        kind: ParsedTypeKind.Object,
+        required: true,
+        type: objParsedShape,
+      },
+    });
+  });
+
+  it("does not change non-object types", () => {
+    const { sourceFile } = createTestSourceFile(
+      `type MyRequired = Required<"test">;
+      }`
+    );
+    const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.TypeReference
+    );
+    const parsedType = UtilityTypeParsingHelper.parseUtilityType(
+      typeRef,
+      mockedParseTypeNodeCreator()
+    );
+    expect(parsedType).toEqual(testParsedType);
+  });
+
+  it("throws an error if there an incorrect number of type arguments", () => {
+    const { sourceFile } = createTestSourceFile(
+      `type MyRequired = Required<{ name?: string, num: number, arr?: boolean[] }, "test">;
+      }`
+    );
+    const typeRef = sourceFile.getFirstDescendantByKindOrThrow(
+      SyntaxKind.TypeReference
+    );
+
+    expect(() =>
+      UtilityTypeParsingHelper.parseUtilityType(
+        typeRef,
+        mockedParseTypeNodeCreator()
+      )
+    ).toThrowError(
+      "One type param expected for Required utility type. Found 2."
     );
   });
 });
