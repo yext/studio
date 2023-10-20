@@ -202,7 +202,7 @@ export default class ParsingOrchestrator {
     });
 
     if (absPath.startsWith(this.paths.components)) {
-      this.updateFilepathToDependencyTree(absPath);
+      this.updateDependencyTrees(absPath);
       const componentDepTreeRoot = Object.keys(this.dependencyTrees).find(
         (path) => upath.toUnix(path) === absPath
       );
@@ -227,7 +227,7 @@ export default class ParsingOrchestrator {
     );
   };
 
-  private updateFilepathToDependencyTree(absPath: string) {
+  private updateDependencyTrees(absPath: string) {
     const newDepTree = dependencyTree({
       filename: absPath,
       directory: upath.dirname(absPath),
