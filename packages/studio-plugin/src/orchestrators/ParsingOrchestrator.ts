@@ -44,7 +44,6 @@ export default class ParsingOrchestrator {
   /** This tree contains a root for each Component File. */
   private dependencyTreesObject: Record<string, Tree> = {};
 
-
   /** All paths are assumed to be absolute. */
   constructor(
     private project: Project,
@@ -115,7 +114,7 @@ export default class ParsingOrchestrator {
     }
 
     if (filepath.startsWith(this.paths.components)) {
-      const componentDepTreeRoot = this.getComponentDepTreeRoot(filepath)
+      const componentDepTreeRoot = this.getComponentDepTreeRoot(filepath);
       if (componentDepTreeRoot) {
         delete this.dependencyTreesObject[componentDepTreeRoot];
       }
@@ -203,7 +202,7 @@ export default class ParsingOrchestrator {
 
     if (absPath.startsWith(this.paths.components)) {
       this.updateDependencyTrees(absPath);
-      const componentDepTreeRoot = this.getComponentDepTreeRoot(absPath)
+      const componentDepTreeRoot = this.getComponentDepTreeRoot(absPath);
       if (!componentDepTreeRoot) {
         throw new Error(`Could not find dependency tree for ${absPath}`);
       }
@@ -231,20 +230,22 @@ export default class ParsingOrchestrator {
       directory: upath.dirname(absPath),
       visited: this.dependencyTreesObject,
     });
-    this.dependencyTreesObject = Object.assign(this.dependencyTreesObject, newDepTree);
+    this.dependencyTreesObject = Object.assign(
+      this.dependencyTreesObject,
+      newDepTree
+    );
   }
 
   /**
-   * Given a Unix filepath, this function finds the corresponding 
-   * dependency tree root.  This is important since the paths within 
+   * Given a Unix filepath, this function finds the corresponding
+   * dependency tree root.  This is important since the paths within
    * the dependency tree may be either Unix or Windows.
    */
-  private getComponentDepTreeRoot(unixFilepath: string){
+  private getComponentDepTreeRoot(unixFilepath: string) {
     return Object.keys(this.dependencyTreesObject).find(
       (path) => upath.toUnix(path) === unixFilepath
     );
   }
-
 
   private initPageNameToPageFile(): Record<string, PageFile> {
     if (!fs.existsSync(this.paths.pages)) {
