@@ -230,10 +230,13 @@ export default class ParsingOrchestrator {
       directory: upath.dirname(absPath),
       visited: this.dependencyTreesObject,
     });
-    if (typeof(newDepTree) === "string"){
+    if (typeof newDepTree === "string") {
       throw new Error(`Invalid dependency tree returned for ${absPath}.`);
     }
-    this.dependencyTreesObject = {...this.dependencyTreesObject, ...newDepTree};
+    this.dependencyTreesObject = {
+      ...this.dependencyTreesObject,
+      ...newDepTree,
+    };
   }
 
   /**
