@@ -135,7 +135,7 @@ export default class StudioSourceFileParser {
       });
       if (!resolvedPath) {
         throw new Error(
-          `${importPath} could not be resolved when parsing` +
+          `${importPath} could not be resolved when parsing ` +
             `${this.sourceFile.getFilePath()} for CSS imports.`
         );
       }
