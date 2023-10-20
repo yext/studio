@@ -91,9 +91,7 @@ describe("getLayoutState", () => {
   it("correctly parses CSS imports", () => {
     const result = getLayoutState("BasicLayout");
     const expectedIndexCssPath = getFixturePath("LayoutFile/index.css");
-    expect(result.value.cssImports).toEqual([
-      expectedIndexCssPath
-    ]);
+    expect(result.value.cssImports).toEqual([expectedIndexCssPath]);
   });
 
   it("correctly gets filepath", () => {

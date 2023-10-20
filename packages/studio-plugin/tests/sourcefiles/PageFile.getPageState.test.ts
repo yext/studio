@@ -79,9 +79,7 @@ describe("getPageState", () => {
 
     assertIsOk(result);
     const expectedIndexCssPath = getFixturePath("PageFile/index.css");
-    expect(result.value.cssImports).toEqual([
-      expectedIndexCssPath
-    ]);
+    expect(result.value.cssImports).toEqual([expectedIndexCssPath]);
   });
 
   it("correctly gets filepath", () => {
