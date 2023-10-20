@@ -8,6 +8,7 @@ import tryUsingResult from "../errors/tryUsingResult";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { Result } from "true-myth";
 import { Tree } from "dependency-tree";
+import upath from "upath"
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -62,8 +63,9 @@ export default class ComponentFile {
 function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
   const cssFiles = Object.entries(dependencyTree).reduce(
     (cssFiles, [filename, subDependencyTree]) => {
-      if (filename.includes(".css")) {
-        cssFiles.add(filename);
+      const unixFilepath = upath.toUnix(filename)
+      if (unixFilepath.includes(".css")) {
+        cssFiles.add(unixFilepath);
       }
       return new Set([
         ...cssFiles,
