@@ -15,7 +15,7 @@ export default function useInjectUserStyles(
 ) {
   const [componentCss, pageCss] = useStudioStore(
     (store) => [
-      getComponentTreeCss(store),
+      getComponentTreeCssImports(store),
       store.pages.getActivePageState()?.cssImports,
     ],
     isEqual
@@ -39,7 +39,7 @@ export default function useInjectUserStyles(
   }, [iframeDocument, pageCss, componentCss]);
 }
 
-function getComponentTreeCss(store: StudioStore) {
+function getComponentTreeCssImports(store: StudioStore) {
   const componentTree = store.actions.getComponentTree();
   const getComponentMetadata = store.actions.getComponentMetadata;
 
