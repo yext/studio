@@ -57,9 +57,10 @@ function clearStylingFromIframe(iframeDocument: Document) {
 function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   const styletagIdAttribute = `[${USER_CUSTOM_STYLE_ATTRIBUTE}='${filepath}']`;
   const parentDocumentStyletag = document.querySelector(styletagIdAttribute);
-  const existingIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
+  const existingIframeStyletag =
+    iframeDocument.querySelector(styletagIdAttribute);
   if (existingIframeStyletag) {
-    return
+    return;
   }
 
   if (!parentDocumentStyletag) {
