@@ -77,9 +77,11 @@ export default class StudioSourceFileWriter {
       });
     });
     this.sourceFile.fixMissingImports();
+    
+    const nodeModulesDirectory = "/node_modules/"
     cssImports?.forEach((importSource) => {
-      const moduleSpecifier = importSource.includes("/node_modules/")
-        ? importSource.split("/node_modules/")[1]
+      const moduleSpecifier = importSource.includes(nodeModulesDirectory)
+        ? importSource.split(nodeModulesDirectory)[1]
         : getImportSpecifierWithExtension(
             this.sourceFile.getFilePath(),
             importSource

@@ -62,10 +62,9 @@ export default class ComponentFile {
 
 function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
   const cssFiles = Object.entries(dependencyTree).reduce(
-    (cssFiles, [filename, subDependencyTree]) => {
-      const unixFilepath = upath.toUnix(filename);
-      if (unixFilepath.endsWith(".css")) {
-        cssFiles.add(unixFilepath);
+    (cssFiles, [absFilepath, subDependencyTree]) => {
+      if (absFilepath.endsWith(".css")) {
+        cssFiles.add(upath.toUnix(absFilepath));
       }
       return new Set([
         ...cssFiles,
