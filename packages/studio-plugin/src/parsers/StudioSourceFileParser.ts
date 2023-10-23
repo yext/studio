@@ -17,7 +17,7 @@ import upath from "upath";
 import vm from "vm";
 import TypeNodeParsingHelper, {
   ParsedType,
-} from "./helpers/TypeNodeParsingHelper";
+} from "./helpers/TypeNodeParsingHelpers";
 import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup";
 import { TypelessPropVal } from "../types";

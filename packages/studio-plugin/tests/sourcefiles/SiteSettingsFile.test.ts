@@ -38,9 +38,19 @@ describe("getSiteSettings", () => {
     expect(siteSettingsFile.getSiteSettings()).toEqual(expectedSiteSettings);
   });
 
-  it("errors out if the default export is missing", () => {
+  it("errors out if SiteSettings interface is missing", () => {
     const siteSettingsFile = new SiteSettingsFile(
       getSiteSettingsPath("blankFile.ts"),
+      tsMorphProject
+    );
+    expect(() => siteSettingsFile.getSiteSettings()).toThrow(
+      "Unable to resolve type SiteSettings."
+    );
+  });
+
+  it("errors out if the default export is missing", () => {
+    const siteSettingsFile = new SiteSettingsFile(
+      getSiteSettingsPath("missingDefaultExport.ts"),
       tsMorphProject
     );
     expect(() => siteSettingsFile.getSiteSettings()).toThrow(
