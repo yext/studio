@@ -128,7 +128,7 @@ describe("getPageState", () => {
     });
 
     it("cannot resolve node_module CSS import using package.json export alias", () => {
-      const pageFile = createPageFile("brokenCssImport");
+      const pageFile = createPageFile("unsupportedCssImport");
 
       expect(pageFile.getPageState()).toHaveErrorMessage(
         /^@yext\/search-ui-react\/bundle.css could not be resolved /
