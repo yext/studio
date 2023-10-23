@@ -41,7 +41,10 @@ export default class ParsingOrchestrator {
   private studioData?: StudioData;
   private paths: UserPaths;
   private layoutOrchestrator: LayoutOrchestrator;
-  /** This tree contains a root for each Component File. */
+  /** 
+   * Each key in this object is a ComponentFile filepath which
+   * maps to the rest of the ComponentFile's dependency tree.
+  */
   private dependencyTreesObject: Record<string, Tree> = {};
 
   /** All paths are assumed to be absolute. */
