@@ -52,15 +52,15 @@ export default class StudioSourceFileWriter {
   /**
    * Mutates the source file by adding missing import declarations for identifiers
    * that are referenced in the file, removing import declarations that are no longer
-   * needed, and adding any provided css imports.
+   * needed, and adding any provided style imports.
    *
    * @param namedImports - named imports to add to the file
-   * @param cssImports - css file paths to add as import declarations to the file
+   * @param styleImports - style file paths to add as import declarations to the file
    * @param defaultImports - any default imports to add to the file
    */
   updateFileImports(
     namedImports: Record<string, string[]>,
-    cssImports?: string[],
+    styleImports?: string[],
     defaultImports?: { name: string; moduleSpecifier: string }[]
   ) {
     const structures: OptionalKind<ImportDeclarationStructure>[] = Object.keys(
@@ -79,7 +79,7 @@ export default class StudioSourceFileWriter {
     this.sourceFile.fixMissingImports();
 
     const NODE_MODULES_DIR = "/node_modules/";
-    cssImports?.forEach((importSource) => {
+    styleImports?.forEach((importSource) => {
       const moduleSpecifier = importSource.includes(NODE_MODULES_DIR)
         ? importSource.split(NODE_MODULES_DIR)[1]
         : getImportSpecifierWithExtension(
