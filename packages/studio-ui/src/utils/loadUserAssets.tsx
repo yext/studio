@@ -1,7 +1,12 @@
 import useStudioStore from "../store/useStudioStore";
 import getFunctionComponent from "./getFunctionComponent";
 import dynamicImportFromBrowser from "./dynamicImportFromBrowser";
-import { ComponentMetadata, FileMetadataKind, LayoutState, PageState } from "@yext/studio-plugin";
+import {
+  ComponentMetadata,
+  FileMetadataKind,
+  LayoutState,
+  PageState,
+} from "@yext/studio-plugin";
 
 export const USER_CUSTOM_STYLE_ATTRIBUTE = "studio-user-custom-style";
 
@@ -39,10 +44,18 @@ export async function loadStyling() {
   const studioStore = useStudioStore.getState();
   const pages = Object.values(studioStore.pages.pages);
   const layouts = Object.values(studioStore.layouts.layoutNameToLayoutState);
-  const fileMetadatas = Object.values(studioStore.fileMetadatas.UUIDToFileMetadata);
-  const componentMetadatas = fileMetadatas.filter((fileMetadata) => fileMetadata.kind === FileMetadataKind.Component) as ComponentMetadata[] 
+  const fileMetadatas = Object.values(
+    studioStore.fileMetadatas.UUIDToFileMetadata
+  );
+  const componentMetadatas = fileMetadatas.filter(
+    (fileMetadata) => fileMetadata.kind === FileMetadataKind.Component
+  ) as ComponentMetadata[];
 
-  const userCssFilepaths = getCssImportsFromUserFiles([...pages, ...layouts, ...componentMetadatas])
+  const userCssFilepaths = getCssImportsFromUserFiles([
+    ...pages,
+    ...layouts,
+    ...componentMetadatas,
+  ]);
   for (const filepath of userCssFilepaths) {
     await dynamicImportFromBrowser(filepath).then((styling) => {
       const styleEl = document.createElement("style");
@@ -54,8 +67,10 @@ export async function loadStyling() {
   }
 }
 
-function getCssImportsFromUserFiles(cssImporters: (ComponentMetadata | PageState | LayoutState)[])  {
+function getCssImportsFromUserFiles(
+  cssImporters: (ComponentMetadata | PageState | LayoutState)[]
+) {
   return Object.values(cssImporters).reduce((cssImports, importer) => {
-    return new Set([...cssImports, ...importer.cssImports])
-  }, new Set<string>())
+    return new Set([...cssImports, ...importer.cssImports]);
+  }, new Set<string>());
 }
