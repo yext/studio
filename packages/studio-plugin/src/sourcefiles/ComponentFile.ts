@@ -50,29 +50,29 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-    const cssImports = getCssFilesFromDependencyTree(this.dependencyTree);
+    const styleImports = getStyleFilesFromDependencyTree(this.dependencyTree);
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
       filepath,
-      cssImports,
+      styleImports,
     };
   };
 }
 
-function getCssFilesFromDependencyTree(dependencyTree: Tree): string[] {
-  const cssFiles = Object.entries(dependencyTree).reduce(
-    (cssFiles, [absFilepath, subDependencyTree]) => {
+function getStyleFilesFromDependencyTree(dependencyTree: Tree): string[] {
+  const styleFiles = Object.entries(dependencyTree).reduce(
+    (styleFiles, [absFilepath, subDependencyTree]) => {
       if (isStyleFile(absFilepath)) {
-        cssFiles.add(upath.toUnix(absFilepath));
+        styleFiles.add(upath.toUnix(absFilepath));
       }
       return new Set([
-        ...cssFiles,
-        ...getCssFilesFromDependencyTree(subDependencyTree),
+        ...styleFiles,
+        ...getStyleFilesFromDependencyTree(subDependencyTree),
       ]);
     },
     new Set<string>()
   );
-  return [...cssFiles];
+  return [...styleFiles];
 }
