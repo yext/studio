@@ -33,7 +33,7 @@ export default function useInjectUserStyles(
 }
 
 function getUserCssImports(store: StudioStore): string[] {
-  const pageCss = store.pages.getActivePageState()?.cssImports ?? []
+  const pageCss = store.pages.getActivePageState()?.cssImports ?? [];
   const componentTree = store.actions.getComponentTree();
   const getComponentMetadata = store.actions.getComponentMetadata;
 
@@ -44,7 +44,7 @@ function getUserCssImports(store: StudioStore): string[] {
       componentTreeCss.add(cssFilepath);
     });
   });
-    return [...componentTreeCss, ...pageCss]
+  return [...componentTreeCss, ...pageCss];
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
