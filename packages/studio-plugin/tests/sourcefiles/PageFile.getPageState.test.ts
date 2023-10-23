@@ -81,7 +81,9 @@ describe("getPageState", () => {
     const expectedIndexCssPath = getFixturePath("PageFile/index.css");
     expect(result.value.cssImports).toEqual([
       expectedIndexCssPath,
-      expect.stringContaining("/node_modules/@yext/search-ui-react/lib/bundle.css")
+      expect.stringContaining(
+        "/node_modules/@yext/search-ui-react/lib/bundle.css"
+      ),
     ]);
   });
 
@@ -127,7 +129,7 @@ describe("getPageState", () => {
 
     it("cannot resolve node_module CSS import using package.json export alias", () => {
       const pageFile = createPageFile("brokenCssImport");
-  
+
       expect(pageFile.getPageState()).toHaveErrorMessage(
         /^@yext\/search-ui-react\/bundle.css could not be resolved /
       );
