@@ -48,8 +48,8 @@ export function loadStyling(): void{
     studioStore.fileMetadatas.UUIDToFileMetadata
   );
   const componentMetadatas = fileMetadatas.filter(
-    (fileMetadata) => fileMetadata.kind === FileMetadataKind.Component
-  ) as ComponentMetadata[];
+    (fileMetadata): fileMetadata is ComponentMetadata => fileMetadata.kind === FileMetadataKind.Component
+  );
 
   const userCssFilepaths = getCssImportsFromUserFiles([
     ...pages,
