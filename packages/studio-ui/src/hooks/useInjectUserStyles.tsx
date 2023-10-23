@@ -57,18 +57,19 @@ function clearStylingFromIframe(iframeDocument: Document) {
 function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   const styletagIdAttribute = `[${USER_CUSTOM_STYLE_ATTRIBUTE}='${filepath}']`;
   const parentDocumentStyletag = document.querySelector(styletagIdAttribute);
-  const oldIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
+  const existingIframeStyletag = iframeDocument.querySelector(styletagIdAttribute);
+  if (existingIframeStyletag) {
+    return
+  }
+
   if (!parentDocumentStyletag) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
         "If this is a newly added CSS file, refresh Studio to update. " +
-        "Note that unsaved changes will be deleted on page refresh."
+        "Note that unsaved changes will not be preserved on page refresh."
     );
     return;
   }
-
-  if (!oldIframeStyletag) {
-    const newIframeStyletag = parentDocumentStyletag.cloneNode(true);
-    iframeDocument.head.appendChild(newIframeStyletag);
-  }
+  const newIframeStyletag = parentDocumentStyletag.cloneNode(true);
+  iframeDocument.head.appendChild(newIframeStyletag);
 }
