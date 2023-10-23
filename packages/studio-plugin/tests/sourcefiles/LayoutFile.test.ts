@@ -31,7 +31,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
       bool: { type: PropValueType.boolean, required: false },
     },
     filepath,
-    cssImports: [],
+    styleImports: [],
   };
 }
 
@@ -91,7 +91,7 @@ describe("getLayoutState", () => {
   it("correctly parses CSS imports", () => {
     const result = getLayoutState("BasicLayout");
     const expectedIndexCssPath = getFixturePath("LayoutFile/index.css");
-    expect(result.value.cssImports).toEqual([
+    expect(result.value.styleImports).toEqual([
       expectedIndexCssPath,
       expect.stringContaining(
         "/node_modules/@yext/search-ui-react/lib/bundle.css"

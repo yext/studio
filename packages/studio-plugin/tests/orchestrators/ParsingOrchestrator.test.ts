@@ -39,7 +39,7 @@ const basicPageState: PageState = {
     }),
   ],
   filepath: expect.anything(),
-  cssImports: [],
+  styleImports: [],
 };
 
 describe("aggregates data as expected", () => {
@@ -57,7 +57,7 @@ describe("aggregates data as expected", () => {
       expect.objectContaining({
         filepath: expect.stringContaining("components/Card.tsx"),
         kind: FileMetadataKind.Component,
-        cssImports: [expect.stringContaining("index.css")],
+        styleImports: [expect.stringContaining("index.css")],
       })
     );
     expect(fileMetadataArray).toContainEqual(
@@ -97,7 +97,7 @@ describe("aggregates data as expected", () => {
           }),
         ],
         filepath: expect.stringContaining("layouts/BasicLayout.tsx"),
-        cssImports: [],
+        styleImports: [],
       },
     });
   });

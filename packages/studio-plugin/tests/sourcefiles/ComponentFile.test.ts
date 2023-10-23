@@ -44,7 +44,7 @@ describe("getComponentMetadata", () => {
       metadataUUID: expect.any(String),
       kind: "componentMetadata",
       propShape: { title: { type: "string", required: false } },
-      cssImports: [],
+      styleImports: [],
     });
   });
 
@@ -61,7 +61,7 @@ describe("getComponentMetadata", () => {
       kind: "componentMetadata",
       propShape: {},
       acceptsChildren: true,
-      cssImports: [],
+      styleImports: [],
     });
   });
 
@@ -168,7 +168,7 @@ describe("getComponentMetadata", () => {
           ],
         },
       },
-      cssImports: [],
+      styleImports: [],
     };
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
@@ -270,7 +270,7 @@ describe("getComponentMetadata", () => {
     const componentFile = makeComponentFileWithDependencyTree("ComplexBanner");
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
-    expect(result.value).toHaveProperty("cssImports", [
+    expect(result.value).toHaveProperty("styleImports", [
       expect.stringContaining("index.css"),
     ]);
   });
@@ -281,7 +281,7 @@ describe("getComponentMetadata", () => {
     );
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
-    expect(result.value).toHaveProperty("cssImports", [
+    expect(result.value).toHaveProperty("styleImports", [
       expect.stringContaining("index.css"),
     ]);
   });

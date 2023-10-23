@@ -40,7 +40,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
     metadataUUID: filepath,
     propShape,
     filepath,
-    cssImports: [],
+    styleImports: [],
   };
 }
 

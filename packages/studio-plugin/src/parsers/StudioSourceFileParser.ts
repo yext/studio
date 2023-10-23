@@ -123,7 +123,7 @@ export default class StudioSourceFileParser {
   }
 
   parseStyleImports(): string[] {
-    const getAbsoluteImportFilepath = (importPath: string) => {
+    const getAbsoluteStyleImportFilepath = (importPath: string) => {
       if (upath.isAbsolute(importPath)) {
         return upath.toUnix(importPath);
       }
@@ -135,18 +135,18 @@ export default class StudioSourceFileParser {
       if (!resolvedPath) {
         throw new Error(
           `${importPath} could not be resolved when parsing ` +
-            `${this.sourceFile.getFilePath()} for CSS imports.`
+            `${this.sourceFile.getFilePath()} for style imports.`
         );
       }
       return upath.toUnix(resolvedPath);
     };
-    
+
     const styleImports: string[] = [];
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source: importPath } =
         StaticParsingHelpers.parseImport(importDeclaration);
       if (isStyleFile(importPath)) {
-        styleImports.push(getAbsoluteImportFilepath(importPath));
+        styleImports.push(getAbsoluteStyleImportFilepath(importPath));
       }
     });
     return styleImports;
