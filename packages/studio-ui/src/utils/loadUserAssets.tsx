@@ -70,7 +70,6 @@ export function loadStyling(): void{
 function getCssImportsFromUserFiles(
   cssImporters: (ComponentMetadata | PageState | LayoutState)[]
 ): Set<string> {
-  return Object.values(cssImporters).reduce((cssImports, importer) => {
-    return new Set([...cssImports, ...importer.cssImports]);
-  }, new Set<string>());
+  const cssImports = cssImporters.flatMap((importer) => importer.cssImports);
+  return new Set(cssImports);
 }
