@@ -81,7 +81,9 @@ describe("getPageState", () => {
     const expectedIndexCssPath = getFixturePath("PageFile/index.css");
     expect(result.value.cssImports).toEqual([
       expectedIndexCssPath,
-      "@yext/search-ui-react/index.css",
+      expect.stringContaining(
+        "/node_modules/@yext/search-ui-react/lib/bundle.css"
+      ),
     ]);
   });
 
@@ -123,6 +125,14 @@ describe("getPageState", () => {
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
       expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it("cannot resolve node_module CSS import using package.json export alias", () => {
+      const pageFile = createPageFile("unsupportedCssImport");
+
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        /^@yext\/search-ui-react\/bundle.css could not be resolved /
+      );
     });
   });
 });

@@ -1,6 +1,7 @@
 import "./index.css";
+import "@yext/search-ui-react/lib/bundle.css";
+
 import ComplexBanner from "../ComponentFile/ComplexBanner";
-import "@yext/search-ui-react/index.css";
 import { TemplateProps } from "@yext/pages";
 
 export default function BasicLayout({ document }: TemplateProps) {

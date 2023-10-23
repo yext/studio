@@ -15,7 +15,6 @@ import prettier from "prettier";
 import fs from "fs";
 import { PropVal, PropValueKind, PropValues, PropValueType } from "../types";
 import { getImportSpecifierWithExtension } from "../utils/getImportSpecifier";
-import upath from "upath";
 
 /**
  * StudioSourceFileWriter contains shared business logic for
@@ -78,13 +77,15 @@ export default class StudioSourceFileWriter {
       });
     });
     this.sourceFile.fixMissingImports();
+
+    const NODE_MODULES_DIR = "/node_modules/";
     cssImports?.forEach((importSource) => {
-      const moduleSpecifier = upath.isAbsolute(importSource)
-        ? getImportSpecifierWithExtension(
+      const moduleSpecifier = importSource.includes(NODE_MODULES_DIR)
+        ? importSource.split(NODE_MODULES_DIR)[1]
+        : getImportSpecifierWithExtension(
             this.sourceFile.getFilePath(),
             importSource
-          )
-        : importSource;
+          );
       this.sourceFile.addImportDeclaration({ moduleSpecifier });
     });
     this.sourceFile.organizeImports();

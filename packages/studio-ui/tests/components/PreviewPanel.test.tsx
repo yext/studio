@@ -13,7 +13,7 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import loadComponents from "../../src/utils/loadComponents";
+import { loadComponents } from "../../src/utils/loadUserAssets";
 
 const mockSetState = jest.fn();
 

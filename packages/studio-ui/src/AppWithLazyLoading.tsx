@@ -2,7 +2,7 @@ import LoadingOverlay from "./components/LoadingOverlay";
 import { Suspense, lazy, useEffect, useState } from "react";
 import useStudioStore from "./store/useStudioStore";
 import ProgressBar from "./components/ProgressBar";
-import loadComponents from "./utils/loadComponents";
+import { loadComponents, loadStyling } from "./utils/loadUserAssets";
 import classNames from "classnames";
 
 const AppPromise = import("./App");
@@ -18,6 +18,7 @@ export default function AppWithLazyLoading() {
 
   useEffect(() => {
     loadComponents();
+    loadStyling();
     void AppPromise.then(() => setAppLoaded(true));
   }, []);
 

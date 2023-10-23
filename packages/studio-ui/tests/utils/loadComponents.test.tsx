@@ -1,5 +1,5 @@
 import { FileMetadataKind } from "@yext/studio-plugin";
-import loadComponents from "../../src/utils/loadComponents";
+import { loadComponents } from "../../src/utils/loadUserAssets";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
 import path from "path";
 import { waitFor } from "@testing-library/react";

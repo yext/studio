@@ -177,7 +177,7 @@ describe("getComponentMetadata", () => {
 
   it("correctly parses a string literal type", () => {
     const pathToComponent = getComponentPath("StringLiteralBanner");
-    const componentFile = new ComponentFile(pathToComponent, project);
+    const componentFile = new ComponentFile(pathToComponent, project, {});
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value.propShape).toEqual({
@@ -191,7 +191,7 @@ describe("getComponentMetadata", () => {
 
   it("can parse a type that shares the same name as a Studio type", () => {
     const pathToComponent = getComponentPath("StudioTypeNameBanner");
-    const componentFile = new ComponentFile(pathToComponent, project);
+    const componentFile = new ComponentFile(pathToComponent, project, {});
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value.propShape).toEqual({
@@ -204,7 +204,7 @@ describe("getComponentMetadata", () => {
 
   it("Throws an Error if the prop interface is a utility type", () => {
     const pathToComponent = getComponentPath("UtilityTypeBanner");
-    const componentFile = new ComponentFile(pathToComponent, project);
+    const componentFile = new ComponentFile(pathToComponent, project, {});
     expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       'Unable to resolve type Omit<UtilityTypeBannerProps, "missing">.'
     );
@@ -212,7 +212,7 @@ describe("getComponentMetadata", () => {
 
   it("Throws an Error if HexColor is not imported from Studio", () => {
     const pathToComponent = getComponentPath("NonStudioImportBanner");
-    const componentFile = new ComponentFile(pathToComponent, project);
+    const componentFile = new ComponentFile(pathToComponent, project, {});
     expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       "Prop type HexColor is invalid because it is not imported from @yext/studio"
     );
@@ -220,7 +220,7 @@ describe("getComponentMetadata", () => {
 
   it("Throws an Error if imported prop interface is missing HexColor import", () => {
     const pathToComponent = getComponentPath("MissingExternalImportBanner");
-    const componentFile = new ComponentFile(pathToComponent, project);
+    const componentFile = new ComponentFile(pathToComponent, project, {});
     expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       "Prop type HexColor is invalid because it is not imported from @yext/studio"
     );
@@ -236,7 +236,7 @@ describe("getComponentMetadata", () => {
 
   it("Throws an Error when an prop type is missing for prop within initialProps", () => {
     const pathToComponent = getComponentPath("MissingTypeInitialBanner");
-    const componentFile = new ComponentFile(pathToComponent, project);
+    const componentFile = new ComponentFile(pathToComponent, project, {});
     expect(componentFile.getComponentMetadata()).toHaveErrorMessage(
       /^Could not find prop type for/
     );
