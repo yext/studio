@@ -22,6 +22,7 @@ import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup";
 import { TypelessPropVal } from "../types";
 import cabinet from "filing-cabinet";
+import isStyleFile from "../utils/isStyleFile";
 
 export type ParsedImport = {
   importSource: string;
@@ -145,7 +146,7 @@ export default class StudioSourceFileParser {
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source: importPath } =
         StaticParsingHelpers.parseImport(importDeclaration);
-      if (importPath.endsWith(".css") || importPath.endsWith(".scss")) {
+      if (isStyleFile(importPath)) {
         cssImports.push(getAbsoluteImportFilepath(importPath));
       }
     });

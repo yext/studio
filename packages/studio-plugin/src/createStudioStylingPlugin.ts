@@ -1,4 +1,5 @@
 import { PluginOption } from "vite";
+import isStyleFile from "./utils/isStyleFile";
 
 /**
  * Adds the `?inline` query parameter to all CSS and SCSS imports
@@ -17,7 +18,7 @@ export default function createStudioStylingPlugin(): PluginOption {
       if (isImportedByStudio(id)) {
         return;
       }
-      if (isStyleFile(id)) {
+      if (isStyleId(id)) {
         const resolvedId = (
           await this.resolve(id, importer, { skipSelf: true })
         )?.id;
@@ -37,12 +38,9 @@ function isImportedByStudio(id: string) {
   return includesQueryParameter(id, "studioStyling");
 }
 
-function isStyleFile(id: string) {
+function isStyleId(id: string) {
   const idWithoutQueryParams = id.split("?")[0];
-  return (
-    idWithoutQueryParams.endsWith(".css") ||
-    idWithoutQueryParams.endsWith(".scss")
-  );
+  return isStyleFile(idWithoutQueryParams)
 }
 
 function addQueryParameter(id: string, queryParameter: string) {
