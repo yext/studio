@@ -1,6 +1,4 @@
-import "./index.css";
-import "@yext/search-ui-react/lib/bundle.css";
-
+import "@yext/search-ui-react/bundle.css";
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 import { GetPath, TemplateConfig, TemplateProps } from "@yext/pages";
 
@@ -19,6 +17,6 @@ export const getPath: GetPath<TemplateProps> = ({
   return document.slug;
 };
 
-export default function Location({ document }: TemplateProps) {
+export default function BrokenCss({ document }: TemplateProps) {
   return <ComplexBanner title={document.title} num={3} bool={false} />;
 }

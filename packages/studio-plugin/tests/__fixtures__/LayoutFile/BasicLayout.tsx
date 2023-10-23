@@ -1,4 +1,6 @@
 import "./index.css";
+import "@yext/search-ui-react/lib/bundle.css";
+
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 import { TemplateProps } from "@yext/pages";
 
