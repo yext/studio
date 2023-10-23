@@ -13,11 +13,8 @@ import { StudioStore } from "../store/models/StudioStore";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const [componentTreeCss, pageCss] = useStudioStore(
-    (store) => [
-      getComponentTreeCssImports(store),
-      store.pages.getActivePageState()?.cssImports,
-    ],
+  const userCssImports = useStudioStore(
+    (store) => getUserCssImports(store),
     isEqual
   );
 
@@ -25,32 +22,29 @@ export default function useInjectUserStyles(
     if (!iframeDocument) {
       return;
     }
-
-    componentTreeCss.forEach((cssFilepath) => {
-      injectStyleIntoIframe(iframeDocument, cssFilepath);
-    });
-    pageCss?.forEach((cssFilepath) => {
+    userCssImports.forEach((cssFilepath) => {
       injectStyleIntoIframe(iframeDocument, cssFilepath);
     });
 
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [iframeDocument, pageCss, componentTreeCss]);
+  }, [iframeDocument, userCssImports]);
 }
 
-function getComponentTreeCssImports(store: StudioStore) {
+function getUserCssImports(store: StudioStore): string[] {
+  const pageCss = store.pages.getActivePageState()?.cssImports ?? []
   const componentTree = store.actions.getComponentTree();
   const getComponentMetadata = store.actions.getComponentMetadata;
 
-  const componentCss = new Set<string>();
+  const componentTreeCss = new Set<string>();
   componentTree?.forEach((component) => {
     const cssImports = getComponentMetadata(component)?.cssImports;
     cssImports?.forEach((cssFilepath) => {
-      componentCss.add(cssFilepath);
+      componentTreeCss.add(cssFilepath);
     });
   });
-  return componentCss;
+    return [...componentTreeCss, ...pageCss]
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
