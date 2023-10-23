@@ -40,7 +40,7 @@ export function loadComponents(): Promise<void>[] {
  * is labeled with the absolute path to the corresponding
  * user styling file.
  */
-export async function loadStyling() {
+export function loadStyling(): void{
   const studioStore = useStudioStore.getState();
   const pages = Object.values(studioStore.pages.pages);
   const layouts = Object.values(studioStore.layouts.layoutNameToLayoutState);
@@ -56,20 +56,20 @@ export async function loadStyling() {
     ...layouts,
     ...componentMetadatas,
   ]);
-  for (const filepath of userCssFilepaths) {
-    await dynamicImportFromBrowser(filepath).then((styling) => {
+  userCssFilepaths.forEach( filepath => {
+    void dynamicImportFromBrowser(filepath).then((styling) => {
       const styleEl = document.createElement("style");
       styleEl.innerText = styling.default;
       styleEl.setAttribute(USER_CUSTOM_STYLE_ATTRIBUTE, filepath);
       document.head.appendChild(styleEl);
       styleEl.disabled = true;
     });
-  }
+  })
 }
 
 function getCssImportsFromUserFiles(
   cssImporters: (ComponentMetadata | PageState | LayoutState)[]
-) {
+): Set<string> {
   return Object.values(cssImporters).reduce((cssImports, importer) => {
     return new Set([...cssImports, ...importer.cssImports]);
   }, new Set<string>());
