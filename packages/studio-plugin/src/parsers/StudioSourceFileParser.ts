@@ -122,9 +122,7 @@ export default class StudioSourceFileParser {
     );
   }
 
-  parseCssImports(): string[] {
-    const cssImports: string[] = [];
-
+  parseStyleImports(): string[] {
     const getAbsoluteImportFilepath = (importPath: string) => {
       if (upath.isAbsolute(importPath)) {
         return upath.toUnix(importPath);
@@ -142,15 +140,16 @@ export default class StudioSourceFileParser {
       }
       return upath.toUnix(resolvedPath);
     };
-
+    
+    const styleImports: string[] = [];
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
       const { source: importPath } =
         StaticParsingHelpers.parseImport(importDeclaration);
       if (isStyleFile(importPath)) {
-        cssImports.push(getAbsoluteImportFilepath(importPath));
+        styleImports.push(getAbsoluteImportFilepath(importPath));
       }
     });
-    return cssImports;
+    return styleImports;
   }
 
   getExportedObjectExpression(

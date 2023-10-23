@@ -2,6 +2,6 @@ import { ComponentState } from "./ComponentState";
 
 export type LayoutState = {
   componentTree: ComponentState[];
-  cssImports: string[];
+  styleImports: string[];
   filepath: string;
 };
