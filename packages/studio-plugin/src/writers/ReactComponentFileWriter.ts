@@ -25,7 +25,7 @@ import {
 import StudioSourceFileWriter from "./StudioSourceFileWriter";
 import ComponentTreeHelpers from "../utils/ComponentTreeHelpers";
 import camelCase from "camelcase";
-import { CustomTags } from "../parsers/helpers/TypeNodeParsingHelper";
+import { CustomTags } from "../parsers/helpers/TypeNodeParsingHelpers";
 import { getImportSpecifier } from "../utils/getImportSpecifier";
 
 /**

@@ -1,5 +1,5 @@
 import { UnionTypeNode, SyntaxKind, LiteralTypeNode, TypeNode } from "ts-morph";
-import { ParsedType, ParsedTypeKind } from "./TypeNodeParsingHelper";
+import { ParsedType, ParsedTypeKind } from "./TypeNodeParsingHelpers";
 
 export default class StringUnionParsingHelper {
   static parseStringUnion(
