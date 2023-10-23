@@ -1,7 +1,7 @@
 import useStudioStore from "../store/useStudioStore";
 import getFunctionComponent from "./getFunctionComponent";
 import dynamicImportFromBrowser from "./dynamicImportFromBrowser";
-import { FileMetadataKind } from "@yext/studio-plugin";
+import { ComponentMetadata, FileMetadataKind, LayoutState, PageState } from "@yext/studio-plugin";
 
 export const USER_CUSTOM_STYLE_ATTRIBUTE = "studio-user-custom-style";
 
@@ -37,32 +37,13 @@ export function loadComponents(): Promise<void>[] {
  */
 export async function loadStyling() {
   const studioStore = useStudioStore.getState();
-  const UUIDToFileMetadata = studioStore.fileMetadatas.UUIDToFileMetadata;
-  const pages = studioStore.pages.pages;
-  const layouts = studioStore.layouts.layoutNameToLayoutState;
+  const pages = Object.values(studioStore.pages.pages);
+  const layouts = Object.values(studioStore.layouts.layoutNameToLayoutState);
+  const fileMetadatas = Object.values(studioStore.fileMetadatas.UUIDToFileMetadata);
+  const componentMetadatas = fileMetadatas.filter((fileMetadata) => fileMetadata.kind === FileMetadataKind.Component) as ComponentMetadata[] 
 
-  for (const fileMetadata of Object.values(UUIDToFileMetadata)) {
-    if (fileMetadata.kind === FileMetadataKind.Component) {
-      await importAndInjectIntoStudio(fileMetadata.cssImports);
-    }
-  }
-
-  for (const page of Object.values(pages)) {
-    await importAndInjectIntoStudio(page.cssImports);
-  }
-
-  for (const layout of Object.values(layouts)) {
-    await importAndInjectIntoStudio(layout.cssImports);
-  }
-}
-
-async function importAndInjectIntoStudio(cssImports: string[]) {
-  for (const filepath of Object.values(cssImports)) {
-    if (
-      document.querySelector(`[${USER_CUSTOM_STYLE_ATTRIBUTE}='${filepath}']`)
-    ) {
-      return;
-    }
+  const userCssFilepaths = getCssImportsFromUserFiles([...pages, ...layouts, ...componentMetadatas])
+  for (const filepath of userCssFilepaths) {
     await dynamicImportFromBrowser(filepath).then((styling) => {
       const styleEl = document.createElement("style");
       styleEl.innerText = styling.default;
@@ -71,4 +52,10 @@ async function importAndInjectIntoStudio(cssImports: string[]) {
       styleEl.disabled = true;
     });
   }
+}
+
+function getCssImportsFromUserFiles(cssImporters: (ComponentMetadata | PageState | LayoutState)[])  {
+  return Object.values(cssImporters).reduce((cssImports, importer) => {
+    return new Set([...cssImports, ...importer.cssImports])
+  }, new Set<string>())
 }
