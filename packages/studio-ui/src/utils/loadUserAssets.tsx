@@ -71,6 +71,8 @@ export function loadStyling(): void {
 function getStyleImportsFromUserFiles(
   styleImporters: (ComponentMetadata | PageState | LayoutState)[]
 ): Set<string> {
-  const styleImports = styleImporters.flatMap((importer) => importer.styleImports);
+  const styleImports = styleImporters.flatMap(
+    (importer) => importer.styleImports
+  );
   return new Set(styleImports);
 }

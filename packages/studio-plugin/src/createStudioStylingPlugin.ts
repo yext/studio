@@ -40,7 +40,7 @@ function isImportedByStudio(id: string) {
 
 function isStyleId(id: string) {
   const idWithoutQueryParams = id.split("?")[0];
-  return isStyleFile(idWithoutQueryParams)
+  return isStyleFile(idWithoutQueryParams);
 }
 
 function addQueryParameter(id: string, queryParameter: string) {

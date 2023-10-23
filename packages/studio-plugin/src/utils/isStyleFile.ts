@@ -4,8 +4,5 @@
  * and SCSS.
  */
 export default function isStyleFile(filename: string) {
-  return (
-    filename.endsWith(".css") ||
-    filename.endsWith(".scss")
-  );
+  return filename.endsWith(".css") || filename.endsWith(".scss");
 }
