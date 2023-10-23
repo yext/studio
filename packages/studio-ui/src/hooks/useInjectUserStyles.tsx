@@ -13,8 +13,8 @@ import { StudioStore } from "../store/models/StudioStore";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const userCssImports = useStudioStore(
-    (store) => getUserCssImports(store),
+  const userStyleImports = useStudioStore(
+    (store) => getUserStyleImports(store),
     isEqual
   );
 
@@ -22,29 +22,29 @@ export default function useInjectUserStyles(
     if (!iframeDocument) {
       return;
     }
-    userCssImports.forEach((cssFilepath) => {
-      injectStyleIntoIframe(iframeDocument, cssFilepath);
+    userStyleImports.forEach((styleFilepath) => {
+      injectStyleIntoIframe(iframeDocument, styleFilepath);
     });
 
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [iframeDocument, userCssImports]);
+  }, [iframeDocument, userStyleImports]);
 }
 
-function getUserCssImports(store: StudioStore): string[] {
-  const pageCss = store.pages.getActivePageState()?.cssImports ?? [];
+function getUserStyleImports(store: StudioStore): string[] {
+  const pageStyles = store.pages.getActivePageState()?.styleImports ?? [];
   const componentTree = store.actions.getComponentTree();
   const getComponentMetadata = store.actions.getComponentMetadata;
 
-  const componentTreeCss = new Set<string>();
+  const componentTreeStyles = new Set<string>();
   componentTree?.forEach((component) => {
-    const cssImports = getComponentMetadata(component)?.cssImports;
-    cssImports?.forEach((cssFilepath) => {
-      componentTreeCss.add(cssFilepath);
+    const styleImports = getComponentMetadata(component)?.styleImports;
+    styleImports?.forEach((styleFilepath) => {
+      componentTreeStyles.add(styleFilepath);
     });
   });
-  return [...componentTreeCss, ...pageCss];
+  return [...componentTreeStyles, ...pageStyles];
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
@@ -66,7 +66,7 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   if (!parentDocumentStyletag) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
-        "If this is a newly added CSS file, refresh Studio to update. " +
+        "If this is a newly added style file, refresh Studio to update. " +
         "Note that unsaved changes will not be preserved on page refresh."
     );
     return;
