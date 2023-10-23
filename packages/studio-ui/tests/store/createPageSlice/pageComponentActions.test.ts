@@ -12,7 +12,7 @@ describe("PageSlice", () => {
         pages: {
           universal: {
             componentTree: [searchBarComponent, resultsComponent],
-            cssImports: [],
+            styleImports: [],
             filepath: "mock-filepath",
           },
         },
@@ -40,7 +40,7 @@ describe("PageSlice", () => {
         pages: {
           universal: {
             componentTree: [searchBarComponent],
-            cssImports: [],
+            styleImports: [],
             filepath: "mock-filepath",
           },
         },

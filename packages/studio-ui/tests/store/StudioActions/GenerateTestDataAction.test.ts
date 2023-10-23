@@ -109,7 +109,7 @@ function getPagesRecord(entityFiles?: string[]) {
   return {
     test: {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "mock-filepath",
       pagesJS: {
         getPathValue: undefined,

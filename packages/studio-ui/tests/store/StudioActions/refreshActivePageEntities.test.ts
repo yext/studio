@@ -6,7 +6,7 @@ const initialState: Partial<PageSliceStates> = {
   pages: {
     Universal: {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "some/file/path",
       pagesJS: {
         entityFiles: ["mockLocalData.json", "entityFile.json"],
@@ -15,7 +15,7 @@ const initialState: Partial<PageSliceStates> = {
     },
     empty: {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "some/file/path",
       pagesJS: {
         entityFiles: [],

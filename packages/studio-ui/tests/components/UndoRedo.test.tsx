@@ -14,7 +14,7 @@ describe("Undo/redo", () => {
         pages: {
           universal: {
             componentTree: [searchBarComponent],
-            cssImports: [],
+            styleImports: [],
             filepath: "mock-filepath",
           },
         },

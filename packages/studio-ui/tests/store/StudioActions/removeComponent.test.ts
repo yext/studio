@@ -32,7 +32,7 @@ it("removes component and its children from the active PageState", () => {
       pages: {
         pagename: {
           componentTree: initialTree,
-          cssImports: [],
+          styleImports: [],
           filepath: "unused",
         },
       },
