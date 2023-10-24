@@ -1,4 +1,3 @@
-import "../styles/index.css";
 import ComplexBanner from "../ComponentFile/ComplexBanner";
 import "@yext/search-ui-react/index.css";
 
