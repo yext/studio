@@ -2,6 +2,7 @@ import useTemporalStore from "../store/useTemporalStore";
 import { ReactComponent as Undo } from "../icons/undo.svg";
 import { useCallback, useEffect } from "react";
 import classNames from "classnames";
+import platform from "platform"
 
 /**
  * Buttons for undo and redo actions.
@@ -24,7 +25,8 @@ export default function UndoRedo(): JSX.Element {
 
   const handleUndoKeydown = useCallback(
     (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === "z") {
+    const actionKey = platform.os.family === "OS X" ? event.metaKey : event.ctrlKey
+      if (actionKey && event.key === "z") {
         event.preventDefault();
         undo();
       }
