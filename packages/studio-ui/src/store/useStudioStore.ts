@@ -16,6 +16,7 @@ import createEnvDataSlice from "./slices/createEnvDataSlice";
 import createGitDataSlice from "./slices/createGitDataSlice";
 import createAccountContentSlice from "./slices/accountContent/createAccountContentSlice";
 import createLayoutSlice from "./slices/createLayoutSlice";
+import createLoadedStylesSlice from "./slices/createLoadedStylesSlice";
 
 enableMapSet();
 
@@ -52,6 +53,7 @@ const useStudioStore = create<StudioStore>()(
         envData: lens(createEnvDataSlice),
         gitData: lens(createGitDataSlice),
         accountContent: lens(createAccountContentSlice),
+        loadedStyles: lens(createLoadedStylesSlice),
       };
     })
   )

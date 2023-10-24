@@ -13,8 +13,11 @@ import { StudioStore } from "../store/models/StudioStore";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const userStyleImports = useStudioStore(
-    (store) => getUserStyleImports(store),
+  const [userStyleImports, loadedStyleFilepaths] = useStudioStore(
+    (store) => [
+      getUserStyleImports(store),
+      store.loadedStyles.loadedStyleFilepaths,
+    ],
     isEqual
   );
 
@@ -29,7 +32,14 @@ export default function useInjectUserStyles(
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [iframeDocument, userStyleImports]);
+
+    /**
+     * loadedStyleFilepaths is watched by this useEffect hook to
+     * account for the race condition where this hook is
+     * called before all user styles are added to Studio's
+     * document head.
+     */
+  }, [iframeDocument, userStyleImports, loadedStyleFilepaths]);
 }
 
 function getUserStyleImports(store: StudioStore): string[] {
@@ -66,8 +76,9 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   if (!parentDocumentStyletag) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
-        "If this is a newly added style file, refresh Studio to update. " +
-        "Note that unsaved changes will not be preserved on page refresh."
+        "If this style is missing from Studio Preview and is a " +
+        "newly added style file, refresh Studio to update. Note that " +
+        "unsaved changes will not be preserved on page refresh."
     );
     return;
   }
