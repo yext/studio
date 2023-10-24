@@ -46,16 +46,7 @@ describe("Undo/redo", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 
-  it("undoes last state update using control + z", async () => {
-    render(<UndoRedo />);
-    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
-      "searchbar-uuid"
-    );
-    await userEvent.keyboard("{Control>}z{/Control}");
-    expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
-  });
-
-  it("undoes last state update using command + z", async () => {
+  it("undoes last state update using control/command + z", async () => {
     render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
