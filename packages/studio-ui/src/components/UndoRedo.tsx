@@ -37,6 +37,7 @@ export default function UndoRedo(): JSX.Element {
 
   useEffect(() => {
     document.addEventListener("keydown", handleUndoKeydown);
+    return () => document.removeEventListener("keydown", handleUndoKeydown);
   }, [handleUndoKeydown]);
 
   const disableUndo = pastStates.length === 0;
