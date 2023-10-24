@@ -2,14 +2,14 @@ import LoadingProgressSlice from "../models/slices/LoadingProgressSlice";
 import { SliceCreator } from "../models/utils";
 
 const createLoadingProgressSlice: SliceCreator<LoadingProgressSlice> = (
-  set,
+  set
 ) => ({
-  loadedStyles: new Set<string> (), 
-  addLoadedStyle:(style: string) => {
+  loadedStyles: new Set<string>(),
+  addLoadedStyle: (style: string) => {
     set((store) => {
-      store.loadedStyles.add(style)
-    })
-  }
+      store.loadedStyles.add(style);
+    });
+  },
 });
 
 export default createLoadingProgressSlice;

@@ -1,4 +1,4 @@
 export default interface LoadingProgressSlice {
-  loadedStyles: Set<string>
+  loadedStyles: Set<string>;
   addLoadedStyle: (style: string) => void;
 }

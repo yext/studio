@@ -14,10 +14,9 @@ export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
   const [userStyleImports, loadedStyles] = useStudioStore(
-    (store) => [
-      getUserStyleImports(store),
-      store.loadingProgress.loadedStyles
-    ], isEqual);
+    (store) => [getUserStyleImports(store), store.loadingProgress.loadedStyles],
+    isEqual
+  );
 
   useEffect(() => {
     if (!iframeDocument) {
@@ -67,7 +66,7 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   if (!parentDocumentStyletag) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
-        "If this style is missing from Studio Preview and is a " + 
+        "If this style is missing from Studio Preview and is a " +
         "newly added style file, refresh Studio to update. Note that " +
         "unsaved changes will not be preserved on page refresh."
     );

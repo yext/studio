@@ -59,13 +59,15 @@ export function loadStyling(): Promise<void>[] {
     ...componentMetadatas,
   ]);
   return userStyleFilepaths.map((filepath) => {
-    return dynamicImportFromBrowser(filepath).then((styling) => {
-      const styleEl = document.createElement("style");
-      styleEl.innerText = styling.default;
-      styleEl.setAttribute(USER_CUSTOM_STYLE_ATTRIBUTE, filepath);
-      document.head.appendChild(styleEl);
-      styleEl.disabled = true;
-    }).then(()=> addLoadedStyle(filepath));
+    return dynamicImportFromBrowser(filepath)
+      .then((styling) => {
+        const styleEl = document.createElement("style");
+        styleEl.innerText = styling.default;
+        styleEl.setAttribute(USER_CUSTOM_STYLE_ATTRIBUTE, filepath);
+        document.head.appendChild(styleEl);
+        styleEl.disabled = true;
+      })
+      .then(() => addLoadedStyle(filepath));
   });
 }
 

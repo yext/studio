@@ -53,7 +53,7 @@ const useStudioStore = create<StudioStore>()(
         envData: lens(createEnvDataSlice),
         gitData: lens(createGitDataSlice),
         accountContent: lens(createAccountContentSlice),
-        loadingProgress: lens(createLoadingProgressSlice)
+        loadingProgress: lens(createLoadingProgressSlice),
       };
     })
   )
