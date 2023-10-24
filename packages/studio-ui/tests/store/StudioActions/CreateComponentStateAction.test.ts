@@ -13,7 +13,7 @@ it("creates the expected component state", () => {
     kind: FileMetadataKind.Component,
     filepath: "./blah/AddedComp.tsx",
     metadataUUID: "unused",
-    cssImports: [],
+    styleImports: [],
   };
 
   const expectedState: ComponentState = {
@@ -51,7 +51,7 @@ it("adds default values for required props", () => {
         required: true,
       },
     },
-    cssImports: [],
+    styleImports: [],
   };
 
   const actualState = useStudioStore

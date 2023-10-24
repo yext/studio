@@ -4,7 +4,7 @@ import { PropValueKind } from "./PropValues";
 
 export type PageState = {
   componentTree: ComponentState[];
-  cssImports: string[];
+  styleImports: string[];
   filepath: string;
   pagesJS?: PagesJsState;
 };

@@ -12,7 +12,7 @@ beforeEach(() => {
   mockActivePage({
     componentTree: [],
     filepath: "",
-    cssImports: [],
+    styleImports: [],
   });
   mockStore({
     fileMetadatas: {
@@ -21,14 +21,14 @@ beforeEach(() => {
           kind: FileMetadataKind.Component,
           metadataUUID: "comp",
           filepath: "blah/MockComponent.tsx",
-          cssImports: [],
+          styleImports: [],
         },
         "uuid-container": {
           kind: FileMetadataKind.Component,
           metadataUUID: "cont",
           acceptsChildren: true,
           filepath: "blah/MockContainer.tsx",
-          cssImports: [],
+          styleImports: [],
         },
       },
     },
@@ -44,7 +44,7 @@ beforeEach(() => {
               uuid: "component-inside-layout-uuid",
             },
           ],
-          cssImports: [],
+          styleImports: [],
           filepath: "/filepath/to/MyMockLayout.tsx",
         },
       },

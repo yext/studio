@@ -74,7 +74,7 @@ describe("updateFile", () => {
           { ...commonComplexBannerState, uuid: "mock-uuid-0" },
           { ...commonComplexBannerState, uuid: "mock-uuid-1" },
         ],
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -94,7 +94,7 @@ describe("updateFile", () => {
         "IndexPage"
       ).updateFile({
         componentTree: nestedBannerComponentTree,
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata: computeUUIDToFileMetadata({
           [getComponentPath("ComplexBanner")]: "ComplexBanner",
           [getComponentPath("NestedBanner")]: "NestedBanner",
@@ -152,7 +152,7 @@ describe("updateFile", () => {
             metadataUUID: getComponentPath("BannerUsingObject"),
           },
         ],
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -207,7 +207,7 @@ describe("updateFile", () => {
             metadataUUID: getComponentPath("BannerUsingArrays"),
           },
         ],
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -235,7 +235,7 @@ describe("updateFile", () => {
             metadataUUID: "mock-metadata-uuid",
           },
         ],
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -259,7 +259,7 @@ describe("updateFile", () => {
         "IndexPage"
       ).updateFile({
         componentTree: [fragmentComponent],
-        cssImports: [indexCssPath, appCssPath],
+        styleImports: [indexCssPath, appCssPath],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -289,7 +289,7 @@ describe("updateFile", () => {
             metadataUUID: "mock-standard-metadata-uuid",
           },
         ],
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -309,7 +309,7 @@ describe("updateFile", () => {
         "IndexPage"
       ).updateFile({
         componentTree: [fragmentComponent],
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -344,7 +344,7 @@ describe("updateFile", () => {
             metadataUUID: "mock-text-metadata-uuid",
           },
         ],
-        cssImports: [],
+        styleImports: [],
         UUIDToFileMetadata,
       });
       expect(fs.writeFileSync).toHaveBeenCalledWith(
@@ -405,7 +405,7 @@ function computeUUIDToFileMetadata(components: Record<string, string>) {
         kind: FileMetadataKind.Component,
         metadataUUID,
         filepath: getComponentPath(componentName),
-        cssImports: [],
+        styleImports: [],
       };
       return UUIDToFileMetadata;
     },

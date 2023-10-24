@@ -1,4 +1,5 @@
-import "./index.css";
+import "../styles/index.css";
+import "../styles/sassy.scss";
 import "@yext/search-ui-react/lib/bundle.css";
 
 import ComplexBanner from "../ComponentFile/ComplexBanner";

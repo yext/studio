@@ -3,8 +3,8 @@ import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
 import {
   getComponentPath,
-  getFixturePath,
   getPagePath,
+  getStylePath,
 } from "../__utils__/getFixturePath";
 import { FileMetadata, FileMetadataKind } from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
@@ -23,7 +23,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
       bool: { type: PropValueType.boolean, required: false },
     },
     filepath,
-    cssImports: [],
+    styleImports: [],
   };
 }
 
@@ -73,14 +73,14 @@ describe("getPageState", () => {
     ]);
   });
 
-  it("correctly parses CSS imports", () => {
+  it("correctly parses style imports", () => {
     const pageFile = createPageFile("entityTemplate");
     const result = pageFile.getPageState();
 
     assertIsOk(result);
-    const expectedIndexCssPath = getFixturePath("PageFile/index.css");
-    expect(result.value.cssImports).toEqual([
-      expectedIndexCssPath,
+    expect(result.value.styleImports).toEqual([
+      getStylePath("index.css"),
+      getStylePath("sassy.scss"),
       expect.stringContaining(
         "/node_modules/@yext/search-ui-react/lib/bundle.css"
       ),

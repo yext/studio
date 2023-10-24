@@ -9,12 +9,12 @@ import {
 const pages: PagesRecord = {
   universal: {
     componentTree: [searchBarComponent],
-    cssImports: ["index.css"],
+    styleImports: ["index.css"],
     filepath: "mock-filepath",
   },
   vertical: {
     componentTree: [resultsComponent],
-    cssImports: [],
+    styleImports: [],
     filepath: "mock-filepath",
   },
 };

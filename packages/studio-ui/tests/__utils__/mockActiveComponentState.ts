@@ -13,7 +13,7 @@ export default function mockStoreActiveComponent({
       pages: {
         index: {
           componentTree: activeComponent ? [activeComponent] : [],
-          cssImports: [],
+          styleImports: [],
           filepath: "mock-filepath",
         },
       },

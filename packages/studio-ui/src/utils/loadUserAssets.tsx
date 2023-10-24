@@ -52,12 +52,12 @@ export function loadStyling(): void {
       fileMetadata.kind === FileMetadataKind.Component
   );
 
-  const userCssFilepaths = getCssImportsFromUserFiles([
+  const userStyleFilepaths = getStyleImportsFromUserFiles([
     ...pages,
     ...layouts,
     ...componentMetadatas,
   ]);
-  userCssFilepaths.forEach((filepath) => {
+  userStyleFilepaths.forEach((filepath) => {
     void dynamicImportFromBrowser(filepath).then((styling) => {
       const styleEl = document.createElement("style");
       styleEl.innerText = styling.default;
@@ -68,9 +68,11 @@ export function loadStyling(): void {
   });
 }
 
-function getCssImportsFromUserFiles(
-  cssImporters: (ComponentMetadata | PageState | LayoutState)[]
+function getStyleImportsFromUserFiles(
+  styleImporters: (ComponentMetadata | PageState | LayoutState)[]
 ): Set<string> {
-  const cssImports = cssImporters.flatMap((importer) => importer.cssImports);
-  return new Set(cssImports);
+  const styleImports = styleImporters.flatMap(
+    (importer) => importer.styleImports
+  );
+  return new Set(styleImports);
 }

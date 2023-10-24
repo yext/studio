@@ -9,5 +9,5 @@ export type ComponentMetadata = {
   initialProps?: PropValues;
   propShape?: PropShape;
   acceptsChildren?: boolean;
-  cssImports: string[];
+  styleImports: string[];
 };

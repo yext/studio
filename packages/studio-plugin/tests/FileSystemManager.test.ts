@@ -27,7 +27,7 @@ const bannerComponentState: ComponentState = {
 
 const pageState: PageState = {
   componentTree: [bannerComponentState],
-  cssImports: [],
+  styleImports: [],
   filepath: "some/file/path",
 };
 

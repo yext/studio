@@ -4,7 +4,7 @@ import mockStore from "../../__utils__/mockStore";
 it("updates the active page and sets the entity file", async () => {
   const page = {
     componentTree: [],
-    cssImports: [],
+    styleImports: [],
     filepath: "unused",
   };
   mockStore({

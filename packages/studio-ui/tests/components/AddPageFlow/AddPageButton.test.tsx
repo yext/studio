@@ -14,7 +14,7 @@ import * as sendMessageModule from "../../../src/messaging/sendMessage";
 
 const basicPageState: PageState = {
   componentTree: [],
-  cssImports: [],
+  styleImports: [],
   filepath: expect.stringContaining("test.tsx"),
 };
 
@@ -28,7 +28,7 @@ const mockLayout: LayoutState = {
       metadataUUID: "mockMetadataUUID",
     },
   ],
-  cssImports: [],
+  styleImports: [],
   filepath: "mockLayoutFilepath",
 };
 
@@ -38,7 +38,7 @@ beforeEach(() => {
       pages: {
         universal: {
           componentTree: [],
-          cssImports: [],
+          styleImports: [],
           filepath: "mockFilepath",
         },
       },
@@ -80,7 +80,7 @@ it("closes the modal after completing page name and layout modals in a non-Pages
   expect(useStudioStore.getState().pages.pages["test"]).toEqual({
     ...basicPageState,
     componentTree: mockLayout.componentTree,
-    cssImports: mockLayout.cssImports,
+    styleImports: mockLayout.styleImports,
   });
 });
 
@@ -147,7 +147,7 @@ describe("PagesJS repo", () => {
         entityFiles: ["mockLocalData.json"],
       },
       componentTree: mockLayout.componentTree,
-      cssImports: mockLayout.cssImports,
+      styleImports: mockLayout.styleImports,
     });
 
     await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
@@ -225,7 +225,7 @@ describe("PagesJS repo", () => {
           entityFiles: ["mockLocalData.json"],
         },
         componentTree: mockLayout.componentTree,
-        cssImports: mockLayout.cssImports,
+        styleImports: mockLayout.styleImports,
       });
       await waitFor(() => expect(screen.queryByText("Save")).toBeNull());
 
