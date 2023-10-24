@@ -1,9 +1,7 @@
 import LoadedStylesSlice from "../models/slices/LoadedStylesSlice";
 import { SliceCreator } from "../models/utils";
 
-const createLoadedStylesSlice: SliceCreator<LoadedStylesSlice> = (
-  set
-) => ({
+const createLoadedStylesSlice: SliceCreator<LoadedStylesSlice> = (set) => ({
   loadedStyles: new Set<string>(),
   addLoadedStyle: (style: string) => {
     set((store) => {
