@@ -3,7 +3,7 @@ import isStyleFile from "./utils/isStyleFile";
 
 /**
  * Adds the `?inline` query parameter to all CSS and SCSS imports
- * unless they are imported by Studio. Studio CSS files are
+ * unless they are imported by Studio. Studio styling files are
  * distinguished by their `?studioStyling` query parameter.
  * This prevents user styling from affecting Studio's UI.
  */
