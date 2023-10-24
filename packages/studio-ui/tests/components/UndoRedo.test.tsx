@@ -7,6 +7,15 @@ import { searchBarComponent } from "../__fixtures__/componentStates";
 import mockStore from "../__utils__/mockStore";
 import platform from "platform";
 
+jest.mock("platform", () => ({
+  __esModule: true,
+  default: {
+    os: {
+      family: null
+    }
+  }
+}))
+
 describe("Undo/redo", () => {
   beforeEach(() => {
     jest.useFakeTimers();
@@ -47,15 +56,25 @@ describe("Undo/redo", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 
-  it("undoes last state update using control/command + z", async () => {
-    const actionKey = ["OS X", "Darwin"].includes(platform.os.family)
-      ? "Meta"
-      : "Control";
+  it("undoes last state update using control + z", async () => {
+    platform.os.family = "Windows"
+    
     render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
     );
-    await userEvent.keyboard(`{${actionKey}>}z{/${actionKey}}`);
+    await userEvent.keyboard("{Control>}z{/Control}");
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+  });
+
+  it("undoes last state update using command + z", async () => {
+    platform.os.family = "OS X"
+
+    render(<UndoRedo />);
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard("{Meta>}z{/Meta}");
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 

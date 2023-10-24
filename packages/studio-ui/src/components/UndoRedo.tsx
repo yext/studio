@@ -25,7 +25,7 @@ export default function UndoRedo(): JSX.Element {
 
   const handleUndoKeydown = useCallback(
     (event: KeyboardEvent) => {
-      const actionKey = ["OS X", "Darwin"].includes(platform.os.family)
+      const actionKey = platform.os.family === "OS X"
         ? event.metaKey
         : event.ctrlKey;
       if (actionKey && event.key === "z") {
