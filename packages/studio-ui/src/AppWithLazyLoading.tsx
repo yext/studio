@@ -26,7 +26,7 @@ export default function AppWithLazyLoading() {
 
   return (
     <LoadingOverlay
-      loading={!(componentsLoaded && resourcesLoaded )}
+      loading={!(componentsLoaded && resourcesLoaded)}
       overlay={
         <>
           {renderComponentLoadingProgress(
