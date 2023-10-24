@@ -13,10 +13,11 @@ import { StudioStore } from "../store/models/StudioStore";
 export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
-  const userStyleImports = useStudioStore(
-    (store) => getUserStyleImports(store),
-    isEqual
-  );
+  const [userStyleImports, loadedStyles] = useStudioStore(
+    (store) => [
+      getUserStyleImports(store),
+      store.loadingProgress.loadedStyles
+    ], isEqual);
 
   useEffect(() => {
     if (!iframeDocument) {
@@ -29,7 +30,7 @@ export default function useInjectUserStyles(
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
-  }, [iframeDocument, userStyleImports]);
+  }, [iframeDocument, userStyleImports, loadedStyles]);
 }
 
 function getUserStyleImports(store: StudioStore): string[] {

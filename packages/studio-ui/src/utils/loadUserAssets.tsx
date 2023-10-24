@@ -42,6 +42,7 @@ export function loadComponents(): Promise<void>[] {
  */
 export function loadStyling(): void {
   const studioStore = useStudioStore.getState();
+  const addLoadedStyle = studioStore.loadingProgress.addLoadedStyle;
   const pages = Object.values(studioStore.pages.pages);
   const layouts = Object.values(studioStore.layouts.layoutNameToLayoutState);
   const fileMetadatas = Object.values(
@@ -64,7 +65,7 @@ export function loadStyling(): void {
       styleEl.setAttribute(USER_CUSTOM_STYLE_ATTRIBUTE, filepath);
       document.head.appendChild(styleEl);
       styleEl.disabled = true;
-    });
+    }).then(()=> addLoadedStyle(filepath));
   });
 }
 

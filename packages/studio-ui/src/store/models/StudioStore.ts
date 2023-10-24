@@ -9,6 +9,7 @@ import SiteSettingSlice from "./slices/SiteSettingsSlice";
 import StudioConfigSlice from "./slices/StudioConfigSlice";
 import EnvDataSlice from "./slices/EnvDataSlice";
 import GitDataSlice from "./slices/GitDataSlice";
+import LoadingProgressSlice from "./slices/LoadingProgressSlice";
 
 /**
  * The overall shape of the Zustand store as the state manager for Studio.
@@ -27,4 +28,5 @@ export type StudioStore = {
   envData: EnvDataSlice;
   gitData: GitDataSlice;
   accountContent: AccountContentSlice;
+  loadingProgress: LoadingProgressSlice;
 };
