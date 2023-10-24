@@ -19,3 +19,7 @@ export function getComponentPath(componentName: string): string {
 export function getSiteSettingsPath(fileName = "siteSettings.ts"): string {
   return getFixturePath(upath.join("SiteSettingsFile", fileName));
 }
+
+export function getStylePath(fileName: string): string {
+  return getFixturePath(upath.join("styles", fileName));
+}

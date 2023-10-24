@@ -1,5 +1,5 @@
 import ComponentFile from "../../src/sourcefiles/ComponentFile";
-import { getComponentPath } from "../__utils__/getFixturePath";
+import { getComponentPath, getStylePath } from "../__utils__/getFixturePath";
 import {
   ComponentMetadata,
   FileMetadataKind,
@@ -266,23 +266,25 @@ describe("getComponentMetadata", () => {
     );
   });
 
-  it("Can properly parse its dependency tree for CSS files.", () => {
+  it("Can properly parse its dependency tree for styling files.", () => {
     const componentFile = makeComponentFileWithDependencyTree("ComplexBanner");
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value).toHaveProperty("styleImports", [
-      expect.stringContaining("index.css"),
+      getStylePath("index.css"),
+      getStylePath("sassy.scss"),
     ]);
   });
 
-  it("Can properly parse transitively imported CSS files.", () => {
+  it("Can properly parse transitively imported styling files.", () => {
     const componentFile = makeComponentFileWithDependencyTree(
       "TransitiveCssComponent"
     );
     const result = componentFile.getComponentMetadata();
     assertIsOk(result);
     expect(result.value).toHaveProperty("styleImports", [
-      expect.stringContaining("index.css"),
+      getStylePath("index.css"),
+      getStylePath("sassy.scss"),
     ]);
   });
 });
