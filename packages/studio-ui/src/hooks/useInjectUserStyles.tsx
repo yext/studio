@@ -14,7 +14,7 @@ export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
   const [userStyleImports, loadedStyles] = useStudioStore(
-    (store) => [getUserStyleImports(store), store.loadingProgress.loadedStyles],
+    (store) => [getUserStyleImports(store), store.loadedStyles.loadedStyles],
     isEqual
   );
 

@@ -1,7 +1,7 @@
-import LoadingProgressSlice from "../models/slices/LoadingProgressSlice";
+import LoadedStylesSlice from "../models/slices/LoadedStylesSlice";
 import { SliceCreator } from "../models/utils";
 
-const createLoadingProgressSlice: SliceCreator<LoadingProgressSlice> = (
+const createLoadedStylesSlice: SliceCreator<LoadedStylesSlice> = (
   set
 ) => ({
   loadedStyles: new Set<string>(),
@@ -12,4 +12,4 @@ const createLoadingProgressSlice: SliceCreator<LoadingProgressSlice> = (
   },
 });
 
-export default createLoadingProgressSlice;
+export default createLoadedStylesSlice;
