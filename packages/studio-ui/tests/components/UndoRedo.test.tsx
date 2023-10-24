@@ -5,7 +5,7 @@ import useStudioStore from "../../src/store/useStudioStore";
 import useTemporalStore from "../../src/store/useTemporalStore";
 import { searchBarComponent } from "../__fixtures__/componentStates";
 import mockStore from "../__utils__/mockStore";
-import platform from "platform"
+import platform from "platform";
 
 describe("Undo/redo", () => {
   beforeEach(() => {
@@ -48,7 +48,9 @@ describe("Undo/redo", () => {
   });
 
   it("undoes last state update using control/command + z", async () => {
-    const actionKey = ["OS X", "Darwin"].includes(platform.os.family) ? "Meta" : "Control";
+    const actionKey = ["OS X", "Darwin"].includes(platform.os.family)
+      ? "Meta"
+      : "Control";
     render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
