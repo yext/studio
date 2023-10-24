@@ -29,6 +29,13 @@ export default function useInjectUserStyles(
     return () => {
       clearStylingFromIframe(iframeDocument);
     };
+
+    /**
+     * loadedStyles is watched by this useEffect hook to
+     * account for the race condition where this hook is 
+     * called before all user styles are added to Studio's
+     * document head.
+     */
   }, [iframeDocument, userStyleImports, loadedStyles]);
 }
 
