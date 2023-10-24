@@ -42,7 +42,7 @@ export function loadComponents(): Promise<void>[] {
  */
 export function loadStyling(): Promise<void>[] {
   const studioStore = useStudioStore.getState();
-  const addLoadedStyle = studioStore.loadedStyles.addLoadedStyle;
+  const addLoadedStyle = studioStore.loadedStyles.addLoadedStyleFilepath;
   const pages = Object.values(studioStore.pages.pages);
   const layouts = Object.values(studioStore.layouts.layoutNameToLayoutState);
   const fileMetadatas = Object.values(

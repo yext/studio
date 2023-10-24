@@ -2,10 +2,10 @@ import LoadedStylesSlice from "../models/slices/LoadedStylesSlice";
 import { SliceCreator } from "../models/utils";
 
 const createLoadedStylesSlice: SliceCreator<LoadedStylesSlice> = (set) => ({
-  loadedStyles: new Set<string>(),
-  addLoadedStyle: (style: string) => {
+  loadedStyleFilepaths: new Set<string>(),
+  addLoadedStyleFilepath: (styleFilepath: string) => {
     set((store) => {
-      store.loadedStyles.add(style);
+      store.loadedStyleFilepaths.add(styleFilepath);
     });
   },
 });
