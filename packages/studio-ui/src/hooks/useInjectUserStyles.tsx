@@ -67,8 +67,9 @@ function injectStyleIntoIframe(iframeDocument: Document, filepath: string) {
   if (!parentDocumentStyletag) {
     console.warn(
       `${filepath} was not able to be loaded into the Studio Preview. ` +
-        "If this is a newly added style file, refresh Studio to update. " +
-        "Note that unsaved changes will not be preserved on page refresh."
+        "If this style is missing from Studio Preview and is a " + 
+        "newly added style file, refresh Studio to update. Note that " +
+        "unsaved changes will not be preserved on page refresh."
     );
     return;
   }
