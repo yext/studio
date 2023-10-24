@@ -14,7 +14,10 @@ export default function useInjectUserStyles(
   iframeDocument: Document | undefined
 ) {
   const [userStyleImports, loadedStyleFilepaths] = useStudioStore(
-    (store) => [getUserStyleImports(store), store.loadedStyles.loadedStyleFilepaths],
+    (store) => [
+      getUserStyleImports(store),
+      store.loadedStyles.loadedStyleFilepaths,
+    ],
     isEqual
   );
 
@@ -32,7 +35,7 @@ export default function useInjectUserStyles(
 
     /**
      * loadedStyleFilepaths is watched by this useEffect hook to
-     * account for the race condition where this hook is 
+     * account for the race condition where this hook is
      * called before all user styles are added to Studio's
      * document head.
      */
