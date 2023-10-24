@@ -11,10 +11,10 @@ jest.mock("platform", () => ({
   __esModule: true,
   default: {
     os: {
-      family: null
-    }
-  }
-}))
+      family: null,
+    },
+  },
+}));
 
 describe("Undo/redo", () => {
   beforeEach(() => {
@@ -57,8 +57,8 @@ describe("Undo/redo", () => {
   });
 
   it("undoes last state update using control + z", async () => {
-    platform.os.family = "Windows"
-    
+    platform.os.family = "Windows";
+
     render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
@@ -68,7 +68,7 @@ describe("Undo/redo", () => {
   });
 
   it("undoes last state update using command + z", async () => {
-    platform.os.family = "OS X"
+    platform.os.family = "OS X";
 
     render(<UndoRedo />);
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
