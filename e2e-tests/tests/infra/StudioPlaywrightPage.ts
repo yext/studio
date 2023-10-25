@@ -142,6 +142,5 @@ export default class StudioPlaywrightPage {
       message: "Waiting for LoadingOverlay to finish.",
       timeout: 5000,
     }).toBeTruthy()
-    console.log("TRUTHED!")
   }
 }
