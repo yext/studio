@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 import HoursDisplay from "../components/HoursDisplay";
 import ProminentImage from "../components/ProminentImage";
+import "../styles/main.css";
 
 export const config: TemplateConfig = {
   stream: {

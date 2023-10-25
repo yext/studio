@@ -1,5 +1,6 @@
 import { GetPath, TemplateProps } from "@yext/pages";
 import Header from "../components/Header";
+import "../styles/main.css";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "index.html";
