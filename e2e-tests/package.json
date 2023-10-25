@@ -16,8 +16,11 @@
     "@vitejs/plugin-react": "^2.1.0",
     "@yext/pages": "^1.0.0-rc.1",
     "@yext/studio": "*",
+    "autoprefixer": "^10.4.16",
     "fs-extra": "^11.1.1",
-    "glob": "^10.3.1"
+    "glob": "^10.3.1",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.4"
   },
   "dependencies": {
     "kill-port": "^2.0.1"
