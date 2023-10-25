@@ -49,7 +49,7 @@ describe("page name validation", () => {
     isEntityPage: false,
     isPagesJSRepo: true,
   });
-  
+
   function expectPageNameError(input: string, errorMessages: string[]) {
     const result: ValidationResult = validator.validate({ pageName: input });
     expect(result.valid).toBeFalsy();
@@ -81,7 +81,7 @@ describe("page name validation", () => {
     const checkReservedName = (pageName: string) => {
       const errorMessage = `Page name "${pageName}" is a reserved PagesJS filename.`;
       expectPageNameError(pageName, [errorMessage]);
-    }
+    };
 
     PAGES_JS_RESERVED_PAGE_NAMES.forEach((name) => checkReservedName(name));
   });

@@ -79,7 +79,9 @@ export default class PageDataValidator {
       errorMessages.push("Page name must be 255 characters or less.");
     }
     if (this.isPagesJSRepo && PAGES_JS_RESERVED_PAGE_NAMES.includes(pageName)) {
-      errorMessages.push(`Page name "${pageName}" is a reserved PagesJS filename.`);
+      errorMessages.push(
+        `Page name "${pageName}" is a reserved PagesJS filename.`
+      );
     }
     if (this.pages[pageName]) {
       errorMessages.push(`Page name "${pageName}" is already used.`);
