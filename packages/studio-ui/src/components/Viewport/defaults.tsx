@@ -29,7 +29,7 @@ export const VIEWPORTS: ViewportMap = {
       width: 375,
     },
     type: "mobile",
-    css: "aspect-[375/667]",
+    css: "w-[375px] h-[667px]",
   },
   iphone14: {
     name: "iPhone 14",
@@ -38,7 +38,7 @@ export const VIEWPORTS: ViewportMap = {
       width: 390,
     },
     type: "mobile",
-    css: "aspect-[390/844]",
+    css: "w-[390px] h-[844px]",
   },
   galaxyzflip5folded: {
     name: "Galaxy Z Flip5 Folded",
@@ -47,7 +47,7 @@ export const VIEWPORTS: ViewportMap = {
       width: 720,
     },
     type: "mobile",
-    css: "aspect-[720/748]",
+    css: "w-[720px] h-[748px]",
   },
   galaxyzflip5unfolded: {
     name: "Galaxy Z Flip5 Unfolded",
@@ -56,7 +56,7 @@ export const VIEWPORTS: ViewportMap = {
       width: 720,
     },
     type: "mobile",
-    css: "aspect-[720/1760]",
+    css: "w-[720px] h-[1760px]",
   },
   pixel7: {
     name: "Pixel 7",
@@ -65,7 +65,7 @@ export const VIEWPORTS: ViewportMap = {
       width: 360,
     },
     type: "mobile",
-    css: "aspect-[360/800]",
+    css: "w-[360px] h-[800px]",
   },
   pixelfoldfolded: {
     name: "Pixel Fold Folded",
@@ -74,7 +74,7 @@ export const VIEWPORTS: ViewportMap = {
       width: 372,
     },
     type: "mobile",
-    css: "aspect-[372/720]",
+    css: "w-[372px] h-[720px]",
   },
   pixelfoldunfolded: {
     name: "Pixel Fold Unfolded",
@@ -83,6 +83,6 @@ export const VIEWPORTS: ViewportMap = {
       width: 600,
     },
     type: "mobile",
-    css: "aspect-[600/720]",
+    css: "w-[600px] h-[720px]",
   },
 };
