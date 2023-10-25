@@ -68,10 +68,12 @@ describe("aggregates data as expected", () => {
     );
   });
 
-  it("properly populates pageNameToPageState, ignoring sub-directories", () => {
+  it("properly populates PageState Records, ignoring sub-directories and reserved PagesJS Files", () => {
     expect(studioData.pageNameToPageState).toEqual({
       basicPage: basicPageState,
     });
+
+    expect(studioData.pageNameToErrorPageState).toEqual({});
   });
 
   it("properly populates siteSettings", () => {
