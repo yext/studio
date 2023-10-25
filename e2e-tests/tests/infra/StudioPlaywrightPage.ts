@@ -139,7 +139,6 @@ export default class StudioPlaywrightPage {
       .poll(
         () =>
           overlayDomEl.evaluate((e: HTMLElement) => {
-            console.log(e.className);
             return e.className.includes("opacity-0");
           }),
         {
