@@ -43,7 +43,7 @@ const basicPageState: PageState = {
 };
 
 describe("aggregates data as expected", () => {
-  const orchestrator = createParsingOrchestrator();
+  const orchestrator = createParsingOrchestrator({ isPagesJS: true });
   let studioData: StudioData;
 
   beforeAll(() => {

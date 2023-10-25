@@ -1,4 +1,5 @@
 import PageDataValidator, {
+  PAGES_JS_RESERVED_PAGE_NAMES,
   ValidationResult,
 } from "../../src/utils/PageDataValidator";
 
@@ -44,11 +45,12 @@ describe("URL slug validation", () => {
 });
 
 describe("page name validation", () => {
+  const validator = new PageDataValidator({
+    isEntityPage: false,
+    isPagesJSRepo: true,
+  });
+  
   function expectPageNameError(input: string, errorMessages: string[]) {
-    const validator = new PageDataValidator({
-      isEntityPage: false,
-      isPagesJSRepo: true,
-    });
     const result: ValidationResult = validator.validate({ pageName: input });
     expect(result.valid).toBeFalsy();
     expect(result.errorMessages).toEqual(expect.arrayContaining(errorMessages));
@@ -73,5 +75,14 @@ describe("page name validation", () => {
     const longName = "a".repeat(256);
     const errorMessage = "Page name must be 255 characters or less.";
     expectPageNameError(longName, [errorMessage]);
+  });
+
+  it("gives an error when using PagesJS Reserved Filenames", () => {
+    const checkReservedName = (pageName: string) => {
+      const errorMessage = `Page name "${pageName}" is a reserved PagesJS filename.`;
+      expectPageNameError(pageName, [errorMessage]);
+    }
+
+    PAGES_JS_RESERVED_PAGE_NAMES.forEach((name) => checkReservedName(name));
   });
 });
