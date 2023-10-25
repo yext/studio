@@ -1,5 +1,6 @@
 import { PlaywrightTestConfig, expect } from "@playwright/test";
 import fs from "node:fs";
+import os from "node:os";
 
 expect.extend({
   async toHaveContents(filepath: string, expectedContents: string) {
@@ -51,7 +52,7 @@ const config: PlaywrightTestConfig = {
     video: "on",
   },
   workers: 1,
-  ignoreSnapshots: true,
+  ignoreSnapshots: os.platform() !== "darwin",
 };
 
 export default config;
