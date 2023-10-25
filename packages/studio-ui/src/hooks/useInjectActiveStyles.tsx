@@ -10,12 +10,12 @@ import { StudioStore } from "../store/models/StudioStore";
  * styling of the current active page and component tree.  Styling is cleared
  * from the iframe before each injection.
  */
-export default function useInjectUserStyles(
+export default function useInjectActiveStyles(
   iframeDocument: Document | undefined
 ) {
-  const [userStyleImports, loadedStyleFilepaths] = useStudioStore(
+  const [activeStylesFilepaths, loadedStyleFilepaths] = useStudioStore(
     (store) => [
-      getUserStyleImports(store),
+      getFilepathsOfActiveStyles(store),
       store.loadedStyles.loadedStyleFilepaths,
     ],
     isEqual
@@ -25,7 +25,7 @@ export default function useInjectUserStyles(
     if (!iframeDocument) {
       return;
     }
-    userStyleImports.forEach((styleFilepath) => {
+    activeStylesFilepaths.forEach((styleFilepath) => {
       injectStyleIntoIframe(iframeDocument, styleFilepath);
     });
 
@@ -39,11 +39,11 @@ export default function useInjectUserStyles(
      * called before all user styles are added to Studio's
      * document head.
      */
-  }, [iframeDocument, userStyleImports, loadedStyleFilepaths]);
+  }, [iframeDocument, activeStylesFilepaths, loadedStyleFilepaths]);
 }
 
-function getUserStyleImports(store: StudioStore): string[] {
-  const pageStyles = store.pages.getActivePageState()?.styleImports ?? [];
+function getFilepathsOfActiveStyles(store: StudioStore): string[] {
+  const activePageStyles = store.pages.getActivePageState()?.styleImports ?? [];
   const componentTree = store.actions.getComponentTree();
   const getComponentMetadata = store.actions.getComponentMetadata;
 
@@ -54,7 +54,7 @@ function getUserStyleImports(store: StudioStore): string[] {
       componentTreeStyles.add(styleFilepath);
     });
   });
-  return [...componentTreeStyles, ...pageStyles];
+  return [...componentTreeStyles, ...activePageStyles];
 }
 
 function clearStylingFromIframe(iframeDocument: Document) {
