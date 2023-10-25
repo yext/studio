@@ -56,9 +56,13 @@ describe("Undo/redo", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 
-  it("undoes last state update using control + z if OS is not OS X", async () => {
+  it("only undoes last state update using control + z if not in OS X", async () => {
     platform.os.family = "Windows";
     render(<UndoRedo />);
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard("{Meta>}z{/Meta}");
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
     );
@@ -66,9 +70,13 @@ describe("Undo/redo", () => {
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 
-  it("undoes last state update using command + z is OS is OS X", async () => {
+  it("only undoes last state update using command + z if in OS X", async () => {
     platform.os.family = "OS X";
     render(<UndoRedo />);
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard("{Control>}z{/Control}");
     expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
       "searchbar-uuid"
     );
