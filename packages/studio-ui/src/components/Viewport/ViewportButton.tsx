@@ -7,10 +7,8 @@ export default function ViewportButton(): JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const handleClose = useCallback(() => setIsOpen(false), []);
-  useRootClose(containerRef, () => {
-    handleClose();
-  });
-  const handleClick = useCallback(() => setIsOpen(!isOpen), [isOpen]);
+  useRootClose(containerRef, handleClose);
+  const handleClick = useCallback(() => setIsOpen((isOpen) => !isOpen), []);
 
   return (
     <div ref={containerRef}>
