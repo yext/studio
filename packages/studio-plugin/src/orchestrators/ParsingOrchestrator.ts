@@ -214,6 +214,18 @@ export default class ParsingOrchestrator {
         `The pages directory does not exist, expected directory to be at "${this.paths.pages}".`
       );
     }
+
+    if (this.studioConfig.isPagesJSRepo) {
+      const excludeReservedPagesJSFiles = (filename: string) =>
+        !(filename.includes("_server") || filename.includes("_client"));
+
+      return createFilenameMapping(
+        this.paths.pages,
+        this.getOrCreatePageFile,
+        excludeReservedPagesJSFiles
+      );
+    }
+
     return createFilenameMapping(this.paths.pages, this.getOrCreatePageFile);
   }
 
