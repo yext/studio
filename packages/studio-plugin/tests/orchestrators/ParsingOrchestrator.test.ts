@@ -131,7 +131,10 @@ it("throws an error when the page imports components from unexpected folders", (
     __dirname,
     "../__fixtures__/ParsingOrchestrator/src/pages"
   );
-  createParsingOrchestrator({ paths: userPaths, isPagesJS: true }).getStudioData();
+  createParsingOrchestrator({
+    paths: userPaths,
+    isPagesJS: true,
+  }).getStudioData();
   expect(prettyPrintError).toHaveBeenCalledTimes(1);
   expect(prettyPrintError).toHaveBeenCalledWith(
     expect.stringMatching(/^Failed to parse PageState/),
