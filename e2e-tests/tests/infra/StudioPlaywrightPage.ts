@@ -134,8 +134,14 @@ export default class StudioPlaywrightPage {
    */
   async waitForLoadState() {
     await this.page.waitForLoadState();
-    await expect(
-      this.page.getByRole("button", { name: "Open Add Element Menu" })
-    ).toBeVisible();
+    const overlayDomEl = this.page.getByTestId("loading-overlay")
+    await expect.poll(() => overlayDomEl.evaluate((e: HTMLElement) => {
+       console.log(e.className)
+      return e.className.includes("opacity-0")
+    }), {
+      message: "Waiting for LoadingOverlay to finish.",
+      timeout: 5000,
+    }).toBeTruthy()
+    console.log("TRUTHED!")
   }
 }
