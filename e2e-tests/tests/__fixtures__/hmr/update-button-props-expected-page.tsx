@@ -2,6 +2,7 @@ import { GetPath, TemplateProps } from "@yext/pages";
 import Banner from "../components/Banner";
 import Button from "../components/Button";
 import Container from "../components/Container";
+import "../styles/main.css";
 
 export const getPath: GetPath<TemplateProps> = () => {
   return "index.html";

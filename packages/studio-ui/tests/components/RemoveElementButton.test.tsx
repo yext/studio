@@ -31,7 +31,7 @@ beforeEach(() => {
             parentUUID: "mock-uuid-0",
           },
         ],
-        cssImports: [],
+        styleImports: [],
         filepath: "mock-filepath",
       },
     },

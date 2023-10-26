@@ -1,6 +1,6 @@
 {
   "name": "@yext/studio-plugin",
-  "version": "0.26.1",
+  "version": "0.27.0-alpha.1",
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",
   "type": "module",
@@ -14,6 +14,11 @@
       "types": "./lib/createStudioPlugin.d.ts",
       "import": "./lib/createStudioPlugin.js",
       "require": "./lib/createStudioPlugin.js"
+    },
+    "./src/createStudioStylingPlugin": {
+      "types": "./lib/createStudioStylingPlugin.d.ts",
+      "import": "./lib/createStudioStylingPlugin.js",
+      "require": "./lib/createStudioStylingPlugin.js"
     },
     "./virtual-module": {
       "types": "./virtual-module.d.ts"
@@ -38,6 +43,8 @@
     "chokidar": "^3.5.3",
     "colors": "^1.4.0",
     "cross-fetch": "^4.0.0",
+    "dependency-tree": "^10.0.9",
+    "filing-cabinet": "^4.1.6",
     "kill-port": "^2.0.1",
     "prettier": "2.8.3",
     "simple-git": "^3.16.0",

@@ -21,6 +21,8 @@ import TypeNodeParsingHelper, {
 import { parseSync as babelParseSync } from "@babel/core";
 import NpmLookup from "./helpers/NpmLookup";
 import { TypelessPropVal } from "../types";
+import cabinet from "filing-cabinet";
+import isStyleFile from "../utils/isStyleFile";
 
 export type ParsedImport = {
   importSource: string;
@@ -120,16 +122,34 @@ export default class StudioSourceFileParser {
     );
   }
 
-  parseCssImports(): string[] {
-    const cssImports: string[] = [];
+  parseStyleImports(): string[] {
+    const getAbsoluteStyleImportFilepath = (importPath: string) => {
+      if (upath.isAbsolute(importPath)) {
+        return upath.toUnix(importPath);
+      }
+      const resolvedPath = cabinet({
+        partial: importPath,
+        directory: upath.dirname(this.sourceFile.getFilePath()),
+        filename: this.sourceFile.getFilePath(),
+      });
+      if (!resolvedPath) {
+        throw new Error(
+          `${importPath} could not be resolved when parsing ` +
+            `${this.sourceFile.getFilePath()} for style imports.`
+        );
+      }
+      return upath.toUnix(resolvedPath);
+    };
 
+    const styleImports: string[] = [];
     this.sourceFile.getImportDeclarations().forEach((importDeclaration) => {
-      const { source } = StaticParsingHelpers.parseImport(importDeclaration);
-      if (source.endsWith(".css")) {
-        cssImports.push(source);
+      const { source: importPath } =
+        StaticParsingHelpers.parseImport(importDeclaration);
+      if (isStyleFile(importPath)) {
+        styleImports.push(getAbsoluteStyleImportFilepath(importPath));
       }
     });
-    return cssImports;
+    return styleImports;
   }
 
   getExportedObjectExpression(

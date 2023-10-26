@@ -29,12 +29,12 @@ export default class LayoutFile {
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
     });
-    const cssImports = this.studioSourceFileParser.parseCssImports();
+    const styleImports = this.studioSourceFileParser.parseStyleImports();
     const filepath = this.studioSourceFileParser.getFilepath();
 
     return {
       componentTree,
-      cssImports,
+      styleImports,
       filepath,
     };
   };

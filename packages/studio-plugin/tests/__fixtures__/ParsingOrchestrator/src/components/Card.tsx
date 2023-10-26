@@ -1,3 +1,5 @@
+import "../styles/index.css";
+import "../styles/sassy.scss";
 export interface CardProps {
   text: string;
 }

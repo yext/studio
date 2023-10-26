@@ -16,7 +16,7 @@ jest.mock("uuid");
 
 const basicPageState: PageState = {
   componentTree: [],
-  cssImports: [],
+  styleImports: [],
   filepath: "mock-filepath",
 };
 
@@ -33,6 +33,7 @@ const UUIDToFileMetadata: Record<string, FileMetadata> = {
     kind: FileMetadataKind.Component,
     metadataUUID: "mock-metadata-uuid",
     filepath: getComponentPath("ComplexBanner"),
+    styleImports: [],
   },
 };
 

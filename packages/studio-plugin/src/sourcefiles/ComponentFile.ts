@@ -7,6 +7,9 @@ import StudioSourceFileParser from "../parsers/StudioSourceFileParser";
 import tryUsingResult from "../errors/tryUsingResult";
 import { ParsingError, ParsingErrorKind } from "../errors/ParsingError";
 import { Result } from "true-myth";
+import { Tree } from "dependency-tree";
+import upath from "upath";
+import isStyleFile from "../utils/isStyleFile";
 
 /**
  * ComponentFile is responsible for parsing a single component file, for example
@@ -16,7 +19,11 @@ export default class ComponentFile {
   private studioSourceFileParser: StudioSourceFileParser;
   private fileMetadataParser: FileMetadataParser;
 
-  constructor(filepath: string, project: Project) {
+  constructor(
+    filepath: string,
+    project: Project,
+    private dependencyTree: Tree
+  ) {
     this.studioSourceFileParser = new StudioSourceFileParser(filepath, project);
     this.fileMetadataParser = new FileMetadataParser(
       this.studioSourceFileParser
@@ -43,12 +50,29 @@ export default class ComponentFile {
     };
 
     const filepath = this.studioSourceFileParser.getFilepath();
-
+    const styleImports = getStyleFilesFromDependencyTree(this.dependencyTree);
     return {
       kind: FileMetadataKind.Component,
       ...this.fileMetadataParser.parse(onProp),
       ...(acceptsChildren ? { acceptsChildren } : {}),
       filepath,
+      styleImports,
     };
   };
+}
+
+function getStyleFilesFromDependencyTree(dependencyTree: Tree): string[] {
+  const styleFiles = Object.entries(dependencyTree).reduce(
+    (styleFiles, [absFilepath, subDependencyTree]) => {
+      if (isStyleFile(absFilepath)) {
+        styleFiles.add(upath.toUnix(absFilepath));
+      }
+      return new Set([
+        ...styleFiles,
+        ...getStyleFilesFromDependencyTree(subDependencyTree),
+      ]);
+    },
+    new Set<string>()
+  );
+  return [...styleFiles];
 }

@@ -13,7 +13,7 @@ import {
   PropValueKind,
   PropValueType,
 } from "@yext/studio-plugin";
-import loadComponents from "../../src/utils/loadComponents";
+import { loadComponents } from "../../src/utils/loadUserAssets";
 
 const mockSetState = jest.fn();
 
@@ -130,7 +130,7 @@ async function mockPreviewState(componentTree: ComponentState[]) {
       pages: {
         universalPage: {
           componentTree,
-          cssImports: [],
+          styleImports: [],
           filepath: "mock/file/path",
           pagesJS: {
             entityFiles: ["entityFile.json"],

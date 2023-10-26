@@ -11,7 +11,7 @@ it("logs an error when using setComponentProps if the component is a fragment", 
     universal: {
       pageName: "universal",
       componentTree: [fragmentComponent, searchBarComponent],
-      cssImports: [],
+      styleImports: [],
       filepath: "mock-filepath",
     },
   };

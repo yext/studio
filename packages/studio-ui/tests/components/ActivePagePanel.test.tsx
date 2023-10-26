@@ -8,7 +8,7 @@ import { checkTooltipFunctionality } from "../__utils__/helpers";
 
 const basePageState: PageState = {
   componentTree: [],
-  cssImports: [],
+  styleImports: [],
   filepath: "mock-filepath",
 };
 

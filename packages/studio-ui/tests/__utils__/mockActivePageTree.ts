@@ -8,7 +8,7 @@ export function mockActivePageTree(componentTree: ComponentState[]) {
       pages: {
         pagename: {
           componentTree,
-          cssImports: [],
+          styleImports: [],
           filepath: "unused",
         },
       },

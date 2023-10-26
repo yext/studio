@@ -1,7 +1,8 @@
 import { createPortal } from "react-dom";
-import { Dispatch, PropsWithChildren, SetStateAction, useEffect } from "react";
+import { Dispatch, PropsWithChildren, SetStateAction } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { twMerge } from "tailwind-merge";
+import useInjectActiveStyles from "../hooks/useInjectActiveStyles";
 
 export default function IFramePortal(
   props: PropsWithChildren<{
@@ -11,7 +12,7 @@ export default function IFramePortal(
   }>
 ) {
   const iframeDocument = props.iframeEl?.contentWindow?.document;
-  useParentDocumentStyles(iframeDocument);
+  useInjectActiveStyles(iframeDocument);
   const viewportCss = useStudioStore((store) => store.pagePreview.viewport.css);
   const iframeCSS = twMerge("mr-auto ml-auto", viewportCss);
 
@@ -26,18 +27,4 @@ export default function IFramePortal(
       {iframeDocument && createPortal(props.children, iframeDocument.body)}
     </div>
   );
-}
-
-function useParentDocumentStyles(iframeDocument: Document | undefined) {
-  useEffect(() => {
-    if (iframeDocument) {
-      const inlineStyles = document.head.getElementsByTagName("style");
-      const stylesheets = document.head.querySelectorAll(
-        'link[rel="stylesheet"]'
-      );
-      for (const el of [...inlineStyles, ...stylesheets]) {
-        iframeDocument.head.appendChild(el.cloneNode(true));
-      }
-    }
-  }, [iframeDocument]);
 }

@@ -21,6 +21,7 @@ const mockactiveComponentMetadata: FileMetadata = {
   kind: FileMetadataKind.Component,
   metadataUUID: "mock-metadata-uuid-1",
   filepath: "mock-filepath",
+  styleImports: [],
 };
 
 describe("delete key shortcut", () => {

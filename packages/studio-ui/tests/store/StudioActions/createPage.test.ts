@@ -27,7 +27,7 @@ describe("non-PagesJS repo", () => {
     expect(pagesRecord).toEqual({
       test: {
         componentTree: [],
-        cssImports: [],
+        styleImports: [],
         filepath: expect.stringContaining("test"),
       },
     });
@@ -43,7 +43,7 @@ describe("non-PagesJS repo", () => {
     expect(pagesRecord).toEqual({
       test: {
         componentTree: [],
-        cssImports: [],
+        styleImports: [],
         filepath: expect.stringContaining("test"),
       },
     });
@@ -86,7 +86,7 @@ describe("PagesJS repo", () => {
     expect(pagesRecord).toEqual({
       test: {
         componentTree: [],
-        cssImports: [],
+        styleImports: [],
         filepath: expect.stringContaining("test"),
         pagesJS: {
           getPathValue: { kind: PropValueKind.Literal, value: "testing" },

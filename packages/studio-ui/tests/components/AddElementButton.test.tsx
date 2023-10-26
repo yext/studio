@@ -7,7 +7,7 @@ it("renders the button when there is an active page state (but no menu)", () => 
   mockActivePage({
     componentTree: [],
     filepath: "",
-    cssImports: [],
+    styleImports: [],
   });
 
   render(<AddElementButton />);
@@ -25,7 +25,7 @@ it("clicking the button opens the menu", async () => {
   mockActivePage({
     componentTree: [],
     filepath: "",
-    cssImports: [],
+    styleImports: [],
   });
 
   render(<AddElementButton />);

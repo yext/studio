@@ -1,11 +1,11 @@
 import upath from "upath";
 
 /**
- * Calculates the import needed to import a file into another;
+ * Calculates the import needed to import a file into another.
  *
  * Assumes given paths are absolute.
  */
-export default function getImportSpecifier(
+export function getImportSpecifier(
   baseFilePath: string,
   filePathToBeImported: string
 ) {
@@ -19,4 +19,18 @@ export default function getImportSpecifier(
     return "./" + importPath;
   }
   return importPath;
+}
+
+/**
+ * Calculates the import needed to import a file into another,
+ * including the extension.
+ *
+ * Assumes given paths are absolute.
+ */
+export function getImportSpecifierWithExtension(
+  baseFilePath: string,
+  filePathToBeImported: string
+) {
+  const extension = upath.extname(filePathToBeImported);
+  return getImportSpecifier(baseFilePath, filePathToBeImported) + extension;
 }

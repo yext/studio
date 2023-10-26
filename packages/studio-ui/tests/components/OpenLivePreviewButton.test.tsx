@@ -34,7 +34,7 @@ describe("button is disabled properly", () => {
   it("disables the button when active page is not a PagesJS Template", () => {
     const pageState: PageState = {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "some/file/path.tsx",
     };
     mockActivePage(pageState);
@@ -47,7 +47,7 @@ describe("button is disabled properly", () => {
   it("disables the button for Static page without a valid GetPathVal", () => {
     const pageState: PageState = {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "some/file/path.tsx",
       pagesJS: {
         getPathValue: undefined,
@@ -63,7 +63,7 @@ describe("button is disabled properly", () => {
   it("when an Entity's localData doesn't contain an id, the button is disabled", () => {
     const pageState: PageState = {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "some/file/path.tsx",
       pagesJS: {
         getPathValue: undefined,
@@ -97,7 +97,7 @@ describe("button links to correct preview url", () => {
   it("preview url for Static Page is correct", () => {
     const pageState: PageState = {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "some/file/path.tsx",
       pagesJS: {
         getPathValue: {
@@ -121,7 +121,7 @@ describe("button links to correct preview url", () => {
   it("preview url for Entity Page is correct", () => {
     const pageState: PageState = {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath: "some/file/path.tsx",
       pagesJS: {
         getPathValue: undefined,

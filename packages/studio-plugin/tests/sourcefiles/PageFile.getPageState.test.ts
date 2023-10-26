@@ -1,7 +1,11 @@
 import PageFile from "../../src/sourcefiles/PageFile";
 import { ComponentStateKind } from "../../src/types/ComponentState";
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getPagePath } from "../__utils__/getFixturePath";
+import {
+  getComponentPath,
+  getPagePath,
+  getStylePath,
+} from "../__utils__/getFixturePath";
 import { FileMetadata, FileMetadataKind } from "../../src/types";
 import { mockUUID } from "../__utils__/spies";
 import { assertIsOk } from "../__utils__/asserts";
@@ -19,6 +23,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
       bool: { type: PropValueType.boolean, required: false },
     },
     filepath,
+    styleImports: [],
   };
 }
 
@@ -68,14 +73,17 @@ describe("getPageState", () => {
     ]);
   });
 
-  it("correctly parses CSS imports", () => {
+  it("correctly parses style imports", () => {
     const pageFile = createPageFile("entityTemplate");
     const result = pageFile.getPageState();
 
     assertIsOk(result);
-    expect(result.value.cssImports).toEqual([
-      "./index.css",
-      "@yext/search-ui-react/index.css",
+    expect(result.value.styleImports).toEqual([
+      getStylePath("index.css"),
+      getStylePath("sassy.scss"),
+      expect.stringContaining(
+        "/node_modules/@yext/search-ui-react/lib/bundle.css"
+      ),
     ]);
   });
 
@@ -117,6 +125,14 @@ describe("getPageState", () => {
         /^Unable to find top-level JSX element or JSX fragment type in the default export at path: /
       );
       expect(consoleErrorSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it("cannot resolve node_module CSS import using package.json export alias", () => {
+      const pageFile = createPageFile("unsupportedCssImport");
+
+      expect(pageFile.getPageState()).toHaveErrorMessage(
+        /^@yext\/search-ui-react\/bundle.css could not be resolved /
+      );
     });
   });
 });

@@ -2,7 +2,7 @@ import LoadingOverlay from "./components/LoadingOverlay";
 import { Suspense, lazy, useEffect, useState } from "react";
 import useStudioStore from "./store/useStudioStore";
 import ProgressBar from "./components/ProgressBar";
-import loadComponents from "./utils/loadComponents";
+import { loadComponents, loadStyling } from "./utils/loadUserAssets";
 import classNames from "classnames";
 
 const AppPromise = import("./App");
@@ -15,15 +15,18 @@ export default function AppWithLazyLoading() {
   ]);
   const componentsLoaded = loadedCount === totalCount;
   const [appLoaded, setAppLoaded] = useState(false);
+  const [stylesLoaded, setStylesLoaded] = useState(false);
+  const resourcesLoaded = appLoaded && stylesLoaded;
 
   useEffect(() => {
     loadComponents();
+    void Promise.all(loadStyling()).then(() => setStylesLoaded(true));
     void AppPromise.then(() => setAppLoaded(true));
   }, []);
 
   return (
     <LoadingOverlay
-      loading={!componentsLoaded || !appLoaded}
+      loading={!(componentsLoaded && resourcesLoaded)}
       overlay={
         <>
           {renderComponentLoadingProgress(
@@ -31,7 +34,7 @@ export default function AppWithLazyLoading() {
             totalCount,
             componentsLoaded
           )}
-          {renderBundleMessage(appLoaded)}
+          {renderResourcesLoadingMessage(resourcesLoaded)}
         </>
       }
     >
@@ -65,11 +68,11 @@ function renderComponentLoadingProgress(
   );
 }
 
-function renderBundleMessage(appLoaded: boolean) {
+function renderResourcesLoadingMessage(loadComplete: boolean) {
   const className = classNames("text-sky-600 mt-4", {
-    "animate-pulse": !appLoaded,
+    "animate-pulse": !loadComplete,
   });
-  const msg = appLoaded
+  const msg = loadComplete
     ? "Studio resources loaded!"
     : "... loading Studio resources ...";
 
