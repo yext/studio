@@ -119,6 +119,7 @@ describe("aggregates data as expected", () => {
         isPagesJS: true,
       });
       const studioData = orchestrator.getStudioData();
+      expect(studioData.pageNameToErrorPageState).toEqual({});
       expect(studioData.pageNameToPageState).toEqual({
         basicPage: {
           ...basicPageState,
@@ -138,7 +139,10 @@ it("throws an error when the page imports components from unexpected folders", (
     __dirname,
     "../__fixtures__/ParsingOrchestrator/src/pages"
   );
-  createParsingOrchestrator({ paths: userPaths }).getStudioData();
+  createParsingOrchestrator({
+    paths: userPaths,
+    isPagesJS: true,
+  }).getStudioData();
   expect(prettyPrintError).toHaveBeenCalledTimes(1);
   expect(prettyPrintError).toHaveBeenCalledWith(
     expect.stringMatching(/^Failed to parse PageState/),

@@ -23,6 +23,6 @@ it("can change viewport", async () => {
       width: 375,
     },
     type: "mobile",
-    css: "aspect-[375/667]",
+    css: "w-[375px] h-[667px]",
   });
 });

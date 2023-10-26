@@ -1,7 +1,7 @@
 module.exports = [
   {
     path: "lib/**/*.js",
-    limit: "850 kB",
+    limit: "870 kB",
     gzip: false,
   },
 ];

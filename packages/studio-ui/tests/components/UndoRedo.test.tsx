@@ -5,6 +5,16 @@ import useStudioStore from "../../src/store/useStudioStore";
 import useTemporalStore from "../../src/store/useTemporalStore";
 import { searchBarComponent } from "../__fixtures__/componentStates";
 import mockStore from "../__utils__/mockStore";
+import platform from "platform";
+
+jest.mock("platform", () => ({
+  __esModule: true,
+  default: {
+    os: {
+      family: null,
+    },
+  },
+}));
 
 describe("Undo/redo", () => {
   beforeEach(() => {
@@ -43,6 +53,34 @@ describe("Undo/redo", () => {
       "searchbar-uuid"
     );
     await userEvent.click(screen.getByLabelText("Undo"));
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+  });
+
+  it("undoes last state update using control + z if OS is not OS X", async () => {
+    platform.os.family = "Windows";
+    render(<UndoRedo />);
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard("{Meta>}z{/Meta}");
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard("{Control>}z{/Control}");
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
+  });
+
+  it("undoes last state update using command + z if OS is OS X", async () => {
+    platform.os.family = "OS X";
+    render(<UndoRedo />);
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard("{Control>}z{/Control}");
+    expect(useStudioStore.getState().pages.activeComponentUUID).toBe(
+      "searchbar-uuid"
+    );
+    await userEvent.keyboard("{Meta>}z{/Meta}");
     expect(useStudioStore.getState().pages.activeComponentUUID).toBeUndefined();
   });
 

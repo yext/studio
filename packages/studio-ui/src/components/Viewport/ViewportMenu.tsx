@@ -47,7 +47,7 @@ export default function ViewportMenu({
 interface OptionProps {
   viewport: Viewport;
   isCurrentlySelected: boolean;
-  handleSelect: (viewport) => void;
+  handleSelect: (viewport: Viewport) => void;
 }
 
 function Option({ viewport, isCurrentlySelected, handleSelect }: OptionProps) {
@@ -56,19 +56,17 @@ function Option({ viewport, isCurrentlySelected, handleSelect }: OptionProps) {
     [handleSelect, viewport]
   );
   const { name, styles } = viewport;
-  const className = classNames(
-    "flex items-center gap-x-2 px-6 py-2 cursor-pointer w-full text-left",
-    {
-      "bg-gray-300": isCurrentlySelected,
-      "hover:bg-gray-100": !isCurrentlySelected,
-    }
-  );
+  const className = classNames("flex items-center gap-x-2 px-6 py-2 w-full", {
+    "bg-gray-300": isCurrentlySelected,
+    "hover:bg-gray-100": !isCurrentlySelected,
+  });
 
   return (
     <button
       className={className}
       onClick={onClick}
       aria-label={`Select ${name} Viewport`}
+      disabled={isCurrentlySelected}
     >
       <div className="flex flex-row gap-x-2 items-center">
         {name}

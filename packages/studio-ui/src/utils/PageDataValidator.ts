@@ -1,5 +1,7 @@
 import { PagesRecord } from "../store/models/slices/PageSlice";
 
+export const PAGES_JS_RESERVED_PAGE_NAMES = ["_server", "_client"];
+
 export interface ValidationResult {
   valid: boolean;
   errorMessages: string[];
@@ -75,6 +77,11 @@ export default class PageDataValidator {
     }
     if (pageName.length > 255) {
       errorMessages.push("Page name must be 255 characters or less.");
+    }
+    if (this.isPagesJSRepo && PAGES_JS_RESERVED_PAGE_NAMES.includes(pageName)) {
+      errorMessages.push(
+        `Page name "${pageName}" is a reserved PagesJS filename.`
+      );
     }
     if (this.pages[pageName]) {
       errorMessages.push(`Page name "${pageName}" is already used.`);

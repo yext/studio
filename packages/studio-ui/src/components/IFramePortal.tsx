@@ -1,9 +1,8 @@
 import { createPortal } from "react-dom";
-import { Dispatch, PropsWithChildren, SetStateAction, useRef } from "react";
+import { Dispatch, PropsWithChildren, SetStateAction } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { twMerge } from "tailwind-merge";
 import useInjectActiveStyles from "../hooks/useInjectActiveStyles";
-import useViewportOption from "../hooks/useViewportOption";
 
 export default function IFramePortal(
   props: PropsWithChildren<{
@@ -12,18 +11,13 @@ export default function IFramePortal(
     setIframeEl: Dispatch<SetStateAction<HTMLIFrameElement | null>>;
   }>
 ) {
-  const previewRef = useRef<HTMLDivElement>(null);
   const iframeDocument = props.iframeEl?.contentWindow?.document;
-  const [viewport] = useStudioStore((store) => [store.pagePreview.viewport]);
   useInjectActiveStyles(iframeDocument);
-  const iframeCSS = twMerge(
-    "mr-auto ml-auto",
-    viewport.css,
-    useViewportOption(viewport, previewRef)
-  );
+  const viewportCss = useStudioStore((store) => store.pagePreview.viewport.css);
+  const iframeCSS = twMerge("mr-auto ml-auto", viewportCss);
 
   return (
-    <div ref={previewRef} className="grow w-1/3 bg-white border-y-8">
+    <div className="grow w-1/3 bg-white border-y-8 overflow-x-scroll">
       <iframe
         id="iframe"
         title={props.title}
