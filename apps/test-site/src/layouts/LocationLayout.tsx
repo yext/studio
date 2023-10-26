@@ -1,4 +1,5 @@
 import Header from "../components/Header";
+import "../styles/main.css";
 
 function LocationLayout() {
   return (

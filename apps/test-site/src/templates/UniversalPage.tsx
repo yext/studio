@@ -4,6 +4,7 @@ import Button from "../components/Button";
 import Container from "../components/Container";
 import Cta from "../components/Cta";
 import FixedText from "../components/FixedText";
+import "../styles/main.css";
 
 export const config: TemplateConfig = {
   stream: {

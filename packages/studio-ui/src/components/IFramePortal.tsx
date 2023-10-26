@@ -2,7 +2,7 @@ import { createPortal } from "react-dom";
 import { Dispatch, PropsWithChildren, SetStateAction, useRef } from "react";
 import useStudioStore from "../store/useStudioStore";
 import { twMerge } from "tailwind-merge";
-import useInjectUserStyles from "../hooks/useInjectUserStyles";
+import useInjectActiveStyles from "../hooks/useInjectActiveStyles";
 import useViewportOption from "../hooks/useViewportOption";
 
 export default function IFramePortal(
@@ -15,7 +15,7 @@ export default function IFramePortal(
   const previewRef = useRef<HTMLDivElement>(null);
   const iframeDocument = props.iframeEl?.contentWindow?.document;
   const [viewport] = useStudioStore((store) => [store.pagePreview.viewport]);
-  useInjectUserStyles(iframeDocument);
+  useInjectActiveStyles(iframeDocument);
   const iframeCSS = twMerge(
     "mr-auto ml-auto",
     viewport.css,
