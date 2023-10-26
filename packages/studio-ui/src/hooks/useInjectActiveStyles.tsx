@@ -13,7 +13,7 @@ import { StudioStore } from "../store/models/StudioStore";
 export default function useInjectActiveStyles(
   iframeDocument: Document | undefined
 ) {
-  const [activeStylesFilepaths, loadedStyleFilepaths] = useStudioStore(
+  const [activeStyleFilepaths, loadedStyleFilepaths] = useStudioStore(
     (store) => [
       getFilepathsOfActiveStyles(store),
       store.loadedStyles.loadedStyleFilepaths,
@@ -25,7 +25,7 @@ export default function useInjectActiveStyles(
     if (!iframeDocument) {
       return;
     }
-    activeStylesFilepaths.forEach((styleFilepath) => {
+    activeStyleFilepaths.forEach((styleFilepath) => {
       injectStyleIntoIframe(iframeDocument, styleFilepath);
     });
 
@@ -39,7 +39,7 @@ export default function useInjectActiveStyles(
      * called before all user styles are added to Studio's
      * document head.
      */
-  }, [iframeDocument, activeStylesFilepaths, loadedStyleFilepaths]);
+  }, [iframeDocument, activeStyleFilepaths, loadedStyleFilepaths]);
 }
 
 function getFilepathsOfActiveStyles(store: StudioStore): string[] {
