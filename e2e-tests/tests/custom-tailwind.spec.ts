@@ -3,7 +3,7 @@ import { studioTest } from "./infra/studioTest.js";
 import fs from "fs";
 
 studioTest.use({
-  tailwindConfigPath: "tests/__fixtures__/tailwind.config.ts",
+  tailwindConfigPath: "tests/__fixtures__/custom-tailwind.config.ts",
 });
 
 studioTest(

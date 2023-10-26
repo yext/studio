@@ -1,5 +1,9 @@
 import { PropValueKind, PropValueType } from "../../src/types/PropValues";
-import { getComponentPath, getLayoutPath } from "../__utils__/getFixturePath";
+import {
+  getComponentPath,
+  getLayoutPath,
+  getStylePath,
+} from "../__utils__/getFixturePath";
 import {
   ComponentStateKind,
   FileMetadata,
@@ -27,6 +31,7 @@ function mockGetFileMetadata(filepath: string): FileMetadata {
       bool: { type: PropValueType.boolean, required: false },
     },
     filepath,
+    styleImports: [],
   };
 }
 
@@ -83,11 +88,14 @@ describe("getLayoutState", () => {
     ]);
   });
 
-  it("correctly parses CSS imports", () => {
+  it("correctly parses style imports", () => {
     const result = getLayoutState("BasicLayout");
-    expect(result.value.cssImports).toEqual([
-      "./index.css",
-      "@yext/search-ui-react/index.css",
+    expect(result.value.styleImports).toEqual([
+      getStylePath("index.css"),
+      getStylePath("sassy.scss"),
+      expect.stringContaining(
+        "/node_modules/@yext/search-ui-react/lib/bundle.css"
+      ),
     ]);
   });
 

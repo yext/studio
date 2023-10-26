@@ -8,7 +8,7 @@ import { PropValueKind } from "@yext/studio-plugin";
 const pages: PagesRecord = {
   universal: {
     componentTree: [],
-    cssImports: [],
+    styleImports: [],
     filepath: "mock-filepath",
     pagesJS: {
       getPathValue: { kind: PropValueKind.Literal, value: "index.html" },
@@ -30,7 +30,7 @@ describe("addPage", () => {
   it("adds a page to pages", () => {
     useStudioStore.getState().pages.addPage("test", {
       componentTree: [],
-      cssImports: [],
+      styleImports: [],
       filepath,
     });
     const pagesRecord = useStudioStore.getState().pages.pages;
@@ -38,7 +38,7 @@ describe("addPage", () => {
       ...pages,
       test: {
         componentTree: [],
-        cssImports: [],
+        styleImports: [],
         filepath,
       },
     });

@@ -92,12 +92,12 @@ export default class PageFile {
     const componentTree = this.componentTreeParser.parseComponentTree({
       ...this.studioSourceFileParser.getAbsPathDefaultImports(),
     });
-    const cssImports = this.studioSourceFileParser.parseCssImports();
+    const styleImports = this.studioSourceFileParser.parseStyleImports();
     const filepath = this.studioSourceFileParser.getFilepath();
 
     return {
       componentTree,
-      cssImports,
+      styleImports,
       filepath,
       ...(this.isPagesJSRepo && {
         pagesJS: this.pagesJsStateParser.getPagesJsState(),
@@ -137,7 +137,7 @@ export default class PageFile {
 
     this.reactComponentFileWriter.updateFile({
       componentTree: updatedPageState.componentTree,
-      cssImports: updatedPageState.cssImports,
+      styleImports: updatedPageState.styleImports,
       onFileUpdate,
       UUIDToFileMetadata,
     });

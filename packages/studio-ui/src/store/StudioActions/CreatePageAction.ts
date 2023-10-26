@@ -59,7 +59,7 @@ export default class CreatePageAction {
   ) {
     const pageState: PageState = {
       componentTree: layout ? layout.componentTree : [],
-      cssImports: layout ? layout.cssImports : [],
+      styleImports: layout ? layout.styleImports : [],
       filepath,
     };
     if (isPagesJSRepo && getPathValue) {

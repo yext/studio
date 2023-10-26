@@ -1,6 +1,7 @@
 import { HexColor } from "@yext/studio";
 import { CtaData } from "@yext/search-ui-react";
-import "./index.css";
+import "../styles/index.css";
+import "../styles/sassy.scss";
 
 export interface ComplexBannerProps {
   /**

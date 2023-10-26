@@ -10,7 +10,7 @@ import EditStreamScopeButton from "../../src/components/EditStreamScopeButton";
 
 const basePageState: PageState = {
   componentTree: [],
-  cssImports: [],
+  styleImports: [],
   filepath: "mock-filepath",
 };
 

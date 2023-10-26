@@ -25,7 +25,7 @@ export type StudioTestFixtures = {
 export const studioTest = base.extend<StudioTestFixtures>({
   createRemote: false,
   debug: false,
-  tailwindConfigPath: undefined,
+  tailwindConfigPath: "tests/infra/tailwind.config.ts",
   studioPage: async (
     { page, createRemote, debug, tailwindConfigPath },
     use,

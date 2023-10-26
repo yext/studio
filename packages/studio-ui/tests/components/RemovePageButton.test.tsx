@@ -10,7 +10,7 @@ beforeEach(() => {
       pages: {
         universal: {
           componentTree: [],
-          cssImports: [],
+          styleImports: [],
           filepath: "mock-filepath",
         },
       },

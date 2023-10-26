@@ -7,7 +7,7 @@ import { PagesRecord } from "../../../src/store/models/slices/PageSlice";
 const mockPages: PagesRecord = {
   UpdateMe: {
     componentTree: [],
-    cssImports: [],
+    styleImports: [],
     filepath: "some/file/path",
   },
 };

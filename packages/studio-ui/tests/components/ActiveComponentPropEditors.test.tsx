@@ -54,6 +54,7 @@ const activeComponentMetadata: FileMetadata = {
   kind: FileMetadataKind.Component,
   metadataUUID: "banner-metadata-uuid",
   filepath: "mock-filepath",
+  styleImports: [],
 };
 
 const propShape: PropShape = {

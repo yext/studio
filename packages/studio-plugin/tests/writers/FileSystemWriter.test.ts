@@ -44,7 +44,7 @@ const bannerComponentState: ComponentState = {
 
 const pageState: PageState = {
   componentTree: [bannerComponentState],
-  cssImports: [],
+  styleImports: [],
   filepath: upath.join(paths.pages, "UpdatedPage.tsx"),
 };
 

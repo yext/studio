@@ -1,5 +1,5 @@
 import { FileMetadataKind } from "@yext/studio-plugin";
-import loadComponents from "../../src/utils/loadComponents";
+import { loadComponents } from "../../src/utils/loadUserAssets";
 import mockStore, { MockStudioStore } from "../__utils__/mockStore";
 import path from "path";
 import { waitFor } from "@testing-library/react";
@@ -12,11 +12,13 @@ const mockStoreState: MockStudioStore = {
         kind: FileMetadataKind.Component,
         metadataUUID: "banner-metadata-uuid",
         filepath: path.resolve(__dirname, "../__mocks__/Banner.tsx"),
+        styleImports: [],
       },
       "container-metadata-uuid": {
         kind: FileMetadataKind.Component,
         metadataUUID: "container-metadata-uuid",
         filepath: path.resolve(__dirname, "../__mocks__/Container.tsx"),
+        styleImports: [],
       },
     },
     UUIDToImportedComponent: {},

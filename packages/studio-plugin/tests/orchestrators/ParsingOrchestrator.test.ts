@@ -14,6 +14,7 @@ import fs from "fs";
 import prettyPrintError from "../../src/errors/prettyPrintError";
 import { assertIsOk } from "../__utils__/asserts";
 import { createTestProject } from "../__utils__/createTestSourceFile";
+import { getFixturePath } from "../__utils__/getFixturePath";
 
 jest.mock("../../src/errors/prettyPrintError");
 
@@ -39,7 +40,7 @@ const basicPageState: PageState = {
     }),
   ],
   filepath: expect.anything(),
-  cssImports: [],
+  styleImports: [],
 };
 
 describe("aggregates data as expected", () => {
@@ -52,11 +53,18 @@ describe("aggregates data as expected", () => {
 
   it("properly populates UUIDToFileMetadata", () => {
     const fileMetadataArray = Object.values(studioData.UUIDToFileMetadata);
+    const expectedIndexCssPath = getFixturePath(
+      "ParsingOrchestrator/src/styles/index.css"
+    );
+    const expectedSassyScssPath = getFixturePath(
+      "ParsingOrchestrator/src/styles/sassy.scss"
+    );
     expect(fileMetadataArray).toHaveLength(2);
     expect(fileMetadataArray).toContainEqual(
       expect.objectContaining({
         filepath: expect.stringContaining("components/Card.tsx"),
         kind: FileMetadataKind.Component,
+        styleImports: [expectedIndexCssPath, expectedSassyScssPath],
       })
     );
     expect(fileMetadataArray).toContainEqual(
@@ -96,7 +104,7 @@ describe("aggregates data as expected", () => {
           }),
         ],
         filepath: expect.stringContaining("layouts/BasicLayout.tsx"),
-        cssImports: [],
+        styleImports: [],
       },
     });
   });
