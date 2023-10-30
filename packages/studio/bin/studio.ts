@@ -20,8 +20,8 @@ cli
     const YEXT_STUDIO_ARGS = JSON.stringify({
       "--": options["--"],
       port: options.port,
-      root: options.root
-    })
+      root: options.root,
+    });
 
     spawnSync(
       "npx",
@@ -39,7 +39,7 @@ cli
         env: {
           ...process.env,
           YEXT_STUDIO_ARGS,
-          VITE_STUDIO_STRICT: String(options.strict)
+          VITE_STUDIO_STRICT: String(options.strict),
         },
         shell: true,
       }
