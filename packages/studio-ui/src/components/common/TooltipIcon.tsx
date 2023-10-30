@@ -18,7 +18,7 @@ export default function TooltipIcon({ content }: TooltipIconProps) {
         data-testid="prop-tooltip"
       />
       <Tooltip
-        className="bg-black z-20 maxWidth:23.5%"
+        className="bg-black z-20 max-w-[23.5%]"
         anchorId={tooltipId}
         content={content}
         place="top"
