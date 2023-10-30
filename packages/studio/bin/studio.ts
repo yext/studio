@@ -17,12 +17,7 @@ cli
   .option("--root <directory>", `[string] path to the root directory`)
   .option("--strict", "Runs Studio in React Strict Mode")
   .action((options: CliArgs) => {
-    const YEXT_STUDIO_ARGS = JSON.stringify({
-      "--": options["--"],
-      port: options.port,
-      root: options.root,
-    });
-
+    const {strict, ...studioArgs} = options
     spawnSync(
       "npx",
       [
@@ -38,8 +33,8 @@ cli
         stdio: ["ignore", "inherit", "inherit"],
         env: {
           ...process.env,
-          YEXT_STUDIO_ARGS,
-          VITE_STUDIO_STRICT: String(options.strict),
+          YEXT_STUDIO_ARGS: JSON.stringify(studioArgs),
+          VITE_STUDIO_STRICT: String(strict)
         },
         shell: true,
       }
