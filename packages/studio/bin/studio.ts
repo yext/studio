@@ -16,7 +16,7 @@ cli
   .option("--port <port>", "[number] port to run studio")
   .option("--root <directory>", `[string] path to the root directory`)
   .action((options: CliArgs) => {
-    const useStrictMode = options["--"]?.includes("strict");
+    const useStrictMode: boolean = options["--"]?.includes("strict") ?? false;
     spawnSync(
       "npx",
       [
@@ -33,7 +33,7 @@ cli
         env: {
           ...process.env,
           YEXT_STUDIO_ARGS: JSON.stringify(options),
-          VITE_STUDIO_STRICT: String(useStrictMode ?? false),
+          VITE_STUDIO_STRICT: String(useStrictMode),
         },
         shell: true,
       }
