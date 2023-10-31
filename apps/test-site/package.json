@@ -34,7 +34,7 @@
     "tailwindcss": "^3.3.4"
   },
   "scripts": {
-    "dev": "studio --strict",
+    "dev": "studio -- strict",
     "localData": "yext pages generate-test-data -a",
     "start": "craco start",
     "build-test-site": "craco build"

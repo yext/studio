@@ -15,9 +15,8 @@ cli
   .command("", "start dev server")
   .option("--port <port>", "[number] port to run studio")
   .option("--root <directory>", `[string] path to the root directory`)
-  .option("--strict", "Runs Studio in React Strict Mode")
   .action((options: CliArgs) => {
-    const { strict, ...studioArgs } = options;
+    const useStrictMode = options["--"]?.includes("strict")
     spawnSync(
       "npx",
       [
@@ -33,8 +32,8 @@ cli
         stdio: ["ignore", "inherit", "inherit"],
         env: {
           ...process.env,
-          YEXT_STUDIO_ARGS: JSON.stringify(studioArgs),
-          VITE_STUDIO_STRICT: String(strict),
+          YEXT_STUDIO_ARGS: JSON.stringify(options),
+          VITE_STUDIO_STRICT: String(useStrictMode),
         },
         shell: true,
       }
