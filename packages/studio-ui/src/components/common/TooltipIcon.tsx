@@ -12,12 +12,18 @@ export default function TooltipIcon({ content }: TooltipIconProps) {
 
   return (
     <div>
-      <Info id={tooltipId} className="ml-3 pb-1" data-testid="prop-tooltip" />
+      <Info
+        id={tooltipId}
+        className="ml-1 pb-1 mr-4"
+        data-testid="prop-tooltip"
+      />
       <Tooltip
-        className="bg-black z-20"
+        className="bg-black z-20 max-w-[23.5%]"
         anchorId={tooltipId}
         content={content}
-        place="left"
+        place="top"
+        closeOnScroll={true}
+        positionStrategy="fixed"
       />
     </div>
   );
