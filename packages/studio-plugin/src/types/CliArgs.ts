@@ -8,5 +8,5 @@ export interface CliArgs {
   // This option is always provided by the cac package, and we only use it to
   // configure Studio to run in React Strict Mode for internal development by
   // using `-- strict`.
-  "--"?: string[];
+  "--": string[];
 }
