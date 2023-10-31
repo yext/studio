@@ -18,9 +18,15 @@ if (import.meta.hot) {
     void hotReloadGitData(hmrPayload);
   });
 }
+const WrappedApp =
+  import.meta.env.VITE_STUDIO_STRICT === "true" ? (
+    <React.StrictMode>
+      <AppWithLazyLoading />
+    </React.StrictMode>
+  ) : (
+    <AppWithLazyLoading />
+  );
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <AppWithLazyLoading />
-  </React.StrictMode>
+  WrappedApp
 );
